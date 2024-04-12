@@ -1,0 +1,20 @@
+import { CSSProperties } from "react";
+
+import "./ScrollbarWrapper.scss";
+
+interface ScrollbarWrapperProps {
+  className?: string;
+  style?: CSSProperties;
+  children: JSX.Element | JSX.Element[];
+}
+
+const ScrollbarWrapper = (props: ScrollbarWrapperProps) => (
+  <div
+    style={props.style}
+    className={`${props.className ?? ""} scrollbar-wrapper`}
+  >
+    {props.children}
+  </div>
+);
+
+export default ScrollbarWrapper;

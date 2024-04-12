@@ -1,0 +1,45 @@
+.progress-bar-wrapper {
+  height: 1.5rem;
+  width: 100%;
+  display: flex;
+  margin: 1rem 0 1rem 0.5rem;
+  overflow: hidden;
+  position: relative;
+  align-items: center;
+  border-radius: 5px;
+  background-color: whitesmoke;
+
+  .progress-bar-info {
+    display: flex;
+    align-items: center;
+    color: #000000;
+    position: absolute;
+    right: 0;
+    padding: 0 0.5rem;
+    z-index: 1;
+    .progress-bar-info-total {
+      margin: 0 0.25rem;
+    }
+  }
+
+  .progress-bar {
+    height: 100%;
+    text-align: center;
+    position: relative;
+    transition: all 200ms;
+    background-color: green;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  .progress-bar-text {
+    left: 50%;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    color: #000000;
+    font-weight: 900;
+    align-items: center;
+    position: absolute;
+  }
+}

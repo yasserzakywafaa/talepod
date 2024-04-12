@@ -1,0 +1,40 @@
+#everything from .gitignore
+# DEPENDENCIES
+node_modules
+
+# LOG
+*.log
+npm-debug.log*
+
+# compiled output
+/dist
+/build
+
+# PUBLISH
+# .env
+.npmrc
+/package
+/*.tgz
+
+# MISC
+/coverage
+/storybook-static
+.vscode
+_ignore
+
+# RANDOM
+.DS_Store
+
+# Extras
+uploads/
+
+# Remove uploaded files from build
+public/uploads
+
+Dockerfile
+README.md
+docker-compose.yml
+.gitlab-ci.yml
+.openshift-dc.patch.yml
+.gitignore
+.env

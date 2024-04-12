@@ -1,0 +1,55 @@
+.scrollbar-wrapper {
+  width: 100%;
+  overflow: auto;
+  position: relative;
+  scroll-snap-type: x;
+  &:hover {
+    &::-webkit-scrollbar {
+      height: 10px;
+      visibility: visible;
+    }
+    &::-webkit-scrollbar-track {
+      opacity: 1;
+      visibility: visible;
+    }
+    &::-webkit-scrollbar-thumb {
+      visibility: visible;
+      opacity: 1;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+  /* width */
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    visibility: hidden;
+    border-radius: 5px;
+  }
+  /* Track */
+  &::-webkit-scrollbar-track {
+    opacity: 0;
+    visibility: hidden;
+    border-radius: 5px;
+    background-color: #eee;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    opacity: 0;
+    border-radius: 5px;
+    visibility: hidden;
+    background-color: #999;
+  }
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    visibility: hidden;
+    background-color: #2da1be;
+  }
+
+  .scroll-snap {
+    scroll-snap-align: center;
+  }
+}

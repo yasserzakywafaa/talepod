@@ -1,0 +1,14 @@
+.loader-spinner-wrapper {
+  background-color: rgba(16, 23, 36, 0.7);
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 9;
+  left: 0;
+  top: 0;
+  .loader-image {
+    width: 100px;
+    min-width: 100px;
+    min-height: 100px;
+  }
+}
