@@ -1,0 +1,99 @@
+{
+  "name": "@create-tooling/react-pwa-ai-file-uploader",
+  "version": "1.0.0",
+  "description": "Container application with offline capabilities ",
+  "private": true,
+  "author": "",
+  "homepage": "/",
+  "license": "MIT",
+  "repository": "",
+  "scripts": {
+    "start": "yarn start:frontend & yarn start:backend",
+    "start:no-reload": "yarn start:frontend--disable-reload & yarn start:backend",
+    "start:win": "yarn start:backend--win & yarn start:frontend--disable-reload--win",
+    "start:prod": "NODE_ENV=production ts-node server/app.ts",
+    "start:prod--win": "set NODE_ENV=production & ts-node server/app.ts",
+    "start:frontend": "react-scripts start",
+    "start:frontend--disable-reload": "NODE_ENV=development REACT_APP_DISABLE_LIVE_RELOAD=true yarn start:frontend",
+    "start:frontend--disable-reload--win": "set NODE_ENV=development & set REACT_APP_DISABLE_LIVE_RELOAD=true & yarn start:frontend",
+    "start:frontend--prod": "serve -l 5000 -s build",
+    "start:backend": "NODE_ENV=development ts-node server/app.ts",
+    "start:backend--win": "set NODE_ENV=development & ts-node server/app.ts",
+    "start:backend--watch": "NODE_ENV=development nodemon server/app.ts",
+    "start:backend--watch--win": "set NODE_ENV=development & nodemon server/app.ts",
+    "build": "rimraf build & react-scripts build",
+    "build:win": "rimraf build && set NODE_ENV=production & set PORT=4000 & react-scripts build",
+    "docker:clean": "docker system prune",
+    "docker:build": "docker build -t react-pwa-ai-file-uploader:latest .",
+    "docker:run": "docker run -d -it --rm -p 8080:8080 react-pwa-ai-file-uploader",
+    "docker:compose--local": "docker-compose -f docker-compose.yml up frontend",
+    "docker:compose--prod": "docker-compose -f docker-compose.yml up production",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@google/generative-ai": "^0.6.0",
+    "@mui/icons-material": "^5.15.15",
+    "@mui/material": "^5.15.15",
+    "@mui/styles": "^5.15.15",
+    "@types/react-dom": "^18.0.6",
+    "@types/react-router-dom": "^5.3.3",
+    "axios": "^0.21.4",
+    "classnames": "^2.3.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.1",
+    "express-fileupload": "^1.3.1",
+    "formidable": "^2.0.1",
+    "html-loader-react-scripts": "^1.2.1",
+    "nodemon": "^2.0.19",
+    "openai": "^4.33.0",
+    "path": "^0.12.7",
+    "pouchdb": "^7.3.0",
+    "pouchdb-find": "^7.3.0",
+    "react": "^17.0.2",
+    "react-beautiful-dnd": "^13.1.0",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^5.0.1",
+    "react-toastify": "^9.0.8",
+    "typescript": "^4.7.4",
+    "web-vitals": "^1.1.1"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@testing-library/react": "^13.3.0",
+    "@types/cors": "^2.8.12",
+    "@types/express-fileupload": "^1.4.1",
+    "@types/jest": "^28.1.8",
+    "@types/lodash": "^4.14.184",
+    "@types/pouchdb": "^6.4.0",
+    "@types/react-beautiful-dnd": "^13.1.2",
+    "sass": "^1.51.0",
+    "serve": "^10.1.1",
+    "ts-node": "^10.9.1"
+  },
+  "browser": {
+    "crypto": false
+  }
+}

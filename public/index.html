@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="React PWA" />
+    <link rel="icon" href="%PUBLIC_URL%/icons/logo.png" />
+    <link
+      rel="apple-touch-icon"
+      href="%PUBLIC_URL%/icons/maskable_icon_x512.png"
+    />
+    <link rel="manifest" href="%PUBLIC_URL%/app.webmanifest.json" />
+    <title>React PWA</title>
+    <script src="%PUBLIC_URL%/sw-register.js"></script>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+
+    <!-- 
+      ONLY for development purposes/
+      Live Reload was causing issues while extracting ZIP file.
+      Disable it by starting the app with:
+      REACT_APP_DISABLE_LIVE_RELOAD=true <start_command>
+    -->
+    <script type="text/javascript">
+      // console.log("<<<: index.html NODE_ENV :>>>", "%NODE_ENV%");
+      if (
+        "%NODE_ENV%".trim() === "development" &&
+        "%REACT_APP_DISABLE_LIVE_RELOAD%".trim() === "true"
+      ) {
+        console.log(
+          "<<<: index.html REACT_APP_DISABLE_LIVE_RELOAD :>>>",
+          "%REACT_APP_DISABLE_LIVE_RELOAD%"
+        );
+        const WS = window.WebSocket;
+        function DevWebSocket(s) {
+          if (s === "ws://localhost:4000/ws") {
+            console.log("<<<: Live Reload Has Been Disabled :>>>");
+            return {};
+          } else {
+            // Pass through other usage of sockets
+            return new WS(s);
+          }
+        }
+        window.WebSocket = DevWebSocket;
+      }
+    </script>
+  </body>
+</html>
