@@ -2,7 +2,7 @@
 image: node:18-alpine
 # Functions that should be executed before the build script is run
 before_script:
-  - yarn build
+  - yarn install
 pages:
   stage: deploy
   script:
