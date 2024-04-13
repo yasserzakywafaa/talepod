@@ -20,7 +20,7 @@
     "noImplicitAny": false,
     "strictNullChecks": false,
 
-    "suppressImplicitAnyIndexErrors": true,
+    "suppressImplicitAnyIndexErrors": false,
     "noUnusedLocals": false,
     "importHelpers": true,
     "allowSyntheticDefaultImports": true,

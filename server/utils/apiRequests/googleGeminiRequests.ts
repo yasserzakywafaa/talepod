@@ -40,6 +40,7 @@ const googleGeminiRequests = (expressApp) => {
 
   console.log("GEMINI_MODEL_NAME:>>>", CONFIG.GEMINI_MODEL_NAME);
 
+  // Generate API
   expressApp.post(
     "/api/gemini/generate/:userPrompt",
     async (request, response) => {
@@ -66,6 +67,7 @@ const googleGeminiRequests = (expressApp) => {
     }
   );
 
+  // Chat API
   expressApp.post("/api/gemini/chat/:userPrompt", async (request, response) => {
     console.log("expressApp.post:>>> CHAT", {
       params: request.params,
