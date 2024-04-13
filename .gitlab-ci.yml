@@ -10,17 +10,20 @@ variables:
   GEMINI_MODEL_NAME: ${GEMINI_MODEL_NAME}
   GEMINI_API_KEY_1: ${GEMINI_API_KEY_1}
 
-pages:
-  stage: deploy
-  script:
-    - yarn build
-    # - yarn start:prod
-  publish: build
-  artifacts:
-    paths:
-      # The folder that contains the files to be exposed at the Page URL
-      - public
-  rules:
-    # This ensures that only pushes to the default branch will trigger
-    # a pages deploy
-    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+build:
+  stage: build
+  script: yarn build
+# pages:
+#   stage: deploy
+#   script:
+#     - yarn build
+#     # - yarn start:prod
+#   publish: build
+#   artifacts:
+#     paths:
+#       # The folder that contains the files to be exposed at the Page URL
+#       - public
+#   rules:
+#     # This ensures that only pushes to the default branch will trigger
+#     # a pages deploy
+#     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
