@@ -16,9 +16,11 @@ const CONFIG = {
   PROD_ENV_PATH: "data",
   FRONTEND_DEV_PATH: path.resolve(__dirname + "/../public"),
   FRONTEND_BUILD_PATH: path.resolve(__dirname + "/../build"),
-  // OpenAI API Key, it can be changed with different accounts
+
+  // APIs keys for AI
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   GEMINI_API_KEY_1: process.env.GEMINI_API_KEY_1,
+  GEMINI_MODEL_NAME: process.env.GEMINI_MODEL_NAME,
 };
 
 export default CONFIG;

@@ -15,10 +15,20 @@ import LoaderSpinner from "src/components/Loading/LoaderSpinner";
 import END_POINTS from "src/lib/endpoints";
 import { Google } from "@mui/icons-material";
 
+interface AiAnswerProps {
+  title: string;
+  statusCode: number;
+  description: string;
+}
+
 const GoogleGeminiSection = () => {
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [userPrompt, setUserPrompt] = useState<string | undefined>("");
-  const [aiAnswer, setAiAnswer] = useState<string | undefined>("");
+  const [aiAnswer, setAiAnswer] = useState<AiAnswerProps>({
+    statusCode: 0,
+    title: "",
+    description: "",
+  });
 
   const handleOnTextChange = (event: ChangeEvent<HTMLInputElement>) => {
     console.log("handleOnTextChange:>>>", {
@@ -39,13 +49,29 @@ const GoogleGeminiSection = () => {
 
     try {
       const URL = END_POINTS(userPrompt);
-      const response = await axios.post(URL.GOOGLE_GEMINI.USER_PROMPT);
+      const generateResponse = await axios.post(URL.GOOGLE_GEMINI.GENERATE);
+      setAiAnswer({
+        statusCode: 200,
+        title: "",
+        description: generateResponse.data,
+      });
+
+      // const chatResponse = await axios.post(URL.GOOGLE_GEMINI.CHAT);
+      // setAiAnswer({
+      //   statusCode: 200,
+      //   title: "",
+      //   description: generateResponse.data,
+      // });
 
       setIsFetching(false);
-      setAiAnswer(response.data);
     } catch (error) {
       console.log("request error:>>>", {
         error,
+      });
+      setAiAnswer({
+        statusCode: error,
+        title: error,
+        description: error,
       });
       setIsFetching(false);
     }
@@ -79,7 +105,7 @@ const GoogleGeminiSection = () => {
           </Button>
         </Stack>
 
-        {aiAnswer && (
+        {aiAnswer.description && (
           <>
             <Divider style={{ margin: "2rem 0" }}>
               <Chip label="Answer" size="small" />
@@ -88,7 +114,11 @@ const GoogleGeminiSection = () => {
             <Card sx={{ minWidth: 275 }}>
               <CardContent>
                 <Typography variant="h5" component="div">
-                  {aiAnswer}
+                  {aiAnswer.title}
+                </Typography>
+
+                <Typography variant="h6" component="div">
+                  {aiAnswer.description}
                 </Typography>
               </CardContent>
 

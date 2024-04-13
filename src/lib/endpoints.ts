@@ -10,7 +10,8 @@ const END_POINTS = (param?: string) => {
       USER_PROMPT: `${publicURL}/api/openai/${param}`,
     },
     GOOGLE_GEMINI: {
-      USER_PROMPT: `${publicURL}/api/gemini/${param}`,
+      GENERATE: `${publicURL}/api/gemini/generate/${param}`,
+      CHAT: `${publicURL}/api/gemini/chat/${param}`,
     },
   };
 };

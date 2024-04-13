@@ -15,16 +15,26 @@ import LoaderSpinner from "src/components/Loading/LoaderSpinner";
 import END_POINTS from "src/lib/endpoints";
 import { AndroidRounded } from "@mui/icons-material";
 
+interface AiAnswerProps {
+  title: string;
+  statusCode: number;
+  description: string;
+}
+
 const OpenAISection = () => {
   const [isFetching, setIsFetching] = useState<boolean>(false);
-  const [userQuestion, setUserQuestion] = useState<string | undefined>("");
-  const [aiAnswer, setAiAnswer] = useState<string | undefined>("");
+  const [userPrompt, setUserPrompt] = useState<string | undefined>("");
+  const [aiAnswer, setAiAnswer] = useState<AiAnswerProps>({
+    statusCode: 0,
+    title: "",
+    description: "",
+  });
 
   const handleOnTextChange = (event: ChangeEvent<HTMLInputElement>) => {
     console.log("handleOnTextChange:>>>", {
       value: event.target.value,
     });
-    setUserQuestion(event.target.value);
+    setUserPrompt(event.target.value);
   };
 
   const handleOnFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -32,20 +42,28 @@ const OpenAISection = () => {
     event.stopPropagation();
 
     console.log("form is submitting:>>>", {
-      userQuestion,
+      userPrompt,
     });
 
     setIsFetching(true);
 
     try {
-      const URL = END_POINTS(userQuestion);
+      const URL = END_POINTS(userPrompt);
       const response = await axios.post(URL.OPENAI.USER_PROMPT);
-
       setIsFetching(false);
-      setAiAnswer(response.data);
+      setAiAnswer({
+        statusCode: response.data,
+        title: response.data,
+        description: response.data,
+      });
     } catch (error) {
       console.log("request error:>>>", {
         error,
+      });
+      setAiAnswer({
+        statusCode: error.response.status,
+        title: error.response.statusText,
+        description: error.response.data,
       });
       setIsFetching(false);
     }
@@ -54,7 +72,7 @@ const OpenAISection = () => {
   return (
     <Box position="relative" sx={{ padding: "1rem" }}>
       {isFetching && <LoaderSpinner style={{ position: "absolute" }} />}
-      
+
       <Box
         noValidate
         display="flex"
@@ -80,15 +98,25 @@ const OpenAISection = () => {
           </Button>
         </Stack>
 
-        {aiAnswer && (
+        {aiAnswer.description && (
           <>
             <Divider style={{ margin: "2rem 0" }}>
               <Chip label="Answer" size="small" />
             </Divider>
             <Card sx={{ minWidth: 275 }}>
-              <CardContent>
+              <CardContent
+                style={
+                  aiAnswer.statusCode !== 200 && {
+                    color: "red",
+                  }
+                }
+              >
                 <Typography variant="h5" component="div">
-                  {aiAnswer}
+                  {aiAnswer.title}
+                </Typography>
+
+                <Typography variant="h6" component="div">
+                  {aiAnswer.description}
                 </Typography>
               </CardContent>
 

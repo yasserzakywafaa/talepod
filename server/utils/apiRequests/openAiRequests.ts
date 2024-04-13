@@ -1,14 +1,7 @@
 import OpenAi from "openai";
-import CONFIG from "../../config";
 
 const openAiRequests = (expressApp) => {
   const openai = new OpenAi();
-  // const openai = new OpenAi({
-  //   apiKey: CONFIG.OPENAI_API_KEY,
-  // });
-  // openai.apiKey = CONFIG.OPENAI_API_KEY ?? "";
-
-  console.log("OPENAI_API_KEY:>>>", CONFIG.OPENAI_API_KEY);
 
   expressApp.post("/api/openai/:userQuestion", async (request, response) => {
     console.log("expressApp.post:>>>", {
