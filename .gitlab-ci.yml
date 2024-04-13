@@ -3,6 +3,15 @@ image: node:18-alpine
 # Functions that should be executed before the build script is run
 before_script:
   - yarn install
+
+build:
+  stage: build
+  script: yarn build
+  rules:
+    # This ensures that only pushes to the default branch will trigger
+    # a pages deploy
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+
 pages:
   stage: deploy
   script:
