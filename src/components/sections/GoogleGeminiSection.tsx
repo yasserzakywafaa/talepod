@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { ChangeEvent, FormEvent, useState } from "react";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import LoaderSpinner from "src/components/Loading/LoaderSpinner";
 import END_POINTS from "src/lib/endpoints";
 import { Google } from "@mui/icons-material";
@@ -48,8 +48,14 @@ const GoogleGeminiSection = () => {
     setIsFetching(true);
 
     try {
-      const URL = END_POINTS(userPrompt);
-      const generateResponse = await axios.post(URL.GOOGLE_GEMINI.GENERATE);
+      const requestConfig: AxiosRequestConfig = {
+        method: "POST",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+        url: END_POINTS(userPrompt).GOOGLE_GEMINI.GENERATE,
+      };
+
+      // const generateResponse = await axios.post(URL.GOOGLE_GEMINI.GENERATE);
+      const generateResponse = await axios(requestConfig);
       setAiAnswer({
         statusCode: 200,
         title: "",
