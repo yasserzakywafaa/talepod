@@ -84,7 +84,7 @@ const OpenAISection = () => {
       >
         <Stack spacing={2} flexGrow={1}>
           <TextField
-            label="Question"
+            label="User Prompt"
             variant="outlined"
             onChange={handleOnTextChange}
           />
