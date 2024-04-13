@@ -42,3 +42,5 @@ if (CONFIG.IS_PROD) {
 }
 
 expressApp.listen(PORT, () => console.log(`Server running on PORT ${PORT}`));
+
+module.exports = expressApp;
