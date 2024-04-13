@@ -1,6 +1,12 @@
 {
-  "version": 2,
   "name": "react-pwa-ai",
-  "builds": [{ "src": "server/app.js", "use": "@vercel/node" }],
-  "routes": [{ "src": "/(.*)", "dest": "server/app.js" }]
+  "version": "1.0.0",
+  "description": "Container application fir Google Gemini && OpenAI APIs.",
+  "author": "yasserzakywafaa",
+  "license": "MIT",
+  "private": true,
+  "main": "server/app.js",
+  "scripts": {
+    "start": "ts-node server/app.js"
+  }
 }
