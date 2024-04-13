@@ -15,10 +15,11 @@ pages:
   script:
     - yarn build
     # - yarn start:prod
-  artifacts:
-    paths:
-      # The folder that contains the files to be exposed at the Page URL
-      - build
+  publish: build
+  # artifacts:
+  #   paths:
+  #     # The folder that contains the files to be exposed at the Page URL
+  #     - build
   rules:
     # This ensures that only pushes to the default branch will trigger
     # a pages deploy
