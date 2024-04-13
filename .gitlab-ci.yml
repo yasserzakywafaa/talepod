@@ -16,8 +16,8 @@ pages:
     - yarn build
     # - yarn start:prod
   publish: build
-  # artifacts:
-  #   paths:
+  artifacts:
+    paths:
   #     # The folder that contains the files to be exposed at the Page URL
   #     - build
   rules:
