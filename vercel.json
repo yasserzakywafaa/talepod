@@ -1,5 +1,6 @@
 {
   "version": 2,
   "name": "react-pwa-ai",
+  "devCommand": "yarn start:prod",
   "routes": [{ "src": "/(.*)", "dest": "./server/app.js" }]
 }
