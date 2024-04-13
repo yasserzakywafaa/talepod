@@ -2,11 +2,5 @@
   "version": 2,
   "name": "react-pwa-ai",
   "devCommand": "NODE_ENV=production ts-node server/app.ts",
-  "redirects": [
-    {
-      "source": "/(.*)",
-      "destination": "/",
-      "permanent": false
-    }
-  ]
+  "routes": [{ "src": "/(.*)", "dest": "/" }]
 }
