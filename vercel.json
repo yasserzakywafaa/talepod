@@ -2,5 +2,6 @@
   "version": 2,
   "name": "react-pwa-ai",
   "builds": [{ "src": "./server/app.js", "use": "@vercel/node" }],
-  "routes": [{ "src": "/(.*)", "dest": "./server/app.js" }]
+  "routes": [{ "src": "/(.*)", "dest": "/" }],
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
 }
