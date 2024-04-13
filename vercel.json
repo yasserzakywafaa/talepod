@@ -1,7 +1,6 @@
 {
   "name": "react-pwa-ai",
   "version": "1.0.0",
-  "author": "yasserzakywafaa",
   "license": "MIT",
   "private": true,
   "main": "server/app.js",
