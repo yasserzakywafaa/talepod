@@ -1,10 +1,6 @@
 {
+  "version": 2,
   "name": "react-pwa-ai",
-  "version": "1.0.0",
-  "license": "MIT",
-  "private": true,
-  "main": "server/app.js",
-  "scripts": {
-    "start": "ts-node server/app.js"
-  }
+  "builds": [{ "src": "server/app.js", "use": "@vercel/node" }],
+  "routes": [{ "src": "/(.*)", "dest": "server/app.js" }]
 }

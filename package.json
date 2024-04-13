@@ -1,7 +1,7 @@
 {
   "name": "@create-tooling/react-pwa-ai-file-uploader",
   "version": "1.0.0",
-  "description": "Container application with offline capabilities ",
+  "description": "Container application fir Google Gemini && OpenAI APIs.",
   "private": true,
   "author": "",
   "homepage": "/",
