@@ -6,7 +6,7 @@ before_script:
 pages:
   stage: deploy
   script:
-    - yarn build
+    - yarn start:prod
   artifacts:
     paths:
       # The folder that contains the files to be exposed at the Page URL
