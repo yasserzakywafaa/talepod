@@ -5,18 +5,10 @@ image: node:18-alpine
 before_script:
   - yarn install
 
-# build:
-#   stage: build
-#   script: yarn build
-#   rules:
-#     # This ensures that only pushes to the default branch will trigger
-#     # a pages deploy
-#     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
-
 variables:
-  - OPENAI_API_KEY: ${CI_ENVIRONMENT_SLUG}_OPENAI_API_KEY
-  - GEMINI_MODEL_NAME: ${CI_ENVIRONMENT_SLUG}_GEMINI_MODEL_NAME
-  - GEMINI_API_KEY_1: ${CI_ENVIRONMENT_SLUG}_GEMINI_API_KEY_1
+  OPENAI_API_KEY: ${OPENAI_API_KEY}
+  GEMINI_MODEL_NAME: ${GEMINI_MODEL_NAME}
+  GEMINI_API_KEY_1: ${GEMINI_API_KEY_1}
 
 pages:
   stage: build-and-deploy
