@@ -9,9 +9,9 @@ import "react-toastify/dist/ReactToastify.css";
 
 import "./Notification.scss";
 
-interface INotificationProps extends ToastContainerProps {}
+interface NotificationProps extends ToastContainerProps {}
 
-interface INotificationToast {
+interface NotificationToast {
   content: any;
   type?: TypeOptions;
   options?: ToastOptions;
@@ -25,7 +25,7 @@ export enum ToastTypes {
   Default = "default",
 }
 
-export const Notification = (props: INotificationProps) => {
+export const Notification = (props: NotificationProps) => {
   return (
     <ToastContainer
       rtl={props.rtl}
@@ -60,7 +60,7 @@ export const Notification = (props: INotificationProps) => {
   );
 };
 
-export const Notify = (props: INotificationToast) => {
+export const Notify = (props: NotificationToast) => {
   switch (props.type) {
     case ToastTypes.Info:
       return toast.info(props.content, props.options);

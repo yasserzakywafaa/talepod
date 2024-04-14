@@ -10,10 +10,11 @@ import {
   Typography,
 } from "@mui/material";
 import { ChangeEvent, FormEvent, useState } from "react";
-import axios, { AxiosRequestConfig } from "axios";
+import axios from "axios";
 import LoaderSpinner from "src/components/Loading/LoaderSpinner";
 import END_POINTS from "src/lib/endpoints";
 import { Google } from "@mui/icons-material";
+import { Notify, ToastTypes } from "../Notification/Notification";
 
 interface AiAnswerProps {
   title: string;
@@ -47,27 +48,47 @@ const GoogleGeminiSection = () => {
 
     setIsFetching(true);
 
-    try {
-      const requestConfig: AxiosRequestConfig = {
-        method: "POST",
-        headers: { "content-type": "application/x-www-form-urlencoded" },
-        url: END_POINTS(userPrompt).GOOGLE_GEMINI.GENERATE,
-      };
+    // handleGenerateContent(userPrompt);
+    handleChat(userPrompt);
+  };
 
-      // const generateResponse = await axios.post(URL.GOOGLE_GEMINI.GENERATE);
-      const generateResponse = await axios(requestConfig);
+  // const handleGenerateContent = async (userPrompt: string) => {
+  //   try {
+  //     const URL = END_POINTS(userPrompt);
+  //     const generateResponse = await axios.post(URL.GOOGLE_GEMINI.GENERATE);
+  //     setAiAnswer({
+  //       statusCode: 200,
+  //       title: "",
+  //       description: generateResponse.data,
+  //     });
+
+  //     setIsFetching(false);
+  //   } catch (error) {
+  //     console.log("request error:>>>", {
+  //       error,
+  //     });
+  //     setAiAnswer({
+  //       statusCode: error.response.status,
+  //       title: error.response.statusText,
+  //       description: error.response.data.message,
+  //     });
+  //     setIsFetching(false);
+  //     Notify({
+  //       content: `${error.response.status} ${error.response.statusText}\n${error.response.data.message}`,
+  //       type: ToastTypes.Error,
+  //     });
+  //   }
+  // };
+
+  const handleChat = async (userPrompt: string) => {
+    try {
+      const URL = END_POINTS(userPrompt);
+      const chatResponse = await axios.post(URL.GOOGLE_GEMINI.CHAT);
       setAiAnswer({
         statusCode: 200,
         title: "",
-        description: generateResponse.data,
+        description: chatResponse.data,
       });
-
-      // const chatResponse = await axios.post(URL.GOOGLE_GEMINI.CHAT);
-      // setAiAnswer({
-      //   statusCode: 200,
-      //   title: "",
-      //   description: generateResponse.data,
-      // });
 
       setIsFetching(false);
     } catch (error) {
@@ -75,11 +96,15 @@ const GoogleGeminiSection = () => {
         error,
       });
       setAiAnswer({
-        statusCode: error,
-        title: error,
-        description: error,
+        statusCode: error.response.status,
+        title: error.response.statusText,
+        description: error.response.data.message,
       });
       setIsFetching(false);
+      Notify({
+        content: `${error.response.status} ${error.response.statusText}\n${error.response.data.message}`,
+        type: ToastTypes.Error,
+      });
     }
   };
 
@@ -127,12 +152,6 @@ const GoogleGeminiSection = () => {
                   {aiAnswer.description}
                 </Typography>
               </CardContent>
-
-              {/* <CardActions>
-                <Button size="small" variant="outlined">
-                  Ask another question?
-                </Button>
-              </CardActions> */}
             </Card>
           </>
         )}

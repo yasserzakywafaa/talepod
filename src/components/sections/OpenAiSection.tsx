@@ -14,6 +14,7 @@ import axios from "axios";
 import LoaderSpinner from "src/components/Loading/LoaderSpinner";
 import END_POINTS from "src/lib/endpoints";
 import { AndroidRounded } from "@mui/icons-material";
+import { Notify, ToastTypes } from "../Notification/Notification";
 
 interface AiAnswerProps {
   title: string;
@@ -66,6 +67,7 @@ const OpenAISection = () => {
         description: error.response.data,
       });
       setIsFetching(false);
+      Notify({ content: error.response.statusText, type: ToastTypes.Error });
     }
   };
 
@@ -119,12 +121,6 @@ const OpenAISection = () => {
                   {aiAnswer.description}
                 </Typography>
               </CardContent>
-
-              {/* <CardActions>
-              <Button size="small" variant="outlined">
-                Ask another question?
-              </Button>
-            </CardActions> */}
             </Card>
           </>
         )}

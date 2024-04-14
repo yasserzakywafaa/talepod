@@ -2,17 +2,13 @@
 
 import {
   GoogleGenerativeAI,
+  ChatSession,
   HarmCategory,
   HarmBlockThreshold,
 } from "@google/generative-ai";
 import CONFIG from "../../config";
 
 const googleGeminiRequests = (expressApp) => {
-  // Access your API key as an environment variable
-  const genAI = new GoogleGenerativeAI(CONFIG.GEMINI_API_KEY_1 ?? "");
-  const genAiModel = genAI.getGenerativeModel({
-    model: CONFIG.GEMINI_MODEL_NAME ?? "",
-  });
   const generationConfig = {
     topK: 1,
     topP: 1,
@@ -38,15 +34,31 @@ const googleGeminiRequests = (expressApp) => {
     },
   ];
 
+  // Generative AI
+  const genAI = new GoogleGenerativeAI(CONFIG.GEMINI_API_KEY_1 ?? "");
+  const genAiModel = genAI.getGenerativeModel({
+    model: CONFIG.GEMINI_MODEL_NAME ?? "",
+    generationConfig,
+    safetySettings,
+  });
+
+  // Chat Session with the model
+  new ChatSession(
+    CONFIG.GEMINI_API_KEY_1 ?? "",
+    CONFIG.GEMINI_MODEL_NAME ?? "",
+    {
+      history: [],
+      generationConfig,
+      safetySettings,
+    }
+  );
+
   console.log("GEMINI_MODEL_NAME:>>>", CONFIG.GEMINI_MODEL_NAME);
 
   // Generate API
   expressApp.post(
     "/api/gemini/generate/:userPrompt",
     async (request, response) => {
-      console.log("expressApp.post:>>>", {
-        params: request.params,
-      });
       const userPrompt = request.params.userPrompt;
       // Google Gemini Complete API Call
       try {
@@ -56,40 +68,52 @@ const googleGeminiRequests = (expressApp) => {
         const generateContentResponseText =
           generateContentRequest.response.text();
 
-        response.status(200).json(generateContentResponseText);
-      } catch (error) {
-        console.log("expressApp.post:>>> Error", {
-          error,
+        console.log("expressApp.post:>>> GENERATE", {
+          requestParams: request.params,
+          response: generateContentResponseText,
         });
 
-        response.status(error.status).json(error.message);
+        response.status(200).json(generateContentResponseText);
+      } catch (error) {
+        let statusCode = 400;
+        if (error.message.indexOf("400") > -1) {
+          statusCode = 400;
+        }
+        console.log("expressApp.post:>>> Error", {
+          error,
+          message: error.message,
+          statusCode,
+        });
+
+        response.status(statusCode).json({
+          statusCode,
+          message: error.message,
+        });
       }
     }
   );
 
   // Chat API
   expressApp.post("/api/gemini/chat/:userPrompt", async (request, response) => {
-    console.log("expressApp.post:>>> CHAT", {
-      params: request.params,
-    });
-    const chat = genAiModel.startChat({
-      generationConfig,
-      safetySettings,
-      history: [],
-    });
+    const chat = genAiModel.startChat();
     const userPrompt = request.params.userPrompt;
     // Google Gemini Complete API Call
     try {
-      const chatRequest = await chat.sendMessage(userPrompt);
-      const chatResponseText = chatRequest.response.text();
+      const chatResponse = await chat.sendMessage(userPrompt);
+      const chatResponseText = chatResponse.response.text();
+
+      console.log("expressApp.post:>>> CHAT", {
+        requestParams: request.params,
+        response: chatResponseText,
+      });
 
       response.status(200).json(chatResponseText);
     } catch (error) {
-      console.log("expressApp.post:>>> Error", {
+      console.log("expressApp.post:>>> CHAT Error", {
         error,
       });
 
-      response.status(error.status).json(error.message);
+      response.status(error).json(error);
     }
   });
 
