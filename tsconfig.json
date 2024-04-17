@@ -19,10 +19,7 @@
     "allowJs": true,
     "jsx": "react-jsx",
     "moduleResolution": "node",
-    "rootDir": "client",
-    "paths": {
-      "react": ["./client/src/react.d.ts"]
-    },
+    "rootDir": "client/src",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": false,
@@ -44,8 +41,7 @@
     "strictPropertyInitialization": false
   },
   "noEmit": false,
-  // "files": ["client/src/react.d.ts"],
-  "include": ["client", "**/*.tsx"],
+  "include": ["client/src/**/*.tsx", "client/src/**/*.ts"],
   "exclude": [
     "**/node_modules",
     "client/build",

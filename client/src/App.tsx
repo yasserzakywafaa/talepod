@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { routes } from "./routes";
+import routes from "./application/routes";
 // import { DBUtils } from "./lib/database";
 import LoaderSpinner from "./components/Loading/LoaderSpinner";
 

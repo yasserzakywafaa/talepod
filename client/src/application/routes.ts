@@ -3,6 +3,4 @@ const routes = {
   unauthorized: `/unauthorized`,
 };
 
-const api = {};
-
-export { routes, api };
+export default routes;
