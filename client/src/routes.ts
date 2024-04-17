@@ -1,8 +1,8 @@
-const endpoints = {
+const routes = {
   home: `/`,
   unauthorized: `/unauthorized`,
 };
 
 const api = {};
 
-export { endpoints, api };
+export { routes, api };

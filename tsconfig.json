@@ -1,10 +1,8 @@
 {
-  // "extends": "./tsconfigBaseCodeRules.json",
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "build",
     "module": "esnext",
-    // "module": "commonjs",
     "target": "es2017",
     "lib": [
       "es6",
@@ -19,9 +17,12 @@
     "downlevelIteration": true,
     "sourceMap": true,
     "allowJs": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "moduleResolution": "node",
     "rootDir": "client",
+    "paths": {
+      "react": ["./client/src/react.d.ts"]
+    },
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": false,
@@ -37,12 +38,20 @@
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
     "strictFunctionTypes": false,
     "alwaysStrict": false,
     "strictBindCallApply": false,
     "strictPropertyInitialization": false
   },
-  "include": ["client"],
-  "exclude": ["**/node_modules", "client/build", "scripts", "webpack", "jest", "public"]
+  "noEmit": false,
+  // "files": ["client/src/react.d.ts"],
+  "include": ["client", "**/*.tsx"],
+  "exclude": [
+    "**/node_modules",
+    "client/build",
+    "scripts",
+    "webpack",
+    "jest",
+    "public"
+  ]
 }

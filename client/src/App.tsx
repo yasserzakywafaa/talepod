@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { endpoints } from "./routes";
+import { routes } from "./routes";
 // import { DBUtils } from "./lib/database";
 import LoaderSpinner from "./components/Loading/LoaderSpinner";
 
@@ -53,21 +53,13 @@ const App = () => {
     <Suspense fallback={<LoaderSpinner />}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <BrowserRouter basename="/">
-          <Switch>
-            <Route
-              exact
-              strict
-              path={endpoints.unauthorized}
-              render={() => <UnauthorizedPage />}
-            />
-            <Route
-              exact
-              strict
-              path={endpoints.home}
-              render={() => <HomePage />}
-            />
-          </Switch>
+
+        <BrowserRouter>
+          <Routes>
+            <Route index path={routes.home} element={<HomePage />} />
+
+            <Route path={routes.unauthorized} element={<UnauthorizedPage />} />
+          </Routes>
         </BrowserRouter>
       </ThemeProvider>
     </Suspense>
