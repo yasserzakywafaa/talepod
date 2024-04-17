@@ -30,8 +30,8 @@ const useChooseFile = (props: IChooseFileProps) => {
 
   const onFileChanged = useCallback(
     (event: Event) => {
-      const files: FileList = event.target?.["files"];
-      if (files && files.length) Callback(files);
+      // const files: FileList = event.target?.["files"];
+      // if (files && files.length) Callback(files);
     },
     [Callback]
   );

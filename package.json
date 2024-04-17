@@ -12,7 +12,7 @@
   },
   "scripts": {
     "install": "cd client && yarn install && cd ../server && yarn install && cd ../",
-    "start": "cd server && yarn start:backend",
+    "start": "cd client && yarn start:frontend && cd ../server && yarn start:backend",
     "start:windows": "cd client && yarn start:frontend--windows & cd ../server && yarn start:backend--windows",
     "start:backend-watch": "cd client && yarn start:frontend & cd ../server && yarn start:backend--watch",
     "start:backend-watch--windows": "cd client && yarn start:frontend--windows & cd ../server && yarn start:backend--watch--windows",

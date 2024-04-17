@@ -1,4 +1,4 @@
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { createRef, CSSProperties, useEffect } from "react";
 
 import "./Card.scss";
@@ -16,7 +16,7 @@ interface ICardProps {
 }
 
 const Card = (props: ICardProps) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const imageRef = createRef<HTMLImageElement>();
   const { image, loading, style, path, classNames } = props;
 
@@ -36,7 +36,7 @@ const Card = (props: ICardProps) => {
           <ImagePlaceholder />
         )}
       </div>
-      <div onClick={() => history.push(path)} className="play">
+      <div onClick={() => navigate(path)} className="play">
         <PlayCircleFilled />
       </div>
     </div>

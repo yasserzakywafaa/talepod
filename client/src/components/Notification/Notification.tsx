@@ -55,7 +55,7 @@ export const Notification = (props: NotificationProps) => {
       draggablePercent={props.draggablePercent}
       progressClassName={props.progressClassName}
       draggableDirection={props.draggableDirection}
-      enableMultiContainer={props.enableMultiContainer}
+      // enableMultiContainer={props.enableMultiContainer}
     />
   );
 };

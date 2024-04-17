@@ -12,12 +12,12 @@
     "url": "git+{GITLAB_PROJECT_URL}"
   },
   "scripts": {
-    "start:backend": "NODE_ENV=development ts-node app.ts",
-    "start:backend--windows": "set NODE_ENV=development & ts-node app.ts",
-    "start:backend--watch": "NODE_ENV=development nodemon app.ts",
-    "start:backend--watch--windows": "set NODE_ENV=development & nodemon app.ts",
-    "start:prod": "NODE_ENV=production ts-node app.ts",
-    "start:prod--windows": "set NODE_ENV=production & ts-node app.ts",
+    "start:backend": "NODE_ENV=development ts-node src/app.ts",
+    "start:backend--windows": "set NODE_ENV=development & ts-node src/app.ts",
+    "start:backend--watch": "NODE_ENV=development nodemon src/app.ts",
+    "start:backend--watch--windows": "set NODE_ENV=development & nodemon src/app.ts",
+    "start:prod": "NODE_ENV=production ts-node src/app.ts",
+    "start:prod--windows": "set NODE_ENV=production & ts-node src/app.ts",
     "docker:clean": "docker system prune",
     "docker:build": "docker build -t react-pwa-ai:latest .",
     "docker:run": "docker run -d -it --rm -p 8080:8080 react-pwa-ai",

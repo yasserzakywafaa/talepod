@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 import "./NavigationBar.scss";
 import Logo from "./Logo";
@@ -17,12 +17,12 @@ interface NavigationBarProps {
 
 const NavigationBar = (props: NavigationBarProps) => {
   const { path, showBackButton } = props;
-  const history = useHistory();
+  const navigate = useNavigate();
   const navigatioBarClassNames = classNames({
     "navigation-bar": true,
   });
 
-  const handleOnBackClick = () => history.push(path);
+  const handleOnBackClick = () => navigate(path);
   const handleOnRefreshClick = () => window.location.reload();
 
   return (

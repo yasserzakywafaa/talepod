@@ -16,7 +16,7 @@ const BROWSER = {
   MSIE: false,
 };
 
-const hasIndex = (args) => navigator.userAgent.indexOf(args) !== -1;
+const hasIndex = (args: string) => navigator.userAgent.indexOf(args) !== -1;
 
 const detectBroswerType = () => {
   switch (true) {
