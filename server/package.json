@@ -1,0 +1,56 @@
+{
+  "name": "@gitlab_group_name/project_name",
+  "version": "1.0.0",
+  "description": "{PROJECT_DESCRIPTION}",
+  "private": true,
+  "author": "",
+  "homepage": "/",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+{GITLAB_PROJECT_URL}"
+  },
+  "scripts": {
+    "start:backend": "NODE_ENV=development ts-node server/app.ts",
+    "start:backend--windows": "set NODE_ENV=development & ts-node server/app.ts",
+    "start:backend--watch": "NODE_ENV=development nodemon server/app.ts",
+    "start:backend--watch--windows": "set NODE_ENV=development & nodemon server/app.ts",
+    "start:prod": "NODE_ENV=production ts-node server/app.ts",
+    "start:prod--windows": "set NODE_ENV=production & ts-node server/app.ts",
+    "docker:clean": "docker system prune",
+    "docker:build": "docker build -t react-pwa-ai:latest .",
+    "docker:run": "docker run -d -it --rm -p 8080:8080 react-pwa-ai",
+    "docker:compose--local": "docker-compose -f docker-compose.yml up frontend",
+    "docker:compose--prod": "docker-compose -f docker-compose.yml up production",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.6.0",
+    "axios": "^0.21.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.1",
+    "express-fileupload": "^1.3.1",
+    "formidable": "^2.0.1",
+    "html-loader-react-scripts": "^1.2.1",
+    "nodemon": "^2.0.19",
+    "openai": "^4.33.0",
+    "path": "^0.12.7",
+    "pouchdb": "^7.3.0",
+    "pouchdb-find": "^7.3.0",
+    "raw-loader": "^4.0.2",
+    "react": "^17.0.2",
+    "typescript": "^4.7.4"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@types/cors": "^2.8.12",
+    "@types/express-fileupload": "^1.4.1",
+    "@types/jest": "^28.1.8",
+    "@types/lodash": "^4.14.184",
+    "@types/pouchdb": "^6.4.0",
+    "serve": "^10.1.1",
+    "ts-node": "^10.9.1"
+  }
+}

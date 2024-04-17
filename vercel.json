@@ -1,6 +1,0 @@
-{
-  "version": 2,
-  "name": "react-pwa-ai",
-  "devCommand": "NODE_ENV=production ts-node server/app.ts",
-  "routes": [{ "src": "/server/app.ts", "dest": "/" }]
-}
