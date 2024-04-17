@@ -4,6 +4,7 @@
   "description": "{PROJECT_DESCRIPTION}",
   "private": true,
   "author": "",
+  "type": "module",
   "homepage": "/",
   "license": "MIT",
   "repository": {
@@ -11,12 +12,12 @@
     "url": "git+{GITLAB_PROJECT_URL}"
   },
   "scripts": {
-    "start:backend": "NODE_ENV=development ts-node server/app.ts",
-    "start:backend--windows": "set NODE_ENV=development & ts-node server/app.ts",
-    "start:backend--watch": "NODE_ENV=development nodemon server/app.ts",
-    "start:backend--watch--windows": "set NODE_ENV=development & nodemon server/app.ts",
-    "start:prod": "NODE_ENV=production ts-node server/app.ts",
-    "start:prod--windows": "set NODE_ENV=production & ts-node server/app.ts",
+    "start:backend": "NODE_ENV=development ts-node app.ts",
+    "start:backend--windows": "set NODE_ENV=development & ts-node app.ts",
+    "start:backend--watch": "NODE_ENV=development nodemon app.ts",
+    "start:backend--watch--windows": "set NODE_ENV=development & nodemon app.ts",
+    "start:prod": "NODE_ENV=production ts-node app.ts",
+    "start:prod--windows": "set NODE_ENV=production & ts-node app.ts",
     "docker:clean": "docker system prune",
     "docker:build": "docker build -t react-pwa-ai:latest .",
     "docker:run": "docker run -d -it --rm -p 8080:8080 react-pwa-ai",
@@ -27,6 +28,7 @@
   },
   "dependencies": {
     "@google/generative-ai": "0.6.0",
+    "@types/node": "^20.12.7",
     "axios": "0.21.4",
     "cors": "2.8.5",
     "dotenv": "16.4.5",
@@ -41,12 +43,12 @@
     "pouchdb-find": "7.3.0",
     "raw-loader": "4.0.2",
     "react": "17.0.2",
-    "typescript": "4.7.4"
+    "typescript": "^5.4.5"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "7.21.11",
     "@types/express-fileupload": "1.4.1",
     "serve": "14.2.1",
-    "ts-node": "10.9.1"
+    "ts-node": "^10.9.2"
   }
 }
