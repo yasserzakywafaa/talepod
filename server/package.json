@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "@google/generative-ai": "0.6.0",
-    "@types/node": "^20.12.7",
     "axios": "0.21.4",
     "body-parser": "^1.20.2",
     "cors": "2.8.5",
@@ -43,13 +42,11 @@
     "pouchdb": "7.3.0",
     "pouchdb-find": "7.3.0",
     "raw-loader": "4.0.2",
-    "react": "17.0.2",
-    "typescript": "5.4.5"
+    "react": "17.0.2"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "7.21.11",
     "@types/express-fileupload": "1.4.1",
-    "serve": "14.2.1",
     "ts-node": "^10.9.2"
   }
 }
