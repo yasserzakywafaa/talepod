@@ -61,13 +61,15 @@ const OpenAISection = () => {
       console.log("request error:>>>", {
         error,
       });
-      setAiAnswer({
-        statusCode: error.response.status,
-        title: error.response.statusText,
-        description: error.response.data,
-      });
-      setIsFetching(false);
-      Notify({ content: error.response.statusText, type: ToastTypes.Error });
+      if (axios.isAxiosError(error)) {
+        setAiAnswer({
+          statusCode: error.response.status,
+          title: error.response.statusText,
+          description: error.response.data,
+        });
+        setIsFetching(false);
+        Notify({ content: error.response.statusText, type: ToastTypes.Error });
+      }
     }
   };
 

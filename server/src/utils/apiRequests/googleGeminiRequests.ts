@@ -6,7 +6,8 @@ import {
   HarmCategory,
   HarmBlockThreshold,
 } from "@google/generative-ai";
-import CONFIG from "../../config";
+import CONFIG from "src/config";
+import isError from "../isError";
 
 const googleGeminiRequests = (expressApp) => {
   const generationConfig = {
@@ -75,20 +76,22 @@ const googleGeminiRequests = (expressApp) => {
 
         response.status(200).json(generateContentResponseText);
       } catch (error) {
-        let statusCode = 400;
-        if (error.message.indexOf("400") > -1) {
-          statusCode = 400;
-        }
-        console.log("expressApp.post:>>> Error", {
-          error,
-          message: error.message,
-          statusCode,
-        });
+        if (isError(error)) {
+          let statusCode = 400;
+          if (error.message.indexOf("400") > -1) {
+            statusCode = 400;
+          }
+          console.error("expressApp.post:>>> Error", {
+            error,
+            message: error.message,
+            statusCode,
+          });
 
-        response.status(statusCode).json({
-          statusCode,
-          message: error.message,
-        });
+          response.status(statusCode).json({
+            statusCode,
+            message: error.message,
+          });
+        }
       }
     }
   );

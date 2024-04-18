@@ -41,6 +41,6 @@
     "strictBindCallApply": false,
     "strictPropertyInitialization": false
   },
-  "include": ["/"],
+  "include": ["src"],
   "exclude": ["node_modules"]
 }

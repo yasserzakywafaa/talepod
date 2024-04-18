@@ -10,11 +10,12 @@ import {
   Typography,
 } from "@mui/material";
 import { ChangeEvent, FormEvent, useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import LoaderSpinner from "src/components/Loading/LoaderSpinner";
 import END_POINTS from "src/lib/endpoints";
 import { Google } from "@mui/icons-material";
 import { Notify, ToastTypes } from "../Notification/Notification";
+import isError from "src/utils/isError";
 
 interface AiAnswerProps {
   title: string;
@@ -95,16 +96,19 @@ const GoogleGeminiSection = () => {
       console.log("request error:>>>", {
         error,
       });
-      setAiAnswer({
-        statusCode: error.response.status,
-        title: error.response.statusText,
-        description: error.response.data.message,
-      });
-      setIsFetching(false);
-      Notify({
-        content: `${error.response.status} ${error.response.statusText}\n${error.response.data.message}`,
-        type: ToastTypes.Error,
-      });
+
+      if (axios.isAxiosError(error)) {
+        setAiAnswer({
+          statusCode: error.response.status,
+          title: error.response.statusText,
+          description: error.response.data.message,
+        });
+        setIsFetching(false);
+        Notify({
+          content: `${error.response.status} ${error.response.statusText}\n${error.response.data.message}`,
+          type: ToastTypes.Error,
+        });
+      }
     }
   };
 
