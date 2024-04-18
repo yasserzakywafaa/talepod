@@ -7,9 +7,9 @@ import {
   HarmBlockThreshold,
 } from "@google/generative-ai";
 import CONFIG from "src/config";
-import isError from "../isError";
+import isError from "../utils/isError";
 
-const googleGeminiRequests = (expressApp) => {
+const GoogleGeminiController = (expressApp) => {
   const generationConfig = {
     topK: 1,
     topP: 1,
@@ -127,4 +127,4 @@ const googleGeminiRequests = (expressApp) => {
   // });
 };
 
-export default googleGeminiRequests;
+export default GoogleGeminiController;

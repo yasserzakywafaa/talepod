@@ -12,12 +12,12 @@
     "url": "git+{GITLAB_PROJECT_URL}"
   },
   "scripts": {
-    "start:backend": "NODE_ENV=development ts-node src/app.ts",
-    "start:backend--windows": "set NODE_ENV=development & ts-node src/app.ts",
-    "start:backend--watch": "NODE_ENV=development nodemon src/app.ts",
-    "start:backend--watch--windows": "set NODE_ENV=development & nodemon src/app.ts",
-    "start:prod": "NODE_ENV=production ts-node src/app.ts",
-    "start:prod--windows": "set NODE_ENV=production & ts-node src/app.ts",
+    "start:backend": "NODE_ENV=development ts-node src/server.ts",
+    "start:backend--windows": "set NODE_ENV=development & ts-node src/server.ts",
+    "start:backend--watch": "NODE_ENV=development nodemon src/server.ts",
+    "start:backend--watch--windows": "set NODE_ENV=development & nodemon src/server.ts",
+    "start:prod": "NODE_ENV=production ts-node src/server.ts",
+    "start:prod--windows": "set NODE_ENV=production & ts-node src/server.ts",
     "docker:clean": "docker system prune",
     "docker:build": "docker build -t react-pwa-ai:latest .",
     "docker:run": "docker run -d -it --rm -p 8080:8080 react-pwa-ai",
@@ -30,6 +30,7 @@
     "@google/generative-ai": "0.6.0",
     "@types/node": "^20.12.7",
     "axios": "0.21.4",
+    "body-parser": "^1.20.2",
     "cors": "2.8.5",
     "dotenv": "16.4.5",
     "express": "4.18.1",
@@ -43,7 +44,7 @@
     "pouchdb-find": "7.3.0",
     "raw-loader": "4.0.2",
     "react": "17.0.2",
-    "typescript": "^5.4.5"
+    "typescript": "5.4.5"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "7.21.11",

@@ -11,6 +11,7 @@
     │   │   ├── controllers
     │   │   ├── models
     │   │   ├── routes
+    │   │   ├── config.ts
     │   │   └── server.ts
     ├── node_modules
     ├── .gitignore

@@ -3,6 +3,7 @@
     "baseUrl": "./",
     "outDir": "build",
     "module": "commonjs",
+    "moduleResolution": "Node",
     "target": "es2017",
     "rootDir": "src",
     "paths": {
@@ -21,7 +22,6 @@
     "sourceMap": true,
     "allowJs": true,
     "jsx": "react-jsx",
-    "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": false,

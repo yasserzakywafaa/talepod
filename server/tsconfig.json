@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
-    "module": "commonjs",
-    "target": "es2017",
-    "rootDir": "src",
+    "module": "ES2022",
+    // "module": "CommonJS",
+    "moduleResolution": "node",
+    "target": "ES2022",
+    "rootDir": "./src",
     "paths": {
       "src/*": ["src/*"]
     },
@@ -14,13 +16,13 @@
       "es2016",
       "es2017",
       "es2018",
-      "es2019"
+      "es2019",
+      "ES2022"
     ],
     "downlevelIteration": true,
     "sourceMap": true,
     "allowJs": true,
     "jsx": "react-jsx",
-    "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": false,
@@ -39,7 +41,19 @@
     "strictFunctionTypes": false,
     "alwaysStrict": false,
     "strictBindCallApply": false,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "inlineSourceMap": false,
+    "inlineSources": true,
+    "declaration": false,
+    "noEmit": false,
+    "outDir": "./.ts-node",
+    "useUnknownInCatchVariables": true,
+    "preserveConstEnums": true
+  },
+  "ts-node": {
+    // Tell ts-node CLI to install the --loader automatically, explained below
+    "esm": true,
+    "files": true
   },
   "include": ["src"],
   "exclude": ["node_modules"]

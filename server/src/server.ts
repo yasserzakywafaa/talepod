@@ -1,8 +1,10 @@
 import cors from "cors";
 import express from "express";
+import bodyParser from "body-parser";
+
 import CONFIG from "./config";
-import openAiRequests from "./utils/apiRequests/openAiRequests";
-import googleGeminiRequests from "./utils/apiRequests/googleGeminiRequests";
+import END_POINTS from "./models/endpoints";
+import openAIRoutes from "./routes/openaiRoutes";
 
 const expressApp = express();
 const frontendBuildPath = CONFIG.FRONTEND_BUILD_PATH;
@@ -10,13 +12,9 @@ const envPath = CONFIG.IS_DEV ? CONFIG.DEV_ENV_PATH : CONFIG.PROD_ENV_PATH;
 const PORT = CONFIG.IS_DEV ? CONFIG.DEV_SERVER_PORT : CONFIG.PROD_SERVER_PORT;
 
 expressApp.use(cors());
+expressApp.use(bodyParser.json());
 expressApp.use(express.json());
 expressApp.use(express.urlencoded({ extended: true }));
-
-console.log("process.env.NODE_ENV:>>>", process.env.NODE_ENV);
-console.log("frontendBuildPath:>>>", frontendBuildPath);
-console.log("CONFIG.ENV:>>>", CONFIG.NODE_ENV);
-console.log("envPath:>>>", envPath);
 
 if (CONFIG.IS_PROD) {
   // Serve Frontend Bundled Application
@@ -28,11 +26,18 @@ if (CONFIG.IS_PROD) {
   });
 }
 
-// OpenAI API Requests
-openAiRequests(expressApp);
+// Mount API routes
+expressApp.use(END_POINTS.OPENAI.USER_PROMPT, openAIRoutes);
+// expressApp.use("/api/google-gemini", googleGeminiRoutes);
 
-// Google Gemini API Requests
-googleGeminiRequests(expressApp);
+console.log("process.env.NODE_ENV:>>>", process.env.NODE_ENV);
+console.log("CONFIG.ENV:>>>", CONFIG.NODE_ENV);
+console.log("envPath:>>>", envPath);
+
+// // OpenAI API Requests
+// OpenAIController(expressApp);
+// // Google Gemini API Requests
+// GoogleGeminiController(expressApp);
 
 if (CONFIG.IS_PROD) {
   expressApp.get("*", (req, res) => {
