@@ -12,11 +12,15 @@ variables:
 
 build-frontend:
   stage: build
-  script: cd ./client && yarn build
+  script: 
+    - cd ./client
+    - yarn build
 
 build-backend:
   stage: build
-  script: cd ./server && yarn build
+  script: 
+    - cd ./server
+    - yarn build
 # pages:
 #   stage: deploy
 #   script:
