@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "CommonJS",
     "target": "es2017",
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "baseUrl": "./",
     // "rootDir": "src",
     // "rootDirs": ["./client/src/*", "./server/src/*"],
     "paths": {
-      "client/src/*": ["./client/src/*"],
-      "server/src/*": ["./server/src/*"],
-      // "*": ["node_modules/*"]
+      "src/*": ["src/*"],
+      // "client/src/*": ["./client/src/*"],
+      // "server/src/*": ["./server/src/*"],
+      "*": ["node_modules/*"]
     },
     "lib": [
       "es6",
@@ -55,6 +56,7 @@
   //   "files": true
   // },
   // "include": ["src"],
-  "include": ["./client/src/**/*.ts", "./server/src/**/*.ts"],
+  // "include": ["./client/src/**/*.ts", "./server/src/**/*.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
 }
