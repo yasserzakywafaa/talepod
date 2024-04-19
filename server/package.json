@@ -30,7 +30,8 @@
     "express": "4.18.1",
     "nodemon": "2.0.19",
     "openai": "4.33.0",
-    "path": "0.12.7"
+    "path": "0.12.7",
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
     "@types/cors": "2.8.12",
