@@ -11,8 +11,11 @@ variables:
   GEMINI_API_KEY_1: ${GEMINI_API_KEY_1}
 
 build:
-  stage: build
-  script: yarn build
+  stage: build-frontend
+  script: cd client && yarn build
+
+  stage: build-backend
+  script: cd server && yarn build 
 # pages:
 #   stage: deploy
 #   script:
