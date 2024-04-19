@@ -1,7 +1,6 @@
 import express from 'express';
 import OpenAIController from '../controllers/OpenAIController';
-import END_POINTS from 'src/models/endpoints';
-
+import END_POINTS from 'server/src/models/endpoints'
 const openAIRouter = express.Router();
 
 // Define API routes

@@ -11,6 +11,7 @@
     "url": "git+{GITLAB_PROJECT_URL}"
   },
   "scripts": {
+    "start:backend": "ts-node server/src/server.ts",
     "install": "cd client && yarn install && cd ../server && yarn install && cd ../",
     "start": "cd client && yarn start:frontend && cd ../server && yarn start:backend",
     "start:windows": "cd client && yarn start:frontend--windows & cd ../server && yarn start:backend--windows",
@@ -27,10 +28,21 @@
     "format": "prettier --write .",
     "eject": "react-scripts eject"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@google/generative-ai": "0.6.0",
+    "body-parser": "^1.20.2",
+    "cors": "2.8.5",
+    "dotenv": "16.4.5",
+    "express": "4.18.1",
+    "nodemon": "2.0.19",
+    "openai": "4.33.0",
+    "path": "0.12.7",
+    "tslib": "^2.6.2"
+  },
   "devDependencies": {
-    "@types/jest": "28.1.8",
-    "prettier": "2.3.1",
+    "@types/cors": "2.8.12",
+    "@types/node": "18.19.31",
+    "ts-node": "10.9.2",
     "typescript": "5.4.5"
   },
   "browserslist": [

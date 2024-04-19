@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
-    "module": "esnext",
+    "module": "commonjs",
     "target": "es2017",
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "baseUrl": "./",
-    "outDir": "dist",
-    "rootDir": "src",
-    // "paths": {
-    //   "src/*": ["src/*"],
-    //   "*": ["node_modules/*", "src/*"]
-    // },
+    // "rootDir": "src",
+    // "rootDirs": ["./client/src/*", "./server/src/*"],
+    "paths": {
+      "client/src/*": ["./client/src/*"],
+      "server/src/*": ["./server/src/*"],
+      // "*": ["node_modules/*"]
+    },
     "lib": [
       "es6",
       "dom",
@@ -54,6 +55,6 @@
   //   "files": true
   // },
   // "include": ["src"],
-  "include": ["src/**/*.ts"],
+  "include": ["./client/src/**/*.ts", "./server/src/**/*.ts"],
   "exclude": ["node_modules"]
 }

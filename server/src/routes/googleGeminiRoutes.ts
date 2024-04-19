@@ -1,6 +1,6 @@
 import express from "express";
 import GoogleGeminiController from "../controllers/GoogleGeminiController";
-import END_POINTS from "src/models/endpoints";
+import END_POINTS from "server/src/models/endpoints";
 
 const googleGeminiRouter = express.Router();
 
