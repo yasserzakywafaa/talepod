@@ -31,7 +31,6 @@ if (CONFIG.IS_PROD) {
 expressApp.use(END_POINTS.OPENAI.USER_PROMPT, openAIRoutes);
 expressApp.use(END_POINTS.GOOGLE_GEMINI.GENERATE, googleGeminiRoutes);
 
-console.log("process.env.NODE_ENV:>>>", process.env.NODE_ENV);
 console.log("CONFIG.ENV:>>>", CONFIG.NODE_ENV);
 console.log("envPath:>>>", envPath);
 
