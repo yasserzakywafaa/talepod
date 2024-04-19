@@ -12,8 +12,6 @@ const CONFIG = {
     process.env.NODE_ENV && process.env.NODE_ENV.indexOf("development") > -1,
   IS_PROD:
     process.env.NODE_ENV && process.env.NODE_ENV.indexOf("production") > -1,
-  DEV_ENV_PATH: "public",
-  PROD_ENV_PATH: "data",
   FRONTEND_DEV_PATH: path.resolve(__dirname + "/../public"),
   FRONTEND_BUILD_PATH: path.resolve(__dirname + "/../build"),
 

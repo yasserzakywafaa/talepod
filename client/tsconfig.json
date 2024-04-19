@@ -38,7 +38,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "strictFunctionTypes": false,
-    "alwaysStrict": false,
+    "alwaysStrict": true,
     "strictBindCallApply": false,
     "strictPropertyInitialization": false
   },

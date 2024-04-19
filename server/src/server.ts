@@ -3,17 +3,12 @@ import express from "express";
 import bodyParser from "body-parser";
 
 import CONFIG from "./config";
-// import CONFIG from "server/src/config";
 import END_POINTS from "./models/endpoints";
-// import END_POINTS from "server/src/models/endpoints";
 import openAIRoutes from "./routes/openaiRoutes";
-// import openAIRoutes from "server/src/routes/openaiRoutes";
 import googleGeminiRoutes from "./routes/googleGeminiRoutes";
-// import googleGeminiRoutes from "server/src/routes/googleGeminiRoutes";
 
 const expressApp = express();
 const frontendBuildPath = CONFIG.FRONTEND_BUILD_PATH;
-const envPath = CONFIG.IS_DEV ? CONFIG.DEV_ENV_PATH : CONFIG.PROD_ENV_PATH;
 const PORT = CONFIG.IS_DEV ? CONFIG.DEV_SERVER_PORT : CONFIG.PROD_SERVER_PORT;
 
 expressApp.use(cors());
@@ -36,7 +31,6 @@ expressApp.use(END_POINTS.OPENAI.USER_PROMPT, openAIRoutes);
 expressApp.use(END_POINTS.GOOGLE_GEMINI.GENERATE, googleGeminiRoutes);
 
 console.log("CONFIG.ENV:>>>", CONFIG.NODE_ENV);
-console.log("envPath:>>>", envPath);
 
 if (CONFIG.IS_PROD) {
   expressApp.get("*", (req, res) => {
@@ -45,6 +39,6 @@ if (CONFIG.IS_PROD) {
   });
 }
 
-expressApp.listen(PORT, () => console.log(`Server running on PORT ${PORT}`));
+expressApp.listen(PORT, () => console.log(`Server running on PORT '${PORT}'`));
 
 module.exports = expressApp;

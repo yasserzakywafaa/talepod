@@ -8,7 +8,7 @@ import {
 } from "@google/generative-ai";
 import { Request, Response, NextFunction } from "express";
 
-import CONFIG from "src/config";
+import CONFIG from "../config";
 // import isError from "../utils/isError";
 
 const generationConfig = {
