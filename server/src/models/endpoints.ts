@@ -15,8 +15,8 @@ const END_POINTS = {
     USER_PROMPT: `/api/openai/:userPrompt`,
   },
   GOOGLE_GEMINI: {
-    GENERATE: `/api/gemini/generate`,
-    CHAT: `/api/gemini/chat`,
+    GENERATE: `/api/gemini/generate/:userPrompt`,
+    CHAT: `/api/gemini/chat/:userPrompt`,
   },
 };
 

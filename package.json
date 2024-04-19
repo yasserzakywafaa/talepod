@@ -27,10 +27,7 @@
     "format": "prettier --write .",
     "eject": "react-scripts eject"
   },
-  "dependencies": {
-    "cors": "2.8.5",
-    "dotenv": "16.4.5"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "7.21.11",
     "@types/cors": "2.8.12",

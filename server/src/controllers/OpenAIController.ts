@@ -8,7 +8,7 @@ export const generateAnswer = async (
   response: Response,
   next: NextFunction
 ) => {
-  console.log("expressApp.post:>>>", {
+  console.log("OpenAIController:>>> GENERATE", {
     params: request.params,
   });
 
@@ -26,7 +26,7 @@ export const generateAnswer = async (
     // response.status(200).json(completion.choices[0].message.content);
     response.json(completion.choices[0].message.content);
   } catch (error) {
-    console.log("expressApp.post:>>> Error", {
+    console.log("OpenAIController:>>> GENERATE Error", {
       error,
     });
 

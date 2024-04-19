@@ -12,6 +12,8 @@
     "url": "git+{GITLAB_PROJECT_URL}"
   },
   "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/server.ts",
     "start:backend": "NODE_ENV=development ts-node src/server.ts",
     "start:backend--windows": "set NODE_ENV=development & ts-node src/server.ts",
     "start:backend--watch": "NODE_ENV=development nodemon src/server.ts",
@@ -28,7 +30,6 @@
   },
   "dependencies": {
     "@google/generative-ai": "0.6.0",
-    "@types/node": "18.19.31",
     "axios": "0.21.4",
     "body-parser": "^1.20.2",
     "cors": "2.8.5",
@@ -48,6 +49,8 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "7.21.11",
     "@types/express-fileupload": "1.4.1",
-    "ts-node": "10.9.2"
+    "@types/node": "18.19.31",
+    "ts-node": "10.9.2",
+    "typescript": "5.4.5"
   }
 }

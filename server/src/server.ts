@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import CONFIG from "./config";
 import END_POINTS from "./models/endpoints";
 import openAIRoutes from "./routes/openaiRoutes";
+import googleGeminiRoutes from "./routes/googleGeminiRoutes";
 
 const expressApp = express();
 const frontendBuildPath = CONFIG.FRONTEND_BUILD_PATH;
@@ -28,16 +29,11 @@ if (CONFIG.IS_PROD) {
 
 // Mount API routes
 expressApp.use(END_POINTS.OPENAI.USER_PROMPT, openAIRoutes);
-// expressApp.use("/api/google-gemini", googleGeminiRoutes);
+expressApp.use(END_POINTS.GOOGLE_GEMINI.GENERATE, googleGeminiRoutes);
 
 console.log("process.env.NODE_ENV:>>>", process.env.NODE_ENV);
 console.log("CONFIG.ENV:>>>", CONFIG.NODE_ENV);
 console.log("envPath:>>>", envPath);
-
-// // OpenAI API Requests
-// OpenAIController(expressApp);
-// // Google Gemini API Requests
-// GoogleGeminiController(expressApp);
 
 if (CONFIG.IS_PROD) {
   expressApp.get("*", (req, res) => {
