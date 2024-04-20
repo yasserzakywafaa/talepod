@@ -1,11 +1,10 @@
+import { Card, Divider } from "@mui/material";
+
 import Page from "src/components/Page/Page";
 import NavigationBar from "src/components/NavigationBar/NavigationBar";
-
 import OpenAiSection from "src/components/sections/OpenAiSection";
 import GoogleGeminiSection from "src/components/sections/GoogleGeminiSection";
-
 import "./Home.scss";
-import { Card, Divider } from "@mui/material";
 
 const HomePage = () => {
   return (

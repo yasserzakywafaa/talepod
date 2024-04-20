@@ -3,7 +3,6 @@ import { createRef, CSSProperties, useEffect } from "react";
 
 import "./Card.scss";
 import LoaderSpinner from "../Loading/LoaderSpinner";
-import { checkImageOrientation } from "../../lib/functions";
 import ImagePlaceholder from "../Placeholders/ImagePlaceholder/ImagePlaceholder";
 import { PlayCircleFilled } from "@mui/icons-material";
 
@@ -22,7 +21,7 @@ const Card = (props: ICardProps) => {
 
   useEffect(() => {
     if (imageRef.current) {
-      imageRef.current.onload = (event) => checkImageOrientation(event);
+      imageRef.current.onload = (event) => true;
     }
   }, [imageRef]);
 

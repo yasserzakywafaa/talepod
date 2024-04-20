@@ -9,13 +9,7 @@ export const InitialDBStoreSchema: DocumentsStoreSchema = {
   covers: [
     {
       _id: DocumentsEnum.Covers,
-      data: undefined,
-    },
-  ],
-  files: [
-    {
-      _id: DocumentsEnum.Files,
-      data: undefined,
+      _rev: "",
     },
   ],
 };

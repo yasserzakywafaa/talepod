@@ -9,13 +9,13 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { ChangeEvent, FormEvent, useState } from "react";
-import axios, { AxiosError } from "axios";
-import LoaderSpinner from "src/components/Loading/LoaderSpinner";
-import END_POINTS from "src/lib/endpoints";
+import axios from "axios";
 import { Google } from "@mui/icons-material";
+import { ChangeEvent, FormEvent, useState } from "react";
+
+import END_POINTS from "src/lib/endpoints";
+import LoaderSpinner from "src/components/Loading/LoaderSpinner";
 import { Notify, ToastTypes } from "../Notification/Notification";
-import isError from "src/utils/isError";
 
 interface AiAnswerProps {
   title: string;
@@ -50,7 +50,7 @@ const GoogleGeminiSection = () => {
     setIsFetching(true);
 
     // handleGenerateContent(userPrompt);
-    handleChat(userPrompt);
+    userPrompt && handleChat(userPrompt);
   };
 
   // const handleGenerateContent = async (userPrompt: string) => {
@@ -97,7 +97,7 @@ const GoogleGeminiSection = () => {
         error,
       });
 
-      if (axios.isAxiosError(error)) {
+      if (axios.isAxiosError(error) && error.response) {
         setAiAnswer({
           statusCode: error.response.status,
           title: error.response.statusText,

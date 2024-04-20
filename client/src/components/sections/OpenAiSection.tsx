@@ -61,7 +61,7 @@ const OpenAISection = () => {
       console.log("request error:>>>", {
         error,
       });
-      if (axios.isAxiosError(error)) {
+      if (axios.isAxiosError(error) && error.response) {
         setAiAnswer({
           statusCode: error.response.status,
           title: error.response.statusText,
@@ -109,11 +109,9 @@ const OpenAISection = () => {
             </Divider>
             <Card sx={{ minWidth: 275 }}>
               <CardContent
-                style={
-                  aiAnswer.statusCode !== 200 && {
-                    color: "red",
-                  }
-                }
+                style={{
+                  color: aiAnswer.statusCode !== 200 ? "red" : "unset",
+                }}
               >
                 <Typography variant="h5" component="div">
                   {aiAnswer.title}

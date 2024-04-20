@@ -1,7 +1,8 @@
 import {
   PouchDBList,
   TypeDatabase,
-  IPouchDBAllDocsOptions,
+  PouchDBAllDocsOptions,
+  PouchDBDocParams,
 } from "./databaseConfig";
 import { Document } from "src/shared/interfaces";
 import { Notify, ToastTypes } from "src/components/Notification/Notification";
@@ -93,7 +94,7 @@ export const getDocFromDB = async (
  * Get All Docs from DB
  */
 export const getAllDocsFromDB = async (
-  options?: IPouchDBAllDocsOptions,
+  options?: PouchDBAllDocsOptions,
   database: TypeDatabase = PouchDBList.localDB
 ): Promise<PouchDB.Core.AllDocsResponse<any>> => {
   return await database
@@ -188,7 +189,7 @@ export const removeDocFromDB = async (
   doc: Document,
   database: TypeDatabase = PouchDBList.localDB
 ) => {
-  const params = { _id: doc._id, _rev: doc._rev };
+  const params: PouchDBDocParams = { _id: doc._id, _rev: doc._rev };
   return await database
     .remove(params)
     .then((response) => {

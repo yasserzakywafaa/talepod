@@ -1,7 +1,11 @@
 import { Refresh } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 
-const RefreshButton = ({ onClick }) => {
+export interface RefreshButtonProps {
+  onClick: () => void;
+}
+
+const RefreshButton = ({ onClick }: RefreshButtonProps) => {
   return (
     <IconButton className="refresh-button" onClick={onClick}>
       <Refresh />

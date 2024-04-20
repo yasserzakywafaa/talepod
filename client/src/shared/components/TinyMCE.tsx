@@ -1,6 +1,6 @@
-import { useRef } from "react";
+import { MutableRefObject, useRef } from "react";
 
-import { Editor } from "@tinymce/tinymce-react";
+import { Editor, Editor as TinyEditor } from "@tinymce/tinymce-react";
 
 // TinyMCE so the global var exists
 // eslint-disable-next-line no-unused-vars
@@ -59,18 +59,21 @@ export interface TinyMCEProps {
 }
 
 const TinyMCE = (params: TinyMCEProps) => {
-  const editorRef = useRef(null);
+  const editorRef = useRef<MutableRefObject<Editor | null>>();
 
   console.log("tinymce:>>>", {
     tinymce,
+    editorRef,
   });
 
   return (
     <>
-      <Editor
+      <TinyEditor
         disabled
         value={params.value}
-        onInit={(evt, editor) => (editorRef.current = editor)}
+        onInit={(evt, editor) => {
+          // editorRef.current = editor;
+        }}
         initialValue={params.initialValue}
         init={{
           kin: false,

@@ -1,23 +1,10 @@
 import axios from "axios";
 
-import {
-  Attachment,
-  ConvertedFileTypes,
-  Document,
-} from "src/shared/interfaces";
+import { Attachment } from "src/shared/interfaces";
 
 /**
  * Check image orientation
  */
-
-//  export const checkImageOrientation = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
-export const checkImageOrientation = (event: any) => {
-  const { naturalHeight, naturalWidth } = event.target;
-  event.target.setAttribute(
-    "data-portrait",
-    Number(naturalHeight > naturalWidth)
-  );
-};
 
 /**
  * Get available space size
@@ -54,31 +41,6 @@ export const generateRandomString = (length = 8, prefix = "") => {
   }
 
   return `${prefix}_${str}`;
-};
-
-/**
- * Convert file to Data Base64
- */
-export const convertFileToURLAndBase64 = (
-  file: File
-): Promise<ConvertedFileTypes> => {
-  return new Promise((resolve, reject) => {
-    try {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64 = reader.result.toString().replace(/^data:(.*,)?/, "");
-        return resolve({
-          dataURL: reader.result as string,
-          base64,
-        });
-      };
-
-      if (file) reader.readAsDataURL(file);
-      else throw new Error();
-    } catch (e) {
-      reject(e);
-    }
-  });
 };
 
 /**
@@ -166,33 +128,6 @@ export const convertDataUrlToZipFile = (zipDataURL: any, fileName: string) => {
 };
 
 /**
- * Sort Docs Cards by order
- */
-export const sortCardsByDocsOrder = (docsArray: Document[]): Document[] => {
-  if (!docsArray.length) return [];
-
-  const orders = docsArray.map((doc) => {
-    return {
-      id: doc._id,
-      order: doc.data.order,
-    };
-  });
-  const sortedValues = orders.sort((a, b) => (a.order > b.order ? 1 : -1));
-  const mappedSortedContent = sortedValues.map((card, index) => {
-    const currentDoc: Document = docsArray.find((d) => d._id === card.id);
-    return {
-      ...currentDoc,
-      data: {
-        ...currentDoc.data,
-        order: index,
-      },
-    };
-  });
-
-  return mappedSortedContent;
-};
-
-/**
  * Get query params
  */
 export const getQueryParams = (params: string) => {
@@ -204,31 +139,6 @@ export const getQueryParams = (params: string) => {
       return { [key]: value };
     })
     .reduce((p, n) => ({ ...p, ...n }), {});
-};
-
-/**
- * Get query params
- */
-export const makeURL = (location: any = {}, queries = {}) => {
-  const { pathname } = location;
-
-  const newSearch = Object.keys(queries)
-    .map(
-      (key, i) =>
-        `${i === 0 ? "?" : ""}${key}=${window.encodeURIComponent(queries[key])}`
-    )
-    .join("&");
-
-  return pathname + newSearch;
-};
-
-/**
- * Set attributes to an element
- */
-export const setAttributesToElement = (element: any = {}, attributes = {}) => {
-  Object.keys(attributes).forEach((attr) => {
-    element.setAttribute(attr, attributes[attr]);
-  });
 };
 
 /**

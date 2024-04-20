@@ -11,7 +11,8 @@ interface DatabaseSyncHadlerProps {
   handleUpdateSyncState: (state: boolean) => void;
 }
 
-const databaseSyncHandler = (props: DatabaseSyncHadlerProps) => {
+const databaseSyncHandler = (params: DatabaseSyncHadlerProps) => {
+  const { handleUpdateLocalDB, handleUpdateSyncState } = params;
   // Sync between local and server databases
   const DBSyncOptions: PouchDB.Replication.SyncOptions = {
     live: true,
@@ -42,12 +43,12 @@ const databaseSyncHandler = (props: DatabaseSyncHadlerProps) => {
   syncHandler
     .on("change", (info: SyncHadlerEventProps) => {
       // Something has changed!
-      props.handleUpdateSyncState(true);
+      handleUpdateSyncState(true);
 
       if (info.direction === "pull") {
         Notify({ type: ToastTypes.Info, content: "Updating from Server..." });
         console.log("🔄 Sync:>>> Pulling from Server Database ⬇⬇", info);
-        props.handleUpdateLocalDB();
+        handleUpdateLocalDB && handleUpdateLocalDB();
       } else {
         Notify({ type: ToastTypes.Info, content: "Saving to Server..." });
         console.log("🔄 Sync:>>> Pushing to Server Database ⬆⬆", info);
@@ -56,14 +57,14 @@ const databaseSyncHandler = (props: DatabaseSyncHadlerProps) => {
     .on("complete", () => {
       console.log(`🔄 Sync:>>> Complete`);
       Notify({ type: ToastTypes.Success, content: "Syncing Complete!" });
-      props.handleUpdateSyncState(false);
+      params.handleUpdateSyncState(false);
     })
     .on("paused" || "denied" || "error", (error) => {
       // Document failed to replicate (e.g. due to permissions)
       // Replication was paused, usually because of a lost connection
       // console.log(`❌ Sync:>>> Error`, error);
       Notify({ type: ToastTypes.Error, content: error });
-      props.handleUpdateSyncState(false);
+      params.handleUpdateSyncState(false);
     });
 };
 

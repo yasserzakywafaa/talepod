@@ -1,9 +1,16 @@
-import React from "react";
-
 import "./ProgressBar.scss";
 
-const ProgressBar = (props) => {
-  const { percentage, used, total, unit, className, barColor } = props;
+export interface ProgressBarProps {
+  percentage: number;
+  used: number;
+  total: number;
+  unit: string;
+  className: string;
+  barColor: string;
+}
+
+const ProgressBar = (params: ProgressBarProps) => {
+  const { percentage, used, total, unit, className, barColor } = params;
   const dynamicStyles = {
     width: `${percentage}%`,
     backgroundColor: barColor,

@@ -16,7 +16,7 @@ interface NavigationBarProps {
 }
 
 const NavigationBar = (props: NavigationBarProps) => {
-  const { path, showBackButton } = props;
+  const { path = "", showBackButton } = props;
   const navigate = useNavigate();
   const navigatioBarClassNames = classNames({
     "navigation-bar": true,

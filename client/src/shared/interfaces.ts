@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { AttachmentType } from "./enums";
-export interface IParams {
+export interface Params {
   type: string;
   id: string;
 }
@@ -8,7 +8,6 @@ export interface IParams {
 export interface DocumentsStoreSchema {
   config: Config;
   covers: CoverDoc[];
-  files: FileDoc[];
 }
 
 export interface Config {
@@ -18,14 +17,12 @@ export interface Config {
 
 export interface Document {
   _id: string;
-  _rev?: string;
-  data: FileData;
+  _rev: string;
+  data?: FileData;
   _attachments?: Attachments;
 }
 
 export interface CoverDoc extends Document {}
-export interface FileDoc extends Document {}
-export interface MyListDoc extends Document {}
 
 export interface ListsTitles {
   myListFiles: string;
@@ -42,34 +39,6 @@ export interface Attachment {
   type: AttachmentType;
 }
 
-interface Users {
-  _id: string;
-  _rev?: string;
-  data: User;
-}
-
-interface User {
-  id: string; // UUID
-  name: string;
-  email: string;
-  role: UserRole;
-  active: boolean;
-  username: string;
-}
-
-interface AllowedFiles {
-  _id: string;
-  _rev?: string;
-  data: AllowedFile;
-}
-interface AllowedFile {
-  fileId: string;
-  userId: string;
-  startTime: Date;
-  endTime: Date;
-  expired?: boolean;
-}
-
 export interface FileData {
   id: string;
   title: string;
@@ -80,13 +49,7 @@ export interface FileData {
   description: string;
 }
 
-enum UserRole {
-  user = "user",
-  admin = "admin",
-}
-
 export interface InitialState {
-  player: FileDoc;
   settings: DocumentsStoreSchema;
 }
 
