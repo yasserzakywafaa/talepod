@@ -5,11 +5,8 @@
     "moduleResolution": "Node",
     "baseUrl": "./",
     // "rootDir": "src",
-    // "rootDirs": ["./client/src/*", "./server/src/*"],
     "paths": {
       "src/*": ["src/*"],
-      // "client/src/*": ["./client/src/*"],
-      // "server/src/*": ["./server/src/*"],
       "*": ["node_modules/*"]
     },
     "lib": [
