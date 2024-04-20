@@ -6,12 +6,12 @@ const publicURL = APP_CONSTANTS.IS_DEV
 
 const END_POINTS = (param?: string) => {
   return {
-    OPENAI: {
-      USER_PROMPT: `${publicURL}/api/openai/${param}`,
-    },
     GOOGLE_GEMINI: {
       GENERATE: `${publicURL}/api/gemini/generate/${param}`,
       CHAT: `${publicURL}/api/gemini/chat/${param}`,
+    },
+    OPENAI: {
+      USER_PROMPT: `${publicURL}/api/openai/${param}`,
     },
   };
 };

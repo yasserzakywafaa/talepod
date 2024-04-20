@@ -1,4 +1,3 @@
-import React from "react";
 import { ImageOutlined } from "@mui/icons-material";
 
 import "./ImagePlaceholder.scss";

@@ -57,6 +57,10 @@
     "serve": "14.2.1",
     "typescript": "5.4.5"
   },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
+  },
   "browserslist": [
     "last 1 chrome version",
     "last 1 ChromeAndroid version",

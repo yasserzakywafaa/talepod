@@ -1,13 +1,13 @@
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
 import {
-  Button,
+  Box,
   Card,
-  CardContent,
   Chip,
-  Divider,
   Stack,
+  Button,
+  Divider,
+  TextField,
   Typography,
+  CardContent,
 } from "@mui/material";
 import axios from "axios";
 import { Google } from "@mui/icons-material";
@@ -47,10 +47,11 @@ const GoogleGeminiSection = () => {
       userPrompt,
     });
 
-    setIsFetching(true);
-
-    // handleGenerateContent(userPrompt);
-    userPrompt && handleChat(userPrompt);
+    if (userPrompt) {
+      setIsFetching(true);
+      // handleGenerateContent(userPrompt);
+      userPrompt && handleChat(userPrompt);
+    }
   };
 
   // const handleGenerateContent = async (userPrompt: string) => {

@@ -3,7 +3,6 @@ import express from "express";
 import bodyParser from "body-parser";
 
 import CONFIG from "./config";
-import END_POINTS from "./models/endpoints";
 import openAIRoutes from "./routes/openaiRoutes";
 import googleGeminiRoutes from "./routes/googleGeminiRoutes";
 
@@ -27,8 +26,8 @@ if (CONFIG.IS_PROD) {
 }
 
 // Mount API routes
-expressApp.use(END_POINTS.OPENAI.USER_PROMPT, openAIRoutes);
-expressApp.use(END_POINTS.GOOGLE_GEMINI.GENERATE, googleGeminiRoutes);
+expressApp.use(googleGeminiRoutes);
+expressApp.use(openAIRoutes);
 
 console.log("CONFIG.ENV:>>>", CONFIG.NODE_ENV);
 

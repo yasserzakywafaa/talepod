@@ -1,19 +1,20 @@
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
 import {
-  Button,
+  Box,
   Card,
-  CardContent,
   Chip,
-  Divider,
   Stack,
+  Button,
+  Divider,
+  TextField,
   Typography,
+  CardContent,
 } from "@mui/material";
-import { ChangeEvent, FormEvent, useState } from "react";
 import axios from "axios";
-import LoaderSpinner from "src/components/Loading/LoaderSpinner";
-import END_POINTS from "src/lib/endpoints";
 import { AndroidRounded } from "@mui/icons-material";
+import { ChangeEvent, FormEvent, useState } from "react";
+
+import END_POINTS from "src/lib/endpoints";
+import LoaderSpinner from "src/components/Loading/LoaderSpinner";
 import { Notify, ToastTypes } from "../Notification/Notification";
 
 interface AiAnswerProps {
@@ -42,33 +43,40 @@ const OpenAISection = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    console.log("form is submitting:>>>", {
-      userPrompt,
-    });
+    if (userPrompt) {
+      setIsFetching(true);
 
-    setIsFetching(true);
+      try {
+        const URL = END_POINTS(userPrompt);
+        const response = await axios.post(URL.OPENAI.USER_PROMPT);
 
-    try {
-      const URL = END_POINTS(userPrompt);
-      const response = await axios.post(URL.OPENAI.USER_PROMPT);
-      setIsFetching(false);
-      setAiAnswer({
-        statusCode: response.data,
-        title: response.data,
-        description: response.data,
-      });
-    } catch (error) {
-      console.log("request error:>>>", {
-        error,
-      });
-      if (axios.isAxiosError(error) && error.response) {
-        setAiAnswer({
-          statusCode: error.response.status,
-          title: error.response.statusText,
-          description: error.response.data,
+        console.log("OpenAiSection:>>>", {
+          response,
         });
+
         setIsFetching(false);
-        Notify({ content: error.response.statusText, type: ToastTypes.Error });
+        setAiAnswer({
+          statusCode: response.status,
+          title: "",
+          description: response.data,
+        });
+      } catch (error) {
+        console.log("request error:>>>", {
+          error,
+        });
+        if (axios.isAxiosError(error) && error.response) {
+          setAiAnswer({
+            statusCode: error.response.status,
+            title: error.response.statusText,
+            // description: error.response.data,
+            description: error.response.statusText,
+          });
+          setIsFetching(false);
+          Notify({
+            content: error.response.statusText,
+            type: ToastTypes.Error,
+          });
+        }
       }
     }
   };
