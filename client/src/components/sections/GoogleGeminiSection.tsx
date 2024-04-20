@@ -1,21 +1,21 @@
 import {
   Box,
-  Card,
-  Chip,
-  Stack,
   Button,
+  Card,
+  CardContent,
+  Chip,
   Divider,
+  Stack,
   TextField,
   Typography,
-  CardContent,
 } from "@mui/material";
-import axios from "axios";
-import { Google } from "@mui/icons-material";
 import { ChangeEvent, FormEvent, useState } from "react";
+import { Notify, ToastTypes } from "../Notification/Notification";
 
 import END_POINTS from "src/lib/endpoints";
+import { Google } from "@mui/icons-material";
 import LoaderSpinner from "src/components/Loading/LoaderSpinner";
-import { Notify, ToastTypes } from "../Notification/Notification";
+import axios from "axios";
 
 interface AiAnswerProps {
   title: string;

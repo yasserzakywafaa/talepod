@@ -1,14 +1,15 @@
 // node --version # Should be >= 18
 
 import {
-  GoogleGenerativeAI,
   ChatSession,
-  HarmCategory,
+  GoogleGenerativeAI,
   HarmBlockThreshold,
+  HarmCategory,
 } from "@google/generative-ai";
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 
 import CONFIG from "../config";
+
 // import isError from "../utils/isError";
 
 const generationConfig = {

@@ -1,12 +1,12 @@
-import classNames from "classnames";
-import { useNavigate } from "react-router-dom";
-
 import "./NavigationBar.scss";
-import Logo from "./Logo";
+
 import BackButton from "./BackButton";
-import RefreshButton from "./RefreshButton";
+import Logo from "./Logo";
 import NetworkStatus from "./NetworkStatus";
 import { PlayerModeEnum } from "src/shared/enums";
+import RefreshButton from "./RefreshButton";
+import classNames from "classnames";
+import { useNavigate } from "react-router-dom";
 
 interface NavigationBarProps {
   path?: string;

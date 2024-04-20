@@ -1,6 +1,6 @@
-import { MovieFilter } from "@mui/icons-material";
-
 import "./VideoPlaceholder.scss";
+
+import { MovieFilter } from "@mui/icons-material";
 
 const VideoPlaceholder: React.FC = () => {
   return <MovieFilter color="primary" className="videoPlaceholder" />;

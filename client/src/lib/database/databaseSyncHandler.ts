@@ -1,4 +1,5 @@
 import { Notify, ToastTypes } from "src/components/Notification/Notification";
+
 import { DBConfig } from ".";
 
 interface SyncHadlerEventProps {

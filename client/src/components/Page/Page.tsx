@@ -1,10 +1,11 @@
-import { useEffect } from "react";
-import classNames from "classnames";
+import "./Page.scss";
+
 import { Container, ContainerTypeMap } from "@mui/material";
-import { OverridableComponent } from "@mui/material/OverridableComponent";
 
 import { Notification } from "../Notification/Notification";
-import "./Page.scss";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
+import classNames from "classnames";
+import { useEffect } from "react";
 
 export interface PageProps {
   title: string;

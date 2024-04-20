@@ -1,4 +1,5 @@
 import "./LoaderSpinner.scss";
+
 import loaderGIF from "../../assets/images/loader.gif";
 // import { CircularProgress } from "@material-ui/core";
 

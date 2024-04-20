@@ -1,5 +1,5 @@
-import { AxiosResponse } from "axios";
 import { AttachmentType } from "./enums";
+import { AxiosResponse } from "axios";
 export interface Params {
   type: string;
   id: string;

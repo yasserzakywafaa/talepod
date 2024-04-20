@@ -1,11 +1,12 @@
+import { Notify, ToastTypes } from "src/components/Notification/Notification";
 import {
-  PouchDBList,
-  TypeDatabase,
   PouchDBAllDocsOptions,
   PouchDBDocParams,
+  PouchDBList,
+  TypeDatabase,
 } from "./databaseConfig";
+
 import { Document } from "src/shared/interfaces";
-import { Notify, ToastTypes } from "src/components/Notification/Notification";
 
 export const createLocalPouchDB = async () => PouchDBList.localDB;
 

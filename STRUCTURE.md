@@ -6,8 +6,14 @@
     │   ├── node_modules
     │   ├── public
     │   └── src
+    │       ├── application
+    │       ├── assets
     │       ├── components
     │       ├── pages
+    │       ├── shared
+    │       │    |── domain
+    │       │    |── hooks
+    │       │    |── utils
     │       ├── App.tsx
     │       └── index.tsx
     |   ├── .env

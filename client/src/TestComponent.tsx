@@ -2,4 +2,4 @@ const TestComponent = () => {
   return <>Hello TESTING COMPONENT</>;
 };
 
-export default TestComponent
+export default TestComponent;

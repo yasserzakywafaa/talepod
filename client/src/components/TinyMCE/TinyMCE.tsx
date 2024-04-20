@@ -1,10 +1,3 @@
-import { MutableRefObject, useRef } from "react";
-
-import { Editor, Editor as TinyEditor } from "@tinymce/tinymce-react";
-
-// TinyMCE so the global var exists
-// eslint-disable-next-line no-unused-vars
-import tinymce from "tinymce/tinymce";
 // DOM model
 import "tinymce/models/dom/model";
 // Theme
@@ -13,7 +6,6 @@ import "tinymce/themes/silver";
 import "tinymce/icons/default";
 // Editor styles
 import "tinymce/skins/ui/oxide/skin.min.css";
-
 // importing the plugin js.
 // if you use a plugin that is not listed here the editor will fail to load
 import "tinymce/plugins/advlist";
@@ -44,9 +36,15 @@ import "tinymce/plugins/table";
 import "tinymce/plugins/visualblocks";
 import "tinymce/plugins/visualchars";
 import "tinymce/plugins/wordcount";
-
 // importing plugin resources
 import "tinymce/plugins/emoticons/js/emojis";
+
+import { Editor, Editor as TinyEditor } from "@tinymce/tinymce-react";
+import { MutableRefObject, useRef } from "react";
+
+// TinyMCE so the global var exists
+// eslint-disable-next-line no-unused-vars
+import tinymce from "tinymce/tinymce";
 
 // Content styles, including inline UI like fake cursors
 /* eslint import/no-webpack-loader-syntax: off */

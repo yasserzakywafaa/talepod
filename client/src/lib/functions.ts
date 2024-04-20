@@ -1,6 +1,5 @@
-import axios from "axios";
-
 import { Attachment } from "src/shared/interfaces";
+import axios from "axios";
 
 /**
  * Check image orientation

@@ -1,10 +1,9 @@
+import CONFIG from "./config";
+import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
-import bodyParser from "body-parser";
-
-import CONFIG from "./config";
-import openAIRoutes from "./routes/openaiRoutes";
 import googleGeminiRoutes from "./routes/googleGeminiRoutes";
+import openAIRoutes from "./routes/openaiRoutes";
 
 const expressApp = express();
 const frontendBuildPath = CONFIG.FRONTEND_BUILD_PATH;

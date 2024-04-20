@@ -1,10 +1,11 @@
-import { useNavigate } from "react-router-dom";
-import { createRef, CSSProperties, useEffect } from "react";
-
 import "./Card.scss";
-import LoaderSpinner from "../Loading/LoaderSpinner";
+
+import { CSSProperties, createRef, useEffect } from "react";
+
 import ImagePlaceholder from "../Placeholders/ImagePlaceholder/ImagePlaceholder";
+import LoaderSpinner from "../Loading/LoaderSpinner";
 import { PlayCircleFilled } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 interface ICardProps {
   path: string;

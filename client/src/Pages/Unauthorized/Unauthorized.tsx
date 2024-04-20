@@ -1,4 +1,5 @@
 import "./Unauthorized.scss";
+
 import { ReactComponent as UnauthorizedSVG } from "../../assets/svgs/unauthorized.svg";
 
 const Unauthorized = () => {

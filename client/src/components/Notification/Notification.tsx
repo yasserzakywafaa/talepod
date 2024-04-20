@@ -1,13 +1,13 @@
+import "react-toastify/dist/ReactToastify.css";
+import "./Notification.scss";
+
 import {
   ToastContainer,
-  toast,
   ToastContainerProps,
   ToastOptions,
   TypeOptions,
+  toast,
 } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-import "./Notification.scss";
 
 interface NotificationProps extends ToastContainerProps {}
 

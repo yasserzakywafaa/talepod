@@ -1,4 +1,5 @@
 import { Wifi, WifiOff } from "@mui/icons-material";
+
 import { IconButton } from "@mui/material";
 import useDetectNetworkStatus from "../../shared/hooks/useDetectNetworkStatus";
 

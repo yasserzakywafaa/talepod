@@ -1,5 +1,5 @@
-import { Refresh } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
+import { Refresh } from "@mui/icons-material";
 
 export interface RefreshButtonProps {
   onClick: () => void;

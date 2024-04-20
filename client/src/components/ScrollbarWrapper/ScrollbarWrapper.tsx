@@ -1,6 +1,6 @@
-import { CSSProperties } from "react";
-
 import "./ScrollbarWrapper.scss";
+
+import { CSSProperties } from "react";
 
 interface ScrollbarWrapperProps {
   className?: string;
