@@ -3,6 +3,8 @@ image: node:18-alpine
 
 # Functions that should be executed before the build script is run
 before_script:
+  - pwd # Print current working directory
+  - ls # List contents of current directory
   - yarn install
 
 variables:
@@ -12,13 +14,17 @@ variables:
 
 build-frontend:
   stage: build
-  script: 
+  script:
+    - pwd # Print current working directory
+    - ls # List contents of current directory
     - cd ./client
     - yarn build
 
 build-backend:
   stage: build
-  script: 
+  script:
+    - pwd # Print current working directory
+    - ls # List contents of current directory
     - cd ./server
     - yarn build
 # pages:
