@@ -38,14 +38,13 @@ export const Notification = (props: NotificationProps) => {
       bodyStyle={props.bodyStyle}
       draggable={props.draggable}
       theme={props.theme || "dark"}
-      transition={props.transition}
       toastStyle={props.toastStyle}
       newestOnTop={props.newestOnTop}
       closeButton={props.closeButton}
       containerId={props.containerId}
       pauseOnHover={props.pauseOnHover}
       closeOnClick={props.closeOnClick}
-      autoClose={props.autoClose || 4000}
+      autoClose={props.autoClose || 5000}
       bodyClassName={props.bodyClassName}
       progressStyle={props.progressStyle}
       toastClassName={props.toastClassName}

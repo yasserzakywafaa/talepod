@@ -61,19 +61,23 @@ const OpenAISection = () => {
           description: response.data,
         });
       } catch (error) {
-        console.log("request error:>>>", {
+        console.error("OpenAiSection:>>> Error", {
           error,
         });
+        setIsFetching(false);
         if (axios.isAxiosError(error) && error.response) {
           setAiAnswer({
             statusCode: error.response.status,
             title: error.response.statusText,
-            // description: error.response.data,
             description: error.response.statusText,
           });
-          setIsFetching(false);
           Notify({
             content: error.response.statusText,
+            type: ToastTypes.Error,
+          });
+        } else {
+          Notify({
+            content: `Oops! Something went wrong.\n${error}`,
             type: ToastTypes.Error,
           });
         }

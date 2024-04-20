@@ -50,7 +50,7 @@ const GoogleGeminiSection = () => {
     if (userPrompt) {
       setIsFetching(true);
       // handleGenerateContent(userPrompt);
-      userPrompt && handleChat(userPrompt);
+      handleChat(userPrompt);
     }
   };
 
@@ -66,19 +66,28 @@ const GoogleGeminiSection = () => {
 
   //     setIsFetching(false);
   //   } catch (error) {
-  //     console.log("request error:>>>", {
+  //     console.error("GoogleGeminiSection:>>> Error", {
   //       error,
   //     });
-  //     setAiAnswer({
-  //       statusCode: error.response.status,
-  //       title: error.response.statusText,
-  //       description: error.response.data.message,
-  //     });
-  //     setIsFetching(false);
-  //     Notify({
-  //       content: `${error.response.status} ${error.response.statusText}\n${error.response.data.message}`,
-  //       type: ToastTypes.Error,
-  //     });
+
+  //     if (axios.isAxiosError(error) && error.response) {
+  //       setAiAnswer({
+  //         statusCode: error.response.status,
+  //         title: error.response.statusText,
+  //         description: error.response.data.message,
+  //       });
+  //       setIsFetching(false);
+  //       Notify({
+  //         content: `${error.response.status} ${error.response.statusText}\n${error.response.data.message}`,
+  //         type: ToastTypes.Error,
+  //       });
+  //     } else {
+  //       setIsFetching(false);
+  //       Notify({
+  //         content: `Oops! Something went wrong.\n${error}`,
+  //         type: ToastTypes.Error,
+  //       });
+  //     }
   //   }
   // };
 
@@ -86,30 +95,38 @@ const GoogleGeminiSection = () => {
     try {
       const URL = END_POINTS(userPrompt);
       const chatResponse = await axios.post(URL.GOOGLE_GEMINI.CHAT);
+      console.log("GoogleGeminiSection:>>> CHAT", {
+        chatResponse,
+      });
       setAiAnswer({
         statusCode: 200,
         title: "",
         description: chatResponse.data,
       });
-
       setIsFetching(false);
     } catch (error) {
-      console.log("request error:>>>", {
+      console.error("GoogleGeminiSection:>>> CHAT Error", {
         error,
       });
-
       if (axios.isAxiosError(error) && error.response) {
         setAiAnswer({
           statusCode: error.response.status,
           title: error.response.statusText,
           description: error.response.data.message,
         });
-        setIsFetching(false);
         Notify({
-          content: `${error.response.status} ${error.response.statusText}\n${error.response.data.message}`,
+          content: `${error.response.status} ${error.response.statusText}\n${
+            error.response.data.message ?? ""
+          }`,
+          type: ToastTypes.Error,
+        });
+      } else {
+        Notify({
+          content: `Oops! Something went wrong.\n${error}`,
           type: ToastTypes.Error,
         });
       }
+      setIsFetching(false);
     }
   };
 
