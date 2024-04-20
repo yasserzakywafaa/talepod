@@ -1,11 +1,9 @@
 # The Docker image that will be used to build your app
 image: node:18-alpine
 
-# # Functions that should be executed before the build script is run
-# before_script:
-#   - pwd # Print current working directory
-#   - ls # List contents of current directory
-#   - yarn install
+# Functions that should be executed before the build script is run
+before_script:
+  # - yarn install
 
 variables:
   OPENAI_API_KEY: ${OPENAI_API_KEY}
@@ -15,20 +13,20 @@ variables:
 build-frontend:
   stage: build
   script:
-    - pwd # Print current working directory
     - ls # List contents of current directory
     - cd ./client
     - pwd # Print current working directory
-    # - yarn build
+    - yarn install
+    - yarn build
 
 build-backend:
   stage: build
   script:
-    - pwd # Print current working directory
     - ls # List contents of current directory
     - cd ./server
     - pwd # Print current working directory
-    # - yarn build
+    - yarn install
+    - yarn build
 # pages:
 #   stage: deploy
 #   script:
