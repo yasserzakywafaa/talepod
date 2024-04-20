@@ -1,11 +1,8 @@
 import "./Home.scss";
 
-import { Card, Divider } from "@mui/material";
-
-import GoogleGeminiSection from "src/components/sections/GoogleGeminiSection";
 import NavigationBar from "src/components/NavigationBar/NavigationBar";
-import OpenAiSection from "src/components/sections/OpenAiSection";
 import Page from "src/components/Page/Page";
+import StoryCreator from "src/components/StoryCreator/StoryCreator";
 
 const HomePage = () => {
   return (
@@ -15,16 +12,8 @@ const HomePage = () => {
 
         <NavigationBar />
 
-        <Page title="Home page">
-          <Card>
-            <GoogleGeminiSection />
-          </Card>
-
-          <Divider style={{ margin: "2rem 0" }} />
-
-          <Card>
-            <OpenAiSection />
-          </Card>
+        <Page title="AI Story Creator">
+          <StoryCreator />
         </Page>
       </div>
     </>
