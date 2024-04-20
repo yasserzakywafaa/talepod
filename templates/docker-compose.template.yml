@@ -1,0 +1,64 @@
+version: "3.1"
+
+services:
+  frontend:
+    # container_name: {PROJECT_NAME}-frontend
+    build:
+      context: .
+    restart: always
+    depends_on:
+      - backend
+    command: yarn start:frontend
+    volumes:
+      - .:/{PROJECT_NAME}/
+    working_dir: /{PROJECT_NAME}
+    ports:
+      - 4000:4000
+
+  backend:
+    # container_name: {PROJECT_NAME}-backend
+    build:
+      context: .
+    restart: always
+    command: yarn start:backend
+    # volumes:
+    #   - .:/public/server/
+    # working_dir: /public/server/
+    volumes:
+      - .:/{PROJECT_NAME}/
+    working_dir: /{PROJECT_NAME}
+    ports:
+      - 4001:4001
+
+  production:
+    # container_name: {PROJECT_NAME}-production
+    build:
+      context: .
+    restart: always
+    # enable this volume mapping if you want to test the production setup but without having to rebuild the docker container for every code change.
+    # to update the frontend for this you will have to run docker-compose run --rm production yarn build
+    # to update the code of the server you have to restart the production container
+    #    volumes:
+    #      - .:/{PROJECT_NAME}/
+    command: yarn start:prod
+    working_dir: /{PROJECT_NAME}
+    ports:
+      - 8080:8080
+
+  db:
+    image: couchdb:latest
+    restart: always
+    ports:
+      - "5984:5984"
+    env_file:
+      - .env
+    volumes:
+      - ./dbdata:/opt/couchdb/data
+
+  keycloak:
+    image: jboss/keycloak:8.0.2
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+    ports:
+      - "8080:8080"

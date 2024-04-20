@@ -1,0 +1,72 @@
+{
+  "name": "@gitlab_group_name/project_name",
+  "version": "1.0.0",
+  "description": "{PROJECT_DESCRIPTION}",
+  "private": true,
+  "author": "",
+  "homepage": "/",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+{GITLAB_PROJECT_URL}"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "start:disable-reload": "NODE_ENV=development REACT_APP_DISABLE_LIVE_RELOAD=true yarn start:frontend",
+    "start:disable-reload--windows": "set NODE_ENV=development & set REACT_APP_DISABLE_LIVE_RELOAD=true & yarn start:frontend",
+    "start:prod": "serve -l 5000 -s build",
+    "build": "rimraf build & react-scripts build",
+    "build:windows": "cd client && rimraf build && set NODE_ENV=production & set PORT=4000 & react-scripts build",
+    "docker:clean": "docker system prune",
+    "docker:build": "docker build -t react-pwa-ai:latest .",
+    "docker:run": "docker run -d -it --rm -p 8080:8080 react-pwa-ai",
+    "docker:compose--local": "docker-compose -f docker-compose.yml up frontend",
+    "docker:compose--prod": "docker-compose -f docker-compose.yml up production",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "@emotion/react": "11.11.4",
+    "@emotion/styled": "11.11.5",
+    "@google/generative-ai": "0.7.1",
+    "@mui/icons-material": "5.15.15",
+    "@mui/material": "5.15.15",
+    "@types/pouchdb": "6.4.0",
+    "@mui/styles": "5.15.15",
+    "@tinymce/tinymce-react": "5.0.1",
+    "@types/react": "18.2.25",
+    "@types/react-dom": "18.2.25",
+    "@types/react-router-dom": "5.3.3",
+    "axios": "1.6.8",
+    "classnames": "2.5.1",
+    "html-loader-react-scripts": "1.2.1",
+    "raw-loader": "4.0.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-router-dom": "6.22.3",
+    "react-beautiful-dnd": "13.1.1",
+    "react-scripts": "5.0.1",
+    "react-toastify": "10.0.5"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "7.21.11",
+    "@testing-library/react": "15.0.2",
+    "@types/jest": "29.5.12",
+    "@types/react-beautiful-dnd": "13.1.2",
+    "sass": "1.75.0",
+    "serve": "14.2.1",
+    "typescript": "5.4.5"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
+  },
+  "browserslist": [
+    "last 1 chrome version",
+    "last 1 ChromeAndroid version",
+    "last 1 firefox version",
+    "last 1 FirefoxAndroid version",
+    "last 1 safari version",
+    "last 1 edge version"
+  ]
+}
