@@ -1,3 +1,5 @@
+import { Country } from "src/shared/countries";
+
 export interface StoryCreatorInitialState {
   childInfo: ChildInfo;
 }
@@ -14,7 +16,7 @@ export type ChildInfo = {
   eyeColor: string;
   race: string;
   height: number;
-  nationality: string;
+  nationality: Country;
 };
 
 export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
@@ -26,7 +28,10 @@ export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
       eyeColor: "Brown",
       race: "White",
       height: 50,
-      nationality: "Swiss",
+      nationality: {
+        name: "Switzerland",
+        value: "CH",
+      },
     },
   };
 };

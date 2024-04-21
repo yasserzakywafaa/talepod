@@ -17,7 +17,7 @@ import { useGoogleGeminiContext } from "./domain/Provider";
 
 export const GoogleGeminiContent = () => {
   const { store, manager } = useGoogleGeminiContext();
-  const { isFetching, userPrompt, aiAnswer } = store.state;
+  const { isFetching, userPrompt, optionsAutoPrompt, aiAnswer } = store.state;
   const { handleIsFetching, handleChatRequest, handleUpdateUserPrompt } =
     manager;
 
@@ -32,19 +32,15 @@ export const GoogleGeminiContent = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    console.log("form is submitting:>>>", {
-      userPrompt,
-    });
-
-    if (userPrompt) {
+    if (userPrompt || optionsAutoPrompt) {
       handleIsFetching(true);
       // handleGenerateContent(userPrompt);
-      handleChatRequest(userPrompt);
+      handleChatRequest(userPrompt || optionsAutoPrompt);
     }
   };
 
   return (
-    <Box position="relative" sx={{ padding: "1rem" }}>
+    <Box position="relative" sx={{ marginY: "1rem" }}>
       {isFetching && <LoaderSpinner style={{ position: "absolute" }} />}
 
       <Box
@@ -57,8 +53,10 @@ export const GoogleGeminiContent = () => {
       >
         <Stack spacing={2} flexGrow={1}>
           <TextField
+            multiline
             label="User Prompt"
             variant="outlined"
+            value={userPrompt || optionsAutoPrompt}
             onChange={handleOnTextChange}
           />
           <Button
@@ -70,27 +68,27 @@ export const GoogleGeminiContent = () => {
             Ask Google Gemini
           </Button>
         </Stack>
-
-        {aiAnswer.description && (
-          <>
-            <Divider style={{ margin: "2rem 0" }}>
-              <Chip label="Answer" size="small" />
-            </Divider>
-
-            <Card sx={{ minWidth: 275 }}>
-              <CardContent>
-                <Typography variant="h5" component="div">
-                  {aiAnswer.title}
-                </Typography>
-
-                <Typography variant="h6" component="div">
-                  {aiAnswer.description}
-                </Typography>
-              </CardContent>
-            </Card>
-          </>
-        )}
       </Box>
+
+      {aiAnswer.description && (
+        <>
+          <Divider style={{ margin: "2rem 0" }}>
+            <Chip label="Answer" size="small" />
+          </Divider>
+
+          <Card sx={{ minWidth: 275 }}>
+            <CardContent>
+              <Typography variant="h5" component="div">
+                {aiAnswer.title}
+              </Typography>
+
+              <Typography variant="h6" component="div">
+                {aiAnswer.description}
+              </Typography>
+            </CardContent>
+          </Card>
+        </>
+      )}
     </Box>
   );
 };

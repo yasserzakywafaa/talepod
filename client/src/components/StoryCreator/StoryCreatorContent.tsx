@@ -1,18 +1,23 @@
 import {
   Box,
-  Button,
   Card,
-  Divider,
+  Container,
+  FormControl,
   FormControlLabel,
-  FormLabel,
+  InputLabel,
+  MenuItem,
   Radio,
   RadioGroup,
+  Select,
+  SelectChangeEvent,
   TextField,
+  Typography,
 } from "@mui/material";
 
 import { GenderEnum } from "./domain/state";
 import GoogleGemini from "./features/GoogleGemini/GoogleGemini";
 import OpenAiGPT from "./features/OpenAiGPT/OpenAiGPT";
+import { countries } from "src/shared/countries";
 import { useStoryCreatorContext } from "./domain/Provider";
 
 export const StoryCreatorContent = () => {
@@ -22,189 +27,182 @@ export const StoryCreatorContent = () => {
   const handleOnFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     event.stopPropagation();
-
-    // console.log("form is submitting:>>>", {
-    //   userPrompt,
-    // });
-
-    // if (userPrompt) {
-    //   setIsFetching(true);
-    //   // handleGenerateContent(userPrompt);
-    //   handleChat(userPrompt);
-    // }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+  const handleFieldChange = (
+    event:
+      | SelectChangeEvent
+      | React.ChangeEvent<HTMLInputElement | { name: string; value: string }>
   ) => {
-    const { name, value } = e.target;
-
-    if (name && value) {
-      manager.handleUpdateChildInfo(name, value as string);
-    }
+    const { name, value } = event.target;
+    manager.handleUpdateChildInfo(name, value);
   };
 
   return (
-    <div className="story-creator">
-      <h1>Create a Story for Your Child</h1>
+    <Container className="story-creator" maxWidth={false}>
+      <Typography variant="h2">Create a story for your child</Typography>
 
-      <Card>
+      <Box
+        marginY={5}
+        display="flex"
+        component="div"
+        alignItems="center"
+        flexDirection="column"
+        justifyContent="center"
+      >
         <Box
-          marginY={5}
+          noValidate
+          paddingX={5}
+          width="100%"
           display="flex"
-          component="div"
+          component="form"
+          autoComplete="off"
           flexDirection="row"
           alignItems="flex-start"
-          justifyContent="space-between"
+          className="child-info-form"
+          onSubmit={handleOnFormSubmit}
         >
           <Box
-            noValidate
-            paddingX={5}
-            width="100%"
+            marginX={2}
             display="flex"
-            component="form"
-            autoComplete="off"
-            flexDirection="column"
-            onSubmit={handleOnFormSubmit}
+            component="div"
+            flexDirection="row"
+            alignItems="center"
           >
-            <Box
-              marginY={2}
-              display="flex"
-              component="div"
-              flexDirection="row"
-              alignItems="center"
+            <RadioGroup
+              row
+              sx={{ marginLeft: "16px", marginTop: "-16px" }}
+              name="radio-buttons-group"
+              defaultValue={childInfo.gender}
+              aria-labelledby="radio-buttons-group-gender-label"
+              onChange={handleFieldChange}
             >
-              <FormLabel id="radio-buttons-group-gender-label">
-                Gender
-              </FormLabel>
-
-              <RadioGroup
-                row
-                sx={{ marginLeft: "16px" }}
-                name="radio-buttons-group"
-                defaultValue={childInfo.gender}
-                aria-labelledby="radio-buttons-group-gender-label"
-                onChange={handleChange}
-              >
-                <FormControlLabel
-                  value="male"
-                  control={<Radio />}
-                  label="Male"
-                  checked={childInfo.gender === GenderEnum.male}
-                />
-                <FormControlLabel
-                  value="female"
-                  control={<Radio />}
-                  label="Female"
-                  checked={childInfo.gender === GenderEnum.female}
-                />
-              </RadioGroup>
-            </Box>
-
-            <Box marginY={2} display="flex" component="div" flexDirection="row">
-              <TextField
-                fullWidth
-                id="age"
-                name="age"
-                label="Age"
-                type="number"
-                value={childInfo.age}
-                onChange={handleChange}
-                required
+              <FormControlLabel
+                value="male"
+                control={<Radio />}
+                label="Male"
+                checked={childInfo.gender === GenderEnum.male}
               />
-            </Box>
-
-            <Box marginY={2} display="flex" component="div" flexDirection="row">
-              <TextField
-                fullWidth
-                id="hairColor"
-                name="hairColor"
-                label="Hair Color"
-                value={childInfo.hairColor}
-                onChange={handleChange}
-                required
+              <FormControlLabel
+                value="female"
+                control={<Radio />}
+                label="Female"
+                checked={childInfo.gender === GenderEnum.female}
               />
-            </Box>
-
-            <Box marginY={2} display="flex" component="div" flexDirection="row">
-              <TextField
-                fullWidth
-                id="eyeColor"
-                name="eyeColor"
-                label="Eye Color"
-                value={childInfo.eyeColor}
-                onChange={handleChange}
-                required
-              />
-            </Box>
-
-            <Box marginY={2} display="flex" component="div" flexDirection="row">
-              <TextField
-                fullWidth
-                id="race"
-                name="race"
-                label="Race & Color"
-                value={childInfo.race}
-                onChange={handleChange}
-                required
-              />
-            </Box>
-
-            <Box marginY={2} display="flex" component="div" flexDirection="row">
-              <TextField
-                fullWidth
-                id="height"
-                name="height"
-                label="Height"
-                value={childInfo.height}
-                onChange={handleChange}
-                required
-              />
-            </Box>
-
-            <Box marginY={2} display="flex" component="div" flexDirection="row">
-              <TextField
-                fullWidth
-                id="nationality"
-                name="nationality"
-                label="Nationality"
-                value={childInfo.nationality}
-                onChange={handleChange}
-                required
-              />
-            </Box>
-            <Box marginY={2} display="flex" component="div" flexDirection="row">
-              <Button variant="contained" color="primary" type="submit">
-                Generate Story
-              </Button>
-            </Box>
+            </RadioGroup>
           </Box>
 
-          <Divider
-            style={{ margin: "0 2rem" }}
-            orientation="vertical"
-            sx={{ height: "100vh" }}
-          />
+          <Box marginX={2} display="flex" component="div" flexDirection="row">
+            <TextField
+              required
+              fullWidth
+              id="age"
+              name="age"
+              label="Age"
+              type="number"
+              value={childInfo.age}
+              onChange={handleFieldChange}
+            />
+          </Box>
+
+          <Box marginX={2} display="flex" component="div" flexDirection="row">
+            <TextField
+              required
+              fullWidth
+              id="hairColor"
+              name="hairColor"
+              label="Hair Color"
+              value={childInfo.hairColor}
+              onChange={handleFieldChange}
+            />
+          </Box>
+
+          <Box marginX={2} display="flex" component="div" flexDirection="row">
+            <TextField
+              required
+              fullWidth
+              id="eyeColor"
+              name="eyeColor"
+              label="Eye Color"
+              value={childInfo.eyeColor}
+              onChange={handleFieldChange}
+            />
+          </Box>
+
+          <Box marginX={2} display="flex" component="div" flexDirection="row">
+            <TextField
+              required
+              fullWidth
+              id="race"
+              name="race"
+              label="Race & Color"
+              value={childInfo.race}
+              onChange={handleFieldChange}
+            />
+          </Box>
+
+          <Box marginX={2} display="flex" component="div" flexDirection="row">
+            <TextField
+              required
+              fullWidth
+              id="height"
+              name="height"
+              label="Height"
+              value={childInfo.height}
+              onChange={handleFieldChange}
+            />
+          </Box>
 
           <Box
-            margin={5}
-            width="100%"
+            marginX={2}
             display="flex"
             component="div"
             flexDirection="column"
           >
-            <Card>
-              <GoogleGemini />
-            </Card>
-
-            <Divider style={{ margin: "2rem 0" }} />
-
-            <Card>
-              <OpenAiGPT />
-            </Card>
+            <FormControl fullWidth>
+              <InputLabel id="nationality-select-label">Nationality</InputLabel>
+              <Select
+                required
+                name="nationality"
+                variant="outlined"
+                label="Nationality"
+                id="nationality-select"
+                value={childInfo.nationality.value}
+                labelId="nationality-select-label"
+                onChange={handleFieldChange}
+              >
+                {countries.map((country, index) => {
+                  return (
+                    <MenuItem key={index} value={country.value}>
+                      {country.name}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
           </Box>
         </Box>
-      </Card>
-    </div>
+
+        <Box
+          margin={5}
+          width="100%"
+          display="flex"
+          component="div"
+          flexDirection="row"
+          justifyContent="space-around"
+          className="ai-story-creators-wrapper"
+        >
+          <Card sx={{ flexBasis: "100%", marginX: 1, padding: 2 }}>
+            <Typography variant="h4">Google Gemini</Typography>
+            <GoogleGemini />
+          </Card>
+
+          <Card sx={{ flexBasis: "100%", marginX: 1, padding: 2 }}>
+            <Typography variant="h4">Openai Chat-GPT</Typography>
+            <OpenAiGPT />
+          </Card>
+        </Box>
+      </Box>
+    </Container>
   );
 };

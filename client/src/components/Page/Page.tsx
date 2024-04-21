@@ -26,7 +26,7 @@ const Page = (params: PageProps) => {
   }, [title]);
 
   return (
-    <Container className={pageClassNames} {...containerProps}>
+    <Container maxWidth={false} className={pageClassNames} {...containerProps}>
       <Notification />
       <>{children}</>
     </Container>

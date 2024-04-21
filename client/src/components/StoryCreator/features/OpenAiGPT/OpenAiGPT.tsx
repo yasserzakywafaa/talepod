@@ -1,7 +1,7 @@
 import OpenAiGPTContent from "./OpenAiGPTContent";
 import { OpenAiGPTContextProvider } from "./domain/Provider";
 
-const OpenAiGPT = () => {
+const OpenAiGPT: React.FC = () => {
   return (
     <OpenAiGPTContextProvider>
       <OpenAiGPTContent />

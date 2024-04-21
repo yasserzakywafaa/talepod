@@ -17,7 +17,7 @@ import { useOpenAiGPTContext } from "./domain/Provider";
 
 const OpenAiGPTContent = () => {
   const { store, manager } = useOpenAiGPTContext();
-  const { isFetching, userPrompt, aiAnswer } = store.state;
+  const { isFetching, userPrompt, optionsAutoPrompt, aiAnswer } = store.state;
   const { handleIsFetching, handleUpdateUserPrompt, handleGenerateRequest } =
     manager;
 
@@ -32,14 +32,14 @@ const OpenAiGPTContent = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    if (userPrompt) {
+    if (userPrompt || optionsAutoPrompt) {
       handleIsFetching(true);
-      handleGenerateRequest(userPrompt);
+      handleGenerateRequest(userPrompt || optionsAutoPrompt);
     }
   };
 
   return (
-    <Box position="relative" sx={{ padding: "1rem" }}>
+    <Box position="relative" sx={{ marginY: "1rem" }}>
       {isFetching && <LoaderSpinner style={{ position: "absolute" }} />}
 
       <Box
@@ -53,8 +53,10 @@ const OpenAiGPTContent = () => {
       >
         <Stack spacing={2} flexGrow={1}>
           <TextField
+            multiline
             label="User Prompt"
             variant="outlined"
+            value={userPrompt || optionsAutoPrompt}
             onChange={handleOnTextChange}
           />
           <Button
@@ -66,30 +68,30 @@ const OpenAiGPTContent = () => {
             Ask chatGPT
           </Button>
         </Stack>
-
-        {aiAnswer.description && (
-          <>
-            <Divider style={{ margin: "2rem 0" }}>
-              <Chip label="Answer" size="small" />
-            </Divider>
-            <Card sx={{ minWidth: 275 }}>
-              <CardContent
-                style={{
-                  color: aiAnswer.statusCode !== 200 ? "red" : "unset",
-                }}
-              >
-                <Typography variant="h5" component="div">
-                  {aiAnswer.title}
-                </Typography>
-
-                <Typography variant="h6" component="div">
-                  {aiAnswer.description}
-                </Typography>
-              </CardContent>
-            </Card>
-          </>
-        )}
       </Box>
+
+      {aiAnswer.description && (
+        <>
+          <Divider style={{ margin: "2rem 0" }}>
+            <Chip label="Answer" size="small" />
+          </Divider>
+          <Card sx={{ minWidth: 275 }}>
+            <CardContent
+              style={{
+                color: aiAnswer.statusCode !== 200 ? "red" : "unset",
+              }}
+            >
+              <Typography variant="h5" component="div">
+                {aiAnswer.title}
+              </Typography>
+
+              <Typography variant="h6" component="div">
+                {aiAnswer.description}
+              </Typography>
+            </CardContent>
+          </Card>
+        </>
+      )}
     </Box>
   );
 };

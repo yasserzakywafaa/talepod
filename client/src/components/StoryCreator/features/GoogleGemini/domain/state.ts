@@ -27,7 +27,10 @@ export const getGoogleGeminiInitialState = (): GoogleGeminiInitialState => {
       eyeColor: "",
       race: "",
       height: 0,
-      nationality: "",
+      nationality: {
+        name: "",
+        value: "",
+      },
     },
     userPrompt: "",
     optionsAutoPrompt: "",

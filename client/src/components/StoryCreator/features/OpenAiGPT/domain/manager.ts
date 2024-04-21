@@ -1,9 +1,12 @@
 import { Notify, ToastTypes } from "src/components/Notification/Notification";
 
+import { ChildInfo } from "src/components/StoryCreator/domain/state";
 import END_POINTS from "src/lib/endpoints";
 import { OpenAiGPTAIAnswerProps } from "./state";
 import { OpenAiGPTStore } from "./store";
 import axios from "axios";
+import { useEffect } from "react";
+import { useStoryCreatorContext } from "src/components/StoryCreator/domain/Provider";
 
 export interface OpenAiGPTManager {
   handleIsFetching: (isFetching: boolean) => void;
@@ -17,6 +20,8 @@ export interface OpenAiGPTManager {
 export const useOpenAiGPTManager = (
   store: OpenAiGPTStore
 ): OpenAiGPTManager => {
+  const { store: storyCreatorStore } = useStoryCreatorContext();
+
   const handleIsFetching = (isFetching: boolean) => {
     store.updateState({
       ...store.state,
@@ -97,6 +102,27 @@ export const useOpenAiGPTManager = (
       }
     }
   };
+
+  const getOptionsAutoPromptString = (childInfo: ChildInfo): string => {
+    const { gender, age, hairColor, eyeColor, race, height, nationality } =
+      childInfo;
+
+    const fullDynamicPrompt = `Create a story of 2 pages for a ${age} years old ${gender} with physical characteristics, like the ${gender}'s hair color is ${hairColor}, ${eyeColor} eye color, height of ${height}, and from a country of ${nationality.name} and ${race} race`;
+
+    return fullDynamicPrompt;
+  };
+
+  useEffect(() => {
+    store.updateState({
+      ...store.state,
+      childInfo: {
+        ...storyCreatorStore.state.childInfo,
+      },
+      optionsAutoPrompt: getOptionsAutoPromptString(
+        storyCreatorStore.state.childInfo
+      ),
+    });
+  }, [storyCreatorStore.state.childInfo]);
 
   return {
     handleIsFetching,

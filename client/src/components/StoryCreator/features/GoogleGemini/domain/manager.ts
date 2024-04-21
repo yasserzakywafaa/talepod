@@ -1,9 +1,12 @@
 import { Notify, ToastTypes } from "src/components/Notification/Notification";
 
+import { ChildInfo } from "src/components/StoryCreator/domain/state";
 import END_POINTS from "src/lib/endpoints";
 import { GoogleGeminiAIAnswerProps } from "./state";
 import { GoogleGeminiStore } from "./store";
 import axios from "axios";
+import { useEffect } from "react";
+import { useStoryCreatorContext } from "src/components/StoryCreator/domain/Provider";
 
 export interface GoogleGeminiManager {
   handleIsFetching: (isFetching: boolean) => void;
@@ -18,6 +21,8 @@ export interface GoogleGeminiManager {
 export const useGoogleGeminiManager = (
   store: GoogleGeminiStore
 ): GoogleGeminiManager => {
+  const { store: storyCreatorStore } = useStoryCreatorContext();
+
   const handleIsFetching = (isFetching: boolean) => {
     store.updateState({
       ...store.state,
@@ -138,6 +143,33 @@ export const useGoogleGeminiManager = (
       }
     }
   };
+
+  const getOptionsAutoPromptString = (childInfo: ChildInfo): string => {
+    const { gender, age, hairColor, eyeColor, race, height, nationality } =
+      childInfo;
+
+    const fullDynamicPrompt = `Create a story of 2 pages for a ${age} years old ${gender} with physical characteristics, like the ${gender}'s hair color is ${hairColor}, ${eyeColor} eye color, height of ${height}, and from a country of ${nationality.name} and ${race} race`;
+
+    return fullDynamicPrompt;
+  };
+
+  useEffect(() => {
+    store.updateState({
+      ...store.state,
+      childInfo: {
+        ...storyCreatorStore.state.childInfo,
+      },
+      optionsAutoPrompt: getOptionsAutoPromptString(
+        storyCreatorStore.state.childInfo
+      ),
+    });
+  }, [storyCreatorStore.state.childInfo]);
+
+  useEffect(() => {
+    console.log("GoogleGeminiState:>>>", {
+      GoogleGeminiState: store.state,
+    });
+  }, [store.state.childInfo]);
 
   return {
     handleIsFetching,
