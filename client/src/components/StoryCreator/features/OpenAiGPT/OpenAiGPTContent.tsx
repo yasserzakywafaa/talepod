@@ -9,34 +9,23 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ChangeEvent, FormEvent, useState } from "react";
-import { Notify, ToastTypes } from "../Notification/Notification";
+import { ChangeEvent, FormEvent } from "react";
 
 import { AndroidRounded } from "@mui/icons-material";
-import END_POINTS from "src/lib/endpoints";
 import LoaderSpinner from "src/components/Loading/LoaderSpinner";
-import axios from "axios";
+import { useOpenAiGPTContext } from "./domain/Provider";
 
-interface AiAnswerProps {
-  title: string;
-  statusCode: number;
-  description: string;
-}
-
-const OpenAISection = () => {
-  const [isFetching, setIsFetching] = useState<boolean>(false);
-  const [userPrompt, setUserPrompt] = useState<string | undefined>("");
-  const [aiAnswer, setAiAnswer] = useState<AiAnswerProps>({
-    statusCode: 0,
-    title: "",
-    description: "",
-  });
+const OpenAiGPTContent = () => {
+  const { store, manager } = useOpenAiGPTContext();
+  const { isFetching, userPrompt, aiAnswer } = store.state;
+  const { handleIsFetching, handleUpdateUserPrompt, handleGenerateRequest } =
+    manager;
 
   const handleOnTextChange = (event: ChangeEvent<HTMLInputElement>) => {
     console.log("handleOnTextChange:>>>", {
       value: event.target.value,
     });
-    setUserPrompt(event.target.value);
+    handleUpdateUserPrompt(event.target.value);
   };
 
   const handleOnFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -44,44 +33,8 @@ const OpenAISection = () => {
     event.stopPropagation();
 
     if (userPrompt) {
-      setIsFetching(true);
-
-      try {
-        const URL = END_POINTS(userPrompt);
-        const response = await axios.post(URL.OPENAI.USER_PROMPT);
-
-        console.log("OpenAiSection:>>>", {
-          response,
-        });
-
-        setIsFetching(false);
-        setAiAnswer({
-          statusCode: response.status,
-          title: "",
-          description: response.data,
-        });
-      } catch (error) {
-        console.error("OpenAiSection:>>> Error", {
-          error,
-        });
-        setIsFetching(false);
-        if (axios.isAxiosError(error) && error.response) {
-          setAiAnswer({
-            statusCode: error.response.status,
-            title: error.response.statusText,
-            description: error.response.statusText,
-          });
-          Notify({
-            content: error.response.statusText,
-            type: ToastTypes.Error,
-          });
-        } else {
-          Notify({
-            content: `Oops! Something went wrong.\n${error}`,
-            type: ToastTypes.Error,
-          });
-        }
-      }
+      handleIsFetching(true);
+      handleGenerateRequest(userPrompt);
     }
   };
 
@@ -141,4 +94,4 @@ const OpenAISection = () => {
   );
 };
 
-export default OpenAISection;
+export default OpenAiGPTContent;
