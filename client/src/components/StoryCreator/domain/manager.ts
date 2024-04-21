@@ -17,6 +17,7 @@ export const useStoryCreatorManager = (
     const isNationalityField = name === "nationality";
     const currentNationality = countries.find((c) => c.value === value);
     store.updateState({
+      ...store.state,
       childInfo: {
         ...store.state.childInfo,
         [name]: isNationalityField ? currentNationality : value,

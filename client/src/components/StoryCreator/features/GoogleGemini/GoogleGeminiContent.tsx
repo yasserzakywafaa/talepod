@@ -22,9 +22,6 @@ export const GoogleGeminiContent = () => {
     manager;
 
   const handleOnTextChange = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log("handleOnTextChange:>>>", {
-      value: event.target.value,
-    });
     handleUpdateUserPrompt(event.target.value);
   };
 

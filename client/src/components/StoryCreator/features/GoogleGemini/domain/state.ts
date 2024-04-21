@@ -1,6 +1,6 @@
 import {
   ChildInfo,
-  GenderEnum,
+  getStoryCreatorInitialState,
 } from "src/components/StoryCreator/domain/state";
 
 export interface GoogleGeminiInitialState {
@@ -18,20 +18,10 @@ export interface GoogleGeminiAIAnswerProps {
 }
 
 export const getGoogleGeminiInitialState = (): GoogleGeminiInitialState => {
+  const { childInfo } = getStoryCreatorInitialState();
   return {
     isFetching: false,
-    childInfo: {
-      gender: GenderEnum.female,
-      age: 0,
-      hairColor: "",
-      eyeColor: "",
-      race: "",
-      height: 0,
-      nationality: {
-        name: "",
-        value: "",
-      },
-    },
+    childInfo,
     userPrompt: "",
     optionsAutoPrompt: "",
     aiAnswer: {

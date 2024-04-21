@@ -1,10 +1,10 @@
 import { Notify, ToastTypes } from "src/components/Notification/Notification";
 
-import { ChildInfo } from "src/components/StoryCreator/domain/state";
 import END_POINTS from "src/lib/endpoints";
 import { OpenAiGPTAIAnswerProps } from "./state";
 import { OpenAiGPTStore } from "./store";
 import axios from "axios";
+import { getOptionsAutoPromptString } from "src/components/StoryCreator/utils/getOptionsAutoPromptString";
 import { useEffect } from "react";
 import { useStoryCreatorContext } from "src/components/StoryCreator/domain/Provider";
 
@@ -23,44 +23,31 @@ export const useOpenAiGPTManager = (
   const { store: storyCreatorStore } = useStoryCreatorContext();
 
   const handleIsFetching = (isFetching: boolean) => {
-    store.updateState({
-      ...store.state,
-      isFetching,
-    });
+    store.updateState("isFetching", isFetching);
   };
 
   const handleUpdateChildInfo = (name: string, value: string) => {
-    console.log("handleUpdateChildInfo:>>>", {
-      name,
-      value,
-    });
-    store.updateState({
-      ...store.state,
-      childInfo: {
-        ...store.state.childInfo,
-        [name as string]: value as string,
-      },
-    });
+    const newChildInfo = {
+      ...store.state.childInfo,
+      [name as string]: value as string,
+    };
+
+    store.updateState("childInfo", newChildInfo);
   };
 
   const handleUpdateOptionsAutoPrompt = (optionsAutoPrompt: string) => {
-    store.updateState({
-      ...store.state,
-      optionsAutoPrompt,
-    });
+    store.updateState("optionsAutoPrompt", optionsAutoPrompt);
   };
 
   const handleUpdateUserPrompt = (userPrompt: string) => {
-    store.updateState({
-      ...store.state,
-      userPrompt,
-    });
+    store.updateState("userPrompt", userPrompt);
   };
 
   const handleSetAiAnswer = (aiAnswer: OpenAiGPTAIAnswerProps) => {
-    store.updateState({
-      ...store.state,
-      aiAnswer,
+    store.updateState("aiAnswer", {
+      statusCode: aiAnswer.statusCode,
+      title: aiAnswer.title,
+      description: aiAnswer.description,
     });
   };
 
@@ -103,25 +90,12 @@ export const useOpenAiGPTManager = (
     }
   };
 
-  const getOptionsAutoPromptString = (childInfo: ChildInfo): string => {
-    const { gender, age, hairColor, eyeColor, race, height, nationality } =
-      childInfo;
-
-    const fullDynamicPrompt = `Create a story of 2 pages for a ${age} years old ${gender} with physical characteristics, like the ${gender}'s hair color is ${hairColor}, ${eyeColor} eye color, height of ${height}, and from a country of ${nationality.name} and ${race} race`;
-
-    return fullDynamicPrompt;
-  };
-
   useEffect(() => {
-    store.updateState({
-      ...store.state,
-      childInfo: {
-        ...storyCreatorStore.state.childInfo,
-      },
-      optionsAutoPrompt: getOptionsAutoPromptString(
-        storyCreatorStore.state.childInfo
-      ),
-    });
+    store.updateState("childInfo", storyCreatorStore.state.childInfo);
+    store.updateState(
+      "optionsAutoPrompt",
+      getOptionsAutoPromptString(storyCreatorStore.state.childInfo)
+    );
   }, [storyCreatorStore.state.childInfo]);
 
   return {

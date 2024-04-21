@@ -14,7 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import { GenderEnum } from "./domain/state";
+// import { ChildGenderEnum } from "./domain/state";
 import GoogleGemini from "./features/GoogleGemini/GoogleGemini";
 import OpenAiGPT from "./features/OpenAiGPT/OpenAiGPT";
 import { countries } from "src/shared/countries";
@@ -52,13 +52,14 @@ export const StoryCreatorContent = () => {
       >
         <Box
           noValidate
-          paddingX={5}
+          marginX={2}
           width="100%"
           display="flex"
           component="form"
           autoComplete="off"
           flexDirection="row"
           alignItems="flex-start"
+          justifyContent="space-between"
           className="child-info-form"
           onSubmit={handleOnFormSubmit}
         >
@@ -71,25 +72,38 @@ export const StoryCreatorContent = () => {
           >
             <RadioGroup
               row
-              sx={{ marginLeft: "16px", marginTop: "-16px" }}
+              sx={{ marginLeft: "16px" }}
               name="radio-buttons-group"
               defaultValue={childInfo.gender}
               aria-labelledby="radio-buttons-group-gender-label"
               onChange={handleFieldChange}
             >
               <FormControlLabel
-                value="male"
+                value="boy"
+                name="gender"
+                label="Boy"
                 control={<Radio />}
-                label="Male"
-                checked={childInfo.gender === GenderEnum.male}
               />
               <FormControlLabel
-                value="female"
+                value="girl"
+                name="gender"
+                label="Girl"
                 control={<Radio />}
-                label="Female"
-                checked={childInfo.gender === GenderEnum.female}
               />
             </RadioGroup>
+          </Box>
+
+          <Box marginX={2} display="flex" component="div" flexDirection="row">
+            <TextField
+              required
+              fullWidth
+              id="name"
+              name="name"
+              label="Name"
+              type="text"
+              value={childInfo.name}
+              onChange={handleFieldChange}
+            />
           </Box>
 
           <Box marginX={2} display="flex" component="div" flexDirection="row">

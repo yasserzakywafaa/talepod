@@ -1,16 +1,18 @@
 import { Country } from "src/shared/countries";
 
 export interface StoryCreatorInitialState {
+  isFetching: boolean;
   childInfo: ChildInfo;
 }
 
-export enum GenderEnum {
-  male = "male",
-  female = "female",
+export enum ChildGenderEnum {
+  boy = "boy",
+  girl = "girl",
 }
 
 export type ChildInfo = {
-  gender: GenderEnum;
+  name: string;
+  gender: ChildGenderEnum;
   age: number;
   hairColor: string;
   eyeColor: string;
@@ -21,8 +23,10 @@ export type ChildInfo = {
 
 export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
   return {
+    isFetching: false,
     childInfo: {
-      gender: GenderEnum.female,
+      name: "Yasser",
+      gender: ChildGenderEnum.boy,
       age: 4,
       hairColor: "Blond",
       eyeColor: "Brown",

@@ -1,6 +1,6 @@
 import {
   ChildInfo,
-  GenderEnum,
+  getStoryCreatorInitialState,
 } from "src/components/StoryCreator/domain/state";
 
 export interface OpenAiGPTInitialState {
@@ -18,20 +18,10 @@ export interface OpenAiGPTAIAnswerProps {
 }
 
 export const getOpenAiGPTInitialState = (): OpenAiGPTInitialState => {
+  const { childInfo } = getStoryCreatorInitialState();
   return {
     isFetching: false,
-    childInfo: {
-      gender: GenderEnum.female,
-      age: 0,
-      hairColor: "",
-      eyeColor: "",
-      race: "",
-      height: 0,
-      nationality: {
-        name: "",
-        value: "",
-      },
-    },
+    childInfo,
     userPrompt: "",
     optionsAutoPrompt: "",
     aiAnswer: {
