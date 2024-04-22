@@ -1,13 +1,13 @@
 import { Notify, ToastTypes } from "src/components/Notification/Notification";
+import {
+  getAutoImageGenPromptString,
+  getAutoTextGenPromptString,
+} from "src/components/StoryCreator/utils/getAutoPromptString";
 
 import END_POINTS from "src/lib/endpoints";
 import { OpenAiGPTAIAnswerProps } from "./state";
 import { OpenAiGPTStore } from "./store";
 import axios from "axios";
-import {
-  getAutoImageGenPromptString,
-  getAutoTextGenPromptString,
-} from "src/components/StoryCreator/utils/getAutoPromptString";
 import { useEffect } from "react";
 import { useStoryCreatorContext } from "src/components/StoryCreator/domain/Provider";
 

@@ -20,7 +20,7 @@ const OpenAiGPTTextGeneration = () => {
   const { textGeneration } = store.state;
   const { isFetching, userPrompt, autoTextPrompt, aiAnswer } = textGeneration;
   const {
-    handleIsImageGenFetching,
+    handleIsTextGenFetching,
     handleUpdateUserPrompt,
     handleGenerateTextRequest,
   } = manager;
@@ -37,7 +37,7 @@ const OpenAiGPTTextGeneration = () => {
     event.stopPropagation();
 
     if (userPrompt || autoTextPrompt) {
-      handleIsImageGenFetching(true);
+      handleIsTextGenFetching(true);
       handleGenerateTextRequest(userPrompt || autoTextPrompt);
     }
   };

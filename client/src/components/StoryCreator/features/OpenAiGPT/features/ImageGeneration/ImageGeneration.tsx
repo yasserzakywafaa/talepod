@@ -7,7 +7,6 @@ import {
   Divider,
   Stack,
   TextField,
-  Typography,
 } from "@mui/material";
 import { ChangeEvent, FormEvent } from "react";
 
@@ -86,13 +85,13 @@ const OpenAiGPTImageGeneration = () => {
                 color: aiAnswer.statusCode !== 200 ? "red" : "unset",
               }}
             >
-              <Typography variant="h5" component="div">
-                {aiAnswer.title}
-              </Typography>
-
-              <Typography variant="h6" component="div">
-                {aiAnswer.description}
-              </Typography>
+              <img
+                loading="lazy"
+                alt={aiAnswer.title}
+                src={aiAnswer.description}
+                // src={`${aiAnswer.description}?w=164&h=164&fit=crop&auto=format`}
+                // srcSet={`${aiAnswer.description}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+              />
             </CardContent>
           </Card>
         </>

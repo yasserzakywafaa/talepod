@@ -17,4 +17,3 @@ export const getAutoImageGenPromptString = (childInfo: ChildInfo): string => {
 
   return fullDynamicPrompt;
 };
-
