@@ -12,6 +12,10 @@ const END_POINTS = (param?: string) => {
     },
     OPENAI: {
       USER_PROMPT: `${publicURL}/api/openai/${param}`,
+      GENERATE: {
+        TEXT: `${publicURL}api/openai/generate/text/${param}`,
+        IMAGES: `${publicURL}/api/openai/generate/images/${param}`,
+      }
     },
   };
 };

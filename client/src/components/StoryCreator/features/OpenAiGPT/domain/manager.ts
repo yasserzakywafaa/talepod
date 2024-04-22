@@ -105,7 +105,7 @@ export const useOpenAiGPTManager = (
   const handleGenerateTextRequest = async (userPrompt: string) => {
     try {
       const URL = END_POINTS(userPrompt);
-      const response = await axios.post(URL.OPENAI.USER_PROMPT);
+      const response = await axios.post(URL.OPENAI.GENERATE.TEXT);
 
       console.log("OpenAiSection:>>>", {
         response,
@@ -144,7 +144,7 @@ export const useOpenAiGPTManager = (
   const handleGenerateImageRequest = async (userPrompt: string) => {
     try {
       const URL = END_POINTS(userPrompt);
-      const response = await axios.post(URL.OPENAI.USER_PROMPT);
+      const response = await axios.post(URL.OPENAI.GENERATE.IMAGES);
 
       console.log("OpenAiSection:>>>", {
         response,
