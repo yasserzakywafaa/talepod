@@ -4,7 +4,10 @@ const END_POINTS = {
     CHAT: `/api/gemini/chat/:userPrompt`,
   },
   OPENAI: {
-    USER_PROMPT: `/api/openai/:userPrompt`,
+    GENERATE: {
+      TEXT: `/api/openai/generate/text/:userPrompt`,
+      IMAGES: `/api/openai/generate/images/:userPrompt`,
+    }
   },
 };
 

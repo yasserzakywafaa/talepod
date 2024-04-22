@@ -6,9 +6,13 @@ const openAIRouter = express.Router();
 
 // Define API routes
 openAIRouter.post(
-  END_POINTS.OPENAI.USER_PROMPT,
-  OpenAIController.generateAnswer
+  END_POINTS.OPENAI.GENERATE.TEXT,
+  OpenAIController.generateText
 );
-// openAIRouter.post('/api/openai/:userQuestion', openAIController.generateStory);
+
+openAIRouter.post(
+  END_POINTS.OPENAI.GENERATE.IMAGES,
+  OpenAIController.generateImages
+);
 
 export default openAIRouter;
