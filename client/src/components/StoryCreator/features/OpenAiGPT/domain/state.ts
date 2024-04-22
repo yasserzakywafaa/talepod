@@ -4,10 +4,16 @@ import {
 } from "src/components/StoryCreator/domain/state";
 
 export interface OpenAiGPTInitialState {
-  isFetching: boolean;
   childInfo: ChildInfo;
+  textGeneration: GenerationProps;
+  imageGeneration: GenerationProps;
+}
+
+export interface GenerationProps {
+  isFetching: boolean;
   userPrompt: string;
-  optionsAutoPrompt: string;
+  autoTextPrompt: string;
+  autoImagePrompt: string;
   aiAnswer: OpenAiGPTAIAnswerProps;
 }
 
@@ -20,14 +26,28 @@ export interface OpenAiGPTAIAnswerProps {
 export const getOpenAiGPTInitialState = (): OpenAiGPTInitialState => {
   const { childInfo } = getStoryCreatorInitialState();
   return {
-    isFetching: false,
     childInfo,
-    userPrompt: "",
-    optionsAutoPrompt: "",
-    aiAnswer: {
-      statusCode: 0,
-      title: "",
-      description: "",
+    textGeneration: {
+      isFetching: false,
+      userPrompt: "",
+      autoTextPrompt: "",
+      autoImagePrompt: "",
+      aiAnswer: {
+        statusCode: 0,
+        title: "",
+        description: "",
+      },
+    },
+    imageGeneration: {
+      isFetching: false,
+      userPrompt: "",
+      autoTextPrompt: "",
+      autoImagePrompt: "",
+      aiAnswer: {
+        statusCode: 0,
+        title: "",
+        description: "",
+      },
     },
   };
 };

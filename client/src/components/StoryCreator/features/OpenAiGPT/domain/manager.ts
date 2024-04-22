@@ -4,17 +4,26 @@ import END_POINTS from "src/lib/endpoints";
 import { OpenAiGPTAIAnswerProps } from "./state";
 import { OpenAiGPTStore } from "./store";
 import axios from "axios";
-import { getOptionsAutoPromptString } from "src/components/StoryCreator/utils/getOptionsAutoPromptString";
+import {
+  getAutoImageGenPromptString,
+  getAutoTextGenPromptString,
+} from "src/components/StoryCreator/utils/getAutoPromptString";
 import { useEffect } from "react";
 import { useStoryCreatorContext } from "src/components/StoryCreator/domain/Provider";
 
 export interface OpenAiGPTManager {
-  handleIsFetching: (isFetching: boolean) => void;
   handleUpdateChildInfo: (name: string, value: string) => void;
-  handleUpdateOptionsAutoPrompt: (optionsAutoPrompt: string) => void;
   handleUpdateUserPrompt: (userPrompt: string) => void;
-  handleSetAiAnswer: (aiAnswer: OpenAiGPTAIAnswerProps) => void;
-  handleGenerateRequest: (userPrompt: string) => void;
+
+  handleIsTextGenFetching: (isFetching: boolean) => void;
+  handleSetTextAiAnswer: (aiAnswer: OpenAiGPTAIAnswerProps) => void;
+  handleUpdateAutoTextPrompt: (autoTextPrompt: string) => void;
+  handleGenerateTextRequest: (userPrompt: string) => void;
+
+  handleUpdateAutoImagePrompt: (autoImagePrompt: string) => void;
+  handleIsImageGenFetching: (isFetching: boolean) => void;
+  handleSetImageAiAnswer: (aiAnswer: OpenAiGPTAIAnswerProps) => void;
+  handleGenerateImageRequest: (userPrompt: string) => void;
 }
 
 export const useOpenAiGPTManager = (
@@ -22,8 +31,18 @@ export const useOpenAiGPTManager = (
 ): OpenAiGPTManager => {
   const { store: storyCreatorStore } = useStoryCreatorContext();
 
-  const handleIsFetching = (isFetching: boolean) => {
-    store.updateState("isFetching", isFetching);
+  const handleIsTextGenFetching = (isFetching: boolean) => {
+    store.updateState("textGeneration", {
+      ...store.state.textGeneration,
+      isFetching,
+    });
+  };
+
+  const handleIsImageGenFetching = (isFetching: boolean) => {
+    store.updateState("imageGeneration", {
+      ...store.state.imageGeneration,
+      isFetching,
+    });
   };
 
   const handleUpdateChildInfo = (name: string, value: string) => {
@@ -35,23 +54,55 @@ export const useOpenAiGPTManager = (
     store.updateState("childInfo", newChildInfo);
   };
 
-  const handleUpdateOptionsAutoPrompt = (optionsAutoPrompt: string) => {
-    store.updateState("optionsAutoPrompt", optionsAutoPrompt);
-  };
-
-  const handleUpdateUserPrompt = (userPrompt: string) => {
-    store.updateState("userPrompt", userPrompt);
-  };
-
-  const handleSetAiAnswer = (aiAnswer: OpenAiGPTAIAnswerProps) => {
-    store.updateState("aiAnswer", {
-      statusCode: aiAnswer.statusCode,
-      title: aiAnswer.title,
-      description: aiAnswer.description,
+  const handleUpdateAutoTextPrompt = (autoTextPrompt: string) => {
+    store.updateState("textGeneration", {
+      ...store.state.textGeneration,
+      autoTextPrompt,
     });
   };
 
-  const handleGenerateRequest = async (userPrompt: string) => {
+  const handleUpdateAutoImagePrompt = (autoImagePrompt: string) => {
+    store.updateState("imageGeneration", {
+      ...store.state.imageGeneration,
+      autoImagePrompt,
+    });
+  };
+
+  const handleUpdateUserPrompt = (userPrompt: string) => {
+    store.updateState("textGeneration", {
+      ...store.state.textGeneration,
+      userPrompt,
+    });
+
+    store.updateState("imageGeneration", {
+      ...store.state.imageGeneration,
+      userPrompt,
+    });
+  };
+
+  const handleSetTextAiAnswer = (aiAnswer: OpenAiGPTAIAnswerProps) => {
+    store.updateState("textGeneration", {
+      ...store.state.textGeneration,
+      aiAnswer: {
+        statusCode: aiAnswer.statusCode,
+        title: aiAnswer.title,
+        description: aiAnswer.description,
+      },
+    });
+  };
+
+  const handleSetImageAiAnswer = (aiAnswer: OpenAiGPTAIAnswerProps) => {
+    store.updateState("imageGeneration", {
+      ...store.state.imageGeneration,
+      aiAnswer: {
+        statusCode: aiAnswer.statusCode,
+        title: aiAnswer.title,
+        description: aiAnswer.description,
+      },
+    });
+  };
+
+  const handleGenerateTextRequest = async (userPrompt: string) => {
     try {
       const URL = END_POINTS(userPrompt);
       const response = await axios.post(URL.OPENAI.USER_PROMPT);
@@ -60,8 +111,8 @@ export const useOpenAiGPTManager = (
         response,
       });
 
-      handleIsFetching(false);
-      handleSetAiAnswer({
+      handleIsTextGenFetching(false);
+      handleSetTextAiAnswer({
         statusCode: response.status,
         title: "",
         description: response.data,
@@ -70,9 +121,48 @@ export const useOpenAiGPTManager = (
       console.error("OpenAiSection:>>> Error", {
         error,
       });
-      handleIsFetching(false);
+      handleIsTextGenFetching(false);
       if (axios.isAxiosError(error) && error.response) {
-        handleSetAiAnswer({
+        handleSetTextAiAnswer({
+          statusCode: error.response.status,
+          title: error.response.statusText,
+          description: error.response.statusText,
+        });
+        Notify({
+          content: error.response.statusText,
+          type: ToastTypes.Error,
+        });
+      } else {
+        Notify({
+          content: `Oops! Something went wrong.\n${error}`,
+          type: ToastTypes.Error,
+        });
+      }
+    }
+  };
+
+  const handleGenerateImageRequest = async (userPrompt: string) => {
+    try {
+      const URL = END_POINTS(userPrompt);
+      const response = await axios.post(URL.OPENAI.USER_PROMPT);
+
+      console.log("OpenAiSection:>>>", {
+        response,
+      });
+
+      handleIsImageGenFetching(false);
+      handleSetImageAiAnswer({
+        statusCode: response.status,
+        title: "",
+        description: response.data,
+      });
+    } catch (error) {
+      console.error("OpenAiSection:>>> Error", {
+        error,
+      });
+      handleIsImageGenFetching(false);
+      if (axios.isAxiosError(error) && error.response) {
+        handleSetImageAiAnswer({
           statusCode: error.response.status,
           title: error.response.statusText,
           description: error.response.statusText,
@@ -92,18 +182,32 @@ export const useOpenAiGPTManager = (
 
   useEffect(() => {
     store.updateState("childInfo", storyCreatorStore.state.childInfo);
-    store.updateState(
-      "optionsAutoPrompt",
-      getOptionsAutoPromptString(storyCreatorStore.state.childInfo)
-    );
+
+    store.updateState("textGeneration", {
+      ...store.state.textGeneration,
+      autoTextPrompt: getAutoTextGenPromptString(
+        storyCreatorStore.state.childInfo
+      ),
+    });
+
+    store.updateState("imageGeneration", {
+      ...store.state.imageGeneration,
+      autoImagePrompt: getAutoImageGenPromptString(
+        storyCreatorStore.state.childInfo
+      ),
+    });
   }, [storyCreatorStore.state.childInfo]);
 
   return {
-    handleIsFetching,
+    handleIsTextGenFetching,
+    handleIsImageGenFetching,
     handleUpdateChildInfo,
-    handleUpdateOptionsAutoPrompt,
+    handleUpdateAutoTextPrompt,
+    handleUpdateAutoImagePrompt,
     handleUpdateUserPrompt,
-    handleSetAiAnswer,
-    handleGenerateRequest,
+    handleSetTextAiAnswer,
+    handleSetImageAiAnswer,
+    handleGenerateTextRequest,
+    handleGenerateImageRequest,
   };
 };
