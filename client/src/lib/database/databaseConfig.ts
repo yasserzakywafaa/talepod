@@ -14,7 +14,7 @@ export interface PouchDBDocParams {
   _rev: string;
 }
 
-export const DATABASE_NAME = "react_pwa_ai_file_uploader_db";
+export const DATABASE_NAME = "ai_story_creator_db";
 
 export type PouchDBAllDocsOptions =
   | PouchDB.Core.AllDocsOptions

@@ -2,7 +2,7 @@ const _this = this;
 const version = 11;
 // const isOnline = true;
 const host = _this.location.origin;
-const CACHE_NAME = `react-pwa-ai-file-uploader-v${version}`;
+const CACHE_NAME = `ai-story-creator-v${version}`;
 const urlsToCache = ["/", "/settings", "/index.html"];
 
 // Install service worker
