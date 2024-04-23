@@ -54,8 +54,11 @@ export const useGoogleGeminiManager = (
 
   const handleChatRequest = async (userPrompt: string) => {
     try {
-      const URL = END_POINTS(userPrompt);
-      const chatResponse = await axios.post(URL.GOOGLE_GEMINI.CHAT);
+      // const URL = END_POINTS(userPrompt);
+      // const chatResponse = await axios.post(URL.GOOGLE_GEMINI.CHAT);
+      const chatResponse = await axios.post(END_POINTS.GOOGLE_GEMINI.CHAT, {
+        userPrompt,
+      });
       console.log("GoogleGemini:>>> handleChatRequest:>>> CHAT", {
         chatResponse,
       });
@@ -93,8 +96,12 @@ export const useGoogleGeminiManager = (
 
   const handleGenerateContent = async (userPrompt: string) => {
     try {
-      const URL = END_POINTS(userPrompt);
-      const generateResponse = await axios.post(URL.GOOGLE_GEMINI.GENERATE);
+      // const URL = END_POINTS(userPrompt);
+      // const generateResponse = await axios.post(URL.GOOGLE_GEMINI.GENERATE);
+      const generateResponse = await axios.post(
+        END_POINTS.GOOGLE_GEMINI.GENERATE,
+        { userPrompt }
+      );
       console.log("GoogleGemini:>>> handleGenerateContent:>>> GENERATE", {
         generateResponse,
       });

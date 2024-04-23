@@ -22,21 +22,19 @@ if (CONFIG.IS_PROD) {
   expressApp.get("/", (request, response) => {
     response.status(200).sendFile(`${frontendBuildPath}/index.html`);
   });
-}
 
-// Mount API routes
-expressApp.use(googleGeminiRoutes);
-expressApp.use(openAIRoutes);
-
-console.log("CONFIG.ENV:>>>", CONFIG.NODE_ENV);
-
-if (CONFIG.IS_PROD) {
   expressApp.get("*", (req, res) => {
     //this serves index.html if no other URL hits
     res.status(200).sendFile(`${frontendBuildPath}/index.html`);
   });
 }
 
-expressApp.listen(PORT, () => console.log(`Server running on PORT '${PORT}'`));
+console.log("CONFIG.ENV:>>>", CONFIG.NODE_ENV);
+
+// Mount API routes
+expressApp.use(googleGeminiRoutes);
+expressApp.use(openAIRoutes);
+
+expressApp.listen(PORT, () => console.log(`Server running on PORT:>>> '${PORT}'`));
 
 module.exports = expressApp;

@@ -23,37 +23,13 @@ export const StoryCreatorContent = () => {
         justifyContent="space-around"
         className="ai-story-creator-wrapper"
       >
-        <Card sx={{ flexBasis: "50%", marginX: 1, padding: 2 }}>
+        <Card sx={{ flexBasis: "50%", marginX: 1, padding: 2, height: "fit-content" }}>
           <Typography variant="h4">Google Gemini</Typography>
           <GoogleGemini />
         </Card>
 
         <Card sx={{ flexBasis: "100%", marginX: 1, padding: 2 }}>
           <OpenAiGPT />
-
-          {/* <Box
-            display="flex"
-            component="div"
-            flexDirection="column"
-            className="openai-wrapper"
-            justifyContent="space-around"
-          >
-            <Box className="openai-text-generation">
-              <Typography variant="h4">
-                Openai Chat-GPT Text Generation
-              </Typography>
-              <OpenAiGPT />
-            </Box>
-
-            <Divider sx={{ marginY: 5 }} />
-
-            <Box className="openai-image-generation">
-              <Typography variant="h4">
-                Openai Chat-GPT Image Generation
-              </Typography>
-              <OpenAiGPT />
-            </Box>
-          </Box> */}
         </Card>
       </Box>
     </>
