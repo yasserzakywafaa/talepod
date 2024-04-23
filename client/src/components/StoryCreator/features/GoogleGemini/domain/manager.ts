@@ -54,8 +54,6 @@ export const useGoogleGeminiManager = (
 
   const handleChatRequest = async (userPrompt: string) => {
     try {
-      // const URL = END_POINTS(userPrompt);
-      // const chatResponse = await axios.post(URL.GOOGLE_GEMINI.CHAT);
       const chatResponse = await axios.post(END_POINTS.GOOGLE_GEMINI.CHAT, {
         userPrompt,
       });
@@ -63,8 +61,8 @@ export const useGoogleGeminiManager = (
         chatResponse,
       });
       handleSetAiAnswer({
-        statusCode: 200,
-        title: "",
+        statusCode: chatResponse.status,
+        title: chatResponse.statusText,
         description: chatResponse.data,
       });
       handleIsFetching(false);
@@ -96,8 +94,6 @@ export const useGoogleGeminiManager = (
 
   const handleGenerateContent = async (userPrompt: string) => {
     try {
-      // const URL = END_POINTS(userPrompt);
-      // const generateResponse = await axios.post(URL.GOOGLE_GEMINI.GENERATE);
       const generateResponse = await axios.post(
         END_POINTS.GOOGLE_GEMINI.GENERATE,
         { userPrompt }
@@ -106,8 +102,8 @@ export const useGoogleGeminiManager = (
         generateResponse,
       });
       handleSetAiAnswer({
-        statusCode: 200,
-        title: "",
+        statusCode: generateResponse.status,
+        title: generateResponse.statusText,
         description: generateResponse.data,
       });
 

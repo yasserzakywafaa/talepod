@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material";
-import TextGeneration from "./features/TextGeneration/TextGeneration";
+
 import ImageGeneration from "./features/ImageGeneration/ImageGeneration";
+import TextGeneration from "./features/TextGeneration/TextGeneration";
 
 const OpenAiGPTContent = () => {
   return (
@@ -8,18 +9,18 @@ const OpenAiGPTContent = () => {
       paddingY="1rem"
       display="flex"
       component="div"
-      flexDirection="row"
+      flexDirection="column"
       position="relative"
       className="openai-wrapper"
       justifyContent="space-around"
     >
-      <Box className="openai-text-generation">
+      <Box className="openai-text-generation" marginBottom="1rem">
         <Typography variant="h4">Openai Chat-GPT Text Generation</Typography>
 
         <TextGeneration />
       </Box>
 
-      <Box className="openai-text-generation">
+      <Box className="openai-text-generation" marginTop="1rem">
         <Typography variant="h4">Openai Chat-GPT Image Generation</Typography>
 
         <ImageGeneration />

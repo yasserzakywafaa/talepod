@@ -1,18 +1,19 @@
 import {
-  Container,
-  Typography,
   Box,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  TextField,
+  Container,
   FormControl,
+  FormControlLabel,
   InputLabel,
-  Select,
   MenuItem,
+  Radio,
+  RadioGroup,
+  Select,
   SelectChangeEvent,
+  TextField,
+  Typography,
 } from "@mui/material";
 import { Country, countries } from "src/shared/countries";
+
 import { ChildInfo } from "../../../domain/state";
 
 export interface TextGenerationFormProps {
@@ -20,7 +21,7 @@ export interface TextGenerationFormProps {
   handleUpdateChildInfo: (name: string, value: string | Country) => void;
 }
 
-const  GenerationOptionsForm = (params: TextGenerationFormProps) => {
+const GenerationOptionsForm = (params: TextGenerationFormProps) => {
   const { childInfo, handleUpdateChildInfo } = params;
 
   const handleOnFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -138,18 +139,6 @@ const  GenerationOptionsForm = (params: TextGenerationFormProps) => {
               name="eyeColor"
               label="Eye Color"
               value={childInfo.eyeColor}
-              onChange={handleFieldChange}
-            />
-          </Box>
-
-          <Box marginX={2} display="flex" component="div" flexDirection="row">
-            <TextField
-              required
-              fullWidth
-              id="race"
-              name="race"
-              label="Race & Color"
-              value={childInfo.race}
               onChange={handleFieldChange}
             />
           </Box>

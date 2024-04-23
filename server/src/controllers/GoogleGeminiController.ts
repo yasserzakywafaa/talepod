@@ -1,66 +1,34 @@
 // node --version # Should be >= 18
-import {
-  ChatSession,
-  GoogleGenerativeAI,
-  HarmBlockThreshold,
-  HarmCategory,
-} from "@google/generative-ai";
+import { ChatSession, GoogleGenerativeAI } from "@google/generative-ai";
 import { NextFunction, Request, Response } from "express";
+import {
+  generationConfig,
+  requestParams,
+  safetySettings,
+} from "../models/googleGeminiModel";
 
 import CONFIG from "../config";
 
-const generationConfig = {
-  topK: 1,
-  topP: 1,
-  temperature: 0.9,
-  maxOutputTokens: 2048,
-};
-const safetySettings = [
-  {
-    category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-    threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-  },
-  {
-    category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-    threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-  },
-  {
-    category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-    threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-  },
-  {
-    category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-    threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-  },
-];
-
 // Generative API
 const genAI = new GoogleGenerativeAI(CONFIG.GOOGLE_GEMINI_API_KEY_1 ?? "");
-const genAiModel = genAI.getGenerativeModel({
-  model: CONFIG.GOOGLE_GEMINI_MODEL_NAME ?? "",
-  generationConfig,
-  safetySettings,
-});
-
-// console.log("GOOGLE_GEMINI:>>>", {
-//   MODEL_NAME: CONFIG.GOOGLE_GEMINI_MODEL_NAME,
-// });
+const genAiModel = genAI.getGenerativeModel(requestParams);
 
 export const generateAnswer = async (
   request: Request,
   response: Response,
   next: NextFunction
 ) => {
-  const userPrompt = request.params.userPrompt;
+  const userPrompt = request.body.userPrompt;
   try {
-    const generateContentRequest = await genAiModel.generateContent(userPrompt);
-    const generateContentResponseText = generateContentRequest.response.text();
+    const generateRequest = await genAiModel.generateContent(userPrompt);
+    const generateResponseText = generateRequest.response.text();
 
     console.log("GoogleGeminiController:>>> GENERATE", {
-      requestParams: request.params,
-      response: generateContentResponseText,
+      request,
+      response: generateResponseText,
+      MODEL_NAME: CONFIG.GOOGLE_GEMINI_MODEL_NAME,
     });
-    next(generateContentResponseText);
+    response.json(generateResponseText);
   } catch (error) {
     console.error("GoogleGeminiController:>>> GENERATE Error", {
       error,
@@ -86,14 +54,15 @@ export const generateChat = async (
     }
   );
   const chat = genAiModel.startChat();
-  const userPrompt = request.params.userPrompt;
+  const userPrompt = request.body.userPrompt;
   try {
     const chatResponse = await chat.sendMessage(userPrompt);
     const chatResponseText = chatResponse.response.text();
 
     console.log("GoogleGeminiController:>>> CHAT", {
-      requestParams: request.params,
-      response: chatResponseText,
+      request,
+      response: chatResponse.response,
+      MODEL_NAME: CONFIG.GOOGLE_GEMINI_MODEL_NAME,
     });
     next(chatResponseText);
   } catch (error) {

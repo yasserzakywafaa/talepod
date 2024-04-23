@@ -18,7 +18,7 @@ import { useGoogleGeminiContext } from "./domain/Provider";
 export const GoogleGeminiContent = () => {
   const { store, manager } = useGoogleGeminiContext();
   const { isFetching, userPrompt, optionsAutoPrompt, aiAnswer } = store.state;
-  const { handleIsFetching, handleChatRequest, handleUpdateUserPrompt } =
+  const { handleIsFetching, handleGenerateContent, handleUpdateUserPrompt } =
     manager;
 
   const handleOnTextChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -31,8 +31,8 @@ export const GoogleGeminiContent = () => {
 
     if (userPrompt || optionsAutoPrompt) {
       handleIsFetching(true);
-      // handleGenerateContent(userPrompt);
-      handleChatRequest(userPrompt || optionsAutoPrompt);
+      handleGenerateContent(userPrompt || optionsAutoPrompt);
+      // handleChatRequest(userPrompt || optionsAutoPrompt);
     }
   };
 

@@ -18,6 +18,7 @@ const CONFIG = {
   // APIs keys for AI
   // Openai
   OPENAI_MODEL_NAME: process.env.OPENAI_MODEL_NAME,
+  OPENAI_IMAGES_MODEL_NAME: process.env.OPENAI_IMAGES_MODEL_NAME,
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   // GoogleGemini
   GOOGLE_GEMINI_MODEL_NAME: process.env.GOOGLE_GEMINI_MODEL_NAME,

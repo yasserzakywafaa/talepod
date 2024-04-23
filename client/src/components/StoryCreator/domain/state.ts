@@ -16,7 +16,6 @@ export type ChildInfo = {
   age: number;
   hairColor: string;
   eyeColor: string;
-  race: string;
   height: number;
   nationality: Country;
 };
@@ -25,12 +24,11 @@ export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
   return {
     isFetching: false,
     childInfo: {
-      name: "Yasser",
+      name: "Noah",
       gender: ChildGenderEnum.boy,
-      age: 4,
-      hairColor: "Blond",
+      age: 2,
+      hairColor: "Black",
       eyeColor: "Brown",
-      race: "White",
       height: 50,
       nationality: {
         name: "Switzerland",
