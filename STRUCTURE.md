@@ -19,7 +19,7 @@
     |   ├── .env
     |   ├── package.json
     |   ├── tsconfig.json
-    |   ├── yarn.lock
+    |   └── yarn.lock
     ├── server
     │   ├── node_modules
     │   ├── src
@@ -31,14 +31,17 @@
     │   ├── .env
     │   ├── package.json
     │   ├── tsconfig.json
-    │   ├── yarn.lock
+    │   └── yarn.lock
+    ├── templates
+    │   ├── client
+    │   └── server
     ├── node_modules
     ├── .dockerignore
     ├── .env
     ├── .gitignore
     ├── .gitlab-ci.yml
-    ├── package.json
+    ├── package.json (if needed)
     ├── README.md
     ├── tsconfig.json (if needed)
-    └── STRUCTURE.md
+    ├── STRUCTURE.md
     └── yarn.lock
