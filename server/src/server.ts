@@ -7,7 +7,7 @@ import openAIRoutes from "./routes/openaiRoutes";
 
 const expressApp = express();
 const frontendBuildPath = CONFIG.FRONTEND_BUILD_PATH;
-const PORT = CONFIG.IS_DEV ? CONFIG.DEV_SERVER_PORT : CONFIG.PROD_SERVER_PORT;
+const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.PROD_PORT;
 
 expressApp.use(cors());
 expressApp.use(bodyParser.json());
@@ -29,12 +29,15 @@ if (CONFIG.IS_PROD) {
   });
 }
 
-console.log("CONFIG.ENV:>>>", CONFIG.NODE_ENV);
-
 // Mount API routes
 expressApp.use(googleGeminiRoutes);
 expressApp.use(openAIRoutes);
 
-expressApp.listen(PORT, () => console.log(`Server running on PORT:>>> '${PORT}'`));
+expressApp.listen(PORT, () =>
+  console.log("Server running on:>>>", {
+    ENVIRONMENT: CONFIG.NODE_ENV,
+    PORT,
+  })
+);
 
 module.exports = expressApp;

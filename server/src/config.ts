@@ -4,8 +4,8 @@ import path from "path";
 dotenv.config();
 
 const CONFIG = {
-  PROD_SERVER_PORT: 8080,
-  DEV_SERVER_PORT: 4001,
+  DEV_PORT: process.env.DEV_PORT,
+  PROD_PORT: process.env.PROD_PORT,
   NODE_ENV: process.env.NODE_ENV,
   DISABLE_HOT_RELOAD: process.env.REACT_APP_DISABLE_LIVE_RELOAD,
   IS_DEV:
@@ -16,9 +16,12 @@ const CONFIG = {
   FRONTEND_BUILD_PATH: path.resolve(__dirname + "/../build"),
 
   // APIs keys for AI
+  // Openai
+  OPENAI_MODEL_NAME: process.env.OPENAI_MODEL_NAME,
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
-  GEMINI_API_KEY_1: process.env.GEMINI_API_KEY_1,
-  GEMINI_MODEL_NAME: process.env.GEMINI_MODEL_NAME,
+  // GoogleGemini
+  GOOGLE_GEMINI_MODEL_NAME: process.env.GOOGLE_GEMINI_MODEL_NAME,
+  GOOGLE_GEMINI_API_KEY_1: process.env.GOOGLE_GEMINI_API_KEY_1,
 };
 
 export default CONFIG;

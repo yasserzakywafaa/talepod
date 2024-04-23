@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import OpenAi from "openai";
+import CONFIG from "../config";
 
 const openai = new OpenAi();
 
@@ -18,7 +19,7 @@ export const generateText = async (
   try {
     const completion = await openai.chat.completions.create({
       messages: [{ role: "user", content: userPrompt }],
-      model: "gpt-3.5-turbo",
+      model: CONFIG.OPENAI_MODEL_NAME,
       temperature: 0,
       max_tokens: 1000,
     });

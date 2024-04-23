@@ -1,5 +1,4 @@
 // node --version # Should be >= 18
-
 import {
   ChatSession,
   GoogleGenerativeAI,
@@ -9,8 +8,6 @@ import {
 import { NextFunction, Request, Response } from "express";
 
 import CONFIG from "../config";
-
-// import isError from "../utils/isError";
 
 const generationConfig = {
   topK: 1,
@@ -37,23 +34,24 @@ const safetySettings = [
   },
 ];
 
-// Generative AI
-const genAI = new GoogleGenerativeAI(CONFIG.GEMINI_API_KEY_1 ?? "");
+// Generative API
+const genAI = new GoogleGenerativeAI(CONFIG.GOOGLE_GEMINI_API_KEY_1 ?? "");
 const genAiModel = genAI.getGenerativeModel({
-  model: CONFIG.GEMINI_MODEL_NAME ?? "",
+  model: CONFIG.GOOGLE_GEMINI_MODEL_NAME ?? "",
   generationConfig,
   safetySettings,
 });
+
+// console.log("GOOGLE_GEMINI:>>>", {
+//   MODEL_NAME: CONFIG.GOOGLE_GEMINI_MODEL_NAME,
+// });
 
 export const generateAnswer = async (
   request: Request,
   response: Response,
   next: NextFunction
 ) => {
-  console.log("GEMINI_MODEL_NAME:>>>", CONFIG.GEMINI_MODEL_NAME);
-
   const userPrompt = request.params.userPrompt;
-  // Google Gemini Complete API Call
   try {
     const generateContentRequest = await genAiModel.generateContent(userPrompt);
     const generateContentResponseText = generateContentRequest.response.text();
@@ -62,27 +60,11 @@ export const generateAnswer = async (
       requestParams: request.params,
       response: generateContentResponseText,
     });
-
-    // response.status(200).json(generateContentResponseText);
     next(generateContentResponseText);
   } catch (error) {
-    // if (isError(error)) {
-    //   let statusCode = 400;
-    //   if (error.message.indexOf("400") > -1) {
-    //     statusCode = 400;
-    //   }
-    //   console.error("GoogleGeminiController:>>> GENERATE Error", {
-    //     error,
-    //     message: error.message,
-    //     statusCode,
-    //   });
-
-    //   response.status(statusCode).json({
-    //     statusCode,
-    //     message: error.message,
-    //   });
-    // }
-
+    console.error("GoogleGeminiController:>>> GENERATE Error", {
+      error,
+    });
     next(error);
   }
 };
@@ -95,8 +77,8 @@ export const generateChat = async (
 ) => {
   // Chat Session with the model
   new ChatSession(
-    CONFIG.GEMINI_API_KEY_1 ?? "",
-    CONFIG.GEMINI_MODEL_NAME ?? "",
+    CONFIG.GOOGLE_GEMINI_API_KEY_1 ?? "",
+    CONFIG.GOOGLE_GEMINI_MODEL_NAME ?? "",
     {
       history: [],
       generationConfig,
@@ -105,7 +87,6 @@ export const generateChat = async (
   );
   const chat = genAiModel.startChat();
   const userPrompt = request.params.userPrompt;
-  // Google Gemini Complete API Call
   try {
     const chatResponse = await chat.sendMessage(userPrompt);
     const chatResponseText = chatResponse.response.text();
@@ -114,13 +95,11 @@ export const generateChat = async (
       requestParams: request.params,
       response: chatResponseText,
     });
-
-    response.status(200).json(chatResponseText);
+    next(chatResponseText);
   } catch (error) {
-    console.log("GoogleGeminiController:>>> CHAT Error", {
+    console.error("GoogleGeminiController:>>> CHAT Error", {
       error,
     });
-
     next(error);
   }
 };
