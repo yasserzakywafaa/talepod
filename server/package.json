@@ -13,6 +13,7 @@
   "scripts": {
     "start": "ts-node src/server.ts",
     "start:watch": "nodemon src/server.ts",
+    "start:prod": "node build/server.js",
     "build": "tsc"
   },
   "dependencies": {
