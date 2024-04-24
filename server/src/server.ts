@@ -2,6 +2,7 @@ import CONFIG from "./config";
 import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
+import testRoutes from "./routes/testRoutes";
 import googleGeminiRoutes from "./routes/googleGeminiRoutes";
 import openAIRoutes from "./routes/openaiRoutes";
 
@@ -14,6 +15,7 @@ expressApp.use(express.json());
 expressApp.use(express.urlencoded({ extended: true }));
 
 // Mount API routes
+expressApp.use(testRoutes);
 expressApp.use(googleGeminiRoutes);
 expressApp.use(openAIRoutes);
 

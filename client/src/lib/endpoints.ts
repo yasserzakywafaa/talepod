@@ -5,6 +5,10 @@ const publicURL = APP_CONSTANTS.IS_DEV
   : "";
 
 const END_POINTS = {
+  TESTING: {
+    ROUTE_1: `${publicURL}/api/test-route/1`,
+    ROUTE_2: `${publicURL}/api/test-route/2`,
+  },
   GOOGLE_GEMINI: {
     GENERATE: `${publicURL}/api/gemini/generate`,
     CHAT: `${publicURL}/api/gemini/chat`,
