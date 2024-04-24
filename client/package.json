@@ -37,8 +37,6 @@
     "@types/react-router-dom": "5.3.3",
     "axios": "1.6.8",
     "classnames": "2.5.1",
-    "firebase": "10.11.0",
-    "firebase-tools": "^13.7.3",
     "html-loader-react-scripts": "1.2.1",
     "raw-loader": "4.0.2",
     "react": "18.2.0",

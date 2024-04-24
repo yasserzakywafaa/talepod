@@ -1,7 +1,6 @@
 import "../assets/scss/App.scss";
 import "../assets/scss/fonts.scss";
 import "../assets/scss/default.scss";
-import "../lib/firebase";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
