@@ -18,7 +18,7 @@ export const generateText = async (
       messages: [{ role: "user", content: userPrompt }],
       model: CONFIG.OPENAI_MODEL_NAME,
       temperature: 0,
-      max_tokens: 1000,
+      // max_tokens: 1000,
     });
 
     console.log("OpenAIController:>>> GENERATE TEXT", {
@@ -41,23 +41,39 @@ export const generateImages = async (
   response: Response,
   next: NextFunction
 ) => {
-  const userPrompt = request.body.userPrompt;
+  // const userPrompt = request.body.userPrompt;
+  const { userPrompt, numImages } = request.body;
 
   // OpenAI Image Generation API Call
   try {
-    const imageRequest = await openai.images.generate({
-      n: 1,
-      prompt: userPrompt,
-      size: IMAGES_SIZES["1024x1024"],
-      model: CONFIG.OPENAI_IMAGES_MODEL_NAME,
-    });
+    const imageUrls = [];
+
+    // Make multiple requests to generate each image
+    for (let i = 0; i < numImages; i++) {
+      const imageRequest = await openai.images.generate({
+        n: 1, // Generate one image per request
+        model: CONFIG.OPENAI_IMAGES_MODEL_NAME,
+        size: IMAGES_SIZES["1024x1024"],
+        response_format: "url",
+        prompt: userPrompt,
+        style: "natural",
+        quality: "hd",
+        // user: ""
+      });
+
+      // Extract the URL of the generated image from the response and add it to the array
+      const imageUrl = imageRequest.data[0].url;
+      imageUrls.push(imageUrl);
+    }
 
     console.log("OpenAIController:>>> GENERATE IMAGES", {
       request,
-      response: imageRequest,
+      // response: imageRequest,
+      response: imageUrls,
       MODEL_NAME: CONFIG.OPENAI_IMAGES_MODEL_NAME,
     });
-    response.json(imageRequest.data[0].url);
+    // response.json(imageRequest.data[0].url);
+    response.json(imageUrls);
   } catch (error) {
     console.log("OpenAIController:>>> GENERATE IMAGES Error", {
       error,

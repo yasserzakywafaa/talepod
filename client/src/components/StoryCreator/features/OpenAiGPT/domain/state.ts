@@ -20,7 +20,7 @@ export interface GenerationProps {
 export interface OpenAiGPTAIAnswerProps {
   title: string;
   statusCode: number;
-  description: string;
+  description: string | string[];
 }
 
 export const getOpenAiGPTInitialState = (): OpenAiGPTInitialState => {

@@ -1,8 +1,9 @@
-import axios from "axios";
 import { Notify, ToastTypes } from "src/components/Notification/Notification";
+
 import END_POINTS from "src/lib/endpoints";
 import { OpenAiGPTAIAnswerProps } from "../../domain/state";
 import { OpenAiGPTStore } from "../../domain/store";
+import axios from "axios";
 
 export interface UseImageGeneration {
   handleIsImageGenFetching: (isFetching: boolean) => void;
@@ -43,7 +44,17 @@ export const useImageGeneration = (
     try {
       const response = await axios.post(END_POINTS.OPENAI.GENERATE.IMAGES, {
         userPrompt,
+        numImages: 4, // Specify the number of images to generate
       });
+
+      // // Extract the generated images from the response
+      // const images = response.data.choices
+      //   .map((choice) =>
+      //     choice.finish_reason === "stop" ? choice.image : null
+      //   )
+      //   .filter((image) => image !== null);
+
+      // return images;
 
       console.log("OpenAiSection:>>>", {
         response,

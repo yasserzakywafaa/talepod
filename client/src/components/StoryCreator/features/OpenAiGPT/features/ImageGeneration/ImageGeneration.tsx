@@ -5,8 +5,11 @@ import {
   CardContent,
   Chip,
   Divider,
+  ImageList,
+  ImageListItem,
   Stack,
   TextField,
+  Typography,
 } from "@mui/material";
 import { ChangeEvent, FormEvent } from "react";
 
@@ -40,7 +43,6 @@ const OpenAiGPTImageGeneration = () => {
       handleGenerateImageRequest(userPrompt || autoImagePrompt);
     }
   };
-  handleGenerateImageRequest;
 
   return (
     <Box position="relative" sx={{ marginY: "1rem" }}>
@@ -85,13 +87,31 @@ const OpenAiGPTImageGeneration = () => {
                 color: aiAnswer.statusCode !== 200 ? "red" : "unset",
               }}
             >
-              <img
-                loading="lazy"
-                alt={aiAnswer.title}
-                src={aiAnswer.description}
-                // src={`${aiAnswer.description}?w=164&h=164&fit=crop&auto=format`}
-                // srcSet={`${aiAnswer.description}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-              />
+              {aiAnswer.statusCode !== 200 && (
+                <>
+                  <Typography variant="h5" component="div">
+                    {aiAnswer.title}
+                  </Typography>
+
+                  <Typography variant="h6" component="div">
+                    {aiAnswer.description}
+                  </Typography>
+                </>
+              )}
+
+              <ImageList variant="standard" cols={4} gap={20}>
+                {typeof aiAnswer.description !== "string" &&
+                  aiAnswer.description.length &&
+                  aiAnswer.description.map((image, index) => (
+                    <ImageListItem key={index}>
+                      <img
+                        src={image}
+                        loading="lazy"
+                        alt="Generated with Openai DALL-E"
+                      />
+                    </ImageListItem>
+                  ))}
+              </ImageList>
             </CardContent>
           </Card>
         </>
