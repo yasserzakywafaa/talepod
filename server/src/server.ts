@@ -36,7 +36,6 @@ expressApp.use(openAIRoutes);
 // }
 
 expressApp.get("/", (request, response) => {
-  response.status(200).sendFile(`${CONFIG.FRONTEND_BUILD_PATH}/index.html`);
   response.send(`Hello World! ${CONFIG.NODE_ENV}`);
 });
 
