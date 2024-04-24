@@ -6,11 +6,11 @@ const testRouter = express.Router();
 
 // Define API routes
 testRouter.post(
-  END_POINTS.TESTING.ROUTE_1,
+  END_POINTS.TESTING.ROUTE_ONE,
   TestController.testRoutOne
 );
 testRouter.post(
-  END_POINTS.TESTING.ROUTE_2,
+  END_POINTS.TESTING.ROUTE_TWO,
   TestController.testRoutTwo
 );
 

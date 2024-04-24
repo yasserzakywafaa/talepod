@@ -35,11 +35,16 @@ expressApp.use(openAIRoutes);
 //   });
 // }
 
-expressApp.listen(PORT, () =>
+expressApp.get("/", (request, response) => {
+  response.status(200).sendFile(`${CONFIG.FRONTEND_BUILD_PATH}/index.html`);
+  response.send(`Hello World! ${CONFIG.NODE_ENV}`);
+});
+
+expressApp.listen(PORT, (): void => {
   console.log("Server running on:>>>", {
     ENVIRONMENT: CONFIG.NODE_ENV,
     PORT,
-  })
-);
+  });
+});
 
 module.exports = expressApp;

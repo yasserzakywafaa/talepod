@@ -1,13 +1,13 @@
 import APP_CONSTANTS from "./app_constants";
 
 const publicURL = APP_CONSTANTS.IS_DEV
-  ? `http://localhost:${APP_CONSTANTS.DEV_BACKEND_SERVER_PORT}`
-  : "https://ai-story-creator-api.onrender.com";
+  ? `http://localhost:${APP_CONSTANTS.DEV_SERVER_PORT}`
+  : APP_CONSTANTS.PUBLIC_URL;
 
 const END_POINTS = {
   TESTING: {
-    ROUTE_1: `${publicURL}/api/test-route/1`,
-    ROUTE_2: `${publicURL}/api/test-route/2`,
+    ROUTE_ONE: `${publicURL}/api/test-route-one`,
+    ROUTE_TWO: `${publicURL}/api/test-route-two`,
   },
   GOOGLE_GEMINI: {
     GENERATE: `${publicURL}/api/gemini/generate`,

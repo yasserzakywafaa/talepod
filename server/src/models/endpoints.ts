@@ -1,7 +1,7 @@
 const END_POINTS = {
   TESTING: {
-    ROUTE_1: '/api/test-route/1',
-    ROUTE_2: '/api/test-route/2',
+    ROUTE_ONE: '/api/test-route-one',
+    ROUTE_TWO: '/api/test-route-two',
   },
   GOOGLE_GEMINI: {
     GENERATE: `/api/gemini/generate`,
