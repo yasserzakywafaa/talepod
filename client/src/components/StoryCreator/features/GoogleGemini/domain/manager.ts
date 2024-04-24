@@ -94,10 +94,17 @@ export const useGoogleGeminiManager = (
 
   const handleGenerateContent = async (userPrompt: string) => {
     try {
+      // const generateResponse = await axios.post(
+      //   END_POINTS.GOOGLE_GEMINI.GENERATE,
+      //   { userPrompt }
+      // );
+
       const generateResponse = await axios.post(
-        END_POINTS.GOOGLE_GEMINI.GENERATE,
+        // `https://ai-story-creator-api.onrender.com/api/test-route/1`,
+        END_POINTS.TESTING.ROUTE_1,
         { userPrompt }
       );
+
       console.log("GoogleGemini:>>> handleGenerateContent:>>> GENERATE", {
         generateResponse,
       });

@@ -2,7 +2,7 @@ import APP_CONSTANTS from "./app_constants";
 
 const publicURL = APP_CONSTANTS.IS_DEV
   ? `http://localhost:${APP_CONSTANTS.DEV_BACKEND_SERVER_PORT}`
-  : "";
+  : "https://ai-story-creator-api.onrender.com";
 
 const END_POINTS = {
   TESTING: {
