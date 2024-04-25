@@ -55,11 +55,12 @@ const GenerationOptionsForm = (params: TextGenerationFormProps) => {
           marginX={2}
           width="100%"
           display="flex"
+          flexWrap="wrap"
           component="form"
           autoComplete="off"
           flexDirection="row"
           alignItems="flex-start"
-          justifyContent="space-between"
+          justifyContent="flex-start"
           className="child-info-form"
           onSubmit={handleOnFormSubmit}
         >
@@ -93,7 +94,7 @@ const GenerationOptionsForm = (params: TextGenerationFormProps) => {
             </RadioGroup>
           </Box>
 
-          <Box marginX={2} display="flex" component="div" flexDirection="row">
+          <Box margin={2} display="flex" component="div" flexDirection="row">
             <TextField
               required
               fullWidth
@@ -106,7 +107,7 @@ const GenerationOptionsForm = (params: TextGenerationFormProps) => {
             />
           </Box>
 
-          <Box marginX={2} display="flex" component="div" flexDirection="row">
+          <Box margin={2} display="flex" component="div" flexDirection="row">
             <TextField
               required
               fullWidth
@@ -119,7 +120,7 @@ const GenerationOptionsForm = (params: TextGenerationFormProps) => {
             />
           </Box>
 
-          <Box marginX={2} display="flex" component="div" flexDirection="row">
+          <Box margin={2} display="flex" component="div" flexDirection="row">
             <TextField
               required
               fullWidth
@@ -131,7 +132,7 @@ const GenerationOptionsForm = (params: TextGenerationFormProps) => {
             />
           </Box>
 
-          <Box marginX={2} display="flex" component="div" flexDirection="row">
+          <Box margin={2} display="flex" component="div" flexDirection="row">
             <TextField
               required
               fullWidth
@@ -143,7 +144,7 @@ const GenerationOptionsForm = (params: TextGenerationFormProps) => {
             />
           </Box>
 
-          <Box marginX={2} display="flex" component="div" flexDirection="row">
+          <Box margin={2} display="flex" component="div" flexDirection="row">
             <TextField
               required
               fullWidth
@@ -155,12 +156,7 @@ const GenerationOptionsForm = (params: TextGenerationFormProps) => {
             />
           </Box>
 
-          <Box
-            marginX={2}
-            display="flex"
-            component="div"
-            flexDirection="column"
-          >
+          <Box margin={2} display="flex" component="div" flexDirection="column">
             <FormControl fullWidth>
               <InputLabel id="nationality-select-label">Nationality</InputLabel>
               <Select

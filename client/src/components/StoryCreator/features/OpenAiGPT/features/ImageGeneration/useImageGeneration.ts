@@ -44,7 +44,7 @@ export const useImageGeneration = (
     try {
       const response = await axios.post(END_POINTS.OPENAI.GENERATE.IMAGES, {
         userPrompt,
-        numImages: 4, // Specify the number of images to generate
+        numImages: 8, // Specify the number of images to generate
       });
 
       // // Extract the generated images from the response

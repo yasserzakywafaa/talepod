@@ -99,17 +99,20 @@ const OpenAiGPTImageGeneration = () => {
                 </>
               )}
 
-              <ImageList variant="standard" cols={4} gap={20}>
+              <ImageList variant="standard" cols={2} gap={20}>
                 {typeof aiAnswer.description !== "string" &&
                   aiAnswer.description.length &&
                   aiAnswer.description.map((image, index) => (
-                    <ImageListItem key={index}>
-                      <img
-                        src={image}
-                        loading="lazy"
-                        alt="Generated with Openai DALL-E"
-                      />
-                    </ImageListItem>
+                    <Card variant="outlined">
+                      <ImageListItem key={index}>
+                        <img
+                          src={image}
+                          width="100%"
+                          loading="lazy"
+                          alt="Generated with Openai DALL-E"
+                        />
+                      </ImageListItem>
+                    </Card>
                   ))}
               </ImageList>
             </CardContent>
