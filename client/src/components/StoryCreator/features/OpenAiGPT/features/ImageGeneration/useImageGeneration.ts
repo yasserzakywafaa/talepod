@@ -1,4 +1,7 @@
-import { Notify, ToastTypes } from "src/components/Notification/Notification";
+import {
+  Notify,
+  ToastTypes,
+} from "src/components/shared/Notification/Notification";
 
 import END_POINTS from "src/lib/endpoints";
 import { OpenAiGPTAIAnswerProps } from "../../domain/state";
@@ -44,7 +47,7 @@ export const useImageGeneration = (
     try {
       const response = await axios.post(END_POINTS.OPENAI.GENERATE.IMAGES, {
         userPrompt,
-        numImages: 8, // Specify the number of images to generate
+        numImages: 10, // Specify the number of images to generate
       });
 
       // // Extract the generated images from the response

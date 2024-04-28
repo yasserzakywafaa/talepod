@@ -1,8 +1,12 @@
-import axios from "axios";
-import { Notify, ToastTypes } from "src/components/Notification/Notification";
+import {
+  Notify,
+  ToastTypes,
+} from "src/components/shared/Notification/Notification";
+
 import END_POINTS from "src/lib/endpoints";
 import { OpenAiGPTAIAnswerProps } from "../../domain/state";
 import { OpenAiGPTStore } from "../../domain/store";
+import axios from "axios";
 
 export interface UseTextGeneration {
   handleIsTextGenFetching: (isFetching: boolean) => void;

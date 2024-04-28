@@ -4,30 +4,36 @@ import "../assets/scss/default.scss";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
-import { Suspense, lazy } from "react";
+import { FC, Suspense, lazy, useEffect } from "react";
 
-import { AppContextProvider } from "./AppContext";
-// import { DBUtils } from "./lib/database";
-import LoaderSpinner from "../components/Loading/LoaderSpinner";
+import { ApplicationContextProvider } from "./domain/Provider";
+import LoaderSpinner from "../components/shared/Loading/LoaderSpinner";
 import routes from "./routes";
+import useApplicationStore from "./domain/store";
 
+// import { DBUtils } from "./lib/database";
 // import "./shared/components/TinyMCE";
 // import { PouchDBIndexesEnum } from "./shared/enums";
 
 const HomePage = lazy(() => import("../Pages/Home/Home"));
+const CheckoutPage = lazy(() => import("../Pages/Checkout/CheckoutPage"));
 const UnauthorizedPage = lazy(
   () => import("../Pages/Unauthorized/Unauthorized")
 );
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "rgba(4, 114, 28, 1)",
-    },
-  },
-});
+const App: FC = () => {
+  // const {
+  //   store: { state },
+  // } = useApplicationContext();
+  const { state } = useApplicationStore();
+  const defaultTheme = createTheme({
+    palette: { mode: state.themeMode },
+  });
 
-const App = () => {
+  useEffect(() => {
+    console.log("App:>>> themeMode", state.themeMode);
+  }, [state]);
+
   // /**
   //  * Create database
   //  */
@@ -52,14 +58,16 @@ const App = () => {
   // );
 
   return (
-    <AppContextProvider>
+    <ApplicationContextProvider>
       <Suspense fallback={<LoaderSpinner />}>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={defaultTheme}>
           <CssBaseline />
 
           <BrowserRouter>
             <Routes>
               <Route index path={routes.home} element={<HomePage />} />
+
+              <Route path={routes.checkout} element={<CheckoutPage />} />
 
               <Route
                 path={routes.unauthorized}
@@ -69,7 +77,7 @@ const App = () => {
           </BrowserRouter>
         </ThemeProvider>
       </Suspense>
-    </AppContextProvider>
+    </ApplicationContextProvider>
   );
 };
 

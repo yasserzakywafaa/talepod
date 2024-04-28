@@ -2,6 +2,7 @@ import "./Page.scss";
 
 import { Container, ContainerTypeMap } from "@mui/material";
 
+import NavigationBar from "../NavigationBar/NavigationBar";
 import { Notification } from "../Notification/Notification";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import classNames from "classnames";
@@ -27,7 +28,9 @@ const Page = (params: PageProps) => {
 
   return (
     <Container maxWidth={false} className={pageClassNames} {...containerProps}>
+      {/* {isFetching && <LoaderSpinner style={{ position: "fixed" }} />} */}
       <Notification />
+      <NavigationBar />
       <>{children}</>
     </Container>
   );

@@ -1,7 +1,7 @@
 import { Wifi, WifiOff } from "@mui/icons-material";
 
 import { IconButton } from "@mui/material";
-import useDetectNetworkStatus from "../../shared/hooks/useDetectNetworkStatus";
+import useDetectNetworkStatus from "../../../shared/hooks/useDetectNetworkStatus";
 
 const NetworkStatus = () => {
   const [currentNetworkStatus] = useDetectNetworkStatus();

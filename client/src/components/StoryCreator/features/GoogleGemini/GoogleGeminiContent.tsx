@@ -12,7 +12,7 @@ import {
 import { ChangeEvent, FormEvent } from "react";
 
 import { Google } from "@mui/icons-material";
-import LoaderSpinner from "src/components/Loading/LoaderSpinner";
+import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
 import { useGoogleGeminiContext } from "./domain/Provider";
 
 export const GoogleGeminiContent = () => {

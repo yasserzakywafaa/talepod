@@ -1,4 +1,7 @@
-import { Notify, ToastTypes } from "src/components/Notification/Notification";
+import {
+  Notify,
+  ToastTypes,
+} from "src/components/shared/Notification/Notification";
 import {
   PouchDBAllDocsOptions,
   PouchDBDocParams,
