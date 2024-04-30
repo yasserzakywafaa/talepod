@@ -10,6 +10,7 @@ import axios from "axios";
 
 export interface UseImageGeneration {
   handleIsImageGenFetching: (isFetching: boolean) => void;
+  handleUpdateUserImagePrompt: (userImagePrompt: string) => void;
   handleUpdateAutoImagePrompt: (autoImagePrompt: string) => void;
   handleSetImageAiAnswer: (aiAnswer: OpenAiGPTAIAnswerProps) => void;
   handleGenerateImageRequest: (userPrompt: string) => void;
@@ -24,6 +25,14 @@ export const useImageGeneration = (
       isFetching,
     });
   };
+
+  const handleUpdateUserImagePrompt = (userPrompt: string) => {
+    store.updateState("imageGeneration", {
+      ...store.state.imageGeneration,
+      userPrompt,
+    });
+  };
+
 
   const handleUpdateAutoImagePrompt = (autoImagePrompt: string) => {
     store.updateState("imageGeneration", {
@@ -95,6 +104,7 @@ export const useImageGeneration = (
 
   return {
     handleIsImageGenFetching,
+    handleUpdateUserImagePrompt,
     handleUpdateAutoImagePrompt,
     handleSetImageAiAnswer,
     handleGenerateImageRequest,

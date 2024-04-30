@@ -11,7 +11,7 @@ export interface OpenAiGPTInitialState {
 
 export interface GenerationProps {
   isFetching: boolean;
-  userPrompt: string;
+  userPrompt: string | undefined;
   autoTextPrompt: string;
   autoImagePrompt: string;
   aiAnswer: OpenAiGPTAIAnswerProps;

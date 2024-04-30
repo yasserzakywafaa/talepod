@@ -8,10 +8,7 @@ interface ToggleColorModeProps {
   toggleColorMode: () => void;
 }
 
-export default function ToggleColorMode({
-  mode,
-  toggleColorMode,
-}: ToggleColorModeProps) {
+const ToggleColorMode = ({ mode, toggleColorMode }: ToggleColorModeProps) => {
   return (
     <IconButton
       onClick={toggleColorMode}
@@ -25,4 +22,6 @@ export default function ToggleColorMode({
       )}
     </IconButton>
   );
-}
+};
+
+export default ToggleColorMode;

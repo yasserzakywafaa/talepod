@@ -23,7 +23,7 @@ const OpenAiGPTImageGeneration = () => {
   const { isFetching, userPrompt, autoImagePrompt, aiAnswer } = imageGeneration;
   const {
     handleIsImageGenFetching,
-    handleUpdateUserPrompt,
+    handleUpdateUserImagePrompt,
     handleGenerateImageRequest,
   } = manager;
 
@@ -31,7 +31,7 @@ const OpenAiGPTImageGeneration = () => {
     console.log("handleOnTextChange:>>>", {
       value: event.target.value,
     });
-    handleUpdateUserPrompt(event.target.value);
+    handleUpdateUserImagePrompt(event.target.value);
   };
 
   const handleOnFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -62,7 +62,7 @@ const OpenAiGPTImageGeneration = () => {
             multiline
             label="User Prompt"
             variant="outlined"
-            value={userPrompt || autoImagePrompt}
+            value={userPrompt || autoImagePrompt || undefined}
             onChange={handleOnTextChange}
           />
           <Button

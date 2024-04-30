@@ -12,15 +12,17 @@ import { useTextGeneration } from "../features/TextGeneration/useTextGeneration"
 
 export interface OpenAiGPTManager {
   handleUpdateChildInfo: (name: string, value: string) => void;
-  handleUpdateUserPrompt: (userPrompt: string) => void;
+  // handleUpdateUserPrompt: (userPrompt: string) => void;
 
   handleIsTextGenFetching: (isFetching: boolean) => void;
+  handleUpdateUserTextPrompt: (userTextPrompt: string) => void;
   handleSetTextAiAnswer: (aiAnswer: OpenAiGPTAIAnswerProps) => void;
   handleUpdateAutoTextPrompt: (autoTextPrompt: string) => void;
   handleGenerateTextRequest: (userPrompt: string) => void;
 
   handleUpdateAutoImagePrompt: (autoImagePrompt: string) => void;
   handleIsImageGenFetching: (isFetching: boolean) => void;
+  handleUpdateUserImagePrompt: (userImagePrompt: string) => void;
   handleSetImageAiAnswer: (aiAnswer: OpenAiGPTAIAnswerProps) => void;
   handleGenerateImageRequest: (userPrompt: string) => void;
 }
@@ -31,12 +33,14 @@ export const useOpenAiGPTManager = (
   const { store: storyCreatorStore } = useStoryCreatorContext();
   const {
     handleIsTextGenFetching,
+    handleUpdateUserTextPrompt,
     handleUpdateAutoTextPrompt,
     handleSetTextAiAnswer,
     handleGenerateTextRequest,
   } = useTextGeneration(store);
   const {
     handleIsImageGenFetching,
+    handleUpdateUserImagePrompt,
     handleUpdateAutoImagePrompt,
     handleSetImageAiAnswer,
     handleGenerateImageRequest,
@@ -49,18 +53,6 @@ export const useOpenAiGPTManager = (
     };
 
     store.updateState("childInfo", newChildInfo);
-  };
-
-  const handleUpdateUserPrompt = (userPrompt: string) => {
-    store.updateState("textGeneration", {
-      ...store.state.textGeneration,
-      userPrompt,
-    });
-
-    store.updateState("imageGeneration", {
-      ...store.state.imageGeneration,
-      userPrompt,
-    });
   };
 
   useEffect(() => {
@@ -83,14 +75,15 @@ export const useOpenAiGPTManager = (
 
   return {
     handleUpdateChildInfo,
-    handleUpdateUserPrompt,
 
     handleIsTextGenFetching,
+    handleUpdateUserTextPrompt,
     handleGenerateTextRequest,
     handleUpdateAutoTextPrompt,
     handleSetTextAiAnswer,
 
     handleIsImageGenFetching,
+    handleUpdateUserImagePrompt,
     handleUpdateAutoImagePrompt,
     handleSetImageAiAnswer,
     handleGenerateImageRequest,

@@ -10,6 +10,7 @@ import axios from "axios";
 
 export interface UseTextGeneration {
   handleIsTextGenFetching: (isFetching: boolean) => void;
+  handleUpdateUserTextPrompt: (userTextPrompt: string) => void;
   handleUpdateAutoTextPrompt: (autoImagePrompt: string) => void;
   handleSetTextAiAnswer: (aiAnswer: OpenAiGPTAIAnswerProps) => void;
   handleGenerateTextRequest: (userPrompt: string) => void;
@@ -20,6 +21,13 @@ export const useTextGeneration = (store: OpenAiGPTStore): UseTextGeneration => {
     store.updateState("textGeneration", {
       ...store.state.textGeneration,
       isFetching,
+    });
+  };
+
+  const handleUpdateUserTextPrompt = (userPrompt: string) => {
+    store.updateState("textGeneration", {
+      ...store.state.textGeneration,
+      userPrompt,
     });
   };
 
@@ -83,6 +91,7 @@ export const useTextGeneration = (store: OpenAiGPTStore): UseTextGeneration => {
 
   return {
     handleIsTextGenFetching,
+    handleUpdateUserTextPrompt,
     handleUpdateAutoTextPrompt,
     handleSetTextAiAnswer,
     handleGenerateTextRequest,

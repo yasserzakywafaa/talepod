@@ -1,53 +1,77 @@
 import "./NavigationBar.scss";
 
 // import BackButton from "./BackButton";
-// import Logo from "./Logo";
-import { PlayerModeEnum } from "src/shared/enums";
 // import NetworkStatus from "./NetworkStatus";
 // import RefreshButton from "./RefreshButton";
-import ToggleColorMode from "../ToggleColorMode";
+// import ToggleColorMode from "./ToggleColorMode";
+// import { useApplicationContext } from "src/application/domain/Provider";
+import { useNavigate } from "react-router-dom";
+import Logo from "./Logo";
 import classNames from "classnames";
-import { useApplicationContext } from "src/application/domain/Provider";
-
-// import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
+import routes from "src/application/routes";
+import { useMatch } from "react-router-dom";
 
 interface NavigationBarProps {
-  path?: string;
   className?: string;
-  showBackButton?: boolean;
-  changeMode?: (mode: PlayerModeEnum) => void;
 }
 
 const NavigationBar = (props: NavigationBarProps) => {
-  // const { path = "", showBackButton = false } = props;
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  // const {
+  //   store: {
+  //     state: { themeMode },
+  //     toggleThemeMode,
+  //   },
+  // } = useApplicationContext();
+
+  // const handleOnBackClick = () => navigate(path);
+  // const handleOnRefreshClick = () => window.location.reload();
+
+  const pagesMatch = {
+    isHomePage: !!useMatch(routes.home),
+    isCheckoutPage: !!useMatch(routes.checkout),
+  };
   const navigatioBarClassNames = classNames({
     "navigation-bar": true,
   });
 
-  const {
-    store: {
-      state: { themeMode },
-      toggleThemeMode,
-    },
-  } = useApplicationContext();
+  const handleOnClickLogo = () => navigate(routes.home);
+  const handleOnClickCheckout = () => navigate(routes.checkout);
 
-  // const handleOnBackClick = () => navigate(path);
-  // const handleOnRefreshClick = () => window.location.reload();
 
   return (
     <div className={navigatioBarClassNames}>
       <div className="navigation-bar-container">
         {/* <div className="navigation-bar-logo" onClick={handleOnBackClick}> */}
-        <div className="navigation-bar-logo">{/* <Logo /> */}</div>
+        <Button
+          type="button"
+          title="Home"
+          variant="text"
+          // href={routes.home}
+          className="navigation-bar-logo"
+          onClick={handleOnClickLogo}
+        >
+          <Logo />
+        </Button>
 
         <div className="navigation-bar-actions">
           {/* {showBackButton && <BackButton onClick={handleOnBackClick} />} */}
-
-          <ToggleColorMode mode={themeMode} toggleColorMode={toggleThemeMode} />
-
           {/* <RefreshButton onClick={handleOnRefreshClick} /> */}
           {/* <NetworkStatus /> */}
+
+          {/* <ToggleColorMode mode={themeMode} toggleColorMode={toggleThemeMode} /> */}
+
+          {!pagesMatch.isCheckoutPage && (
+            <Button
+              type="button"
+              variant="text"
+              title="test-checkout-button"
+              onClick={handleOnClickCheckout}
+            >
+              Checkout
+            </Button>
+          )}
         </div>
       </div>
     </div>

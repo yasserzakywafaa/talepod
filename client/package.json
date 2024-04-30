@@ -14,7 +14,6 @@
     "start": "react-scripts start",
     "start:prod": "serve -l 5000 -s build",
     "build": "rimraf build & react-scripts build",
-    "deploy-firebase": "yarn build && firebase deploy",
     "docker:clean": "docker system prune",
     "docker:build": "docker build -t ai-story-creator:latest .",
     "docker:run": "docker run -d -it --rm -p 8080:8080 ai-story-creator",

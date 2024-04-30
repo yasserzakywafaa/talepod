@@ -21,7 +21,7 @@ const OpenAiGPTTextGeneration = () => {
   const { isFetching, userPrompt, autoTextPrompt, aiAnswer } = textGeneration;
   const {
     handleIsTextGenFetching,
-    handleUpdateUserPrompt,
+    handleUpdateUserTextPrompt,
     handleGenerateTextRequest,
   } = manager;
 
@@ -29,7 +29,7 @@ const OpenAiGPTTextGeneration = () => {
     console.log("handleOnTextChange:>>>", {
       value: event.target.value,
     });
-    handleUpdateUserPrompt(event.target.value);
+    handleUpdateUserTextPrompt(event.target.value);
   };
 
   const handleOnFormSubmit = async (event: FormEvent<HTMLFormElement>) => {

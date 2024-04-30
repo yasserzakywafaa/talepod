@@ -13,7 +13,6 @@ import Info from "./features/Info";
 import InfoMobile from "./features/InfoMobile";
 import PaymentForm from "./features/PaymentForm";
 import Review from "./features/Review";
-import SitemarkIcon from "./features/SitemarkIcon";
 import Stack from "@mui/material/Stack";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
@@ -83,13 +82,12 @@ const Checkout = () => {
             }}
           >
             <Button
-              startIcon={<ArrowBackRoundedIcon />}
+              href="/"
               component="a"
-              href="/material-ui/getting-started/templates/"
               sx={{ ml: "-8px" }}
+              startIcon={<ArrowBackRoundedIcon />}
             >
-              Back to
-              <SitemarkIcon />
+              Back
             </Button>
           </Box>
           <Box
@@ -139,13 +137,12 @@ const Checkout = () => {
               }}
             >
               <Button
-                startIcon={<ArrowBackRoundedIcon />}
+                href="/"
                 component="a"
-                href="/material-ui/getting-started/templates/"
                 sx={{ alignSelf: "start" }}
+                startIcon={<ArrowBackRoundedIcon />}
               >
-                Back to
-                <SitemarkIcon />
+                Back
               </Button>
             </Box>
             <Box
