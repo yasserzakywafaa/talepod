@@ -27,53 +27,54 @@ const NavigationBar = (props: NavigationBarProps) => {
 
   // const handleOnBackClick = () => navigate(path);
   // const handleOnRefreshClick = () => window.location.reload();
-
   const pagesMatch = {
     isHomePage: !!useMatch(routes.home),
     isCheckoutPage: !!useMatch(routes.checkout),
+    isUnauthorizedPage: !!useMatch(routes.unauthorized),
   };
-  const navigatioBarClassNames = classNames({
+  const isNotFoundPage = Object.values(pagesMatch).every((p) => p === false);
+  const navigationBarClassNames = classNames({
     "navigation-bar": true,
   });
 
   const handleOnClickLogo = () => navigate(routes.home);
   const handleOnClickCheckout = () => navigate(routes.checkout);
 
-
   return (
-    <div className={navigatioBarClassNames}>
-      <div className="navigation-bar-container">
-        {/* <div className="navigation-bar-logo" onClick={handleOnBackClick}> */}
-        <Button
-          type="button"
-          title="Home"
-          variant="text"
-          // href={routes.home}
-          className="navigation-bar-logo"
-          onClick={handleOnClickLogo}
-        >
-          <Logo />
-        </Button>
+    <div className={navigationBarClassNames}>
+      {!isNotFoundPage && !pagesMatch.isUnauthorizedPage && (
+        <div className="navigation-bar-container">
+          {/* <div className="navigation-bar-logo" onClick={handleOnBackClick}> */}
+          <Button
+            type="button"
+            title="Home"
+            variant="text"
+            // href={routes.home}
+            className="navigation-bar-logo"
+            onClick={handleOnClickLogo}
+          >
+            <Logo />
+          </Button>
 
-        <div className="navigation-bar-actions">
-          {/* {showBackButton && <BackButton onClick={handleOnBackClick} />} */}
-          {/* <RefreshButton onClick={handleOnRefreshClick} /> */}
-          {/* <NetworkStatus /> */}
+          <div className="navigation-bar-actions">
+            {/* {showBackButton && <BackButton onClick={handleOnBackClick} />} */}
+            {/* <RefreshButton onClick={handleOnRefreshClick} /> */}
+            {/* <NetworkStatus /> */}
+            {/* <ToggleColorMode mode={themeMode} toggleColorMode={toggleThemeMode} /> */}
 
-          {/* <ToggleColorMode mode={themeMode} toggleColorMode={toggleThemeMode} /> */}
-
-          {!pagesMatch.isCheckoutPage && (
-            <Button
-              type="button"
-              variant="text"
-              title="test-checkout-button"
-              onClick={handleOnClickCheckout}
-            >
-              Checkout
-            </Button>
-          )}
+            {!pagesMatch.isCheckoutPage && (
+              <Button
+                type="button"
+                variant="text"
+                title="test-checkout-button"
+                onClick={handleOnClickCheckout}
+              >
+                Checkout
+              </Button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

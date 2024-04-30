@@ -5,13 +5,9 @@ import StoryCreator from "src/components/StoryCreator/StoryCreator";
 
 const HomePage = () => {
   return (
-    <>
-      <div className="background-layer home-page">
-        <Page title="AI Story Creator">
-          <StoryCreator />
-        </Page>
-      </div>
-    </>
+    <Page title="AI Story Creator" className="home-page">
+      <StoryCreator />
+    </Page>
   );
 };
 

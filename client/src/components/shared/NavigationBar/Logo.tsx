@@ -1,4 +1,4 @@
-import { ReactComponent as FileLogo } from "../../../assets/svgs/logo.svg";
+import { ReactComponent as FileLogo } from "../../../assets/images/logo.svg";
 
 const Logo = () => {
   return (

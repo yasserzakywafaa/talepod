@@ -5,13 +5,9 @@ import Page from "src/components/shared/Page/Page";
 
 const CheckoutPage = () => {
   return (
-    <>
-      <div className="background-layer checkout-page">
-        <Page title="Checkout">
-          <Checkout />
-        </Page>
-      </div>
-    </>
+    <Page title="Checkout" className="checkout-page">
+      <Checkout />
+    </Page>
   );
 };
 

@@ -1,19 +1,19 @@
 /**
-* Unauthorized Page
+* Not Found Page
 */
-.unauthorized-page {
-  .unauthorized-image {
+.not-found-page {
+  .not-found-image {
     width: 25%;
   }
-  .unauthorized-card-wrapper {
+  .not-found-card-wrapper {
     border-radius: 5px;
     padding: 1rem 2rem;
   }
 }
 
 @media screen and (max-width: 820px) {
-  .unauthorized-page {
-    .unauthorized-image {
+  .not-found-page {
+    .not-found-image {
       width: 50%;
     }
   }

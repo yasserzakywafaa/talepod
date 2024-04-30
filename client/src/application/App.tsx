@@ -10,6 +10,7 @@ import { ApplicationContextProvider } from "./domain/Provider";
 import LoaderSpinner from "../components/shared/Loading/LoaderSpinner";
 import routes from "./routes";
 import useApplicationStore from "./domain/store";
+import NotFoundPage from "src/Pages/NotFound/NotFound";
 
 // import { DBUtils } from "./lib/database";
 // import "./shared/components/TinyMCE";
@@ -73,6 +74,9 @@ const App: FC = () => {
                 path={routes.unauthorized}
                 element={<UnauthorizedPage />}
               />
+
+              {/* Fallback route for 404 errors */}
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </BrowserRouter>
         </ThemeProvider>

@@ -1,25 +1,23 @@
 /**
 * Home Page
 */
-.background-layer {
-  &.home-page {
-    position: relative;
-    padding-top: 5rem;
-    color: #000000;
-    &.dark {
-      background-color: #252526;
-      .navigation-bar {
-        &.bg-color-transparent {
+.home-page {
+  position: relative;
+  padding-top: 5rem;
+  color: #000000;
+  &.dark {
+    background-color: #252526;
+    .navigation-bar {
+      &.bg-color-transparent {
+        color: #fff;
+        fill: #fff;
+        button {
           color: #fff;
           fill: #fff;
-          button {
-            color: #fff;
+        }
+        .logo {
+          svg {
             fill: #fff;
-          }
-          .logo {
-            svg {
-              fill: #fff;
-            }
           }
         }
       }
