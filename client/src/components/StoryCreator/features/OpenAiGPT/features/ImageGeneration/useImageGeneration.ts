@@ -33,7 +33,6 @@ export const useImageGeneration = (
     });
   };
 
-
   const handleUpdateAutoImagePrompt = (autoImagePrompt: string) => {
     store.updateState("imageGeneration", {
       ...store.state.imageGeneration,
@@ -56,7 +55,7 @@ export const useImageGeneration = (
     try {
       const response = await axios.post(END_POINTS.OPENAI.GENERATE.IMAGES, {
         userPrompt,
-        numImages: 10, // Specify the number of images to generate
+        numImages: 5, // Specify the number of images to generate
       });
 
       // // Extract the generated images from the response
