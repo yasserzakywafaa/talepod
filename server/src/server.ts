@@ -2,9 +2,9 @@ import CONFIG from "./config";
 import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
-import testRoutes from "./routes/testRoutes";
 import googleGeminiRoutes from "./routes/googleGeminiRoutes";
 import openAIRoutes from "./routes/openaiRoutes";
+import testRoutes from "./routes/testRoutes";
 
 const expressApp = express();
 const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.PROD_PORT;
@@ -13,6 +13,11 @@ expressApp.use(cors());
 expressApp.use(bodyParser.json());
 expressApp.use(express.json());
 expressApp.use(express.urlencoded({ extended: true }));
+// Serve static files from the specified directory
+expressApp.use(
+  "/assets/generatedTextToSpeech",
+  express.static(CONFIG.SERVER_GENERATED_AUDIO_FILES_PATH)
+);
 
 // Mount API routes
 expressApp.use(testRoutes);

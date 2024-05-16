@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import CONFIG from "../config";
 import { IMAGES_SIZES } from "../models/openaiModel";
 import OpenAi from "openai";
+import fs from "fs";
 
 const openai = new OpenAi();
 
@@ -30,6 +31,53 @@ export const generateText = async (
     response.json(generateRequest.choices[0].message.content);
   } catch (error) {
     console.log("OpenAIController:>>> GENERATE TEXT Error", {
+      error,
+    });
+    next(error);
+  }
+};
+
+export const generateTextToSpeech = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  const userPrompt = request.body.userPrompt;
+
+  // OpenAI Text Generation API Call
+  try {
+    const generateRequest = await openai.audio.speech.create({
+      input: userPrompt,
+      model: CONFIG.OPENAI_TTS_MODEL_NAME,
+      voice: "nova",
+      response_format: "mp3",
+      speed: 1.0,
+    });
+
+    const audioFileName = "speech.mp3";
+    const audioFilePath = `${CONFIG.SERVER_GENERATED_AUDIO_FILES_PATH}/${audioFileName}`;
+    const buffer = Buffer.from(await generateRequest.arrayBuffer());
+    // await fs.promises.writeFile(path.resolve(`${audioFileName}`), buffer);
+    await fs.promises.writeFile(audioFilePath, buffer);
+
+    console.log("OpenAIController:>>> GENERATE TEXT TO SPEECH", {
+      request,
+      response: generateRequest,
+      writePath: audioFilePath,
+      serverFilesPath: CONFIG.SERVER_GENERATED_AUDIO_FILES_PATH,
+      streamUrl: `${request.get(
+        "host"
+      )}/assets/generatedTextToSpeech/${audioFileName}`,
+      MODEL_NAME: CONFIG.OPENAI_TTS_MODEL_NAME,
+    });
+
+    response.json({
+      audioUrl: `${request.get(
+        "host"
+      )}/assets/generatedTextToSpeech/${audioFileName}`,
+    });
+  } catch (error) {
+    console.log("OpenAIController:>>> GENERATE TEXT TO SPEECH Error", {
       error,
     });
     next(error);
@@ -84,6 +132,7 @@ export const generateImages = async (
 
 const OpenAIController = {
   generateText,
+  generateTextToSpeech,
   generateImages,
 };
 

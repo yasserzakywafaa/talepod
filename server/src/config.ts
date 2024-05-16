@@ -14,10 +14,14 @@ const CONFIG = {
     process.env.NODE_ENV && process.env.NODE_ENV.indexOf("production") > -1,
   FRONTEND_DEV_PATH: path.resolve(__dirname + "/../public"),
   FRONTEND_BUILD_PATH: path.resolve(__dirname + "/../build"),
+  SERVER_GENERATED_AUDIO_FILES_PATH: path.resolve(
+    "./assets/generatedTextToSpeech"
+  ),
 
   // APIs keys for AI
   // Openai
   OPENAI_MODEL_NAME: process.env.OPENAI_MODEL_NAME,
+  OPENAI_TTS_MODEL_NAME: process.env.OPENAI_TTS_MODEL_NAME,
   OPENAI_IMAGES_MODEL_NAME: process.env.OPENAI_IMAGES_MODEL_NAME,
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   // GoogleGemini

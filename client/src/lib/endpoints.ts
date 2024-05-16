@@ -16,6 +16,7 @@ const END_POINTS = {
   OPENAI: {
     GENERATE: {
       TEXT: `${publicURL}/api/openai/generate/text`,
+      TEXT_TO_SPEECH: `${publicURL}/api/openai/generate/text-to-speech`,
       IMAGES: `${publicURL}/api/openai/generate/images`,
     },
   },

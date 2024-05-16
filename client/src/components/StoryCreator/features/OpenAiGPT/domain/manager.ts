@@ -6,9 +6,10 @@ import {
 import { OpenAiGPTAIAnswerProps } from "./state";
 import { OpenAiGPTStore } from "./store";
 import { useEffect } from "react";
-import { useStoryCreatorContext } from "src/components/StoryCreator/domain/Provider";
 import { useImageGeneration } from "../features/ImageGeneration/useImageGeneration";
+import { useStoryCreatorContext } from "src/components/StoryCreator/domain/Provider";
 import { useTextGeneration } from "../features/TextGeneration/useTextGeneration";
+import { useTextToSpeechGeneration } from "../features/TextToSpeechGeneration/useTextToSpeechGeneration";
 
 export interface OpenAiGPTManager {
   handleUpdateChildInfo: (name: string, value: string) => void;
@@ -19,6 +20,10 @@ export interface OpenAiGPTManager {
   handleSetTextAiAnswer: (aiAnswer: OpenAiGPTAIAnswerProps) => void;
   handleUpdateAutoTextPrompt: (autoTextPrompt: string) => void;
   handleGenerateTextRequest: (userPrompt: string) => void;
+
+  handleIsTextToSpeechGenFetching: (isFetching: boolean) => void;
+  handleSetTextToSpeechAiAnswer: (aiAnswer: OpenAiGPTAIAnswerProps) => void;
+  handleGenerateTextToSpeechRequest: (userPrompt: string) => void;
 
   handleUpdateAutoImagePrompt: (autoImagePrompt: string) => void;
   handleIsImageGenFetching: (isFetching: boolean) => void;
@@ -38,6 +43,13 @@ export const useOpenAiGPTManager = (
     handleSetTextAiAnswer,
     handleGenerateTextRequest,
   } = useTextGeneration(store);
+
+  const {
+    handleIsTextToSpeechGenFetching,
+    handleSetTextToSpeechAiAnswer,
+    handleGenerateTextToSpeechRequest,
+  } = useTextToSpeechGeneration(store);
+
   const {
     handleIsImageGenFetching,
     handleUpdateUserImagePrompt,
@@ -81,6 +93,10 @@ export const useOpenAiGPTManager = (
     handleGenerateTextRequest,
     handleUpdateAutoTextPrompt,
     handleSetTextAiAnswer,
+
+    handleIsTextToSpeechGenFetching,
+    handleSetTextToSpeechAiAnswer,
+    handleGenerateTextToSpeechRequest,
 
     handleIsImageGenFetching,
     handleUpdateUserImagePrompt,

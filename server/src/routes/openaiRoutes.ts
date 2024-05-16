@@ -11,6 +11,11 @@ openAIRouter.post(
 );
 
 openAIRouter.post(
+  END_POINTS.OPENAI.GENERATE.TEXT_TO_SPEECH,
+  OpenAIController.generateTextToSpeech
+);
+
+openAIRouter.post(
   END_POINTS.OPENAI.GENERATE.IMAGES,
   OpenAIController.generateImages
 );

@@ -6,6 +6,7 @@ import {
 export interface OpenAiGPTInitialState {
   childInfo: ChildInfo;
   textGeneration: GenerationProps;
+  textToSpeechGeneration: GenerationProps;
   imageGeneration: GenerationProps;
 }
 
@@ -28,6 +29,17 @@ export const getOpenAiGPTInitialState = (): OpenAiGPTInitialState => {
   return {
     childInfo,
     textGeneration: {
+      isFetching: false,
+      userPrompt: "",
+      autoTextPrompt: "",
+      autoImagePrompt: "",
+      aiAnswer: {
+        statusCode: 0,
+        title: "",
+        description: "",
+      },
+    },
+    textToSpeechGeneration: {
       isFetching: false,
       userPrompt: "",
       autoTextPrompt: "",
