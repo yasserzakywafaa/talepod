@@ -38,10 +38,11 @@ export const StoryCreatorContent = () => {
               onChange={handleChange}
               aria-label="basic tabs example"
             >
-              <Tab label="Google Gemini" />
               <Tab label="OpenAi" />
+              <Tab label="Google Gemini" />
             </Tabs>
           </Box>
+
           <div
             role="tabpanel"
             hidden={value !== 0}
@@ -50,8 +51,7 @@ export const StoryCreatorContent = () => {
           >
             {value === 0 && (
               <Box sx={{ p: 3 }}>
-                <Typography variant="h4">Google Gemini</Typography>
-                <GoogleGemini />
+                <OpenAiGPT />
               </Box>
             )}
           </div>
@@ -64,27 +64,12 @@ export const StoryCreatorContent = () => {
           >
             {value === 1 && (
               <Box sx={{ p: 3 }}>
-                <OpenAiGPT />
+                <Typography variant="h4">Google Gemini</Typography>
+                <GoogleGemini />
               </Box>
             )}
           </div>
         </Box>
-        {/* 
-        <Card
-          sx={{
-            flexBasis: "50%",
-            marginX: 1,
-            padding: 2,
-            height: "fit-content",
-          }}
-        >
-          <Typography variant="h4">Google Gemini</Typography>
-          <GoogleGemini />
-        </Card>
-
-        <Card sx={{ flexBasis: "100%", marginX: 1, padding: 2 }}>
-          <OpenAiGPT />
-        </Card> */}
       </Box>
     </>
   );
