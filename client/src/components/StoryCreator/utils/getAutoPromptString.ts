@@ -4,7 +4,25 @@ export const getAutoTextGenPromptString = (childInfo: ChildInfo): string => {
   const { name, gender, age, hairColor, eyeColor, height, nationality } =
     childInfo;
 
-  const fullDynamicPrompt = `Create a story for 1 page children's book that has around 200 characters per page, for a ${age} years old ${gender} named ${name}, with physical characteristics, like the ${gender}'s hair color is ${hairColor}, ${eyeColor} eye color, height of ${height}cm, and from a country of ${nationality.name}`;
+  const customParams = {
+    name: "",
+    gender: "",
+    age: "",
+    hairColor: "",
+    eyeColor: "",
+    height: "",
+    nationality: "",
+  };
+
+  if (age) customParams.age = `${age}-years old`;
+  if (hairColor) customParams.hairColor = `${hairColor} hair color, `;
+  if (eyeColor) customParams.eyeColor = `${eyeColor} eye color, `;
+  if (height) customParams.height = `height of ${height}cm, `;
+  if (nationality)
+    customParams.nationality = ` from the country of ${nationality.name}.`;
+
+  // const fullDynamicPrompt = `Create a story for 1 page children's book that has around 200 characters per page, for a ${age} years old ${gender} named ${name}, with physical characteristics, like the ${gender}'s hair color is ${hairColor}, ${eyeColor} eye color, height of ${height}cm, and from a country of ${nationality.name}`;
+  const fullDynamicPrompt = `Create a story that has around 200 characters, for a ${customParams.age} ${gender} named ${name}, with physical characteristics like ${customParams.hairColor}${customParams.eyeColor}${customParams.height}and${customParams.nationality}`;
 
   return fullDynamicPrompt;
 };

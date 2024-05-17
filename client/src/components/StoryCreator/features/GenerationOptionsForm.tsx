@@ -79,12 +79,14 @@ const GenerationOptionsForm = (params: TextGenerationFormProps) => {
               onChange={handleFieldChange}
             >
               <FormControlLabel
+                required
                 value="boy"
                 name="gender"
                 label="Boy"
                 control={<Radio />}
               />
               <FormControlLabel
+                required
                 value="girl"
                 name="gender"
                 label="Girl"
@@ -108,6 +110,7 @@ const GenerationOptionsForm = (params: TextGenerationFormProps) => {
               label="Name"
               type="text"
               value={childInfo.name}
+              error={!childInfo.name}
               onChange={handleFieldChange}
             />
           </Box>
@@ -127,6 +130,7 @@ const GenerationOptionsForm = (params: TextGenerationFormProps) => {
               label="Age"
               type="number"
               value={childInfo.age}
+              error={!childInfo.age}
               onChange={handleFieldChange}
             />
           </Box>
@@ -139,7 +143,6 @@ const GenerationOptionsForm = (params: TextGenerationFormProps) => {
             width="150px"
           >
             <TextField
-              required
               fullWidth
               id="hairColor"
               name="hairColor"
@@ -157,7 +160,6 @@ const GenerationOptionsForm = (params: TextGenerationFormProps) => {
             width="150px"
           >
             <TextField
-              required
               fullWidth
               id="eyeColor"
               name="eyeColor"
@@ -175,7 +177,6 @@ const GenerationOptionsForm = (params: TextGenerationFormProps) => {
             width="100px"
           >
             <TextField
-              required
               fullWidth
               id="height"
               name="height"

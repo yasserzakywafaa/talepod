@@ -22,12 +22,6 @@ const OpenAiGPTContent = () => {
         <TextGeneration />
       </Box>
 
-      {/* <Box className="openai-text-t-speech-generation" marginTop="1rem">
-        <Typography variant="h4">Openai Chat-GPT TTS Generation</Typography>
-
-        <TextToSpeechGeneration />
-      </Box> */}
-
       {/* <Box className="openai-text-generation" marginTop="1rem">
         <Typography variant="h4">Openai Chat-GPT Image Generation</Typography>
 
