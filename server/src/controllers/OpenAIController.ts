@@ -58,6 +58,10 @@ export const generateTextToSpeech = async (
     const audioFilePath = `${CONFIG.SERVER_GENERATED_AUDIO_FILES_PATH}/${audioFileName}`;
     const buffer = Buffer.from(await generateRequest.arrayBuffer());
     // await fs.promises.writeFile(path.resolve(`${audioFileName}`), buffer);
+    !fs.existsSync(CONFIG.SERVER_GENERATED_AUDIO_FILES_PATH) &&
+      fs.mkdirSync(CONFIG.SERVER_GENERATED_AUDIO_FILES_PATH, {
+        recursive: true,
+      });
     await fs.promises.writeFile(audioFilePath, buffer);
 
     console.log("OpenAIController:>>> GENERATE TEXT TO SPEECH", {
