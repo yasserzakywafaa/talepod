@@ -24,15 +24,15 @@ export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
   return {
     isFetching: false,
     childInfo: {
-      name: "Noah",
-      gender: ChildGenderEnum.boy,
+      name: "Cookie",
+      gender: ChildGenderEnum.girl,
       age: 2,
       hairColor: "Black",
       eyeColor: "Brown",
       height: 50,
       nationality: {
-        name: "Switzerland",
-        value: "CH",
+        name: "Egypt",
+        value: "EG",
       },
     },
   };

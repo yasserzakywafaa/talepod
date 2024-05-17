@@ -1,17 +1,17 @@
-import ReactAudioPlayer from "react-audio-player";
-
 export interface AudioPlayerProps {
-  audioUrl: string;
+  url: string;
+  name: string;
 }
 
 export const AudioPlayer = (params: AudioPlayerProps): JSX.Element => {
   return (
     <>
-      <ReactAudioPlayer
-        src={params.audioUrl}
-        autoPlay={false}
+      <audio
         controls
-        title="AUDIO_FILE"
+        src={params.url}
+        autoPlay={false}
+        title={params.name}
+        style={{ width: "100%" }}
       />
     </>
   );

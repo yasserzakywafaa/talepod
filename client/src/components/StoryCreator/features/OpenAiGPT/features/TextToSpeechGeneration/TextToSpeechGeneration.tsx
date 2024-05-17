@@ -1,16 +1,7 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  Divider,
-  Stack,
-} from "@mui/material";
+import { Box, Button, Paper, Stack } from "@mui/material";
 
 import { AndroidRounded } from "@mui/icons-material";
 import { AudioPlayer } from "src/components/shared/AudioPlayer/AudioPlayer";
-// import { FormEvent } from "react";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
 import { useOpenAiGPTContext } from "../../domain/Provider";
 
@@ -55,18 +46,12 @@ const OpenAiGPTTextToSpeechGeneration = () => {
 
       {aiAnswer.description && (
         <>
-          <Divider style={{ margin: "2rem 0" }}>
-            <Chip label="Answer" size="small" />
-          </Divider>
-          <Card sx={{ minWidth: 275 }}>
-            <CardContent
-              style={{
-                color: aiAnswer.statusCode !== 200 ? "red" : "unset",
-              }}
-            >
-              <AudioPlayer audioUrl={aiAnswer.description as string} />
-            </CardContent>
-          </Card>
+          <Paper elevation={2} style={{ padding: "1rem" }}>
+            <AudioPlayer
+              url={aiAnswer.description as string}
+              name={aiAnswer.title}
+            />
+          </Paper>
         </>
       )}
     </Box>

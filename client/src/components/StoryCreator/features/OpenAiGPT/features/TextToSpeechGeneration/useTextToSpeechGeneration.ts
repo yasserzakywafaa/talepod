@@ -7,6 +7,7 @@ import END_POINTS from "src/lib/endpoints";
 import { OpenAiGPTAIAnswerProps } from "../../domain/state";
 import { OpenAiGPTStore } from "../../domain/store";
 import axios from "axios";
+import { v4 as uuid } from "uuid";
 
 export interface UseTextGeneration {
   handleIsTextToSpeechGenFetching: (isFetching: boolean) => void;
@@ -37,10 +38,12 @@ export const useTextToSpeechGeneration = (
 
   const handleGenerateTextToSpeechRequest = async () => {
     try {
+      const { name, age, nationality } = store.state.childInfo;
       const response = await axios.post(
         END_POINTS.OPENAI.GENERATE.TEXT_TO_SPEECH,
         {
           userPrompt: store.state.textGeneration.aiAnswer.description,
+          fileName: `${name}_${age}yo_${nationality.name}_${uuid()}`,
         }
       );
 
@@ -51,8 +54,8 @@ export const useTextToSpeechGeneration = (
       handleIsTextToSpeechGenFetching(false);
       handleSetTextToSpeechAiAnswer({
         statusCode: response.status,
-        title: "",
-        description: response.data.audioUrl,
+        title: response.data.fileName,
+        description: response.data.audioFileUrl,
       });
     } catch (error) {
       console.error("OpenAiSection:>>> Error", {

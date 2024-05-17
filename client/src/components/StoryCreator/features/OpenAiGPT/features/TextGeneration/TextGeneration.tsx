@@ -13,6 +13,7 @@ import { ChangeEvent, FormEvent } from "react";
 
 import { AndroidRounded } from "@mui/icons-material";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
+import TextToSpeechGeneration from "../TextToSpeechGeneration/TextToSpeechGeneration";
 import { useOpenAiGPTContext } from "../../domain/Provider";
 
 const OpenAiGPTTextGeneration = () => {
@@ -92,6 +93,10 @@ const OpenAiGPTTextGeneration = () => {
               <Typography variant="h6" component="div">
                 {aiAnswer.description}
               </Typography>
+            </CardContent>
+
+            <CardContent>
+              <TextToSpeechGeneration />
             </CardContent>
           </Card>
         </>

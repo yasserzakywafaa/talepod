@@ -14,8 +14,11 @@ const CONFIG = {
     process.env.NODE_ENV && process.env.NODE_ENV.indexOf("production") > -1,
   FRONTEND_DEV_PATH: path.resolve(__dirname + "/../public"),
   FRONTEND_BUILD_PATH: path.resolve(__dirname + "/../build"),
-  SERVER_GENERATED_AUDIO_FILES_PATH: path.resolve(
-    "./assets/generatedTextToSpeech"
+
+  // Assets
+  SERVER_TEXT_TO_SPEECH_PATH: "assets/audio/textToSpeech",
+  SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH: path.resolve(
+    "./assets/audio/textToSpeech"
   ),
 
   // APIs keys for AI

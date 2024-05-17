@@ -4,6 +4,7 @@ import CONFIG from "../config";
 import { IMAGES_SIZES } from "../models/openaiModel";
 import OpenAi from "openai";
 import fs from "fs";
+import { getAudioFileUrl } from "../utils/stringUtils";
 
 const openai = new OpenAi();
 
@@ -42,24 +43,35 @@ export const generateTextToSpeech = async (
   response: Response,
   next: NextFunction
 ) => {
-  const userPrompt = request.body.userPrompt;
+  const { userPrompt, fileName } = request.body;
+  const {
+    SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH,
+    SERVER_TEXT_TO_SPEECH_PATH,
+    OPENAI_TTS_MODEL_NAME,
+  } = CONFIG;
 
-  // OpenAI Text Generation API Call
+  // OpenAI Text-to-Speech Generation API Call
   try {
     const generateRequest = await openai.audio.speech.create({
-      input: userPrompt,
-      model: CONFIG.OPENAI_TTS_MODEL_NAME,
-      voice: "nova",
-      response_format: "mp3",
       speed: 1.0,
+      voice: "nova",
+      input: userPrompt,
+      response_format: "mp3",
+      model: CONFIG.OPENAI_TTS_MODEL_NAME,
     });
 
-    const audioFileName = "speech.mp3";
-    const audioFilePath = `${CONFIG.SERVER_GENERATED_AUDIO_FILES_PATH}/${audioFileName}`;
+    const audioFileName = `${fileName}.mp3`;
+    const audioFilePath = `${CONFIG.SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH}/${audioFileName}`;
+    const audioFileUrl = getAudioFileUrl(
+      request.protocol,
+      request.get("host"),
+      SERVER_TEXT_TO_SPEECH_PATH,
+      audioFileName
+    );
+
     const buffer = Buffer.from(await generateRequest.arrayBuffer());
-    // await fs.promises.writeFile(path.resolve(`${audioFileName}`), buffer);
-    !fs.existsSync(CONFIG.SERVER_GENERATED_AUDIO_FILES_PATH) &&
-      fs.mkdirSync(CONFIG.SERVER_GENERATED_AUDIO_FILES_PATH, {
+    !fs.existsSync(SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH) &&
+      fs.mkdirSync(SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH, {
         recursive: true,
       });
     await fs.promises.writeFile(audioFilePath, buffer);
@@ -68,17 +80,14 @@ export const generateTextToSpeech = async (
       request,
       response: generateRequest,
       writePath: audioFilePath,
-      serverFilesPath: CONFIG.SERVER_GENERATED_AUDIO_FILES_PATH,
-      streamUrl: `${request.get(
-        "host"
-      )}/assets/generatedTextToSpeech/${audioFileName}`,
-      MODEL_NAME: CONFIG.OPENAI_TTS_MODEL_NAME,
+      serverFilesPath: SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH,
+      audioFileUrl: audioFileUrl,
+      MODEL_NAME: OPENAI_TTS_MODEL_NAME,
     });
 
     response.json({
-      audioUrl: `${request.get(
-        "host"
-      )}/assets/generatedTextToSpeech/${audioFileName}`,
+      audioFileUrl,
+      fileName,
     });
   } catch (error) {
     console.log("OpenAIController:>>> GENERATE TEXT TO SPEECH Error", {

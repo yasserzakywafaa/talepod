@@ -10,6 +10,9 @@
 **/.cache/
 **/.DS_Store
 
+# Text-to-speech generated audio files
+/server/assets/audio/textToSpeech
+
 # IDEs and editors
 /.idea
 .project

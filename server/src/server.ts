@@ -15,8 +15,8 @@ expressApp.use(express.json());
 expressApp.use(express.urlencoded({ extended: true }));
 // Serve static files from the specified directory
 expressApp.use(
-  "/assets/generatedTextToSpeech",
-  express.static(CONFIG.SERVER_GENERATED_AUDIO_FILES_PATH)
+  `/${CONFIG.SERVER_TEXT_TO_SPEECH_PATH}`,
+  express.static(CONFIG.SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH)
 );
 
 // Mount API routes
