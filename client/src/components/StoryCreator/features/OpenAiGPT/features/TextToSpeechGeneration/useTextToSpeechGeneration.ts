@@ -7,7 +7,7 @@ import END_POINTS from "src/lib/endpoints";
 import { OpenAiGPTAIAnswerProps } from "../../domain/state";
 import { OpenAiGPTStore } from "../../domain/store";
 import axios from "axios";
-import { v4 as uuid } from "uuid";
+import { getRandomString } from "src/lib/functions";
 
 export interface UseTextGeneration {
   handleIsTextToSpeechGenFetching: (isFetching: boolean) => void;
@@ -43,7 +43,7 @@ export const useTextToSpeechGeneration = (
         END_POINTS.OPENAI.GENERATE.TEXT_TO_SPEECH,
         {
           userPrompt: store.state.textGeneration.aiAnswer.description,
-          fileName: `${name}_${age}yo_${nationality.name}_${uuid()}`,
+          fileName: `${name}_${age}yo_${nationality.name}_${getRandomString()}`,
         }
       );
 

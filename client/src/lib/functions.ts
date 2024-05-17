@@ -29,7 +29,7 @@ export const getAvailableSpace = (element: Element) => {
 /**
  * Generate random string
  */
-export const generateRandomString = (length = 8, prefix = "") => {
+export const getRandomString = (length = 8, prefix = "") => {
   let str = "";
 
   while (str.length <= length) {
