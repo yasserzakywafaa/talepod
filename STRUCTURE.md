@@ -22,10 +22,18 @@
     |   └── yarn.lock
     ├── server
     │   ├── node_modules
+    │   ├── assets
+    │   │   ├── audio
+    │   │       └── textToSpeech
     │   ├── src
     │   │   ├── controllers
     │   │   ├── models
+    │   │   │   ├── endpoints.ts
+    │   │   │   └── mongodb
+    │   │   │       ├── audioFile.ts
+    │   │   │       └── index.ts
     │   │   ├── routes
+    │   │   │   └── openaiRoutes.ts
     │   │   ├── config.ts
     │   │   └── server.ts
     │   ├── .env

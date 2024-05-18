@@ -30,6 +30,10 @@ const CONFIG = {
   // GoogleGemini
   GOOGLE_GEMINI_MODEL_NAME: process.env.GOOGLE_GEMINI_MODEL_NAME,
   GOOGLE_GEMINI_API_KEY_1: process.env.GOOGLE_GEMINI_API_KEY_1,
+
+  // Database
+  MONGODB_URI_DEV: process.env.MONGODB_URI_DEV,
+  MONGODB_URI_PROD: process.env.MONGODB_URI_PROD,
 };
 
 export default CONFIG;

@@ -1,6 +1,7 @@
 import CONFIG from "./config";
 import bodyParser from "body-parser";
 import cors from "cors";
+import { databaseInit } from "./models/mongoDb";
 import express from "express";
 import googleGeminiRoutes from "./routes/googleGeminiRoutes";
 import openAIRoutes from "./routes/openaiRoutes";
@@ -23,6 +24,8 @@ expressApp.use(
 expressApp.use(testRoutes);
 expressApp.use(googleGeminiRoutes);
 expressApp.use(openAIRoutes);
+
+databaseInit();
 
 if (CONFIG.IS_PROD) {
   expressApp.get("/", (request, response) => {

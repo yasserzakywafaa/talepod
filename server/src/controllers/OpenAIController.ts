@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
+import AudioFile from "../models/mongoDb/audioFile";
 import CONFIG from "../config";
 import { IMAGES_SIZES } from "../models/openaiModel";
 import OpenAi from "openai";
@@ -75,6 +76,14 @@ export const generateTextToSpeech = async (
         recursive: true,
       });
     await fs.promises.writeFile(audioFilePath, buffer);
+
+    // This create a MongoDB Document with the file's metadata
+    const audioFile = new AudioFile({
+      fileName: audioFileName,
+      url: audioFileUrl,
+    });
+    // Save to MongoDb Atlas
+    await audioFile.save();
 
     console.log("OpenAIController:>>> GENERATE TEXT TO SPEECH", {
       request,
