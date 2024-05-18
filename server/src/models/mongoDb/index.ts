@@ -24,8 +24,6 @@ const databaseInit = () => {
   database.on("error", console.error.bind(console, "<<< Connection Error:>>>"));
   database.once("open", () => {
     console.info("<<< Connected to MongoDB Atlas >>>");
-
-    console.log("Connected to MongoDB Atlas");
   });
 };
 
