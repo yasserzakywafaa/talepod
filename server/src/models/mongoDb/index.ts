@@ -7,7 +7,9 @@ const getMongoDbUri = (): string => {
       return CONFIG.MONGODB_URI_DEV;
 
     case CONFIG.IS_PROD:
-      return CONFIG.MONGODB_URI_PROD;
+      // Uncomment when going to production
+      // return CONFIG.MONGODB_URI_PROD;
+      return CONFIG.MONGODB_URI_DEV;
 
     default:
       return "";
