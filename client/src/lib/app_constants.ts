@@ -7,6 +7,9 @@ const APP_CONSTANTS = {
     process.env.NODE_ENV && process.env.NODE_ENV.indexOf("development") > -1,
   IS_PROD:
     process.env.NODE_ENV && process.env.NODE_ENV.indexOf("production") > -1,
+
+  // Auth
+  GOOGLE_AUTH_CLIENT_ID: process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID,
 };
 
 export default APP_CONSTANTS;

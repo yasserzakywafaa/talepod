@@ -1,6 +1,7 @@
 const routes = {
   home: `/`,
-  checkout: `checkout`,
+  login: `/login`,
+  checkout: `/checkout`,
   unauthorized: `/unauthorized`,
   notfound: `/notfound`,
 };
