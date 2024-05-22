@@ -2,11 +2,12 @@ import "./Page.scss";
 
 import { Container, ContainerTypeMap } from "@mui/material";
 
-import NavigationBar from "../NavigationBar/NavigationBar";
+// import NavigationBar from "../NavigationBar/NavigationBar";
 import { Notification } from "../Notification/Notification";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import classNames from "classnames";
 import { useEffect } from "react";
+import ApplicationBar from "../ApplicationBar/ApplicationBar";
 
 export interface PageProps {
   title: string;
@@ -30,7 +31,7 @@ const Page = (params: PageProps) => {
     <Container maxWidth={false} className={pageClassNames} {...containerProps}>
       {/* {isFetching && <LoaderSpinner style={{ position: "fixed" }} />} */}
       <Notification />
-      <NavigationBar />
+      <ApplicationBar />
       <>{children}</>
     </Container>
   );

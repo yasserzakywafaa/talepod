@@ -4,8 +4,8 @@ import { PaletteMode } from "@mui/material";
 import WbSunnyRoundedIcon from "@mui/icons-material/WbSunnyRounded";
 
 interface ToggleColorModeProps {
-  mode: PaletteMode;
-  toggleColorMode: () => void;
+  mode?: PaletteMode;
+  toggleColorMode?: () => void;
 }
 
 const ToggleColorMode = ({ mode, toggleColorMode }: ToggleColorModeProps) => {
