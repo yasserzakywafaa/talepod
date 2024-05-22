@@ -13,6 +13,7 @@ import Login from "src/Pages/Login/Login";
 import NotFoundPage from "src/Pages/NotFound/NotFound";
 import routes from "./routes";
 import useApplicationStore from "./domain/store";
+import LandingPage from "src/Pages/Landing/Landing";
 
 // import { DBUtils } from "./lib/database";
 // import "./shared/components/TinyMCE";
@@ -72,6 +73,8 @@ const App: FC = () => {
                 <Route path={routes.login} element={<Login />} />
 
                 <Route index path={routes.home} element={<HomePage />} />
+
+                <Route index path={routes.landing} element={<LandingPage />} />
 
                 <Route path={routes.checkout} element={<CheckoutPage />} />
 

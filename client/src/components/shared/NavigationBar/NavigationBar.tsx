@@ -6,7 +6,7 @@ import "./NavigationBar.scss";
 // import ToggleColorMode from "./ToggleColorMode";
 // import { useApplicationContext } from "src/application/domain/Provider";
 import { useNavigate } from "react-router-dom";
-import Logo from "./Logo";
+import Logo from "../Logo/Logo";
 import classNames from "classnames";
 import { Button } from "@mui/material";
 import routes from "src/application/routes";
