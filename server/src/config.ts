@@ -12,8 +12,8 @@ const CONFIG = {
     process.env.NODE_ENV && process.env.NODE_ENV.indexOf("development") > -1,
   IS_PROD:
     process.env.NODE_ENV && process.env.NODE_ENV.indexOf("production") > -1,
-  FRONTEND_DEV_PATH: path.resolve(__dirname + "/../public"),
-  FRONTEND_BUILD_PATH: path.resolve(__dirname + "/../build"),
+  FRONTEND_DEV_PATH: path.resolve("../client/public"),
+  FRONTEND_BUILD_PATH: path.resolve("../client/build"),
 
   // Assets
   SERVER_TEXT_TO_SPEECH_PATH: "assets/audio/textToSpeech",

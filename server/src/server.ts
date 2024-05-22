@@ -44,6 +44,14 @@ if (CONFIG.IS_PROD) {
   //   //this serves index.html if no other URL hits
   //   res.status(200).sendFile(`${CONFIG.FRONTEND_BUILD_PATH}/index.html`);
   // });
+
+  // Serve static files from the React app build directory
+  expressApp.use(express.static(CONFIG.FRONTEND_BUILD_PATH));
+
+  // Catch-all route to serve `index.html` for all client-side routes
+  expressApp.get("*", (req, res) => {
+    res.sendFile(`${CONFIG.FRONTEND_BUILD_PATH}/index.html`);
+  });
 }
 
 expressApp.listen(PORT, (): void => {
