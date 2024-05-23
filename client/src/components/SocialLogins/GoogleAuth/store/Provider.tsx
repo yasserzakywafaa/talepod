@@ -2,7 +2,7 @@ import { GoogleAuthManager, useGoogleAuthManager } from "./manager";
 import React, { PropsWithChildren, createContext, useContext } from "react";
 import useGoogleAuthStore, { GoogleAuthStore } from "./store";
 
-import APP_CONSTANTS from "src/lib/app_constants";
+import APP_CONSTANTS from "src/application/shared/app_constants";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export interface GoogleAuthContextProps {

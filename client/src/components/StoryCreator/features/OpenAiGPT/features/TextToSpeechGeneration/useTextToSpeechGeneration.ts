@@ -3,11 +3,11 @@ import {
   ToastTypes,
 } from "src/components/shared/Notification/Notification";
 
-import END_POINTS from "src/lib/endpoints";
+import END_POINTS from "src/application/shared/endpoints";
 import { OpenAiGPTAIAnswerProps } from "../../store/state";
 import { OpenAiGPTStore } from "../../store/store";
 import axios from "axios";
-import { getRandomString } from "src/lib/functions";
+import { getRandomString } from "src/shared/utils/stringUtils";
 
 export interface UseTextGeneration {
   handleIsTextToSpeechGenFetching: (isFetching: boolean) => void;

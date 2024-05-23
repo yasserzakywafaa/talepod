@@ -3,7 +3,7 @@ import {
   ToastTypes,
 } from "src/components/shared/Notification/Notification";
 
-import END_POINTS from "src/lib/endpoints";
+import END_POINTS from "src/application/shared/endpoints";
 import { OpenAiGPTAIAnswerProps } from "../../store/state";
 import { OpenAiGPTStore } from "../../store/store";
 import axios from "axios";

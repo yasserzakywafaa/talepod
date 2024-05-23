@@ -3,7 +3,7 @@ import {
   ToastTypes,
 } from "src/components/shared/Notification/Notification";
 
-import END_POINTS from "src/lib/endpoints";
+import END_POINTS from "src/application/shared/endpoints";
 import { GoogleGeminiAIAnswerProps } from "./state";
 import { GoogleGeminiStore } from "./store";
 import axios from "axios";
