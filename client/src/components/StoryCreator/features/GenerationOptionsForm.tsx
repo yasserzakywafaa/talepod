@@ -79,14 +79,12 @@ const GenerationOptionsForm = (params: TextGenerationFormProps) => {
               onChange={handleFieldChange}
             >
               <FormControlLabel
-                required
                 value="boy"
                 name="gender"
                 label="Boy"
                 control={<Radio />}
               />
               <FormControlLabel
-                required
                 value="girl"
                 name="gender"
                 label="Girl"

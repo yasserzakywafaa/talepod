@@ -1,4 +1,4 @@
-import { Box, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Container, Tab, Tabs, Typography } from "@mui/material";
 
 import GenerationOptionsForm from "./features/GenerationOptionsForm";
 import GoogleGemini from "./features/GoogleGemini/GoogleGemini";
@@ -17,7 +17,7 @@ export const StoryCreatorContent = () => {
   };
 
   return (
-    <>
+    <Container id="features" sx={{ py: { xs: 8, sm: 16 } }}>
       <GenerationOptionsForm
         childInfo={childInfo}
         handleUpdateChildInfo={manager.handleUpdateChildInfo}
@@ -71,6 +71,6 @@ export const StoryCreatorContent = () => {
           </div>
         </Box>
       </Box>
-    </>
+    </Container>
   );
 };

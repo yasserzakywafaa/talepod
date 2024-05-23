@@ -35,8 +35,6 @@ const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
   // Add all the pages the will contain the AppBar
   const pagesMatch = {
     isHomePage: !!useMatch(routes.home),
-    isLandingPage: !!useMatch(routes.landing),
-    isRegisterPage: !!useMatch(routes.register),
     isCheckoutPage: !!useMatch(routes.checkout),
     isUnauthorizedPage: !!useMatch(routes.unauthorized),
   };

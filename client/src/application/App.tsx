@@ -8,10 +8,8 @@ import { FC, Suspense, lazy, useEffect } from "react";
 
 import { AppWithGoogleAuth } from "../components/SocialLogins/GoogleAuth/store/Provider";
 import { ApplicationContextProvider } from "./store/Provider";
-import LandingPage from "src/Pages/Landing/Landing";
 import LoaderSpinner from "../components/shared/Loading/LoaderSpinner";
 import NotFoundPage from "src/Pages/NotFound/NotFound";
-import Register from "src/components/Modals/RegisterModal/Register";
 import routes from "./routes";
 import useApplicationStore from "./store/store";
 
@@ -70,11 +68,7 @@ const App: FC = () => {
 
             <BrowserRouter>
               <Routes>
-                <Route path={routes.register} element={<Register />} />
-
                 <Route index path={routes.home} element={<HomePage />} />
-
-                <Route index path={routes.landing} element={<LandingPage />} />
 
                 <Route path={routes.checkout} element={<CheckoutPage />} />
 
