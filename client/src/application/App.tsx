@@ -6,8 +6,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { FC, Suspense, lazy, useEffect } from "react";
 
+import AppProviders from "./AppProviders";
 import { AppWithGoogleAuth } from "../components/shared/SocialLogins/GoogleAuth/store/Provider";
-import { ApplicationContextProvider } from "./store/Provider";
+// import { ApplicationContextProvider } from "./store/Provider";
 import LoaderSpinner from "../components/shared/Loading/LoaderSpinner";
 import NotFoundPage from "src/Pages/NotFound/NotFound";
 import routes from "./routes";
@@ -61,7 +62,8 @@ const App: FC = () => {
 
   return (
     <AppWithGoogleAuth>
-      <ApplicationContextProvider>
+      <AppProviders>
+        {/* <ApplicationContextProvider> */}
         <Suspense fallback={<LoaderSpinner />}>
           <ThemeProvider theme={defaultTheme}>
             <CssBaseline />
@@ -83,7 +85,8 @@ const App: FC = () => {
             </BrowserRouter>
           </ThemeProvider>
         </Suspense>
-      </ApplicationContextProvider>
+      </AppProviders>
+      {/* </ApplicationContextProvider> */}
     </AppWithGoogleAuth>
   );
 };

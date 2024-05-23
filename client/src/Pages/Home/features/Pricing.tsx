@@ -10,50 +10,67 @@ import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import routes from "src/application/routes";
+import { useNavigate } from "react-router-dom";
+import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
+
+export enum PriceTiers {
+  Free = "Free",
+  Professional = "Professional",
+  Advanced = "Advanced",
+}
 
 const tiers = [
   {
-    title: "Free",
+    title: PriceTiers.Free,
     price: "0",
     description: [
-      "10 users included",
-      "2 GB of storage",
-      "Help center access",
-      "Email support",
+      "Generate up to 5 stories per month",
+      "Basic text-to-speech conversion",
+      "Access to a limited story library",
+      "Standard customer support",
+      "Community forum access",
     ],
-    buttonText: "Sign up for free",
+    buttonText: "Register for free",
     buttonVariant: "outlined",
   },
   {
-    title: "Professional",
+    title: PriceTiers.Professional,
     subheader: "Recommended",
     price: "5",
     description: [
-      "20 users included",
-      "10 GB of storage",
-      "Help center access",
-      "Priority email support",
-      "Dedicated team",
-      "Best deals",
+      "Generate up to 20 stories per month",
+      "High-quality text-to-speech conversion",
+      "Access to an extensive story library",
+      "Priority customer support",
+      "Offline access to stories",
+      "Customizable story parameters",
     ],
     buttonText: "Start now",
     buttonVariant: "contained",
   },
   {
-    title: "Enterprise",
+    title: PriceTiers.Advanced,
     price: "10",
     description: [
-      "50 users included",
-      "30 GB of storage",
-      "Help center access",
-      "Phone & email support",
+      "Unlimited story generation",
+      "Access to exclusive story content",
+      "Offline access to stories",
+      "Personalized story recommendations",
+      "Premium text-to-speech voices",
+      "Custom voice options for TTS",
     ],
-    buttonText: "Contact us",
+    buttonText: "Start now",
     buttonVariant: "outlined",
   },
 ];
 
-export default function Pricing() {
+const Pricing = () => {
+  const navigate = useNavigate();
+  const {
+    store: { handleToggleRegisterModal },
+  } = useRegisterModalContext();
+
   return (
     <Container
       id="pricing"
@@ -89,7 +106,7 @@ export default function Pricing() {
             item
             key={tier.title}
             xs={12}
-            sm={tier.title === "Enterprise" ? 12 : 6}
+            sm={tier.title === PriceTiers.Advanced ? 12 : 6}
             md={4}
           >
             <Card
@@ -98,11 +115,16 @@ export default function Pricing() {
                 display: "flex",
                 flexDirection: "column",
                 gap: 4,
-                border: tier.title === "Professional" ? "1px solid" : undefined,
+                border:
+                  tier.title === PriceTiers.Professional
+                    ? "1px solid"
+                    : undefined,
                 borderColor:
-                  tier.title === "Professional" ? "primary.main" : undefined,
+                  tier.title === PriceTiers.Professional
+                    ? "primary.main"
+                    : undefined,
                 background:
-                  tier.title === "Professional"
+                  tier.title === PriceTiers.Professional
                     ? "linear-gradient(#033363, #021F3B)"
                     : undefined,
               }}
@@ -114,13 +136,14 @@ export default function Pricing() {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    color: tier.title === "Professional" ? "grey.100" : "",
+                    color:
+                      tier.title === PriceTiers.Professional ? "grey.100" : "",
                   }}
                 >
                   <Typography component="h3" variant="h6">
                     {tier.title}
                   </Typography>
-                  {tier.title === "Professional" && (
+                  {tier.title === PriceTiers.Professional && (
                     <Chip
                       icon={<AutoAwesomeIcon />}
                       label={tier.subheader}
@@ -144,7 +167,9 @@ export default function Pricing() {
                     display: "flex",
                     alignItems: "baseline",
                     color:
-                      tier.title === "Professional" ? "grey.50" : undefined,
+                      tier.title === PriceTiers.Professional
+                        ? "grey.50"
+                        : undefined,
                   }}
                 >
                   <Typography component="h3" variant="h2">
@@ -175,7 +200,7 @@ export default function Pricing() {
                       sx={{
                         width: 20,
                         color:
-                          tier.title === "Professional"
+                          tier.title === PriceTiers.Professional
                             ? "primary.light"
                             : "primary.main",
                       }}
@@ -185,7 +210,7 @@ export default function Pricing() {
                       variant="subtitle2"
                       sx={{
                         color:
-                          tier.title === "Professional"
+                          tier.title === PriceTiers.Professional
                             ? "grey.200"
                             : undefined,
                       }}
@@ -195,13 +220,17 @@ export default function Pricing() {
                   </Box>
                 ))}
               </CardContent>
+
               <CardActions>
                 <Button
                   fullWidth
+                  component="button"
                   variant={tier.buttonVariant as "outlined" | "contained"}
-                  component="a"
-                  href="/material-ui/getting-started/templates/checkout/"
-                  target="_blank"
+                  onClick={() =>
+                    tier.title === PriceTiers.Free
+                      ? handleToggleRegisterModal()
+                      : navigate(routes.checkout)
+                  }
                 >
                   {tier.buttonText}
                 </Button>
@@ -212,4 +241,6 @@ export default function Pricing() {
       </Grid>
     </Container>
   );
-}
+};
+
+export default Pricing;

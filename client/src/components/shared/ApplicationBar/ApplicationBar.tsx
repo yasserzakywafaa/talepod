@@ -17,8 +17,8 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import routes from "src/application/routes";
 import { scrollToSection } from "src/shared/utils/scrollToSection";
-import useLoginModal from "src/components/Modals/LoginModal/useLoginModal";
-import useRegisterModal from "src/components/Modals/RegisterModal/useRegisterModal";
+import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
+import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useState } from "react";
 
 interface ApplicationBarProps {
@@ -28,8 +28,12 @@ interface ApplicationBarProps {
 
 const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
   const navigate = useNavigate();
-  const loginModal = useLoginModal();
-  const registerModal = useRegisterModal();
+  const {
+    store: { handleToggleLoginModal },
+  } = useLoginModalContext();
+  const {
+    store: { handleToggleRegisterModal },
+  } = useRegisterModalContext();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Add all the pages the will contain the AppBar
@@ -168,7 +172,7 @@ const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
                   variant="text"
                   size="small"
                   component="button"
-                  onClick={loginModal.handleToggleLoginModal}
+                  onClick={handleToggleLoginModal}
                 >
                   Log in
                 </Button>
@@ -178,7 +182,7 @@ const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
                   color="primary"
                   variant="contained"
                   component="button"
-                  onClick={registerModal.handleToggleRegisterModal}
+                  onClick={handleToggleRegisterModal}
                 >
                   Register
                 </Button>
@@ -250,7 +254,7 @@ const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
                         color="primary"
                         variant="contained"
                         component="button"
-                        onClick={registerModal.handleToggleRegisterModal}
+                        onClick={handleToggleRegisterModal}
                         sx={{ width: "100%" }}
                       >
                         Register
@@ -263,7 +267,7 @@ const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
                         variant="outlined"
                         component="button"
                         sx={{ width: "100%" }}
-                        onClick={loginModal.handleToggleLoginModal}
+                        onClick={handleToggleLoginModal}
                       >
                         Log in
                       </Button>
@@ -277,15 +281,8 @@ const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
       )}
 
       {/* Modals */}
-      <LoginModal
-        isVisible={loginModal.state.isVisible}
-        onClose={loginModal.handleToggleLoginModal}
-      />
-
-      <RegisterModal
-        isVisible={registerModal.state.isVisible}
-        onClose={registerModal.handleToggleRegisterModal}
-      />
+      <LoginModal />
+      <RegisterModal />
     </>
   );
 };

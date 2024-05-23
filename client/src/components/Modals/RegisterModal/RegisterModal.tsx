@@ -6,15 +6,16 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import RegisterForm from "./features/RegisterForm/RegisterForm";
 import SocialRegister from "./features/SocialRegister/SocialRegister";
+import { useEffect } from "react";
+import { useRegisterModalContext } from "./store/Provider";
 
-export interface RegisterModalParams {
-  isVisible: boolean;
-  onClose: () => void;
-}
+export const RegisterModal = () => {
+  const {
+    store: { state, handleToggleRegisterModal },
+  } = useRegisterModalContext();
 
-export const RegisterModal = (props: RegisterModalParams) => {
   const handleCloseModal = () => {
-    props.onClose();
+    handleToggleRegisterModal();
   };
 
   const handleOnFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -26,11 +27,15 @@ export const RegisterModal = (props: RegisterModalParams) => {
     handleCloseModal();
   };
 
+  useEffect(() => {
+    console.log("RegisterModal.tsx:>>> state:>>>", state);
+  }, [state]);
+
   return (
     <>
       <Dialog
         scroll="body"
-        open={props.isVisible}
+        open={state.isVisible}
         onClose={handleCloseModal}
         PaperProps={{
           component: "form",

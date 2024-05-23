@@ -17,7 +17,7 @@ export const useApplicationContext = () => {
   const context = useContext(AppContext);
   if (!context) {
     throw new Error(
-      "useAppContext must be used within an ApplicationContextProvider"
+      "useApplicationContext must be used within an ApplicationContextProvider"
     );
   }
   return context;

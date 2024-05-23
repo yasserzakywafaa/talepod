@@ -1,23 +1,13 @@
-import { useState } from "react";
+import { LoginModalInitialState, getLoginModalInitialState } from "./state";
 
-export interface LoginModalInitialState {
-  isFetching: boolean;
-  isVisible: boolean;
-}
+import { useState } from "react";
 
 export interface LoginModalStore {
   state: LoginModalInitialState;
   handleToggleLoginModal: () => void;
 }
 
-export const getLoginModalInitialState = (): LoginModalInitialState => {
-  return {
-    isFetching: false,
-    isVisible: false,
-  };
-};
-
-const useLoginModal = (): LoginModalStore => {
+const useLoginModalStore = (): LoginModalStore => {
   const initialState = getLoginModalInitialState();
   const [state, setState] = useState<LoginModalInitialState>(initialState);
 
@@ -34,4 +24,4 @@ const useLoginModal = (): LoginModalStore => {
   };
 };
 
-export default useLoginModal;
+export default useLoginModalStore;

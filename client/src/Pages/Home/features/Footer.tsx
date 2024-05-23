@@ -5,17 +5,13 @@ import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import Logo from "src/components/shared/Logo/Logo";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import TwitterIcon from "@mui/icons-material/X";
 import Typography from "@mui/material/Typography";
 
-const logoStyle = {
-  width: "140px",
-  height: "auto",
-};
-
-function Copyright() {
+const Copyright = () => {
   return (
     <Typography variant="body2" color="text.secondary" mt={1}>
       {"Copyright © "}
@@ -23,9 +19,9 @@ function Copyright() {
       {new Date().getFullYear()}
     </Typography>
   );
-}
+};
 
-export default function Footer() {
+const Footer = () => {
   return (
     <Container
       sx={{
@@ -55,13 +51,15 @@ export default function Footer() {
         >
           <Box sx={{ width: { xs: "100%", sm: "60%" } }}>
             <Box sx={{ ml: "-15px" }}>
-              <img
+              {/* <img
                 src={
                   "https://assets-global.website-files.com/61ed56ae9da9fd7e0ef0a967/61f12e6faf73568658154dae_SitemarkDefault.svg"
                 }
                 style={logoStyle}
-                alt="logo of sitemark"
-              />
+                alt="logo of Swissai"
+              /> */}
+
+              <Logo />
             </Box>
             <Typography variant="body2" fontWeight={600} gutterBottom>
               Newsletter
@@ -175,12 +173,15 @@ export default function Footer() {
           <Link color="text.secondary" href="#">
             Privacy Policy
           </Link>
+
           <Typography display="inline" sx={{ mx: 0.5, opacity: 0.5 }}>
             &nbsp;•&nbsp;
           </Typography>
+
           <Link color="text.secondary" href="#">
             Terms of Service
           </Link>
+
           <Copyright />
         </div>
         <Stack
@@ -221,4 +222,6 @@ export default function Footer() {
       </Box>
     </Container>
   );
-}
+};
+
+export default Footer;

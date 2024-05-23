@@ -6,15 +6,15 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import LoginForm from "./features/LoginForm/LoginForm";
 import SocialLogin from "./features/SocialLogin/SocialLogin";
+import { useLoginModalContext } from "./store/Provider";
 
-export interface LoginModalParams {
-  isVisible: boolean;
-  onClose: () => void;
-}
+export const LoginModal = () => {
+  const {
+    store: { state, handleToggleLoginModal },
+  } = useLoginModalContext();
 
-export const LoginModal = (props: LoginModalParams) => {
   const handleCloseModal = () => {
-    props.onClose();
+    handleToggleLoginModal();
   };
 
   const handleOnFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -30,7 +30,7 @@ export const LoginModal = (props: LoginModalParams) => {
     <>
       <Dialog
         scroll="body"
-        open={props.isVisible}
+        open={state.isVisible}
         onClose={handleCloseModal}
         PaperProps={{
           component: "form",
