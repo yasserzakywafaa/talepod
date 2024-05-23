@@ -40,7 +40,14 @@ const GenerationOptionsForm = (params: TextGenerationFormProps) => {
 
   return (
     <Container className="story-creator" maxWidth={false}>
-      <Typography variant="h2">Create a story for your child</Typography>
+      <Typography
+        variant="h2"
+        sx={{
+          color: (theme) => (theme.palette.mode === "light" ? "#000" : "#fff"),
+        }}
+      >
+        Create a story for your child
+      </Typography>
 
       <Box
         marginY={5}

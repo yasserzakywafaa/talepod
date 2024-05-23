@@ -10,30 +10,35 @@ import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
 import Logo from "src/components/shared/Logo/Logo";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { PaletteMode } from "@mui/material";
 import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal";
 import ToggleColorMode from "src/components/shared/ToggleColorMode";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import routes from "src/application/routes";
 import { scrollToSection } from "src/shared/utils/scrollToSection";
+import { useApplicationContext } from "src/application/store/Provider";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useState } from "react";
 
-interface ApplicationBarProps {
-  mode?: PaletteMode;
-  toggleColorMode?: () => void;
-}
-
-const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
+const ApplicationBar = () => {
   const navigate = useNavigate();
+
+  const {
+    store: {
+      state: { themeMode },
+      toggleThemeMode,
+    },
+  } = useApplicationContext();
+
   const {
     store: { handleToggleLoginModal },
   } = useLoginModalContext();
+
   const {
     store: { handleToggleRegisterModal },
   } = useRegisterModalContext();
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Add all the pages the will contain the AppBar
@@ -70,14 +75,14 @@ const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
           <Container maxWidth="lg">
             <Toolbar
               variant="regular"
-              sx={(theme) => ({
+              sx={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
                 flexShrink: 0,
                 borderRadius: "4px",
                 bgcolor:
-                  theme.palette.mode === "light"
+                  themeMode === "light"
                     ? "rgba(255, 255, 255, 0.4)"
                     : "rgba(0, 0, 0, 0.4)",
                 backdropFilter: "blur(24px)",
@@ -85,10 +90,10 @@ const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
                 border: "1px solid",
                 borderColor: "divider",
                 boxShadow:
-                  theme.palette.mode === "light"
+                  themeMode === "light"
                     ? `0 0 1px rgba(85, 166, 246, 0.1), 1px 1.5px 2px -1px rgba(85, 166, 246, 0.15), 4px 4px 12px -2.5px rgba(85, 166, 246, 0.15)`
                     : "0 0 1px rgba(2, 31, 59, 0.7), 1px 1.5px 2px -1px rgba(2, 31, 59, 0.65), 4px 4px 12px -2.5px rgba(2, 31, 59, 0.65)",
-              })}
+              }}
             >
               <Box
                 sx={{
@@ -164,8 +169,8 @@ const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
                 }}
               >
                 <ToggleColorMode
-                  mode={mode}
-                  toggleColorMode={toggleColorMode}
+                  mode={themeMode}
+                  toggleColorMode={toggleThemeMode}
                 />
                 <Button
                   color="primary"
@@ -222,8 +227,8 @@ const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
                       }}
                     >
                       <ToggleColorMode
-                        mode={mode}
-                        toggleColorMode={toggleColorMode}
+                        mode={themeMode}
+                        toggleColorMode={toggleThemeMode}
                       />
                     </Box>
 

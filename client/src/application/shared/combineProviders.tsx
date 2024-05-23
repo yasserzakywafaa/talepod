@@ -1,27 +1,3 @@
-// import React, { FC, ReactNode } from "react";
-
-// type ProviderProps = {
-//   children: ReactNode;
-// };
-
-// const combineProviders = (
-//   providers: React.ComponentType<ProviderProps>[]
-// ): FC<ProviderProps> => {
-//   const CombinedProviders: FC<ProviderProps> = ({ children }) => {
-//     return (
-//       <>
-//         {providers.map((Provider, index) => (
-//           <Provider key={index}>{children}</Provider>
-//         ))}
-//       </>
-//     );
-//   };
-
-//   return CombinedProviders;
-// };
-
-// export default combineProviders;
-
 import { FC, PropsWithChildren } from "react";
 
 type Provider = FC<PropsWithChildren<{}>>;
