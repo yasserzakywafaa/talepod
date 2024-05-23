@@ -6,15 +6,14 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { FC, Suspense, lazy, useEffect } from "react";
 
-import { AppWithGoogleAuth } from "./authentication/GoogleAuth/domain/Provider";
-import { ApplicationContextProvider } from "./domain/Provider";
-import LoaderSpinner from "../components/shared/Loading/LoaderSpinner";
-import Login from "src/Pages/Authentication/Login/Login";
-import NotFoundPage from "src/Pages/NotFound/NotFound";
-import routes from "./routes";
-import useApplicationStore from "./domain/store";
+import { AppWithGoogleAuth } from "../components/SocialLogins/GoogleAuth/store/Provider";
+import { ApplicationContextProvider } from "./store/Provider";
 import LandingPage from "src/Pages/Landing/Landing";
-import Register from "src/Pages/Authentication/Register/Register";
+import LoaderSpinner from "../components/shared/Loading/LoaderSpinner";
+import NotFoundPage from "src/Pages/NotFound/NotFound";
+import Register from "src/components/Modals/RegisterModal/Register";
+import routes from "./routes";
+import useApplicationStore from "./store/store";
 
 // import { DBUtils } from "./lib/database";
 // import "./shared/components/TinyMCE";
@@ -71,8 +70,6 @@ const App: FC = () => {
 
             <BrowserRouter>
               <Routes>
-                <Route path={routes.login} element={<Login />} />
-
                 <Route path={routes.register} element={<Register />} />
 
                 <Route index path={routes.home} element={<HomePage />} />

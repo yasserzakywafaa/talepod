@@ -1,6 +1,6 @@
 import React from "react";
 import { StoryCreatorContent } from "./StoryCreatorContent";
-import { StoryCreatorContextProvider } from "./domain/Provider";
+import { StoryCreatorContextProvider } from "./store/Provider";
 
 const StoryCreator: React.FC = () => {
   return (

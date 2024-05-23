@@ -3,7 +3,7 @@ import { Box, Button, Paper, Stack } from "@mui/material";
 import { AndroidRounded } from "@mui/icons-material";
 import { AudioPlayer } from "src/components/shared/AudioPlayer/AudioPlayer";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
-import { useOpenAiGPTContext } from "../../domain/Provider";
+import { useOpenAiGPTContext } from "../../store/Provider";
 
 const OpenAiGPTTextToSpeechGeneration = () => {
   const { store, manager } = useOpenAiGPTContext();

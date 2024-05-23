@@ -11,19 +11,9 @@ import { Link } from "react-router-dom";
 import { LockOutlined } from "@mui/icons-material";
 
 const LoginForm = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
-
   return (
     <Box
       sx={{
-        marginTop: 8,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -32,10 +22,12 @@ const LoginForm = () => {
       <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
         <LockOutlined />
       </Avatar>
+
       <Typography component="h1" variant="h5">
         Log in
       </Typography>
-      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+
+      <Box component="div" sx={{ mt: 1 }}>
         <TextField
           margin="normal"
           required

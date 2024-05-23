@@ -1,6 +1,6 @@
 import { GoogleLogin } from "@react-oauth/google";
-import { useGoogleAuthContext } from "./domain/Provider";
-import { useApplicationContext } from "src/application/domain/Provider";
+import { useApplicationContext } from "src/application/store/Provider";
+import { useGoogleAuthContext } from "./store/Provider";
 
 const GoogleAuth = () => {
   const {

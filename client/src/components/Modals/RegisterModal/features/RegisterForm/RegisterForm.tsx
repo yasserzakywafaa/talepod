@@ -13,19 +13,9 @@ import { Link } from "react-router-dom";
 import { LockOutlined } from "@mui/icons-material";
 
 const RegisterForm = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
-
   return (
     <Box
       sx={{
-        marginTop: 8,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -35,9 +25,10 @@ const RegisterForm = () => {
         <LockOutlined />
       </Avatar>
       <Typography component="h1" variant="h5">
-        Sign up
+        Register
       </Typography>
-      <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+
+      <Box component="div" sx={{ mt: 1 }}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -50,6 +41,7 @@ const RegisterForm = () => {
               autoFocus
             />
           </Grid>
+
           <Grid item xs={12} sm={6}>
             <TextField
               required
@@ -60,6 +52,7 @@ const RegisterForm = () => {
               autoComplete="family-name"
             />
           </Grid>
+
           <Grid item xs={12}>
             <TextField
               required
@@ -70,6 +63,7 @@ const RegisterForm = () => {
               autoComplete="email"
             />
           </Grid>
+
           <Grid item xs={12}>
             <TextField
               required
@@ -81,6 +75,7 @@ const RegisterForm = () => {
               autoComplete="new-password"
             />
           </Grid>
+
           <Grid item xs={12}>
             <FormControlLabel
               control={<Checkbox value="allowExtraEmails" color="primary" />}
@@ -88,6 +83,7 @@ const RegisterForm = () => {
             />
           </Grid>
         </Grid>
+
         <Button
           type="submit"
           fullWidth

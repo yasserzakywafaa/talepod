@@ -1,5 +1,5 @@
 import OpenAiGPTContent from "./OpenAiGPTContent";
-import { OpenAiGPTContextProvider } from "./domain/Provider";
+import { OpenAiGPTContextProvider } from "./store/Provider";
 
 const OpenAiGPT: React.FC = () => {
   return (

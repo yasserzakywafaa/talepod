@@ -4,8 +4,8 @@ import {
 } from "src/components/shared/Notification/Notification";
 
 import END_POINTS from "src/lib/endpoints";
-import { OpenAiGPTAIAnswerProps } from "../../domain/state";
-import { OpenAiGPTStore } from "../../domain/store";
+import { OpenAiGPTAIAnswerProps } from "../../store/state";
+import { OpenAiGPTStore } from "../../store/store";
 import axios from "axios";
 
 export interface UseTextGeneration {

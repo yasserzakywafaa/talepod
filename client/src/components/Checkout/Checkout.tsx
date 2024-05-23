@@ -20,7 +20,7 @@ import Stepper from "@mui/material/Stepper";
 import Typography from "@mui/material/Typography";
 import { useCheckout } from "./useCheckout";
 
-// import { useApplicationContext } from "src/application/domain/Provider";
+// import { useApplicationContext } from "src/application/store/Provider";
 
 const steps = ["Shipping address", "Payment details", "Review your order"];
 

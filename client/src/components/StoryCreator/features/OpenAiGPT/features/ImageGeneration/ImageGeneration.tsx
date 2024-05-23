@@ -15,7 +15,7 @@ import { ChangeEvent, FormEvent } from "react";
 
 import { AndroidRounded } from "@mui/icons-material";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
-import { useOpenAiGPTContext } from "../../domain/Provider";
+import { useOpenAiGPTContext } from "../../store/Provider";
 
 const OpenAiGPTImageGeneration = () => {
   const { store, manager } = useOpenAiGPTContext();

@@ -1,4 +1,4 @@
-import { ChildInfo } from "../domain/state";
+import { ChildInfo } from "../store/state";
 
 export const getAutoTextGenPromptString = (childInfo: ChildInfo): string => {
   const { name, gender, age, hairColor, eyeColor, height, nationality } =

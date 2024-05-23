@@ -7,7 +7,7 @@ import { OpenAiGPTAIAnswerProps } from "./state";
 import { OpenAiGPTStore } from "./store";
 import { useEffect } from "react";
 import { useImageGeneration } from "../features/ImageGeneration/useImageGeneration";
-import { useStoryCreatorContext } from "src/components/StoryCreator/domain/Provider";
+import { useStoryCreatorContext } from "src/components/StoryCreator/store/Provider";
 import { useTextGeneration } from "../features/TextGeneration/useTextGeneration";
 import { useTextToSpeechGeneration } from "../features/TextToSpeechGeneration/useTextToSpeechGeneration";
 

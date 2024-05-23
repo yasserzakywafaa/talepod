@@ -1,7 +1,7 @@
 import {
   ChildInfo,
   getStoryCreatorInitialState,
-} from "src/components/StoryCreator/domain/state";
+} from "src/components/StoryCreator/store/state";
 
 export interface GoogleGeminiInitialState {
   isFetching: boolean;

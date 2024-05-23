@@ -1,7 +1,6 @@
 const routes = {
   home: `/`,
   landing: `/landing`,
-  login: `/login`,
   logout: `/logout`,
   register: `/register`,
   checkout: `/checkout`,

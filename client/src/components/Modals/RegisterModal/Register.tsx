@@ -1,11 +1,11 @@
 import { Box, Divider } from "@mui/material";
 
-import RegisterForm from "./features/RegisterForm/RegisterForm";
-import React from "react";
-import SocialRegister from "./features/SocialRegister/SocialRegister";
-import Page from "src/components/shared/Page/Page";
-import { useApplicationContext } from "src/application/domain/Provider";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
+import Page from "src/components/shared/Page/Page";
+import React from "react";
+import RegisterForm from "./features/RegisterForm/RegisterForm";
+import SocialRegister from "./features/SocialRegister/SocialRegister";
+import { useApplicationContext } from "src/application/store/Provider";
 
 const Register: React.FC = () => {
   const {

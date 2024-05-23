@@ -4,7 +4,7 @@ import GenerationOptionsForm from "./features/GenerationOptionsForm";
 import GoogleGemini from "./features/GoogleGemini/GoogleGemini";
 import OpenAiGPT from "./features/OpenAiGPT/OpenAiGPT";
 import { useState } from "react";
-import { useStoryCreatorContext } from "./domain/Provider";
+import { useStoryCreatorContext } from "./store/Provider";
 
 export const StoryCreatorContent = () => {
   const { store, manager } = useStoryCreatorContext();

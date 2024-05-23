@@ -1,20 +1,25 @@
-import { PaletteMode } from "@mui/material";
-import Box from "@mui/material/Box";
+import { useMatch, useNavigate } from "react-router-dom";
+
 import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
-import Typography from "@mui/material/Typography";
-import MenuItem from "@mui/material/MenuItem";
 import Drawer from "@mui/material/Drawer";
-import MenuIcon from "@mui/icons-material/Menu";
-import { useState } from "react";
+import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
 import Logo from "src/components/shared/Logo/Logo";
-import { useMatch, useNavigate } from "react-router-dom";
+import MenuIcon from "@mui/icons-material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { PaletteMode } from "@mui/material";
+import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal";
+import ToggleColorMode from "src/components/shared/ToggleColorMode";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 import routes from "src/application/routes";
 import { scrollToSection } from "src/shared/utils/scrollToSection";
-import ToggleColorMode from "src/components/shared/ToggleColorMode";
+import useLoginModal from "src/components/Modals/LoginModal/useLoginModal";
+import useRegisterModal from "src/components/Modals/RegisterModal/useRegisterModal";
+import { useState } from "react";
 
 interface ApplicationBarProps {
   mode?: PaletteMode;
@@ -23,13 +28,14 @@ interface ApplicationBarProps {
 
 const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
+  const loginModal = useLoginModal();
+  const registerModal = useRegisterModal();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Add all the pages the will contain the AppBar
   const pagesMatch = {
     isHomePage: !!useMatch(routes.home),
     isLandingPage: !!useMatch(routes.landing),
-    isLoginPage: !!useMatch(routes.login),
     isRegisterPage: !!useMatch(routes.register),
     isCheckoutPage: !!useMatch(routes.checkout),
     isUnauthorizedPage: !!useMatch(routes.unauthorized),
@@ -37,16 +43,14 @@ const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
   const isNotFoundPage = Object.values(pagesMatch).every((p) => p === false);
 
   const toggleDrawer = (newOpen: boolean) => () => {
-    setIsOpen(newOpen);
+    setIsDrawerOpen(newOpen);
   };
 
   const handleOnMenuItemClick = (sectionId: string) => () => {
     scrollToSection(sectionId);
-    setIsOpen(false);
+    setIsDrawerOpen(false);
   };
 
-  const handleOnLoginClick = () => navigate(routes.login);
-  const handleOnRegisterClick = () => navigate(routes.register);
   const handleOnLogoClick = () => navigate(routes.home);
 
   return (
@@ -166,7 +170,7 @@ const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
                   variant="text"
                   size="small"
                   component="button"
-                  onClick={handleOnLoginClick}
+                  onClick={loginModal.handleToggleLoginModal}
                 >
                   Log in
                 </Button>
@@ -176,7 +180,7 @@ const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
                   color="primary"
                   variant="contained"
                   component="button"
-                  onClick={handleOnRegisterClick}
+                  onClick={registerModal.handleToggleRegisterModal}
                 >
                   Register
                 </Button>
@@ -196,7 +200,7 @@ const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
 
                 <Drawer
                   anchor="right"
-                  open={isOpen}
+                  open={isDrawerOpen}
                   onClose={toggleDrawer(false)}
                 >
                   <Box
@@ -248,7 +252,7 @@ const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
                         color="primary"
                         variant="contained"
                         component="button"
-                        onClick={handleOnRegisterClick}
+                        onClick={registerModal.handleToggleRegisterModal}
                         sx={{ width: "100%" }}
                       >
                         Register
@@ -261,7 +265,7 @@ const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
                         variant="outlined"
                         component="button"
                         sx={{ width: "100%" }}
-                        onClick={handleOnLoginClick}
+                        onClick={loginModal.handleToggleLoginModal}
                       >
                         Log in
                       </Button>
@@ -273,6 +277,17 @@ const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
           </Container>
         </AppBar>
       )}
+
+      {/* Modals */}
+      <LoginModal
+        isVisible={loginModal.state.isVisible}
+        onClose={loginModal.handleToggleLoginModal}
+      />
+
+      <RegisterModal
+        isVisible={registerModal.state.isVisible}
+        onClose={registerModal.handleToggleRegisterModal}
+      />
     </>
   );
 };

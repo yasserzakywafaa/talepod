@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { Country, countries } from "src/shared/countries";
 
-import { ChildInfo } from "../domain/state";
+import { ChildInfo } from "../store/state";
 
 export interface TextGenerationFormProps {
   childInfo: ChildInfo;

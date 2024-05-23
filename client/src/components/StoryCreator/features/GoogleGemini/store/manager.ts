@@ -9,7 +9,7 @@ import { GoogleGeminiStore } from "./store";
 import axios from "axios";
 import { getAutoTextGenPromptString } from "src/components/StoryCreator/utils/getAutoPromptString";
 import { useEffect } from "react";
-import { useStoryCreatorContext } from "src/components/StoryCreator/domain/Provider";
+import { useStoryCreatorContext } from "src/components/StoryCreator/store/Provider";
 
 export interface GoogleGeminiManager {
   handleIsFetching: (isFetching: boolean) => void;
