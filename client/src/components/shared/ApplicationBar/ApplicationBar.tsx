@@ -22,8 +22,8 @@ interface ApplicationBarProps {
 }
 
 const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
-  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
 
   // Add all the pages the will contain the AppBar
   const pagesMatch = {
@@ -37,12 +37,12 @@ const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
   const isNotFoundPage = Object.values(pagesMatch).every((p) => p === false);
 
   const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
+    setIsOpen(newOpen);
   };
 
   const handleOnMenuItemClick = (sectionId: string) => () => {
     scrollToSection(sectionId);
-    setOpen(false);
+    setIsOpen(false);
   };
 
   const handleOnLoginClick = () => navigate(routes.login);
@@ -196,7 +196,7 @@ const ApplicationBar = ({ mode, toggleColorMode }: ApplicationBarProps) => {
 
                 <Drawer
                   anchor="right"
-                  open={open}
+                  open={isOpen}
                   onClose={toggleDrawer(false)}
                 >
                   <Box

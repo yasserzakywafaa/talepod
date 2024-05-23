@@ -16,6 +16,7 @@ export default function LandingPage() {
       <Hero />
       <Box sx={{ bgcolor: "background.default" }}>
         <LogoCollection />
+        
         <Features />
 
         <Divider />
