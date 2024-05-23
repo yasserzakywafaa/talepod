@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { FC, Suspense, lazy, useEffect } from "react";
 
-import { AppWithGoogleAuth } from "../components/SocialLogins/GoogleAuth/store/Provider";
+import { AppWithGoogleAuth } from "../components/shared/SocialLogins/GoogleAuth/store/Provider";
 import { ApplicationContextProvider } from "./store/Provider";
 import LoaderSpinner from "../components/shared/Loading/LoaderSpinner";
 import NotFoundPage from "src/Pages/NotFound/NotFound";

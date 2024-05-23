@@ -1,4 +1,4 @@
-import GoogleAuth from "src/components/SocialLogins/GoogleAuth/GoogleAuth";
+import GoogleAuth from "src/components/shared/SocialLogins/GoogleAuth/GoogleAuth";
 
 const SocialLogin = (): JSX.Element => {
   return (
