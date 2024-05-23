@@ -2,14 +2,11 @@ import {
   Avatar,
   Box,
   Button,
-  Checkbox,
-  FormControlLabel,
   Grid,
   TextField,
   Typography,
 } from "@mui/material";
 
-import { Link } from "react-router-dom";
 import { LockOutlined } from "@mui/icons-material";
 
 const RegisterForm = () => {
@@ -25,7 +22,7 @@ const RegisterForm = () => {
         <LockOutlined />
       </Avatar>
       <Typography component="h1" variant="h5">
-        Register
+        Create a new account
       </Typography>
 
       <Box component="div" sx={{ mt: 1 }}>
@@ -76,12 +73,12 @@ const RegisterForm = () => {
             />
           </Grid>
 
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <FormControlLabel
               control={<Checkbox value="allowExtraEmails" color="primary" />}
               label="I want to receive inspiration, marketing promotions and updates via email."
             />
-          </Grid>
+          </Grid> */}
         </Grid>
 
         <Button
@@ -92,11 +89,11 @@ const RegisterForm = () => {
         >
           Register
         </Button>
-        <Grid container justifyContent="flex-end">
+        {/* <Grid container justifyContent="flex-end">
           <Grid item>
             <Link to="#">Already have an account? Log in</Link>
           </Grid>
-        </Grid>
+        </Grid> */}
       </Box>
     </Box>
   );

@@ -1,13 +1,5 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Button, TextField, Typography } from "@mui/material";
 
-import { Link } from "react-router-dom";
 import { LockOutlined } from "@mui/icons-material";
 
 const LoginForm = () => {
@@ -24,7 +16,7 @@ const LoginForm = () => {
       </Avatar>
 
       <Typography component="h1" variant="h5">
-        Log in
+        Log in to you account
       </Typography>
 
       <Box component="div" sx={{ mt: 1 }}>
@@ -56,14 +48,14 @@ const LoginForm = () => {
         >
           Log in
         </Button>
-        <Grid container>
+        {/* <Grid container>
           <Grid item xs>
             <Link to="#">Forgot password?</Link>
           </Grid>
           <Grid item>
-            <Link to="#">{"Don't have an account? Sign Up"}</Link>
+            <Link to="#">{"Don't have an account? Register"}</Link>
           </Grid>
-        </Grid>
+        </Grid> */}
       </Box>
     </Box>
   );

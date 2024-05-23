@@ -66,7 +66,7 @@ export const LoginModal = (props: LoginModalParams) => {
               alignItems="center"
               justifyContent="center"
               sx={{
-                marginY: 6,
+                marginY: 4,
               }}
             >
               <LoginForm />
@@ -79,7 +79,7 @@ export const LoginModal = (props: LoginModalParams) => {
               alignItems="center"
               justifyContent="center"
               sx={{
-                margin: 8,
+                marginTop: 4,
               }}
               className="social-login-wrapper"
             >
