@@ -41,7 +41,7 @@ export const GoogleAuthContextProvider = (
   );
 };
 
-export const AppWithGoogleAuth: React.FC<PropsWithChildren> = ({
+export const AppWithGoogleAuthContextProvider: React.FC<PropsWithChildren> = ({
   children,
 }) => (
   <GoogleOAuthProvider clientId={APP_CONSTANTS.GOOGLE_AUTH_CLIENT_ID || ""}>

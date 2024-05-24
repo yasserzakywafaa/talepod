@@ -3,7 +3,7 @@ export type Country = {
   value: string;
 };
 
-export const countries: Country[] = [
+export const Countries: Country[] = [
   { name: "Afghanistan", value: "AF" },
   { name: "Åland Islands", value: "AX" },
   { name: "Albania", value: "AL" },

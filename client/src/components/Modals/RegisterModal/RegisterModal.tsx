@@ -6,30 +6,31 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import RegisterForm from "./features/RegisterForm/RegisterForm";
 import SocialRegister from "./features/SocialRegister/SocialRegister";
-import { useEffect } from "react";
 import { useRegisterModalContext } from "./store/Provider";
+import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
+import { useApplicationContext } from "src/application/store/Provider";
 
 export const RegisterModal = () => {
+  const { manager: applicationManager } = useApplicationContext();
   const {
-    store: { state, handleToggleRegisterModal },
+    store: { state, handleIsFetching, handleToggleRegisterModal },
   } = useRegisterModalContext();
 
   const handleCloseModal = () => {
+    handleIsFetching(false);
     handleToggleRegisterModal();
+    applicationManager.handleIsFetching(false);
   };
 
   const handleOnFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const formJson = Object.fromEntries((formData as any).entries());
-    const email = formJson.email;
-    console.log(email);
-    handleCloseModal();
+    console.log("RegisterModal:>>> handleOnFormSubmit:>>>", {
+      formJson,
+    });
+    // handleCloseModal();
   };
-
-  useEffect(() => {
-    console.log("RegisterModal.tsx:>>> state:>>>", state);
-  }, [state]);
 
   return (
     <>
@@ -56,6 +57,8 @@ export const RegisterModal = () => {
         </IconButton>
 
         <DialogContent>
+          {state.isFetching && <LoaderSpinner style={{ position: "fixed" }} />}
+
           <Box
             display="flex"
             flexDirection="column"

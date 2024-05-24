@@ -4,24 +4,17 @@ import GenerationOptionsForm from "./features/GenerationOptionsForm";
 import GoogleGemini from "./features/GoogleGemini/GoogleGemini";
 import OpenAiGPT from "./features/OpenAiGPT/OpenAiGPT";
 import { useState } from "react";
-import { useStoryCreatorContext } from "./store/Provider";
 
 export const StoryCreatorContent = () => {
-  const { store, manager } = useStoryCreatorContext();
-  const { childInfo } = store.state;
-
   const [value, setValue] = useState(0);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabsChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
   return (
-    <Container id="features" sx={{ py: { xs: 8, sm: 16 } }}>
-      <GenerationOptionsForm
-        childInfo={childInfo}
-        handleUpdateChildInfo={manager.handleUpdateChildInfo}
-      />
+    <Container id="features" sx={{ pt: { xs: 8, sm: 16 } }}>
+      <GenerationOptionsForm />
 
       <Box
         width="100%"
@@ -35,7 +28,7 @@ export const StoryCreatorContent = () => {
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs
               value={value}
-              onChange={handleChange}
+              onChange={handleTabsChange}
               aria-label="basic tabs example"
             >
               <Tab label="OpenAi" />

@@ -3,14 +3,18 @@ import { LoginModalContextProvider } from "src/components/Modals/LoginModal/stor
 import React from "react";
 import { RegisterModalContextProvider } from "src/components/Modals/RegisterModal/store/Provider";
 import combineProviders from "./shared/combineProviders";
+import { AppWithGoogleAuthContextProvider } from "src/components/shared/SocialLogins/GoogleAuth/store/Provider";
 
-const providers = [
+const contextProviders = [
   ApplicationContextProvider,
   LoginModalContextProvider,
   RegisterModalContextProvider,
+
+  // Authentication
+  AppWithGoogleAuthContextProvider,
 ];
 
-const AppProviders: React.FC<{ children: React.ReactNode }> =
-  combineProviders(providers);
+const AppContextProviders: React.FC<{ children: React.ReactNode }> =
+  combineProviders(contextProviders);
 
-export default AppProviders;
+export default AppContextProviders;

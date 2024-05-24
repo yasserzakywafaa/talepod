@@ -2,40 +2,70 @@ import {
   Box,
   Container,
   FormControl,
-  FormControlLabel,
   InputLabel,
   MenuItem,
-  Radio,
-  RadioGroup,
   Select,
   SelectChangeEvent,
   TextField,
   Typography,
 } from "@mui/material";
-import { Country, countries } from "src/shared/countries";
 
-import { ChildInfo } from "../store/state";
+import { ChildGenderEnum } from "../store/state";
+import { Moral, Morals } from "src/shared/generatedStory/Moral";
+import { Tone, Tones } from "src/shared/generatedStory/Tone";
+import {
+  Environment,
+  Environments,
+} from "src/shared/generatedStory/Environments";
+import { useStoryCreatorContext } from "../store/Provider";
+import { Countries, Country } from "src/shared/countries";
 
-export interface TextGenerationFormProps {
-  childInfo: ChildInfo;
-  handleUpdateChildInfo: (name: string, value: string | Country) => void;
-}
-
-const GenerationOptionsForm = (params: TextGenerationFormProps) => {
-  const { childInfo, handleUpdateChildInfo } = params;
+const GenerationOptionsForm = () => {
+  const {
+    store: {
+      state: { childInfo, generatedStory },
+    },
+    manager: { handleUpdateChildInfo, handleUpdateStoryInfo },
+  } = useStoryCreatorContext();
 
   const handleOnFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     event.stopPropagation();
   };
 
-  const handleFieldChange = (
-    event:
-      | SelectChangeEvent
-      | React.ChangeEvent<HTMLInputElement | { name: string; value: string }>
-  ) => {
+  const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     handleUpdateChildInfo(name, value);
+  };
+
+  const handleOnSelectChange = (event: SelectChangeEvent) => {
+    const { name, value } = event.target;
+
+    switch (name) {
+      case "gender":
+        handleUpdateChildInfo(name, value);
+        break;
+
+      case "nationality":
+        const currentCountryValue = Countries.find((c) => c.value === value);
+        handleUpdateChildInfo(name, currentCountryValue as Country);
+        break;
+
+      case "moral":
+        const currentMoralValue = Morals.find((m) => m.value === value);
+        handleUpdateStoryInfo(name, currentMoralValue as Moral);
+        break;
+
+      case "tone":
+        const currenToneValue = Tones.find((t) => t.value === value);
+        handleUpdateStoryInfo(name, currenToneValue as Tone);
+        break;
+
+      case "environment":
+        const currenEnvironmentValue = Tones.find((t) => t.value === value);
+        handleUpdateStoryInfo(name, currenEnvironmentValue as Environment);
+        break;
+    }
   };
 
   return (
@@ -44,6 +74,7 @@ const GenerationOptionsForm = (params: TextGenerationFormProps) => {
         variant="h2"
         sx={{
           color: (theme) => (theme.palette.mode === "light" ? "#000" : "#fff"),
+          fontSize: { xs: 20, sm: 30 },
         }}
       >
         Create a story for your child
@@ -62,157 +93,190 @@ const GenerationOptionsForm = (params: TextGenerationFormProps) => {
           marginX={2}
           width="100%"
           display="flex"
-          flexWrap="wrap"
+          // flexWrap="wrap"
           component="form"
           autoComplete="off"
-          flexDirection="row"
+          flexDirection="column"
           alignItems="flex-start"
           justifyContent="flex-start"
           className="child-info-form"
           onSubmit={handleOnFormSubmit}
         >
           <Box
-            marginX={2}
+            width="100%"
             display="flex"
             component="div"
-            flexDirection="row"
-            alignItems="center"
+            justifyContent="flex-start"
           >
-            <RadioGroup
-              sx={{ marginLeft: "16px" }}
-              name="radio-buttons-group"
-              defaultValue={childInfo.gender}
-              aria-labelledby="radio-buttons-group-gender-label"
-              onChange={handleFieldChange}
-            >
-              <FormControlLabel
-                value="boy"
-                name="gender"
-                label="Boy"
-                control={<Radio />}
-              />
-              <FormControlLabel
-                value="girl"
-                name="gender"
-                label="Girl"
-                control={<Radio />}
-              />
-            </RadioGroup>
-          </Box>
+            <Box mb={4} mr={4} component="div">
+              <FormControl>
+                <InputLabel id="nationality-select-label">Gender</InputLabel>
+                <Select
+                  required
+                  name="gender"
+                  label="Gender"
+                  variant="outlined"
+                  id="story-gender-select"
+                  value={childInfo.gender}
+                  labelId="story-gender-select-label"
+                  onChange={handleOnSelectChange}
+                >
+                  {Object.values(ChildGenderEnum).map((gender, index) => {
+                    return (
+                      <MenuItem key={index} value={gender}>
+                        {gender}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </Box>
 
-          <Box
-            margin={2}
-            display="flex"
-            component="div"
-            flexDirection="row"
-            width="150px"
-          >
-            <TextField
-              required
-              fullWidth
-              id="name"
-              name="name"
-              label="Name"
-              type="text"
-              value={childInfo.name}
-              error={!childInfo.name}
-              onChange={handleFieldChange}
-            />
-          </Box>
-
-          <Box
-            margin={2}
-            display="flex"
-            component="div"
-            flexDirection="row"
-            width="100px"
-          >
-            <TextField
-              required
-              fullWidth
-              id="age"
-              name="age"
-              label="Age"
-              type="number"
-              value={childInfo.age}
-              error={!childInfo.age}
-              onChange={handleFieldChange}
-            />
-          </Box>
-
-          <Box
-            margin={2}
-            display="flex"
-            component="div"
-            flexDirection="row"
-            width="150px"
-          >
-            <TextField
-              fullWidth
-              id="hairColor"
-              name="hairColor"
-              label="Hair Color"
-              value={childInfo.hairColor}
-              onChange={handleFieldChange}
-            />
-          </Box>
-
-          <Box
-            margin={2}
-            display="flex"
-            component="div"
-            flexDirection="row"
-            width="150px"
-          >
-            <TextField
-              fullWidth
-              id="eyeColor"
-              name="eyeColor"
-              label="Eye Color"
-              value={childInfo.eyeColor}
-              onChange={handleFieldChange}
-            />
-          </Box>
-
-          <Box
-            margin={2}
-            display="flex"
-            component="div"
-            flexDirection="row"
-            width="100px"
-          >
-            <TextField
-              fullWidth
-              id="height"
-              name="height"
-              label="Height"
-              value={childInfo.height}
-              onChange={handleFieldChange}
-            />
-          </Box>
-
-          <Box margin={2} display="flex" component="div" flexDirection="column">
-            <FormControl fullWidth>
-              <InputLabel id="nationality-select-label">Nationality</InputLabel>
-              <Select
+            <Box mb={4} mr={4} component="div">
+              <TextField
                 required
-                name="nationality"
-                variant="outlined"
-                label="Nationality"
-                id="nationality-select"
-                value={childInfo.nationality.value}
-                labelId="nationality-select-label"
+                id="age"
+                name="age"
+                label="Age"
+                type="number"
+                value={childInfo.age}
+                error={!childInfo.age}
                 onChange={handleFieldChange}
-              >
-                {countries.map((country, index) => {
-                  return (
-                    <MenuItem key={index} value={country.value}>
-                      {country.name}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
+              />
+            </Box>
+
+            <Box mb={4} mr={4} component="div">
+              <TextField
+                required
+                id="name"
+                name="name"
+                label="Name"
+                type="text"
+                value={childInfo.name}
+                error={!childInfo.name}
+                onChange={handleFieldChange}
+              />
+            </Box>
+
+            <Box mb={4} mr={4} component="div">
+              <FormControl>
+                <InputLabel id="nationality-select-label">
+                  Nationality
+                </InputLabel>
+                <Select
+                  required
+                  name="nationality"
+                  variant="outlined"
+                  label="Nationality"
+                  id="nationality-select"
+                  value={childInfo.nationality?.value}
+                  labelId="nationality-select-label"
+                  onChange={handleOnSelectChange}
+                >
+                  {Countries.map((country, index) => {
+                    return (
+                      <MenuItem key={index} value={country.value}>
+                        {country.name}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </Box>
+
+            <Box mb={4} mr={4} component="div">
+              <TextField
+                required
+                id="interests"
+                name="interests"
+                label="Other Interests"
+                type="text"
+                value={childInfo.interests}
+                error={!childInfo.interests}
+                onChange={handleFieldChange}
+              />
+            </Box>
+          </Box>
+
+          <Box
+            width="100%"
+            display="flex"
+            component="div"
+            justifyContent="flex-start"
+          >
+            <Box mr={4} component="div" flexDirection="column">
+              <FormControl>
+                <InputLabel id="nationality-select-label">Moral</InputLabel>
+                <Select
+                  required
+                  name="moral"
+                  variant="outlined"
+                  label="Moral"
+                  id="story-moral-select"
+                  value={generatedStory.moral.value}
+                  labelId="story-moral-select-label"
+                  onChange={handleOnSelectChange}
+                >
+                  {Morals.map((moral, index) => {
+                    return (
+                      <MenuItem key={index} value={moral.value}>
+                        {moral.name}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </Box>
+
+            <Box mr={4} component="div" flexDirection="column">
+              <FormControl>
+                <InputLabel id="nationality-select-label">Tone</InputLabel>
+                <Select
+                  required
+                  name="tone"
+                  variant="outlined"
+                  label="Tone"
+                  id="story-tone-select"
+                  value={generatedStory.tone.value}
+                  labelId="story-tone-select-label"
+                  onChange={handleOnSelectChange}
+                >
+                  {Tones.map((tone, index) => {
+                    return (
+                      <MenuItem key={index} value={tone.value}>
+                        {tone.name}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </Box>
+
+            <Box mr={4} component="div" flexDirection="column">
+              <FormControl>
+                <InputLabel id="nationality-select-label">
+                  Environment
+                </InputLabel>
+                <Select
+                  required
+                  name="environment"
+                  variant="outlined"
+                  label="Environment"
+                  id="environment-select"
+                  value={generatedStory.environment?.value}
+                  labelId="environment-select-label"
+                  onChange={handleOnSelectChange}
+                >
+                  {Environments.map((environment, index) => {
+                    return (
+                      <MenuItem key={index} value={environment.value}>
+                        {environment.name}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </Box>
           </Box>
         </Box>
       </Box>

@@ -73,7 +73,7 @@ export const useOpenAiGPTManager = (
     store.updateState("textGeneration", {
       ...store.state.textGeneration,
       autoTextPrompt: getAutoTextGenPromptString(
-        storyCreatorStore.state.childInfo
+        storyCreatorStore.state
       ),
     });
 

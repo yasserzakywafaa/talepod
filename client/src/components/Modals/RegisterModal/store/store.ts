@@ -7,12 +7,20 @@ import { useState } from "react";
 
 export interface RegisterModalStore {
   state: RegisterModalInitialState;
+  handleIsFetching: (isFetching: boolean) => void;
   handleToggleRegisterModal: () => void;
 }
 
 const useRegisterModalStore = (): RegisterModalStore => {
   const initialState = getRegisterModalInitialState();
   const [state, setState] = useState<RegisterModalInitialState>(initialState);
+
+  const handleIsFetching = (isFetching: boolean) => {
+    setState((prevState) => ({
+      ...prevState,
+      isFetching,
+    }));
+  };
 
   const handleToggleRegisterModal = () => {
     setState((prevState) => ({
@@ -23,6 +31,7 @@ const useRegisterModalStore = (): RegisterModalStore => {
 
   return {
     state,
+    handleIsFetching,
     handleToggleRegisterModal,
   };
 };

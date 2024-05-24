@@ -143,7 +143,7 @@ export const useGoogleGeminiManager = (
     store.updateState("childInfo", storyCreatorStore.state.childInfo);
     store.updateState(
       "optionsAutoPrompt",
-      getAutoTextGenPromptString(storyCreatorStore.state.childInfo)
+      getAutoTextGenPromptString(storyCreatorStore.state)
     );
   }, [storyCreatorStore.state.childInfo]);
 

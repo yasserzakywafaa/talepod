@@ -1,6 +1,6 @@
 import GoogleAuth from "src/components/shared/SocialLogins/GoogleAuth/GoogleAuth";
 
-const SocialLogin = (): JSX.Element => {
+const SocialRegister = (): JSX.Element => {
   return (
     <>
       <GoogleAuth />
@@ -8,4 +8,4 @@ const SocialLogin = (): JSX.Element => {
   );
 };
 
-export default SocialLogin;
+export default SocialRegister;

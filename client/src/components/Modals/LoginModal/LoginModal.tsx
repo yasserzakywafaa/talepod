@@ -7,23 +7,29 @@ import DialogContent from "@mui/material/DialogContent";
 import LoginForm from "./features/LoginForm/LoginForm";
 import SocialLogin from "./features/SocialLogin/SocialLogin";
 import { useLoginModalContext } from "./store/Provider";
+import { useApplicationContext } from "src/application/store/Provider";
+import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
 
 export const LoginModal = () => {
+  const { manager: applicationManager } = useApplicationContext();
   const {
-    store: { state, handleToggleLoginModal },
+    store: { state, handleIsFetching, handleToggleLoginModal },
   } = useLoginModalContext();
 
   const handleCloseModal = () => {
+    handleIsFetching(false);
     handleToggleLoginModal();
+    applicationManager.handleIsFetching(false);
   };
 
   const handleOnFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const formJson = Object.fromEntries((formData as any).entries());
-    const email = formJson.email;
-    console.log(email);
-    handleCloseModal();
+    console.log("LoginModal:>>> handleOnFormSubmit:>>>", {
+      formJson,
+    });
+    // handleCloseModal();
   };
 
   return (
@@ -51,6 +57,8 @@ export const LoginModal = () => {
         </IconButton>
 
         <DialogContent>
+          {state.isFetching && <LoaderSpinner style={{ position: "fixed" }} />}
+          
           <Box
             display="flex"
             flexDirection="column"

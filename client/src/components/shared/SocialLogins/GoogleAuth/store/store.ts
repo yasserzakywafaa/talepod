@@ -4,6 +4,8 @@ import { useState } from "react";
 
 export interface GoogleAuthStore {
   state: GoogleAuthInitialState;
+  handleIsFetching: (isFetching: boolean) => void;
+
   updateState: (
     key: keyof GoogleAuthInitialState,
     newValue: GoogleAuthInitialState[keyof GoogleAuthInitialState]
@@ -13,6 +15,13 @@ export interface GoogleAuthStore {
 const useGoogleAuthStore = (): GoogleAuthStore => {
   const initialState = getGoogleAuthInitialState();
   const [state, setState] = useState<GoogleAuthInitialState>(initialState);
+
+  const handleIsFetching = (isFetching: boolean) => {
+    setState((prevState) => ({
+      ...prevState,
+      isFetching,
+    }));
+  };
 
   const updateState = (
     key: keyof GoogleAuthInitialState,
@@ -26,6 +35,7 @@ const useGoogleAuthStore = (): GoogleAuthStore => {
 
   return {
     state,
+    handleIsFetching,
     updateState,
   };
 };
