@@ -105,6 +105,7 @@ const GenerationOptionsForm = () => {
           <Box
             width="100%"
             display="flex"
+            flexWrap="wrap"
             component="div"
             justifyContent="flex-start"
           >
@@ -200,11 +201,12 @@ const GenerationOptionsForm = () => {
 
           <Box
             width="100%"
+            flexWrap="wrap"
             display="flex"
             component="div"
             justifyContent="flex-start"
           >
-            <Box mr={4} component="div" flexDirection="column">
+            <Box mb={4} mr={4} component="div" flexDirection="column">
               <FormControl>
                 <InputLabel id="nationality-select-label">Moral</InputLabel>
                 <Select
@@ -228,7 +230,7 @@ const GenerationOptionsForm = () => {
               </FormControl>
             </Box>
 
-            <Box mr={4} component="div" flexDirection="column">
+            <Box mb={4} mr={4} component="div" flexDirection="column">
               <FormControl>
                 <InputLabel id="nationality-select-label">Tone</InputLabel>
                 <Select
@@ -252,7 +254,7 @@ const GenerationOptionsForm = () => {
               </FormControl>
             </Box>
 
-            <Box mr={4} component="div" flexDirection="column">
+            <Box mb={4} mr={4} component="div" flexDirection="column">
               <FormControl>
                 <InputLabel id="nationality-select-label">
                   Environment
