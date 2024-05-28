@@ -6,8 +6,37 @@ import { IMAGES_SIZES } from "../models/openaiModel";
 import OpenAi from "openai";
 import fs from "fs";
 import { getAudioFileUrl } from "../utils/stringUtils";
+import AWS from 'aws-sdk';
 
 const openai = new OpenAi();
+
+// Hosting 
+AWS.config.update({
+  accessKeyId: CONFIG.AWS_ACCESS_KEY,
+  secretAccessKey: CONFIG.AWS_SECRET_KEY,
+  region: CONFIG.AWS_REGION,
+});
+
+const s3 = new AWS.S3();
+
+const saveFileToAws = (fileName: string) => {
+  const fileContent = fs.readFileSync(fileName);
+
+  const params = {
+    Bucket: 'testing-aws-demo',
+    Key: 'audio/' + fileName, // File name you want to save as in S3
+    Body: fileContent,
+  };
+
+  s3.upload(params, (err, data) => {
+    if (err) {
+      console.error(`ERROR UPLOADING FILE:>>> ${data.Location}`);
+
+      throw err;
+    }
+    console.log(`File uploaded successfully. ${data.Location}`);
+  });
+}
 
 export const generateText = async (
   request: Request,
@@ -76,6 +105,9 @@ export const generateTextToSpeech = async (
         recursive: true,
       });
     await fs.promises.writeFile(audioFilePath, buffer);
+
+    // Upload Audio file to AWS S3
+    saveFileToAws(audioFileName)
 
     // This create a MongoDB Document with the file's metadata
     const audioFile = new AudioFile({
