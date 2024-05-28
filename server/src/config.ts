@@ -35,8 +35,8 @@ const CONFIG = {
   MONGODB_URI_DEV: process.env.MONGODB_URI_DEV,
   MONGODB_URI_PROD: process.env.MONGODB_URI_PROD,
 
-  
   // Hosting
+  AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
   AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY,
   AWS_SECRET_KEY: process.env.AWS_SECRET_KEY,
   AWS_REGION: process.env.AWS_REGION,

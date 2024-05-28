@@ -1,42 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 
-import AudioFile from "../models/mongoDb/audioFile";
 import CONFIG from "../config";
 import { IMAGES_SIZES } from "../models/openaiModel";
 import OpenAi from "openai";
 import fs from "fs";
-import { getAudioFileUrl } from "../utils/stringUtils";
-import AWS from 'aws-sdk';
+import { saveFileDataToDb } from "../models/mongoDb";
+import { uploadFileToS3 } from "../models/amazonAwsS3";
 
 const openai = new OpenAi();
-
-// Hosting 
-AWS.config.update({
-  accessKeyId: CONFIG.AWS_ACCESS_KEY,
-  secretAccessKey: CONFIG.AWS_SECRET_KEY,
-  region: CONFIG.AWS_REGION,
-});
-
-const s3 = new AWS.S3();
-
-const saveFileToAws = (fileName: string) => {
-  const fileContent = fs.readFileSync(fileName);
-
-  const params = {
-    Bucket: 'testing-aws-demo',
-    Key: 'audio/' + fileName, // File name you want to save as in S3
-    Body: fileContent,
-  };
-
-  s3.upload(params, (err, data) => {
-    if (err) {
-      console.error(`ERROR UPLOADING FILE:>>> ${data.Location}`);
-
-      throw err;
-    }
-    console.log(`File uploaded successfully. ${data.Location}`);
-  });
-}
 
 export const generateText = async (
   request: Request,
@@ -91,43 +62,33 @@ export const generateTextToSpeech = async (
     });
 
     const audioFileName = `${fileName}.mp3`;
-    const audioFilePath = `${CONFIG.SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH}/${audioFileName}`;
-    const audioFileUrl = getAudioFileUrl(
-      request.protocol,
-      request.get("host"),
-      SERVER_TEXT_TO_SPEECH_PATH,
-      audioFileName
-    );
-
+    const filePath = `${CONFIG.SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH}/${audioFileName}`;
     const buffer = Buffer.from(await generateRequest.arrayBuffer());
     !fs.existsSync(SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH) &&
       fs.mkdirSync(SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH, {
         recursive: true,
       });
-    await fs.promises.writeFile(audioFilePath, buffer);
+    await fs.promises.writeFile(filePath, buffer);
 
-    // Upload Audio file to AWS S3
-    saveFileToAws(audioFileName)
+    // Upload file to Amazon S3
+    const fileUrl = await uploadFileToS3(fileName, filePath);
 
-    // This create a MongoDB Document with the file's metadata
-    const audioFile = new AudioFile({
-      fileName: audioFileName,
-      url: audioFileUrl,
-    });
-    // Save to MongoDb Atlas
-    await audioFile.save();
+    if (fileUrl) {
+      // Save file to MongoDB Atlas
+      await saveFileDataToDb(audioFileName, fileUrl);
+    } else {
+      throw new Error("Failed to upload file to S3");
+    }
 
     console.log("OpenAIController:>>> GENERATE TEXT TO SPEECH", {
-      request,
-      response: generateRequest,
-      writePath: audioFilePath,
+      fileUrl,
+      writePath: filePath,
       serverFilesPath: SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH,
-      audioFileUrl: audioFileUrl,
       MODEL_NAME: OPENAI_TTS_MODEL_NAME,
     });
 
     response.json({
-      audioFileUrl,
+      fileUrl,
       fileName,
     });
   } catch (error) {

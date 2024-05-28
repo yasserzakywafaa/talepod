@@ -51,7 +51,7 @@ export const getAutoTextGenPromptString = (
     ${customParams.generatedStory.tone}
     ${customParams.generatedStory.moral}
     ${customParams.generatedStory.environment}
-    The characters of the story are: The protagonist / main character is a ${age}-year-old boy called ${name}.
+    The characters of the story are: The protagonist / main character is a ${age}-year-old ${gender.toLowerCase()} called ${name}.
     ${customParams.childInfo.interests}`;
 
   return fullDynamicPrompt;

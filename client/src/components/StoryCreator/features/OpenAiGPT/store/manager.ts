@@ -72,9 +72,7 @@ export const useOpenAiGPTManager = (
 
     store.updateState("textGeneration", {
       ...store.state.textGeneration,
-      autoTextPrompt: getAutoTextGenPromptString(
-        storyCreatorStore.state
-      ),
+      autoTextPrompt: getAutoTextGenPromptString(storyCreatorStore.state),
     });
 
     store.updateState("imageGeneration", {
@@ -83,7 +81,7 @@ export const useOpenAiGPTManager = (
         storyCreatorStore.state.childInfo
       ),
     });
-  }, [storyCreatorStore.state.childInfo]);
+  }, [storyCreatorStore.state]);
 
   return {
     handleUpdateChildInfo,

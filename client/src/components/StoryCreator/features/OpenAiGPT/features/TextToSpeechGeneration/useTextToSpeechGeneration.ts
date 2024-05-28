@@ -43,7 +43,9 @@ export const useTextToSpeechGeneration = (
         END_POINTS.OPENAI.GENERATE.TEXT_TO_SPEECH,
         {
           userPrompt: store.state.textGeneration.aiAnswer.description,
-          fileName: `${name}_${age}yo_${nationality?.name}_${getRandomString()}`,
+          fileName: `${name}_${age}yo_${
+            nationality?.name
+          }_${getRandomString()}`,
         }
       );
 
@@ -55,7 +57,7 @@ export const useTextToSpeechGeneration = (
       handleSetTextToSpeechAiAnswer({
         statusCode: response.status,
         title: response.data.fileName,
-        description: response.data.audioFileUrl,
+        description: response.data.fileUrl,
       });
     } catch (error) {
       console.error("OpenAiSection:>>> Error", {

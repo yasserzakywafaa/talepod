@@ -9,16 +9,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-
-import { ChildGenderEnum } from "../store/state";
-import { Moral, Morals } from "src/shared/generatedStory/Moral";
-import { Tone, Tones } from "src/shared/generatedStory/Tone";
+import { Countries, Country } from "src/shared/countries";
 import {
   Environment,
   Environments,
 } from "src/shared/generatedStory/Environments";
+import { Moral, Morals } from "src/shared/generatedStory/Moral";
+import { Tone, Tones } from "src/shared/generatedStory/Tone";
+
+import { ChildGenderEnum } from "../store/state";
 import { useStoryCreatorContext } from "../store/Provider";
-import { Countries, Country } from "src/shared/countries";
 
 const GenerationOptionsForm = () => {
   const {
@@ -62,7 +62,9 @@ const GenerationOptionsForm = () => {
         break;
 
       case "environment":
-        const currenEnvironmentValue = Tones.find((t) => t.value === value);
+        const currenEnvironmentValue = Environments.find(
+          (e) => e.value === value
+        );
         handleUpdateStoryInfo(name, currenEnvironmentValue as Environment);
         break;
     }

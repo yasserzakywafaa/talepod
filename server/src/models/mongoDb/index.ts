@@ -1,3 +1,4 @@
+import AudioFile from "./schema/audioFile";
 import CONFIG from "../../config";
 import mongoose from "mongoose";
 
@@ -27,4 +28,18 @@ const databaseInit = () => {
   });
 };
 
-export { databaseInit };
+const saveFileDataToDb = async (
+  audioFileName: string,
+  audioFileS3Uri: string
+): Promise<void> => {
+  // This create a MongoDB Document with the file's metadata
+  const audioFile = new AudioFile({
+    fileName: audioFileName,
+    // url: audioFileUrl,
+    url: audioFileS3Uri,
+  });
+  // Save to MongoDb Atlas
+  await audioFile.save();
+};
+
+export { databaseInit, saveFileDataToDb };

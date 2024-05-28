@@ -1,8 +1,7 @@
 import { Country } from "src/shared/countries";
-
-import { StoryCreatorStore } from "./store";
 import { Environment } from "src/shared/generatedStory/Environments";
 import { Moral } from "src/shared/generatedStory/Moral";
+import { StoryCreatorStore } from "./store";
 import { Tone } from "src/shared/generatedStory/Tone";
 
 export interface StoryCreatorManager {
