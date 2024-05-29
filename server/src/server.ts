@@ -20,19 +20,28 @@ expressApp.use(
   express.static(CONFIG.SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH)
 );
 
-// CORS configuration
-const corsOptions = {
-  origin: "CONFIG.PROD_CLIENT_PUBLIC_URL",
-  methods: "GET,POST,PUT,DELETE",
-  allowedHeaders: "Content-Type,Authorization",
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
-expressApp.use(cors(corsOptions));
+// // CORS configuration
+// const corsOptions = {
+//   origin: CONFIG.PROD_CLIENT_PUBLIC_URL,
+//   methods: "GET,POST,PUT,DELETE",
+//   allowedHeaders: "Content-Type,Authorization",
+//   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+// };
+// expressApp.use(cors(corsOptions));
 
 // Mount API routes
 expressApp.use(testRoutes);
 expressApp.use(googleGeminiRoutes);
 expressApp.use(openAIRoutes);
+
+expressApp.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", CONFIG.PROD_CLIENT_PUBLIC_URL);
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 
 databaseInit();
 
