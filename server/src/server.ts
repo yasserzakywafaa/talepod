@@ -13,19 +13,21 @@ const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.PROD_PORT;
 expressApp.use(bodyParser.json());
 expressApp.use(express.json());
 expressApp.use(express.urlencoded({ extended: true }));
-// Use CORS middleware
-expressApp.use(
-  cors({
-    origin: CONFIG.PROD_CLIENT_PUBLIC_URL, // Replace with your frontend URL
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+
 // Serve static files from the specified directory
 expressApp.use(
   `/${CONFIG.SERVER_TEXT_TO_SPEECH_PATH}`,
   express.static(CONFIG.SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH)
 );
+
+// CORS configuration
+const corsOptions = {
+  origin: "CONFIG.PROD_CLIENT_PUBLIC_URL",
+  methods: "GET,POST,PUT,DELETE",
+  allowedHeaders: "Content-Type,Authorization",
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+expressApp.use(cors(corsOptions));
 
 // Mount API routes
 expressApp.use(testRoutes);
@@ -48,6 +50,7 @@ if (CONFIG.IS_PROD) {
 
 expressApp.listen(PORT, (): void => {
   console.log("Server running on:>>>", {
+    PROD_CLIENT_PUBLIC_URL: CONFIG.PROD_CLIENT_PUBLIC_URL,
     ENVIRONMENT: CONFIG.NODE_ENV,
     PORT,
   });
