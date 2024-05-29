@@ -10,10 +10,17 @@ import testRoutes from "./routes/testRoutes";
 const expressApp = express();
 const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.PROD_PORT;
 
-expressApp.use(cors());
 expressApp.use(bodyParser.json());
 expressApp.use(express.json());
 expressApp.use(express.urlencoded({ extended: true }));
+// Use CORS middleware
+expressApp.use(
+  cors({
+    origin: CONFIG.PROD_CLIENT_PUBLIC_URL, // Replace with your frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 // Serve static files from the specified directory
 expressApp.use(
   `/${CONFIG.SERVER_TEXT_TO_SPEECH_PATH}`,
