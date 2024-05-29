@@ -95,7 +95,6 @@ const GenerationOptionsForm = () => {
           marginX={2}
           width="100%"
           display="flex"
-          // flexWrap="wrap"
           component="form"
           autoComplete="off"
           flexDirection="column"
@@ -135,7 +134,7 @@ const GenerationOptionsForm = () => {
               </FormControl>
             </Box>
 
-            <Box mb={4} mr={4} component="div">
+            <Box mb={4} mr={4} component="div" width={80}>
               <TextField
                 required
                 id="age"

@@ -5,9 +5,9 @@ import fs from "fs";
 
 // Hosting
 AWS.config.update({
-  accessKeyId: CONFIG.AWS_ACCESS_KEY,
-  secretAccessKey: CONFIG.AWS_SECRET_KEY,
-  region: CONFIG.AWS_REGION,
+  accessKeyId: CONFIG.HOST_AWS_ACCESS_KEY,
+  secretAccessKey: CONFIG.HOST_AWS_SECRET_KEY,
+  region: CONFIG.HOST_AWS_REGION,
 });
 
 const amazonS3 = new AWS.S3();
@@ -21,7 +21,7 @@ const uploadFileToS3 = async (
 
   const params: S3.Types.PutObjectRequest = {
     Body: fileContent,
-    Bucket: CONFIG.AWS_S3_BUCKET_NAME,
+    Bucket: CONFIG.HOST_AWS_S3_BUCKET_NAME,
     Key: `${CONFIG.SERVER_TEXT_TO_SPEECH_PATH}/${fileName}`,
     ContentType: "audio/mp3",
   };
