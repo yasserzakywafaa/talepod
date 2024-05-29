@@ -38,14 +38,12 @@ if (CONFIG.IS_PROD) {
   // expressApp.get("/", (request, response) => {
   //   response.send(`Hello World! ${CONFIG.NODE_ENV}`);
   // });
-
-  // Serve Frontend Bundled Application
-  expressApp.use(express.static(CONFIG.FRONTEND_BUILD_PATH, { index: false }));
-
-  // Catch-all route to serve `index.html` for all client-side routes
-  expressApp.get("*", (req, res) => {
-    res.sendFile(`${CONFIG.FRONTEND_BUILD_PATH}/index.html`);
-  });
+  // // Serve Frontend Bundled Application
+  // expressApp.use(express.static(CONFIG.FRONTEND_BUILD_PATH, { index: false }));
+  // // Catch-all route to serve `index.html` for all client-side routes
+  // expressApp.get("*", (req, res) => {
+  //   res.sendFile(`${CONFIG.FRONTEND_BUILD_PATH}/index.html`);
+  // });
 }
 
 expressApp.listen(PORT, (): void => {
