@@ -103,7 +103,7 @@ export const useGoogleGeminiManager = (
         { userPrompt },
         {
           headers: {
-            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
           },
         }
       );

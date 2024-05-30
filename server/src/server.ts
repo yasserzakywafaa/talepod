@@ -9,20 +9,36 @@ import testRoutes from "./routes/testRoutes";
 
 const expressApp = express();
 const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.PROD_PORT;
-// const publicClientUrl = CONFIG.IS_DEV
-//   ? `http://localhost:${CONFIG.DEV_PORT}`
-//   : CONFIG.PROD_CLIENT_PUBLIC_URL;
+const publicClientUrl = CONFIG.IS_DEV ? "*" : CONFIG.PROD_CLIENT_PUBLIC_URL;
+// ? `http://localhost:${CONFIG.DEV_PORT}`
 
 // CORS configuration
+// expressApp.use((req, res, next) => {
+//   // res.header("Access-Control-Allow-Origin", CONFIG.PROD_CLIENT_PUBLIC_URL);
+//   res.header("Access-Control-Allow-Origin", publicClientUrl);
+//   res.header(
+//     "Access-Control-Allow-Methods",
+//     "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+//   );
+//   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//   if (req.method === "OPTIONS") {
+//     res.sendStatus(204);
+//   } else {
+//     next();
+//   }
+// });
+
 if (CONFIG.IS_PROD) {
   expressApp.use(
     cors({
       // origin: publicClientUrl,
       origin: CONFIG.PROD_CLIENT_PUBLIC_URL,
+      // origin: "*",
       methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-      allowedHeaders: "Content-Type,Authorization",
+      allowedHeaders: ["Content-Type", "Authorization"],
       preflightContinue: false,
       optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+      credentials: false,
     })
   );
 } else {
