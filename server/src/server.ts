@@ -10,8 +10,9 @@ import testRoutes from "./routes/testRoutes";
 const expressApp = express();
 const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.PROD_PORT;
 
-expressApp.use(bodyParser.json());
+expressApp.use(cors());
 expressApp.use(express.json());
+expressApp.use(bodyParser.json());
 expressApp.use(express.urlencoded({ extended: true }));
 
 // Serve static files from the specified directory
@@ -19,6 +20,13 @@ expressApp.use(
   `/${CONFIG.SERVER_TEXT_TO_SPEECH_PATH}`,
   express.static(CONFIG.SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH)
 );
+
+// Mount API routes
+expressApp.use(testRoutes);
+expressApp.use(googleGeminiRoutes);
+expressApp.use(openAIRoutes);
+
+databaseInit();
 
 // // CORS configuration
 // const corsOptions = {
@@ -29,33 +37,39 @@ expressApp.use(
 // };
 // expressApp.use(cors(corsOptions));
 
-// Mount API routes
-expressApp.use(testRoutes);
-expressApp.use(googleGeminiRoutes);
-expressApp.use(openAIRoutes);
+// expressApp.use(function (req, res, next) {
+//   // res.header("Access-Control-Allow-Origin", CONFIG.PROD_CLIENT_PUBLIC_URL);
+//   // res.header("Access-Control-Allow-Origin", `http://localhost:${CONFIG.DEV_PORT}`);
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   next();
+// });
 
-expressApp.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", CONFIG.PROD_CLIENT_PUBLIC_URL);
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
+// expressApp.options(
+//   "*",
+//   cors({
+//     origin: `http://localhost:${CONFIG.DEV_PORT}`,
+//     optionsSuccessStatus: 200,
+//   })
+// );
+// expressApp.use(
+//   cors({
+//     origin: `http://localhost:${CONFIG.DEV_PORT}`,
+//     optionsSuccessStatus: 200,
+//   })
+// );
 
-databaseInit();
-
-if (CONFIG.IS_PROD) {
-  // expressApp.get("/", (request, response) => {
-  //   response.send(`Hello World! ${CONFIG.NODE_ENV}`);
-  // });
-  // // Serve Frontend Bundled Application
-  // expressApp.use(express.static(CONFIG.FRONTEND_BUILD_PATH, { index: false }));
-  // // Catch-all route to serve `index.html` for all client-side routes
-  // expressApp.get("*", (req, res) => {
-  //   res.sendFile(`${CONFIG.FRONTEND_BUILD_PATH}/index.html`);
-  // });
-}
+// if (CONFIG.IS_PROD) {
+//   // // Serve Frontend Bundled Application
+//   // expressApp.use(express.static(CONFIG.FRONTEND_BUILD_PATH, { index: false }));
+//   // // Catch-all route to serve `index.html` for all client-side routes
+//   // expressApp.get("*", (req, res) => {
+//   //   res.sendFile(`${CONFIG.FRONTEND_BUILD_PATH}/index.html`);
+//   // });
+// }
 
 expressApp.listen(PORT, (): void => {
   console.log("Server running on:>>>", {
