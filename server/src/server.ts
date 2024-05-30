@@ -9,8 +9,28 @@ import testRoutes from "./routes/testRoutes";
 
 const expressApp = express();
 const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.PROD_PORT;
+// const publicClientUrl = CONFIG.IS_DEV
+//   ? `http://localhost:${CONFIG.DEV_PORT}`
+//   : CONFIG.PROD_CLIENT_PUBLIC_URL;
 
-expressApp.use(cors());
+// CORS configuration
+if (CONFIG.IS_PROD) {
+  expressApp.use(
+    cors({
+      // origin: publicClientUrl,
+      origin: CONFIG.PROD_CLIENT_PUBLIC_URL,
+      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+      allowedHeaders: "Content-Type,Authorization",
+      preflightContinue: false,
+      optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+    })
+  );
+} else {
+  expressApp.use(cors());
+}
+// Handle OPTIONS preflight requests for all routes
+expressApp.options("*", cors());
+
 expressApp.use(express.json());
 expressApp.use(bodyParser.json());
 expressApp.use(express.urlencoded({ extended: true }));
@@ -27,40 +47,6 @@ expressApp.use(googleGeminiRoutes);
 expressApp.use(openAIRoutes);
 
 databaseInit();
-
-// // CORS configuration
-// const corsOptions = {
-//   origin: CONFIG.PROD_CLIENT_PUBLIC_URL,
-//   methods: "GET,POST,PUT,DELETE",
-//   allowedHeaders: "Content-Type,Authorization",
-//   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-// };
-// expressApp.use(cors(corsOptions));
-
-// expressApp.use(function (req, res, next) {
-//   // res.header("Access-Control-Allow-Origin", CONFIG.PROD_CLIENT_PUBLIC_URL);
-//   // res.header("Access-Control-Allow-Origin", `http://localhost:${CONFIG.DEV_PORT}`);
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-//   next();
-// });
-
-// expressApp.options(
-//   "*",
-//   cors({
-//     origin: `http://localhost:${CONFIG.DEV_PORT}`,
-//     optionsSuccessStatus: 200,
-//   })
-// );
-// expressApp.use(
-//   cors({
-//     origin: `http://localhost:${CONFIG.DEV_PORT}`,
-//     optionsSuccessStatus: 200,
-//   })
-// );
 
 // if (CONFIG.IS_PROD) {
 //   // // Serve Frontend Bundled Application

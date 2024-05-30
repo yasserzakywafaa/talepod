@@ -4,6 +4,8 @@ const publicApiUrl = APP_CONSTANTS.IS_DEV
   ? `http://localhost:${APP_CONSTANTS.DEV_SERVER_PORT}`
   : APP_CONSTANTS.PUBLIC_API_URL;
 
+// const publicApiUrl = "https://develop.d3jpfjqck2dtes.amplifyapp.com/";
+
 const END_POINTS = {
   TESTING: {
     ROUTE_ONE: `${publicApiUrl}/api/test-route-one`,

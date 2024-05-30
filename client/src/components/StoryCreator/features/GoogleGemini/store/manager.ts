@@ -100,7 +100,12 @@ export const useGoogleGeminiManager = (
       const generateResponse = await axios.post(
         END_POINTS.GOOGLE_GEMINI.GENERATE,
         // END_POINTS.TESTING.ROUTE_ONE,
-        { userPrompt }
+        { userPrompt },
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
       );
 
       console.log("GoogleGemini:>>> handleGenerateContent:>>> GENERATE", {
