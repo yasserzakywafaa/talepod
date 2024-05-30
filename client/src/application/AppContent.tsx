@@ -7,9 +7,7 @@ import { lazy } from "react";
 import routes from "./routes";
 import { useApplicationContext } from "./store/Provider";
 
-// import { DBUtils } from "./lib/database";
 // import "./shared/components/TinyMCE";
-// import { PouchDBIndexesEnum } from "./shared/enums";
 
 const HomePage = lazy(() => import("../Pages/Home/Home"));
 const CheckoutPage = lazy(() => import("../Pages/Checkout/CheckoutPage"));
@@ -25,29 +23,6 @@ const AppContent = () => {
   const defaultTheme = createTheme({
     palette: { mode: state.themeMode },
   });
-
-  // /**
-  //  * Create database
-  //  */
-  // useEffect(
-  //   () => {
-  //     DBUtils.createLocalPouchDB().then(async (database) => {
-  //       await DBUtils.createDBIndexesIfNotExist(
-  //         Object.values(PouchDBIndexesEnum)
-  //       );
-
-  //       // // Fetch All Data from PouchDB
-  //       // .then(() => dispatch(SettingsActions.fetchDataFromDB()))
-  //       // .catch((error) => {
-  //       //   console.error(`❌ Error Getting Document:>>>`, error);
-  //       //   throw error;
-  //       // });
-  //     });
-  //   },
-  //   [
-  //     // dispatch
-  //   ]
-  // );
 
   return (
     <ThemeProvider theme={defaultTheme}>

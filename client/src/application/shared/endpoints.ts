@@ -1,23 +1,23 @@
 import APP_CONSTANTS from "./app_constants";
 
-const publicURL = APP_CONSTANTS.IS_DEV
+const publicApiUrl = APP_CONSTANTS.IS_DEV
   ? `http://localhost:${APP_CONSTANTS.DEV_SERVER_PORT}`
-  : APP_CONSTANTS.PUBLIC_URL;
+  : APP_CONSTANTS.PUBLIC_API_URL;
 
 const END_POINTS = {
   TESTING: {
-    ROUTE_ONE: `${publicURL}/api/test-route-one`,
-    ROUTE_TWO: `${publicURL}/api/test-route-two`,
+    ROUTE_ONE: `${publicApiUrl}/api/test-route-one`,
+    ROUTE_TWO: `${publicApiUrl}/api/test-route-two`,
   },
   GOOGLE_GEMINI: {
-    GENERATE: `${publicURL}/api/gemini/generate`,
-    CHAT: `${publicURL}/api/gemini/chat`,
+    GENERATE: `${publicApiUrl}/api/gemini/generate`,
+    CHAT: `${publicApiUrl}/api/gemini/chat`,
   },
   OPENAI: {
     GENERATE: {
-      TEXT: `${publicURL}/api/openai/generate/text`,
-      TEXT_TO_SPEECH: `${publicURL}/api/openai/generate/text-to-speech`,
-      IMAGES: `${publicURL}/api/openai/generate/images`,
+      TEXT: `${publicApiUrl}/api/openai/generate/text`,
+      TEXT_TO_SPEECH: `${publicApiUrl}/api/openai/generate/text-to-speech`,
+      IMAGES: `${publicApiUrl}/api/openai/generate/images`,
     },
   },
 };

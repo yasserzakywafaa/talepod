@@ -5,7 +5,7 @@ import { IMAGES_SIZES } from "../models/openaiModel";
 import OpenAi from "openai";
 import fs from "fs";
 import { saveFileDataToDb } from "../models/mongoDb";
-import { uploadFileToS3 } from "../models/amazonAwsS3";
+import { uploadFileToS3 } from "../models/amazonS3";
 
 const openai = new OpenAi();
 

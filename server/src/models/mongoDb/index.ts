@@ -18,13 +18,12 @@ const getMongoDbUri = (): string => {
 };
 
 const databaseInit = () => {
-  // mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
   mongoose.connect(getMongoDbUri());
 
   const database = mongoose.connection;
-  database.on("error", console.error.bind(console, "<<< Connection Error:>>>"));
+  database.on("error", console.error.bind(console, "· Connection Error ❌"));
   database.once("open", () => {
-    console.info("<<< Connected to MongoDB Atlas >>>");
+    console.info("· Connected to MongoDB Atlas ✅");
   });
 };
 
@@ -35,7 +34,6 @@ const saveFileDataToDb = async (
   // This create a MongoDB Document with the file's metadata
   const audioFile = new AudioFile({
     fileName: audioFileName,
-    // url: audioFileUrl,
     url: audioFileS3Uri,
   });
   // Save to MongoDb Atlas
