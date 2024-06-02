@@ -1,10 +1,10 @@
-import APP_CONSTANTS from "./app_constants";
+// import APP_CONSTANTS from "./app_constants";
 
-const publicApiUrl = APP_CONSTANTS.IS_DEV
-  ? `http://localhost:${APP_CONSTANTS.DEV_SERVER_PORT}`
-  : APP_CONSTANTS.PUBLIC_API_URL;
+// const publicApiUrl = APP_CONSTANTS.IS_DEV
+//   ? `http://localhost:${APP_CONSTANTS.DEV_SERVER_PORT}`
+//   : APP_CONSTANTS.PUBLIC_API_URL;
 
-// const publicApiUrl = "https://develop.d3jpfjqck2dtes.amplifyapp.com/";
+const publicApiUrl = window.location.origin;
 
 const END_POINTS = {
   TESTING: {
