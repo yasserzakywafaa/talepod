@@ -15,7 +15,8 @@ const publicClientUrl = CONFIG.IS_DEV ? "*" : CONFIG.PROD_CLIENT_PUBLIC_URL;
 // CORS configuration
 expressApp.use((req, res, next) => {
   // res.header("Access-Control-Allow-Origin", CONFIG.PROD_CLIENT_PUBLIC_URL);
-  res.header("Access-Control-Allow-Origin", publicClientUrl);
+  // res.header("Access-Control-Allow-Origin", publicClientUrl);
+  res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Methods",
     "GET,POST,PUT,PATCH,DELETE,OPTIONS"
