@@ -100,10 +100,13 @@ export const useGoogleGeminiManager = (
       const generateResponse = await axios.post(
         END_POINTS.GOOGLE_GEMINI.GENERATE,
         // END_POINTS.TESTING.ROUTE_ONE,
-        { userPrompt },
+        // { userPrompt },
         {
           headers: {
             "Content-Type": "application/json",
+          },
+          data: {
+            userPrompt,
           },
         }
       );
