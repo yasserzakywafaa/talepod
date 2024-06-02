@@ -1,0 +1,78 @@
+{
+  "name": "@swissai/ai-story-creator",
+  "version": "1.0.0",
+  "description": "{PROJECT_DESCRIPTION}",
+  "private": true,
+  "author": "Yasser Zaky",
+  "homepage": "/",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/swissai/ai-story-creator.git"
+  },
+  "scripts": {
+    "start": "ts-node src/server.ts",
+    "start:watch": "nodemon src/server.ts",
+    "start:prod": "node build/server.js",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1628.0",
+    "body-parser": "^1.20.2",
+    "cors": "2.8.5",
+    "dotenv": "16.4.5",
+    "express": "4.18.1",
+    "mongoose": "8.4.0",
+    "nodemon": "2.0.19",
+    "openai": "4.47.1",
+    "path": "0.12.7",
+    "tslib": "^2.6.2",
+    "@emotion/react": "11.11.4",
+    "@emotion/styled": "11.11.5",
+    "@google/generative-ai": "0.7.1",
+    "@mui/icons-material": "5.15.15",
+    "@mui/material": "5.15.15",
+    "@mui/styles": "5.15.15",
+    "@react-oauth/google": "^0.12.1",
+    "@tinymce/tinymce-react": "5.0.1",
+    "@types/pouchdb": "6.4.0",
+    "@types/react": "18.2.25",
+    "@types/react-dom": "18.2.25",
+    "@types/react-router-dom": "5.3.3",
+    "axios": "1.6.8",
+    "classnames": "2.5.1",
+    "html-loader-react-scripts": "1.2.1",
+    "raw-loader": "4.0.2",
+    "react": "18.2.0",
+    "react-beautiful-dnd": "13.1.1",
+    "react-dom": "18.2.0",
+    "react-router-dom": "6.22.3",
+    "react-scripts": "5.0.1",
+    "react-toastify": "10.0.5"
+  },
+  "devDependencies": {
+    "@types/cors": "2.8.12",
+    "@types/express": "^4.17.21",
+    "@types/node": "18.19.31",
+    "ts-node": "10.9.2",
+    "typescript": "5.4.5",
+    "@babel/plugin-proposal-private-property-in-object": "7.21.11",
+    "@testing-library/react": "15.0.2",
+    "@types/jest": "29.5.12",
+    "@types/react-beautiful-dnd": "13.1.2",
+    "sass": "1.75.0",
+    "serve": "14.2.1"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
+  },
+  "browserslist": [
+    "last 1 chrome version",
+    "last 1 ChromeAndroid version",
+    "last 1 firefox version",
+    "last 1 FirefoxAndroid version",
+    "last 1 safari version",
+    "last 1 edge version"
+  ]
+}
