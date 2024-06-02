@@ -45,20 +45,14 @@ expressApp.use(googleGeminiRoutes_1.default);
 expressApp.use(openaiRoutes_1.default);
 (0, mongoDb_1.databaseInit)();
 if (config_1.default.IS_PROD) {
-    // // Serve Frontend Bundled Application
-    // expressApp.use(express.static(CONFIG.FRONTEND_BUILD_PATH, { index: false }));
-    // TEST
-    expressApp.use(express_1.default.static("./client"));
+    // Serve Frontend Bundled Application
+    expressApp.use(express_1.default.static("./"));
     expressApp.get("*", (req, res) => {
-        res.sendFile(path_1.default.join(__dirname, "./client/index.html"));
+        res.sendFile(path_1.default.join(__dirname, "./index.html"));
     });
-    expressApp.use((err, req, res, next) => {
-        console.error("<<<: SERVER Production Error :>>>", err.stack);
-        res.status(500).send("Internal Server Error");
-    });
-    // // Catch-all route to serve `index.html` for all client-side routes
-    // expressApp.get("*", (req, res) => {
-    //   res.sendFile(`${CONFIG.FRONTEND_BUILD_PATH}/index.html`);
+    // expressApp.use((err, req, res, next) => {
+    //   console.error("<<<: SERVER Production Error :>>>", err.stack);
+    //   res.status(500).send("Internal Server Error");
     // });
 }
 expressApp.listen(PORT, () => {

@@ -48,23 +48,15 @@ expressApp.use(openAIRoutes);
 databaseInit();
 
 if (CONFIG.IS_PROD) {
-  // // Serve Frontend Bundled Application
-  // expressApp.use(express.static(CONFIG.FRONTEND_BUILD_PATH, { index: false }));
-
-  // TEST
-  expressApp.use(express.static("./client"));
+  // Serve Frontend Bundled Application
+  expressApp.use(express.static("./"));
   expressApp.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "./client/index.html"));
+    res.sendFile(path.join(__dirname, "./index.html"));
   });
 
-  expressApp.use((err, req, res, next) => {
-    console.error("<<<: SERVER Production Error :>>>", err.stack);
-    res.status(500).send("Internal Server Error");
-  });
-
-  // // Catch-all route to serve `index.html` for all client-side routes
-  // expressApp.get("*", (req, res) => {
-  //   res.sendFile(`${CONFIG.FRONTEND_BUILD_PATH}/index.html`);
+  // expressApp.use((err, req, res, next) => {
+  //   console.error("<<<: SERVER Production Error :>>>", err.stack);
+  //   res.status(500).send("Internal Server Error");
   // });
 }
 

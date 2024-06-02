@@ -11,10 +11,10 @@
     "url": "https://gitlab.com/swissai/ai-story-creator.git"
   },
   "scripts": {
-    "start": "ts-node src/server.ts",
-    "start:watch": "nodemon src/server.ts",
-    "start:prod": "node build/server.js",
-    "build": "tsc"
+    "start": "node server.js",
+    "build-copy:client": "cd .. && cd client && yarn build && cp -r ./build/ ../deploy/",
+    "build-copy:server": "cd .. && cd server && yarn build && cp -r ./build/ ../deploy/",
+    "build": "yarn build-copy:client && yarn build-copy:server"
   },
   "dependencies": {
     "aws-sdk": "^2.1628.0",
