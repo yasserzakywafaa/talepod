@@ -11,7 +11,7 @@ import routes from "./routes";
 
 const expressApp = express();
 const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.PROD_PORT;
-const publicClientUrl = CONFIG.IS_DEV ? "*" : CONFIG.PROD_CLIENT_PUBLIC_URL;
+// const publicClientUrl = CONFIG.IS_DEV ? "*" : CONFIG.PROD_CLIENT_PUBLIC_URL;
 
 // CORS configuration
 expressApp.use(cors());
@@ -37,27 +37,17 @@ expressApp.use(express.json());
 expressApp.use(bodyParser.json());
 expressApp.use(express.urlencoded({ extended: true }));
 
-// // Serve static files from the specified directory
-// expressApp.use(
-//   `/${CONFIG.SERVER_TEXT_TO_SPEECH_PATH}`,
-//   express.static(CONFIG.SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH)
-// );
-
 // Mount API routes dynamically
 expressApp.use("/api", routes);
-
-// // Mount API routes
-// expressApp.use(testRoutes);
-// expressApp.use(googleGeminiRoutes);
-// expressApp.use(openAIRoutes);
 
 databaseInit();
 
 if (CONFIG.IS_PROD) {
   // Serve Frontend Bundled Application
-  expressApp.use(express.static("./"));
+  const buildPath = path.join(__dirname, "/");
+  expressApp.use(express.static(buildPath));
   expressApp.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "./index.html"));
+    res.sendFile(path.join(buildPath, "/index.html"));
   });
 }
 
