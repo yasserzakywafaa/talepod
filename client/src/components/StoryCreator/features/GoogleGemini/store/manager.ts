@@ -104,6 +104,7 @@ export const useGoogleGeminiManager = (
           headers: {
             "Content-Type": "application/json",
           },
+          maxRedirects: 0,
         }
       );
 
