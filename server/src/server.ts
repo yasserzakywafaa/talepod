@@ -32,7 +32,8 @@ const publicClientUrl = CONFIG.IS_DEV ? "*" : CONFIG.PROD_CLIENT_PUBLIC_URL;
 if (CONFIG.IS_PROD) {
   const corsOptions = {
     credentials: false,
-    origin: publicClientUrl,
+    // origin: publicClientUrl,
+    origin: "*",
     methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
     allowedHeaders: ["Content-Type", "Authorization"],
     optionsSuccessStatus: 204, // some legacy browsers (IE11, various SmartTVs) choke on 204
