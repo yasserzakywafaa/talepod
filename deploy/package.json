@@ -12,8 +12,8 @@
   },
   "scripts": {
     "start": "node server.js",
-    "build-copy:client": "cd .. && cd client && yarn build && cp -r ./build/ ../deploy/",
-    "build-copy:server": "cd .. && cd server && yarn build && cp -r ./build/ ../deploy/",
+    "build-copy:client": "cd .. && cd client && yarn install && yarn build && cp -r ./build/ ../deploy/",
+    "build-copy:server": "cd .. && cd server && yarn install && yarn build && cp -r ./build/ ../deploy/",
     "build": "yarn build-copy:client && yarn build-copy:server"
   },
   "dependencies": {
@@ -39,6 +39,7 @@
     "react-router-dom": "6.22.3",
     "react-scripts": "5.0.1",
     "react-toastify": "10.0.5",
+    "typescript": "5.4.5",
     "aws-sdk": "^2.1628.0",
     "body-parser": "^1.20.2",
     "cors": "2.8.5",
