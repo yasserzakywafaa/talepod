@@ -10,25 +10,8 @@ import testRoutes from "./routes/testRoutes";
 const expressApp = express();
 const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.PROD_PORT;
 const publicClientUrl = CONFIG.IS_DEV ? "*" : CONFIG.PROD_CLIENT_PUBLIC_URL;
-// ? `http://localhost:${CONFIG.DEV_PORT}`
 
 // CORS configuration
-// expressApp.use((req, res, next) => {
-//   // res.header("Access-Control-Allow-Origin", CONFIG.PROD_CLIENT_PUBLIC_URL);
-//   // res.header("Access-Control-Allow-Origin", publicClientUrl);
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header(
-//     "Access-Control-Allow-Methods",
-//     "GET,POST,PUT,PATCH,DELETE,OPTIONS"
-//   );
-//   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-//   if (req.method === "OPTIONS") {
-//     res.sendStatus(204);
-//   } else {
-//     next();
-//   }
-// });
-
 if (CONFIG.IS_PROD) {
   const corsOptions = {
     credentials: false,
@@ -39,11 +22,11 @@ if (CONFIG.IS_PROD) {
     optionsSuccessStatus: 204, // some legacy browsers (IE11, various SmartTVs) choke on 204
   };
   expressApp.use(cors(corsOptions));
+  // Handle OPTIONS preflight requests for all routes
+  expressApp.options("*", cors());
 } else {
   expressApp.use(cors());
 }
-// Handle OPTIONS preflight requests for all routes
-expressApp.options("*", cors());
 
 // Middleware
 expressApp.use(express.json());
