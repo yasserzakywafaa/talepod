@@ -11,7 +11,7 @@
     "url": "https://gitlab.com/swissai/ai-story-creator.git"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "yarn install && node server.js",
     "build-copy:client": "cd .. && cd client && yarn install && yarn build && cp -r ./build/ ../deploy/",
     "build-copy:server": "cd .. && cd server && yarn install && yarn build && cp -r ./build/ ../deploy/",
     "build": "yarn build-copy:client && yarn build-copy:server"
