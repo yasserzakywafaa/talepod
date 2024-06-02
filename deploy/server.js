@@ -6,11 +6,11 @@ const body_parser_1 = tslib_1.__importDefault(require("body-parser"));
 const cors_1 = tslib_1.__importDefault(require("cors"));
 const mongoDb_1 = require("./models/mongoDb");
 const express_1 = tslib_1.__importDefault(require("express"));
-// import googleGeminiRoutes from "./routes/googleGeminiRoutes";
-// import openAIRoutes from "./routes/openaiRoutes";
+const googleGeminiRoutes_1 = tslib_1.__importDefault(require("./routes/googleGeminiRoutes"));
+const openaiRoutes_1 = tslib_1.__importDefault(require("./routes/openaiRoutes"));
 const path_1 = tslib_1.__importDefault(require("path"));
-const routes_1 = tslib_1.__importDefault(require("./routes"));
-// import testRoutes from "./routes/testRoutes";
+// import routes from "./routes";
+const testRoutes_1 = tslib_1.__importDefault(require("./routes/testRoutes"));
 const expressApp = (0, express_1.default)();
 const PORT = config_1.default.IS_DEV ? config_1.default.DEV_PORT : config_1.default.PROD_PORT;
 // const publicClientUrl = CONFIG.IS_DEV ? "*" : CONFIG.PROD_CLIENT_PUBLIC_URL;
@@ -36,25 +36,30 @@ expressApp.use((0, cors_1.default)());
 expressApp.use(express_1.default.json());
 expressApp.use(body_parser_1.default.json());
 expressApp.use(express_1.default.urlencoded({ extended: true }));
-// Mount API routes dynamically
-expressApp.use("/api", routes_1.default);
+// // Mount API routes dynamically
+// expressApp.use("/api", routes);
+// Mount API routes
+expressApp.use(testRoutes_1.default);
+expressApp.use(googleGeminiRoutes_1.default);
+expressApp.use(openaiRoutes_1.default);
 (0, mongoDb_1.databaseInit)();
-const buildPath = path_1.default.join(__dirname, "/");
 if (config_1.default.IS_PROD) {
     // Serve Frontend Bundled Application
-    // const buildPath = path.join(__dirname, "/");
+    const buildPath = path_1.default.join(__dirname, "/");
     expressApp.use(express_1.default.static(buildPath));
     expressApp.get("*", (req, res) => {
-        res.sendFile(path_1.default.join(buildPath, "/index.html"));
+        if (!req.path.startsWith("/api")) {
+            res.sendFile(path_1.default.join(buildPath, "index.html"));
+        }
     });
 }
 expressApp.listen(PORT, () => {
     console.log("Server running on:>>>", {
-        PROD_CLIENT_PUBLIC_URL: config_1.default.PROD_CLIENT_PUBLIC_URL,
-        ENVIRONMENT: config_1.default.NODE_ENV,
         PORT,
-        buildPath,
-        buildPathResponse: path_1.default.join(buildPath, "/index.html"),
+        ENVIRONMENT: config_1.default.NODE_ENV,
+        PROD_CLIENT_PUBLIC_URL: config_1.default.PROD_CLIENT_PUBLIC_URL,
+        deployPath: path_1.default.join(__dirname, "/"),
+        deployClientPath: path_1.default.join(path_1.default.join(__dirname, "/"), "/index.html"),
     });
 });
 module.exports = expressApp;
