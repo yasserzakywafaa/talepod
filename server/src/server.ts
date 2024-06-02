@@ -33,11 +33,11 @@ expressApp.use(express.json());
 expressApp.use(bodyParser.json());
 expressApp.use(express.urlencoded({ extended: true }));
 
-// Serve static files from the specified directory
-expressApp.use(
-  `/${CONFIG.SERVER_TEXT_TO_SPEECH_PATH}`,
-  express.static(CONFIG.SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH)
-);
+// // Serve static files from the specified directory
+// expressApp.use(
+//   `/${CONFIG.SERVER_TEXT_TO_SPEECH_PATH}`,
+//   express.static(CONFIG.SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH)
+// );
 
 // Mount API routes
 expressApp.use(testRoutes);
