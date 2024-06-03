@@ -14,7 +14,7 @@
     "start": "ts-node src/server.ts",
     "start:watch": "nodemon src/server.ts",
     "start:prod": "node build/server.js",
-    "build": "tsc"
+    "build": "rimraf build & tsc"
   },
   "dependencies": {
     "@google/generative-ai": "0.6.0",

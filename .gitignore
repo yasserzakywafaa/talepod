@@ -9,6 +9,9 @@
 **/dist/
 **/.cache/
 **/.DS_Store
+**/deploy
+!deploy/package.json
+!deploy/yarn.lock
 
 # Text-to-speech generated audio files
 /server/assets/audio/textToSpeech
