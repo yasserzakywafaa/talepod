@@ -237,13 +237,13 @@ const ApplicationBar = () => {
                       Features
                     </MenuItem>
 
-                    <MenuItem onClick={handleOnMenuItemClick("testimonials")}>
+                    {/* <MenuItem onClick={handleOnMenuItemClick("testimonials")}>
                       Testimonials
-                    </MenuItem>
+                    </MenuItem> */}
 
-                    <MenuItem onClick={handleOnMenuItemClick("highlights")}>
+                    {/* <MenuItem onClick={handleOnMenuItemClick("highlights")}>
                       Highlights
-                    </MenuItem>
+                    </MenuItem> */}
 
                     <MenuItem onClick={handleOnMenuItemClick("pricing")}>
                       Pricing
