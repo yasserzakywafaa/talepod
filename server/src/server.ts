@@ -3,11 +3,12 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import { databaseInit } from "./models/mongoDb";
 import express from "express";
-import googleGeminiRoutes from "./routes/googleGeminiRoutes";
-import openAIRoutes from "./routes/openaiRoutes";
-import path from "path";
 // import routes from "./routes";
-import testRoutes from "./routes/testRoutes";
+import loadRoutes from "./routes";
+// import googleGeminiRoutes from "./routes/googleGeminiRoutes";
+// import openAIRoutes from "./routes/openaiRoutes";
+import path from "path";
+// import testRoutes from "./routes/testRoutes";
 
 const expressApp = express();
 const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.PROD_PORT;
@@ -40,23 +41,26 @@ expressApp.use(express.urlencoded({ extended: true }));
 // // Mount API routes dynamically
 // expressApp.use("/api", routes);
 
-// Mount API routes
-expressApp.use(testRoutes);
-expressApp.use(googleGeminiRoutes);
-expressApp.use(openAIRoutes);
+// Load and mount API routes
+loadRoutes(expressApp);
+
+// // Mount API routes
+// expressApp.use(testRoutes);
+// expressApp.use(googleGeminiRoutes);
+// expressApp.use(openAIRoutes);
 
 databaseInit();
 
-// if (CONFIG.IS_PROD) {
-// Serve Frontend Bundled Application
-const buildPath = path.join(__dirname, "/");
-expressApp.use(express.static(buildPath));
-// expressApp.get("*", (req, res) => {
-//   if (!req.path.startsWith("/api")) {
-//     res.sendFile(path.join(buildPath, "index.html"));
-//   }
-// });
-// }
+if (CONFIG.IS_PROD) {
+  // Serve Frontend Bundled Application
+  const buildPath = path.join(__dirname, "/");
+  expressApp.use(express.static(buildPath));
+  // expressApp.get("*", (req, res) => {
+  //   if (!req.path.startsWith("/api")) {
+  //     res.sendFile(path.join(buildPath, "index.html"));
+  //   }
+  // });
+}
 
 expressApp.listen(PORT, (): void => {
   console.log("Server running on:>>>", {

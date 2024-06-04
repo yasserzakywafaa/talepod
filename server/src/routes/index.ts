@@ -1,17 +1,20 @@
-import { Router } from "express";
+import CONFIG from "../config";
+import { Express } from "express";
 import fs from "fs";
 import path from "path";
 
-const router = Router();
+const loadRoutes = (expressApp: Express) => {
+  const routesPath = path.resolve(__dirname);
+  const filesExtension = CONFIG.IS_DEV ? ".ts" : ".js";
 
-// Automatically import all route files
-const routeFiles = fs
-  .readdirSync(__dirname)
-  .filter((file) => file.endsWith("Routes.ts"));
+  fs.readdirSync(routesPath).forEach((file) => {
+    // Skip the index file to prevent self-importing
+    if (file !== `index${filesExtension}` && file.endsWith(filesExtension)) {
+      const route = require(path.join(routesPath, file)).default;
 
-routeFiles.forEach((file) => {
-  const route = require(path.join(__dirname, file)).default;
-  router.use(route);
-});
+      if (route) expressApp.use(route);
+    }
+  });
+};
 
-export default router;
+export default loadRoutes;
