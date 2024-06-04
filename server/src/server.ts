@@ -24,16 +24,20 @@ loadRoutes(expressApp);
 databaseInit();
 
 if (CONFIG.IS_PROD) {
+  // Load API routes dynamically
+  loadRoutes(expressApp);
+
   // Serve Frontend Bundled Application
   const buildPath = path.join(__dirname, "/");
   expressApp.use(express.static(buildPath));
 
   // Catch-all route
-  // expressApp.get("*", (req, res) => {
-  //   if (!req.path.startsWith("/api")) {
-  //     res.sendFile(path.join(buildPath, "index.html"));
-  //   }
-  // });
+  expressApp.get("*", (req, res) => {
+    if (!req.path.startsWith("/api") && req.path !== "/") {
+      // Exclude root path as well
+      res.sendFile(path.join(buildPath, "index.html"));
+    }
+  });
 }
 
 expressApp.listen(PORT, (): void => {
