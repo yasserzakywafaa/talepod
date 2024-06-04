@@ -47,16 +47,16 @@ expressApp.use(openAIRoutes);
 
 databaseInit();
 
-if (CONFIG.IS_PROD) {
-  // Serve Frontend Bundled Application
-  const buildPath = path.join(__dirname, "/");
-  expressApp.use(express.static(buildPath));
-  // expressApp.get("*", (req, res) => {
-  //   if (!req.path.startsWith("/api")) {
-  //     res.sendFile(path.join(buildPath, "index.html"));
-  //   }
-  // });
-}
+// if (CONFIG.IS_PROD) {
+// Serve Frontend Bundled Application
+const buildPath = path.join(__dirname, "/");
+expressApp.use(express.static(buildPath));
+// expressApp.get("*", (req, res) => {
+//   if (!req.path.startsWith("/api")) {
+//     res.sendFile(path.join(buildPath, "index.html"));
+//   }
+// });
+// }
 
 expressApp.listen(PORT, (): void => {
   console.log("Server running on:>>>", {
