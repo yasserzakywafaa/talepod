@@ -1,7 +1,7 @@
 import { Box, Button, Paper, Stack } from "@mui/material";
 
-import { AndroidRounded } from "@mui/icons-material";
 import { AudioPlayer } from "src/components/shared/AudioPlayer/AudioPlayer";
+import { AutoAwesome } from "@mui/icons-material";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
 import { useOpenAiGPTContext } from "../../store/Provider";
 
@@ -36,11 +36,11 @@ const OpenAiGPTTextToSpeechGeneration = () => {
           type="submit"
           title="submit-button"
           variant="contained"
-          endIcon={<AndroidRounded />}
+          endIcon={<AutoAwesome />}
           disabled={!textGeneration.aiAnswer.description}
           onClick={handleOnGenerateTextToSpeechClick}
         >
-          Generate Audio with chatGPT
+          Generate Audio
         </Button>
       </Stack>
 

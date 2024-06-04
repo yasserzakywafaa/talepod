@@ -51,7 +51,8 @@ const tiers = [
   },
   {
     title: PriceTiers.Advanced,
-    price: "10",
+    subheader: "Coming Soon",
+    price: "",
     description: [
       "Unlimited story generation",
       "Access to exclusive story content",
@@ -143,7 +144,7 @@ const Pricing = () => {
                   <Typography component="h3" variant="h6">
                     {tier.title}
                   </Typography>
-                  {tier.title === PriceTiers.Professional && (
+                  {tier.title !== PriceTiers.Free && (
                     <Chip
                       icon={<AutoAwesomeIcon />}
                       label={tier.subheader}
@@ -172,12 +173,16 @@ const Pricing = () => {
                         : undefined,
                   }}
                 >
-                  <Typography component="h3" variant="h2">
-                    ${tier.price}
-                  </Typography>
-                  <Typography component="h3" variant="h6">
-                    &nbsp; per month
-                  </Typography>
+                  {tier.price && (
+                    <>
+                      <Typography component="h3" variant="h2">
+                        ${tier.price}
+                      </Typography>
+                      <Typography component="h3" variant="h6">
+                        &nbsp; per month
+                      </Typography>
+                    </>
+                  )}
                 </Box>
                 <Divider
                   sx={{

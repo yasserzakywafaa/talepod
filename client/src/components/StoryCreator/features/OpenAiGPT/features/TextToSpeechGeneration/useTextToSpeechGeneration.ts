@@ -38,14 +38,12 @@ export const useTextToSpeechGeneration = (
 
   const handleGenerateTextToSpeechRequest = async () => {
     try {
-      const { name, age, nationality } = store.state.childInfo;
+      const { name, age, language } = store.state.childInfo;
       const response = await axios.post(
         END_POINTS.OPENAI.GENERATE.TEXT_TO_SPEECH,
         {
           userPrompt: store.state.textGeneration.aiAnswer.description,
-          fileName: `${name}_${age}yo_${
-            nationality?.name
-          }_${getRandomString()}`,
+          fileName: `${name}_${age}yo_${language.name}_${getRandomString()}`,
         }
       );
 

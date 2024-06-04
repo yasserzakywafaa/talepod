@@ -124,6 +124,7 @@ const ApplicationBar = () => {
                     </Typography>
                   </MenuItem>
 
+                  {/* 
                   <MenuItem
                     onClick={handleOnMenuItemClick("testimonials")}
                     sx={{ py: "6px", px: "12px" }}
@@ -131,16 +132,16 @@ const ApplicationBar = () => {
                     <Typography variant="body2" color="text.primary">
                       Testimonials
                     </Typography>
-                  </MenuItem>
+                  </MenuItem> */}
 
-                  <MenuItem
+                  {/* <MenuItem
                     onClick={handleOnMenuItemClick("highlights")}
                     sx={{ py: "6px", px: "12px" }}
                   >
                     <Typography variant="body2" color="text.primary">
                       Highlights
                     </Typography>
-                  </MenuItem>
+                  </MenuItem> */}
 
                   <MenuItem
                     onClick={handleOnMenuItemClick("pricing")}

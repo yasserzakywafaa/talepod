@@ -1,0 +1,17 @@
+.child-info-form {
+  position: relative;
+  margin: 0;
+  .child-info-form-item {
+    flex-basis: 20%;
+    margin-bottom: 2rem;
+    margin-right: 2rem;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .child-info-form {
+    .child-info-form-item {
+      flex-basis: 40%;
+    }
+  }
+}

@@ -1,3 +1,5 @@
+import "./StoryCreator.scss";
+
 import { Box, Container, Tab, Tabs, Typography } from "@mui/material";
 
 import GenerationOptionsForm from "./features/GenerationOptionsForm";
@@ -13,13 +15,14 @@ export const StoryCreatorContent = () => {
   };
 
   return (
-    <Container id="features" sx={{ pt: { xs: 8, sm: 16 } }}>
+    <Container id="story-creator" sx={{ pt: { xs: 4, sm: 4 }, paddingX: 0 }}>
       <GenerationOptionsForm />
 
       <Box
         width="100%"
         display="flex"
         component="div"
+        paddingX="1rem"
         flexDirection="row"
         justifyContent="space-around"
         className="ai-story-creator-wrapper"

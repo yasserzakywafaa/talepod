@@ -1,4 +1,5 @@
-import { Country } from "src/shared/countries";
+import { Language, Languages } from "src/shared/languages";
+
 import { Environment } from "src/shared/generatedStory/Environments";
 import { Moral } from "src/shared/generatedStory/Moral";
 import { Tone } from "src/shared/generatedStory/Tone";
@@ -19,7 +20,7 @@ export type ChildInfo = {
   gender: ChildGenderEnum;
   age: number;
   interests: string;
-  nationality?: Country;
+  language: Language;
 };
 
 export interface GeneratedStory {
@@ -38,10 +39,7 @@ export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
       gender: ChildGenderEnum.Girl,
       age: 2,
       interests: "Football",
-      nationality: {
-        name: "Egypt",
-        value: "EG",
-      },
+      language: Languages[0],
     },
     generatedStory: {
       audioLength: 5,

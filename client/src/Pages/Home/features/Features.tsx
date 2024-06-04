@@ -1,15 +1,15 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
+import DevicesRoundedIcon from "@mui/icons-material/DevicesRounded";
+import EdgesensorHighRoundedIcon from "@mui/icons-material/EdgesensorHighRounded";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import DevicesRoundedIcon from "@mui/icons-material/DevicesRounded";
-import EdgesensorHighRoundedIcon from "@mui/icons-material/EdgesensorHighRounded";
 import ViewQuiltRoundedIcon from "@mui/icons-material/ViewQuiltRounded";
 import { useState } from "react";
 
@@ -105,6 +105,7 @@ export default function Features() {
               />
             ))}
           </Grid>
+
           <Box
             component={Card}
             variant="outlined"
@@ -158,6 +159,7 @@ export default function Features() {
               </Link>
             </Box>
           </Box>
+
           <Stack
             direction="column"
             justifyContent="center"
@@ -258,6 +260,7 @@ export default function Features() {
             ))}
           </Stack>
         </Grid>
+
         <Grid
           item
           xs={12}

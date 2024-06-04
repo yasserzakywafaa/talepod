@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { ChangeEvent, FormEvent } from "react";
 
-import { AndroidRounded } from "@mui/icons-material";
+import { AutoAwesome } from "@mui/icons-material";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
 import TextToSpeechGeneration from "../TextToSpeechGeneration/TextToSpeechGeneration";
 import { useOpenAiGPTContext } from "../../store/Provider";
@@ -68,9 +68,9 @@ const OpenAiGPTTextGeneration = () => {
             type="submit"
             title="submit-button"
             variant="contained"
-            endIcon={<AndroidRounded />}
+            endIcon={<AutoAwesome />}
           >
-            Ask chatGPT
+            Generate
           </Button>
         </Stack>
       </Box>
