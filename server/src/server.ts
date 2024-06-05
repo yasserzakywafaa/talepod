@@ -54,6 +54,8 @@ if (CONFIG.IS_PROD) {
     if (!req.path.startsWith("/api") && req.path !== "/") {
       // Exclude root path as well
       res.sendFile(path.join(buildPath, "index.html"));
+    } else {
+      res.status(404).send("Not Found");
     }
   });
 }
