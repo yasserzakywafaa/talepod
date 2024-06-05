@@ -45,13 +45,13 @@ if (CONFIG.IS_PROD) {
   const buildPath = path.join(__dirname, "/");
   expressApp.use(express.static(buildPath));
 
-  // Catch-all route
-  expressApp.get("*", (req, res) => {
-    if (!req.path.startsWith("/api") && req.path !== "/") {
-      // Exclude root path as well
-      res.sendFile(path.join(buildPath, "index.html"));
-    }
-  });
+  // // Catch-all route
+  // expressApp.get("*", (req, res) => {
+  //   if (!req.path.startsWith("/api") && req.path !== "/") {
+  //     // Exclude root path as well
+  //     res.sendFile(path.join(buildPath, "index.html"));
+  //   }
+  // });
 }
 
 expressApp.listen(PORT, (): void => {
