@@ -20,6 +20,9 @@ expressApp.use(express.urlencoded({ extended: true }));
 // Initiate MongoDB connection
 databaseInit();
 
+// Load API routes dynamically
+loadRoutes(expressApp);
+
 if (CONFIG.IS_PROD) {
   // Serve Frontend Bundled Application
   const buildPath = path.join(__dirname, "/");
@@ -42,9 +45,6 @@ if (CONFIG.IS_PROD) {
     }
   });
 }
-
-// Load API routes dynamically
-loadRoutes(expressApp);
 
 expressApp.listen(PORT, (): void => {
   console.log("Server running on:>>>", {
