@@ -17,8 +17,12 @@ expressApp.use(express.json());
 expressApp.use(bodyParser.json());
 expressApp.use(express.urlencoded({ extended: true }));
 
-// Load API routes dynamically
-loadRoutes(expressApp);
+// Middleware to handle API requests
+expressApp.use("/api", (req, res, next) => {
+  // Load API routes dynamically
+  loadRoutes(expressApp);
+  next();
+});
 
 // Initiate MongoDB connection
 databaseInit();
@@ -45,13 +49,13 @@ if (CONFIG.IS_PROD) {
   const buildPath = path.join(__dirname, "/");
   expressApp.use(express.static(buildPath));
 
-  // // Catch-all route
-  // expressApp.get("*", (req, res) => {
-  //   if (!req.path.startsWith("/api") && req.path !== "/") {
-  //     // Exclude root path as well
-  //     res.sendFile(path.join(buildPath, "index.html"));
-  //   }
-  // });
+  // Catch-all route
+  expressApp.get("*", (req, res) => {
+    if (!req.path.startsWith("/api") && req.path !== "/") {
+      // Exclude root path as well
+      res.sendFile(path.join(buildPath, "index.html"));
+    }
+  });
 }
 
 expressApp.listen(PORT, (): void => {
