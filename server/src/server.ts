@@ -5,9 +5,9 @@ import { databaseInit } from "./models/mongoDb";
 import express from "express";
 import loadRoutes from "./routes";
 import path from "path";
-import googleGeminiRoutes from "./routes/googleGeminiRoutes";
-import openaiRoutes from "./routes/openaiRoutes";
-import testRoutes from "./routes/testRoutes";
+// import googleGeminiRoutes from "./routes/googleGeminiRoutes";
+// import openaiRoutes from "./routes/openaiRoutes";
+// import testRoutes from "./routes/testRoutes";
 
 const expressApp = express();
 const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.PROD_PORT;
@@ -23,14 +23,8 @@ expressApp.use(express.urlencoded({ extended: true }));
 // Initiate MongoDB connection
 databaseInit();
 
-// // Load API routes dynamically
-// loadRoutes(expressApp);
-
-// Mount API routes
-expressApp.use(googleGeminiRoutes);
-expressApp.use(openaiRoutes);
-expressApp.use(testRoutes);
-
+// Load API routes dynamically
+loadRoutes(expressApp);
 
 if (CONFIG.IS_PROD) {
   // Serve Frontend Bundled Application
