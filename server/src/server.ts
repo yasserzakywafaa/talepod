@@ -17,26 +17,25 @@ expressApp.use(express.json());
 expressApp.use(bodyParser.json());
 expressApp.use(express.urlencoded({ extended: true }));
 
-// Load API routes dynamically
-loadRoutes(expressApp);
-
 // Initiate MongoDB connection
 databaseInit();
 
 if (CONFIG.IS_PROD) {
   // Load API routes dynamically
-  loadRoutes(expressApp);
+  loadRoutes(expressApp).then(() => {
+    console.log("Routes Resolved:>>>");
 
-  // Serve Frontend Bundled Application
-  const buildPath = path.join(__dirname, "/");
-  expressApp.use(express.static(buildPath));
+    // Serve Frontend Bundled Application
+    const buildPath = path.join(__dirname, "/");
+    expressApp.use(express.static(buildPath));
 
-  // Catch-all route
-  expressApp.get("*", (req, res) => {
-    if (!req.path.startsWith("/api") && req.path !== "/") {
-      // Exclude root path as well
-      res.sendFile(path.join(buildPath, "index.html"));
-    }
+    // Catch-all route
+    expressApp.get("*", (req, res) => {
+      if (!req.path.startsWith("/api") && req.path !== "/") {
+        // Exclude root path as well
+        res.sendFile(path.join(buildPath, "index.html"));
+      }
+    });
   });
 }
 

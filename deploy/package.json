@@ -12,9 +12,12 @@
   },
   "scripts": {
     "start": "yarn install && node server.js",
+    "build": "yarn build-copy:client && yarn build-copy:server",
     "build-copy:client": "cd .. && cd client && yarn install && yarn build && cp -r ./build/ ../deploy/",
     "build-copy:server": "cd .. && cd server && yarn install && yarn build && cp -r ./build/ ../deploy/",
-    "build": "yarn build-copy:client && yarn build-copy:server"
+    "build--windows": "yarn build-copy:client--windows && yarn build-copy:server--windows",
+    "build-copy:client--windows": "cd .. && cd client && yarn install && yarn build && cp -r ./build/. ../deploy/",
+    "build-copy:server--windows": "cd .. && cd server && yarn install && yarn build && cp -r ./build/. ../deploy/"
   },
   "dependencies": {
     "@emotion/react": "11.11.4",
