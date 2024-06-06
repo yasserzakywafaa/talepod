@@ -1,3 +1,4 @@
+import AwsLogger from "./aws-logger";
 import CONFIG from "./config";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -65,6 +66,11 @@ if (CONFIG.IS_PROD) {
 
 expressApp.listen(PORT, (): void => {
   console.log("Server running on:>>>", {
+    PORT,
+    ENVIRONMENT: CONFIG.NODE_ENV,
+    deployPath: path.join(__dirname, "/"),
+  });
+  AwsLogger.info("Server running on:>>>", {
     PORT,
     ENVIRONMENT: CONFIG.NODE_ENV,
     deployPath: path.join(__dirname, "/"),
