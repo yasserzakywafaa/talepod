@@ -1,49 +1,45 @@
-import AWS, { S3 } from "aws-sdk";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 import CONFIG from "../../config";
 import fs from "fs";
 
-// Hosting
-AWS.config.update({
-  accessKeyId: CONFIG.HOST_AWS_ACCESS_KEY,
-  secretAccessKey: CONFIG.HOST_AWS_SECRET_KEY,
+// Create an S3 client
+const s3Client = new S3Client({
   region: CONFIG.HOST_AWS_REGION,
+  credentials: {
+    accessKeyId: CONFIG.HOST_AWS_ACCESS_KEY,
+    secretAccessKey: CONFIG.HOST_AWS_SECRET_KEY,
+  },
 });
-
-const amazonS3 = new AWS.S3();
 
 const uploadFileToS3 = async (
   fileName: string,
   filePath: string
 ): Promise<string> => {
-  // Upload Audio file to AWS S3
-  const fileContent = fs.readFileSync(filePath);
-
-  const params: S3.Types.PutObjectRequest = {
-    Body: fileContent,
-    Bucket: CONFIG.HOST_AWS_S3_BUCKET_NAME,
-    Key: `${CONFIG.SERVER_TEXT_TO_SPEECH_PATH}/${fileName}`,
-    ContentType: "audio/mp3",
-  };
-
   try {
-    const response = await amazonS3.upload(params).promise();
-    console.log("amazonS3 model:>>> File uploaded successfully", {
-      response,
+    // Read file content
+    const fileContent = fs.readFileSync(filePath);
+
+    // Create a command to put object to S3
+    const putObjectCommand = new PutObjectCommand({
+      Bucket: CONFIG.HOST_AWS_S3_BUCKET_NAME,
+      Key: `${CONFIG.SERVER_TEXT_TO_SPEECH_PATH}/${fileName}`,
+      Body: fileContent,
+      ContentType: "audio/mp3",
     });
 
-    return response.Location;
+    // Execute the command
+    await s3Client.send(putObjectCommand);
+
+    // Return the URL of the uploaded file
+    return `https://${CONFIG.HOST_AWS_S3_BUCKET_NAME}.s3.${CONFIG.HOST_AWS_REGION}.amazonaws.com/${CONFIG.SERVER_TEXT_TO_SPEECH_PATH}/${fileName}`;
   } catch (error) {
-    if (error) {
-      console.error("amazonS3 model:>>> ERROR", {
-        err: error,
-      });
+    console.error("amazonS3 model:>>> ERROR", {
+      error,
+    });
 
-      throw error;
-    }
+    throw error;
   }
-
-  return "";
 };
 
 export { uploadFileToS3 };

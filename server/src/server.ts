@@ -1,4 +1,3 @@
-import AwsLogger from "./aws-logger";
 import CONFIG from "./config";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -21,44 +20,29 @@ expressApp.use(express.json());
 expressApp.use(bodyParser.json());
 expressApp.use(express.urlencoded({ extended: true }));
 
-// // Initiate MongoDB connection
-// databaseInit();
-
-// // Load API routes dynamically
-// loadRoutes(expressApp);
-
 if (CONFIG.IS_PROD) {
+  // Load API routes dynamically
+  loadRoutes(expressApp);
+
   // Serve Frontend Bundled Application
   const buildPath = path.join(__dirname, "/");
   expressApp.use(express.static(buildPath));
 
-  // Load API routes dynamically
-  loadRoutes(expressApp);
-
-  // Catch-all route
-  // expressApp.get("*", (req, res) => {
-  //   if (req.path.startsWith("/api")) {
-  //     console.log('<<<: Route starts with "/api" :>>>', {
-  //       path: req.path,
-  //     });
-
-  //     // // Load API routes dynamically
-  //     // loadRoutes(expressApp);
-  //   } else {
-  //     console.log('<<<: Route NOT starts with "/api" :>>>', {
-  //       path: req.path,
-  //     });
-  //     res.sendFile(path.join(buildPath, "index.html"));
-  //   }
-  // });
+  // Initiate MongoDB connection
+  databaseInit();
 
   expressApp.get("*", (req, res) => {
-    console.log('<<<: Route starts with "/api" :>>>', {
+    console.log("<<<: Route path :>>>", {
       path: req.path,
     });
 
     res.sendFile(path.join(buildPath, "index.html"));
   });
+}
+
+if (CONFIG.IS_DEV) {
+  // Load API routes dynamically
+  loadRoutes(expressApp);
 
   // Initiate MongoDB connection
   databaseInit();
@@ -66,11 +50,6 @@ if (CONFIG.IS_PROD) {
 
 expressApp.listen(PORT, (): void => {
   console.log("Server running on:>>>", {
-    PORT,
-    ENVIRONMENT: CONFIG.NODE_ENV,
-    deployPath: path.join(__dirname, "/"),
-  });
-  AwsLogger.info("Server running on:>>>", {
     PORT,
     ENVIRONMENT: CONFIG.NODE_ENV,
     deployPath: path.join(__dirname, "/"),

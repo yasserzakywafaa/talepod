@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
+import AwsLogger from "../aws-logger";
 import CONFIG from "../config";
 import { IMAGES_SIZES } from "../models/openaiModel";
 import OpenAi from "openai";
@@ -21,13 +22,14 @@ export const generateText = async (
       messages: [{ role: "user", content: userPrompt }],
       model: CONFIG.OPENAI_MODEL_NAME,
       temperature: 0,
-      // max_tokens: 1000,
     });
 
     console.log("OpenAIController:>>> GENERATE TEXT", {
-      request,
-      response: generateRequest,
+      path: request.path,
       MODEL_NAME: CONFIG.OPENAI_MODEL_NAME,
+    });
+    AwsLogger.info("AWS Logger OpenAIController:>>> GENERATE TEXT", {
+      path: request.path,
     });
 
     response.json(generateRequest.choices[0].message.content);
@@ -35,6 +37,7 @@ export const generateText = async (
     console.log("OpenAIController:>>> GENERATE TEXT Error", {
       error,
     });
+    AwsLogger.error("OpenAIController:>>> GENERATE TEXT Error", { error });
     next(error);
   }
 };
@@ -77,10 +80,10 @@ export const generateTextToSpeech = async (
       // Save file to MongoDB Atlas
       await saveFileDataToDb(audioFileName, fileUrl);
     } else {
-      throw new Error("Failed to upload file to S3");
+      throw new Error("❌ Failed to upload file to S3");
     }
 
-    console.log("OpenAIController:>>> GENERATE TEXT TO SPEECH", {
+    console.log("OpenAI:>>> GENERATE TEXT TO SPEECH", {
       fileUrl,
       writePath: filePath,
       serverFilesPath: SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH,
@@ -92,7 +95,7 @@ export const generateTextToSpeech = async (
       fileName,
     });
   } catch (error) {
-    console.log("OpenAIController:>>> GENERATE TEXT TO SPEECH Error", {
+    console.log("❌ OpenAI:>>> GENERATE TEXT TO SPEECH Error", {
       error,
     });
     next(error);
