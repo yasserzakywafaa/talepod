@@ -1,8 +1,8 @@
 import END_POINTS from "../models/endpoints";
 import GoogleGeminiController from "../controllers/GoogleGeminiController";
-import express from "express";
+import { Router } from "express";
 
-const googleGeminiRouter = express.Router();
+const googleGeminiRouter = Router();
 
 // Define API routes
 googleGeminiRouter.post(

@@ -20,33 +20,47 @@ expressApp.use(express.json());
 expressApp.use(bodyParser.json());
 expressApp.use(express.urlencoded({ extended: true }));
 
-// Initiate MongoDB connection
-databaseInit();
+// // Initiate MongoDB connection
+// databaseInit();
 
-// Load API routes dynamically
-loadRoutes(expressApp);
+// // Load API routes dynamically
+// loadRoutes(expressApp);
 
 if (CONFIG.IS_PROD) {
   // Serve Frontend Bundled Application
   const buildPath = path.join(__dirname, "/");
   expressApp.use(express.static(buildPath));
 
-  // Catch-all route
-  expressApp.get("*", (req, res) => {
-    if (req.path.startsWith("/api")) {
-      console.log('<<<: Route starts with "/api" :>>>', {
-        path: req.path,
-      });
+  // Load API routes dynamically
+  loadRoutes(expressApp);
 
-      // Load API routes dynamically
-      loadRoutes(expressApp);
-    } else {
-      console.log('<<<: Route NOT starts with "/api" :>>>', {
-        path: req.path,
-      });
-      res.sendFile(path.join(buildPath, "index.html"));
-    }
+  // Catch-all route
+  // expressApp.get("*", (req, res) => {
+  //   if (req.path.startsWith("/api")) {
+  //     console.log('<<<: Route starts with "/api" :>>>', {
+  //       path: req.path,
+  //     });
+
+  //     // // Load API routes dynamically
+  //     // loadRoutes(expressApp);
+  //   } else {
+  //     console.log('<<<: Route NOT starts with "/api" :>>>', {
+  //       path: req.path,
+  //     });
+  //     res.sendFile(path.join(buildPath, "index.html"));
+  //   }
+  // });
+
+  expressApp.get("*", (req, res) => {
+    console.log('<<<: Route starts with "/api" :>>>', {
+      path: req.path,
+    });
+
+    res.sendFile(path.join(buildPath, "index.html"));
   });
+
+  // Initiate MongoDB connection
+  databaseInit();
 }
 
 expressApp.listen(PORT, (): void => {
