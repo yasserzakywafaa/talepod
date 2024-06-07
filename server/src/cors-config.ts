@@ -16,7 +16,11 @@ const corsOptions = {
     "http://talepod.com" ||
     "https://talepod.com" ||
     "http://api.talepod.com" ||
-    "https://api.talepod.com",
+    "https://api.talepod.com" ||
+    "http://www.talepod.com" ||
+    "https://www.talepod.com" ||
+    "http://www.api.talepod.com" ||
+    "https://www.api.talepod.com",
   methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true, // Allow credentials (cookies, authorization headers)
