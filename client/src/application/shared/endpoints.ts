@@ -2,8 +2,8 @@ import APP_CONSTANTS from "./app_constants";
 
 const publicApiUrl = APP_CONSTANTS.IS_DEV
   ? `http://localhost:${APP_CONSTANTS.DEV_SERVER_PORT}`
-  : window.location.origin;
-//   : APP_CONSTANTS.PUBLIC_API_URL;
+  // : window.location.origin;
+  : APP_CONSTANTS.PUBLIC_API_URL;
 
 const END_POINTS = {
   TESTING: {
