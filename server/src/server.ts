@@ -26,7 +26,7 @@ if (CONFIG.IS_DEV) {
     //     callback(new Error("❌ Not allowed by CORS"));
     //   }
     // },
-    origin: "http://talepod.com" || "https://talepod.com",
+    origin: "http://talepod.com/" || "https://talepod.com/",
     methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true, // Allow credentials (cookies, authorization headers)
