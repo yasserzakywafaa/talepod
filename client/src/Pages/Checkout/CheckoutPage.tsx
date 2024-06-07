@@ -5,7 +5,7 @@ import Page from "src/components/shared/Page/Page";
 
 const CheckoutPage = () => {
   return (
-    <Page title="Checkout" className="checkout-page">
+    <Page title="Checkout | TalePod" className="checkout-page">
       <Checkout />
     </Page>
   );

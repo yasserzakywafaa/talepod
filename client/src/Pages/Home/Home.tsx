@@ -15,7 +15,7 @@ import StoryCreator from "src/components/StoryCreator/StoryCreator";
 
 const Homepage = () => {
   return (
-    <Page title="AI Story Creator" className="home-page">
+    <Page title="TalePod | Bedtime Stories" className="home-page">
       {/* <Hero /> */}
 
       <StoryCreator />

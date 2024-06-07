@@ -13,7 +13,7 @@ const NotFoundPage = () => {
   return (
     <>
       <Box component="div" className="not-found-page">
-        <Page title="Not Found Page">
+        <Page title="Not Found | TalePod">
           <Box
             sx={{ p: 3 }}
             display="flex"

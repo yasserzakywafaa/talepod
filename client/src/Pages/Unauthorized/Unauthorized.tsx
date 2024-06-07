@@ -11,7 +11,7 @@ const Unauthorized = () => {
   const handleOnClick = () => navigate(routes.home);
 
   return (
-    <Page title="AI Story Creator" className="unauthorized-page">
+    <Page title="Unauthorized | TalePod" className="unauthorized-page">
       <Box
         display="flex"
         component="div"

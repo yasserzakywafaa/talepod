@@ -25,7 +25,7 @@ export const StoryCreatorContent = () => {
         paddingX="1rem"
         flexDirection="row"
         justifyContent="space-around"
-        className="ai-story-creator-wrapper"
+        className="story-creator-content"
       >
         <Box sx={{ width: "100%" }}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>

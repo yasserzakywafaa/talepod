@@ -1,5 +1,5 @@
 {
-  "name": "@swissai/ai-story-creator",
+  "name": "@swissai/{project_name}",
   "version": "1.0.0",
   "description": "{PROJECT_DESCRIPTION}",
   "private": true,
@@ -8,15 +8,15 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/swissai/ai-story-creator.git"
+    "url": "https://gitlab.com/swissai/{project_name}.git"
   },
   "scripts": {
     "start": "react-scripts start",
     "start:prod": "serve -l 5000 -s build",
     "build": "rimraf build & react-scripts build",
     "docker:clean": "docker system prune",
-    "docker:build": "docker build -t ai-story-creator:latest .",
-    "docker:run": "docker run -d -it --rm -p 8080:8080 ai-story-creator",
+    "docker:build": "docker build -t {project_name}:latest .",
+    "docker:run": "docker run -d -it --rm -p 8080:8080 {project_name}",
     "docker:compose--local": "docker-compose -f docker-compose.yml up frontend",
     "docker:compose--prod": "docker-compose -f docker-compose.yml up production",
     "test": "react-scripts test",

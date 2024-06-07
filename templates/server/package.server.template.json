@@ -1,5 +1,5 @@
 {
-  "name": "@swissai/ai-story-creator",
+  "name": "@swissai/{project_name}",
   "version": "1.0.0",
   "description": "{PROJECT_DESCRIPTION}",
   "private": true,
@@ -8,7 +8,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/swissai/ai-story-creator.git"
+    "url": "https://gitlab.com/swissai/{project_name}.git"
   },
   "scripts": {
     "start": "ts-node src/server.ts",

@@ -2,8 +2,8 @@ const _this = this;
 const version = 11;
 // const isOnline = true;
 const host = _this.location.origin;
-const CACHE_NAME = `ai-story-creator-v${version}`;
-const urlsToCache = ["/", "/settings", "/index.html"];
+const CACHE_NAME = `talepod-v${version}`;
+const urlsToCache = ["/", "/index.html"];
 
 // Install service worker
 const onInstall = (event) => {

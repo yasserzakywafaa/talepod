@@ -1,5 +1,5 @@
 {
-  "name": "@gitlab_group_name/project_name",
+  "name": "@gitlab_group_name/{project_name}",
   "version": "1.0.0",
   "description": "{PROJECT_DESCRIPTION}",
   "private": true,
@@ -24,8 +24,8 @@
     "build:frontend": "rimraf build & react-scripts build",
     "build:backend": "tsc",
     "docker:clean": "docker system prune",
-    "docker:build": "docker build -t ai-story-creator:latest .",
-    "docker:run": "docker run -d -it --rm -p 8080:8080 ai-story-creator",
+    "docker:build": "docker build -t {project_name}:latest .",
+    "docker:run": "docker run -d -it --rm -p 8080:8080 {project_name}",
     "docker:compose--local": "docker-compose -f docker-compose.yml up frontend",
     "docker:compose--prod": "docker-compose -f docker-compose.yml up production",
     "test": "react-scripts test",
