@@ -15,7 +15,7 @@ const CONFIG = {
   FRONTEND_DEV_PATH: path.resolve("../client/public"),
   FRONTEND_BUILD_PATH: path.resolve("../client/build"),
 
-  PROD_CLIENT_PUBLIC_URL: process.env.PROD_CLIENT_PUBLIC_URL,
+  PROD_CLIENT_PUBLIC_URLS: process.env.PROD_CLIENT_PUBLIC_URLS,
 
   // Assets
   SERVER_TEXT_TO_SPEECH_PATH: "assets/audio/textToSpeech",

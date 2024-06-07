@@ -16,18 +16,9 @@ const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.PROD_PORT;
 if (CONFIG.IS_DEV) {
   expressApp.use(cors());
 } else {
-  // const corsOptions = {
-  //   credentials: false,
-  //   // origin: CONFIG.PROD_CLIENT_PUBLIC_URL,
-  //   origin: "*",
-  //   methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
-  //   allowedHeaders: ["Content-Type", "Authorization"],
-  //   optionsSuccessStatus: 204, // some legacy browsers (IE11, various SmartTVs) choke on 204
-  // };
-
   const corsOptions = {
     origin: (origin: string, callback: Function) => {
-      const allowedOrigins = CONFIG.PROD_CLIENT_PUBLIC_URL.split(", ");
+      const allowedOrigins = CONFIG.PROD_CLIENT_PUBLIC_URLS.split(", ");
       if (allowedOrigins.includes(origin) || !origin) {
         callback(null, true);
       } else {
