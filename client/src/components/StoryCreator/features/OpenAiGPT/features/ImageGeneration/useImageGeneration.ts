@@ -53,10 +53,19 @@ export const useImageGeneration = (
 
   const handleGenerateImageRequest = async (userPrompt: string) => {
     try {
-      const response = await axios.post(END_POINTS.OPENAI.GENERATE.IMAGES, {
-        userPrompt,
-        numImages: 5, // Specify the number of images to generate
-      });
+      const response = await axios.post(
+        END_POINTS.OPENAI.GENERATE.IMAGES,
+        {
+          userPrompt,
+          numImages: 5, // Specify the number of images to generate
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Custom-Header": new Date().toISOString(),
+          },
+        }
+      );
 
       // // Extract the generated images from the response
       // const images = response.data.choices

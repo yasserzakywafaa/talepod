@@ -44,6 +44,12 @@ export const useTextToSpeechGeneration = (
         {
           userPrompt: store.state.textGeneration.aiAnswer.description,
           fileName: `${name}_${age}yo_${language.name}_${getRandomString()}`,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Custom-Header": new Date().toISOString(),
+          },
         }
       );
 

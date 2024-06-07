@@ -51,9 +51,18 @@ export const useTextGeneration = (store: OpenAiGPTStore): UseTextGeneration => {
 
   const handleGenerateTextRequest = async (userPrompt: string) => {
     try {
-      const response = await axios.post(END_POINTS.OPENAI.GENERATE.TEXT, {
-        userPrompt,
-      });
+      const response = await axios.post(
+        END_POINTS.OPENAI.GENERATE.TEXT,
+        {
+          userPrompt,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Custom-Header": new Date().toISOString(),
+          },
+        }
+      );
 
       console.log("OpenAiSection:>>>", {
         response,

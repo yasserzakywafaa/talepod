@@ -1,6 +1,6 @@
 import cors from "cors";
 import { Express } from "express";
-import CONFIG from "src/config";
+import CONFIG from "./config";
 
 const corsOptions = {
   origin: (origin: string, callback: Function) => {

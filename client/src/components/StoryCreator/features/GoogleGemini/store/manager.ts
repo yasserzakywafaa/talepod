@@ -57,9 +57,18 @@ export const useGoogleGeminiManager = (
 
   const handleChatRequest = async (userPrompt: string) => {
     try {
-      const chatResponse = await axios.post(END_POINTS.GOOGLE_GEMINI.CHAT, {
-        userPrompt,
-      });
+      const chatResponse = await axios.post(
+        END_POINTS.GOOGLE_GEMINI.CHAT,
+        {
+          userPrompt,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Custom-Header": new Date().toISOString(), // Adding a custom header to trigger preflight
+          },
+        }
+      );
       console.log("GoogleGemini:>>> handleChatRequest:>>> CHAT", {
         chatResponse,
       });
