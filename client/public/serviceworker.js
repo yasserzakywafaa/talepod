@@ -21,6 +21,9 @@ const onInstall = (event) => {
 const onFetch = (event) => {
   const { url } = event.request;
 
+  // Bypass service worker for API requests
+  if (event.request.url.includes("/api/")) return;
+
   if (url.includes(host)) {
     event.respondWith(
       fetch(event.request)
