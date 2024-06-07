@@ -17,14 +17,16 @@ if (CONFIG.IS_DEV) {
   expressApp.use(cors());
 } else {
   const corsOptions = {
-    origin: (origin: string, callback: Function) => {
-      const allowedOrigins = CONFIG.PROD_CLIENT_PUBLIC_URLS.split(", ");
-      if (allowedOrigins.includes(origin) || !origin) {
-        callback(null, true);
-      } else {
-        callback(new Error("❌ Not allowed by CORS"));
-      }
-    },
+    // origin: (origin: string, callback: Function) => {
+    //   const allowedOrigins = CONFIG.PROD_CLIENT_PUBLIC_URLS.split(", ");
+    //   if (allowedOrigins.includes(origin) || !origin) {
+    //     callback(null, true);
+    //   } else {
+    //     console.error(`❌ Not allowed by CORS: ${origin}`);
+    //     callback(new Error("❌ Not allowed by CORS"));
+    //   }
+    // },
+    origin: "http://talepod.com" || "https://talepod.com",
     methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true, // Allow credentials (cookies, authorization headers)
