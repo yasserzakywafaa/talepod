@@ -18,7 +18,8 @@ if (CONFIG.IS_DEV) {
 } else {
   const corsOptions = {
     credentials: false,
-    origin: CONFIG.PROD_CLIENT_PUBLIC_URL,
+    // origin: CONFIG.PROD_CLIENT_PUBLIC_URL,
+    origin: "*",
     methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
     allowedHeaders: ["Content-Type", "Authorization"],
     optionsSuccessStatus: 204, // some legacy browsers (IE11, various SmartTVs) choke on 204
