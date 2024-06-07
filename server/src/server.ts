@@ -16,14 +16,30 @@ const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.PROD_PORT;
 if (CONFIG.IS_DEV) {
   expressApp.use(cors());
 } else {
+  // const corsOptions = {
+  //   credentials: false,
+  //   // origin: CONFIG.PROD_CLIENT_PUBLIC_URL,
+  //   origin: "*",
+  //   methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
+  //   allowedHeaders: ["Content-Type", "Authorization"],
+  //   optionsSuccessStatus: 204, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  // };
+
   const corsOptions = {
-    credentials: false,
-    // origin: CONFIG.PROD_CLIENT_PUBLIC_URL,
-    origin: "*",
+    origin: (origin: string, callback: Function) => {
+      const allowedOrigins = CONFIG.PROD_CLIENT_PUBLIC_URL.split(", ");
+      if (allowedOrigins.includes(origin) || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("❌ Not allowed by CORS"));
+      }
+    },
     methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // Allow credentials (cookies, authorization headers)
     optionsSuccessStatus: 204, // some legacy browsers (IE11, various SmartTVs) choke on 204
   };
+
   expressApp.use(cors(corsOptions));
 }
 
@@ -41,7 +57,7 @@ if (CONFIG.IS_PROD) {
   expressApp.use(express.static(buildPath));
 
   expressApp.get("*", (req, res) => {
-    console.log("<<<: Route path :>>>", {
+    console.log("ℹ️ <<<: Route path :>>>", {
       path: req.path,
     });
 
@@ -53,10 +69,9 @@ if (CONFIG.IS_PROD) {
 databaseInit();
 
 expressApp.listen(PORT, (): void => {
-  console.log("Server running on:>>>", {
+  console.log("☁️ Server running on:>>>", {
     PORT,
     ENVIRONMENT: CONFIG.NODE_ENV,
-    deployPath: path.join(__dirname, "/"),
   });
 });
 
