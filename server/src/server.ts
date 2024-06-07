@@ -34,6 +34,8 @@ if (CONFIG.IS_DEV) {
   };
 
   expressApp.use(cors(corsOptions));
+  // Explicitly handle OPTIONS requests
+  expressApp.options('*', cors(corsOptions));
 }
 
 // Middleware
@@ -50,7 +52,7 @@ if (CONFIG.IS_PROD) {
   expressApp.use(express.static(buildPath));
 
   expressApp.get("*", (req, res) => {
-    console.log("ℹ️ <<<: Route path :>>>", {
+    console.log("☁️ Route path :>>>", {
       path: req.path,
     });
 

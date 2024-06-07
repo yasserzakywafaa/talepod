@@ -43,8 +43,6 @@ const GenerationOptionsForm = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    debugger;
-
     if (userPrompt || autoTextPrompt) {
       handleIsTextGenFetching(true);
       handleGenerateTextRequest(userPrompt || autoTextPrompt);
