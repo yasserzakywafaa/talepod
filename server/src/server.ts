@@ -35,6 +35,9 @@ if (CONFIG.IS_PROD) {
 
     res.sendFile(path.join(buildPath, "index.html"));
   });
+} else {
+  // Load API routes dynamically
+  loadRoutes(expressApp);
 }
 
 // Initiate MongoDB connection
