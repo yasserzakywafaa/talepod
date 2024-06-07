@@ -13,7 +13,18 @@ const expressApp = express();
 const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.PROD_PORT;
 
 // CORS configuration
-expressApp.use(cors());
+if (CONFIG.IS_DEV) {
+  expressApp.use(cors());
+} else {
+  const corsOptions = {
+    credentials: false,
+    origin: CONFIG.PROD_CLIENT_PUBLIC_URL,
+    methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
+    allowedHeaders: ["Content-Type", "Authorization"],
+    optionsSuccessStatus: 204, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  };
+  expressApp.use(cors(corsOptions));
+}
 
 // Middleware
 expressApp.use(express.json());
@@ -28,9 +39,6 @@ if (CONFIG.IS_PROD) {
   const buildPath = path.join(__dirname, "/");
   expressApp.use(express.static(buildPath));
 
-  // Initiate MongoDB connection
-  databaseInit();
-
   expressApp.get("*", (req, res) => {
     console.log("<<<: Route path :>>>", {
       path: req.path,
@@ -40,13 +48,8 @@ if (CONFIG.IS_PROD) {
   });
 }
 
-if (CONFIG.IS_DEV) {
-  // Load API routes dynamically
-  loadRoutes(expressApp);
-
-  // Initiate MongoDB connection
-  databaseInit();
-}
+// Initiate MongoDB connection
+databaseInit();
 
 expressApp.listen(PORT, (): void => {
   console.log("Server running on:>>>", {
