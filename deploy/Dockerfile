@@ -1,52 +1,54 @@
-# Stage 1: Build the front-end
-FROM node:16-alpine as builder
-WORKDIR /talepod
+# Stage 1: Build the frontend
+FROM node:alpine as client-builder
 
-COPY ../client/package.json ../client/yarn.lock ./client/
-RUN cd client && yarn install
+# Set working directory inside the Docker image
+WORKDIR /client
 
-COPY ../client ./client
-RUN cd client && yarn build
+# Copy the client dependencies
+COPY ../client/package.json ../client/yarn.lock ./
+RUN yarn install
 
-# Stage 2: Set up the back-end
-FROM node:16-alpine
-WORKDIR /talepod
+# Copy the rest of the client source code
+COPY ../client ./
+RUN yarn build
 
-COPY ../server/package.json ../server/yarn.lock ./server/
-RUN cd server && yarn install
+# -------------------------------- #
 
-COPY ../server ./server
+# Stage 2: Build the backend
+FROM node:alpine as server-builder
 
-# Copy front-end build files to the back-end for serving static files
-COPY --from=builder /talepod/client/build /talepod/server/client/build
+# Set working directory inside the Docker image
+WORKDIR /server
 
-EXPOSE 4000
-EXPOSE 4001
+# Copy the server dependencies
+COPY ../server/package.json ../server/yarn.lock ../server/.env ./
+RUN yarn install
+
+# Copy the rest of the server source code
+COPY ../server ./
+RUN yarn build
+
+# -------------------------------- #
+
+# Stage 3: Set up the final image
+FROM node:alpine
+
+# Set working directory inside the Docker image
+WORKDIR /talepod-app
+
+# Copy frontend build output to the final image
+COPY --from=client-builder /client/build /talepod-app/build
+
+# Copy backend build output to the final image
+COPY --from=server-builder /server/build /talepod-app/build
+COPY --from=server-builder /server/package.json /talepod-app/
+COPY --from=server-builder /server/.env /talepod-app/
+COPY --from=server-builder /server/yarn.lock /talepod-app/
+COPY --from=server-builder /server/node_modules /talepod-app/node_modules
+
+EXPOSE 4000-4001
 EXPOSE 8080
 
 LABEL maintainer="Yasser Zaky <yasserzakywafaa@gmail.com>"
 
 CMD ["yarn", "start:prod"]
-
-# ENV DIR /talepod
-
-# RUN chown -R node.node /talepod
-
-# # Tell docker that all future commands should run as the appuser user
-# USER node
-
-# LABEL maintainer="Yasser Zaky <yasserzakywafaa@gmail.com>"
-
-# COPY tsconfig.json .
-# COPY package.json .
-# COPY yarn.lock .
-# RUN  yarn install
-# # RUN yarn install --frozen-lockfile
-
-# COPY client/public client/public
-# COPY client/src client/src
-# RUN  yarn build
-
-# COPY server server
-
-# CMD yarn start:prod

@@ -1,6 +1,6 @@
-import cors from "cors";
-import { Express } from "express";
 import CONFIG from "./config";
+import { Express } from "express";
+import cors from "cors";
 
 const corsOptions = {
   origin: (origin: string, callback: Function) => {
@@ -12,13 +12,7 @@ const corsOptions = {
       callback(new Error("❌ Not allowed by CORS"));
     }
   },
-  // origin:
-  //   "http://talepod.com" ||
-  //   "https://talepod.com" ||
-  //   "http://www.talepod.com" ||
-  //   "https://www.talepod.com" ||
-  //   "http://api.talepod.com" ||
-  //   "https://api.talepod.com",
+  // origin: "*",
   methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true, // Allow credentials (cookies, authorization headers)

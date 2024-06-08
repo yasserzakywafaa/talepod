@@ -40,6 +40,13 @@
     │   ├── package.json
     │   ├── tsconfig.json
     │   └── yarn.lock
+    ├── deploy
+    │   ├── .env
+    │   ├── docker-compose.yml
+    │   ├── Dockerfile
+    │   ├── package.json
+    │   ├── yarn.lock
+    │   └── server
     ├── templates
     │   ├── client
     │   └── server

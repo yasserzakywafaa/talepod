@@ -19,10 +19,12 @@
     "build-copy:client--windows": "cd .. && cd client && yarn install && yarn build && cp -r ./build/. ../deploy/",
     "build-copy:server--windows": "cd .. && cd server && yarn install && yarn build && cp -r ./build/. ../deploy/",
     "docker:clean": "docker system prune",
-    "docker:build": "docker build -t talepod:latest .",
-    "docker:run": "docker run -d -it --rm -p 8080:8080 talepod",
-    "docker:compose--local": "docker-compose -f docker-compose.yml up frontend",
-    "docker:compose--prod": "docker-compose -f docker-compose.yml up production"
+    "docker:build": "docker build -t talepod:latest -f Dockerfile ..",
+    "docker:run": "docker run -it --rm -p 8080:8080 --name talepod-container talepod:latest",
+    "docker:run--shell": "docker run -it --rm -p 8080:8080 --name talepod-container talepod:latest /bin/sh",
+    "docker-compose:build": "docker-compose build",
+    "docker:compose--local": "yarn docker-compose:build && docker-compose -f docker-compose.yml up frontend",
+    "docker:compose--prod": "yarn docker-compose:build && docker-compose -f docker-compose.yml up production"
   },
   "dependencies": {
     "@emotion/react": "11.11.4",
