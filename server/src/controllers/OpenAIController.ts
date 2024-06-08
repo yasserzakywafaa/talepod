@@ -24,20 +24,20 @@ export const generateText = async (
       temperature: 0,
     });
 
-    console.log("OpenAIController:>>> GENERATE TEXT", {
+    console.log("ℹ️ OpenAIController:>>> GENERATE TEXT", {
       path: request.path,
       MODEL_NAME: CONFIG.OPENAI_MODEL_NAME,
     });
-    AwsLogger.info("AWS Logger OpenAIController:>>> GENERATE TEXT", {
+    AwsLogger.info("ℹ️ AWS Logger OpenAIController:>>> GENERATE TEXT", {
       path: request.path,
     });
 
     response.json(generateRequest.choices[0].message.content);
   } catch (error) {
-    console.log("OpenAIController:>>> GENERATE TEXT Error", {
+    console.error("❌ OpenAIController:>>> GENERATE TEXT Error", {
       error,
     });
-    AwsLogger.error("OpenAIController:>>> GENERATE TEXT Error", { error });
+    AwsLogger.error("❌ OpenAIController:>>> GENERATE TEXT Error", { error });
     next(error);
   }
 };
@@ -83,7 +83,7 @@ export const generateTextToSpeech = async (
       throw new Error("❌ Failed to upload file to S3");
     }
 
-    console.log("OpenAI:>>> GENERATE TEXT TO SPEECH", {
+    console.log("ℹ️ OpenAI:>>> GENERATE TEXT TO SPEECH", {
       fileUrl,
       writePath: filePath,
       serverFilesPath: SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH,
@@ -95,7 +95,7 @@ export const generateTextToSpeech = async (
       fileName,
     });
   } catch (error) {
-    console.log("❌ OpenAI:>>> GENERATE TEXT TO SPEECH Error", {
+    console.error("❌ OpenAI:>>> GENERATE TEXT TO SPEECH Error", {
       error,
     });
     next(error);
@@ -132,7 +132,7 @@ export const generateImages = async (
       imageUrls.push(imageUrl);
     }
 
-    console.log("OpenAIController:>>> GENERATE IMAGES", {
+    console.log("ℹ️ OpenAIController:>>> GENERATE IMAGES", {
       request,
       // response: imageRequest,
       response: imageUrls,
@@ -141,7 +141,7 @@ export const generateImages = async (
     // response.json(imageRequest.data[0].url);
     response.json(imageUrls);
   } catch (error) {
-    console.log("OpenAIController:>>> GENERATE IMAGES Error", {
+    console.error("❌ OpenAIController:>>> GENERATE IMAGES Error", {
       error,
     });
     next(error);

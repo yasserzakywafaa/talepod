@@ -12,6 +12,8 @@
 **/deploy
 !deploy/package.json
 !deploy/yarn.lock
+!deploy/Dockerfile
+!deploy/docker-compose.yml
 
 # Text-to-speech generated audio files
 /server/assets/audio/textToSpeech

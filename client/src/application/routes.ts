@@ -1,6 +1,8 @@
 const routes = {
   home: `/`,
-  create: `/app/create`,
+  create: `/create`,
+  explore: `/explore`,
+  story: `/story/:id`,
   logout: `/logout`,
   checkout: `/checkout`,
   unauthorized: `/unauthorized`,
