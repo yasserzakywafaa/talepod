@@ -21,7 +21,7 @@ FROM node:alpine as server-builder
 WORKDIR /server
 
 # Copy the server dependencies
-COPY server/package.json server/yarn.lock server/.env ./
+COPY server/package.json server/yarn.lock ./
 RUN yarn install
 
 # Copy the rest of the server source code
@@ -36,13 +36,16 @@ FROM node:alpine as deploy-builder
 # Set working directory inside the Docker image
 WORKDIR /talepod-app
 
+# Copy dependencies
+COPY  .env /talepod-app/
+
 # Copy frontend build output to the final image
 COPY --from=client-builder /client/build /talepod-app/build
 
 # Copy backend build output to the final image
 COPY --from=server-builder /server/build /talepod-app/build
 COPY --from=server-builder /server/package.json /talepod-app/
-COPY --from=server-builder /server/.env /talepod-app/
+# COPY --from=server-builder /server/.env /talepod-app/
 COPY --from=server-builder /server/yarn.lock /talepod-app/
 COPY --from=server-builder /server/node_modules /talepod-app/node_modules
 

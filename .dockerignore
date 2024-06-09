@@ -37,4 +37,4 @@ docker-compose.yml
 .gitlab-ci.yml
 .openshift-dc.patch.yml
 .gitignore
-.env
+# .env
