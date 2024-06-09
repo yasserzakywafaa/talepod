@@ -1,0 +1,24 @@
+services:
+  production:
+    # container_name: talepod-production
+    image: talepod:latest
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    restart: always
+    env_file:
+      - .env
+    command: yarn start:prod
+    working_dir: /talepod-app
+    ports:
+      - 8080:8080
+
+  mongodbatlas:
+    image: mongo:6-jammy
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb:/data/db
+
+volumes:
+  mongodb:
