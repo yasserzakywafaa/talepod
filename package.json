@@ -11,6 +11,7 @@
     "url": "https://gitlab.com/swissai/talepod.git"
   },
   "scripts": {
+    "build:vercel": "cd client && yarn build:vercel && cd ../server && yarn build:vercel",
     "docker:clean": "docker system prune",
     "docker:build": "docker build -t talepod:latest -f Dockerfile .",
     "docker:run": "docker run -it --rm -p 8080:8080 --name talepod-container talepod:latest",

@@ -14,6 +14,7 @@
     "start": "react-scripts start",
     "start:prod": "serve -l 5000 -s build",
     "build": "rimraf build & react-scripts build",
+    "build:vercel": "yarn build && mv build ../build/client",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
