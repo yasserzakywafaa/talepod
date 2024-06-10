@@ -14,11 +14,6 @@
     "start": "react-scripts start",
     "start:prod": "serve -l 5000 -s build",
     "build": "rimraf build & react-scripts build",
-    "docker:clean": "docker system prune",
-    "docker:build": "docker build -t talepod:latest .",
-    "docker:run": "docker run -d -it --rm -p 8080:8080 talepod",
-    "docker:compose--local": "docker-compose -f docker-compose.yml up frontend",
-    "docker:compose--prod": "docker-compose -f docker-compose.yml up production",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
