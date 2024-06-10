@@ -3,7 +3,7 @@
   "buildCommand": "yarn build",
   "builds": [
     {
-      "src": "src/server.ts",
+      "src": "src/server.js",
       "use": "@vercel/node",
       "config": {
         "distDir": "build"
