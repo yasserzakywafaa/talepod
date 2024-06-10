@@ -28,13 +28,14 @@ if (CONFIG.IS_PROD) {
   // const buildPath = path.join(__dirname, "/");
   // expressApp.use(express.static(buildPath));
 
-  // expressApp.get("*", (req, res) => {
-  //   console.log("☁️ Route path :>>>", {
-  //     path: req.path,
-  //   });
+  expressApp.get("*", (req, res) => {
+    console.log("☁️ Route path :>>>", {
+      path: req.path,
+    });
 
-  //   res.sendFile(path.join(buildPath, "index.html"));
-  // });
+    // res.sendFile(path.join(buildPath, "index.html"));
+    res.send("👋🏻  HELLO 'GET' Request 🙋🏻‍♂️ ");
+  });
 } else {
   // Load API routes dynamically
   loadRoutes(expressApp);
