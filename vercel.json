@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "buildCommand": "cd server && yarn build",
   "builds": [
     {
       "src": "server/package.json",
@@ -33,6 +34,5 @@
     "env": {
       "NODE_ENV": "production"
     }
-  },
-  "buildCommand": "cd server && yarn build && cd ../client && yarn build"
+  }
 }
