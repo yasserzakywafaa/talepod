@@ -19,7 +19,6 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "7.21.11",
     "@emotion/react": "11.11.4",
     "@emotion/styled": "11.11.5",
     "@mui/icons-material": "5.15.15",
@@ -44,8 +43,6 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "7.21.11",
-    "@testing-library/react": "15.0.2",
-    "@types/jest": "29.5.12",
     "@types/react-beautiful-dnd": "13.1.2",
     "sass": "1.75.0",
     "serve": "14.2.1",
