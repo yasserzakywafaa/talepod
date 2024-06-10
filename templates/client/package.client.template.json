@@ -38,17 +38,12 @@
     "html-loader-react-scripts": "1.2.1",
     "raw-loader": "4.0.2",
     "react": "18.2.0",
-    "react-beautiful-dnd": "13.1.1",
     "react-dom": "18.2.0",
     "react-router-dom": "6.22.3",
     "react-scripts": "5.0.1",
     "react-toastify": "10.0.5"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "7.21.11",
-    "@testing-library/react": "15.0.2",
-    "@types/jest": "29.5.12",
-    "@types/react-beautiful-dnd": "13.1.2",
     "sass": "1.75.0",
     "serve": "14.2.1",
     "typescript": "5.4.5"
