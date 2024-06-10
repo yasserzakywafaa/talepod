@@ -12,7 +12,9 @@
   },
   "scripts": {
     "start": "yarn install && node server.js",
-    "build": "yarn build-copy:client && yarn build-copy:server && yarn start",
+    "start:vercel": "node build/server.js",
+    "build": "yarn build-copy:client && yarn build-copy:server",
+    "build:vercel": "yarn build-copy:client && yarn build-copy:server && yarn start:vercel",
     "build-copy:client": "cd .. && cd client && yarn install --production && yarn build && cp -r ./build/ ../deploy/",
     "build-copy:server": "cd .. && cd server && yarn install --production && yarn build && cp -r ./build/ ../deploy/",
     "build--windows": "yarn build-copy:client--windows && yarn build-copy:server--windows",
