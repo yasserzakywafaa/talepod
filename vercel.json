@@ -9,7 +9,7 @@
       }
     },
     {
-      "src": "server/src/server.ts",
+      "src": "server/package.json",
       "use": "@vercel/node",
       "config": {
         "distDir": "build"
@@ -19,7 +19,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/server/src/server.ts"
+      "dest": "/build/server.js"
     },
     {
       "src": "/(.*)",
