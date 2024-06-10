@@ -2,9 +2,9 @@ import CONFIG from "./config";
 import bodyParser from "body-parser";
 import { databaseInit } from "./models/mongoDb";
 import express from "express";
+import handleCorsConfig from "./cors-config";
 import loadRoutes from "./routes";
 import path from "path";
-import handleCorsConfig from "./cors-config";
 // import googleGeminiRoutes from "./routes/googleGeminiRoutes";
 // import openaiRoutes from "./routes/openaiRoutes";
 // import testRoutes from "./routes/testRoutes";
@@ -24,17 +24,17 @@ if (CONFIG.IS_PROD) {
   // Load API routes dynamically
   loadRoutes(expressApp);
 
-  // Serve Frontend Bundled Application
-  const buildPath = path.join(__dirname, "/");
-  expressApp.use(express.static(buildPath));
+  // // Serve Frontend Bundled Application
+  // const buildPath = path.join(__dirname, "/");
+  // expressApp.use(express.static(buildPath));
 
-  expressApp.get("*", (req, res) => {
-    console.log("☁️ Route path :>>>", {
-      path: req.path,
-    });
+  // expressApp.get("*", (req, res) => {
+  //   console.log("☁️ Route path :>>>", {
+  //     path: req.path,
+  //   });
 
-    res.sendFile(path.join(buildPath, "index.html"));
-  });
+  //   res.sendFile(path.join(buildPath, "index.html"));
+  // });
 } else {
   // Load API routes dynamically
   loadRoutes(expressApp);
