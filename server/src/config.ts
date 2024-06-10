@@ -14,7 +14,7 @@ const CONFIG = {
     process.env.NODE_ENV && process.env.NODE_ENV.indexOf("production") > -1,
   FRONTEND_DEV_PATH: path.resolve("../client/public"),
   FRONTEND_BUILD_PATH: path.resolve("../client/build"),
-
+  SERVE_STATIC_CONTENT: process.env.SERVE_STATIC_CONTENT,
   PROD_CLIENT_PUBLIC_URLS: process.env.PROD_CLIENT_PUBLIC_URLS,
 
   // Assets

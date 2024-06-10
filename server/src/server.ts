@@ -20,26 +20,26 @@ expressApp.use(express.json());
 expressApp.use(bodyParser.json());
 expressApp.use(express.urlencoded({ extended: true }));
 
-// if (CONFIG.IS_PROD) {
-// Load API routes dynamically
-loadRoutes(expressApp);
+if (CONFIG.SERVE_STATIC_CONTENT) {
+  // Load API routes dynamically
+  loadRoutes(expressApp);
 
-// // Serve Frontend Bundled Application
-// const buildPath = path.join(__dirname, "/");
-// expressApp.use(express.static(buildPath));
+  // // Serve Frontend Bundled Application
+  // const buildPath = path.join(__dirname, "/");
+  // expressApp.use(express.static(buildPath));
 
-expressApp.get("*", (req, res) => {
-  console.log("☁️ Route path :>>>", {
-    path: req.path,
+  expressApp.get("*", (req, res) => {
+    console.log("☁️ Route path :>>>", {
+      path: req.path,
+    });
+
+    // res.sendFile(path.join(buildPath, "index.html"));
+    res.send("👋🏻  HELLO 'GET' Request 🙋🏻‍♂️ ");
   });
-
-  // res.sendFile(path.join(buildPath, "index.html"));
-  res.send("👋🏻  HELLO 'GET' Request 🙋🏻‍♂️ ");
-});
-// } else {
-//   // Load API routes dynamically
-//   loadRoutes(expressApp);
-// }
+} else {
+  // Load API routes dynamically
+  loadRoutes(expressApp);
+}
 
 // Initiate MongoDB connection
 databaseInit();
