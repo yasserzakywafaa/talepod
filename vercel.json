@@ -25,5 +25,22 @@
       "src": "/(.*)",
       "dest": "/build/index.html"
     }
-  ]
+  ],
+  "functions": {
+    "api/index.js": {
+      "runtime": "nodejs14.x",
+      "maxDuration": 10,
+      "memory": 512,
+      "includeFiles": "server/build/**"
+    }
+  },
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    }
+  },
+  "buildCommand": "yarn build && yarn start:prod"
 }
