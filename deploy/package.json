@@ -41,8 +41,6 @@
     "react-scripts": "5.0.1",
     "react-toastify": "10.0.5",
     "typescript": "5.4.5",
-    "@aws-sdk/client-cloudwatch": "^3.590.0",
-    "@aws-sdk/client-cloudwatch-logs": "^3.590.0",
     "@aws-sdk/client-s3": "^3.591.0",
     "@aws-sdk/credential-provider-node": "^3.590.0",
     "@google/generative-ai": "0.6.0",
@@ -54,9 +52,7 @@
     "nodemon": "2.0.19",
     "openai": "4.47.1",
     "path": "0.12.7",
-    "tslib": "2.6.2",
-    "winston": "3.13.0",
-    "winston-cloudwatch": "6.3.0"
+    "tslib": "2.6.2"
   },
   "devDependencies": {
     "sass": "1.75.0",
