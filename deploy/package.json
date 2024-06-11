@@ -11,21 +11,13 @@
     "url": "https://gitlab.com/yasserzakywafaa/talepod.git"
   },
   "scripts": {
-    "start": "yarn install && node server.js",
+    "start": "node server.js",
     "build": "yarn build-copy:client && yarn build-copy:server",
-    "build:vercel": "yarn build-copy:client && yarn build-copy:server && node server.js",
     "build-copy:client": "cd .. && cd client && yarn install --production && yarn build && cp -r ./build/ ../deploy/client/",
     "build-copy:server": "cd .. && cd server && yarn install --production && yarn build && cp -r ./build/ ../deploy/",
     "build--windows": "yarn build-copy:client--windows && yarn build-copy:server--windows",
     "build-copy:client--windows": "cd .. && cd client && yarn install && yarn build && cp -r ./build/. ../deploy/",
-    "build-copy:server--windows": "cd .. && cd server && yarn install && yarn build && cp -r ./build/. ../deploy/",
-    "docker:clean": "docker system prune",
-    "docker:build": "docker build -t talepod:latest -f Dockerfile ..",
-    "docker:run": "docker run -it --rm -p 8080:8080 --name talepod-container talepod:latest",
-    "docker:run--shell": "docker run -it --rm -p 8080:8080 --name talepod-container talepod:latest /bin/sh",
-    "docker-compose:build": "docker-compose build",
-    "docker:compose--local": "yarn docker-compose:build && docker-compose -f docker-compose.yml up frontend",
-    "docker:compose--prod": "yarn docker-compose:build && docker-compose -f docker-compose.yml up production"
+    "build-copy:server--windows": "cd .. && cd server && yarn install && yarn build && cp -r ./build/. ../deploy/"
   },
   "dependencies": {
     "@emotion/react": "11.11.4",
