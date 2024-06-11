@@ -1,5 +1,4 @@
 *
 !deploy/package.json
+!deploy/package[old].json
 !deploy/yarn.lock
-!deploy/Dockerfile
-!deploy/docker-compose.yml
