@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 
-import AwsLogger from "../aws-logger";
 import CONFIG from "../config";
 import { IMAGES_SIZES } from "../models/openaiModel";
 import OpenAi from "openai";
@@ -28,16 +27,12 @@ export const generateText = async (
       path: request.path,
       MODEL_NAME: CONFIG.OPENAI_MODEL_NAME,
     });
-    AwsLogger.info("ℹ️ AWS Logger OpenAIController:>>> GENERATE TEXT", {
-      path: request.path,
-    });
 
     response.json(generateRequest.choices[0].message.content);
   } catch (error) {
     console.error("❌ OpenAIController:>>> GENERATE TEXT Error", {
       error,
     });
-    AwsLogger.error("❌ OpenAIController:>>> GENERATE TEXT Error", { error });
     next(error);
   }
 };

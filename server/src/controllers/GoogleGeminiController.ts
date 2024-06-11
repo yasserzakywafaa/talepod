@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 
-import AwsLogger from "../aws-logger";
 import CONFIG from "../config";
 import { GoogleGenerativeAI } from "@google/generative-ai"; // node --version # Should be >= 18
 import { requestParams } from "../models/googleGeminiModel";
@@ -16,8 +15,6 @@ export const generateText = async (
 ) => {
   const userPrompt = request.body.userPrompt;
 
-  AwsLogger.info("API request received", { userPrompt });
-
   try {
     const generateRequest = await genAiModel.generateContent(userPrompt);
     const generateResponseText = generateRequest.response.text();
@@ -26,16 +23,11 @@ export const generateText = async (
       path: request.path,
       MODEL_NAME: CONFIG.GOOGLE_GEMINI_MODEL_NAME,
     });
-    AwsLogger.info("ℹ️ AWS Logger GoogleGemini:>>> GENERATE", {
-      path: request.path,
-      MODEL_NAME: CONFIG.GOOGLE_GEMINI_MODEL_NAME,
-    });
     response.json(generateResponseText);
   } catch (error) {
     console.error("❌ GoogleGeminiController:>>> GENERATE Error", {
       error,
     });
-    AwsLogger.error("❌ GoogleGemini:>>> GENERATE Error", { error });
     next(error);
   }
 };

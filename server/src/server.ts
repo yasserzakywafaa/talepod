@@ -24,17 +24,19 @@ if (CONFIG.SERVE_STATIC_CONTENT) {
   // Load API routes dynamically
   loadRoutes(expressApp);
 
-  // // Serve Frontend Bundled Application
-  // const buildPath = path.join(__dirname, "/");
-  // expressApp.use(express.static(buildPath));
+  // Serve Frontend Bundled Application
+  const buildPath = path.join(__dirname, "/client/");
+  expressApp.use(express.static(buildPath));
 
   expressApp.get("*", (req, res) => {
     console.log("☁️ Route path :>>>", {
       path: req.path,
+      buildPath,
+      sendFile: path.join(buildPath, "index.html"),
     });
 
-    // res.sendFile(path.join(buildPath, "index.html"));
-    res.send("👋🏻  HELLO 'GET' Request 🙋🏻‍♂️ ");
+    res.sendFile(path.join(buildPath, "index.html"));
+    // res.send("👋🏻  HELLO 'GET' Request 🙋🏻‍♂️ ");
   });
 } else {
   // Load API routes dynamically
