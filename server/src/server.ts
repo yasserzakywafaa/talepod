@@ -10,7 +10,7 @@ import path from "path";
 // import testRoutes from "./routes/testRoutes";
 
 const expressApp = express();
-const buildPath = path.join(__dirname, "./client/");
+const buildPath = path.join(__dirname, "../client/");
 const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.PROD_PORT;
 
 // CORS configuration
