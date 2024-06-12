@@ -10,6 +10,7 @@ import path from "path";
 // import testRoutes from "./routes/testRoutes";
 
 const expressApp = express();
+const buildPath = path.join(__dirname, "/client/");
 const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.PROD_PORT;
 
 // CORS configuration
@@ -25,7 +26,6 @@ if (CONFIG.SERVE_STATIC_CONTENT) {
   loadRoutes(expressApp);
 
   // Serve Frontend Bundled Application
-  const buildPath = path.join(__dirname, "/client/");
   expressApp.use(express.static(buildPath));
 
   expressApp.get("*", (req, res) => {
@@ -49,6 +49,7 @@ databaseInit();
 expressApp.listen(PORT, (): void => {
   console.log("☁️ Server running on:>>>", {
     PORT,
+    buildPath,
     ENVIRONMENT: CONFIG.NODE_ENV,
   });
 });
