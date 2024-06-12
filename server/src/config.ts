@@ -5,7 +5,7 @@ dotenv.config();
 
 const CONFIG = {
   DEV_PORT: process.env.DEV_PORT,
-  PROD_PORT: process.env.PROD_PORT,
+  PORT: process.env.PORT,
   NODE_ENV: process.env.NODE_ENV,
   DISABLE_HOT_RELOAD: process.env.REACT_APP_DISABLE_LIVE_RELOAD,
   IS_DEV:
