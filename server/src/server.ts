@@ -10,7 +10,7 @@ import path from "path";
 // import testRoutes from "./routes/testRoutes";
 
 const expressApp = express();
-const buildPath = path.join(__dirname, "/client/");
+const buildPath = path.join(__dirname, "../client/");
 const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.PROD_PORT;
 
 // CORS configuration
@@ -35,8 +35,8 @@ if (CONFIG.SERVE_STATIC_CONTENT) {
       sendFile: path.join(buildPath, "index.html"),
     });
 
-    res.sendFile(path.join(buildPath, "index.html"));
-    // res.send("👋🏻  HELLO 'GET' Request 🙋🏻‍♂️ ");
+    // res.sendFile(path.join(buildPath, "index.html"));
+    res.send("👋🏻  HELLO 'GET' Request 🙋🏻‍♂️ ");
   });
 } else {
   // Load API routes dynamically
