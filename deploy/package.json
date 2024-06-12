@@ -16,7 +16,7 @@
     "build-copy:server": "cd .. && cd server && yarn install --production && yarn build && cp -r ./build/. ../deploy/",
     "build-copy:client": "cd .. && cd client && yarn install --production && yarn build && cp -r ./build/. ../deploy/client",
     "build--windows": "yarn build-copy:client--windows && yarn build-copy:server--windows",
-    "build-copy:server--windows": "cd .. && cd server && yarn install && yarn build && cp -r ./build/. ../deploy/server/",
+    "build-copy:server--windows": "cd .. && cd server && yarn install && yarn build && cp -r ./build/. ../deploy/",
     "build-copy:client--windows": "cd .. && cd client && yarn install && yarn build && cp -r ./build/. ../deploy/client/"
   },
   "dependencies": {
@@ -32,7 +32,27 @@
     "openai": "4.47.1",
     "path": "0.12.7",
     "tslib": "2.6.2",
-    "typescript": "5.4.5"
+    "typescript": "5.4.5",
+    "@emotion/react": "11.11.4",
+    "@emotion/styled": "11.11.5",
+    "@mui/icons-material": "5.15.15",
+    "@mui/material": "5.15.15",
+    "@mui/styles": "5.15.15",
+    "@react-oauth/google": "^0.12.1",
+    "@tinymce/tinymce-react": "5.0.1",
+    "@types/pouchdb": "6.4.0",
+    "@types/react": "18.2.25",
+    "@types/react-dom": "18.2.25",
+    "@types/react-router-dom": "5.3.3",
+    "axios": "1.6.8",
+    "classnames": "2.5.1",
+    "html-loader-react-scripts": "1.2.1",
+    "raw-loader": "4.0.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-router-dom": "6.22.3",
+    "react-scripts": "5.0.1",
+    "react-toastify": "10.0.5"
   },
   "devDependencies": {},
   "peerDependencies": {}
