@@ -5,9 +5,6 @@ import express from "express";
 import handleCorsConfig from "./cors-config";
 import loadRoutes from "./routes";
 import path from "path";
-// import googleGeminiRoutes from "./routes/googleGeminiRoutes";
-// import openaiRoutes from "./routes/openaiRoutes";
-// import testRoutes from "./routes/testRoutes";
 
 const expressApp = express();
 const buildPath = path.join(__dirname, "../client/");
@@ -21,7 +18,7 @@ expressApp.use(express.json());
 expressApp.use(bodyParser.json());
 expressApp.use(express.urlencoded({ extended: true }));
 
-if (CONFIG.SERVE_STATIC_CONTENT) {
+if (CONFIG.SERVE_STATIC_CONTENT === "true") {
   // Load API routes dynamically
   loadRoutes(expressApp);
 
@@ -29,9 +26,10 @@ if (CONFIG.SERVE_STATIC_CONTENT) {
   expressApp.use(express.static(buildPath));
 
   expressApp.get("*", (req, res) => {
-    console.log("☁️ Route path :>>>", {
-      path: req.path,
+    console.log("🎯 Route path :>>>", {
+      SERVE_STATIC_CONTENT: CONFIG.SERVE_STATIC_CONTENT,
       buildPath,
+      path: req.path,
       sendFile: path.join(buildPath, "index.html"),
     });
 
@@ -46,10 +44,9 @@ if (CONFIG.SERVE_STATIC_CONTENT) {
 // Initiate MongoDB connection
 databaseInit();
 
-expressApp.listen(PORT || 1607, (): void => {
+expressApp.listen(PORT || 8080, (): void => {
   console.log("☁️ Server running on:>>>", {
     PORT,
-    buildPath,
     ENVIRONMENT: CONFIG.NODE_ENV,
   });
 });
