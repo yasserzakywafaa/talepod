@@ -8,7 +8,24 @@ import path from "path";
 
 const expressApp = express();
 const buildPath = path.join(__dirname, "../client/");
-const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.PORT;
+// const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.STAG_PORT;
+
+const getPort = (): string => {
+  switch (true) {
+    case CONFIG.IS_DEV:
+      return CONFIG.DEV_PORT;
+
+    case CONFIG.IS_STAG:
+      return CONFIG.STAG_PORT;
+
+    case CONFIG.IS_PROD:
+      return CONFIG.PROD_PORT;
+
+    default:
+      return "8000";
+  }
+};
+const PORT = getPort();
 
 // CORS configuration
 handleCorsConfig(expressApp);
@@ -44,7 +61,7 @@ if (CONFIG.SERVE_STATIC_CONTENT === "true") {
 // Initiate MongoDB connection
 databaseInit();
 
-expressApp.listen(PORT || 8080, (): void => {
+expressApp.listen(PORT, (): void => {
   console.log("☁️ Server running on:>>>", {
     PORT,
     ENVIRONMENT: CONFIG.NODE_ENV,

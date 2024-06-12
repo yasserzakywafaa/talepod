@@ -5,11 +5,14 @@ dotenv.config();
 
 const CONFIG = {
   DEV_PORT: process.env.DEV_PORT,
-  PORT: process.env.PORT,
+  STAG_PORT: process.env.STAG_PORT,
+  PROD_PORT: process.env.PROD_PORT,
   NODE_ENV: process.env.NODE_ENV,
   DISABLE_HOT_RELOAD: process.env.REACT_APP_DISABLE_LIVE_RELOAD,
   IS_DEV:
     process.env.NODE_ENV && process.env.NODE_ENV.indexOf("development") > -1,
+  IS_STAG:
+    process.env.NODE_ENV && process.env.NODE_ENV.indexOf("staging") > -1,
   IS_PROD:
     process.env.NODE_ENV && process.env.NODE_ENV.indexOf("production") > -1,
   FRONTEND_DEV_PATH: path.resolve("../client/public"),
