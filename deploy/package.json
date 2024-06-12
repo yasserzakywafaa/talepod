@@ -14,10 +14,10 @@
     "start": "node server/server.js",
     "build": "yarn build-copy:server",
     "build-copy:client": "cd .. && cd client && yarn install --production && yarn build && cp -r ./build/ ../deploy/client",
-    "build-copy:server": "cd .. && cd server && yarn install --production && yarn build && cp -r ./build/ ../deploy/sever",
+    "build-copy:server": "cd .. && cd server && yarn install --production && yarn build && cp -r ./build/ ../deploy/server",
     "build--windows": "yarn build-copy:client--windows && yarn build-copy:server--windows",
     "build-copy:client--windows": "cd .. && cd client && yarn install && yarn build && cp -r ./build/. ../deploy/client/",
-    "build-copy:server--windows": "cd .. && cd server && yarn install && yarn build && cp -r ./build/. ../deploy/sever/"
+    "build-copy:server--windows": "cd .. && cd server && yarn install && yarn build && cp -r ./build/. ../deploy/server/"
   },
   "dependencies": {},
   "devDependencies": {},
