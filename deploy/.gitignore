@@ -2,3 +2,4 @@
 !deploy/package.json
 !deploy/package[old].json
 !deploy/yarn.lock
+!deploy/vercel.json
