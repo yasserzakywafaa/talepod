@@ -11,10 +11,10 @@
     "url": "https://gitlab.com/yasserzakywafaa/talepod.git"
   },
   "scripts": {
-    "start": "node ./server.js",
+    "start": "node server.js",
     "build": "yarn build-copy:server && yarn build-copy:client",
-    "build-copy:server": "cd .. && cd server && yarn install --production && yarn build && cp -r ./build/ ../deploy/",
-    "build-copy:client": "cd .. && cd client && yarn install --production && yarn build && cp -r ./build/ ../deploy/client",
+    "build-copy:server": "cd .. && cd server && yarn install --production && yarn build && cp -r ./build/. ../deploy/",
+    "build-copy:client": "cd .. && cd client && yarn install --production && yarn build && cp -r ./build/. ../deploy/client",
     "build--windows": "yarn build-copy:client--windows && yarn build-copy:server--windows",
     "build-copy:server--windows": "cd .. && cd server && yarn install && yarn build && cp -r ./build/. ../deploy/server/",
     "build-copy:client--windows": "cd .. && cd client && yarn install && yarn build && cp -r ./build/. ../deploy/client/"
