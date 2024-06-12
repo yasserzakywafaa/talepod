@@ -21,38 +21,27 @@ expressApp.use(express.json());
 expressApp.use(bodyParser.json());
 expressApp.use(express.urlencoded({ extended: true }));
 
-expressApp.get("*", (req, res) => {
-  console.log("☁️ Route path :>>>", {
-    path: req.path,
-    buildPath,
-    sendFile: path.join(buildPath, "index.html"),
+if (CONFIG.SERVE_STATIC_CONTENT) {
+  // Load API routes dynamically
+  loadRoutes(expressApp);
+
+  // Serve Frontend Bundled Application
+  expressApp.use(express.static(buildPath));
+
+  expressApp.get("*", (req, res) => {
+    console.log("☁️ Route path :>>>", {
+      path: req.path,
+      buildPath,
+      sendFile: path.join(buildPath, "index.html"),
+    });
+
+    res.sendFile(path.join(buildPath, "index.html"));
+    // res.send("👋🏻  HELLO 'GET' Request 🙋🏻‍♂️ ");
   });
-
-  // res.sendFile(path.join(buildPath, "index.html"));
-  res.send("👋🏻  HELLO 'GET' Request 🙋🏻‍♂️ ");
-});
-
-// if (CONFIG.SERVE_STATIC_CONTENT) {
-//   // Load API routes dynamically
-//   loadRoutes(expressApp);
-
-//   // Serve Frontend Bundled Application
-//   expressApp.use(express.static(buildPath));
-
-//   expressApp.get("*", (req, res) => {
-//     console.log("☁️ Route path :>>>", {
-//       path: req.path,
-//       buildPath,
-//       sendFile: path.join(buildPath, "index.html"),
-//     });
-
-//     // res.sendFile(path.join(buildPath, "index.html"));
-//     res.send("👋🏻  HELLO 'GET' Request 🙋🏻‍♂️ ");
-//   });
-// } else {
-//   // Load API routes dynamically
-//   loadRoutes(expressApp);
-// }
+} else {
+  // Load API routes dynamically
+  loadRoutes(expressApp);
+}
 
 // Initiate MongoDB connection
 databaseInit();
