@@ -1,10 +1,11 @@
 import { useMatch, useNavigate } from "react-router-dom";
 
 import AppBar from "@mui/material/AppBar";
+import BackButton from "./BackButton";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import Divider from "@mui/material/Divider";
+// import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
 import Logo from "src/components/shared/Logo/Logo";
@@ -17,13 +18,14 @@ import Typography from "@mui/material/Typography";
 import routes from "src/application/routes";
 import { scrollToSection } from "src/shared/utils/scrollToSection";
 import { useApplicationContext } from "src/application/store/Provider";
-import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
-import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
+import useDeviceSize from "src/shared/hooks/useDeviceSize";
+// import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
+// import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useState } from "react";
 
 const ApplicationBar = () => {
   const navigate = useNavigate();
-
+  const { isDesktop, isTablet, isMobile } = useDeviceSize();
   const {
     store: {
       state: { themeMode },
@@ -31,19 +33,20 @@ const ApplicationBar = () => {
     },
   } = useApplicationContext();
 
-  const {
-    store: { handleToggleLoginModal },
-  } = useLoginModalContext();
+  // const {
+  //   store: { handleToggleLoginModal },
+  // } = useLoginModalContext();
 
-  const {
-    store: { handleToggleRegisterModal },
-  } = useRegisterModalContext();
+  // const {
+  //   store: { handleToggleRegisterModal },
+  // } = useRegisterModalContext();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Add all the pages the will contain the AppBar
   const pagesMatch = {
     isHomePage: !!useMatch(routes.home),
+    isCreatePage: !!useMatch(routes.create),
     isCheckoutPage: !!useMatch(routes.checkout),
     isUnauthorizedPage: !!useMatch(routes.unauthorized),
   };
@@ -57,6 +60,8 @@ const ApplicationBar = () => {
     scrollToSection(sectionId);
     setIsDrawerOpen(false);
   };
+
+  const handleOnBackClick = () => navigate(-1);
 
   const handleOnLogoClick = () => navigate(routes.home);
 
@@ -81,50 +86,57 @@ const ApplicationBar = () => {
                 justifyContent: "space-between",
                 flexShrink: 0,
                 borderRadius: "4px",
-                bgcolor:
-                  themeMode === "light"
-                    ? "rgba(255, 255, 255, 0.4)"
-                    : "rgba(0, 0, 0, 0.4)",
+                // bgcolor:
+                //   themeMode === "light"
+                //     ? "rgba(255, 255, 255, 0.4)"
+                //     : "rgba(0, 0, 0, 0.4)",
                 backdropFilter: "blur(24px)",
                 maxHeight: 40,
-                border: "1px solid",
+                // border: "1px solid",
                 borderColor: "divider",
-                boxShadow:
+                // boxShadow:
+                //   themeMode === "light"
+                //     ? `0 0 1px rgba(85, 166, 246, 0.1), 1px 1.5px 2px -1px rgba(85, 166, 246, 0.15), 4px 4px 12px -2.5px rgba(85, 166, 246, 0.15)`
+                //     : "0 0 1px rgba(2, 31, 59, 0.7), 1px 1.5px 2px -1px rgba(2, 31, 59, 0.65), 4px 4px 12px -2.5px rgba(2, 31, 59, 0.65)",
+                boxShadow: (theme) =>
                   themeMode === "light"
-                    ? `0 0 1px rgba(85, 166, 246, 0.1), 1px 1.5px 2px -1px rgba(85, 166, 246, 0.15), 4px 4px 12px -2.5px rgba(85, 166, 246, 0.15)`
-                    : "0 0 1px rgba(2, 31, 59, 0.7), 1px 1.5px 2px -1px rgba(2, 31, 59, 0.65), 4px 4px 12px -2.5px rgba(2, 31, 59, 0.65)",
+                    ? // ? `0 0 1px ${theme.palette.primary[400]}, 1px 1.5px 2px -1px ${theme.palette.primary[400]}, 4px 4px 12px -2.5px ${theme.palette.primary[400]}`
+                      `0 0 1px ${theme.palette.primary.light}`
+                    : `0 0 1px ${theme.palette.primary.dark}`,
               }}
             >
-              <Box
-                sx={{
-                  flexGrow: 1,
-                  display: "flex",
-                  alignItems: "center",
-                  ml: "-18px",
-                  px: 0,
-                }}
-              >
-                <Button
-                  color="primary"
-                  variant="text"
-                  size="small"
-                  component="button"
-                  onClick={handleOnLogoClick}
-                >
-                  <Logo />
-                </Button>
-
-                <Box sx={{ display: { xs: "none", md: "flex" } }}>
-                  <MenuItem
-                    onClick={handleOnMenuItemClick("features")}
-                    sx={{ py: "6px", px: "12px" }}
+              {isDesktop && (
+                <>
+                  <Box
+                    sx={{
+                      flexGrow: 1,
+                      display: "flex",
+                      alignItems: "center",
+                      ml: "-18px",
+                      px: 0,
+                    }}
                   >
-                    <Typography variant="body2" color="text.primary">
-                      Features
-                    </Typography>
-                  </MenuItem>
+                    <Button
+                      color="primary"
+                      variant="text"
+                      size="small"
+                      component="button"
+                      onClick={handleOnLogoClick}
+                    >
+                      <Logo />
+                    </Button>
 
-                  {/* 
+                    <Box sx={{ display: { xs: "none", md: "flex" } }}>
+                      <MenuItem
+                        onClick={handleOnMenuItemClick("features")}
+                        sx={{ py: "6px", px: "12px" }}
+                      >
+                        <Typography variant="body2" color="text.primary">
+                          Features
+                        </Typography>
+                      </MenuItem>
+
+                      {/* 
                   <MenuItem
                     onClick={handleOnMenuItemClick("testimonials")}
                     sx={{ py: "6px", px: "12px" }}
@@ -134,7 +146,7 @@ const ApplicationBar = () => {
                     </Typography>
                   </MenuItem> */}
 
-                  {/* <MenuItem
+                      {/* <MenuItem
                     onClick={handleOnMenuItemClick("highlights")}
                     sx={{ py: "6px", px: "12px" }}
                   >
@@ -143,144 +155,172 @@ const ApplicationBar = () => {
                     </Typography>
                   </MenuItem> */}
 
-                  <MenuItem
-                    onClick={handleOnMenuItemClick("pricing")}
-                    sx={{ py: "6px", px: "12px" }}
-                  >
-                    <Typography variant="body2" color="text.primary">
-                      Pricing
-                    </Typography>
-                  </MenuItem>
+                      <MenuItem
+                        onClick={handleOnMenuItemClick("pricing")}
+                        sx={{ py: "6px", px: "12px" }}
+                      >
+                        <Typography variant="body2" color="text.primary">
+                          Pricing
+                        </Typography>
+                      </MenuItem>
 
-                  <MenuItem
-                    onClick={handleOnMenuItemClick("faq")}
-                    sx={{ py: "6px", px: "12px" }}
-                  >
-                    <Typography variant="body2" color="text.primary">
-                      FAQ
-                    </Typography>
-                  </MenuItem>
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  display: { xs: "none", md: "flex" },
-                  gap: 0.5,
-                  alignItems: "center",
-                }}
-              >
-                <ToggleColorMode
-                  mode={themeMode}
-                  toggleColorMode={toggleThemeMode}
-                />
-                <Button
-                  color="primary"
-                  variant="text"
-                  size="small"
-                  component="button"
-                  onClick={handleToggleLoginModal}
-                >
-                  Log in
-                </Button>
+                      <MenuItem
+                        onClick={handleOnMenuItemClick("faq")}
+                        sx={{ py: "6px", px: "12px" }}
+                      >
+                        <Typography variant="body2" color="text.primary">
+                          FAQ
+                        </Typography>
+                      </MenuItem>
+                    </Box>
+                  </Box>
 
-                <Button
-                  size="small"
-                  color="primary"
-                  variant="contained"
-                  component="button"
-                  onClick={handleToggleRegisterModal}
-                >
-                  Register
-                </Button>
-              </Box>
-
-              {/* Mobile */}
-              <Box sx={{ display: { sm: "", md: "none" } }}>
-                <Button
-                  variant="text"
-                  color="primary"
-                  aria-label="menu"
-                  onClick={toggleDrawer(true)}
-                  sx={{ minWidth: "30px", p: "4px" }}
-                >
-                  <MenuIcon />
-                </Button>
-
-                <Drawer
-                  anchor="right"
-                  open={isDrawerOpen}
-                  onClose={toggleDrawer(false)}
-                >
                   <Box
                     sx={{
-                      minWidth: "60dvw",
-                      p: 2,
-                      backgroundColor: "background.paper",
-                      flexGrow: 1,
+                      display: { xs: "none", md: "flex" },
+                      gap: 0.5,
+                      alignItems: "center",
                     }}
                   >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "end",
-                        flexGrow: 1,
-                      }}
+                    <ToggleColorMode
+                      mode={themeMode}
+                      toggleColorMode={toggleThemeMode}
+                    />
+                    {/* <Button
+                      color="primary"
+                      variant="text"
+                      size="small"
+                      component="button"
+                      onClick={handleToggleLoginModal}
                     >
-                      <ToggleColorMode
-                        mode={themeMode}
-                        toggleColorMode={toggleThemeMode}
-                      />
-                    </Box>
+                      Log in
+                    </Button>
 
-                    <MenuItem onClick={handleOnMenuItemClick("features")}>
-                      Features
-                    </MenuItem>
+                    <Button
+                      size="small"
+                      color="primary"
+                      variant="contained"
+                      component="button"
+                      onClick={handleToggleRegisterModal}
+                    >
+                      Register
+                    </Button> */}
+                  </Box>
+                </>
+              )}
 
-                    {/* <MenuItem onClick={handleOnMenuItemClick("testimonials")}>
+              {/* Mobile */}
+              {isTablet ||
+                (isMobile && !isDesktop && (
+                  <Box
+                    display="flex"
+                    component="div"
+                    flexDirection="row"
+                    justifyContent="space-between"
+                    width="100%"
+                  >
+                    {!pagesMatch.isHomePage && (
+                      <BackButton onClick={handleOnBackClick} />
+                    )}
+
+                    {pagesMatch.isHomePage && (
+                      <Button
+                        color="primary"
+                        variant="text"
+                        size="small"
+                        component="button"
+                        onClick={handleOnLogoClick}
+                      >
+                        <Logo />
+                      </Button>
+                    )}
+
+                    <Button
+                      variant="text"
+                      color="primary"
+                      aria-label="menu"
+                      onClick={toggleDrawer(true)}
+                      sx={{ minWidth: "30px", p: "4px" }}
+                    >
+                      <MenuIcon />
+                    </Button>
+
+                    <Drawer
+                      anchor="right"
+                      open={isDrawerOpen}
+                      onClose={toggleDrawer(false)}
+                    >
+                      <Box
+                        sx={{
+                          minWidth: "60dvw",
+                          p: 2,
+                          backgroundColor: "background.paper",
+                          flexGrow: 1,
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "end",
+                            flexGrow: 1,
+                          }}
+                        >
+                          <ToggleColorMode
+                            mode={themeMode}
+                            toggleColorMode={toggleThemeMode}
+                          />
+                        </Box>
+
+                        <MenuItem onClick={handleOnMenuItemClick("features")}>
+                          Features
+                        </MenuItem>
+
+                        {/* <MenuItem onClick={handleOnMenuItemClick("testimonials")}>
                       Testimonials
                     </MenuItem> */}
 
-                    {/* <MenuItem onClick={handleOnMenuItemClick("highlights")}>
+                        {/* <MenuItem onClick={handleOnMenuItemClick("highlights")}>
                       Highlights
                     </MenuItem> */}
 
-                    <MenuItem onClick={handleOnMenuItemClick("pricing")}>
-                      Pricing
-                    </MenuItem>
+                        <MenuItem onClick={handleOnMenuItemClick("pricing")}>
+                          Pricing
+                        </MenuItem>
 
-                    <MenuItem onClick={handleOnMenuItemClick("faq")}>
-                      FAQ
-                    </MenuItem>
+                        <MenuItem onClick={handleOnMenuItemClick("faq")}>
+                          FAQ
+                        </MenuItem>
 
-                    <Divider />
+                        {/* <Divider />
 
-                    <MenuItem>
-                      <Button
-                        color="primary"
-                        variant="contained"
-                        component="button"
-                        onClick={handleToggleRegisterModal}
-                        sx={{ width: "100%" }}
-                      >
-                        Register
-                      </Button>
-                    </MenuItem>
+                        <MenuItem>
+                          <Button
+                            color="primary"
+                            variant="contained"
+                            component="button"
+                            onClick={handleToggleRegisterModal}
+                            sx={{ width: "100%" }}
+                          >
+                            Register
+                          </Button>
+                        </MenuItem>
 
-                    <MenuItem>
-                      <Button
-                        color="primary"
-                        variant="outlined"
-                        component="button"
-                        sx={{ width: "100%" }}
-                        onClick={handleToggleLoginModal}
-                      >
-                        Log in
-                      </Button>
-                    </MenuItem>
+                        <MenuItem>
+                          <Button
+                            color="primary"
+                            variant="outlined"
+                            component="button"
+                            sx={{ width: "100%" }}
+                            onClick={handleToggleLoginModal}
+                          >
+                            Log in
+                          </Button>
+                        </MenuItem> */}
+                      </Box>
+                    </Drawer>
                   </Box>
-                </Drawer>
-              </Box>
+                ))}
             </Toolbar>
           </Container>
         </AppBar>

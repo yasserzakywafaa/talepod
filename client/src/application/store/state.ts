@@ -8,6 +8,6 @@ export interface ApplicationInitialState {
 export const getApplicationInitialState = (): ApplicationInitialState => {
   return {
     isFetching: false,
-    themeMode: "light",
+    themeMode: "dark",
   };
 };

@@ -15,7 +15,7 @@ const Copyright = () => {
   return (
     <Typography variant="body2" color="text.secondary" mt={1}>
       {"Copyright © "}
-      <Link href="https://mui.com/">Swissai&nbsp;</Link>
+      <Link href="https://mui.com/">TalePod&nbsp;</Link>
       {new Date().getFullYear()}
     </Typography>
   );

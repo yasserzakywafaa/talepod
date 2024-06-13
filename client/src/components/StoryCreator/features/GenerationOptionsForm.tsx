@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Container,
   FormControl,
   InputLabel,
   MenuItem,
@@ -122,15 +121,17 @@ const GenerationOptionsForm = () => {
   }, [OpenaiGPTStore.state]);
 
   return (
-    <Container className="story-creator" maxWidth={false}>
+    <Box className="story-creator-form">
       <Typography
         variant="h2"
         sx={{
-          color: (theme) => (theme.palette.mode === "light" ? "#000" : "#fff"),
+          // color: (theme) => (theme.palette.mode === "light" ? "#000" : "#fff"),
           fontSize: { xs: 20, sm: 30 },
+          mt: 2,
+          mb: 4,
         }}
       >
-        Create a story for your child
+        Define your story
       </Typography>
 
       {isFetching && <LoaderSpinner style={{ position: "fixed" }} />}
@@ -331,7 +332,7 @@ const GenerationOptionsForm = () => {
           </Button>
         </Box>
       </Box>
-    </Container>
+    </Box>
   );
 };
 

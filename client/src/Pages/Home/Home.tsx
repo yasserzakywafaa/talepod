@@ -4,21 +4,21 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import FAQ from "./features/FAQ";
 import Features from "./features/Features";
-import Footer from "./features/Footer";
-// import Hero from "./features/Hero";
+import Footer from "../../components/shared/Footer/Footer";
+import Hero from "./features/Hero";
 // import Highlights from "./features/Highlights";
 import Page from "src/components/shared/Page/Page";
 import Pricing from "./features/Pricing";
-import StoryCreator from "src/components/StoryCreator/StoryCreator";
 
+// import StoryCreator from "src/components/StoryCreator/StoryCreator";
 // import Testimonials from "./features/Testimonials";
 
 const Homepage = () => {
   return (
     <Page title="TalePod | Bedtime Stories" className="home-page">
-      {/* <Hero /> */}
+      <Hero />
 
-      <StoryCreator />
+      {/* <StoryCreator /> */}
 
       <Box sx={{ bgcolor: "background.default" }}>
         <Features />
