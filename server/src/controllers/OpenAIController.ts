@@ -23,8 +23,8 @@ export const generateText = async (
       temperature: 0,
     });
 
-    console.log("ℹ️ OpenAIController:>>> GENERATE TEXT", {
-      path: request.path,
+    console.log("ℹ️  OpenAIController:>>> GENERATE TEXT", {
+      request: request.path,
       MODEL_NAME: CONFIG.OPENAI_MODEL_NAME,
     });
 
@@ -78,7 +78,7 @@ export const generateTextToSpeech = async (
       throw new Error("❌ Failed to upload file to S3");
     }
 
-    console.log("ℹ️ OpenAI:>>> GENERATE TEXT TO SPEECH", {
+    console.log("ℹ️  OpenAI:>>> GENERATE TEXT TO SPEECH", {
       fileUrl,
       writePath: filePath,
       serverFilesPath: SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH,
@@ -127,7 +127,7 @@ export const generateImages = async (
       imageUrls.push(imageUrl);
     }
 
-    console.log("ℹ️ OpenAIController:>>> GENERATE IMAGES", {
+    console.log("ℹ️  OpenAIController:>>> GENERATE IMAGES", {
       request,
       // response: imageRequest,
       response: imageUrls,

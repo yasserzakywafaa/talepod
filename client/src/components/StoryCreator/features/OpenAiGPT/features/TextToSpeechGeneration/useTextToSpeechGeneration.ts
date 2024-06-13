@@ -4,14 +4,15 @@ import {
 } from "src/components/shared/Notification/Notification";
 
 import END_POINTS from "src/application/shared/endpoints";
-import { OpenAiGPTAIAnswerProps } from "../../store/state";
+import { GeneratedStoryParts } from "../../store/state";
 import { OpenAiGPTStore } from "../../store/store";
 import axios from "axios";
+import extractStoryParts from "src/components/StoryCreator/utils/extractStoryParts";
 import { getRandomString } from "src/shared/utils/stringUtils";
 
 export interface UseTextGeneration {
   handleIsTextToSpeechGenFetching: (isFetching: boolean) => void;
-  handleSetTextToSpeechAiAnswer: (aiAnswer: OpenAiGPTAIAnswerProps) => void;
+  handleSetTextToSpeechAiAnswer: (aiAnswer: GeneratedStoryParts) => void;
   handleGenerateTextToSpeechRequest: () => void;
 }
 
@@ -25,25 +26,40 @@ export const useTextToSpeechGeneration = (
     });
   };
 
-  const handleSetTextToSpeechAiAnswer = (aiAnswer: OpenAiGPTAIAnswerProps) => {
+  const handleSetTextToSpeechAiAnswer = (
+    aiAnswer: Partial<GeneratedStoryParts>
+  ) => {
     store.updateState("textToSpeechGeneration", {
       ...store.state.textGeneration,
-      aiAnswer: {
+      generatedStory: {
         statusCode: aiAnswer.statusCode,
-        title: aiAnswer.title,
-        description: aiAnswer.description,
+        title: aiAnswer.title!,
+        summary: aiAnswer.summary!,
+        mainStory: aiAnswer.mainStory!,
+        poem: aiAnswer.poem!,
       },
     });
   };
 
   const handleGenerateTextToSpeechRequest = async () => {
     try {
-      const { name, age, language } = store.state.childInfo;
+      const { name, age } = store.state.childInfo;
+
+      if (!store.state.textGeneration.generatedStory) return;
+
+      // Extract the parts from the story
+      const storyParts = extractStoryParts(
+        store.state.textGeneration.generatedStory.mainStory as string
+      );
+      console.log("🎯 storyParts :>>>", {
+        storyParts,
+      });
+
       const response = await axios.post(
         END_POINTS.OPENAI.GENERATE.TEXT_TO_SPEECH,
         {
-          userPrompt: store.state.textGeneration.aiAnswer.description,
-          fileName: `${name}_${age}yo_${language.name}_${getRandomString()}`,
+          userPrompt: `${storyParts.mainStory} ${storyParts.poem}`,
+          fileName: `${name}_${age}yo_${storyParts.title}_${getRandomString()}`,
         },
         {
           headers: {
@@ -53,7 +69,7 @@ export const useTextToSpeechGeneration = (
         }
       );
 
-      console.log("OpenAiSection:>>>", {
+      console.log("ℹ️  OpenAiSection:>>>", {
         response,
       });
 
@@ -61,18 +77,19 @@ export const useTextToSpeechGeneration = (
       handleSetTextToSpeechAiAnswer({
         statusCode: response.status,
         title: response.data.fileName,
-        description: response.data.fileUrl,
+        mainStory: response.data.fileUrl,
       });
     } catch (error) {
       console.error("OpenAiSection:>>> Error", {
         error,
       });
       handleIsTextToSpeechGenFetching(false);
+
       if (axios.isAxiosError(error) && error.response) {
         handleSetTextToSpeechAiAnswer({
           statusCode: error.response.status,
           title: error.response.statusText,
-          description: error.response.statusText,
+          mainStory: error.response.statusText,
         });
         Notify({
           content: error.response.statusText,
@@ -80,7 +97,7 @@ export const useTextToSpeechGeneration = (
         });
       } else {
         Notify({
-          content: `Oops! Something went wrong.\n${error}`,
+          content: `❌ Oops! Something went wrong.\n${error}`,
           type: ToastTypes.Error,
         });
       }

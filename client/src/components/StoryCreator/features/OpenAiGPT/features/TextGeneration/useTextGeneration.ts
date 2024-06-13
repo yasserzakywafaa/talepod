@@ -4,7 +4,6 @@ import {
 } from "src/components/shared/Notification/Notification";
 
 import END_POINTS from "src/application/shared/endpoints";
-import { OpenAiGPTAIAnswerProps } from "../../store/state";
 import { OpenAiGPTStore } from "../../store/store";
 import axios from "axios";
 
@@ -12,7 +11,6 @@ export interface UseTextGeneration {
   handleIsTextGenFetching: (isFetching: boolean) => void;
   handleUpdateUserTextPrompt: (userTextPrompt: string) => void;
   handleUpdateAutoTextPrompt: (autoImagePrompt: string) => void;
-  handleSetTextAiAnswer: (aiAnswer: OpenAiGPTAIAnswerProps) => void;
   handleGenerateTextRequest: (userPrompt: string) => void;
 }
 
@@ -25,6 +23,7 @@ export const useTextGeneration = (store: OpenAiGPTStore): UseTextGeneration => {
   };
 
   const handleUpdateUserTextPrompt = (userPrompt: string) => {
+    console.log("ℹ️  useTextGeneration:>>>", { userPrompt });
     store.updateState("textGeneration", {
       ...store.state.textGeneration,
       userPrompt,
@@ -35,17 +34,6 @@ export const useTextGeneration = (store: OpenAiGPTStore): UseTextGeneration => {
     store.updateState("textGeneration", {
       ...store.state.textGeneration,
       autoTextPrompt,
-    });
-  };
-
-  const handleSetTextAiAnswer = (aiAnswer: OpenAiGPTAIAnswerProps) => {
-    store.updateState("textGeneration", {
-      ...store.state.textGeneration,
-      aiAnswer: {
-        statusCode: aiAnswer.statusCode,
-        title: aiAnswer.title,
-        description: aiAnswer.description,
-      },
     });
   };
 
@@ -64,15 +52,16 @@ export const useTextGeneration = (store: OpenAiGPTStore): UseTextGeneration => {
         }
       );
 
-      console.log("OpenAiSection:>>>", {
-        response,
-      });
+      console.log("ℹ️  OpenAiSection:>>>", { response });
 
       handleIsTextGenFetching(false);
-      handleSetTextAiAnswer({
-        statusCode: response.status,
-        title: "",
-        description: response.data,
+
+      store.updateState("textGeneration", {
+        ...store.state.textGeneration,
+        generatedStory: {
+          statusCode: response.status,
+          mainStory: response.data,
+        },
       });
     } catch (error) {
       console.error("OpenAiSection:>>> Error", {
@@ -80,11 +69,15 @@ export const useTextGeneration = (store: OpenAiGPTStore): UseTextGeneration => {
       });
       handleIsTextGenFetching(false);
       if (axios.isAxiosError(error) && error.response) {
-        handleSetTextAiAnswer({
-          statusCode: error.response.status,
-          title: error.response.statusText,
-          description: error.response.statusText,
+        store.updateState("textGeneration", {
+          ...store.state.textGeneration,
+          generatedStory: {
+            statusCode: error.response.status,
+            title: error.response.statusText,
+            mainStory: error.response.statusText,
+          },
         });
+
         Notify({
           content: error.response.statusText,
           type: ToastTypes.Error,
@@ -102,7 +95,6 @@ export const useTextGeneration = (store: OpenAiGPTStore): UseTextGeneration => {
     handleIsTextGenFetching,
     handleUpdateUserTextPrompt,
     handleUpdateAutoTextPrompt,
-    handleSetTextAiAnswer,
     handleGenerateTextRequest,
   };
 };

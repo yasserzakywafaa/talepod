@@ -13,13 +13,15 @@ import { ChangeEvent, FormEvent } from "react";
 
 import { AutoAwesome } from "@mui/icons-material";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
+import ReactMarkdown from "react-markdown";
 import TextToSpeechGeneration from "../TextToSpeechGeneration/TextToSpeechGeneration";
 import { useOpenAiGPTContext } from "../../store/Provider";
 
 const OpenAiGPTTextGeneration = () => {
   const { store, manager } = useOpenAiGPTContext();
   const { textGeneration } = store.state;
-  const { isFetching, userPrompt, autoTextPrompt, aiAnswer } = textGeneration;
+  const { isFetching, userPrompt, autoTextPrompt, generatedStory } =
+    textGeneration;
   const {
     handleIsTextGenFetching,
     handleUpdateUserTextPrompt,
@@ -27,9 +29,6 @@ const OpenAiGPTTextGeneration = () => {
   } = manager;
 
   const handleOnTextChange = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log("handleOnTextChange:>>>", {
-      value: event.target.value,
-    });
     handleUpdateUserTextPrompt(event.target.value);
   };
 
@@ -75,7 +74,7 @@ const OpenAiGPTTextGeneration = () => {
         </Stack>
       </Box>
 
-      {aiAnswer.description && (
+      {generatedStory && generatedStory.mainStory && (
         <>
           <Divider style={{ margin: "2rem 0" }}>
             <Chip label="Answer" size="small" />
@@ -83,16 +82,16 @@ const OpenAiGPTTextGeneration = () => {
           <Card sx={{ minWidth: 275 }}>
             <CardContent
               style={{
-                color: aiAnswer.statusCode !== 200 ? "red" : "unset",
+                color: generatedStory.statusCode !== 200 ? "red" : "unset",
               }}
             >
               <Typography variant="h5" component="div">
-                {aiAnswer.title}
+                {generatedStory.title}
               </Typography>
 
-              <Typography variant="h6" component="div">
-                {aiAnswer.description}
-              </Typography>
+              <ReactMarkdown>
+                {generatedStory.mainStory as string}
+              </ReactMarkdown>
             </CardContent>
 
             <CardContent>

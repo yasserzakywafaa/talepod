@@ -7,7 +7,10 @@ import { Tone } from "src/shared/generatedStory/Tone";
 export interface StoryCreatorInitialState {
   isFetching: boolean;
   childInfo: ChildInfo;
-  generatedStory: GeneratedStory;
+  storyParams: StoryParams;
+  textGeneration: TextGenerationProps;
+  textToSpeechGeneration: TextGenerationProps;
+  imageGeneration: ImageGenerationProps;
 }
 
 export enum ChildGenderEnum {
@@ -23,7 +26,7 @@ export type ChildInfo = {
   language: Language;
 };
 
-export interface GeneratedStory {
+export interface StoryParams {
   tone: Tone;
   moral: Moral;
   audioLength: number;
@@ -31,31 +34,86 @@ export interface GeneratedStory {
   environment: Environment;
 }
 
+export interface StoryParts {
+  title: string;
+  summary: string;
+  mainStory: string;
+  poem: string;
+}
+
+export interface TextGenerationProps {
+  isFetching: boolean;
+  userPrompt: string | undefined;
+  autoTextPrompt: string;
+  autoImagePrompt: string;
+  generatedStory: GeneratedStoryParts | undefined;
+}
+
+export interface GeneratedStoryParts extends Partial<StoryParts> {
+  statusCode?: number;
+  url?: string;
+}
+
+export interface ImageGenerationProps {
+  isFetching: boolean;
+  userPrompt: string | undefined;
+  autoTextPrompt: string;
+  autoImagePrompt: string;
+  generatedImage: GeneratedImageProps | undefined;
+}
+
+export interface GeneratedImageProps {
+  title: string;
+  statusCode: number;
+  content: string | string[];
+}
+
 export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
   return {
     isFetching: false,
     childInfo: {
-      name: "Cookie",
+      name: "",
       gender: ChildGenderEnum.Girl,
       age: 2,
-      interests: "Football",
+      interests: "",
       language: Languages[0],
     },
-    generatedStory: {
+    storyParams: {
       audioLength: 5,
       maxCharacters: 2000,
       moral: {
-        name: "Honesty",
-        value: "HON",
+        name: "",
+        value: "",
       },
       tone: {
-        name: "Adventurous",
-        value: "ADV",
+        name: "",
+        value: "",
       },
       environment: {
-        name: "Snowy Mountain",
-        value: "SM",
+        name: "",
+        value: "",
       },
+    },
+    textGeneration: {
+      isFetching: false,
+      userPrompt: "",
+      autoTextPrompt: "",
+      autoImagePrompt: "",
+      generatedStory: undefined,
+    },
+    textToSpeechGeneration: {
+      isFetching: false,
+      userPrompt: "",
+      autoTextPrompt: "",
+      autoImagePrompt: "",
+      generatedStory: undefined,
+    },
+    imageGeneration: {
+      isFetching: false,
+      userPrompt: "",
+      autoTextPrompt: "",
+      autoImagePrompt: "",
+      generatedImage: undefined,
     },
   };
 };

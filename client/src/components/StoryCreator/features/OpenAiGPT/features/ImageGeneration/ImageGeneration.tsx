@@ -20,7 +20,8 @@ import { useOpenAiGPTContext } from "../../store/Provider";
 const OpenAiGPTImageGeneration = () => {
   const { store, manager } = useOpenAiGPTContext();
   const { imageGeneration } = store.state;
-  const { isFetching, userPrompt, autoImagePrompt, aiAnswer } = imageGeneration;
+  const { isFetching, userPrompt, autoImagePrompt, generatedImage } =
+    imageGeneration;
   const {
     handleIsImageGenFetching,
     handleUpdateUserImagePrompt,
@@ -76,7 +77,7 @@ const OpenAiGPTImageGeneration = () => {
         </Stack>
       </Box>
 
-      {aiAnswer.description && (
+      {generatedImage && generatedImage.content && (
         <>
           <Divider style={{ margin: "2rem 0" }}>
             <Chip label="Answer" size="small" />
@@ -84,25 +85,25 @@ const OpenAiGPTImageGeneration = () => {
           <Card sx={{ minWidth: 275 }}>
             <CardContent
               style={{
-                color: aiAnswer.statusCode !== 200 ? "red" : "unset",
+                color: generatedImage.statusCode !== 200 ? "red" : "unset",
               }}
             >
-              {aiAnswer.statusCode !== 200 && (
+              {generatedImage.statusCode !== 200 && (
                 <>
                   <Typography variant="h5" component="div">
-                    {aiAnswer.title}
+                    {generatedImage.title}
                   </Typography>
 
                   <Typography variant="h6" component="div">
-                    {aiAnswer.description}
+                    {generatedImage.content}
                   </Typography>
                 </>
               )}
 
               <ImageList variant="standard" cols={2} gap={20}>
-                {typeof aiAnswer.description !== "string" &&
-                  aiAnswer.description.length &&
-                  aiAnswer.description.map((image, index) => (
+                {typeof generatedImage.content !== "string" &&
+                  generatedImage.content.length &&
+                  generatedImage.content.map((image, index) => (
                     <Card variant="outlined">
                       <ImageListItem key={index}>
                         <img

@@ -1,3 +1,4 @@
+import { ChildInfo } from "./state";
 import { Country } from "src/shared/countries";
 import { Environment } from "src/shared/generatedStory/Environments";
 import { Moral } from "src/shared/generatedStory/Moral";
@@ -6,7 +7,7 @@ import { Tone } from "src/shared/generatedStory/Tone";
 
 export interface StoryCreatorManager {
   handleUpdateChildInfo: (
-    name: string,
+    name: keyof ChildInfo,
     value: string | number | Country
   ) => void;
   handleUpdateStoryInfo: (
@@ -37,8 +38,8 @@ export const useStoryCreatorManager = (
   ) => {
     store.updateState({
       ...store.state,
-      generatedStory: {
-        ...store.state.generatedStory,
+      storyParams: {
+        ...store.state.storyParams,
         [name]: value,
       },
     });

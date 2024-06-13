@@ -5,8 +5,7 @@ export const getAutoTextGenPromptString = (
 ): string => {
   const { name, gender, age, interests, language } = promptParams.childInfo;
 
-  const { moral, tone, audioLength, environment, maxCharacters } =
-    promptParams.generatedStory;
+  const { moral, tone, audioLength, environment } = promptParams.storyParams;
 
   const customParams = {
     childInfo: {
@@ -26,13 +25,13 @@ export const getAutoTextGenPromptString = (
   };
 
   if (tone)
-    customParams.generatedStory.tone = `The tone of the story to be ${tone.name}, `;
+    customParams.generatedStory.tone = `The tone of the story to be ${tone.name}.`;
 
   if (moral)
     customParams.generatedStory.moral = `Value or theme: The value the parent wants to teach their kid through the story is ${moral.name}, `;
 
   if (environment)
-    customParams.generatedStory.environment = `the environment of the story to be at ${environment.name}, `;
+    customParams.generatedStory.environment = `Environment: the environment of the story to be at the ${environment.name}, `;
 
   if (language)
     customParams.childInfo.language = ` in the language of ${language.name},`;
@@ -40,21 +39,27 @@ export const getAutoTextGenPromptString = (
   if (interests)
     customParams.childInfo.interests = `Supporting characters to be around ${interests}`;
 
-  // const fullDynamicPrompt = `Create a story for 1 page children's book that has around 200 characters per page, for a ${age} years old ${gender} named ${name}, with physical characteristics, like the ${gender}'s hair color is ${hairColor}, ${eyeColor} eye color, height of ${height}cm, and from a country of ${language.name}`;
-  // const fullDynamicPrompt = `Create a story that has around 200 characters, for a ${customParams.age} ${gender} named ${name}, with physical characteristics like ${customParams.hairColor}${customParams.eyeColor}and${customParams.language}`;
-
   const fullDynamicPrompt = `Write a story that is ${audioLength} minutes long ${
     customParams.childInfo.language
-  } with the following structure:
-    Title: Provide a title for the story.
-    Summary: Provide a summary for the story that is not longer than ${maxCharacters} characters Outlining the basic plot and key elements of the story.
-    Structure: Structure the story in 4-5 chapters that are ${audioLength} minutes long if read by the parent
-    Poem: Create a bedtime poem that summarizes the story in 4-6 rhyming verses
+  } with the following outputs inside of the curly brackets to be ready for data ETL process.
+    Make sure the Title, Story summary, Story, Poem are each between curly brackets so the development team can split the data to those fields respectively.
+
+    {provide Story title}
+
+    {provide here Story summary that is not longer than 120 characters Outlining the basic plot and key elements of the story.}
+
+    {provide the story with 4-5 scenes or chapters. Do not mention the chapters. Just provide the text of the story as it is a bedtime story for kids hence build the drama accordingly and ensure a length of ${audioLength} minutes as mentioned above}
+
+    {provide the poem: Create a bedtime poem that summarizes the story in 4-6 rhyming verses}
+
     ${customParams.generatedStory.tone}
     ${customParams.generatedStory.moral}
     ${customParams.generatedStory.environment}
-    The characters of the story are: The protagonist / main character is a ${age}-year-old ${gender.toLowerCase()} called ${name}.
-    ${customParams.childInfo.interests}`;
+    The characters of the story are: The protagonist/main character is ${name}, a ${age}-year-old ${gender.toLowerCase()}.
+    ${customParams.childInfo.interests}
+    
+    Please ensure that the story is kids compliant. All kids between 1 year to 12 years, so no explicit content outside this age range.
+    `;
 
   return fullDynamicPrompt;
 };
@@ -63,8 +68,6 @@ export const getAutoImageGenPromptString = (childInfo: ChildInfo): string => {
   const { name, gender, age } = childInfo;
 
   const fullDynamicPrompt = `A ${age} years old ${gender} named ${name}, with physical characteristics`;
-
-  // const longPrmpt = `Create images children's book that will be converted to pdf to go be printed as small square 196mmx196mm children book.
 
   return fullDynamicPrompt;
 };

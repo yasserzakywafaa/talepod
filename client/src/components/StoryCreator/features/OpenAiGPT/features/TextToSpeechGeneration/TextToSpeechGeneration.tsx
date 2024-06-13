@@ -8,7 +8,6 @@ import { useOpenAiGPTContext } from "../../store/Provider";
 const OpenAiGPTTextToSpeechGeneration = () => {
   const { store, manager } = useOpenAiGPTContext();
   const { textGeneration, textToSpeechGeneration } = store.state;
-  const { isFetching, aiAnswer } = textToSpeechGeneration;
   const { handleIsTextToSpeechGenFetching, handleGenerateTextToSpeechRequest } =
     manager;
 
@@ -19,17 +18,19 @@ const OpenAiGPTTextToSpeechGeneration = () => {
       textGeneration,
     });
 
-    if (textGeneration.aiAnswer.description) {
+    if (textGeneration.generatedStory) {
       handleIsTextToSpeechGenFetching(true);
       handleGenerateTextToSpeechRequest(
-        textGeneration.aiAnswer.description as string
+        textGeneration.generatedStory.mainStory as string
       );
     }
   };
 
   return (
     <Box position="relative" sx={{ marginY: "1rem" }}>
-      {isFetching && <LoaderSpinner style={{ position: "absolute" }} />}
+      {textToSpeechGeneration.isFetching && (
+        <LoaderSpinner style={{ position: "absolute" }} />
+      )}
 
       <Stack spacing={2} flexGrow={1}>
         <Button
@@ -37,23 +38,24 @@ const OpenAiGPTTextToSpeechGeneration = () => {
           title="submit-button"
           variant="contained"
           endIcon={<AutoAwesome />}
-          disabled={!textGeneration.aiAnswer.description}
+          disabled={!textGeneration.generatedStory?.mainStory}
           onClick={handleOnGenerateTextToSpeechClick}
         >
           Generate Audio
         </Button>
       </Stack>
 
-      {aiAnswer.description && (
-        <>
-          <Paper elevation={2} style={{ padding: "1rem" }}>
-            <AudioPlayer
-              url={aiAnswer.description as string}
-              name={aiAnswer.title}
-            />
-          </Paper>
-        </>
-      )}
+      {textToSpeechGeneration.generatedStory &&
+        textToSpeechGeneration.generatedStory.mainStory && (
+          <>
+            <Paper elevation={2} style={{ padding: "1rem" }}>
+              <AudioPlayer
+                url={textToSpeechGeneration.generatedStory.mainStory as string}
+                name={textToSpeechGeneration.generatedStory.title!}
+              />
+            </Paper>
+          </>
+        )}
     </Box>
   );
 };

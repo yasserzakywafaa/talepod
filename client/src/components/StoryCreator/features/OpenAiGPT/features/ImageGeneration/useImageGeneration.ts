@@ -4,7 +4,7 @@ import {
 } from "src/components/shared/Notification/Notification";
 
 import END_POINTS from "src/application/shared/endpoints";
-import { OpenAiGPTAIAnswerProps } from "../../store/state";
+import { GeneratedStoryParts } from "../../store/state";
 import { OpenAiGPTStore } from "../../store/store";
 import axios from "axios";
 
@@ -12,7 +12,7 @@ export interface UseImageGeneration {
   handleIsImageGenFetching: (isFetching: boolean) => void;
   handleUpdateUserImagePrompt: (userImagePrompt: string) => void;
   handleUpdateAutoImagePrompt: (autoImagePrompt: string) => void;
-  handleSetImageAiAnswer: (aiAnswer: OpenAiGPTAIAnswerProps) => void;
+  handleSetImageAiAnswer: (aiAnswer: GeneratedStoryParts) => void;
   handleGenerateImageRequest: (userPrompt: string) => void;
 }
 
@@ -40,13 +40,13 @@ export const useImageGeneration = (
     });
   };
 
-  const handleSetImageAiAnswer = (aiAnswer: OpenAiGPTAIAnswerProps) => {
+  const handleSetImageAiAnswer = (aiAnswer: GeneratedStoryParts) => {
     store.updateState("imageGeneration", {
       ...store.state.imageGeneration,
-      aiAnswer: {
+      generatedStory: {
         statusCode: aiAnswer.statusCode,
         title: aiAnswer.title,
-        description: aiAnswer.description,
+        mainStory: aiAnswer.mainStory,
       },
     });
   };
@@ -84,7 +84,7 @@ export const useImageGeneration = (
       handleSetImageAiAnswer({
         statusCode: response.status,
         title: "",
-        description: response.data,
+        mainStory: response.data,
       });
     } catch (error) {
       console.error("OpenAiSection:>>> Error", {
@@ -95,7 +95,7 @@ export const useImageGeneration = (
         handleSetImageAiAnswer({
           statusCode: error.response.status,
           title: error.response.statusText,
-          description: error.response.statusText,
+          mainStory: error.response.statusText,
         });
         Notify({
           content: error.response.statusText,

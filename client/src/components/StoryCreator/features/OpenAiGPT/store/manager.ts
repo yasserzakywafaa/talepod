@@ -3,7 +3,7 @@ import {
   getAutoTextGenPromptString,
 } from "src/components/StoryCreator/utils/getAutoPromptString";
 
-import { OpenAiGPTAIAnswerProps } from "./state";
+import { GeneratedStoryParts } from "./state";
 import { OpenAiGPTStore } from "./store";
 import { useEffect } from "react";
 import { useImageGeneration } from "../features/ImageGeneration/useImageGeneration";
@@ -13,22 +13,20 @@ import { useTextToSpeechGeneration } from "../features/TextToSpeechGeneration/us
 
 export interface OpenAiGPTManager {
   handleUpdateChildInfo: (name: string, value: string) => void;
-  // handleUpdateUserPrompt: (userPrompt: string) => void;
 
   handleIsTextGenFetching: (isFetching: boolean) => void;
   handleUpdateUserTextPrompt: (userTextPrompt: string) => void;
-  handleSetTextAiAnswer: (aiAnswer: OpenAiGPTAIAnswerProps) => void;
   handleUpdateAutoTextPrompt: (autoTextPrompt: string) => void;
   handleGenerateTextRequest: (userPrompt: string) => void;
 
   handleIsTextToSpeechGenFetching: (isFetching: boolean) => void;
-  handleSetTextToSpeechAiAnswer: (aiAnswer: OpenAiGPTAIAnswerProps) => void;
+  handleSetTextToSpeechAiAnswer: (aiAnswer: GeneratedStoryParts) => void;
   handleGenerateTextToSpeechRequest: (userPrompt: string) => void;
 
   handleUpdateAutoImagePrompt: (autoImagePrompt: string) => void;
   handleIsImageGenFetching: (isFetching: boolean) => void;
   handleUpdateUserImagePrompt: (userImagePrompt: string) => void;
-  handleSetImageAiAnswer: (aiAnswer: OpenAiGPTAIAnswerProps) => void;
+  handleSetImageAiAnswer: (aiAnswer: GeneratedStoryParts) => void;
   handleGenerateImageRequest: (userPrompt: string) => void;
 }
 
@@ -40,7 +38,6 @@ export const useOpenAiGPTManager = (
     handleIsTextGenFetching,
     handleUpdateUserTextPrompt,
     handleUpdateAutoTextPrompt,
-    handleSetTextAiAnswer,
     handleGenerateTextRequest,
   } = useTextGeneration(store);
 
@@ -90,7 +87,6 @@ export const useOpenAiGPTManager = (
     handleUpdateUserTextPrompt,
     handleGenerateTextRequest,
     handleUpdateAutoTextPrompt,
-    handleSetTextAiAnswer,
 
     handleIsTextToSpeechGenFetching,
     handleSetTextToSpeechAiAnswer,

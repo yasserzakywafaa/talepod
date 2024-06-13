@@ -19,8 +19,8 @@ export const generateText = async (
     const generateRequest = await genAiModel.generateContent(userPrompt);
     const generateResponseText = generateRequest.response.text();
 
-    console.log("ℹ️ GoogleGemini:>>> GENERATE", {
-      path: request.path,
+    console.log("ℹ️  GoogleGemini:>>> GENERATE", {
+      request: request.path,
       MODEL_NAME: CONFIG.GOOGLE_GEMINI_MODEL_NAME,
     });
     response.json(generateResponseText);

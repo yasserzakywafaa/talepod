@@ -7,9 +7,13 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Slider,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
   Typography,
 } from "@mui/material";
+import { ChildGenderEnum, ChildInfo } from "../store/state";
 import {
   Environment,
   Environments,
@@ -19,19 +23,18 @@ import { Moral, Morals } from "src/shared/generatedStory/Moral";
 import { Tone, Tones } from "src/shared/generatedStory/Tone";
 
 import { AutoAwesome } from "@mui/icons-material";
-import { ChildGenderEnum } from "../store/state";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
+import { useEffect } from "react";
 import { useOpenAiGPTContext } from "./OpenAiGPT/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
 
 const GenerationOptionsForm = () => {
   const {
     store: {
-      state: { childInfo, generatedStory },
+      state: { childInfo, storyParams: generatedStory },
     },
     manager: { handleUpdateChildInfo, handleUpdateStoryInfo },
   } = useStoryCreatorContext();
-
   const { store: OpenaiGPTStore, manager: OpenaiGPTManager } =
     useOpenAiGPTContext();
   const { isFetching, userPrompt, autoTextPrompt } =
@@ -43,15 +46,43 @@ const GenerationOptionsForm = () => {
     event.preventDefault();
     event.stopPropagation();
 
+    const form = event.currentTarget;
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
     if (userPrompt || autoTextPrompt) {
       handleIsTextGenFetching(true);
+      debugger;
       handleGenerateTextRequest(userPrompt || autoTextPrompt);
     }
   };
 
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    handleUpdateChildInfo(name, value);
+    handleUpdateChildInfo(name as keyof ChildInfo, value);
+  };
+
+  const handleAgeSliderChange = (
+    event: Event,
+    value: number,
+    activeThumb: number
+  ) => {
+    if (Array.isArray(value)) {
+      handleUpdateChildInfo("age", value[0]);
+    } else {
+      handleUpdateChildInfo("age", value);
+    }
+  };
+
+  const handleGenderChange = (
+    event: React.MouseEvent<HTMLElement>,
+    gender: string | null
+  ) => {
+    if (gender !== null) {
+      handleUpdateChildInfo("gender", gender);
+    }
   };
 
   const handleOnSelectChange = (event: SelectChangeEvent) => {
@@ -86,6 +117,10 @@ const GenerationOptionsForm = () => {
     }
   };
 
+  useEffect(() => {
+    console.log("ℹ️  FORM:>>>", { GPTState: OpenaiGPTStore.state });
+  }, [OpenaiGPTStore.state]);
+
   return (
     <Container className="story-creator" maxWidth={false}>
       <Typography
@@ -98,7 +133,7 @@ const GenerationOptionsForm = () => {
         Create a story for your child
       </Typography>
 
-      {isFetching && <LoaderSpinner style={{ position: "absolute" }} />}
+      {isFetching && <LoaderSpinner style={{ position: "fixed" }} />}
 
       <Box
         marginY={4}
@@ -114,36 +149,13 @@ const GenerationOptionsForm = () => {
         className="child-info-form"
         onSubmit={handleOnFormSubmit}
       >
-        <FormControl className="child-info-form-item">
-          <InputLabel id="nationality-select-label">Gender</InputLabel>
-          <Select
-            required
-            name="gender"
-            label="Gender"
-            variant="outlined"
-            id="story-gender-select"
-            value={childInfo.gender}
-            labelId="story-gender-select-label"
-            onChange={handleOnSelectChange}
-          >
-            {Object.values(ChildGenderEnum).map((gender, index) => {
-              return (
-                <MenuItem key={index} value={gender}>
-                  {gender}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
-
         <TextField
           required
-          id="age"
-          name="age"
-          label="Age"
-          type="number"
-          value={childInfo.age}
-          error={!childInfo.age}
+          id="name"
+          name="name"
+          label="Name"
+          type="text"
+          value={childInfo.name}
           className="child-info-form-item"
           onChange={handleFieldChange}
         />
@@ -170,22 +182,66 @@ const GenerationOptionsForm = () => {
           </Select>
         </FormControl>
 
-        <TextField
-          required
-          id="name"
-          name="name"
-          label="Name"
-          type="text"
-          value={childInfo.name}
-          error={!childInfo.name}
-          className="child-info-form-item"
-          onChange={handleFieldChange}
-        />
+        <Box className="child-info-form-item">
+          <Typography id="age-slider" gutterBottom>
+            Age: {childInfo.age} years
+          </Typography>
+          <Slider
+            marks
+            min={0}
+            max={12}
+            step={1}
+            value={childInfo.age}
+            valueLabelDisplay="auto"
+            aria-labelledby="age-slider"
+            onChange={handleAgeSliderChange}
+          />
+        </Box>
+
+        <Box className="child-info-form-item">
+          <Typography id="gender-toggle" gutterBottom>
+            Gender
+          </Typography>
+          <ToggleButtonGroup
+            exclusive
+            value={childInfo.gender}
+            aria-labelledby="gender-toggle"
+            onChange={handleGenderChange}
+          >
+            <ToggleButton
+              value={ChildGenderEnum.Boy}
+              sx={{
+                "&.Mui-selected": {
+                  backgroundColor: (theme) => theme.palette.primary.main,
+                  color: "white",
+                },
+                "&.Mui-selected:hover": {
+                  backgroundColor: (theme) => theme.palette.primary.dark,
+                },
+              }}
+            >
+              {ChildGenderEnum.Boy}
+            </ToggleButton>
+            <ToggleButton
+              value={ChildGenderEnum.Girl}
+              sx={{
+                "&.Mui-selected": {
+                  backgroundColor: (theme) => theme.palette.primary.main,
+                  color: "white",
+                },
+                "&.Mui-selected:hover": {
+                  backgroundColor: (theme) => theme.palette.primary.dark,
+                },
+              }}
+            >
+              {ChildGenderEnum.Girl}
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
 
         <FormControl className="child-info-form-item">
           <InputLabel id="nationality-select-label">Moral</InputLabel>
           <Select
-            required
             name="moral"
             label="Moral"
             variant="outlined"
@@ -207,7 +263,6 @@ const GenerationOptionsForm = () => {
         <FormControl className="child-info-form-item">
           <InputLabel id="nationality-select-label">Tone</InputLabel>
           <Select
-            required
             name="tone"
             variant="outlined"
             label="Tone"
@@ -229,7 +284,6 @@ const GenerationOptionsForm = () => {
         <FormControl className="child-info-form-item">
           <InputLabel id="nationality-select-label">Environment</InputLabel>
           <Select
-            required
             name="environment"
             variant="outlined"
             label="Environment"
@@ -249,13 +303,11 @@ const GenerationOptionsForm = () => {
         </FormControl>
 
         <TextField
-          required
           id="interests"
           name="interests"
           label="Other Interests"
           type="text"
           value={childInfo.interests}
-          error={!childInfo.interests}
           className="child-info-form-item"
           onChange={handleFieldChange}
         />
@@ -275,7 +327,7 @@ const GenerationOptionsForm = () => {
             variant="contained"
             endIcon={<AutoAwesome />}
           >
-            Generate
+            Create
           </Button>
         </Box>
       </Box>
