@@ -34,7 +34,7 @@ const uploadFileToS3 = async (
     // Return the URL of the uploaded file
     return `https://${CONFIG.HOST_AWS_S3_BUCKET_NAME}.s3.${CONFIG.HOST_AWS_REGION}.amazonaws.com/${CONFIG.SERVER_TEXT_TO_SPEECH_PATH}/${fileName}`;
   } catch (error) {
-    console.error("amazonS3 model:>>> ERROR", {
+    console.error("❌ AmazonS3 model:>>> ERROR", {
       error,
     });
 

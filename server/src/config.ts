@@ -21,9 +21,9 @@ const CONFIG = {
   PROD_CLIENT_PUBLIC_URLS: process.env.PROD_CLIENT_PUBLIC_URLS,
 
   // Assets
-  SERVER_TEXT_TO_SPEECH_PATH: "assets/audio/textToSpeech",
+  SERVER_TEXT_TO_SPEECH_PATH: "assets/audio",
   SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH: path.resolve(
-    "./assets/audio/textToSpeech"
+    "./assets/audio"
   ),
 
   // APIs keys for AI
@@ -37,6 +37,7 @@ const CONFIG = {
   GOOGLE_GEMINI_API_KEY_1: process.env.GOOGLE_GEMINI_API_KEY_1,
 
   // Database
+  MONGODB_DEV_CLUSTER: process.env.MONGODB_DEV_CLUSTER,
   MONGODB_URI_DEV: process.env.MONGODB_URI_DEV,
   MONGODB_URI_PROD: process.env.MONGODB_URI_PROD,
 

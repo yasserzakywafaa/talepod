@@ -62,7 +62,7 @@ if (CONFIG.SERVE_STATIC_CONTENT === "true") {
 databaseInit();
 
 expressApp.listen(PORT, (): void => {
-  console.log("☁️ Server running on:>>>", {
+  console.log("☁️  Server running on:>>>", {
     PORT,
     ENVIRONMENT: CONFIG.NODE_ENV,
   });
