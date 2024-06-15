@@ -6,8 +6,8 @@ const googleGeminiRouter = Router();
 
 // Define API routes
 googleGeminiRouter.post(
-  END_POINTS.GOOGLE_GEMINI.GENERATE,
-  GoogleGeminiController.generateText
+  END_POINTS.GOOGLE_GEMINI.CREATE.STORY,
+  GoogleGeminiController.createStory
 );
 
 export default googleGeminiRouter;

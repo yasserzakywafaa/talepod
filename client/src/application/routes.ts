@@ -2,7 +2,7 @@ const routes = {
   home: `/`,
   create: `/create`,
   explore: `/explore`,
-  story: `/story/:id`,
+  story: (storyId: string) => `/story/${storyId}`,
   logout: `/logout`,
   checkout: `/checkout`,
   unauthorized: `/unauthorized`,

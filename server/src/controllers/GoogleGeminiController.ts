@@ -8,7 +8,7 @@ import { requestParams } from "../models/googleGeminiModel";
 const genAI = new GoogleGenerativeAI(CONFIG.GOOGLE_GEMINI_API_KEY_1 ?? "");
 const genAiModel = genAI.getGenerativeModel(requestParams);
 
-export const generateText = async (
+export const createStory = async (
   request: Request,
   response: Response,
   next: NextFunction
@@ -16,16 +16,16 @@ export const generateText = async (
   const userPrompt = request.body.userPrompt;
 
   try {
-    const generateRequest = await genAiModel.generateContent(userPrompt);
-    const generateResponseText = generateRequest.response.text();
+    const createStoryRequest = await genAiModel.generateContent(userPrompt);
+    const createStoryResponseText = createStoryRequest.response.text();
 
-    console.log("ℹ️  GoogleGemini:>>> GENERATE", {
+    console.log("ℹ️  GoogleGeminiController:>>> CREATE", {
       request: request.path,
       MODEL_NAME: CONFIG.GOOGLE_GEMINI_MODEL_NAME,
     });
-    response.json(generateResponseText);
+    response.json(createStoryResponseText);
   } catch (error) {
-    console.error("❌ GoogleGeminiController:>>> GENERATE Error", {
+    console.error("❌ GoogleGeminiController:>>> CREATE Error", {
       error,
     });
     next(error);
@@ -33,7 +33,7 @@ export const generateText = async (
 };
 
 const GoogleGeminiController = {
-  generateText,
+  createStory,
 };
 
 export default GoogleGeminiController;

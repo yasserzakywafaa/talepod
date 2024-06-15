@@ -5,10 +5,9 @@ import BackButton from "./BackButton";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-// import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
-import Logo from "src/components/shared/Logo/Logo";
+// import Logo from "src/components/shared/Logo/Logo";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal";
@@ -47,6 +46,8 @@ const ApplicationBar = () => {
   const pagesMatch = {
     isHomePage: !!useMatch(routes.home),
     isCreatePage: !!useMatch(routes.create),
+    isExplorePage: !!useMatch(routes.explore),
+    isViewStoryPage: !!useMatch(routes.story(":id")),
     isCheckoutPage: !!useMatch(routes.checkout),
     isUnauthorizedPage: !!useMatch(routes.unauthorized),
   };
@@ -57,13 +58,22 @@ const ApplicationBar = () => {
   };
 
   const handleOnMenuItemClick = (sectionId: string) => () => {
-    scrollToSection(sectionId);
+    switch (sectionId) {
+      case "home":
+        navigate(routes.home);
+        break;
+      case "explore":
+        navigate(routes.explore);
+        break;
+
+      default:
+        scrollToSection(sectionId);
+    }
     setIsDrawerOpen(false);
   };
 
   const handleOnBackClick = () => navigate(-1);
-
-  const handleOnLogoClick = () => navigate(routes.home);
+  // const handleOnLogoClick = () => navigate(routes.home);
 
   return (
     <>
@@ -107,72 +117,68 @@ const ApplicationBar = () => {
             >
               {isDesktop && (
                 <>
-                  <Box
-                    sx={{
-                      flexGrow: 1,
-                      display: "flex",
-                      alignItems: "center",
-                      ml: "-18px",
-                      px: 0,
-                    }}
-                  >
-                    <Button
-                      color="primary"
-                      variant="text"
-                      size="small"
-                      component="button"
-                      onClick={handleOnLogoClick}
+                  <Box sx={{ display: { xs: "none", md: "flex" } }}>
+                    <MenuItem onClick={handleOnMenuItemClick("home")}>
+                      Home
+                    </MenuItem>
+
+                    <MenuItem
+                      onClick={handleOnMenuItemClick("explore")}
+                      sx={{ py: "6px", px: "12px" }}
                     >
-                      <Logo />
-                    </Button>
+                      <Typography variant="body2" color="text.primary">
+                        Explore
+                      </Typography>
+                    </MenuItem>
 
-                    <Box sx={{ display: { xs: "none", md: "flex" } }}>
-                      <MenuItem
-                        onClick={handleOnMenuItemClick("features")}
-                        sx={{ py: "6px", px: "12px" }}
-                      >
-                        <Typography variant="body2" color="text.primary">
-                          Features
-                        </Typography>
-                      </MenuItem>
+                    {pagesMatch.isHomePage && (
+                      <>
+                        <MenuItem
+                          onClick={handleOnMenuItemClick("features")}
+                          sx={{ py: "6px", px: "12px" }}
+                        >
+                          <Typography variant="body2" color="text.primary">
+                            Features
+                          </Typography>
+                        </MenuItem>
 
-                      {/* 
-                  <MenuItem
-                    onClick={handleOnMenuItemClick("testimonials")}
-                    sx={{ py: "6px", px: "12px" }}
-                  >
-                    <Typography variant="body2" color="text.primary">
-                      Testimonials
-                    </Typography>
-                  </MenuItem> */}
+                        {/* <MenuItem
+                          onClick={handleOnMenuItemClick("testimonials")}
+                          sx={{ py: "6px", px: "12px" }}
+                        >
+                          <Typography variant="body2" color="text.primary">
+                            Testimonials
+                          </Typography>
+                        </MenuItem> */}
 
-                      {/* <MenuItem
-                    onClick={handleOnMenuItemClick("highlights")}
-                    sx={{ py: "6px", px: "12px" }}
-                  >
-                    <Typography variant="body2" color="text.primary">
-                      Highlights
-                    </Typography>
-                  </MenuItem> */}
+                        {/* <MenuItem
+                          onClick={handleOnMenuItemClick("highlights")}
+                          sx={{ py: "6px", px: "12px" }}
+                        >
+                          <Typography variant="body2" color="text.primary">
+                            Highlights
+                          </Typography>
+                        </MenuItem> */}
 
-                      <MenuItem
-                        onClick={handleOnMenuItemClick("pricing")}
-                        sx={{ py: "6px", px: "12px" }}
-                      >
-                        <Typography variant="body2" color="text.primary">
-                          Pricing
-                        </Typography>
-                      </MenuItem>
+                        <MenuItem
+                          onClick={handleOnMenuItemClick("pricing")}
+                          sx={{ py: "6px", px: "12px" }}
+                        >
+                          <Typography variant="body2" color="text.primary">
+                            Pricing
+                          </Typography>
+                        </MenuItem>
 
-                      <MenuItem
-                        onClick={handleOnMenuItemClick("faq")}
-                        sx={{ py: "6px", px: "12px" }}
-                      >
-                        <Typography variant="body2" color="text.primary">
-                          FAQ
-                        </Typography>
-                      </MenuItem>
-                    </Box>
+                        <MenuItem
+                          onClick={handleOnMenuItemClick("faq")}
+                          sx={{ py: "6px", px: "12px" }}
+                        >
+                          <Typography variant="body2" color="text.primary">
+                            FAQ
+                          </Typography>
+                        </MenuItem>
+                      </>
+                    )}
                   </Box>
 
                   <Box
@@ -216,24 +222,27 @@ const ApplicationBar = () => {
                     display="flex"
                     component="div"
                     flexDirection="row"
-                    justifyContent="space-between"
+                    justifyContent={
+                      pagesMatch.isHomePage ? "flex-end" : "space-between"
+                    }
                     width="100%"
                   >
                     {!pagesMatch.isHomePage && (
                       <BackButton onClick={handleOnBackClick} />
                     )}
 
-                    {pagesMatch.isHomePage && (
+                    {/* {pagesMatch.isHomePage && (
                       <Button
-                        color="primary"
-                        variant="text"
                         size="small"
+                        variant="text"
+                        color="primary"
                         component="button"
+                        sx={{ marginX: 0 }}
                         onClick={handleOnLogoClick}
                       >
                         <Logo />
                       </Button>
-                    )}
+                    )} */}
 
                     <Button
                       variant="text"
@@ -272,25 +281,45 @@ const ApplicationBar = () => {
                           />
                         </Box>
 
-                        <MenuItem onClick={handleOnMenuItemClick("features")}>
-                          Features
+                        <MenuItem onClick={handleOnMenuItemClick("home")}>
+                          Home
                         </MenuItem>
 
-                        {/* <MenuItem onClick={handleOnMenuItemClick("testimonials")}>
-                      Testimonials
-                    </MenuItem> */}
-
-                        {/* <MenuItem onClick={handleOnMenuItemClick("highlights")}>
-                      Highlights
-                    </MenuItem> */}
-
-                        <MenuItem onClick={handleOnMenuItemClick("pricing")}>
-                          Pricing
+                        <MenuItem onClick={handleOnMenuItemClick("explore")}>
+                          Explore
                         </MenuItem>
 
-                        <MenuItem onClick={handleOnMenuItemClick("faq")}>
-                          FAQ
-                        </MenuItem>
+                        {pagesMatch.isHomePage && (
+                          <>
+                            <MenuItem
+                              onClick={handleOnMenuItemClick("features")}
+                            >
+                              Features
+                            </MenuItem>
+
+                            {/* <MenuItem
+                              onClick={handleOnMenuItemClick("testimonials")}
+                            >
+                              Testimonials
+                            </MenuItem>
+
+                            <MenuItem
+                              onClick={handleOnMenuItemClick("highlights")}
+                            >
+                              Highlights
+                            </MenuItem> */}
+
+                            <MenuItem
+                              onClick={handleOnMenuItemClick("pricing")}
+                            >
+                              Pricing
+                            </MenuItem>
+
+                            <MenuItem onClick={handleOnMenuItemClick("faq")}>
+                              FAQ
+                            </MenuItem>
+                          </>
+                        )}
 
                         {/* <Divider />
 

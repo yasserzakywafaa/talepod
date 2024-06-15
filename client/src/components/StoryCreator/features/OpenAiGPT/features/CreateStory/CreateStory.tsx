@@ -14,7 +14,7 @@ import { ChangeEvent, FormEvent } from "react";
 import { AutoAwesome } from "@mui/icons-material";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
 import ReactMarkdown from "react-markdown";
-import TextToSpeechGeneration from "../TextToSpeechGeneration/TextToSpeechGeneration";
+import TextToSpeechGeneration from "../CreateStoryAudio/CreateStoryAudio";
 import { useOpenAiGPTContext } from "../../store/Provider";
 
 const OpenAiGPTTextGeneration = () => {
@@ -69,7 +69,7 @@ const OpenAiGPTTextGeneration = () => {
             variant="contained"
             endIcon={<AutoAwesome />}
           >
-            Generate
+            Create
           </Button>
         </Stack>
       </Box>

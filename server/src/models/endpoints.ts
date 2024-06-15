@@ -1,18 +1,23 @@
 const END_POINTS = {
   TESTING: {
-    ROUTE_ONE: "/api/test-route-one",
-    ROUTE_TWO: "/api/test-route-two",
+    ROUTE_ONE: "/api/v1/test-route-one",
+    ROUTE_TWO: "/api/v1/test-route-two",
   },
   GOOGLE_GEMINI: {
-    GENERATE: `/api/gemini/generate`,
-    CHAT: `/api/gemini/chat`,
+    CREATE: {
+      STORY: `/api/v1/gemini/create/story`,
+    },
   },
   OPENAI: {
-    GENERATE: {
-      TEXT: `/api/openai/generate/text`,
-      TEXT_TO_SPEECH: `/api/openai/generate/text-to-speech`,
-      IMAGES: `/api/openai/generate/images`,
+    CREATE: {
+      STORY: `/api/v1/openai/create/story`,
+      STORY_AUDIO: `/api/v1/openai/create/story-audio`,
+      IMAGES: `/api/v1/openai/create/images`,
     },
+  },
+  STORIES: {
+    GET_ALL_STORIES: `/api/v1/stories`,
+    GET_STORY_BY_ID: (storyId: string) => `/api/v1/story/${storyId}`,
   },
 };
 

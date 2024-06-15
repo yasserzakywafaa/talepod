@@ -1,15 +1,16 @@
 import { NextFunction, Request, Response } from "express";
+import { saveFileDataToDb, saveStoryToDb } from "../models/mongoDb";
 
 import CONFIG from "../config";
 import { IMAGES_SIZES } from "../models/openaiModel";
 import OpenAi from "openai";
+import extractStoryParts from "../utils/extractStoryParts";
 import fs from "fs";
-import { saveFileDataToDb } from "../models/mongoDb";
 import { uploadFileToS3 } from "../models/amazonS3";
 
 const openai = new OpenAi();
 
-export const generateText = async (
+export const createStory = async (
   request: Request,
   response: Response,
   next: NextFunction
@@ -17,32 +18,51 @@ export const generateText = async (
   const userPrompt = request.body.userPrompt;
   // OpenAI Text Generation API Call
   try {
-    const generateRequest = await openai.chat.completions.create({
+    const createRequest = await openai.chat.completions.create({
       messages: [{ role: "user", content: userPrompt }],
       model: CONFIG.OPENAI_MODEL_NAME,
       temperature: 0,
     });
+    const openaiResponse = createRequest.choices[0].message.content;
 
-    console.log("ℹ️  OpenAIController:>>> GENERATE TEXT", {
+    if (openaiResponse.length) {
+      // Extract the parts from the story
+      const storyParts = extractStoryParts(openaiResponse);
+
+      try {
+        // Save story to MongoDB Atlas
+        const storyId = await saveStoryToDb({
+          ...storyParts,
+          createdAt: new Date(),
+        });
+
+        response.json({
+          storyId,
+          storyContent: openaiResponse,
+        });
+      } catch (error) {
+        throw new Error("❌ Failed to story to Db");
+      }
+    }
+
+    console.log("ℹ️  OpenAIController:>>> Create Story", {
       request: request.path,
       MODEL_NAME: CONFIG.OPENAI_MODEL_NAME,
     });
-
-    response.json(generateRequest.choices[0].message.content);
   } catch (error) {
-    console.error("❌ OpenAIController:>>> GENERATE TEXT Error", {
+    console.error("❌ OpenAIController:>>> Create Story Error", {
       error,
     });
     next(error);
   }
 };
 
-export const generateTextToSpeech = async (
+export const createStoryAudio = async (
   request: Request,
   response: Response,
   next: NextFunction
 ) => {
-  const { userPrompt, fileName } = request.body;
+  const { storyId, userPrompt, fileName } = request.body;
   const {
     SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH,
     SERVER_TEXT_TO_SPEECH_PATH,
@@ -51,7 +71,7 @@ export const generateTextToSpeech = async (
 
   // OpenAI Text-to-Speech Generation API Call
   try {
-    const generateRequest = await openai.audio.speech.create({
+    const createRequest = await openai.audio.speech.create({
       speed: 1.0,
       voice: "nova",
       input: userPrompt,
@@ -61,7 +81,7 @@ export const generateTextToSpeech = async (
 
     const audioFileName = `${fileName}.mp3`;
     const filePath = `${CONFIG.SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH}/${audioFileName}`;
-    const buffer = Buffer.from(await generateRequest.arrayBuffer());
+    const buffer = Buffer.from(await createRequest.arrayBuffer());
     !fs.existsSync(SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH) &&
       fs.mkdirSync(SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH, {
         recursive: true,
@@ -73,15 +93,13 @@ export const generateTextToSpeech = async (
 
     if (fileUrl) {
       // Save file to MongoDB Atlas
-      await saveFileDataToDb(audioFileName, fileUrl);
+      await saveFileDataToDb(storyId, audioFileName, fileUrl);
     } else {
       throw new Error("❌ Failed to upload file to S3");
     }
 
-    console.log("ℹ️  OpenAI:>>> GENERATE TEXT TO SPEECH", {
+    console.log("ℹ️  OpenAI:>>> Create Story Audio", {
       fileUrl,
-      writePath: filePath,
-      serverFilesPath: SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH,
       MODEL_NAME: OPENAI_TTS_MODEL_NAME,
     });
 
@@ -90,14 +108,14 @@ export const generateTextToSpeech = async (
       fileName,
     });
   } catch (error) {
-    console.error("❌ OpenAI:>>> GENERATE TEXT TO SPEECH Error", {
+    console.error("❌ OpenAI:>>> Create Story Audio Error", {
       error,
     });
     next(error);
   }
 };
 
-export const generateImages = async (
+export const createImages = async (
   request: Request,
   response: Response,
   next: NextFunction
@@ -127,7 +145,7 @@ export const generateImages = async (
       imageUrls.push(imageUrl);
     }
 
-    console.log("ℹ️  OpenAIController:>>> GENERATE IMAGES", {
+    console.log("ℹ️  OpenAIController:>>> Create Images", {
       request,
       // response: imageRequest,
       response: imageUrls,
@@ -136,7 +154,7 @@ export const generateImages = async (
     // response.json(imageRequest.data[0].url);
     response.json(imageUrls);
   } catch (error) {
-    console.error("❌ OpenAIController:>>> GENERATE IMAGES Error", {
+    console.error("❌ OpenAIController:>>> Create Images Error", {
       error,
     });
     next(error);
@@ -144,9 +162,9 @@ export const generateImages = async (
 };
 
 const OpenAIController = {
-  generateText,
-  generateTextToSpeech,
-  generateImages,
+  createStory,
+  createStoryAudio,
+  createImages,
 };
 
 export default OpenAIController;

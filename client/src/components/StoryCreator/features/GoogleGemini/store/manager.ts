@@ -17,7 +17,6 @@ export interface GoogleGeminiManager {
   handleUpdateOptionsAutoPrompt: (optionsAutoPrompt: string) => void;
   handleUpdateUserPrompt: (userPrompt: string) => void;
   handleSetAiAnswer: (aiAnswer: GoogleGeminiAIAnswerProps) => void;
-  handleChatRequest: (userPrompt: string) => void;
   handleGenerateContent: (userPrompt: string) => void;
 }
 
@@ -55,59 +54,10 @@ export const useGoogleGeminiManager = (
     });
   };
 
-  const handleChatRequest = async (userPrompt: string) => {
-    try {
-      const chatResponse = await axios.post(
-        END_POINTS.GOOGLE_GEMINI.CHAT,
-        {
-          userPrompt,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Custom-Header": new Date().toISOString(), // Adding a custom header to trigger preflight
-          },
-        }
-      );
-      console.log("GoogleGemini:>>> handleChatRequest:>>> CHAT", {
-        chatResponse,
-      });
-      handleSetAiAnswer({
-        statusCode: chatResponse.status,
-        title: chatResponse.statusText,
-        description: chatResponse.data,
-      });
-      handleIsFetching(false);
-    } catch (error) {
-      console.error("GoogleGemini:>>> handleChatRequest:>>> CHAT Error", {
-        error,
-      });
-      if (axios.isAxiosError(error) && error.response) {
-        handleSetAiAnswer({
-          statusCode: error.response.status,
-          title: error.response.statusText,
-          description: error.response.data.message,
-        });
-        Notify({
-          content: `${error.response.status} ${error.response.statusText}\n${
-            error.response.data.message ?? ""
-          }`,
-          type: ToastTypes.Error,
-        });
-      } else {
-        Notify({
-          content: `Oops! Something went wrong.\n${error}`,
-          type: ToastTypes.Error,
-        });
-      }
-      handleIsFetching(false);
-    }
-  };
-
   const handleGenerateContent = async (userPrompt: string) => {
     try {
       const generateResponse = await axios.post(
-        END_POINTS.GOOGLE_GEMINI.GENERATE,
+        END_POINTS.GOOGLE_GEMINI.CREATE.STORY,
         { userPrompt },
         {
           headers: {
@@ -167,7 +117,6 @@ export const useGoogleGeminiManager = (
     handleUpdateOptionsAutoPrompt,
     handleUpdateUserPrompt,
     handleSetAiAnswer,
-    handleChatRequest,
     handleGenerateContent,
   };
 };

@@ -4,7 +4,8 @@ export const lightTheme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#bb86fc", // Indigo
+      // main: "#bb86fc", // Indigo
+      main: "#fea4ae", // Rose
     },
     secondary: {
       main: "#6B8E23", // Olive Green
@@ -26,7 +27,8 @@ export const darkTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: "#bb86fc", // Indigo
+      // main: "#bb86fc", // Indigo
+      main: "#fea4ae", // Rose
     },
     secondary: {
       main: "#6B8E23", // Olive Green

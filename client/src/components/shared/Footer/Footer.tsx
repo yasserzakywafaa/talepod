@@ -2,10 +2,10 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 // import FacebookIcon from "@mui/icons-material/GitHub";
+// import LinkedInIcon from "@mui/icons-material/LinkedIn";
+// import Logo from "src/components/shared/Logo/Logo";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import Logo from "src/components/shared/Logo/Logo";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import TwitterIcon from "@mui/icons-material/X";
@@ -50,17 +50,10 @@ const Footer = () => {
           }}
         >
           <Box sx={{ width: { xs: "100%", sm: "60%" } }}>
-            <Box sx={{ ml: "-15px" }}>
-              {/* <img
-                src={
-                  "https://assets-global.website-files.com/61ed56ae9da9fd7e0ef0a967/61f12e6faf73568658154dae_SitemarkDefault.svg"
-                }
-                style={logoStyle}
-                alt="logo of Swissai"
-              /> */}
-
+            {/* <Box sx={{ ml: "-15px" }}>
               <Logo />
-            </Box>
+            </Box> */}
+
             <Typography variant="body2" fontWeight={600} gutterBottom>
               Newsletter
             </Typography>
@@ -117,6 +110,7 @@ const Footer = () => {
             FAQs
           </Link>
         </Box>
+
         <Box
           sx={{
             display: { xs: "none", sm: "flex" },
@@ -130,23 +124,6 @@ const Footer = () => {
           <Link color="text.secondary" href="#">
             About us
           </Link>
-          <Link color="text.secondary" href="#">
-            Careers
-          </Link>
-          <Link color="text.secondary" href="#">
-            Press
-          </Link>
-        </Box>
-        <Box
-          sx={{
-            display: { xs: "none", sm: "flex" },
-            flexDirection: "column",
-            gap: 1,
-          }}
-        >
-          <Typography variant="body2" fontWeight={600}>
-            Legal
-          </Typography>
           <Link color="text.secondary" href="#">
             Terms
           </Link>
@@ -209,7 +186,7 @@ const Footer = () => {
           >
             <TwitterIcon />
           </IconButton>
-
+          {/* 
           <IconButton
             color="inherit"
             href="https://www.linkedin.com/company/mui/"
@@ -217,7 +194,7 @@ const Footer = () => {
             sx={{ alignSelf: "center" }}
           >
             <LinkedInIcon />
-          </IconButton>
+          </IconButton> */}
         </Stack>
       </Box>
     </Container>

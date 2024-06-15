@@ -2,8 +2,9 @@ import { AutoFixHigh } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
+import MainCharacter from "../../../assets/images/sleeping_bunny_with_a_moon.png";
 import Typography from "@mui/material/Typography";
-import { alpha } from "@mui/material";
+// import { alpha } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 export default function Hero() {
@@ -27,16 +28,19 @@ export default function Hero() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          pt: { xs: 2, sm: 20 },
+          pt: { xs: 4 },
           pb: { xs: 8, sm: 12 },
         }}
       >
-        <Box
+        <Box sx={{ maxWidth: "300px" }}>
+          <img src={MainCharacter} width="100%" />
+        </Box>
+        {/* <Box
           id="image"
           sx={(theme) => ({
-            my: { xs: 6, sm: 8 },
+            my: { xs: 6 },
             alignSelf: "center",
-            height: { xs: 200, sm: 700 },
+            height: { xs: 200, sm: 400 },
             width: "100%",
             backgroundSize: "cover",
             borderRadius: "10px",
@@ -50,7 +54,9 @@ export default function Hero() {
             //     ? `0 0 12px 8px ${alpha("#9CCCFC", 0.2)}`
             //     : `0 0 24px 12px ${alpha("#033363", 0.2)}`,
           })}
-        />
+        >
+          <img src={MainCharacter} />
+        </Box> */}
 
         <Typography
           variant="h1"

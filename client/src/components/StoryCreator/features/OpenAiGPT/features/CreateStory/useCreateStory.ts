@@ -14,7 +14,7 @@ export interface UseTextGeneration {
   handleGenerateTextRequest: (userPrompt: string) => void;
 }
 
-export const useTextGeneration = (store: OpenAiGPTStore): UseTextGeneration => {
+export const useCreateStory = (store: OpenAiGPTStore): UseTextGeneration => {
   const handleIsTextGenFetching = (isFetching: boolean) => {
     store.updateState("textGeneration", {
       ...store.state.textGeneration,
@@ -40,7 +40,7 @@ export const useTextGeneration = (store: OpenAiGPTStore): UseTextGeneration => {
   const handleGenerateTextRequest = async (userPrompt: string) => {
     try {
       const response = await axios.post(
-        END_POINTS.OPENAI.GENERATE.TEXT,
+        END_POINTS.OPENAI.GENERATE.STORY,
         {
           userPrompt,
         },
@@ -59,8 +59,9 @@ export const useTextGeneration = (store: OpenAiGPTStore): UseTextGeneration => {
       store.updateState("textGeneration", {
         ...store.state.textGeneration,
         generatedStory: {
+          storyId: response.data.storyId,
           statusCode: response.status,
-          mainStory: response.data,
+          mainStory: response.data.storyContent,
         },
       });
     } catch (error) {

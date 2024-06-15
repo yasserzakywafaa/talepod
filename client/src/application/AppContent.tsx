@@ -12,6 +12,8 @@ import { useApplicationContext } from "./store/Provider";
 
 const HomePage = lazy(() => import("../Pages/Home/Home"));
 const CreateStoryPage = lazy(() => import("../Pages/CreateStory/CreateStory"));
+const ExplorePage = lazy(() => import("../Pages/Explore/Explore"));
+const ViewStoryPage = lazy(() => import("../Pages/ViewStory/ViewStory"));
 const CheckoutPage = lazy(() => import("../Pages/Checkout/CheckoutPage"));
 const UnauthorizedPage = lazy(
   () => import("../Pages/Unauthorized/Unauthorized")
@@ -31,6 +33,14 @@ const AppContent = () => {
           <Route index path={routes.home} element={<HomePage />} />
 
           <Route index path={routes.create} element={<CreateStoryPage />} />
+
+          <Route index path={routes.explore} element={<ExplorePage />} />
+
+          <Route
+            index
+            path={routes.story(":storyId")}
+            element={<ViewStoryPage />}
+          />
 
           <Route path={routes.checkout} element={<CheckoutPage />} />
 

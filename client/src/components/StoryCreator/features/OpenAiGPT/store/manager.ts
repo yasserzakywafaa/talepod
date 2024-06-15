@@ -5,11 +5,11 @@ import {
 
 import { GeneratedStoryParts } from "./state";
 import { OpenAiGPTStore } from "./store";
+import { useCreateStory } from "../features/CreateStory/useCreateStory";
+import { useCreateStoryAudio } from "../features/CreateStoryAudio/useCreateStoryAudio";
 import { useEffect } from "react";
-import { useImageGeneration } from "../features/ImageGeneration/useImageGeneration";
+import { useImageGeneration } from "../features/CreateStoryImage/useCreateStoryImage";
 import { useStoryCreatorContext } from "src/components/StoryCreator/store/Provider";
-import { useTextGeneration } from "../features/TextGeneration/useTextGeneration";
-import { useTextToSpeechGeneration } from "../features/TextToSpeechGeneration/useTextToSpeechGeneration";
 
 export interface OpenAiGPTManager {
   handleUpdateChildInfo: (name: string, value: string) => void;
@@ -39,13 +39,13 @@ export const useOpenAiGPTManager = (
     handleUpdateUserTextPrompt,
     handleUpdateAutoTextPrompt,
     handleGenerateTextRequest,
-  } = useTextGeneration(store);
+  } = useCreateStory(store);
 
   const {
     handleIsTextToSpeechGenFetching,
     handleSetTextToSpeechAiAnswer,
     handleGenerateTextToSpeechRequest,
-  } = useTextToSpeechGeneration(store);
+  } = useCreateStoryAudio(store);
 
   const {
     handleIsImageGenFetching,

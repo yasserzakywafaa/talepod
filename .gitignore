@@ -11,7 +11,7 @@
 **/.DS_Store
 
 # Text-to-speech generated audio files
-/server/assets/audio/textToSpeech
+/server/assets/
 
 # IDEs and editors
 /.idea

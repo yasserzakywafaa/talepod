@@ -20,6 +20,7 @@ export interface TextGenerationProps {
 }
 
 export interface GeneratedStoryParts extends Partial<StoryParts> {
+  storyId?: string;
   statusCode?: number;
   url?: string;
 }

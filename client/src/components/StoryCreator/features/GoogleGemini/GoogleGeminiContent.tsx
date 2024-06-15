@@ -32,7 +32,6 @@ export const GoogleGeminiContent = () => {
     if (userPrompt || optionsAutoPrompt) {
       handleIsFetching(true);
       handleGenerateContent(userPrompt || optionsAutoPrompt);
-      // handleChatRequest(userPrompt || optionsAutoPrompt);
     }
   };
 

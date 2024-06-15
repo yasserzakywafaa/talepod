@@ -72,7 +72,7 @@ const OpenAiGPTImageGeneration = () => {
             variant="contained"
             endIcon={<AndroidRounded />}
           >
-            Generate Image
+            Create Image
           </Button>
         </Stack>
       </Box>

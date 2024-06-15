@@ -2,13 +2,16 @@ import {
   Notify,
   ToastTypes,
 } from "src/components/shared/Notification/Notification";
+import {
+  getRandomString,
+  replaceSpaceWithUnderscore,
+} from "src/shared/utils/stringUtils";
 
 import END_POINTS from "src/application/shared/endpoints";
 import { GeneratedStoryParts } from "../../store/state";
 import { OpenAiGPTStore } from "../../store/store";
 import axios from "axios";
 import extractStoryParts from "src/components/StoryCreator/utils/extractStoryParts";
-import { getRandomString } from "src/shared/utils/stringUtils";
 
 export interface UseTextGeneration {
   handleIsTextToSpeechGenFetching: (isFetching: boolean) => void;
@@ -16,7 +19,7 @@ export interface UseTextGeneration {
   handleGenerateTextToSpeechRequest: () => void;
 }
 
-export const useTextToSpeechGeneration = (
+export const useCreateStoryAudio = (
   store: OpenAiGPTStore
 ): UseTextGeneration => {
   const handleIsTextToSpeechGenFetching = (isFetching: boolean) => {
@@ -43,23 +46,27 @@ export const useTextToSpeechGeneration = (
 
   const handleGenerateTextToSpeechRequest = async () => {
     try {
-      const { name, age } = store.state.childInfo;
+      const { name } = store.state.childInfo;
+      const story = store.state.textGeneration.generatedStory;
 
-      if (!store.state.textGeneration.generatedStory) return;
+      if (!story) return;
 
       // Extract the parts from the story
-      const storyParts = extractStoryParts(
-        store.state.textGeneration.generatedStory.mainStory as string
-      );
+      const storyParts = extractStoryParts(story.mainStory as string);
       console.log("🎯 storyParts :>>>", {
         storyParts,
       });
 
+      const fileName = `${replaceSpaceWithUnderscore(
+        storyParts.title
+      ).toLowerCase()}_${name}_${getRandomString()}`;
+
       const response = await axios.post(
-        END_POINTS.OPENAI.GENERATE.TEXT_TO_SPEECH,
+        END_POINTS.OPENAI.GENERATE.STORY_AUdio,
         {
+          fileName,
+          storyId: story.storyId,
           userPrompt: `${storyParts.mainStory} ${storyParts.poem}`,
-          fileName: `${name}_${age}yo_${storyParts.title}_${getRandomString()}`,
         },
         {
           headers: {

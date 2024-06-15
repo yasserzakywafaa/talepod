@@ -1,11 +1,14 @@
+import { MongoClient, ObjectId } from "mongodb";
+import { createDocument, updateDocument } from "./crudOperations";
+
 // import AudioFile from "./schema/audioFile";
 import CONFIG from "../../config";
-import { MongoClient } from "mongodb";
+import { Story } from "../types";
 
 let dbClient: MongoClient;
 let database: any;
 
-enum DBCollections {
+export enum DBCollections {
   Stories = "Stories",
   Users = "Users",
 }
@@ -65,7 +68,26 @@ const closeDatabase = async () => {
   }
 };
 
+const saveStoryToDb = async (
+  story: Partial<Story>
+): Promise<ObjectId | string> => {
+  try {
+    const storyId: ObjectId = await createDocument(
+      story as Story,
+      DBCollections.Stories
+    );
+    console.log("✅ Story saved to DB successfully");
+
+    return storyId;
+  } catch (error) {
+    console.error("❌ Error saving story data to DB", error);
+
+    return "";
+  }
+};
+
 const saveFileDataToDb = async (
+  storyId: string,
   audioFileName: string,
   audioFileS3Uri: string
 ): Promise<void> => {
@@ -76,7 +98,9 @@ const saveFileDataToDb = async (
       url: audioFileS3Uri,
       createdAt: new Date(),
     };
-    await collection.insertOne(audioFile);
+
+    // await collection.insertOne(audioFile);
+    await updateDocument(storyId, DBCollections.Stories, { audioFile });
 
     console.log("✅ File saved to DB successfully");
   } catch (error) {
@@ -84,4 +108,11 @@ const saveFileDataToDb = async (
   }
 };
 
-export { dbClient, database, databaseInit, closeDatabase, saveFileDataToDb };
+export {
+  dbClient,
+  database,
+  databaseInit,
+  closeDatabase,
+  saveStoryToDb,
+  saveFileDataToDb,
+};

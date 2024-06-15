@@ -14,10 +14,6 @@ const OpenAiGPTTextToSpeechGeneration = () => {
   const handleOnGenerateTextToSpeechClick = async (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent> | undefined
   ) => {
-    console.log("handleOnGenerateTextToSpeechClick:>>> ", {
-      textGeneration,
-    });
-
     if (textGeneration.generatedStory) {
       handleIsTextToSpeechGenFetching(true);
       handleGenerateTextToSpeechRequest(
@@ -41,7 +37,7 @@ const OpenAiGPTTextToSpeechGeneration = () => {
           disabled={!textGeneration.generatedStory?.mainStory}
           onClick={handleOnGenerateTextToSpeechClick}
         >
-          Generate Audio
+          Create Audio
         </Button>
       </Stack>
 

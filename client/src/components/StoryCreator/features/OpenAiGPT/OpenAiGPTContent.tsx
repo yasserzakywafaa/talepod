@@ -1,7 +1,8 @@
 import { Box, Typography } from "@mui/material";
 
-// import ImageGeneration from "./features/ImageGeneration/ImageGeneration";
-import TextGeneration from "./features/TextGeneration/TextGeneration";
+import CreateStory from "./features/CreateStory/CreateStory";
+
+// import CreateStoryImages from "./features/CreateStoryImage/CreateStoryImage";
 
 // import TextToSpeechGeneration from "./features/TextToSpeechGeneration/TextToSpeechGeneration";
 
@@ -19,13 +20,13 @@ const OpenAiGPTContent = () => {
       <Box className="openai-text-generation" marginBottom="1rem">
         <Typography variant="h4">Openai Chat-GPT Text Generation</Typography>
 
-        <TextGeneration />
+        <CreateStory />
       </Box>
 
       {/* <Box className="openai-text-generation" marginTop="1rem">
         <Typography variant="h4">Openai Chat-GPT Image Generation</Typography>
 
-        <ImageGeneration />
+        <CreateStoryImages />
       </Box> */}
     </Box>
   );

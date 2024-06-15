@@ -58,6 +58,14 @@ export const replaceSpaceWithDash = (string: string) => {
 };
 
 /**
+ * Replace spaces in a string with underscore
+ */
+export const replaceSpaceWithUnderscore = (string: string) => {
+  // return string.split(" ").join("-").toLowerCase();
+  return string.split(" ").join("_");
+};
+
+/**
  * Convert bytes into Megabytes
  */
 export const convertToMB = (bytes: number) => (bytes / 1000000).toFixed(0);
