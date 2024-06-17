@@ -24,7 +24,10 @@ const ExplorePage: React.FC = () => {
     <Page title="TalePod | Public Bedtime Stories" className="explore-page">
       <Container
         sx={{
-          pt: { xs: 14 },
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          pt: { xs: 10 },
           pb: { xs: 8, sm: 12 },
         }}
       >

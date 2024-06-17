@@ -5,7 +5,6 @@ import {
   Card,
   CardActions,
   CardContent,
-  CardMedia,
   Typography,
 } from "@mui/material";
 
@@ -31,13 +30,14 @@ const MediaCard = (props: MediaCardParams) => {
   };
 
   return (
-    <Card sx={{ maxWidth: maxImgWidth }}>
-      <CardMedia
+    // <Card sx={{ maxWidth: maxImgWidth }}>
+    <Card sx={{ maxWidth: maxImgWidth, mb: 4, mr: 4 }}>
+      {/* <CardMedia
         component="img"
         alt="green iguana"
         height="150"
         src={props.image || `https://picsum.photos/${maxImgWidth}/150`}
-      />
+      /> */}
 
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
@@ -50,7 +50,7 @@ const MediaCard = (props: MediaCardParams) => {
 
       <CardActions>
         <Button size="large" variant="outlined" onClick={handleOnViewClick}>
-          View Story
+          Read Story
         </Button>
       </CardActions>
     </Card>
