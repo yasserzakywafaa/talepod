@@ -12,6 +12,7 @@
 
 # Text-to-speech generated audio files
 /server/assets/
+/server/build/
 
 # IDEs and editors
 /.idea
