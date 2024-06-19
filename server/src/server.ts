@@ -11,16 +11,16 @@ const buildPath = path.join(__dirname, "../client/");
 // const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.STAG_PORT;
 
 const getPort = (): string => {
+  // If process.env.PORT is set (in Heroku), use it
+  if (process.env.PORT) return process.env.PORT;
+
   switch (true) {
     case CONFIG.IS_DEV:
-      return CONFIG.DEV_PORT;
-
+      return CONFIG.DEV_PORT || "8000";
     case CONFIG.IS_STAG:
-      return CONFIG.STAG_PORT;
-
+      return CONFIG.STAG_PORT || "8000";
     case CONFIG.IS_PROD:
-      return CONFIG.PROD_PORT;
-
+      return CONFIG.PROD_PORT || "8000";
     default:
       return "8000";
   }
