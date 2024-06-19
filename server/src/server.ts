@@ -1,14 +1,19 @@
+import { NextFunction, Request, Response } from "express";
+
 import CONFIG from "./config";
 import bodyParser from "body-parser";
 import { databaseInit } from "./models/mongoDb";
 import express from "express";
+import googleGeminiRoutes from "./routes/googleGeminiRoutes";
 import handleCorsConfig from "./cors-config";
-import loadRoutes from "./routes";
+// import loadRoutes from "./routes";
+import openaiRoutes from "./routes/openaiRoutes";
 import path from "path";
+import storiesRouter from "./routes/storiesRoutes";
+import testRouter from "./routes/testRoutes";
 
 const expressApp = express();
 const buildPath = path.join(__dirname, "../client/");
-// const PORT = CONFIG.IS_DEV ? CONFIG.DEV_PORT : CONFIG.STAG_PORT;
 
 const getPort = (): string => {
   // If process.env.PORT is set (in Heroku), use it
@@ -16,11 +21,11 @@ const getPort = (): string => {
 
   switch (true) {
     case CONFIG.IS_DEV:
-      return CONFIG.DEV_PORT || "8000";
+      return CONFIG.DEV_PORT;
     case CONFIG.IS_STAG:
-      return CONFIG.STAG_PORT || "8000";
+      return CONFIG.STAG_PORT;
     case CONFIG.IS_PROD:
-      return CONFIG.PROD_PORT || "8000";
+      return CONFIG.PROD_PORT;
     default:
       return "8000";
   }
@@ -35,9 +40,18 @@ expressApp.use(express.json());
 expressApp.use(bodyParser.json());
 expressApp.use(express.urlencoded({ extended: true }));
 
+// Mount API routes
+expressApp.use(testRouter);
+expressApp.use(storiesRouter);
+expressApp.use(openaiRoutes);
+expressApp.use(googleGeminiRoutes);
+
+// Initiate MongoDB connection
+databaseInit();
+
 if (CONFIG.SERVE_STATIC_CONTENT === "true") {
-  // Load API routes dynamically
-  loadRoutes(expressApp);
+  // // Load API routes dynamically
+  // loadRoutes(expressApp);
 
   // Serve Frontend Bundled Application
   expressApp.use(express.static(buildPath));
@@ -53,13 +67,11 @@ if (CONFIG.SERVE_STATIC_CONTENT === "true") {
     res.sendFile(path.join(buildPath, "index.html"));
     // res.send("👋🏻  HELLO 'GET' Request 🙋🏻‍♂️ ");
   });
-} else {
-  // Load API routes dynamically
-  loadRoutes(expressApp);
 }
-
-// Initiate MongoDB connection
-databaseInit();
+// else {
+//   // Load API routes dynamically
+//   loadRoutes(expressApp);
+// }
 
 expressApp.listen(PORT, (): void => {
   console.log("☁️  Server running on:>>>", {
