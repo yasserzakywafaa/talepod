@@ -1,6 +1,6 @@
 {
-  "name": "React Progressive Web Application",
-  "short_name": "React PWA",
+  "name": "TalePod | Create Custom Bedtime Stories",
+  "short_name": "TalePod",
   "start_url": "/",
   "orientation": "portrait",
   "theme_color": "#101724",

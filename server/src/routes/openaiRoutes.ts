@@ -1,14 +1,20 @@
 import END_POINTS from "../models/endpoints";
 import OpenAIController from "../controllers/OpenAIController";
-import express from "express";
-// import END_POINTS from 'server/src/models/endpoints'
-const openAIRouter = express.Router();
+import { Router } from "express";
+
+const openAIRouter = Router();
 
 // Define API routes
+openAIRouter.post(END_POINTS.OPENAI.CREATE.STORY, OpenAIController.createStory);
+
 openAIRouter.post(
-  END_POINTS.OPENAI.USER_PROMPT,
-  OpenAIController.generateAnswer
+  END_POINTS.OPENAI.CREATE.STORY_AUDIO,
+  OpenAIController.createStoryAudio
 );
-// openAIRouter.post('/api/openai/:userQuestion', openAIController.generateStory);
+
+openAIRouter.post(
+  END_POINTS.OPENAI.CREATE.IMAGES,
+  OpenAIController.createImages
+);
 
 export default openAIRouter;

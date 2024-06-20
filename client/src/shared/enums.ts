@@ -23,8 +23,3 @@ export enum DocumentsEnum {
   Covers = "Covers",
   Files = "Files",
 }
-
-export enum AttachmentType {
-  Cover = "Cover",
-  File = "File",
-}

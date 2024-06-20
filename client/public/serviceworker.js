@@ -2,8 +2,8 @@ const _this = this;
 const version = 11;
 // const isOnline = true;
 const host = _this.location.origin;
-const CACHE_NAME = `react-pwa-ai-file-uploader-v${version}`;
-const urlsToCache = ["/", "/settings", "/index.html"];
+const CACHE_NAME = `talepod-v${version}`;
+const urlsToCache = ["/", "/index.html"];
 
 // Install service worker
 const onInstall = (event) => {
@@ -20,6 +20,9 @@ const onInstall = (event) => {
 // Listen for requests
 const onFetch = (event) => {
   const { url } = event.request;
+
+  // Bypass service worker for API requests
+  if (event.request.url.includes("/api/")) return;
 
   if (url.includes(host)) {
     event.respondWith(

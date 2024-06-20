@@ -5,6 +5,7 @@
     "moduleResolution": "Node",
     "baseUrl": "./",
     // "rootDir": "src",
+    "outDir": "./build",
     "paths": {
       "src/*": ["src/*"],
       "*": ["node_modules/*"]

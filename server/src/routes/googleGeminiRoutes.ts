@@ -1,17 +1,13 @@
 import END_POINTS from "../models/endpoints";
 import GoogleGeminiController from "../controllers/GoogleGeminiController";
-import express from "express";
+import { Router } from "express";
 
-const googleGeminiRouter = express.Router();
+const googleGeminiRouter = Router();
 
 // Define API routes
 googleGeminiRouter.post(
-  END_POINTS.GOOGLE_GEMINI.GENERATE,
-  GoogleGeminiController.generateAnswer
-);
-googleGeminiRouter.post(
-  END_POINTS.GOOGLE_GEMINI.CHAT,
-  GoogleGeminiController.generateChat
+  END_POINTS.GOOGLE_GEMINI.CREATE.STORY,
+  GoogleGeminiController.createStory
 );
 
 export default googleGeminiRouter;

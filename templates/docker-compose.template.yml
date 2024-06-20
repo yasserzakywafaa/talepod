@@ -45,16 +45,6 @@ services:
     ports:
       - 8080:8080
 
-  db:
-    image: couchdb:latest
-    restart: always
-    ports:
-      - "5984:5984"
-    env_file:
-      - .env
-    volumes:
-      - ./dbdata:/opt/couchdb/data
-
   keycloak:
     image: jboss/keycloak:8.0.2
     environment:
