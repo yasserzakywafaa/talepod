@@ -1,6 +1,6 @@
 import { Box, Button, Typography } from "@mui/material";
 
-import { ReactComponent as NotFound404 } from "../../../assets/images/no_results_found.svg";
+import NotFound404 from "../../../assets/images/no_results_found.svg";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 
@@ -10,7 +10,7 @@ const NoResultsFound: React.FC = () => {
 
   return (
     <>
-      <Box component="div" className="not-found-page">
+      <Box component="div" className="no-results-container" width="100%">
         <Box
           sx={{ p: 3 }}
           display="flex"
@@ -18,10 +18,10 @@ const NoResultsFound: React.FC = () => {
           alignItems="center"
           flexDirection="column"
           justifyContent="center"
-          className="not-found-card-wrapper "
+          className="no-results-wrapper "
         >
-          <Box component="div" className="not-found-image">
-            <NotFound404 />
+          <Box component="div" className="no-results-image">
+            <img src={NotFound404} width="100%" />
           </Box>
 
           <Box

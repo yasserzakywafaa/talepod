@@ -4,6 +4,8 @@ import { Environment } from "src/shared/generatedStory/Environments";
 import { Moral } from "src/shared/generatedStory/Moral";
 import { StoryCreatorStore } from "./store";
 import { Tone } from "src/shared/generatedStory/Tone";
+import { getAutoTextGenPromptString } from "../utils/getAutoPromptString";
+import { useEffect } from "react";
 
 export interface StoryCreatorManager {
   handleUpdateChildInfo: (
@@ -44,6 +46,16 @@ export const useStoryCreatorManager = (
       },
     });
   };
+
+  useEffect(() => {
+    store.updateState({
+      ...store.state,
+      textGeneration: {
+        ...store.state.textGeneration,
+        autoTextPrompt: getAutoTextGenPromptString(store.state),
+      },
+    });
+  }, [store.state.childInfo, store.state.storyParams]);
 
   return {
     handleUpdateChildInfo,

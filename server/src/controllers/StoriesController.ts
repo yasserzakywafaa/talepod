@@ -43,7 +43,7 @@ export const getStoryById = async (
       response.status(404).json({ message: "Story not found" });
     }
 
-    console.log("ℹ️ Get Story by Id", { storyId });
+    console.log("ℹ️  Get Story by Id", { storyId });
 
     response.status(200).json(story);
   } catch (error) {

@@ -11,7 +11,7 @@ export interface UseTextGeneration {
   handleIsTextGenFetching: (isFetching: boolean) => void;
   handleUpdateUserTextPrompt: (userTextPrompt: string) => void;
   handleUpdateAutoTextPrompt: (autoImagePrompt: string) => void;
-  handleGenerateTextRequest: (userPrompt: string) => void;
+  handleGenerateTextRequest: (userPrompt: string) => Promise<string>;
 }
 
 export const useCreateStory = (store: OpenAiGPTStore): UseTextGeneration => {
@@ -37,7 +37,9 @@ export const useCreateStory = (store: OpenAiGPTStore): UseTextGeneration => {
     });
   };
 
-  const handleGenerateTextRequest = async (userPrompt: string) => {
+  const handleGenerateTextRequest = async (
+    userPrompt: string
+  ): Promise<string> => {
     try {
       const response = await axios.post(
         END_POINTS.OPENAI.GENERATE.STORY,
@@ -64,6 +66,8 @@ export const useCreateStory = (store: OpenAiGPTStore): UseTextGeneration => {
           mainStory: response.data.storyContent,
         },
       });
+
+      return response.data.storyId;
     } catch (error) {
       console.error("OpenAiSection:>>> Error", {
         error,
@@ -89,6 +93,8 @@ export const useCreateStory = (store: OpenAiGPTStore): UseTextGeneration => {
           type: ToastTypes.Error,
         });
       }
+
+      return "";
     }
   };
 

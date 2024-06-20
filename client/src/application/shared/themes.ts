@@ -1,11 +1,13 @@
 import { createTheme } from "@mui/material/styles";
 
+const mainColor = "#bb86fc"; // Indigo
+// const mainColor = "#fea4ae"; // Rose
+
 export const lightTheme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      // main: "#bb86fc", // Indigo
-      main: "#fea4ae", // Rose
+      main: mainColor,
     },
     secondary: {
       main: "#6B8E23", // Olive Green
@@ -27,8 +29,7 @@ export const darkTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      // main: "#bb86fc", // Indigo
-      main: "#fea4ae", // Rose
+      main: mainColor,
     },
     secondary: {
       main: "#6B8E23", // Olive Green

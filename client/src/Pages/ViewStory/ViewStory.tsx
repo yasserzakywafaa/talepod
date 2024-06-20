@@ -1,3 +1,4 @@
+import { AutoAwesome, AutoFixHigh } from "@mui/icons-material";
 import {
   Button,
   Card,
@@ -6,8 +7,8 @@ import {
   Container,
   Typography,
 } from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
 
-import { AutoAwesome } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import Footer from "../../components/shared/Footer/Footer";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
@@ -16,10 +17,12 @@ import Page from "src/components/shared/Page/Page";
 import ReactMarkdown from "react-markdown";
 import { useEffect } from "react";
 import { useOpenAiGPTContext } from "src/components/StoryCreator/features/OpenAiGPT/store/Provider";
-import { useParams } from "react-router-dom";
 import { useViewStoryContext } from "./store/Provider";
 
 const ViewStoryPage: React.FC = () => {
+  const navigate = useNavigate();
+  const { storyId } = useParams<{ storyId: string }>();
+
   const {
     store: {
       state: { isFetching, story },
@@ -30,7 +33,9 @@ const ViewStoryPage: React.FC = () => {
     manager: { handleGenerateTextToSpeechRequest },
   } = useOpenAiGPTContext();
 
-  const { storyId } = useParams<{ storyId: string }>();
+  const handleStartNowClick = () => {
+    navigate("/create");
+  };
 
   const handleOnCreateAudioClick = () => {
     handleGenerateTextToSpeechRequest(story.mainStory);
@@ -39,8 +44,6 @@ const ViewStoryPage: React.FC = () => {
   useEffect(() => {
     if (storyId) setUp(storyId);
   }, [storyId]);
-
-  console.log("ℹ️ Get Story by Id", { story });
 
   return (
     <Page title="TalePod | Public Bedtime Stories" className="explore-page">
@@ -138,6 +141,19 @@ const ViewStoryPage: React.FC = () => {
             </CardContent>
           </Card>
         )}
+
+        <Box>
+          <Button
+            size="large"
+            color="primary"
+            variant="contained"
+            sx={{ my: 2, px: 2 }}
+            endIcon={<AutoFixHigh />}
+            onClick={handleStartNowClick}
+          >
+            Create Another Story
+          </Button>
+        </Box>
       </Container>
 
       <Box sx={{ bgcolor: "background.default" }}>
