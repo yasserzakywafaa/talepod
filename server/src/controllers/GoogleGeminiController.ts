@@ -19,14 +19,14 @@ export const createStory = async (
     const createStoryRequest = await genAiModel.generateContent(userPrompt);
     const createStoryResponseText = createStoryRequest.response.text();
 
-    console.log("ℹ️  GoogleGeminiController:>>> CREATE", {
+    console.log("ℹ️  Story created successfully.", {
       request: request.path,
       MODEL_NAME: CONFIG.GOOGLE_GEMINI_MODEL_NAME,
     });
     response.json(createStoryResponseText);
   } catch (error) {
-    console.error("❌ GoogleGeminiController:>>> CREATE Error", {
-      error,
+    console.error("❌ Failed to create a story!", {
+      cause: error,
     });
     next(error);
   }

@@ -13,7 +13,7 @@ export const getAllStories = async (
     const stories = database.collection(DBCollections.Stories);
     const allStories = await stories.find().toArray(); // Convert the cursor to an array
 
-    console.log("ℹ️  Fetched all stories:>>>");
+    console.log("ℹ️  Fetched all stories successfully");
 
     response.status(200).json(allStories);
   } catch (error) {

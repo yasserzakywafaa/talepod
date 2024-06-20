@@ -41,16 +41,18 @@ export const createStory = async (
           storyContent: openaiResponse,
         });
       } catch (error) {
-        throw new Error("❌ Failed to story to Db");
+        throw new Error("❌ Failed to save the created story to Db", {
+          cause: error,
+        });
       }
     }
 
-    console.log("ℹ️  OpenAIController:>>> Create Story", {
+    console.log("ℹ️  Created Story Successfully", {
       request: request.path,
       MODEL_NAME: CONFIG.OPENAI_MODEL_NAME,
     });
   } catch (error) {
-    console.error("❌ OpenAIController:>>> Create Story Error", {
+    console.error("❌ Failed to create a story!", {
       error,
     });
     next(error);
@@ -92,13 +94,19 @@ export const createStoryAudio = async (
     const fileUrl = await uploadFileToS3(fileName, filePath);
 
     if (fileUrl) {
-      // Save file to MongoDB Atlas
-      await saveFileDataToDb(storyId, audioFileName, fileUrl);
+      try {
+        // Save file to MongoDB Atlas
+        await saveFileDataToDb(storyId, audioFileName, fileUrl);
+      } catch (error) {
+        throw new Error("❌ Failed to save the S3 audio file URL file to Db!", {
+          cause: error,
+        });
+      }
     } else {
-      throw new Error("❌ Failed to upload file to S3");
+      console.error("❌ Failed to upload file to S3!");
     }
 
-    console.log("ℹ️  OpenAI:>>> Create Story Audio", {
+    console.log("ℹ️  The story audio file is created successfully.", {
       fileUrl,
       MODEL_NAME: OPENAI_TTS_MODEL_NAME,
     });
@@ -108,7 +116,7 @@ export const createStoryAudio = async (
       fileName,
     });
   } catch (error) {
-    console.error("❌ OpenAI:>>> Create Story Audio Error", {
+    console.error("❌ Failed to create an audio file for the story", {
       error,
     });
     next(error);
@@ -145,7 +153,7 @@ export const createImages = async (
       imageUrls.push(imageUrl);
     }
 
-    console.log("ℹ️  OpenAIController:>>> Create Images", {
+    console.log("ℹ️  Image create successfully", {
       request,
       // response: imageRequest,
       response: imageUrls,
@@ -154,7 +162,7 @@ export const createImages = async (
     // response.json(imageRequest.data[0].url);
     response.json(imageUrls);
   } catch (error) {
-    console.error("❌ OpenAIController:>>> Create Images Error", {
+    console.error("❌ Failed to create images", {
       error,
     });
     next(error);

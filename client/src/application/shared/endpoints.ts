@@ -2,9 +2,8 @@ import APP_CONSTANTS from "./app_constants";
 
 const publicApiUrl = APP_CONSTANTS.IS_DEV
   ? `http://localhost:${APP_CONSTANTS.DEV_SERVER_PORT}`
-  : // : window.location.origin;
-    APP_CONSTANTS.PUBLIC_API_URL;
-// : "https://api.talepod.com";
+  : APP_CONSTANTS.PUBLIC_API_URL;
+// : window.location.origin;
 
 const END_POINTS = {
   TESTING: {
@@ -27,7 +26,6 @@ const END_POINTS = {
     GET_ALL_STORIES: `${publicApiUrl}/api/v1/stories`,
     GET_STORY_BY_ID: (storyId: string) =>
       `${publicApiUrl}/api/v1/story/${storyId}`,
-    // GET_STORY_BY_ID: `${publicApiUrl}/api/v1/story/:storyId`,
   },
 };
 

@@ -27,8 +27,6 @@ const useApplicationStore = (): ApplicationStore => {
 
   const toggleThemeMode = () => {
     setState((prev) => {
-      console.log("useApplicationStore :>> Mode:>>>", prev);
-
       return {
         ...prev,
         themeMode: prev.themeMode === "dark" ? "light" : "dark",

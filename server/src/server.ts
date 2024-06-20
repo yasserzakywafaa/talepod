@@ -1,22 +1,19 @@
-import { NextFunction, Request, Response } from "express";
-
 import CONFIG from "./config";
 import bodyParser from "body-parser";
 import { databaseInit } from "./models/mongoDb";
 import express from "express";
 import googleGeminiRoutes from "./routes/googleGeminiRoutes";
 import handleCorsConfig from "./cors-config";
-// import loadRoutes from "./routes";
 import openaiRoutes from "./routes/openaiRoutes";
 import path from "path";
-import storiesRouter from "./routes/storiesRoutes";
-import testRouter from "./routes/testRoutes";
+import storiesRoutes from "./routes/storiesRoutes";
+import testRoutes from "./routes/testRoutes";
 
 const expressApp = express();
 const buildPath = path.join(__dirname, "../client/");
 
 const getPort = (): string => {
-  // If process.env.PORT is set (in Heroku), use it
+  // If process.env.PORT is set (in Heroku), use it.
   if (process.env.PORT) return process.env.PORT;
 
   switch (true) {
@@ -41,8 +38,8 @@ expressApp.use(bodyParser.json());
 expressApp.use(express.urlencoded({ extended: true }));
 
 // Mount API routes
-expressApp.use(testRouter);
-expressApp.use(storiesRouter);
+expressApp.use(testRoutes);
+expressApp.use(storiesRoutes);
 expressApp.use(openaiRoutes);
 expressApp.use(googleGeminiRoutes);
 
@@ -68,13 +65,9 @@ if (CONFIG.SERVE_STATIC_CONTENT === "true") {
     // res.send("👋🏻  HELLO 'GET' Request 🙋🏻‍♂️ ");
   });
 }
-// else {
-//   // Load API routes dynamically
-//   loadRoutes(expressApp);
-// }
 
 expressApp.listen(PORT, (): void => {
-  console.log("☁️  Server running on:>>>", {
+  console.log("🎯 Server running on:>>>", {
     PORT,
     ENVIRONMENT: CONFIG.NODE_ENV,
   });

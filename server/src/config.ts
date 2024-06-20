@@ -11,8 +11,7 @@ const CONFIG = {
   DISABLE_HOT_RELOAD: process.env.REACT_APP_DISABLE_LIVE_RELOAD,
   IS_DEV:
     process.env.NODE_ENV && process.env.NODE_ENV.indexOf("development") > -1,
-  IS_STAG:
-    process.env.NODE_ENV && process.env.NODE_ENV.indexOf("staging") > -1,
+  IS_STAG: process.env.NODE_ENV && process.env.NODE_ENV.indexOf("staging") > -1,
   IS_PROD:
     process.env.NODE_ENV && process.env.NODE_ENV.indexOf("production") > -1,
   FRONTEND_DEV_PATH: path.resolve("../client/public"),
@@ -22,9 +21,7 @@ const CONFIG = {
 
   // Assets
   SERVER_TEXT_TO_SPEECH_PATH: "assets/audio",
-  SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH: path.resolve(
-    "./assets/audio"
-  ),
+  SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH: path.resolve("./assets/audio"),
 
   // APIs keys for AI
   // Openai
@@ -37,9 +34,8 @@ const CONFIG = {
   GOOGLE_GEMINI_API_KEY_1: process.env.GOOGLE_GEMINI_API_KEY_1,
 
   // Database
-  MONGODB_DEV_CLUSTER: process.env.MONGODB_DEV_CLUSTER,
-  MONGODB_URI_DEV: process.env.MONGODB_URI_DEV,
-  MONGODB_URI_PROD: process.env.MONGODB_URI_PROD,
+  MONGODB_CLUSTER: process.env.MONGODB_CLUSTER,
+  MONGODB_URI: process.env.MONGODB_URI,
 
   // Hosting
   HOST_AWS_S3_BUCKET_NAME: process.env.HOST_AWS_S3_BUCKET_NAME,

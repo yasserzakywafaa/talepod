@@ -1,12 +1,16 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { createDocument, updateDocument } from "./crudOperations";
 
-// import AudioFile from "./schema/audioFile";
 import CONFIG from "../../config";
 import { Story } from "../types";
 
 let dbClient: MongoClient;
 let database: any;
+
+export enum DBNames {
+  TALEPOD_DEV = "talepod_dev",
+  TALEPOD_PROD = "talepod_prod",
+}
 
 export enum DBCollections {
   Stories = "Stories",
@@ -15,17 +19,21 @@ export enum DBCollections {
 
 const getMongoDbUri = (): string => {
   switch (true) {
-    case CONFIG.IS_DEV:
-      return CONFIG.MONGODB_URI_DEV;
+    // case CONFIG.IS_DEV:
+    //   return CONFIG.MONGODB_URI;
 
-    case CONFIG.IS_PROD:
-      // Uncomment when going to production
-      // return CONFIG.MONGODB_URI_PROD;
-      return CONFIG.MONGODB_URI_DEV;
+    // case CONFIG.IS_PROD:
+    //   // Uncomment when going to production
+    //   // return CONFIG.MONGODB_URI_PROD;
+    //   return CONFIG.MONGODB_URI_DEV;
 
     default:
-      return "";
+      return CONFIG.MONGODB_URI;
   }
+};
+
+const getDatabaseName = (): string => {
+  return CONFIG.IS_DEV ? DBNames.TALEPOD_DEV : DBNames.TALEPOD_PROD;
 };
 
 const databaseInit = async () => {
@@ -34,7 +42,9 @@ const databaseInit = async () => {
 
   try {
     await dbClient.connect();
-    database = dbClient.db(`${CONFIG.MONGODB_DEV_CLUSTER}`);
+    // database = dbClient.db(`${CONFIG.MONGODB_CLUSTER}`);
+    const dbName = getDatabaseName();
+    database = dbClient.db(dbName);
 
     console.info("✅ Connected to MongoDB Atlas");
 
