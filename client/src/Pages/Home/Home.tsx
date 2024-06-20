@@ -3,13 +3,13 @@ import "./Home.scss";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import FAQ from "./features/FAQ";
-import Features from "./features/Features";
 import Footer from "../../components/shared/Footer/Footer";
 import Hero from "./features/Hero";
-// import Highlights from "./features/Highlights";
 import Page from "src/components/shared/Page/Page";
-import Pricing from "./features/Pricing";
 
+// import Highlights from "./features/Highlights";
+// import Features from "./features/Features";
+// import Pricing from "./features/Pricing";
 // import StoryCreator from "src/components/StoryCreator/StoryCreator";
 // import Testimonials from "./features/Testimonials";
 
@@ -18,28 +18,17 @@ const Homepage = () => {
     <Page title="TalePod | Bedtime Stories" className="home-page">
       <Hero />
 
-      {/* <StoryCreator /> */}
-
       <Box sx={{ bgcolor: "background.default" }}>
-        <Features />
-
-        <Divider />
-
+        {/* <Features /> */}
+        {/* <Divider /> */}
         {/* <Testimonials /> */}
-
         {/* <Divider /> */}
         {/* <Highlights /> */}
-
-        <Divider />
-
-        <Pricing />
-
-        <Divider />
-
+        {/* <Divider /> */}
+        {/* <Pricing /> */}
+        {/* <Divider /> */}
         <FAQ />
-
         <Divider />
-
         <Footer />
       </Box>
     </Page>

@@ -42,11 +42,10 @@ const databaseInit = async () => {
 
   try {
     await dbClient.connect();
-    // database = dbClient.db(`${CONFIG.MONGODB_CLUSTER}`);
     const dbName = getDatabaseName();
     database = dbClient.db(dbName);
 
-    console.info("✅ Connected to MongoDB Atlas");
+    console.info("✅ Connected to MongoDB Atlas", { dbName });
 
     // Create necessary collections
     await createCollections();

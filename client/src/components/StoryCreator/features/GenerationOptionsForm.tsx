@@ -23,25 +23,31 @@ import { Tone, Tones } from "src/shared/generatedStory/Tone";
 
 import { AutoAwesome } from "@mui/icons-material";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
+import routes from "src/application/routes";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useOpenAiGPTContext } from "./OpenAiGPT/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
 
 const GenerationOptionsForm = () => {
+  const navigate = useNavigate();
   const {
     store: {
       state: { childInfo, storyParams: generatedStory },
     },
+    store: storyCreatorStore,
     manager: { handleUpdateChildInfo, handleUpdateStoryInfo },
   } = useStoryCreatorContext();
+
   const { store: OpenaiGPTStore, manager: OpenaiGPTManager } =
     useOpenAiGPTContext();
-  const { isFetching, userPrompt, autoTextPrompt } =
-    OpenaiGPTStore.state.textGeneration;
+  const { isFetching } = OpenaiGPTStore.state.textGeneration;
   const { handleIsTextGenFetching, handleGenerateTextRequest } =
     OpenaiGPTManager;
 
-  const handleOnFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleOnFormSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
     event.stopPropagation();
 
@@ -51,10 +57,18 @@ const GenerationOptionsForm = () => {
       return;
     }
 
+    const { userPrompt, autoTextPrompt } =
+      storyCreatorStore.state.textGeneration;
+
     if (userPrompt || autoTextPrompt) {
       handleIsTextGenFetching(true);
-      debugger;
-      handleGenerateTextRequest(userPrompt || autoTextPrompt);
+      try {
+        const storyId: string = await handleGenerateTextRequest(
+          userPrompt || autoTextPrompt
+        );
+        handleIsTextGenFetching(false);
+        navigate(routes.story(storyId));
+      } catch (error) {}
     }
   };
 
@@ -117,18 +131,23 @@ const GenerationOptionsForm = () => {
   };
 
   useEffect(() => {
+    console.log("ℹ️  FORM:>>> textGeneration", {
+      StoryCreatorState: storyCreatorStore.state.textGeneration.autoTextPrompt,
+    });
+  }, [storyCreatorStore]);
+
+  useEffect(() => {
     console.log("ℹ️  FORM:>>>", { GPTState: OpenaiGPTStore.state });
   }, [OpenaiGPTStore.state]);
 
   return (
     <Box className="story-creator-form">
       <Typography
-        variant="h2"
         sx={{
-          // color: (theme) => (theme.palette.mode === "light" ? "#000" : "#fff"),
           fontSize: { xs: 20, sm: 30 },
           mt: 2,
           mb: 4,
+          color: (theme) => theme.palette.primary.main,
         }}
       >
         Define your story
@@ -189,8 +208,8 @@ const GenerationOptionsForm = () => {
           </Typography>
           <Slider
             marks
-            min={0}
-            max={12}
+            min={1}
+            max={50}
             step={1}
             value={childInfo.age}
             valueLabelDisplay="auto"

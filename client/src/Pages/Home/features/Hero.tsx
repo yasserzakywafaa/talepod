@@ -17,11 +17,11 @@ export default function Hero() {
   return (
     <Box
       id="hero"
-      sx={(theme) => ({
+      sx={{
         width: "100%",
         backgroundSize: "100% 20%",
         backgroundRepeat: "no-repeat",
-      })}
+      }}
     >
       <Container
         sx={{
@@ -35,28 +35,6 @@ export default function Hero() {
         <Box sx={{ maxWidth: "300px" }}>
           <img src={MainCharacter} width="100%" />
         </Box>
-        {/* <Box
-          id="image"
-          sx={(theme) => ({
-            my: { xs: 6 },
-            alignSelf: "center",
-            height: { xs: 200, sm: 400 },
-            width: "100%",
-            backgroundSize: "cover",
-            borderRadius: "10px",
-            outline: "1px solid",
-            outlineColor:
-              theme.palette.mode === "light"
-                ? alpha("#BFCCD9", 0.5)
-                : alpha("#9CCCFC", 0.1),
-            // boxShadow:
-            //   theme.palette.mode === "light"
-            //     ? `0 0 12px 8px ${alpha("#9CCCFC", 0.2)}`
-            //     : `0 0 24px 12px ${alpha("#033363", 0.2)}`,
-          })}
-        >
-          <img src={MainCharacter} />
-        </Box> */}
 
         <Typography
           variant="h1"

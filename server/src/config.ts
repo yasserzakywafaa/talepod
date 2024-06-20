@@ -34,7 +34,6 @@ const CONFIG = {
   GOOGLE_GEMINI_API_KEY_1: process.env.GOOGLE_GEMINI_API_KEY_1,
 
   // Database
-  MONGODB_CLUSTER: process.env.MONGODB_CLUSTER,
   MONGODB_URI: process.env.MONGODB_URI,
 
   // Hosting

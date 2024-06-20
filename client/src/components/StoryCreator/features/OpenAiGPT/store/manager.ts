@@ -17,7 +17,7 @@ export interface OpenAiGPTManager {
   handleIsTextGenFetching: (isFetching: boolean) => void;
   handleUpdateUserTextPrompt: (userTextPrompt: string) => void;
   handleUpdateAutoTextPrompt: (autoTextPrompt: string) => void;
-  handleGenerateTextRequest: (userPrompt: string) => void;
+  handleGenerateTextRequest: (userPrompt: string) => Promise<string>;
 
   handleIsTextToSpeechGenFetching: (isFetching: boolean) => void;
   handleSetTextToSpeechAiAnswer: (aiAnswer: GeneratedStoryParts) => void;

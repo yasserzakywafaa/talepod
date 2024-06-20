@@ -7,7 +7,6 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Drawer from "@mui/material/Drawer";
 import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
-// import Logo from "src/components/shared/Logo/Logo";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal";
@@ -65,6 +64,9 @@ const ApplicationBar = () => {
       case "explore":
         navigate(routes.explore);
         break;
+      case "create":
+        navigate(routes.create);
+        break;
 
       default:
         scrollToSection(sectionId);
@@ -73,7 +75,6 @@ const ApplicationBar = () => {
   };
 
   const handleOnBackClick = () => navigate(-1);
-  // const handleOnLogoClick = () => navigate(routes.home);
 
   return (
     <>
@@ -96,26 +97,18 @@ const ApplicationBar = () => {
                 justifyContent: "space-between",
                 flexShrink: 0,
                 borderRadius: "4px",
-                // bgcolor:
-                //   themeMode === "light"
-                //     ? "rgba(255, 255, 255, 0.4)"
-                //     : "rgba(0, 0, 0, 0.4)",
                 backdropFilter: "blur(24px)",
                 maxHeight: 40,
-                // border: "1px solid",
                 borderColor: "divider",
-                // boxShadow:
-                //   themeMode === "light"
-                //     ? `0 0 1px rgba(85, 166, 246, 0.1), 1px 1.5px 2px -1px rgba(85, 166, 246, 0.15), 4px 4px 12px -2.5px rgba(85, 166, 246, 0.15)`
-                //     : "0 0 1px rgba(2, 31, 59, 0.7), 1px 1.5px 2px -1px rgba(2, 31, 59, 0.65), 4px 4px 12px -2.5px rgba(2, 31, 59, 0.65)",
-                boxShadow: (theme) =>
-                  themeMode === "light"
-                    ? // ? `0 0 1px ${theme.palette.primary[400]}, 1px 1.5px 2px -1px ${theme.palette.primary[400]}, 4px 4px 12px -2.5px ${theme.palette.primary[400]}`
-                      `0 0 1px ${theme.palette.primary.light}`
-                    : `0 0 1px ${theme.palette.primary.dark}`,
+                boxShadow: isDesktop
+                  ? (theme) =>
+                      themeMode === "light"
+                        ? `0 0 1px ${theme.palette.primary.light}`
+                        : `0 0 1px ${theme.palette.primary.dark}`
+                  : undefined,
               }}
             >
-              {isDesktop && (
+              {!isTablet && (
                 <>
                   <Box sx={{ display: { xs: "none", md: "flex" } }}>
                     <MenuItem onClick={handleOnMenuItemClick("home")}>
@@ -123,11 +116,20 @@ const ApplicationBar = () => {
                     </MenuItem>
 
                     <MenuItem
-                      onClick={handleOnMenuItemClick("explore")}
                       sx={{ py: "6px", px: "12px" }}
+                      onClick={handleOnMenuItemClick("explore")}
                     >
                       <Typography variant="body2" color="text.primary">
                         Explore
+                      </Typography>
+                    </MenuItem>
+
+                    <MenuItem
+                      sx={{ py: "6px", px: "12px" }}
+                      onClick={handleOnMenuItemClick("create")}
+                    >
+                      <Typography variant="body2" color="text.primary">
+                        Create Story
                       </Typography>
                     </MenuItem>
 
@@ -216,88 +218,76 @@ const ApplicationBar = () => {
               )}
 
               {/* Mobile */}
-              {isTablet ||
-                (isMobile && !isDesktop && (
-                  <Box
-                    display="flex"
-                    component="div"
-                    flexDirection="row"
-                    justifyContent={
-                      pagesMatch.isHomePage ? "flex-end" : "space-between"
-                    }
-                    width="100%"
+              {(isTablet || isMobile) && !isDesktop && (
+                <Box
+                  display="flex"
+                  component="div"
+                  flexDirection="row"
+                  justifyContent={
+                    pagesMatch.isHomePage ? "flex-end" : "space-between"
+                  }
+                  width="100%"
+                >
+                  {!pagesMatch.isHomePage && (
+                    <BackButton onClick={handleOnBackClick} />
+                  )}
+
+                  <Button
+                    variant="text"
+                    color="primary"
+                    aria-label="menu"
+                    onClick={toggleDrawer(true)}
+                    sx={{ minWidth: "30px", p: "4px" }}
                   >
-                    {!pagesMatch.isHomePage && (
-                      <BackButton onClick={handleOnBackClick} />
-                    )}
+                    <MenuIcon />
+                  </Button>
 
-                    {/* {pagesMatch.isHomePage && (
-                      <Button
-                        size="small"
-                        variant="text"
-                        color="primary"
-                        component="button"
-                        sx={{ marginX: 0 }}
-                        onClick={handleOnLogoClick}
-                      >
-                        <Logo />
-                      </Button>
-                    )} */}
-
-                    <Button
-                      variant="text"
-                      color="primary"
-                      aria-label="menu"
-                      onClick={toggleDrawer(true)}
-                      sx={{ minWidth: "30px", p: "4px" }}
-                    >
-                      <MenuIcon />
-                    </Button>
-
-                    <Drawer
-                      anchor="right"
-                      open={isDrawerOpen}
-                      onClose={toggleDrawer(false)}
+                  <Drawer
+                    anchor="right"
+                    open={isDrawerOpen}
+                    onClose={toggleDrawer(false)}
+                  >
+                    <Box
+                      sx={{
+                        minWidth: "40dvw",
+                        p: 2,
+                        backgroundColor: "background.paper",
+                        flexGrow: 1,
+                      }}
                     >
                       <Box
                         sx={{
-                          minWidth: "60dvw",
-                          p: 2,
-                          backgroundColor: "background.paper",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "end",
                           flexGrow: 1,
                         }}
                       >
-                        <Box
-                          sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "end",
-                            flexGrow: 1,
-                          }}
-                        >
-                          <ToggleColorMode
-                            mode={themeMode}
-                            toggleColorMode={toggleThemeMode}
-                          />
-                        </Box>
+                        <ToggleColorMode
+                          mode={themeMode}
+                          toggleColorMode={toggleThemeMode}
+                        />
+                      </Box>
 
-                        <MenuItem onClick={handleOnMenuItemClick("home")}>
-                          Home
-                        </MenuItem>
+                      <MenuItem onClick={handleOnMenuItemClick("home")}>
+                        Home
+                      </MenuItem>
 
-                        <MenuItem onClick={handleOnMenuItemClick("explore")}>
-                          Explore
-                        </MenuItem>
+                      <MenuItem onClick={handleOnMenuItemClick("explore")}>
+                        Explore
+                      </MenuItem>
 
-                        {pagesMatch.isHomePage && (
-                          <>
-                            <MenuItem
-                              onClick={handleOnMenuItemClick("features")}
-                            >
-                              Features
-                            </MenuItem>
+                      <MenuItem onClick={handleOnMenuItemClick("create")}>
+                        Create Story
+                      </MenuItem>
 
-                            {/* <MenuItem
+                      {pagesMatch.isHomePage && (
+                        <>
+                          <MenuItem onClick={handleOnMenuItemClick("features")}>
+                            Features
+                          </MenuItem>
+
+                          {/* <MenuItem
                               onClick={handleOnMenuItemClick("testimonials")}
                             >
                               Testimonials
@@ -309,19 +299,17 @@ const ApplicationBar = () => {
                               Highlights
                             </MenuItem> */}
 
-                            <MenuItem
-                              onClick={handleOnMenuItemClick("pricing")}
-                            >
-                              Pricing
-                            </MenuItem>
+                          <MenuItem onClick={handleOnMenuItemClick("pricing")}>
+                            Pricing
+                          </MenuItem>
 
-                            <MenuItem onClick={handleOnMenuItemClick("faq")}>
-                              FAQ
-                            </MenuItem>
-                          </>
-                        )}
+                          <MenuItem onClick={handleOnMenuItemClick("faq")}>
+                            FAQ
+                          </MenuItem>
+                        </>
+                      )}
 
-                        {/* <Divider />
+                      {/* <Divider />
 
                         <MenuItem>
                           <Button
@@ -346,10 +334,10 @@ const ApplicationBar = () => {
                             Log in
                           </Button>
                         </MenuItem> */}
-                      </Box>
-                    </Drawer>
-                  </Box>
-                ))}
+                    </Box>
+                  </Drawer>
+                </Box>
+              )}
             </Toolbar>
           </Container>
         </AppBar>
