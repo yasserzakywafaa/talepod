@@ -58,24 +58,19 @@ const ViewStoryPage: React.FC = () => {
         {!story && <NoResultsFound />}
 
         {story && (
-          <Card>
+          <Card
+            sx={{
+              backgroundColor: "transparent",
+            }}
+          >
             <CardContent>
               <Typography
                 variant="h3"
-                component="h1"
+                component="h3"
                 gutterBottom
                 color="primary"
               >
                 {story.title}
-              </Typography>
-
-              <Typography
-                variant="h5"
-                component="h2"
-                gutterBottom
-                sx={{ color: "#c1a101" }}
-              >
-                Summary
               </Typography>
 
               <Typography variant="body1" paragraph>
@@ -86,7 +81,7 @@ const ViewStoryPage: React.FC = () => {
                 variant="h5"
                 component="h2"
                 gutterBottom
-                sx={{ color: "#c1a101" }}
+                sx={{ color: (theme) => theme.palette.primary.main }}
               >
                 Story
               </Typography>
@@ -98,7 +93,7 @@ const ViewStoryPage: React.FC = () => {
                     variant="h5"
                     component="h2"
                     gutterBottom
-                    sx={{ color: "#c1a101" }}
+                    sx={{ color: (theme) => theme.palette.primary.main }}
                   >
                     Create audio book for this story
                   </Typography>
@@ -121,7 +116,7 @@ const ViewStoryPage: React.FC = () => {
                     variant="h5"
                     component="h2"
                     gutterBottom
-                    sx={{ color: "#c1a101" }}
+                    sx={{ color: (theme) => theme.palette.primary.main }}
                   >
                     Listen to the Story
                   </Typography>
@@ -146,7 +141,7 @@ const ViewStoryPage: React.FC = () => {
           <Button
             size="large"
             color="primary"
-            variant="contained"
+            variant="outlined"
             sx={{ my: 2, px: 2 }}
             endIcon={<AutoFixHigh />}
             onClick={handleStartNowClick}

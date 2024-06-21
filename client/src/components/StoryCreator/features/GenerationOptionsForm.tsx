@@ -214,9 +214,9 @@ const GenerationOptionsForm = () => {
         </FormControl>
 
         <Box className="child-info-form-item">
-          <Typography id="gender-toggle" gutterBottom>
+          {/* <Typography id="gender-toggle" gutterBottom>
             Gender
-          </Typography>
+          </Typography> */}
           <ToggleButtonGroup
             exclusive
             value={childInfo.gender}

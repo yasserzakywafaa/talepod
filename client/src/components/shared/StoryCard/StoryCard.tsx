@@ -32,7 +32,14 @@ const StoryCard = (props: StoryCard) => {
   };
 
   return (
-    <Card sx={{ maxWidth: maxImgWidth, mb: 4, mr: !isDesktop ? 0 : 4 }}>
+    <Card
+      sx={{
+        maxWidth: maxImgWidth,
+        mb: 4,
+        mr: !isDesktop ? 0 : 4,
+        bgcolor: "transparent",
+      }}
+    >
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           {props.story.title}

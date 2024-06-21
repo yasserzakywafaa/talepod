@@ -1,3 +1,5 @@
+import "./App.scss";
+
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { darkTheme, lightTheme } from "./shared/themes";
 

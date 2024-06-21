@@ -70,7 +70,7 @@ const ExplorePage: React.FC = () => {
 
         {!stories.length ? <NoResultsFound /> : <></>}
 
-        <Box>
+        <Box width="100%" margin="auto" display="flex" justifyContent="center">
           <Button
             size="large"
             color="primary"

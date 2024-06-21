@@ -1,7 +1,18 @@
 import { createTheme } from "@mui/material/styles";
 
 const mainColor = "#bb86fc"; // Indigo
-// const mainColor = "#fea4ae"; // Rose
+
+export const colorPallets = {
+  one: {
+    background: {
+      default: "#2E3B4E",
+      card_Background: "#27374D",
+    },
+    text: "#FFFFFF",
+    button: "#FFAB76",
+    accent: "#ad932d",
+  },
+};
 
 export const lightTheme = createTheme({
   palette: {
@@ -23,13 +34,21 @@ export const lightTheme = createTheme({
   typography: {
     fontFamily: "Arial, sans-serif",
   },
+  // components: {
+  //   MuiCssBaseline: {
+  //     styleOverrides: {
+  //       body: {},
+  //     },
+  //   },
+  // },
 });
 
 export const darkTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: mainColor,
+      // main: mainColor,
+      main: colorPallets.one.accent,
     },
     secondary: {
       main: "#6B8E23", // Olive Green
@@ -45,4 +64,11 @@ export const darkTheme = createTheme({
   typography: {
     fontFamily: "Arial, sans-serif",
   },
+  // components: {
+  //   MuiCssBaseline: {
+  //     styleOverrides: {
+  //       body: {},
+  //     },
+  //   },
+  // },
 });
