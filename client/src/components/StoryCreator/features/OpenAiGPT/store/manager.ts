@@ -10,6 +10,7 @@ import { useCreateStoryAudio } from "../features/CreateStoryAudio/useCreateStory
 import { useEffect } from "react";
 import { useImageGeneration } from "../features/CreateStoryImage/useCreateStoryImage";
 import { useStoryCreatorContext } from "src/components/StoryCreator/store/Provider";
+import { Story } from "src/application/shared/interfaces";
 
 export interface OpenAiGPTManager {
   handleUpdateChildInfo: (name: string, value: string) => void;
@@ -17,7 +18,7 @@ export interface OpenAiGPTManager {
   handleIsTextGenFetching: (isFetching: boolean) => void;
   handleUpdateUserTextPrompt: (userTextPrompt: string) => void;
   handleUpdateAutoTextPrompt: (autoTextPrompt: string) => void;
-  handleGenerateTextRequest: (userPrompt: string) => Promise<string>;
+  handleGenerateTextRequest: (userPrompt: string) => Promise<Story>;
 
   handleIsTextToSpeechGenFetching: (isFetching: boolean) => void;
   handleSetTextToSpeechAiAnswer: (aiAnswer: GeneratedStoryParts) => void;

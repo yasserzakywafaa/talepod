@@ -135,14 +135,14 @@ const ApplicationBar = () => {
 
                     {pagesMatch.isHomePage && (
                       <>
-                        <MenuItem
+                        {/* <MenuItem
                           onClick={handleOnMenuItemClick("features")}
                           sx={{ py: "6px", px: "12px" }}
                         >
                           <Typography variant="body2" color="text.primary">
                             Features
                           </Typography>
-                        </MenuItem>
+                        </MenuItem> */}
 
                         {/* <MenuItem
                           onClick={handleOnMenuItemClick("testimonials")}
@@ -162,23 +162,23 @@ const ApplicationBar = () => {
                           </Typography>
                         </MenuItem> */}
 
-                        <MenuItem
+                        {/* <MenuItem
                           onClick={handleOnMenuItemClick("pricing")}
                           sx={{ py: "6px", px: "12px" }}
                         >
                           <Typography variant="body2" color="text.primary">
                             Pricing
                           </Typography>
-                        </MenuItem>
+                        </MenuItem> */}
 
-                        <MenuItem
+                        {/* <MenuItem
                           onClick={handleOnMenuItemClick("faq")}
                           sx={{ py: "6px", px: "12px" }}
                         >
                           <Typography variant="body2" color="text.primary">
                             FAQ
                           </Typography>
-                        </MenuItem>
+                        </MenuItem>  */}
                       </>
                     )}
                   </Box>
@@ -283,9 +283,9 @@ const ApplicationBar = () => {
 
                       {pagesMatch.isHomePage && (
                         <>
-                          <MenuItem onClick={handleOnMenuItemClick("features")}>
+                          {/* <MenuItem onClick={handleOnMenuItemClick("features")}>
                             Features
-                          </MenuItem>
+                          </MenuItem> */}
 
                           {/* <MenuItem
                               onClick={handleOnMenuItemClick("testimonials")}
@@ -299,13 +299,13 @@ const ApplicationBar = () => {
                               Highlights
                             </MenuItem> */}
 
-                          <MenuItem onClick={handleOnMenuItemClick("pricing")}>
+                          {/* <MenuItem onClick={handleOnMenuItemClick("pricing")}>
                             Pricing
-                          </MenuItem>
+                          </MenuItem> */}
 
-                          <MenuItem onClick={handleOnMenuItemClick("faq")}>
+                          {/* <MenuItem onClick={handleOnMenuItemClick("faq")}>
                             FAQ
-                          </MenuItem>
+                          </MenuItem> */}
                         </>
                       )}
 

@@ -38,7 +38,7 @@ export const createStory = async (
 
         response.json({
           storyId,
-          storyContent: openaiResponse,
+          storyParts
         });
       } catch (error) {
         throw new Error("❌ Failed to save the created story to Db", {

@@ -9,10 +9,13 @@ export interface ExploreManager {
 
 export const useExploreManager = (store: ExploreStore): ExploreManager => {
   const setUp = async () => {
-    debugger;
     store.handleIsFetching(true);
-    await fetchAllStories();
-    store.handleIsFetching(false);
+    try {
+      await fetchAllStories();
+      store.handleIsFetching(false);
+    } catch (error) {
+      store.handleIsFetching(false);
+    }
   };
 
   const fetchAllStories = async (): Promise<void> => {

@@ -6,12 +6,13 @@ import {
 import END_POINTS from "src/application/shared/endpoints";
 import { OpenAiGPTStore } from "../../store/store";
 import axios from "axios";
+import { Story } from "src/application/shared/interfaces";
 
 export interface UseTextGeneration {
   handleIsTextGenFetching: (isFetching: boolean) => void;
   handleUpdateUserTextPrompt: (userTextPrompt: string) => void;
   handleUpdateAutoTextPrompt: (autoImagePrompt: string) => void;
-  handleGenerateTextRequest: (userPrompt: string) => Promise<string>;
+  handleGenerateTextRequest: (userPrompt: string) => Promise<Story>;
 }
 
 export const useCreateStory = (store: OpenAiGPTStore): UseTextGeneration => {
@@ -39,7 +40,7 @@ export const useCreateStory = (store: OpenAiGPTStore): UseTextGeneration => {
 
   const handleGenerateTextRequest = async (
     userPrompt: string
-  ): Promise<string> => {
+  ): Promise<Story> => {
     try {
       const response = await axios.post(
         END_POINTS.OPENAI.GENERATE.STORY,
@@ -63,11 +64,14 @@ export const useCreateStory = (store: OpenAiGPTStore): UseTextGeneration => {
         generatedStory: {
           storyId: response.data.storyId,
           statusCode: response.status,
-          mainStory: response.data.storyContent,
+          title: response.data.storyParts.title,
+          summary: response.data.storyParts.summary,
+          mainStory: response.data.storyParts.mainStory,
+          poem: response.data.storyParts.poem,
         },
       });
 
-      return response.data.storyId;
+      return response.data.storyParts as Story;
     } catch (error) {
       console.error("OpenAiSection:>>> Error", {
         error,
@@ -93,8 +97,7 @@ export const useCreateStory = (store: OpenAiGPTStore): UseTextGeneration => {
           type: ToastTypes.Error,
         });
       }
-
-      return "";
+      throw new Error(`❌ Failed to create a story!  ${error}`);
     }
   };
 
