@@ -22,12 +22,12 @@ import { Tone, Tones } from "src/shared/generatedStory/Tone";
 
 import { AutoAwesome } from "@mui/icons-material";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
+import { Story } from "src/application/shared/interfaces";
 import routes from "src/application/routes";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useOpenAiGPTContext } from "./OpenAiGPT/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
-import { Story } from "src/application/shared/interfaces";
 
 const GenerationOptionsForm = () => {
   const navigate = useNavigate();
@@ -67,7 +67,7 @@ const GenerationOptionsForm = () => {
           userPrompt || autoTextPrompt
         );
         handleIsTextGenFetching(false);
-        if (story.id) navigate(routes.story(story.title));
+        if (story.id) navigate(routes.story(story.id));
       } catch (error) {}
     }
   };
@@ -123,13 +123,13 @@ const GenerationOptionsForm = () => {
   };
 
   useEffect(() => {
-    console.log("ℹ️  FORM:>>> textGeneration", {
-      StoryCreatorState: storyCreatorStore.state.textGeneration.autoTextPrompt,
-    });
+    // console.log("ℹ️  FORM:>>> textGeneration", {
+    //   StoryCreatorState: storyCreatorStore.state.textGeneration.autoTextPrompt,
+    // });
   }, [storyCreatorStore]);
 
   useEffect(() => {
-    console.log("ℹ️  FORM:>>>", { GPTState: OpenaiGPTStore.state });
+    // console.log("ℹ️  FORM:>>>", { GPTState: OpenaiGPTStore.state });
   }, [OpenaiGPTStore.state]);
 
   return (

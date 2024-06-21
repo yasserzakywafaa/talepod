@@ -142,7 +142,7 @@ const ViewStoryPage: React.FC = () => {
           </Card>
         )}
 
-        <Box>
+        <Box display="flex" justifyContent="center">
           <Button
             size="large"
             color="primary"

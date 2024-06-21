@@ -11,8 +11,8 @@ import {
 import { CSSProperties } from "react";
 import { Story } from "src/application/shared/interfaces";
 import routes from "src/application/routes";
-import { useNavigate } from "react-router-dom";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
+import { useNavigate } from "react-router-dom";
 
 interface StoryCard {
   story: Story;
