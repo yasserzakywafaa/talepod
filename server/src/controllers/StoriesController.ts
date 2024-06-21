@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 
 import CONFIG from "../config";
 import { ObjectId } from "mongodb";
+import { Story } from "src/models/types";
 
 export const getAllStories = async (
   request: Request,
@@ -37,13 +38,12 @@ export const getStoryById = async (
 
   try {
     const stories = database.collection(DBCollections.Stories);
-    const story = await stories.findOne({ _id: new ObjectId(storyId) });
-
+    const story: Story = await stories.findOne({ _id: new ObjectId(storyId) });
     if (!story) {
       response.status(404).json({ message: "Story not found" });
     }
 
-    console.log("ℹ️  Get Story by Id", { storyId });
+    console.log("ℹ️  Get Story", { storyId, storyTitle: story.title });
 
     response.status(200).json(story);
   } catch (error) {
@@ -53,7 +53,6 @@ export const getStoryById = async (
     next(error);
   }
 };
-
 const GoogleGeminiController = {
   getAllStories,
   getStoryById,

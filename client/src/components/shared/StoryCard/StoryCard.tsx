@@ -1,4 +1,4 @@
-import "./MediaCard.scss";
+import "./StoryCard.scss";
 
 import {
   Button,
@@ -12,8 +12,9 @@ import { CSSProperties } from "react";
 import { Story } from "src/application/shared/interfaces";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
+import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
-interface MediaCardParams {
+interface StoryCard {
   story: Story;
   image?: string;
   loading?: boolean;
@@ -21,8 +22,9 @@ interface MediaCardParams {
   classNames?: string | string[];
 }
 
-const MediaCard = (props: MediaCardParams) => {
+const StoryCard = (props: StoryCard) => {
   const navigate = useNavigate();
+  const { isDesktop } = useDeviceSize();
   const maxImgWidth = 500;
 
   const handleOnViewClick = () => {
@@ -30,15 +32,7 @@ const MediaCard = (props: MediaCardParams) => {
   };
 
   return (
-    // <Card sx={{ maxWidth: maxImgWidth }}>
-    <Card sx={{ maxWidth: maxImgWidth, mb: 4, mr: 4 }}>
-      {/* <CardMedia
-        component="img"
-        alt="green iguana"
-        height="150"
-        src={props.image || `https://picsum.photos/${maxImgWidth}/150`}
-      /> */}
-
+    <Card sx={{ maxWidth: maxImgWidth, mb: 4, mr: !isDesktop ? 0 : 4 }}>
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           {props.story.title}
@@ -57,4 +51,4 @@ const MediaCard = (props: MediaCardParams) => {
   );
 };
 
-export default MediaCard;
+export default StoryCard;

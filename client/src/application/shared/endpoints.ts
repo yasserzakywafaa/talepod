@@ -1,9 +1,20 @@
 import APP_CONSTANTS from "./app_constants";
 
-const publicApiUrl = APP_CONSTANTS.IS_DEV
-  ? `http://localhost:${APP_CONSTANTS.DEV_SERVER_PORT}`
-  : APP_CONSTANTS.PUBLIC_API_URL;
-// : window.location.origin;
+const getPublicURL = (): string | undefined => {
+  switch (true) {
+    case APP_CONSTANTS.IS_DEV:
+      if (APP_CONSTANTS.IS_DEV_LOCAL_SERVER) {
+        return `http://localhost:${APP_CONSTANTS.DEV_SERVER_PORT}`;
+      }
+
+      return APP_CONSTANTS.DEV_API_URL;
+
+    default:
+      return APP_CONSTANTS.PUBLIC_API_URL;
+  }
+};
+
+const publicApiUrl = getPublicURL();
 
 const END_POINTS = {
   TESTING: {

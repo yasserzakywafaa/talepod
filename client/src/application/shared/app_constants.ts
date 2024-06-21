@@ -2,7 +2,11 @@ const APP_CONSTANTS = {
   DESIGN: {},
   DEV_CLIENT_PORT: process.env.REACT_APP_PORT,
   DEV_SERVER_PORT: process.env.REACT_APP_SERVER_PORT,
+  DEV_API_URL: process.env.REACT_APP_PROD_API_DEV_URL,
   PUBLIC_API_URL: process.env.REACT_APP_PROD_API_PUBLIC_URL,
+  IS_DEV_LOCAL_SERVER:
+    process.env.REACT_APP_IS_DEV_LOCAL_SERVER &&
+    process.env.REACT_APP_IS_DEV_LOCAL_SERVER === "true",
   IS_DEV:
     process.env.NODE_ENV && process.env.NODE_ENV.indexOf("development") > -1,
   IS_PROD:

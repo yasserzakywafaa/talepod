@@ -4,7 +4,7 @@ import { AutoFixHigh } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import Footer from "../../components/shared/Footer/Footer";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
-import MediaCard from "src/components/shared/MediaCard/MediaCard";
+import StoryCard from "src/components/shared/StoryCard/StoryCard";
 import NoResultsFound from "src/components/shared/NoResults/NoResults";
 import Page from "src/components/shared/Page/Page";
 import { useEffect } from "react";
@@ -12,14 +12,13 @@ import { useExploreContext } from "../Explore/store/Provider";
 import { useNavigate } from "react-router-dom";
 
 const ExplorePage: React.FC = () => {
+  const navigate = useNavigate();
   const {
     store: {
       state: { isFetching, stories },
     },
     manager: { setUp },
   } = useExploreContext();
-
-  const navigate = useNavigate();
 
   const handleStartNowClick = () => {
     navigate("/create");
@@ -36,19 +35,40 @@ const ExplorePage: React.FC = () => {
           display: "flex",
           flexWrap: "wrap",
           justifyContent: "center",
-          pt: { xs: 10 },
           pb: { xs: 8, sm: 12 },
         }}
       >
         {isFetching && <LoaderSpinner style={{ position: "absolute" }} />}
 
         {stories.length ? (
-          stories.map((story, index) => {
-            return <MediaCard key={index} story={story} />;
-          })
+          <>
+            <Box
+              width="100%"
+              margin="auto"
+              display="flex"
+              justifyContent="center"
+            >
+              <Button
+                size="large"
+                color="primary"
+                variant="contained"
+                sx={{ my: 2, mb: 4, px: 2 }}
+                endIcon={<AutoFixHigh />}
+                onClick={handleStartNowClick}
+              >
+                Create Another Story
+              </Button>
+            </Box>
+
+            {stories.map((story, index) => {
+              return <StoryCard key={index} story={story} />;
+            })}
+          </>
         ) : (
-          <NoResultsFound />
+          <></>
         )}
+
+        {!stories.length ? <NoResultsFound /> : <></>}
 
         <Box>
           <Button

@@ -75,7 +75,7 @@ export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
     childInfo: {
       name: "",
       gender: ChildGenderEnum.Girl,
-      age: 2,
+      age: 1,
       interests: "",
       language: Languages[0],
     },

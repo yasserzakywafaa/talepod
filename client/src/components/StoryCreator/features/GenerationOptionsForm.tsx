@@ -6,7 +6,6 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
-  Slider,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
@@ -28,6 +27,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useOpenAiGPTContext } from "./OpenAiGPT/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
+import { Story } from "src/application/shared/interfaces";
 
 const GenerationOptionsForm = () => {
   const navigate = useNavigate();
@@ -63,11 +63,11 @@ const GenerationOptionsForm = () => {
     if (userPrompt || autoTextPrompt) {
       handleIsTextGenFetching(true);
       try {
-        const storyId: string = await handleGenerateTextRequest(
+        const story: Story = await handleGenerateTextRequest(
           userPrompt || autoTextPrompt
         );
         handleIsTextGenFetching(false);
-        navigate(routes.story(storyId));
+        if (story.id) navigate(routes.story(story.title));
       } catch (error) {}
     }
   };
@@ -75,18 +75,6 @@ const GenerationOptionsForm = () => {
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     handleUpdateChildInfo(name as keyof ChildInfo, value);
-  };
-
-  const handleAgeSliderChange = (
-    event: Event,
-    value: number,
-    activeThumb: number
-  ) => {
-    if (Array.isArray(value)) {
-      handleUpdateChildInfo("age", value[0]);
-    } else {
-      handleUpdateChildInfo("age", value);
-    }
   };
 
   const handleGenderChange = (
@@ -103,6 +91,10 @@ const GenerationOptionsForm = () => {
 
     switch (name) {
       case "gender":
+        handleUpdateChildInfo(name, value);
+        break;
+
+      case "age":
         handleUpdateChildInfo(name, value);
         break;
 
@@ -202,21 +194,24 @@ const GenerationOptionsForm = () => {
           </Select>
         </FormControl>
 
-        <Box className="child-info-form-item">
-          <Typography id="age-slider" gutterBottom>
-            Age: {childInfo.age} years
-          </Typography>
-          <Slider
-            marks
-            min={1}
-            max={50}
-            step={1}
-            value={childInfo.age}
-            valueLabelDisplay="auto"
-            aria-labelledby="age-slider"
-            onChange={handleAgeSliderChange}
-          />
-        </Box>
+        <FormControl className="child-info-form-item">
+          <InputLabel id="age-select-label">Age</InputLabel>
+          <Select
+            name="age"
+            label="Age"
+            variant="outlined"
+            id="age-select"
+            value={childInfo.age.toString()}
+            labelId="story-moral-select-label"
+            onChange={handleOnSelectChange}
+          >
+            {[...Array(50).keys()].map((value) => (
+              <MenuItem key={value + 1} value={value + 1}>
+                {value + 1}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
         <Box className="child-info-form-item">
           <Typography id="gender-toggle" gutterBottom>

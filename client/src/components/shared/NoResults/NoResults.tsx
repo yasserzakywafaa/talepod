@@ -1,13 +1,8 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import NotFound404 from "../../../assets/images/no_results_found.svg";
-import routes from "src/application/routes";
-import { useNavigate } from "react-router-dom";
 
 const NoResultsFound: React.FC = () => {
-  const navigate = useNavigate();
-  const handleOnCreateClick = () => navigate(routes.create);
-
   return (
     <>
       <Box component="div" className="no-results-container" width="100%">
@@ -32,17 +27,7 @@ const NoResultsFound: React.FC = () => {
             justifyContent="center"
             className="unauthorized-card-wrapper"
           >
-            <Typography variant="h3">No Stories Found</Typography>
-
-            <Button
-              sx={{ marginY: "4rem" }}
-              size="large"
-              type="button"
-              variant="contained"
-              onClick={handleOnCreateClick}
-            >
-              Create Story
-            </Button>
+            <Typography variant="h5">No Stories Found</Typography>
           </Box>
         </Box>
       </Box>

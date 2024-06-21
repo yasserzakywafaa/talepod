@@ -3,16 +3,19 @@ import { Express } from "express";
 import cors from "cors";
 
 const corsOptions = {
-  origin: (origin: string, callback: Function) => {
-    const allowedOrigins = CONFIG.PROD_CLIENT_PUBLIC_URLS.split(", ");
-    if (allowedOrigins.includes(origin) || !origin) {
-      callback(null, true);
-    } else {
-      console.error(`❌ Not allowed by CORS: ${origin}`);
-      callback(new Error("❌ Not allowed by CORS"));
-    }
-  },
-  // origin: "*",
+  // origin: (origin: string, callback: Function) => {
+  //   const allowedOrigins = CONFIG.PROD_CLIENT_PUBLIC_URLS.split(", ");
+
+  //   console.log("ℹ️  allowedOrigins:>>>", { allowedOrigins });
+
+  //   if (allowedOrigins.includes(origin) || !origin) {
+  //     callback(null, true);
+  //   } else {
+  //     console.error(`❌ Not allowed by CORS: ${origin}`);
+  //     callback(new Error("❌ Not allowed by CORS"));
+  //   }
+  // },
+  origin: "*",
   methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true, // Allow credentials (cookies, authorization headers)
