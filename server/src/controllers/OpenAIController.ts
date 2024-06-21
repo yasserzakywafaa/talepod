@@ -4,6 +4,7 @@ import { saveFileDataToDb, saveStoryToDb } from "../models/mongoDb";
 import CONFIG from "../config";
 import { IMAGES_SIZES } from "../models/openaiModel";
 import OpenAi from "openai";
+import { Story } from "src/models/types";
 import extractStoryParts from "../utils/extractStoryParts";
 import fs from "fs";
 import { uploadFileToS3 } from "../models/amazonS3";
@@ -36,9 +37,14 @@ export const createStory = async (
           createdAt: new Date(),
         });
 
+        const newStory: Story = {
+          ...storyParts,
+          id: storyId as string,
+          createdAt: new Date(),
+        };
+
         response.json({
-          storyId,
-          storyParts
+          ...newStory,
         });
       } catch (error) {
         throw new Error("❌ Failed to save the created story to Db", {
@@ -47,7 +53,7 @@ export const createStory = async (
       }
     }
 
-    console.log("ℹ️  Created Story Successfully", {
+    console.log("✅  Story Created Successfully", {
       request: request.path,
       MODEL_NAME: CONFIG.OPENAI_MODEL_NAME,
     });

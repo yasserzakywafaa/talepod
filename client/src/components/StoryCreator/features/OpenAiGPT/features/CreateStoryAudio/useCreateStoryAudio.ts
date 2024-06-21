@@ -65,7 +65,7 @@ export const useCreateStoryAudio = (
         END_POINTS.OPENAI.GENERATE.STORY_AUdio,
         {
           fileName,
-          storyId: story.storyId,
+          storyId: story.id,
           userPrompt: `${storyParts.mainStory} ${storyParts.poem}`,
         },
         {

@@ -4,9 +4,9 @@ import { AutoFixHigh } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import Footer from "../../components/shared/Footer/Footer";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
-import StoryCard from "src/components/shared/StoryCard/StoryCard";
 import NoResultsFound from "src/components/shared/NoResults/NoResults";
 import Page from "src/components/shared/Page/Page";
+import StoryCard from "src/components/shared/StoryCard/StoryCard";
 import { useEffect } from "react";
 import { useExploreContext } from "../Explore/store/Provider";
 import { useNavigate } from "react-router-dom";
@@ -20,7 +20,7 @@ const ExplorePage: React.FC = () => {
     manager: { setUp },
   } = useExploreContext();
 
-  const handleStartNowClick = () => {
+  const handleOnCreateClick = () => {
     navigate("/create");
   };
 
@@ -54,7 +54,7 @@ const ExplorePage: React.FC = () => {
                 variant="contained"
                 sx={{ my: 2, mb: 4, px: 2 }}
                 endIcon={<AutoFixHigh />}
-                onClick={handleStartNowClick}
+                onClick={handleOnCreateClick}
               >
                 Create Another Story
               </Button>
@@ -77,7 +77,7 @@ const ExplorePage: React.FC = () => {
             variant="contained"
             sx={{ my: 2, px: 2 }}
             endIcon={<AutoFixHigh />}
-            onClick={handleStartNowClick}
+            onClick={handleOnCreateClick}
           >
             Create Another Story
           </Button>
