@@ -18,7 +18,7 @@ const Homepage = () => {
     <Page title="TalePod | Bedtime Stories" className="home-page">
       <Hero />
 
-      <Box sx={{ bgcolor: "background.default" }}>
+      <Box sx={{ bgcolor: "transparent" }}>
         {/* <Features /> */}
         {/* <Divider /> */}
         {/* <Testimonials /> */}
