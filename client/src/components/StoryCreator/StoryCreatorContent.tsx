@@ -16,7 +16,10 @@ export const StoryCreatorContent = () => {
   };
 
   return (
-    <Container id="story-creator" sx={{ pt: { xs: 4, sm: 4 }, paddingX: 0 }}>
+    <Container
+      className="story-creator-container"
+      sx={{ pt: { xs: 4, sm: 4 }, paddingX: 0 }}
+    >
       <GenerationOptionsForm />
 
       {APP_CONSTANTS.IS_DEV && (

@@ -1,4 +1,5 @@
-import { ChildInfo } from "./state";
+import { AdultGenderEnum, ChildGenderEnum, ChildInfo } from "./state";
+
 import { Country } from "src/shared/countries";
 import { Environment } from "src/shared/generatedStory/Environments";
 import { Moral } from "src/shared/generatedStory/Moral";
@@ -54,6 +55,26 @@ export const useStoryCreatorManager = (
         ...store.state.textGeneration,
         autoTextPrompt: getAutoTextGenPromptString(store.state),
       },
+    });
+
+    const { childInfo } = store.state;
+    if (childInfo.age >= 18) {
+      if (childInfo.gender === ChildGenderEnum.Girl) {
+        handleUpdateChildInfo("gender", AdultGenderEnum.Female);
+      } else if (childInfo.gender === ChildGenderEnum.Boy) {
+        handleUpdateChildInfo("gender", AdultGenderEnum.Male);
+      }
+    } else {
+      if (childInfo.gender === AdultGenderEnum.Female) {
+        handleUpdateChildInfo("gender", ChildGenderEnum.Girl);
+      } else if (childInfo.gender === AdultGenderEnum.Male) {
+        handleUpdateChildInfo("gender", ChildGenderEnum.Boy);
+      }
+    }
+
+    console.log("useEffect:>>>", {
+      age: store.state.childInfo.age,
+      gender: store.state.childInfo.gender,
     });
   }, [store.state.childInfo, store.state.storyParams]);
 

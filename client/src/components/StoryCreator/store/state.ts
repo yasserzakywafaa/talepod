@@ -18,9 +18,14 @@ export enum ChildGenderEnum {
   Girl = "Girl",
 }
 
+export enum AdultGenderEnum {
+  Male = "Male",
+  Female = "Female",
+}
+
 export type ChildInfo = {
   name: string;
-  gender: ChildGenderEnum;
+  gender: ChildGenderEnum | AdultGenderEnum;
   age: number;
   interests: string;
   language: Language;
@@ -74,7 +79,7 @@ export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
     isFetching: false,
     childInfo: {
       name: "",
-      gender: ChildGenderEnum.Girl,
+      gender: ChildGenderEnum.Girl || AdultGenderEnum.Female,
       age: 1,
       interests: "",
       language: Languages[0],

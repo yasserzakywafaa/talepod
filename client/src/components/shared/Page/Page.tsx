@@ -1,13 +1,13 @@
 import "./Page.scss";
 
 import { Container, ContainerTypeMap } from "@mui/material";
+import { darkTheme, lightTheme } from "src/application/shared/themes";
 
 import ApplicationBar from "../ApplicationBar/ApplicationBar";
 import LoaderSpinner from "../Loading/LoaderSpinner";
 import { Notification } from "../Notification/Notification";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import classNames from "classnames";
-import { colorPallets } from "src/application/shared/themes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 
@@ -22,7 +22,7 @@ const Page = (params: PageProps) => {
   const { children, title, className = "", containerProps = {} } = params;
   const {
     store: {
-      state: { isFetching },
+      state: { isFetching, themeMode },
     },
   } = useApplicationContext();
 
@@ -45,8 +45,10 @@ const Page = (params: PageProps) => {
           width: "100%",
           height: "100%",
           backgroundRepeat: "no-repeat",
-          // background: `linear-gradient(to top, #000000, #283e51)`,
-          background: `linear-gradient(to top, #000000, ${colorPallets.one.background.default})`,
+          background:
+            themeMode === "dark"
+              ? darkTheme.palette.background.default
+              : lightTheme.palette.background.default,
         }}
       />
       <Container

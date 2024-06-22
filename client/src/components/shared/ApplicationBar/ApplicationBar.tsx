@@ -1,6 +1,7 @@
 import { useMatch, useNavigate } from "react-router-dom";
 
 import AppBar from "@mui/material/AppBar";
+import { AutoFixHigh } from "@mui/icons-material";
 import BackButton from "./BackButton";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -72,6 +73,10 @@ const ApplicationBar = () => {
         scrollToSection(sectionId);
     }
     setIsDrawerOpen(false);
+  };
+
+  const handleOnCreateClick = () => {
+    navigate("/create");
   };
 
   const handleOnBackClick = () => navigate(-1);
@@ -232,6 +237,26 @@ const ApplicationBar = () => {
                     <BackButton onClick={handleOnBackClick} />
                   )}
 
+                  {(pagesMatch.isExplorePage || pagesMatch.isViewStoryPage) && (
+                    <Box
+                      width="100%"
+                      margin="auto"
+                      display="flex"
+                      justifyContent="center"
+                    >
+                      <Button
+                        size="small"
+                        color="secondary"
+                        variant="text"
+                        sx={{ my: 2, px: 2 }}
+                        endIcon={<AutoFixHigh />}
+                        onClick={handleOnCreateClick}
+                      >
+                        Create Story
+                      </Button>
+                    </Box>
+                  )}
+
                   <Button
                     variant="text"
                     color="primary"
@@ -249,10 +274,10 @@ const ApplicationBar = () => {
                   >
                     <Box
                       sx={{
-                        minWidth: "40dvw",
                         p: 2,
-                        backgroundColor: "background.paper",
                         flexGrow: 1,
+                        minWidth: "40dvw",
+                        backgroundColor: "background.paper",
                       }}
                     >
                       <Box

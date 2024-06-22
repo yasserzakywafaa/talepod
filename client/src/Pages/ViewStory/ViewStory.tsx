@@ -1,15 +1,18 @@
-import { AutoAwesome, AutoFixHigh } from "@mui/icons-material";
+import "./ViewStory.scss";
+
 import {
   Button,
   Card,
   CardContent,
   CardMedia,
   Container,
+  Divider,
   Typography,
 } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
 
+import { AutoAwesome } from "@mui/icons-material";
 import Box from "@mui/material/Box";
+import DreamingFox from "../../assets/images/dreaming_fox_with_a_pillow.png";
 import Footer from "../../components/shared/Footer/Footer";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
 import NoResultsFound from "src/components/shared/NoResults/NoResults";
@@ -17,10 +20,10 @@ import Page from "src/components/shared/Page/Page";
 import ReactMarkdown from "react-markdown";
 import { useEffect } from "react";
 import { useOpenAiGPTContext } from "src/components/StoryCreator/features/OpenAiGPT/store/Provider";
+import { useParams } from "react-router-dom";
 import { useViewStoryContext } from "./store/Provider";
 
 const ViewStoryPage: React.FC = () => {
-  const navigate = useNavigate();
   const { storyId } = useParams<{ storyId: string }>();
 
   const {
@@ -33,10 +36,6 @@ const ViewStoryPage: React.FC = () => {
     manager: { handleGenerateTextToSpeechRequest },
   } = useOpenAiGPTContext();
 
-  const handleStartNowClick = () => {
-    navigate("/create");
-  };
-
   const handleOnCreateAudioClick = () => {
     handleGenerateTextToSpeechRequest(story.mainStory);
   };
@@ -46,11 +45,12 @@ const ViewStoryPage: React.FC = () => {
   }, [storyId]);
 
   return (
-    <Page title="TalePod | Public Bedtime Stories" className="explore-page">
+    <Page title="TalePod | Public Bedtime Stories" className="view-story-page">
       <Container
+        className="view-story-container"
         sx={{
           pt: { xs: 4 },
-          pb: { xs: 8, sm: 12 },
+          pb: 4,
         }}
       >
         {isFetching && <LoaderSpinner style={{ position: "absolute" }} />}
@@ -59,33 +59,48 @@ const ViewStoryPage: React.FC = () => {
 
         {story && (
           <Card
+            className="view-story-card"
             sx={{
               backgroundColor: "transparent",
             }}
           >
-            <CardContent>
+            <Box component="div" className="bg-image-character">
+              <img src={DreamingFox} width="100%" />
+            </Box>
+            <CardContent className="view-story-card-content">
               <Typography
+                gutterBottom
                 variant="h3"
                 component="h3"
-                gutterBottom
                 color="primary"
+                sx={{ fontSize: { xs: "2rem" } }}
+                className="view-story-card-title"
               >
                 {story.title}
               </Typography>
 
-              <Typography variant="body1" paragraph>
+              <Typography
+                paragraph
+                variant="body1"
+                className="view-story-card-summary"
+              >
                 {story.summary}
               </Typography>
 
+              <Divider sx={{ my: 1 }} />
+
               <Typography
+                gutterBottom
                 variant="h5"
                 component="h2"
-                gutterBottom
                 sx={{ color: (theme) => theme.palette.primary.main }}
               >
                 Story
               </Typography>
+
               <ReactMarkdown>{story.mainStory}</ReactMarkdown>
+
+              <Divider sx={{ my: 2 }} />
 
               {!story.audioFile && (
                 <>
@@ -95,7 +110,7 @@ const ViewStoryPage: React.FC = () => {
                     gutterBottom
                     sx={{ color: (theme) => theme.palette.primary.main }}
                   >
-                    Create audio book for this story
+                    Create audio for this story
                   </Typography>
 
                   <Button
@@ -128,7 +143,7 @@ const ViewStoryPage: React.FC = () => {
                   />
 
                   <Typography variant="body2" color="textSecondary" mt={2}>
-                    Audio File: {story.audioFile.fileName} (Uploaded on:{" "}
+                    Audio File: {story.audioFile.fileName} (Created on:{" "}
                     {new Date(story.audioFile.createdAt).toLocaleDateString()})
                   </Typography>
                 </Box>
@@ -136,19 +151,6 @@ const ViewStoryPage: React.FC = () => {
             </CardContent>
           </Card>
         )}
-
-        <Box display="flex" justifyContent="center">
-          <Button
-            size="large"
-            color="primary"
-            variant="outlined"
-            sx={{ my: 2, px: 2 }}
-            endIcon={<AutoFixHigh />}
-            onClick={handleStartNowClick}
-          >
-            Create Another Story
-          </Button>
-        </Box>
       </Container>
 
       <Box sx={{ bgcolor: "background.default" }}>

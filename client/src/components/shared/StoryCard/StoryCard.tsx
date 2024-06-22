@@ -33,6 +33,7 @@ const StoryCard = (props: StoryCard) => {
 
   return (
     <Card
+      className="story-card"
       sx={{
         maxWidth: maxImgWidth,
         mb: 4,
@@ -40,17 +41,27 @@ const StoryCard = (props: StoryCard) => {
         bgcolor: "transparent",
       }}
     >
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+      <CardContent className="story-card-content">
+        <Typography
+          gutterBottom
+          variant="h5"
+          component="div"
+          className={`story-card-title ${!isDesktop ? "ellipsis" : ""}`}
+        >
           {props.story.title}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          className="story-card-summary"
+        >
           {props.story.summary}
         </Typography>
       </CardContent>
 
       <CardActions>
-        <Button size="large" variant="outlined" onClick={handleOnViewClick}>
+        <Button size="small" variant="outlined" onClick={handleOnViewClick}>
           Read Story
         </Button>
       </CardActions>
