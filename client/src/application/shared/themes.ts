@@ -1,36 +1,11 @@
 import { createTheme } from "@mui/material/styles";
 
-const mainColor = "#bb86fc"; // Indigo
+// const mainColor = "#bb86fc"; // Indigo
+const primaryColor = "#ad932d"; // Dark Goldenrod
+const secondaryColor = "#00BFFF"; // Deep Sky Blue
+const darkBg = "linear-gradient(to top, #000000, #2E3B4E)"; // Night Sky
 
-export const colorPallets = {
-  one: {
-    background: {
-      default: "#2E3B4E",
-      card_Background: "#27374D",
-    },
-    text: "#FFFFFF",
-    button: "#FFAB76",
-    accent: "#ad932d",
-  },
-};
-
-export const lightTheme = createTheme({
-  palette: {
-    mode: "light",
-    primary: {
-      main: mainColor,
-    },
-    secondary: {
-      main: "#6B8E23", // Olive Green
-    },
-    background: {
-      default: "#F5F5F5", // Light Gray
-    },
-    text: {
-      primary: "#333333", // Charcoal
-      secondary: "#666666", // Gray
-    },
-  },
+export const theme = createTheme({
   typography: {
     fontFamily: "Arial, sans-serif",
   },
@@ -43,18 +18,39 @@ export const lightTheme = createTheme({
   // },
 });
 
+export const lightTheme = createTheme({
+  ...theme,
+  palette: {
+    mode: "light",
+    primary: {
+      main: primaryColor,
+    },
+    secondary: {
+      main: secondaryColor,
+    },
+    background: {
+      default: "#F5F5F5", // Light Gray
+    },
+    text: {
+      primary: "#333333", // Charcoal
+      secondary: "#666666", // Gray
+    },
+  },
+});
+
 export const darkTheme = createTheme({
+  ...theme,
   palette: {
     mode: "dark",
     primary: {
-      // main: mainColor,
-      main: colorPallets.one.accent,
+      main: primaryColor,
     },
     secondary: {
-      main: "#6B8E23", // Olive Green
+      main: secondaryColor,
     },
     background: {
-      default: "#333333", // Dark Background
+      // default: "#333333", // Dark Background
+      default: darkBg,
     },
     text: {
       primary: "#FFFFFF", // White
@@ -64,11 +60,4 @@ export const darkTheme = createTheme({
   typography: {
     fontFamily: "Arial, sans-serif",
   },
-  // components: {
-  //   MuiCssBaseline: {
-  //     styleOverrides: {
-  //       body: {},
-  //     },
-  //   },
-  // },
 });

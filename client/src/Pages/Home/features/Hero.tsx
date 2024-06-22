@@ -4,7 +4,6 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import MainCharacter from "../../../assets/images/sleeping_bunny_with_a_moon.png";
 import Typography from "@mui/material/Typography";
-// import { alpha } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 export default function Hero() {
@@ -15,20 +14,14 @@ export default function Hero() {
   };
 
   return (
-    <Box
-      id="hero"
-      sx={{
-        width: "100%",
-        backgroundSize: "100% 20%",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
+    <Box id="hero">
       <Container
+        className="hero-container"
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          pt: { xs: 4 },
+          pt: { xs: 2, sm: 4 },
           pb: { xs: 8, sm: 12 },
         }}
       >
@@ -43,7 +36,7 @@ export default function Hero() {
             flexDirection: { xs: "column", md: "row" },
             alignSelf: "center",
             textAlign: "center",
-            fontSize: "3.5rem",
+            fontSize: { xs: "3rem", sm: "3.5rem" },
             color: (theme) => theme.palette.text.primary,
           }}
         >
@@ -69,7 +62,8 @@ export default function Hero() {
           sx={{ alignSelf: "center", width: { sm: "100%", md: "80%" } }}
         >
           Craft personalized bedtime stories tailored to your child's dreams and
-          imagination. Make bedtime magical and memorable.
+          imagination.
+          {/* Make bedtime magical and memorable. */}
         </Typography>
 
         <Button

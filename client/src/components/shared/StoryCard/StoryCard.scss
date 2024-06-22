@@ -1,85 +1,21 @@
-.card {
-  margin-right: 1rem;
-  position: relative;
-  overflow: hidden;
-  border-radius: 5px;
-  max-width: 150px;
-  max-height: 300px;
-  width: 100%;
-  flex: none;
-  z-index: 0;
-
-  .wrapper {
-    position: relative;
-    min-width: 150px;
-    min-height: 150px;
-    .image-icon {
-      svg {
-        width: 100%;
-        height: 100%;
+/* iPhone 5/5S/5C/SE (1st generation) */
+@media (max-width: 320px), (max-height: 568px) {
+  .story-card {
+    .story-card-content {
+      padding-top: 8px;
+      padding-bottom: 8px;
+      .story-card-title {
+        white-space: nowrap; /* Prevents text from wrapping */
+        overflow: hidden; /* Hides the overflow text */
+        text-overflow: ellipsis; /* Adds ellipsis at the end of the text */
+      }
+      .story-card-summary {
+        display: -webkit-box; /* Defines a flexible box layout model */
+        -webkit-box-orient: vertical; /* Sets the orientation of the box layout */
+        -webkit-line-clamp: 2; /* Limits the text to 2 lines */
+        overflow: hidden; /* Hides the overflow text */
+        text-overflow: ellipsis; /* Adds ellipsis at the end of the text */
       }
     }
   }
-
-  &:last-child {
-    margin-right: 0;
-  }
-
-  img {
-    transform: translate(-50%, -50%);
-    position: absolute;
-    height: 100%;
-    left: 50%;
-    top: 50%;
-
-    // &[data-portrait="0"] {
-    object-fit: cover;
-    min-height: 100%;
-    min-width: 100%;
-    height: unset;
-    width: 100%;
-    // }
-  }
-
-  .play {
-    background: rgba(0, 0, 0, 0.4);
-    justify-content: center;
-    transition: all 0.3s;
-    align-items: center;
-    position: absolute;
-    visibility: hidden;
-    cursor: pointer;
-    display: flex;
-    height: 100%;
-    width: 100%;
-    opacity: 0;
-    z-index: 1;
-    left: 0;
-    top: 0;
-
-    svg {
-      transform: translateY(120px);
-      transition: all 0.3s;
-      color: #fff;
-      font-size: 40;
-    }
-  }
-
-  &:hover .play {
-    visibility: visible;
-    opacity: 1;
-
-    & svg {
-      transform: translateY(0px);
-    }
-  }
-}
-
-.skeleton {
-  background: rgba(225, 225, 225, 0.2);
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  left: 0;
-  top: 0;
 }

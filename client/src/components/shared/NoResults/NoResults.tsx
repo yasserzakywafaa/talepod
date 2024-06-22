@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 
-import NotFound404 from "../../../assets/images/no_results_found.svg";
+import NotFound404 from "../../../assets/images/unicorn_with_a_magic_wand_and_a_book.png";
 
 const NoResultsFound: React.FC = () => {
   return (

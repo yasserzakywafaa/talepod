@@ -1,3 +1,4 @@
+import { AdultGenderEnum, ChildGenderEnum, ChildInfo } from "../store/state";
 import {
   Box,
   Button,
@@ -11,7 +12,6 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import { ChildGenderEnum, ChildInfo } from "../store/state";
 import {
   Environment,
   Environments,
@@ -214,9 +214,6 @@ const GenerationOptionsForm = () => {
         </FormControl>
 
         <Box className="child-info-form-item">
-          {/* <Typography id="gender-toggle" gutterBottom>
-            Gender
-          </Typography> */}
           <ToggleButtonGroup
             exclusive
             value={childInfo.gender}
@@ -224,7 +221,9 @@ const GenerationOptionsForm = () => {
             onChange={handleGenderChange}
           >
             <ToggleButton
-              value={ChildGenderEnum.Boy}
+              value={
+                childInfo.age <= 18 ? ChildGenderEnum.Boy : AdultGenderEnum.Male
+              }
               sx={{
                 "&.Mui-selected": {
                   backgroundColor: (theme) => theme.palette.primary.main,
@@ -235,10 +234,15 @@ const GenerationOptionsForm = () => {
                 },
               }}
             >
-              {ChildGenderEnum.Boy}
+              {childInfo.age <= 18 ? ChildGenderEnum.Boy : AdultGenderEnum.Male}
             </ToggleButton>
+
             <ToggleButton
-              value={ChildGenderEnum.Girl}
+              value={
+                childInfo.age <= 18
+                  ? ChildGenderEnum.Girl
+                  : AdultGenderEnum.Female
+              }
               sx={{
                 "&.Mui-selected": {
                   backgroundColor: (theme) => theme.palette.primary.main,
@@ -249,7 +253,9 @@ const GenerationOptionsForm = () => {
                 },
               }}
             >
-              {ChildGenderEnum.Girl}
+              {childInfo.age <= 18
+                ? ChildGenderEnum.Girl
+                : AdultGenderEnum.Female}
             </ToggleButton>
           </ToggleButtonGroup>
         </Box>
