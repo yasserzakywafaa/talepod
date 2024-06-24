@@ -1,6 +1,7 @@
+import { ObjectId } from "mongodb";
+
 export interface Story {
-  _id?: string;
-  id: string;
+  _id: ObjectId;
   title: string;
   summary: string;
   mainStory: string;

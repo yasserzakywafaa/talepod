@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
+import { Story, StoryAudioFile } from "src/models/types";
 import { saveFileDataToDb, saveStoryToDb } from "../models/mongoDb";
 
 import CONFIG from "../config";
 import { IMAGES_SIZES } from "../models/openaiModel";
 import OpenAi from "openai";
-import { Story } from "src/models/types";
 import extractStoryParts from "../utils/extractStoryParts";
 import fs from "fs";
 import { uploadFileToS3 } from "../models/amazonS3";
@@ -39,7 +39,7 @@ export const createStory = async (
 
         const newStory: Story = {
           ...storyParts,
-          id: storyId as string,
+          _id: storyId,
           createdAt: new Date(),
         };
 
@@ -96,34 +96,42 @@ export const createStoryAudio = async (
       });
     await fs.promises.writeFile(filePath, buffer);
 
-    // Upload file to Amazon S3
-    const fileUrl = await uploadFileToS3(fileName, filePath);
-
-    if (fileUrl) {
-      try {
-        // Save file to MongoDB Atlas
-        await saveFileDataToDb(storyId, audioFileName, fileUrl);
-      } catch (error) {
-        throw new Error("❌ Failed to save the S3 audio file URL file to Db!", {
-          cause: error,
-        });
+    try {
+      // Upload file to Amazon S3
+      const fileUrl = await uploadFileToS3(fileName, filePath);
+      if (fileUrl) {
+        try {
+          // Save file to MongoDB Atlas
+          await saveFileDataToDb(storyId, audioFileName, fileUrl);
+        } catch (error) {
+          throw new Error(
+            "❌ Failed to save the S3 audio file URL file to Db!",
+            { cause: error }
+          );
+        }
+      } else {
+        throw new Error("❌ Failed to upload file to S3!");
       }
-    } else {
-      console.error("❌ Failed to upload file to S3!");
+
+      console.log("✅ The story audio file is created successfully.", {
+        fileUrl,
+      });
+
+      const storyAudio: StoryAudioFile = {
+        url: fileUrl,
+        fileName: fileName,
+        createdAt: new Date(),
+      };
+
+      response.json(storyAudio);
+    } catch (error) {
+      throw new Error("❌ Failed to save the S3 audio file URL file to Db!", {
+        cause: error,
+      });
     }
-
-    console.log("ℹ️  The story audio file is created successfully.", {
-      fileUrl,
-      MODEL_NAME: OPENAI_TTS_MODEL_NAME,
-    });
-
-    response.json({
-      fileUrl,
-      fileName,
-    });
   } catch (error) {
     console.error("❌ Failed to create an audio file for the story", {
-      error,
+      cause: error,
     });
     next(error);
   }

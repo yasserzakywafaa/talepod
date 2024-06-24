@@ -67,8 +67,13 @@ const GenerationOptionsForm = () => {
           userPrompt || autoTextPrompt
         );
         handleIsTextGenFetching(false);
-        if (story.id) navigate(routes.story(story.id));
-      } catch (error) {}
+
+        if (story._id) navigate(routes.story(story._id));
+      } catch (error) {
+        console.error("❌ Failed to create a story!", {
+          error,
+        });
+      }
     }
   };
 

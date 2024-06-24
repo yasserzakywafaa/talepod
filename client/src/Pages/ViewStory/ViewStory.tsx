@@ -9,6 +9,10 @@ import {
   Divider,
   Typography,
 } from "@mui/material";
+import {
+  Notify,
+  ToastTypes,
+} from "src/components/shared/Notification/Notification";
 
 import { AutoAwesome } from "@mui/icons-material";
 import Box from "@mui/material/Box";
@@ -29,6 +33,8 @@ const ViewStoryPage: React.FC = () => {
   const {
     store: {
       state: { isFetching, story },
+      handleIsFetching,
+      handleUpdateStory,
     },
     manager: { setUp },
   } = useViewStoryContext();
@@ -36,8 +42,25 @@ const ViewStoryPage: React.FC = () => {
     manager: { handleGenerateTextToSpeechRequest },
   } = useOpenAiGPTContext();
 
-  const handleOnCreateAudioClick = () => {
-    handleGenerateTextToSpeechRequest(story.mainStory);
+  const handleOnCreateAudioClick = async () => {
+    handleIsFetching(true);
+    if (story.mainStory) {
+      try {
+        const audioFile = await handleGenerateTextToSpeechRequest(story);
+        if (audioFile && audioFile.url) {
+          handleUpdateStory({
+            ...story,
+            audioFile,
+          });
+        }
+      } catch (error) {
+        Notify({
+          type: ToastTypes.Error,
+          content: `❌ Failed to create audio! ${error}`,
+        });
+      }
+    }
+    handleIsFetching(false);
   };
 
   useEffect(() => {
@@ -53,7 +76,7 @@ const ViewStoryPage: React.FC = () => {
           pb: 4,
         }}
       >
-        {isFetching && <LoaderSpinner style={{ position: "absolute" }} />}
+        {isFetching && <LoaderSpinner style={{ position: "fixed" }} />}
 
         {!story && <NoResultsFound />}
 
@@ -143,7 +166,7 @@ const ViewStoryPage: React.FC = () => {
                   />
 
                   <Typography variant="body2" color="textSecondary" mt={2}>
-                    Audio File: {story.audioFile.fileName} (Created on:{" "}
+                    Audio File: {story.audioFile.fileName} (Created on:
                     {new Date(story.audioFile.createdAt).toLocaleDateString()})
                   </Typography>
                 </Box>

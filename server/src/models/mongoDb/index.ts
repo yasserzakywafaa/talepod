@@ -79,19 +79,14 @@ const closeDatabase = async () => {
 
 const saveStoryToDb = async (
   story: Partial<Story>
-): Promise<ObjectId | string> => {
+): Promise<ObjectId | undefined> => {
   try {
-    const storyId: ObjectId = await createDocument(
-      story as Story,
-      DBCollections.Stories
-    );
+    const storyId = await createDocument(story as Story, DBCollections.Stories);
     console.log("✅ Story saved to DB successfully");
 
     return storyId;
   } catch (error) {
-    console.error("❌ Error saving story data to DB", error);
-
-    return "";
+    throw new Error("❌ Error saving story data to DB", { cause: error });
   }
 };
 
@@ -101,7 +96,7 @@ const saveFileDataToDb = async (
   audioFileS3Uri: string
 ): Promise<void> => {
   try {
-    const collection = database.collection(DBCollections.Stories);
+    // const collection = database.collection(DBCollections.Stories);
     const audioFile = {
       fileName: audioFileName,
       url: audioFileS3Uri,
