@@ -1,21 +1,18 @@
-/* iPhone 5/5S/5C/SE (1st generation) */
-@media (max-width: 320px), (max-height: 568px) {
-  .story-card {
-    .story-card-content {
-      padding-top: 8px;
-      padding-bottom: 8px;
-      .story-card-title {
-        white-space: nowrap; /* Prevents text from wrapping */
-        overflow: hidden; /* Hides the overflow text */
-        text-overflow: ellipsis; /* Adds ellipsis at the end of the text */
-      }
-      .story-card-summary {
-        display: -webkit-box; /* Defines a flexible box layout model */
-        -webkit-box-orient: vertical; /* Sets the orientation of the box layout */
-        -webkit-line-clamp: 2; /* Limits the text to 2 lines */
-        overflow: hidden; /* Hides the overflow text */
-        text-overflow: ellipsis; /* Adds ellipsis at the end of the text */
-      }
+.story-card {
+  .story-card-content {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    .story-card-title {
+      white-space: nowrap; /* Prevents text from wrapping */
+      overflow: hidden; /* Hides the overflow text */
+      text-overflow: ellipsis; /* Adds ellipsis at the end of the text */
+    }
+    .story-card-summary {
+      display: -webkit-box; /* Defines a flexible box layout model */
+      -webkit-box-orient: vertical; /* Sets the orientation of the box layout */
+      -webkit-line-clamp: 2; /* Limits the text to 2 lines */
+      overflow: hidden; /* Hides the overflow text */
+      text-overflow: ellipsis; /* Adds ellipsis at the end of the text */
     }
   }
 }

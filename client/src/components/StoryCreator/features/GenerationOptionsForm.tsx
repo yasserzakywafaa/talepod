@@ -230,12 +230,13 @@ const GenerationOptionsForm = () => {
                 childInfo.age <= 18 ? ChildGenderEnum.Boy : AdultGenderEnum.Male
               }
               sx={{
+                color: (theme) => theme.palette.text.primary,
                 "&.Mui-selected": {
                   backgroundColor: (theme) => theme.palette.primary.main,
-                  color: "white",
+                  color: (theme) => theme.palette.text.primary,
                 },
                 "&.Mui-selected:hover": {
-                  backgroundColor: (theme) => theme.palette.primary.dark,
+                  backgroundColor: (theme) => theme.palette.secondary.main,
                 },
               }}
             >
@@ -249,12 +250,13 @@ const GenerationOptionsForm = () => {
                   : AdultGenderEnum.Female
               }
               sx={{
+                color: (theme) => theme.palette.text.primary,
                 "&.Mui-selected": {
                   backgroundColor: (theme) => theme.palette.primary.main,
-                  color: "white",
+                  color: (theme) => theme.palette.text.primary,
                 },
                 "&.Mui-selected:hover": {
-                  backgroundColor: (theme) => theme.palette.primary.dark,
+                  backgroundColor: (theme) => theme.palette.secondary.main,
                 },
               }}
             >

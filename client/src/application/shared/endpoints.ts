@@ -8,9 +8,8 @@ const getPublicURL = (): string | undefined => {
       }
 
       return APP_CONSTANTS.DEV_API_URL;
-
     default:
-      return APP_CONSTANTS.PUBLIC_API_URL;
+      return APP_CONSTANTS.PROD_API_URL;
   }
 };
 

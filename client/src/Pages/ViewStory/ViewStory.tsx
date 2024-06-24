@@ -123,6 +123,10 @@ const ViewStoryPage: React.FC = () => {
 
               <ReactMarkdown>{story.mainStory}</ReactMarkdown>
 
+              <ReactMarkdown className="italics bold">
+                {story.poem.split(".").join("\n")}
+              </ReactMarkdown>
+
               <Divider sx={{ my: 2 }} />
 
               {!story.audioFile && (
@@ -166,8 +170,8 @@ const ViewStoryPage: React.FC = () => {
                   />
 
                   <Typography variant="body2" color="textSecondary" mt={2}>
-                    Audio File: {story.audioFile.fileName} (Created on:
-                    {new Date(story.audioFile.createdAt).toLocaleDateString()})
+                    Audio created on:{" "}
+                    {new Date(story.audioFile.createdAt).toLocaleDateString()}
                   </Typography>
                 </Box>
               )}
