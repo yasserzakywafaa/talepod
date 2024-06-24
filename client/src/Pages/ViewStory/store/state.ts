@@ -10,7 +10,6 @@ export const getViewStoryInitialState = (): ViewStoryInitialState => {
     isFetching: false,
     story: {
       _id: "",
-      id: "",
       title: "",
       summary: "",
       mainStory: "",

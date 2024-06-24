@@ -29,21 +29,30 @@ export const getDocumentById = async (
 export const updateDocument = async (
   storyId: string,
   collectionName: DBCollections,
-  updateFields: Partial<Story>
+  fieldsToUpdate: Partial<Story>
 ) => {
   const stories = database.collection(collectionName);
+
+  console.log("ℹ️  updateDocument:>>>", {
+    storyId,
+    collection: DBCollections.Stories,
+    fieldsToUpdate,
+  });
 
   try {
     const result = await stories.findOneAndUpdate(
       { _id: new ObjectId(storyId) },
-      { $set: updateFields },
+      { $set: fieldsToUpdate },
       { returnOriginal: false }
     );
-    console.log("✅ Document updated successfully.");
 
-    return result.value;
+    if (result.value) {
+      console.log("✅ Document updated successfully.");
+
+      return result.value;
+    }
   } catch (error) {
-    throw new Error("❌ Failed to updated document!", error);
+    throw new Error("❌ Failed to update document!", { cause: error });
   }
 };
 

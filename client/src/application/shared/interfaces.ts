@@ -1,6 +1,5 @@
 export interface Story {
   _id: string;
-  id: string;
   title: string;
   summary: string;
   mainStory: string;

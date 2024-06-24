@@ -2,21 +2,21 @@ import {
   Notify,
   ToastTypes,
 } from "src/components/shared/Notification/Notification";
+import { Story, StoryAudioFile } from "src/application/shared/interfaces";
+import axios, { AxiosResponse } from "axios";
 import {
   getRandomString,
   replaceSpaceWithUnderscore,
 } from "src/shared/utils/stringUtils";
 
 import END_POINTS from "src/application/shared/endpoints";
-import { GeneratedStoryParts } from "../../store/state";
 import { OpenAiGPTStore } from "../../store/store";
-import axios from "axios";
-import extractStoryParts from "src/components/StoryCreator/utils/extractStoryParts";
 
 export interface UseTextGeneration {
   handleIsTextToSpeechGenFetching: (isFetching: boolean) => void;
-  handleSetTextToSpeechAiAnswer: (aiAnswer: GeneratedStoryParts) => void;
-  handleGenerateTextToSpeechRequest: () => void;
+  handleGenerateTextToSpeechRequest: (
+    story: Story
+  ) => Promise<StoryAudioFile | undefined>;
 }
 
 export const useCreateStoryAudio = (
@@ -29,63 +29,41 @@ export const useCreateStoryAudio = (
     });
   };
 
-  const handleSetTextToSpeechAiAnswer = (
-    aiAnswer: Partial<GeneratedStoryParts>
-  ) => {
-    store.updateState("textToSpeechGeneration", {
-      ...store.state.textGeneration,
-      generatedStory: {
-        statusCode: aiAnswer.statusCode,
-        title: aiAnswer.title!,
-        summary: aiAnswer.summary!,
-        mainStory: aiAnswer.mainStory!,
-        poem: aiAnswer.poem!,
-      },
-    });
-  };
-
-  const handleGenerateTextToSpeechRequest = async () => {
+  const handleGenerateTextToSpeechRequest = async (
+    story: Story
+  ): Promise<StoryAudioFile | undefined> => {
     try {
       const { name } = store.state.childInfo;
-      const story = store.state.textGeneration.generatedStory;
-
       if (!story) return;
 
-      // Extract the parts from the story
-      const storyParts = extractStoryParts(story.mainStory as string);
-      console.log("🎯 storyParts :>>>", {
-        storyParts,
-      });
-
       const fileName = `${replaceSpaceWithUnderscore(
-        storyParts.title
+        story.title
       ).toLowerCase()}_${name}_${getRandomString()}`;
 
-      const response = await axios.post(
-        END_POINTS.OPENAI.GENERATE.STORY_AUdio,
-        {
-          fileName,
-          storyId: story.id,
-          userPrompt: `${storyParts.mainStory} ${storyParts.poem}`,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Custom-Header": new Date().toISOString(),
+      const response: AxiosResponse<StoryAudioFile, StoryAudioFile> =
+        await axios.post(
+          END_POINTS.OPENAI.GENERATE.STORY_AUdio,
+          {
+            fileName,
+            storyId: story._id,
+            userPrompt: `${story.mainStory} ${story.poem}`,
           },
-        }
-      );
-
-      console.log("ℹ️  OpenAiSection:>>>", {
-        response,
-      });
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "X-Custom-Header": new Date().toISOString(),
+            },
+          }
+        );
 
       handleIsTextToSpeechGenFetching(false);
-      handleSetTextToSpeechAiAnswer({
-        statusCode: response.status,
-        title: response.data.fileName,
-        mainStory: response.data.fileUrl,
+
+      Notify({
+        type: ToastTypes.Success,
+        content: "Story audio created successfully.",
       });
+
+      return response.data;
     } catch (error) {
       console.error("OpenAiSection:>>> Error", {
         error,
@@ -93,14 +71,13 @@ export const useCreateStoryAudio = (
       handleIsTextToSpeechGenFetching(false);
 
       if (axios.isAxiosError(error) && error.response) {
-        handleSetTextToSpeechAiAnswer({
-          statusCode: error.response.status,
-          title: error.response.statusText,
-          mainStory: error.response.statusText,
-        });
         Notify({
           content: error.response.statusText,
           type: ToastTypes.Error,
+        });
+
+        console.error("❌ Failed to create an audio file for the story!", {
+          error: error.response.statusText,
         });
       } else {
         Notify({
@@ -109,11 +86,12 @@ export const useCreateStoryAudio = (
         });
       }
     }
+
+    return;
   };
 
   return {
     handleIsTextToSpeechGenFetching,
-    handleSetTextToSpeechAiAnswer,
     handleGenerateTextToSpeechRequest,
   };
 };

@@ -1,3 +1,4 @@
+import { Story, StoryAudioFile } from "src/application/shared/interfaces";
 import {
   getAutoImageGenPromptString,
   getAutoTextGenPromptString,
@@ -10,7 +11,6 @@ import { useCreateStoryAudio } from "../features/CreateStoryAudio/useCreateStory
 import { useEffect } from "react";
 import { useImageGeneration } from "../features/CreateStoryImage/useCreateStoryImage";
 import { useStoryCreatorContext } from "src/components/StoryCreator/store/Provider";
-import { Story } from "src/application/shared/interfaces";
 
 export interface OpenAiGPTManager {
   handleUpdateChildInfo: (name: string, value: string) => void;
@@ -21,8 +21,9 @@ export interface OpenAiGPTManager {
   handleGenerateTextRequest: (userPrompt: string) => Promise<Story>;
 
   handleIsTextToSpeechGenFetching: (isFetching: boolean) => void;
-  handleSetTextToSpeechAiAnswer: (aiAnswer: GeneratedStoryParts) => void;
-  handleGenerateTextToSpeechRequest: (userPrompt: string) => void;
+  handleGenerateTextToSpeechRequest: (
+    story: Story
+  ) => Promise<StoryAudioFile | undefined>;
 
   handleUpdateAutoImagePrompt: (autoImagePrompt: string) => void;
   handleIsImageGenFetching: (isFetching: boolean) => void;
@@ -42,11 +43,8 @@ export const useOpenAiGPTManager = (
     handleGenerateTextRequest,
   } = useCreateStory(store);
 
-  const {
-    handleIsTextToSpeechGenFetching,
-    handleSetTextToSpeechAiAnswer,
-    handleGenerateTextToSpeechRequest,
-  } = useCreateStoryAudio(store);
+  const { handleIsTextToSpeechGenFetching, handleGenerateTextToSpeechRequest } =
+    useCreateStoryAudio(store);
 
   const {
     handleIsImageGenFetching,
@@ -90,7 +88,6 @@ export const useOpenAiGPTManager = (
     handleUpdateAutoTextPrompt,
 
     handleIsTextToSpeechGenFetching,
-    handleSetTextToSpeechAiAnswer,
     handleGenerateTextToSpeechRequest,
 
     handleIsImageGenFetching,

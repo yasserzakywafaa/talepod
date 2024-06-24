@@ -1,6 +1,7 @@
 import "./StoryCard.scss";
 
 import {
+  Box,
   Button,
   Card,
   CardActions,
@@ -9,8 +10,10 @@ import {
 } from "@mui/material";
 
 import { CSSProperties } from "react";
+import { Headphones } from "@mui/icons-material";
 import { Story } from "src/application/shared/interfaces";
 import routes from "src/application/routes";
+import { theme } from "src/application/shared/themes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useNavigate } from "react-router-dom";
 
@@ -60,11 +63,29 @@ const StoryCard = (props: StoryCard) => {
         </Typography>
       </CardContent>
 
-      <CardActions>
-        <Button size="small" variant="outlined" onClick={handleOnViewClick}>
-          Read Story
-        </Button>
-      </CardActions>
+      <Box
+        className="card-footer"
+        display="flex"
+        flexDirection="row-reverse"
+        justifyContent="space-between"
+        alignContent="center"
+      >
+        <Box
+          className="card-tags"
+          sx={{ px: 2, pt: 1.5 }}
+          color={theme.palette.secondary.main}
+        >
+          {props.story.audioFile && props.story.audioFile.url && (
+            <Headphones fontSize="small" />
+          )}
+        </Box>
+
+        <CardActions>
+          <Button size="small" variant="outlined" onClick={handleOnViewClick}>
+            Read Story
+          </Button>
+        </CardActions>
+      </Box>
     </Card>
   );
 };

@@ -5,6 +5,13 @@
     text-overflow: ellipsis; /* Adds ellipsis at the end of the text */
   }
 
+  .italics {
+    font-style: italic;
+  }
+  .bold {
+    font-weight: 600;
+  }
+
   .bg-image-character {
     position: fixed;
     z-index: -1;

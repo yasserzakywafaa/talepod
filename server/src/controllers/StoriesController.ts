@@ -39,15 +39,15 @@ export const getStoryById = async (
   try {
     const stories = database.collection(DBCollections.Stories);
     const story: Story = await stories.findOne({ _id: new ObjectId(storyId) });
-    if (!story) {
-      response.status(404).json({ message: "Story not found" });
+    if (!story || !storyId) {
+      response.status(404).json({ message: "❌ Story not found" });
     }
 
     console.log("ℹ️  Get Story", { storyId, storyTitle: story.title });
 
     response.status(200).json(story);
   } catch (error) {
-    console.error("❌ Failed to grt Story by Id!", {
+    console.error("❌ Failed to get Story by Id!", {
       error,
     });
     next(error);

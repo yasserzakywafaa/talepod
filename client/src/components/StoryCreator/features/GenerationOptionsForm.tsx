@@ -67,8 +67,13 @@ const GenerationOptionsForm = () => {
           userPrompt || autoTextPrompt
         );
         handleIsTextGenFetching(false);
-        if (story.id) navigate(routes.story(story.id));
-      } catch (error) {}
+
+        if (story._id) navigate(routes.story(story._id));
+      } catch (error) {
+        console.error("❌ Failed to create a story!", {
+          error,
+        });
+      }
     }
   };
 
@@ -225,12 +230,13 @@ const GenerationOptionsForm = () => {
                 childInfo.age <= 18 ? ChildGenderEnum.Boy : AdultGenderEnum.Male
               }
               sx={{
+                color: (theme) => theme.palette.text.primary,
                 "&.Mui-selected": {
                   backgroundColor: (theme) => theme.palette.primary.main,
-                  color: "white",
+                  color: (theme) => theme.palette.text.primary,
                 },
                 "&.Mui-selected:hover": {
-                  backgroundColor: (theme) => theme.palette.primary.dark,
+                  backgroundColor: (theme) => theme.palette.secondary.main,
                 },
               }}
             >
@@ -244,12 +250,13 @@ const GenerationOptionsForm = () => {
                   : AdultGenderEnum.Female
               }
               sx={{
+                color: (theme) => theme.palette.text.primary,
                 "&.Mui-selected": {
                   backgroundColor: (theme) => theme.palette.primary.main,
-                  color: "white",
+                  color: (theme) => theme.palette.text.primary,
                 },
                 "&.Mui-selected:hover": {
-                  backgroundColor: (theme) => theme.palette.primary.dark,
+                  backgroundColor: (theme) => theme.palette.secondary.main,
                 },
               }}
             >
