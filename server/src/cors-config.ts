@@ -2,6 +2,8 @@ import CONFIG from "./config";
 import { Express } from "express";
 import cors from "cors";
 
+const allowedOrigins = ["https://talepod.com", "https://api.talepod.com"];
+
 const corsOptions = {
   // origin: (origin: string, callback: Function) => {
   //   const allowedOrigins = CONFIG.PROD_CLIENT_PUBLIC_URLS.split(", ");
@@ -16,8 +18,8 @@ const corsOptions = {
   //   }
   // },
   origin: "*",
-  methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
-  allowedHeaders: ["Content-Type", "Authorization"],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Custom-Header"],
   credentials: true, // Allow credentials (cookies, authorization headers)
   optionsSuccessStatus: 204, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
