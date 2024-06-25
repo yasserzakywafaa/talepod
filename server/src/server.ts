@@ -62,7 +62,6 @@ if (CONFIG.SERVE_STATIC_CONTENT === "true") {
     });
 
     res.sendFile(path.join(buildPath, "index.html"));
-    // res.send("👋🏻  HELLO 'GET' Request 🙋🏻‍♂️ ");
   });
 }
 
