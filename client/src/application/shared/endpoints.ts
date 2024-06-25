@@ -1,16 +1,19 @@
 import APP_CONSTANTS from "./app_constants";
 
 const getPublicURL = (): string | undefined => {
-  switch (true) {
-    case APP_CONSTANTS.IS_DEV:
-      if (APP_CONSTANTS.IS_DEV_LOCAL_SERVER) {
-        return `http://localhost:${APP_CONSTANTS.DEV_SERVER_PORT}`;
-      }
+  if (APP_CONSTANTS.IS_DEV) {
+    if (APP_CONSTANTS.IS_DEV_LOCAL_SERVER) {
+      return `http://localhost:${APP_CONSTANTS.DEV_SERVER_PORT}`;
+    }
 
-      return APP_CONSTANTS.DEV_API_URL;
-    default:
-      return APP_CONSTANTS.PROD_API_URL;
+    return APP_CONSTANTS.DEV_API_URL;
   }
+
+  if (APP_CONSTANTS.DEV_API_URL) {
+    return APP_CONSTANTS.DEV_API_URL;
+  }
+
+  return APP_CONSTANTS.PROD_API_URL;
 };
 
 const publicApiUrl = getPublicURL();

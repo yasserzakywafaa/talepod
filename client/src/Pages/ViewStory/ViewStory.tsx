@@ -68,7 +68,7 @@ const ViewStoryPage: React.FC = () => {
   }, [storyId]);
 
   return (
-    <Page title="TalePod | Public Bedtime Stories" className="view-story-page">
+    <Page title="Story | TalePod" className="view-story-page">
       <Container
         className="view-story-container"
         sx={{
@@ -112,23 +112,6 @@ const ViewStoryPage: React.FC = () => {
 
               <Divider sx={{ my: 1 }} />
 
-              <Typography
-                gutterBottom
-                variant="h5"
-                component="h2"
-                sx={{ color: (theme) => theme.palette.primary.main }}
-              >
-                Story
-              </Typography>
-
-              <ReactMarkdown>{story.mainStory}</ReactMarkdown>
-
-              <ReactMarkdown className="italics bold">
-                {story.poem.split(".").join("\n")}
-              </ReactMarkdown>
-
-              <Divider sx={{ my: 2 }} />
-
               {!story.audioFile && (
                 <>
                   <Typography
@@ -153,7 +136,7 @@ const ViewStoryPage: React.FC = () => {
               )}
 
               {story.audioFile && (
-                <Box mt={4}>
+                <Box mt={2}>
                   <Typography
                     variant="h5"
                     component="h2"
@@ -175,6 +158,23 @@ const ViewStoryPage: React.FC = () => {
                   </Typography>
                 </Box>
               )}
+
+              <Divider sx={{ my: 2 }} />
+
+              <Typography
+                gutterBottom
+                variant="h5"
+                component="h2"
+                sx={{ color: (theme) => theme.palette.primary.main }}
+              >
+                Story
+              </Typography>
+
+              <ReactMarkdown>{story.mainStory}</ReactMarkdown>
+
+              <ReactMarkdown className="italics bold">
+                {story.poem.split(".").join("\n")}
+              </ReactMarkdown>
             </CardContent>
           </Card>
         )}

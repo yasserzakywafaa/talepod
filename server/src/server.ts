@@ -13,7 +13,7 @@ const expressApp = express();
 const buildPath = path.join(__dirname, "../client/");
 
 const getPort = (): string => {
-  // If process.env.PORT is set (in Heroku), use it.
+  // If process.env.PORT is set, use it.
   if (process.env.PORT) return process.env.PORT;
 
   switch (true) {

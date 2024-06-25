@@ -9,7 +9,7 @@ import StoryCreator from "src/components/StoryCreator/StoryCreator";
 const CreateStoryPage = () => {
   return (
     <Page
-      title="TalePod | Create Bedtime Stories"
+      title="Create Bedtime Stories | TalePod"
       className="create-story-page"
     >
       <Box component="div" className="bg-image-character">

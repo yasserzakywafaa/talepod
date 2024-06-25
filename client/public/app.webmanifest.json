@@ -3,41 +3,61 @@
   "short_name": "TalePod",
   "start_url": "/",
   "orientation": "portrait",
-  "theme_color": "#101724",
+  "theme_color": "#ad932d",
   "background_color": "#101724",
   "scope": "/",
   "display": "standalone",
+  "lang": "en",
+  "dir": "ltr",
   "icons": [
     {
-      "src": "icons/logo_x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/maskable_icon_x128.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "icons/maskable_icon_x192.png",
+      "src": "/icons/android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "icons/maskable_icon_x512.png",
-      "sizes": "512x512",
+      "src": "/icons/android-chrome-384x384.png",
+      "sizes": "384x384",
       "type": "image/png",
       "purpose": "maskable"
+    },
+    {
+      "src": "/icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/mstile-150x150.png",
+      "sizes": "150x150",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/safari-pinned-tab.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ],
-  "desription": "This app lets user view data and go offline.",
+  "description": "This app lets user view data and go offline.",
   "screenshots": [
     {
-      "src": "icons/maskable_icon_x512.png",
-      "sizes": "512x512",
+      "src": "/icons/android-chrome-384x384.png",
+      "sizes": "384x384",
       "type": "image/png"
     }
   ]

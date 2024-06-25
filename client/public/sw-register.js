@@ -6,5 +6,7 @@ if ("serviceWorker" in window.navigator) {
     .then((res) => {
       // console.log("ServiceWorker:>>> Registered!", res)
     })
-    .catch((error) => console.error("ServiceWorker:>>> Error:>>>", error));
+    .catch((error) =>
+      console.error("❌ Failed to register Service Worker!", { error })
+    );
 }
