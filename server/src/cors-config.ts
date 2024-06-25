@@ -17,7 +17,15 @@ const corsOptions = {
   //     callback(new Error("❌ Not allowed by CORS"));
   //   }
   // },
-  origin: "*",
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.error(`❌ Not allowed by CORS: ${origin}`);
+      callback(new Error("❌ Not allowed by CORS"));
+    }
+  },
+  // origin: "*",
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Custom-Header"],
   credentials: true, // Allow credentials (cookies, authorization headers)
