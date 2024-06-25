@@ -7,7 +7,11 @@ interface BackButtonProps {
 
 const BackButton = (props: BackButtonProps) => {
   return (
-    <IconButton onClick={props.onClick} className="back-button">
+    <IconButton
+      className="back-button"
+      sx={{ color: (theme) => theme.palette.primary.main }}
+      onClick={props.onClick}
+    >
       <ArrowBackIosNew />
     </IconButton>
   );

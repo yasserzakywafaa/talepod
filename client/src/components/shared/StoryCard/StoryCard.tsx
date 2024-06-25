@@ -1,13 +1,6 @@
 import "./StoryCard.scss";
 
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Typography,
-} from "@mui/material";
+import { Box, Card, CardActions, CardContent, Typography } from "@mui/material";
 
 import { CSSProperties } from "react";
 import { Headphones } from "@mui/icons-material";
@@ -28,7 +21,6 @@ interface StoryCard {
 const StoryCard = (props: StoryCard) => {
   const navigate = useNavigate();
   const { isDesktop } = useDeviceSize();
-  const maxImgWidth = 500;
 
   const handleOnViewClick = () => {
     navigate(routes.story(props.story._id));
@@ -38,11 +30,18 @@ const StoryCard = (props: StoryCard) => {
     <Card
       className="story-card"
       sx={{
-        maxWidth: maxImgWidth,
         mb: 4,
+        maxWidth: 500,
+        cursor: "pointer",
         mr: !isDesktop ? 0 : 4,
         bgcolor: "transparent",
+        ":hover": {
+          boxShadow: (theme) => `2px 2px 3px ${theme.palette.primary.main}`,
+          transform: "scale(1.01)",
+          transition: "200ms",
+        },
       }}
+      onClick={handleOnViewClick}
     >
       <CardContent className="story-card-content">
         <Typography
@@ -63,29 +62,17 @@ const StoryCard = (props: StoryCard) => {
         </Typography>
       </CardContent>
 
-      <Box
-        className="card-footer"
-        display="flex"
-        flexDirection="row-reverse"
-        justifyContent="space-between"
-        alignContent="center"
-      >
+      <CardActions>
         <Box
           className="card-tags"
-          sx={{ px: 2, pt: 1.5 }}
+          sx={{ pl: 1, pr: 2 }}
           color={theme.palette.secondary.main}
         >
           {props.story.audioFile && props.story.audioFile.url && (
-            <Headphones fontSize="small" />
+            <Headphones fontSize="small" className="card-tags-item" />
           )}
         </Box>
-
-        <CardActions>
-          <Button size="small" variant="outlined" onClick={handleOnViewClick}>
-            Read Story
-          </Button>
-        </CardActions>
-      </Box>
+      </CardActions>
     </Card>
   );
 };
