@@ -15,7 +15,7 @@ import Page from "src/components/shared/Page/Page";
 
 const Homepage = () => {
   return (
-    <Page title="TalePod | Bedtime Stories" className="home-page">
+    <Page title="TalePod" className="home-page">
       <Hero />
 
       <Box sx={{ bgcolor: "transparent" }}>

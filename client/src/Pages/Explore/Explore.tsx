@@ -32,7 +32,7 @@ const ExplorePage: React.FC = () => {
   }, []);
 
   return (
-    <Page title="TalePod | Public Bedtime Stories" className="explore-page">
+    <Page title="Explore Stories | Talepod" className="explore-page">
       <Container
         className="explore-container"
         sx={{

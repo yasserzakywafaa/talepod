@@ -1,9 +1,9 @@
 const _this = this;
-const version = 11;
+const version = 1;
 // const isOnline = true;
 const host = _this.location.origin;
 const CACHE_NAME = `talepod-v${version}`;
-const urlsToCache = ["/", "/index.html"];
+const urlsToCache = ["/", "/index.html", "/create", "/explore", "/story/:id"];
 
 // Install service worker
 const onInstall = (event) => {
@@ -11,7 +11,7 @@ const onInstall = (event) => {
     caches
       .open(CACHE_NAME)
       .then((cache) => cache.addAll(urlsToCache))
-      .catch((error) => console.error("Error:>>> ", error))
+      .catch((error) => console.error("❌ Error", { error }))
   );
 };
 
@@ -37,12 +37,12 @@ const onFetch = (event) => {
               cache.put(event.request, cacheCopy);
             })
             .catch((error) =>
-              console.error("ServiceWorker:>>> Error:>>>", error)
+              console.error("❌ ServiceWorker error!", { error })
             );
           return networkResponse;
         })
         .catch((error) => {
-          console.error("ServiceWorker:>>> Activate Error:>>>", error);
+          console.error("❌ Failed to activate Service Worker!", { error });
 
           return caches.match(event.request);
         })
@@ -73,7 +73,7 @@ const onFetch = (event) => {
 
 // Activate service worker
 const onActivate = (event) => {
-  console.log(`ServiceWorker:>>> (v${version}) Activate:>>>`);
+  console.log(`✅ ServiceWorker (v${version}) Activated.`);
   event.waitUntil(handleActivation());
 };
 
