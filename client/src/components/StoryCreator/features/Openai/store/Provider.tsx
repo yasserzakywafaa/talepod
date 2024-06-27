@@ -1,10 +1,10 @@
-import { OpenAiGPTManager, useOpenAiGPTManager } from "./manager";
+import { OpenaiManager, useOpenAiGPTManager } from "./manager";
 import { createContext, useContext } from "react";
-import useOpenAiGPTStore, { OpenAiGPTStore } from "./store";
+import useOpenaiStore, { OpenaiStore } from "./store";
 
 export interface OpenAiGPTContextProps {
-  store: OpenAiGPTStore;
-  manager: OpenAiGPTManager;
+  store: OpenaiStore;
+  manager: OpenaiManager;
 }
 
 export interface OpenAiGPTContextProviderProps {
@@ -15,7 +15,7 @@ const OpenAiGPTContext = createContext<OpenAiGPTContextProps | undefined>(
   undefined
 );
 
-export const useOpenAiGPTContext = () => {
+export const useOpenaiContext = () => {
   const context = useContext(OpenAiGPTContext);
   if (!context) {
     throw new Error(
@@ -25,10 +25,10 @@ export const useOpenAiGPTContext = () => {
   return context;
 };
 
-export const OpenAiGPTContextProvider = (
+export const OpenaiContextProvider = (
   params: OpenAiGPTContextProviderProps
 ) => {
-  const store = useOpenAiGPTStore();
+  const store = useOpenaiStore();
   const manager = useOpenAiGPTManager(store);
 
   return (

@@ -104,12 +104,12 @@ export const useGoogleGeminiManager = (
   };
 
   useEffect(() => {
-    store.updateState("childInfo", storyCreatorStore.state.childInfo);
+    store.updateState("childInfo", storyCreatorStore.state.profileInfo);
     store.updateState(
       "optionsAutoPrompt",
       getAutoTextGenPromptString(storyCreatorStore.state)
     );
-  }, [storyCreatorStore.state.childInfo]);
+  }, [storyCreatorStore.state.profileInfo]);
 
   return {
     handleIsFetching,

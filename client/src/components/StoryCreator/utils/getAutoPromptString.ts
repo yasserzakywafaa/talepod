@@ -1,21 +1,21 @@
-import { ChildInfo, StoryCreatorInitialState } from "../store/state";
+import { ProfileInfo, StoryCreatorInitialState } from "../store/state";
 
 export const getAutoTextGenPromptString = (
   promptParams: StoryCreatorInitialState
 ): string => {
-  const { name, gender, age, interests, language } = promptParams.childInfo;
+  const { name, gender, age, interests, language } = promptParams.profileInfo;
 
   const { moral, tone, audioLength, environment } = promptParams.storyParams;
 
   const customParams = {
-    childInfo: {
+    profileInfo: {
       name: "",
       gender,
       age: "",
       interests: "",
       language: "",
     },
-    generatedStory: {
+    story: {
       moral: "",
       tone: "",
       audioLength: "",
@@ -25,22 +25,22 @@ export const getAutoTextGenPromptString = (
   };
 
   if (tone)
-    customParams.generatedStory.tone = `The tone of the story to be ${tone.name}.`;
+    customParams.story.tone = `The tone of the story to be ${tone.name}.`;
 
   if (moral)
-    customParams.generatedStory.moral = `Value or theme: The value the parent wants to teach their kid through the story is ${moral.name}, `;
+    customParams.story.moral = `Value or theme: The value the parent wants to teach their kid through the story is ${moral.name}, `;
 
   if (environment)
-    customParams.generatedStory.environment = `Environment: the environment of the story to be at the ${environment.name}, `;
+    customParams.story.environment = `Environment: the environment of the story to be at the ${environment.name}, `;
 
   if (language)
-    customParams.childInfo.language = ` in the language of ${language.name},`;
+    customParams.profileInfo.language = ` in the language of ${language.name},`;
 
   if (interests)
-    customParams.childInfo.interests = `Supporting characters to be around ${interests}`;
+    customParams.profileInfo.interests = `Supporting characters to be around ${interests}`;
 
   const fullDynamicPrompt = `Write a story that is ${audioLength} minutes long ${
-    customParams.childInfo.language
+    customParams.profileInfo.language
   } with the following outputs inside of the curly brackets to be ready for data ETL process.
     Make sure the Title, Story summary, Story, Poem are each between curly brackets so the development team can split the data to those fields respectively.
 
@@ -52,11 +52,11 @@ export const getAutoTextGenPromptString = (
 
     {provide the poem: Create a bedtime poem that summarizes the story in 4-6 rhyming verses}
 
-    ${customParams.generatedStory.tone}
-    ${customParams.generatedStory.moral}
-    ${customParams.generatedStory.environment}
+    ${customParams.story.tone}
+    ${customParams.story.moral}
+    ${customParams.story.environment}
     The characters of the story are: The protagonist/main character is ${name}, a ${age}-year-old ${gender.toLowerCase()}.
-    ${customParams.childInfo.interests}
+    ${customParams.profileInfo.interests}
     
     Please ensure that the story is kids compliant. All kids between 1 year to 12 years, so no explicit content outside this age range.
     `;
@@ -64,7 +64,7 @@ export const getAutoTextGenPromptString = (
   return fullDynamicPrompt;
 };
 
-export const getAutoImageGenPromptString = (childInfo: ChildInfo): string => {
+export const getAutoImageGenPromptString = (childInfo: ProfileInfo): string => {
   const { name, gender, age } = childInfo;
 
   const fullDynamicPrompt = `A ${age} years old ${gender} named ${name}, with physical characteristics`;

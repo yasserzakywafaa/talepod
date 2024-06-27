@@ -1,4 +1,4 @@
-import { AdultGenderEnum, ChildGenderEnum, ChildInfo } from "../store/state";
+import { AdultGenderEnum, ChildGenderEnum, ProfileInfo } from "../store/state";
 import {
   Box,
   Button,
@@ -24,26 +24,23 @@ import { AutoAwesome } from "@mui/icons-material";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
 import { Story } from "src/application/shared/interfaces";
 import routes from "src/application/routes";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useOpenAiGPTContext } from "./OpenAiGPT/store/Provider";
+import { useOpenaiContext } from "./Openai/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
 
 const GenerationOptionsForm = () => {
   const navigate = useNavigate();
   const {
     store: {
-      state: { childInfo, storyParams: generatedStory },
+      state: { profileInfo: childInfo, storyParams: generatedStory },
     },
     store: storyCreatorStore,
-    manager: { handleUpdateChildInfo, handleUpdateStoryInfo },
+    manager: { handleUpdateProfileInfo, handleUpdateStoryInfo },
   } = useStoryCreatorContext();
 
-  const { store: OpenaiGPTStore, manager: OpenaiGPTManager } =
-    useOpenAiGPTContext();
-  const { isFetching } = OpenaiGPTStore.state.textGeneration;
-  const { handleIsTextGenFetching, handleGenerateTextRequest } =
-    OpenaiGPTManager;
+  const { store: OpenaiStore, manager: OpenaiManager } = useOpenaiContext();
+  const { isFetching } = OpenaiStore.state.createStory;
+  const { isCreateStoryFetching, handleCreateStoryRequest } = OpenaiManager;
 
   const handleOnFormSubmit = async (
     event: React.FormEvent<HTMLFormElement>
@@ -57,18 +54,19 @@ const GenerationOptionsForm = () => {
       return;
     }
 
-    const { userPrompt, autoTextPrompt } =
-      storyCreatorStore.state.textGeneration;
+    const { createStoryPrompt } = storyCreatorStore.state.createStory;
 
-    if (userPrompt || autoTextPrompt) {
-      handleIsTextGenFetching(true);
+    if (createStoryPrompt) {
+      isCreateStoryFetching(true);
       try {
-        const story: Story = await handleGenerateTextRequest(
-          userPrompt || autoTextPrompt
-        );
-        handleIsTextGenFetching(false);
+        const story: Story = await handleCreateStoryRequest(createStoryPrompt);
+        isCreateStoryFetching(false);
 
-        if (story._id) navigate(routes.story(story._id));
+        if (story._id) {
+          navigate(routes.story(story._id), {
+            state: { storyCreated: true },
+          });
+        }
       } catch (error) {
         console.error("❌ Failed to create a story!", {
           error,
@@ -79,7 +77,7 @@ const GenerationOptionsForm = () => {
 
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    handleUpdateChildInfo(name as keyof ChildInfo, value);
+    handleUpdateProfileInfo(name as keyof ProfileInfo, value);
   };
 
   const handleGenderChange = (
@@ -87,7 +85,7 @@ const GenerationOptionsForm = () => {
     gender: string | null
   ) => {
     if (gender !== null) {
-      handleUpdateChildInfo("gender", gender);
+      handleUpdateProfileInfo("gender", gender);
     }
   };
 
@@ -96,16 +94,16 @@ const GenerationOptionsForm = () => {
 
     switch (name) {
       case "gender":
-        handleUpdateChildInfo(name, value);
+        handleUpdateProfileInfo(name, value);
         break;
 
       case "age":
-        handleUpdateChildInfo(name, value);
+        handleUpdateProfileInfo(name, value);
         break;
 
       case "language":
         const currentCountryValue = Languages.find((c) => c.value === value);
-        handleUpdateChildInfo(name, currentCountryValue as Language);
+        handleUpdateProfileInfo(name, currentCountryValue as Language);
         break;
 
       case "moral":
@@ -126,16 +124,6 @@ const GenerationOptionsForm = () => {
         break;
     }
   };
-
-  useEffect(() => {
-    // console.log("ℹ️  FORM:>>> textGeneration", {
-    //   StoryCreatorState: storyCreatorStore.state.textGeneration.autoTextPrompt,
-    // });
-  }, [storyCreatorStore]);
-
-  useEffect(() => {
-    // console.log("ℹ️  FORM:>>>", { GPTState: OpenaiGPTStore.state });
-  }, [OpenaiGPTStore.state]);
 
   return (
     <Box className="story-creator-form">
@@ -163,7 +151,7 @@ const GenerationOptionsForm = () => {
         flexDirection="row"
         alignItems="center"
         justifyContent="center"
-        className="child-info-form"
+        className="profile-info-form"
         onSubmit={handleOnFormSubmit}
       >
         <TextField
@@ -173,11 +161,11 @@ const GenerationOptionsForm = () => {
           label="Name"
           type="text"
           value={childInfo.name}
-          className="child-info-form-item"
+          className="profile-info-form-item"
           onChange={handleFieldChange}
         />
 
-        <FormControl className="child-info-form-item">
+        <FormControl className="profile-info-form-item">
           <InputLabel id="language-select-label">Language</InputLabel>
           <Select
             required
@@ -199,7 +187,7 @@ const GenerationOptionsForm = () => {
           </Select>
         </FormControl>
 
-        <FormControl className="child-info-form-item">
+        <FormControl className="profile-info-form-item">
           <InputLabel id="age-select-label">Age</InputLabel>
           <Select
             name="age"
@@ -218,7 +206,7 @@ const GenerationOptionsForm = () => {
           </Select>
         </FormControl>
 
-        <Box className="child-info-form-item">
+        <Box className="profile-info-form-item">
           <ToggleButtonGroup
             exclusive
             value={childInfo.gender}
@@ -267,7 +255,7 @@ const GenerationOptionsForm = () => {
           </ToggleButtonGroup>
         </Box>
 
-        <FormControl className="child-info-form-item">
+        <FormControl className="profile-info-form-item">
           <InputLabel id="nationality-select-label">Moral</InputLabel>
           <Select
             name="moral"
@@ -288,7 +276,7 @@ const GenerationOptionsForm = () => {
           </Select>
         </FormControl>
 
-        <FormControl className="child-info-form-item">
+        <FormControl className="profile-info-form-item">
           <InputLabel id="nationality-select-label">Tone</InputLabel>
           <Select
             name="tone"
@@ -309,7 +297,7 @@ const GenerationOptionsForm = () => {
           </Select>
         </FormControl>
 
-        <FormControl className="child-info-form-item">
+        <FormControl className="profile-info-form-item">
           <InputLabel id="nationality-select-label">Environment</InputLabel>
           <Select
             name="environment"
@@ -336,7 +324,7 @@ const GenerationOptionsForm = () => {
           label="Other Interests"
           type="text"
           value={childInfo.interests}
-          className="child-info-form-item"
+          className="profile-info-form-item"
           onChange={handleFieldChange}
         />
 
@@ -347,7 +335,7 @@ const GenerationOptionsForm = () => {
           component="div"
           alignItems="center"
           justifyContent="center"
-          className="child-info-form-button"
+          className="profile-info-form-button"
         >
           <Button
             type="submit"

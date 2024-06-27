@@ -38,8 +38,8 @@ const ExplorePage: React.FC = () => {
         sx={{
           display: "flex",
           flexWrap: "wrap",
-          justifyContent: "center",
-          pt: { xs: 0, sm: 8 },
+          justifyContent: "space-between",
+          pt: { xs: 0, sm: 4 },
           pb: { xs: 8, sm: 12 },
         }}
       >

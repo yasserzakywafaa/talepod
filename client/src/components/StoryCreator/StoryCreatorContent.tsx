@@ -5,7 +5,7 @@ import { Box, Container, Tab, Tabs, Typography } from "@mui/material";
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import GenerationOptionsForm from "./features/GenerationOptionsForm";
 import GoogleGemini from "./features/GoogleGemini/GoogleGemini";
-import OpenAiGPT from "./features/OpenAiGPT/OpenAiGPT";
+import OpenAiGPT from "./features/Openai/Openai";
 import { useState } from "react";
 
 export const StoryCreatorContent = () => {

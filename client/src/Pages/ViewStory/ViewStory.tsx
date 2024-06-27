@@ -13,6 +13,7 @@ import {
   Notify,
   ToastTypes,
 } from "src/components/shared/Notification/Notification";
+import { useLocation, useParams } from "react-router-dom";
 
 import { AutoAwesome } from "@mui/icons-material";
 import Box from "@mui/material/Box";
@@ -23,11 +24,12 @@ import NoResultsFound from "src/components/shared/NoResults/NoResults";
 import Page from "src/components/shared/Page/Page";
 import ReactMarkdown from "react-markdown";
 import { useEffect } from "react";
-import { useOpenAiGPTContext } from "src/components/StoryCreator/features/OpenAiGPT/store/Provider";
-import { useParams } from "react-router-dom";
+import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
 import { useViewStoryContext } from "./store/Provider";
 
 const ViewStoryPage: React.FC = () => {
+  const location = useLocation();
+  const { storyCreated } = location.state || {};
   const { storyId } = useParams<{ storyId: string }>();
 
   const {
@@ -39,8 +41,8 @@ const ViewStoryPage: React.FC = () => {
     manager: { setUp },
   } = useViewStoryContext();
   const {
-    manager: { handleGenerateTextToSpeechRequest },
-  } = useOpenAiGPTContext();
+    manager: { handleCreateAudio: handleGenerateTextToSpeechRequest },
+  } = useOpenaiContext();
 
   const handleOnCreateAudioClick = async () => {
     handleIsFetching(true);
@@ -65,7 +67,14 @@ const ViewStoryPage: React.FC = () => {
 
   useEffect(() => {
     if (storyId) setUp(storyId);
-  }, [storyId]);
+
+    if (storyCreated) {
+      Notify({
+        type: ToastTypes.Success,
+        content: "Story created successfully.",
+      });
+    }
+  }, [storyId, storyCreated]);
 
   return (
     <Page title="Story | TalePod" className="view-story-page">

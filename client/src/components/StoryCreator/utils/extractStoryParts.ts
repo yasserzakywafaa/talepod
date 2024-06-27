@@ -1,7 +1,7 @@
-import { StoryParts } from "../store/state";
+import { Story } from "src/application/shared/interfaces";
 
 // Function to extract the parts of the story
-const extractStoryParts = (story: string): StoryParts => {
+const extractStoryParts = (story: string): Partial<Story> => {
   const parts = story.match(/{([^}]*)}/g);
 
   if (parts && parts.length === 4) {

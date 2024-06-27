@@ -9,36 +9,30 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ChangeEvent, FormEvent } from "react";
 
 import { AutoAwesome } from "@mui/icons-material";
+import { FormEvent } from "react";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
 import ReactMarkdown from "react-markdown";
 import TextToSpeechGeneration from "../CreateStoryAudio/CreateStoryAudio";
-import { useOpenAiGPTContext } from "../../store/Provider";
+import { useOpenaiContext } from "../../store/Provider";
 
 const OpenAiGPTTextGeneration = () => {
-  const { store, manager } = useOpenAiGPTContext();
-  const { textGeneration } = store.state;
-  const { isFetching, userPrompt, autoTextPrompt, generatedStory } =
-    textGeneration;
+  const { store, manager } = useOpenaiContext();
+  const { createStory: textGeneration } = store.state;
+  const { isFetching, createStoryPrompt, story } = textGeneration;
   const {
-    handleIsTextGenFetching,
-    handleUpdateUserTextPrompt,
-    handleGenerateTextRequest,
+    isCreateStoryFetching: handleIsTextGenFetching,
+    handleCreateStoryRequest: handleGenerateTextRequest,
   } = manager;
-
-  const handleOnTextChange = (event: ChangeEvent<HTMLInputElement>) => {
-    handleUpdateUserTextPrompt(event.target.value);
-  };
 
   const handleOnFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     event.stopPropagation();
 
-    if (userPrompt || autoTextPrompt) {
+    if (createStoryPrompt) {
       handleIsTextGenFetching(true);
-      handleGenerateTextRequest(userPrompt || autoTextPrompt);
+      handleGenerateTextRequest(createStoryPrompt);
     }
   };
 
@@ -60,8 +54,8 @@ const OpenAiGPTTextGeneration = () => {
             multiline
             label="User Prompt"
             variant="outlined"
-            value={userPrompt || autoTextPrompt}
-            onChange={handleOnTextChange}
+            value={createStoryPrompt}
+            // onChange={...}
           />
           <Button
             type="submit"
@@ -74,24 +68,18 @@ const OpenAiGPTTextGeneration = () => {
         </Stack>
       </Box>
 
-      {generatedStory && generatedStory.mainStory && (
+      {story && story.mainStory && (
         <>
           <Divider style={{ margin: "2rem 0" }}>
             <Chip label="Answer" size="small" />
           </Divider>
           <Card sx={{ minWidth: 275 }}>
-            <CardContent
-              style={{
-                color: generatedStory.statusCode !== 200 ? "red" : "unset",
-              }}
-            >
+            <CardContent>
               <Typography variant="h5" component="div">
-                {generatedStory.title}
+                {story.title}
               </Typography>
 
-              <ReactMarkdown>
-                {generatedStory.mainStory as string}
-              </ReactMarkdown>
+              <ReactMarkdown>{story.mainStory as string}</ReactMarkdown>
             </CardContent>
 
             <CardContent>

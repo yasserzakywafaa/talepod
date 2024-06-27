@@ -11,37 +11,25 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ChangeEvent, FormEvent } from "react";
 
 import { AndroidRounded } from "@mui/icons-material";
+import { FormEvent } from "react";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
-import { useOpenAiGPTContext } from "../../store/Provider";
+import { useOpenaiContext } from "../../store/Provider";
 
 const OpenAiGPTImageGeneration = () => {
-  const { store, manager } = useOpenAiGPTContext();
-  const { imageGeneration } = store.state;
-  const { isFetching, userPrompt, autoImagePrompt, generatedImage } =
-    imageGeneration;
-  const {
-    handleIsImageGenFetching,
-    handleUpdateUserImagePrompt,
-    handleGenerateImageRequest,
-  } = manager;
-
-  const handleOnTextChange = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log("handleOnTextChange:>>>", {
-      value: event.target.value,
-    });
-    handleUpdateUserImagePrompt(event.target.value);
-  };
+  const { store, manager } = useOpenaiContext();
+  const { createImage } = store.state;
+  const { isFetching, createImagePrompt, image } = createImage;
+  const { isCreateImageFetching, handleCreateImage } = manager;
 
   const handleOnFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     event.stopPropagation();
 
-    if (userPrompt || autoImagePrompt) {
-      handleIsImageGenFetching(true);
-      handleGenerateImageRequest(userPrompt || autoImagePrompt);
+    if (createImagePrompt) {
+      isCreateImageFetching(true);
+      handleCreateImage(createImagePrompt);
     }
   };
 
@@ -63,8 +51,8 @@ const OpenAiGPTImageGeneration = () => {
             multiline
             label="User Prompt"
             variant="outlined"
-            value={userPrompt || autoImagePrompt || undefined}
-            onChange={handleOnTextChange}
+            value={createImagePrompt || undefined}
+            // onChange={...}
           />
           <Button
             type="submit"
@@ -77,7 +65,7 @@ const OpenAiGPTImageGeneration = () => {
         </Stack>
       </Box>
 
-      {generatedImage && generatedImage.content && (
+      {image && image.content && (
         <>
           <Divider style={{ margin: "2rem 0" }}>
             <Chip label="Answer" size="small" />
@@ -85,25 +73,25 @@ const OpenAiGPTImageGeneration = () => {
           <Card sx={{ minWidth: 275 }}>
             <CardContent
               style={{
-                color: generatedImage.statusCode !== 200 ? "red" : "unset",
+                color: image.statusCode !== 200 ? "red" : "unset",
               }}
             >
-              {generatedImage.statusCode !== 200 && (
+              {image.statusCode !== 200 && (
                 <>
                   <Typography variant="h5" component="div">
-                    {generatedImage.title}
+                    {image.title}
                   </Typography>
 
                   <Typography variant="h6" component="div">
-                    {generatedImage.content}
+                    {image.content}
                   </Typography>
                 </>
               )}
 
               <ImageList variant="standard" cols={2} gap={20}>
-                {typeof generatedImage.content !== "string" &&
-                  generatedImage.content.length &&
-                  generatedImage.content.map((image, index) => (
+                {typeof image.content !== "string" &&
+                  image.content.length &&
+                  image.content.map((image, index) => (
                     <Card variant="outlined">
                       <ImageListItem key={index}>
                         <img

@@ -30,10 +30,9 @@ const StoryCard = (props: StoryCard) => {
     <Card
       className="story-card"
       sx={{
-        mb: 4,
-        maxWidth: 500,
+        mb: 2,
         cursor: "pointer",
-        mr: !isDesktop ? 0 : 4,
+        // mr: !isDesktop ? 0 : 4,
         bgcolor: "transparent",
         ":hover": {
           boxShadow: (theme) => `2px 2px 3px ${theme.palette.primary.main}`,
