@@ -17,13 +17,13 @@ import ReactMarkdown from "react-markdown";
 import TextToSpeechGeneration from "../CreateStoryAudio/CreateStoryAudio";
 import { useOpenaiContext } from "../../store/Provider";
 
-const OpenAiGPTTextGeneration = () => {
+const CreateStory = () => {
   const { store, manager } = useOpenaiContext();
-  const { createStory: textGeneration } = store.state;
-  const { isFetching, createStoryPrompt, story } = textGeneration;
+  const { createStory } = store.state;
+  const { isFetching, createStoryPrompt, story } = createStory;
   const {
     isCreateStoryFetching: handleIsTextGenFetching,
-    handleCreateStoryRequest: handleGenerateTextRequest,
+    // handleCreateStoryRequest,
   } = manager;
 
   const handleOnFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -32,7 +32,7 @@ const OpenAiGPTTextGeneration = () => {
 
     if (createStoryPrompt) {
       handleIsTextGenFetching(true);
-      handleGenerateTextRequest(createStoryPrompt);
+      // handleGenerateTextRequest(createStoryPrompt, profileInfo);
     }
   };
 
@@ -92,4 +92,4 @@ const OpenAiGPTTextGeneration = () => {
   );
 };
 
-export default OpenAiGPTTextGeneration;
+export default CreateStory;

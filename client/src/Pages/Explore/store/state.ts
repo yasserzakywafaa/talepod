@@ -1,4 +1,4 @@
-import { Story } from "src/application/shared/interfaces";
+import { Story } from "src/components/StoryCreator/store/state";
 
 export interface ExploreInitialState {
   isFetching: boolean;

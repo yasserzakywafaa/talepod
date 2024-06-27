@@ -16,11 +16,12 @@ export const createStory = async (
   response: Response,
   next: NextFunction
 ) => {
-  const userPrompt = request.body.userPrompt;
+  const { storyPrompt, profileInfo, storyParams } = request.body;
+
   // OpenAI Text Generation API Call
   try {
     const createRequest = await openai.chat.completions.create({
-      messages: [{ role: "user", content: userPrompt }],
+      messages: [{ role: "user", content: storyPrompt }],
       model: CONFIG.OPENAI_MODEL_NAME,
       temperature: 0,
     });
@@ -32,19 +33,25 @@ export const createStory = async (
 
       try {
         // Save story to MongoDB Atlas
-        const storyId = await saveStoryToDb({
-          ...storyParts,
-          createdAt: new Date(),
-        });
+        const storyId = await saveStoryToDb(
+          {
+            ...storyParts,
+            createdAt: new Date(),
+          },
+          profileInfo,
+          storyParams
+        );
 
-        const newStory: Story = {
+        const newStoryData = {
           ...storyParts,
           _id: storyId,
           createdAt: new Date(),
+          profileInfo,
+          storyParams,
         };
 
         response.json({
-          ...newStory,
+          ...newStoryData,
         });
       } catch (error) {
         throw new Error("❌ Failed to save the created story to Db", {

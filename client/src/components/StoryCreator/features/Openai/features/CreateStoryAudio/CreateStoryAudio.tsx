@@ -3,7 +3,7 @@ import { Box, Button, Paper, Stack } from "@mui/material";
 import { AudioPlayer } from "src/components/shared/AudioPlayer/AudioPlayer";
 import { AutoAwesome } from "@mui/icons-material";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
-import { Story } from "src/application/shared/interfaces";
+import { Story } from "src/components/StoryCreator/store/state";
 import { useOpenaiContext } from "../../store/Provider";
 
 const OpenAiGPTTextToSpeechGeneration = () => {

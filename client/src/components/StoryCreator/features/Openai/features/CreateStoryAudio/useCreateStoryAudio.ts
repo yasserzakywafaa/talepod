@@ -2,7 +2,7 @@ import {
   Notify,
   ToastTypes,
 } from "src/components/shared/Notification/Notification";
-import { Story, StoryAudioFile } from "src/application/shared/interfaces";
+import { Story, StoryAudioFile } from "src/components/StoryCreator/store/state";
 import axios, { AxiosResponse } from "axios";
 import {
   getRandomString,

@@ -1,4 +1,10 @@
-import { Story } from "src/application/shared/interfaces";
+import {
+  AdultGenderEnum,
+  ChildGenderEnum,
+  Story,
+} from "src/components/StoryCreator/store/state";
+
+import { Languages } from "src/shared/languages";
 
 export interface ViewStoryInitialState {
   isFetching: boolean;
@@ -14,12 +20,35 @@ export const getViewStoryInitialState = (): ViewStoryInitialState => {
       summary: "",
       mainStory: "",
       poem: "",
+      createdAt: new Date(),
       audioFile: {
         url: "",
         fileName: "",
         createdAt: new Date(),
       },
-      createdAt: new Date(),
+      profileInfo: {
+        name: "",
+        gender: ChildGenderEnum.Girl || AdultGenderEnum.Female,
+        age: 1,
+        interests: "",
+        language: Languages[0],
+      },
+      storyParams: {
+        audioLength: 10,
+        maxCharacters: 5000,
+        moral: {
+          name: "",
+          value: "",
+        },
+        tone: {
+          name: "",
+          value: "",
+        },
+        environment: {
+          name: "",
+          value: "",
+        },
+      },
     },
   };
 };

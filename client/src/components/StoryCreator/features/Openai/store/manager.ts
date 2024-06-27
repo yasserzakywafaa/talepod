@@ -1,4 +1,9 @@
-import { Story, StoryAudioFile } from "src/application/shared/interfaces";
+import {
+  ProfileInfo,
+  Story,
+  StoryAudioFile,
+  StoryParams,
+} from "src/components/StoryCreator/store/state";
 import {
   getAutoImageGenPromptString,
   getAutoTextGenPromptString,
@@ -17,7 +22,11 @@ export interface OpenaiManager {
   // Create Story
   isCreateStoryFetching: (isFetching: boolean) => void;
   handleUpdateCreateStoryPrompt: (autoTextPrompt: string) => void;
-  handleCreateStoryRequest: (userPrompt: string) => Promise<Story>;
+  handleCreateStoryRequest: (
+    userPrompt: string,
+    profileInfo: ProfileInfo,
+    storyParams: StoryParams
+  ) => Promise<Story>;
   // Create Audio
   isCreateAudioFetching: (isFetching: boolean) => void;
   handleCreateAudio: (story: Story) => Promise<StoryAudioFile | undefined>;

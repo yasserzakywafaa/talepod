@@ -1,8 +1,8 @@
 import { MongoClient, ObjectId } from "mongodb";
+import { ProfileInfo, Story, StoryData, StoryParams } from "../types";
 import { createDocument, updateDocument } from "./crudOperations";
 
 import CONFIG from "../../config";
-import { Story } from "../types";
 
 let dbClient: MongoClient;
 let database: any;
@@ -78,10 +78,17 @@ const closeDatabase = async () => {
 };
 
 const saveStoryToDb = async (
-  story: Partial<Story>
+  story: Partial<Story>,
+  profileInfo: ProfileInfo,
+  storyParams: StoryParams
 ): Promise<ObjectId | undefined> => {
   try {
-    const storyId = await createDocument(story as Story, DBCollections.Stories);
+    const storyData: StoryData = {
+      ...story,
+      profileInfo,
+      storyParams,
+    };
+    const storyId = await createDocument(storyData, DBCollections.Stories);
     console.log("✅ Story saved to DB successfully");
 
     return storyId;

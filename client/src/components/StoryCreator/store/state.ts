@@ -2,7 +2,6 @@ import { Language, Languages } from "src/shared/languages";
 
 import { Environment } from "src/shared/generatedStory/Environments";
 import { Moral } from "src/shared/generatedStory/Moral";
-import { Story } from "src/application/shared/interfaces";
 import { Tone } from "src/shared/generatedStory/Tone";
 
 export interface StoryCreatorInitialState {
@@ -43,6 +42,23 @@ export interface CreateStoryProps {
   isFetching: boolean;
   createStoryPrompt: string;
   story: Story | undefined;
+}
+export interface Story {
+  _id: string;
+  createdAt: Date;
+  title: string;
+  summary: string;
+  mainStory: string;
+  poem: string;
+  audioFile?: StoryAudioFile;
+  profileInfo: ProfileInfo;
+  storyParams: StoryParams;
+}
+
+export interface StoryAudioFile {
+  url: string;
+  fileName: string;
+  createdAt: Date;
 }
 
 export type CreateAudioProps = CreateStoryProps;

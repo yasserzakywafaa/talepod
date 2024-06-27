@@ -1,15 +1,15 @@
 import { DBCollections, database } from ".";
+import { Story, StoryData } from "../types";
 
 import { ObjectId } from "mongodb";
-import { Story } from "../types";
 
 // Create a new document
 export const createDocument = async (
-  story: Story,
+  data: StoryData,
   collectionName: DBCollections
 ) => {
   const collection = database.collection(collectionName);
-  const result = await collection.insertOne(story);
+  const result = await collection.insertOne(data);
 
   return result.insertedId;
 };

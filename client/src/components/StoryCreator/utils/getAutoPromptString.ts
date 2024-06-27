@@ -44,13 +44,13 @@ export const getAutoTextGenPromptString = (
   } with the following outputs inside of the curly brackets to be ready for data ETL process.
     Make sure the Title, Story summary, Story, Poem are each between curly brackets so the development team can split the data to those fields respectively.
 
-    {provide Story title}
+    {Provide Story title}
 
-    {provide here Story summary that is not longer than 120 characters Outlining the basic plot and key elements of the story.}
+    {Provide here Story summary that is not longer than 120 characters Outlining the basic plot and key elements of the story.}
 
-    {provide the story with 4-5 scenes or chapters. Do not mention the chapters. Just provide the text of the story as it is a bedtime story for kids hence build the drama accordingly and ensure a length of ${audioLength} minutes as mentioned above}
+    {Provide the story with 4-5 scenes or chapters. Do not mention the chapters. Just provide the text of the story as it is a bedtime story for kids hence build the drama accordingly and ensure a length of ${audioLength} minutes as mentioned above}
 
-    {provide the poem: Create a bedtime poem that summarizes the story in 4-6 rhyming verses}
+    {Provide the poem: Create a bedtime poem that summarizes the story in 4-6 rhyming verses}
 
     ${customParams.story.tone}
     ${customParams.story.moral}
@@ -58,8 +58,7 @@ export const getAutoTextGenPromptString = (
     The characters of the story are: The protagonist/main character is ${name}, a ${age}-year-old ${gender.toLowerCase()}.
     ${customParams.profileInfo.interests}
     
-    Please ensure that the story is kids compliant. All kids between 1 year to 12 years, so no explicit content outside this age range.
-    `;
+    Please ensure that the story is kids compliant. All kids between 1 year to 12 years, so no explicit content outside this age range.`;
 
   return fullDynamicPrompt;
 };

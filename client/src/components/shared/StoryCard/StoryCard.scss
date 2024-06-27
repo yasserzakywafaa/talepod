@@ -18,6 +18,11 @@
       overflow: hidden; /* Hides the overflow text */
       text-overflow: ellipsis; /* Adds ellipsis at the end of the text */
     }
+    .story-card-tags {
+      .story-card-tags-item {
+        margin-right: 1rem;
+      }
+    }
   }
 }
 

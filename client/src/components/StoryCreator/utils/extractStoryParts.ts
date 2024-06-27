@@ -1,4 +1,4 @@
-import { Story } from "src/application/shared/interfaces";
+import { Story } from "../store/state";
 
 // Function to extract the parts of the story
 const extractStoryParts = (story: string): Partial<Story> => {

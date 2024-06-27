@@ -6,10 +6,10 @@ const extractStoryParts = (story: string): StoryParts => {
 
   if (parts && parts.length === 4) {
     return {
-      title: parts[0].replace(/{|}/g, ""),
-      summary: parts[1].replace(/{|}/g, ""),
-      mainStory: parts[2].replace(/{|}/g, ""),
-      poem: parts[3].replace(/{|}/g, ""),
+      title: parts[0].replace(/[{}]/g, "").trim(),
+      summary: parts[1].replace(/[{}]/g, "").trim(),
+      mainStory: parts[2].replace(/[{}]/g, "").trim(),
+      poem: parts[3].replace(/[{}]/g, "").trim(),
     };
   } else {
     throw new Error(

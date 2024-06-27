@@ -2,16 +2,24 @@ import {
   Notify,
   ToastTypes,
 } from "src/components/shared/Notification/Notification";
+import {
+  ProfileInfo,
+  Story,
+  StoryParams,
+} from "src/components/StoryCreator/store/state";
 import axios, { AxiosResponse } from "axios";
 
 import END_POINTS from "src/application/shared/endpoints";
 import { OpenaiStore } from "../../store/store";
-import { Story } from "src/application/shared/interfaces";
 
 export interface UseTextGeneration {
   isCreateStoryFetching: (isFetching: boolean) => void;
   handleUpdateCreateStoryPrompt: (createStoryPrompt: string) => void;
-  handleCreateStoryRequest: (storyPrompt: string) => Promise<Story>;
+  handleCreateStoryRequest: (
+    storyPrompt: string,
+    profileInfo: ProfileInfo,
+    storyParams: StoryParams
+  ) => Promise<Story>;
 }
 
 export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
@@ -30,13 +38,17 @@ export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
   };
 
   const handleCreateStoryRequest = async (
-    storyPrompt: string
+    storyPrompt: string,
+    profileInfo: ProfileInfo,
+    storyParams: StoryParams
   ): Promise<Story> => {
     try {
       const response: AxiosResponse<Story, Story> = await axios.post(
         END_POINTS.OPENAI.GENERATE.STORY,
         {
-          userPrompt: storyPrompt,
+          storyPrompt,
+          profileInfo,
+          storyParams,
         },
         {
           headers: {
@@ -54,6 +66,8 @@ export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
           ...response.data,
         },
       });
+
+      console.log("✅ response", { response });
 
       Notify({
         type: ToastTypes.Success,

@@ -1,12 +1,7 @@
-import { Box, Typography } from "@mui/material";
-
+import { Box } from "@mui/material";
 import CreateStory from "./features/CreateStory/CreateStory";
 
-// import CreateStoryImages from "./features/CreateStoryImage/CreateStoryImage";
-
-// import TextToSpeechGeneration from "./features/TextToSpeechGeneration/TextToSpeechGeneration";
-
-const OpenAiGPTContent = () => {
+const OpenaiContent = () => {
   return (
     <Box
       paddingY="1rem"
@@ -18,8 +13,7 @@ const OpenAiGPTContent = () => {
       justifyContent="space-around"
     >
       <Box className="openai-text-generation" marginBottom="1rem">
-        <Typography variant="h4">Openai Chat-GPT Text Generation</Typography>
-
+        {/* <Typography variant="h4">Openai Chat-GPT Text Generation</Typography> */}
         <CreateStory />
       </Box>
 
@@ -32,4 +26,4 @@ const OpenAiGPTContent = () => {
   );
 };
 
-export default OpenAiGPTContent;
+export default OpenaiContent;

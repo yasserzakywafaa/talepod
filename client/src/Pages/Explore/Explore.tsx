@@ -38,7 +38,7 @@ const ExplorePage: React.FC = () => {
         sx={{
           display: "flex",
           flexWrap: "wrap",
-          justifyContent: "space-between",
+          justifyContent: "start",
           pt: { xs: 0, sm: 4 },
           pb: { xs: 8, sm: 12 },
         }}

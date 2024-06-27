@@ -1,4 +1,9 @@
-import { AdultGenderEnum, ChildGenderEnum, ProfileInfo } from "../store/state";
+import {
+  AdultGenderEnum,
+  ChildGenderEnum,
+  ProfileInfo,
+  Story,
+} from "../store/state";
 import {
   Box,
   Button,
@@ -22,7 +27,6 @@ import { Tone, Tones } from "src/shared/generatedStory/Tone";
 
 import { AutoAwesome } from "@mui/icons-material";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
-import { Story } from "src/application/shared/interfaces";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 import { useOpenaiContext } from "./Openai/store/Provider";
@@ -32,7 +36,7 @@ const GenerationOptionsForm = () => {
   const navigate = useNavigate();
   const {
     store: {
-      state: { profileInfo: childInfo, storyParams: generatedStory },
+      state: { profileInfo, storyParams },
     },
     store: storyCreatorStore,
     manager: { handleUpdateProfileInfo, handleUpdateStoryInfo },
@@ -59,7 +63,11 @@ const GenerationOptionsForm = () => {
     if (createStoryPrompt) {
       isCreateStoryFetching(true);
       try {
-        const story: Story = await handleCreateStoryRequest(createStoryPrompt);
+        const story: Story = await handleCreateStoryRequest(
+          createStoryPrompt,
+          profileInfo,
+          storyParams
+        );
         isCreateStoryFetching(false);
 
         if (story._id) {
@@ -160,7 +168,7 @@ const GenerationOptionsForm = () => {
           name="name"
           label="Name"
           type="text"
-          value={childInfo.name}
+          value={profileInfo.name}
           className="profile-info-form-item"
           onChange={handleFieldChange}
         />
@@ -173,7 +181,7 @@ const GenerationOptionsForm = () => {
             variant="outlined"
             label="Language"
             id="language-select"
-            value={childInfo.language.value}
+            value={profileInfo.language.value}
             labelId="language-select-label"
             onChange={handleOnSelectChange}
           >
@@ -194,7 +202,7 @@ const GenerationOptionsForm = () => {
             label="Age"
             variant="outlined"
             id="age-select"
-            value={childInfo.age.toString()}
+            value={profileInfo.age.toString()}
             labelId="story-moral-select-label"
             onChange={handleOnSelectChange}
           >
@@ -209,13 +217,15 @@ const GenerationOptionsForm = () => {
         <Box className="profile-info-form-item">
           <ToggleButtonGroup
             exclusive
-            value={childInfo.gender}
+            value={profileInfo.gender}
             aria-labelledby="gender-toggle"
             onChange={handleGenderChange}
           >
             <ToggleButton
               value={
-                childInfo.age <= 18 ? ChildGenderEnum.Boy : AdultGenderEnum.Male
+                profileInfo.age <= 18
+                  ? ChildGenderEnum.Boy
+                  : AdultGenderEnum.Male
               }
               sx={{
                 color: (theme) => theme.palette.text.primary,
@@ -228,12 +238,14 @@ const GenerationOptionsForm = () => {
                 },
               }}
             >
-              {childInfo.age <= 18 ? ChildGenderEnum.Boy : AdultGenderEnum.Male}
+              {profileInfo.age <= 18
+                ? ChildGenderEnum.Boy
+                : AdultGenderEnum.Male}
             </ToggleButton>
 
             <ToggleButton
               value={
-                childInfo.age <= 18
+                profileInfo.age <= 18
                   ? ChildGenderEnum.Girl
                   : AdultGenderEnum.Female
               }
@@ -248,7 +260,7 @@ const GenerationOptionsForm = () => {
                 },
               }}
             >
-              {childInfo.age <= 18
+              {profileInfo.age <= 18
                 ? ChildGenderEnum.Girl
                 : AdultGenderEnum.Female}
             </ToggleButton>
@@ -262,7 +274,7 @@ const GenerationOptionsForm = () => {
             label="Moral"
             variant="outlined"
             id="story-moral-select"
-            value={generatedStory.moral.value}
+            value={storyParams.moral.value}
             labelId="story-moral-select-label"
             onChange={handleOnSelectChange}
           >
@@ -283,7 +295,7 @@ const GenerationOptionsForm = () => {
             variant="outlined"
             label="Tone"
             id="story-tone-select"
-            value={generatedStory.tone.value}
+            value={storyParams.tone.value}
             labelId="story-tone-select-label"
             onChange={handleOnSelectChange}
           >
@@ -304,7 +316,7 @@ const GenerationOptionsForm = () => {
             variant="outlined"
             label="Environment"
             id="environment-select"
-            value={generatedStory.environment?.value}
+            value={storyParams.environment?.value}
             labelId="environment-select-label"
             onChange={handleOnSelectChange}
           >
@@ -323,7 +335,7 @@ const GenerationOptionsForm = () => {
           name="interests"
           label="Other Interests"
           type="text"
-          value={childInfo.interests}
+          value={profileInfo.interests}
           className="profile-info-form-item"
           onChange={handleFieldChange}
         />

@@ -1,6 +1,6 @@
 import { ViewStoryInitialState, getViewStoryInitialState } from "./state";
 
-import { Story } from "src/application/shared/interfaces";
+import { Story } from "src/components/StoryCreator/store/state";
 import { useState } from "react";
 
 export interface ViewStoryStore {
