@@ -2,22 +2,23 @@ import CONFIG from "./config";
 import { Express } from "express";
 import cors from "cors";
 
-const allowedOrigins = ["https://talepod.com", "https://api.talepod.com"];
+const getAllowedOrigins = (): string[] => {
+  if (CONFIG.IS_DEV) {
+    return CONFIG.PUBLIC_URLS_CLIENT_DEV.split(", ");
+  }
+  if (CONFIG.IS_PROD) {
+    return CONFIG.PUBLIC_URLS_CLIENT_PROD.split(", ");
+  }
+
+  return ["https://talepod.com", "https://api.talepod.com"];
+};
 
 const corsOptions = {
-  // origin: (origin: string, callback: Function) => {
-  //   const allowedOrigins = CONFIG.PROD_CLIENT_PUBLIC_URLS.split(", ");
+  origin: (origin: string, callback: Function) => {
+    const allowedOrigins = getAllowedOrigins();
 
-  //   console.log("ℹ️  allowedOrigins:>>>", { allowedOrigins });
+    console.log("ℹ️  allowedOrigins:>>>", { allowedOrigins });
 
-  //   if (allowedOrigins.includes(origin) || !origin) {
-  //     callback(null, true);
-  //   } else {
-  //     console.error(`❌ Not allowed by CORS: ${origin}`);
-  //     callback(new Error("❌ Not allowed by CORS"));
-  //   }
-  // },
-  origin: function (origin, callback) {
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
