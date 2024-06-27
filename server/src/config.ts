@@ -7,18 +7,23 @@ const CONFIG = {
   DEV_PORT: process.env.DEV_PORT,
   STAG_PORT: process.env.STAG_PORT,
   PROD_PORT: process.env.PROD_PORT,
+
+  // Environment
   NODE_ENV: process.env.NODE_ENV,
-  DISABLE_HOT_RELOAD: process.env.REACT_APP_DISABLE_LIVE_RELOAD,
-  IS_DEV:
-    process.env.NODE_ENV && process.env.NODE_ENV.indexOf("development") > -1,
-  IS_STAG: process.env.NODE_ENV && process.env.NODE_ENV.indexOf("staging") > -1,
-  IS_PROD:
-    process.env.NODE_ENV && process.env.NODE_ENV.indexOf("production") > -1,
+  IS_DEV: process.env.NODE_ENV === "development",
+  IS_STAG: process.env.NODE_ENV === "staging",
+  IS_PROD: process.env.NODE_ENV === "production",
+
+  // Public URLs
+  PUBLIC_URLS_SERVER_DEV: process.env.PUBLIC_URLS_SERVER_DEV,
+  PUBLIC_URLS_SERVER_PROD: process.env.PUBLIC_URLS_SERVER_PROD,
+  PUBLIC_URLS_CLIENT_DEV: process.env.PUBLIC_URLS_CLIENT_DEV,
+  PUBLIC_URLS_CLIENT_PROD: process.env.PUBLIC_URLS_CLIENT_PROD,
+
+  // Paths
   FRONTEND_DEV_PATH: path.resolve("../client/public"),
   FRONTEND_BUILD_PATH: path.resolve("../client/build"),
   SERVE_STATIC_CONTENT: process.env.SERVE_STATIC_CONTENT,
-  PROD_CLIENT_PUBLIC_URLS: process.env.PROD_CLIENT_PUBLIC_URLS,
-
   // Assets
   SERVER_TEXT_TO_SPEECH_PATH: "assets/audio",
   SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH: path.resolve("./assets/audio"),
