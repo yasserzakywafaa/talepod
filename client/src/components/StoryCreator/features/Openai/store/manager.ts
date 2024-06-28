@@ -5,9 +5,9 @@ import {
   StoryParams,
 } from "src/components/StoryCreator/store/state";
 import {
-  getAutoImageGenPromptString,
-  getAutoTextGenPromptString,
-} from "src/components/StoryCreator/utils/getAutoPromptString";
+  getCreateImagePrompt,
+  getCreateStoryPrompt,
+} from "src/components/StoryCreator/utils/getStoryPrompts";
 
 import { OpenaiStore } from "./store";
 import { useCreateStory } from "../features/CreateStory/useCreateStory";
@@ -67,12 +67,12 @@ export const useOpenAiGPTManager = (store: OpenaiStore): OpenaiManager => {
 
     store.updateState("createStory", {
       ...store.state.createStory,
-      createStoryPrompt: getAutoTextGenPromptString(storyCreatorStore.state),
+      createStoryPrompt: getCreateStoryPrompt(storyCreatorStore.state),
     });
 
     store.updateState("createImage", {
       ...store.state.createImage,
-      createImagePrompt: getAutoImageGenPromptString(
+      createImagePrompt: getCreateImagePrompt(
         storyCreatorStore.state.profileInfo
       ),
     });

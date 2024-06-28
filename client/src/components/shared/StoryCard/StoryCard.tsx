@@ -102,7 +102,7 @@ const StoryCard = (props: StoryCard) => {
 
           {props.story.createdAt && (
             <Typography variant="body2">
-              {new Date(props.story.createdAt).toLocaleDateString()}
+              {new Date(props.story.createdAt).toLocaleDateString('en-GB')}
             </Typography>
           )}
         </Box>

@@ -3,7 +3,7 @@ import { createTheme } from "@mui/material/styles";
 // const mainColor = "#bb86fc"; // Indigo
 const primaryColor = "#ad932d"; // Dark Goldenrod
 const secondaryColor = "#00BFFF"; // Deep Sky Blue
-const darkBg = "linear-gradient(to top, #000000, #2E3B4E)"; // Night Sky
+const darkBackground = "linear-gradient(to top, #000000, #2E3B4E)"; // Night Sky
 
 export const theme = createTheme({
   palette: {
@@ -38,6 +38,7 @@ export const lightTheme = createTheme({
       primary: "#333333", // Charcoal
       secondary: "#666666", // Gray
     },
+    divider: "#CCCCCC"
   },
 });
 
@@ -47,12 +48,13 @@ export const darkTheme = createTheme({
     ...theme.palette,
     mode: "dark",
     background: {
-      // default: "#333333", // Dark Background
-      default: darkBg,
+      // default: "#333333", // (Charcoal) Dark Background
+      default: darkBackground,
     },
     text: {
       primary: "#FFFFFF", // White
       secondary: "#CCCCCC", // Light Gray
     },
+    divider: "#333333" // Charcoal
   },
 });

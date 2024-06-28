@@ -1,40 +1,40 @@
 import {
   Box,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  Divider,
+  // Button,
+  // Card,
+  // CardContent,
+  // Chip,
+  // Divider,
   Stack,
   TextField,
-  Typography,
+  // Typography,
 } from "@mui/material";
 
-import { AutoAwesome } from "@mui/icons-material";
-import { FormEvent } from "react";
+// import { AutoAwesome } from "@mui/icons-material";
+// import { FormEvent } from "react";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
-import ReactMarkdown from "react-markdown";
-import TextToSpeechGeneration from "../CreateStoryAudio/CreateStoryAudio";
+// import ReactMarkdown from "react-markdown";
+// import TextToSpeechGeneration from "../CreateStoryAudio/CreateStoryAudio";
 import { useOpenaiContext } from "../../store/Provider";
 
 const CreateStory = () => {
   const { store, manager } = useOpenaiContext();
   const { createStory } = store.state;
-  const { isFetching, createStoryPrompt, story } = createStory;
+  const { isFetching, createStoryPrompt } = createStory;
   const {
-    isCreateStoryFetching: handleIsTextGenFetching,
+    // isCreateStoryFetching,
     // handleCreateStoryRequest,
   } = manager;
 
-  const handleOnFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
+  // const handleOnFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   event.stopPropagation();
 
-    if (createStoryPrompt) {
-      handleIsTextGenFetching(true);
-      // handleGenerateTextRequest(createStoryPrompt, profileInfo);
-    }
-  };
+  //   if (createStoryPrompt) {
+  //     isCreateStoryFetching(true);
+  //     // handleGenerateTextRequest(createStoryPrompt, profileInfo);
+  //   }
+  // };
 
   return (
     <Box position="relative" sx={{ marginY: "1rem" }}>
@@ -47,28 +47,28 @@ const CreateStory = () => {
         autoComplete="off"
         position="relative"
         flexDirection="column"
-        onSubmit={handleOnFormSubmit}
+        // onSubmit={handleOnFormSubmit}
       >
         <Stack spacing={2} flexGrow={1}>
           <TextField
             multiline
-            label="User Prompt"
+            label="Create Story Prompt"
             variant="outlined"
             value={createStoryPrompt}
             // onChange={...}
           />
-          <Button
+          {/* <Button
             type="submit"
             title="submit-button"
             variant="contained"
             endIcon={<AutoAwesome />}
           >
             Create
-          </Button>
+          </Button> */}
         </Stack>
       </Box>
 
-      {story && story.mainStory && (
+      {/* {story && story.mainStory && (
         <>
           <Divider style={{ margin: "2rem 0" }}>
             <Chip label="Answer" size="small" />
@@ -87,7 +87,7 @@ const CreateStory = () => {
             </CardContent>
           </Card>
         </>
-      )}
+      )} */}
     </Box>
   );
 };

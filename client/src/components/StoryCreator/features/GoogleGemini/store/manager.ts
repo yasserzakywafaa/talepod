@@ -7,7 +7,7 @@ import END_POINTS from "src/application/shared/endpoints";
 import { GoogleGeminiAIAnswerProps } from "./state";
 import { GoogleGeminiStore } from "./store";
 import axios from "axios";
-import { getAutoTextGenPromptString } from "src/components/StoryCreator/utils/getAutoPromptString";
+import { getCreateStoryPrompt } from "src/components/StoryCreator/utils/getStoryPrompts";
 import { useEffect } from "react";
 import { useStoryCreatorContext } from "src/components/StoryCreator/store/Provider";
 
@@ -107,7 +107,7 @@ export const useGoogleGeminiManager = (
     store.updateState("childInfo", storyCreatorStore.state.profileInfo);
     store.updateState(
       "optionsAutoPrompt",
-      getAutoTextGenPromptString(storyCreatorStore.state)
+      getCreateStoryPrompt(storyCreatorStore.state)
     );
   }, [storyCreatorStore.state.profileInfo]);
 

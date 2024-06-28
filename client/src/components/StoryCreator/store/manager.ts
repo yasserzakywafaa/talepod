@@ -1,11 +1,11 @@
 import { AdultGenderEnum, ChildGenderEnum, ProfileInfo } from "./state";
 
 import { Country } from "src/shared/countries";
-import { Environment } from "src/shared/generatedStory/Environments";
-import { Moral } from "src/shared/generatedStory/Moral";
+import { Environment } from "src/shared/mockedData/Environments";
+import { Moral } from "src/shared/mockedData/Moral";
 import { StoryCreatorStore } from "./store";
-import { Tone } from "src/shared/generatedStory/Tone";
-import { getAutoTextGenPromptString } from "../utils/getAutoPromptString";
+import { Tone } from "src/shared/mockedData/Tone";
+import { getCreateStoryPrompt } from "../utils/getStoryPrompts";
 import { useEffect } from "react";
 
 export interface StoryCreatorManager {
@@ -55,7 +55,7 @@ export const useStoryCreatorManager = (
       ...state,
       createStory: {
         ...state.createStory,
-        createStoryPrompt: getAutoTextGenPromptString(state),
+        createStoryPrompt: getCreateStoryPrompt(state),
       },
     });
 

@@ -20,10 +20,10 @@ import {
 import {
   Environment,
   Environments,
-} from "src/shared/generatedStory/Environments";
+} from "src/shared/mockedData/Environments";
 import { Language, Languages } from "../../../shared/languages";
-import { Moral, Morals } from "src/shared/generatedStory/Moral";
-import { Tone, Tones } from "src/shared/generatedStory/Tone";
+import { Moral, Morals } from "src/shared/mockedData/Moral";
+import { Tone, Tones } from "src/shared/mockedData/Tone";
 
 import { AutoAwesome } from "@mui/icons-material";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
@@ -32,7 +32,7 @@ import { useNavigate } from "react-router-dom";
 import { useOpenaiContext } from "./Openai/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
 
-const GenerationOptionsForm = () => {
+const CreateStoryForm = () => {
   const navigate = useNavigate();
   const {
     store: {
@@ -363,4 +363,4 @@ const GenerationOptionsForm = () => {
   );
 };
 
-export default GenerationOptionsForm;
+export default CreateStoryForm;

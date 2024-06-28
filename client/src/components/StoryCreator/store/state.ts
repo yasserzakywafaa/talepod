@@ -1,8 +1,8 @@
 import { Language, Languages } from "src/shared/languages";
 
-import { Environment } from "src/shared/generatedStory/Environments";
-import { Moral } from "src/shared/generatedStory/Moral";
-import { Tone } from "src/shared/generatedStory/Tone";
+import { Environment } from "src/shared/mockedData/Environments";
+import { Moral } from "src/shared/mockedData/Moral";
+import { Tone } from "src/shared/mockedData/Tone";
 
 export interface StoryCreatorInitialState {
   isFetching: boolean;

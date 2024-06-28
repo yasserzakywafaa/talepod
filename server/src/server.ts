@@ -2,7 +2,7 @@ import CONFIG from "./config";
 import bodyParser from "body-parser";
 import { databaseInit } from "./models/mongoDb";
 import express from "express";
-import googleGeminiRoutes from "./routes/googleGeminiRoutes";
+// import googleGeminiRoutes from "./routes/googleGeminiRoutes";
 import handleCorsConfig from "./cors-config";
 import openaiRoutes from "./routes/openaiRoutes";
 import path from "path";
@@ -41,7 +41,7 @@ expressApp.use(express.urlencoded({ extended: true }));
 expressApp.use(testRoutes);
 expressApp.use(storiesRoutes);
 expressApp.use(openaiRoutes);
-expressApp.use(googleGeminiRoutes);
+// expressApp.use(googleGeminiRoutes);
 
 // Initiate MongoDB connection
 databaseInit();

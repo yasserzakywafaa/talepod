@@ -15,7 +15,6 @@ import {
 } from "src/components/shared/Notification/Notification";
 import { useLocation, useParams } from "react-router-dom";
 
-import { AutoAwesome } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import DreamingFox from "../../assets/images/dreaming_fox_with_a_pillow.png";
 import Footer from "../../components/shared/Footer/Footer";
@@ -26,6 +25,7 @@ import ReactMarkdown from "react-markdown";
 import { useEffect } from "react";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
 import { useViewStoryContext } from "./store/Provider";
+import { Lyrics } from "@mui/icons-material";
 
 const ViewStoryPage: React.FC = () => {
   const location = useLocation();
@@ -119,7 +119,9 @@ const ViewStoryPage: React.FC = () => {
                 {story.summary}
               </Typography>
 
-              <Divider sx={{ my: 1 }} />
+              <Divider
+                sx={{ my: 1, color: (theme) => theme.palette.text.primary }}
+              />
 
               {!story.audioFile && (
                 <>
@@ -136,7 +138,7 @@ const ViewStoryPage: React.FC = () => {
                     size="large"
                     type="button"
                     variant="contained"
-                    endIcon={<AutoAwesome />}
+                    endIcon={<Lyrics />}
                     onClick={handleOnCreateAudioClick}
                   >
                     Create Audio
@@ -163,12 +165,16 @@ const ViewStoryPage: React.FC = () => {
 
                   <Typography variant="body2" color="textSecondary" mt={2}>
                     Audio created on:{" "}
-                    {new Date(story.audioFile.createdAt).toLocaleDateString()}
+                    {new Date(story.audioFile.createdAt).toLocaleDateString(
+                      "en-GB"
+                    )}
                   </Typography>
                 </Box>
               )}
 
-              <Divider sx={{ my: 2 }} />
+              <Divider
+                sx={{ my: 2, color: (theme) => theme.palette.text.primary }}
+              />
 
               <Typography
                 gutterBottom
