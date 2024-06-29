@@ -1,6 +1,11 @@
 import "./Explore.scss";
 
-import { AutoFixHigh, FilterAlt, SwapVert } from "@mui/icons-material";
+import {
+  AutoFixHighOutlined,
+  FilterAltOffOutlined,
+  FilterAltOutlined,
+  SwapVertOutlined,
+} from "@mui/icons-material";
 import { Badge, Button, Container } from "@mui/material";
 
 import Box from "@mui/material/Box";
@@ -65,7 +70,7 @@ const ExplorePage: React.FC = () => {
           >
             <Button
               variant="text"
-              endIcon={<SwapVert />}
+              endIcon={<SwapVertOutlined />}
               onClick={handleSortButtonClick}
             >
               Sort
@@ -75,10 +80,10 @@ const ExplorePage: React.FC = () => {
               Filters
               {activeFiltersCount ? (
                 <Badge badgeContent={activeFiltersCount} color="secondary">
-                  <FilterAlt color="primary" />
+                  <FilterAltOutlined color="primary" />
                 </Badge>
               ) : (
-                <FilterAlt color="primary" />
+                <FilterAltOutlined color="primary" />
               )}
             </Button>
           </Box>
@@ -126,11 +131,22 @@ const ExplorePage: React.FC = () => {
                   size="large"
                   color="secondary"
                   variant="contained"
-                  sx={{ my: 2, px: 2 }}
-                  endIcon={<AutoFixHigh />}
+                  sx={{ my: 2, mx: 1, px: 2 }}
+                  endIcon={<AutoFixHighOutlined />}
                   onClick={handleOnCreateClick}
                 >
                   Create Story
+                </Button>
+
+                <Button
+                  size="large"
+                  color="primary"
+                  variant="outlined"
+                  sx={{ my: 2, mx: 1, px: 2 }}
+                  endIcon={<FilterAltOffOutlined />}
+                  onClick={handleClearFilters}
+                >
+                  Clear Filters
                 </Button>
               </Box>
             </>

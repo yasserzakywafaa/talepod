@@ -3,10 +3,9 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import { ExpandMoreOutlined } from "@mui/icons-material";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useState } from "react";
 
 export default function FAQ() {
@@ -47,7 +46,7 @@ export default function FAQ() {
           onChange={handleChange("panel1")}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<ExpandMoreOutlined />}
             aria-controls="panel1d-content"
             id="panel1d-header"
           >
@@ -73,7 +72,7 @@ export default function FAQ() {
           onChange={handleChange("panel2")}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<ExpandMoreOutlined />}
             aria-controls="panel2d-content"
             id="panel2d-header"
           >
@@ -98,7 +97,7 @@ export default function FAQ() {
           onChange={handleChange("panel3")}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<ExpandMoreOutlined />}
             aria-controls="panel3d-content"
             id="panel3d-header"
           >
@@ -124,7 +123,7 @@ export default function FAQ() {
           onChange={handleChange("panel4")}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<ExpandMoreOutlined />}
             aria-controls="panel4d-content"
             id="panel4d-header"
           >
