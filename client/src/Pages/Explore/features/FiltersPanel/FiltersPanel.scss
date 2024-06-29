@@ -1,0 +1,18 @@
+.filters-panel-container {
+  .filters-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+
+    .filters-form-item {
+      width: 100%;
+      margin: 0.5rem 2rem;
+    }
+  }
+  .filters-form-footer {
+    padding: 1rem;
+  }
+}

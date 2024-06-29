@@ -1,11 +1,11 @@
 import {
-  ChildInfo,
+  ProfileInfo,
   getStoryCreatorInitialState,
 } from "src/components/StoryCreator/store/state";
 
 export interface GoogleGeminiInitialState {
   isFetching: boolean;
-  childInfo: ChildInfo;
+  childInfo: ProfileInfo;
   userPrompt: string;
   optionsAutoPrompt: string;
   aiAnswer: GoogleGeminiAIAnswerProps;
@@ -18,7 +18,7 @@ export interface GoogleGeminiAIAnswerProps {
 }
 
 export const getGoogleGeminiInitialState = (): GoogleGeminiInitialState => {
-  const { childInfo } = getStoryCreatorInitialState();
+  const { profileInfo: childInfo } = getStoryCreatorInitialState();
   return {
     isFetching: false,
     childInfo,

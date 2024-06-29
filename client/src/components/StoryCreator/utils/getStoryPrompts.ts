@@ -1,0 +1,55 @@
+import { ProfileInfo, StoryCreatorInitialState } from "../store/state";
+
+export const getCreateStoryPrompt = (
+  promptParams: StoryCreatorInitialState
+): string => {
+  const { name, gender, age, interests, language } = promptParams.profileInfo;
+
+  const { moral, tone, audioLength, environment } = promptParams.storyParams;
+
+  const fullDynamicPrompt =
+    // `Write a story that is ${audioLength} minutes long ${ customParams.profileInfo.language } with the following outputs inside of the curly brackets to be ready for the data ETL process.
+    `Write a story that is ${audioLength} minutes long ${
+      language.value ? ` in the language of ${language.name},` : "English"
+    } with the following outputs inside of the curly brackets to be ready for the data ETL process.
+    Make sure the Title, Story summary, Story, and Poem are each between curly brackets so the development team can split the data into those fields respectively.
+
+    {Provide here the story title}
+
+    {Provide here the story summary that is not longer than 120 characters Outlining the basic plot and key elements of the story.}
+
+    {Provide here the story with 4-5 scenes or chapters. Refrain from mentioning the chapters. 
+    Just provide the text of the story as it is a bedtime story for kids hence build the drama accordingly and ensure a length of ${audioLength} minutes as mentioned above.}
+
+    {Provide here the story poem: Create a bedtime poem that summarizes the story in 4-6 rhyming verses}
+
+    ${tone.value ? `The tone of the story to be ${tone.name}.` : ""}
+
+    ${
+      moral.value
+        ? `Value or theme: The value the parent wants to teach their kid through the story is ${moral.name}.`
+        : ""
+    }
+
+    ${
+      environment.value
+        ? `Environment: the environment of the story is at the ${environment.name}.`
+        : ""
+    }
+  
+    The characters of the story are: The protagonist/main character is ${name}, a ${age}-year-old ${gender.toLowerCase()}.
+    
+    ${interests.length ? `Supporting characters to be around ${interests}` : ""}
+    
+    Please ensure that the story is kids compliant. All kids between 1 year and 12 years old, so no explicit content outside this age range.`;
+
+  return fullDynamicPrompt;
+};
+
+export const getCreateImagePrompt = (childInfo: ProfileInfo): string => {
+  const { name, gender, age } = childInfo;
+
+  const fullDynamicPrompt = `A ${age} years old ${gender} named ${name}, with physical characteristics`;
+
+  return fullDynamicPrompt;
+};

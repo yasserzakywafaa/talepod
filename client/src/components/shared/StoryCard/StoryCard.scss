@@ -1,4 +1,8 @@
 .story-card {
+  height: 140px;
+  max-width: 350px;
+  margin-left: 1rem;
+  margin-right: 1rem;
   .story-card-content {
     padding-top: 8px;
     padding-bottom: 8px;
@@ -14,5 +18,40 @@
       overflow: hidden; /* Hides the overflow text */
       text-overflow: ellipsis; /* Adds ellipsis at the end of the text */
     }
+    .story-card-tags {
+      .story-card-tags-item {
+        margin-right: 1rem;
+      }
+    }
+  }
+}
+
+/* Tablet (11-inch) */
+@media (max-width: 1024px) {
+  .story-card {
+    width: 50%;
+    max-width: 48%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* Small tablet */
+@media (max-width: 774px) {
+}
+
+/* Big Phone */
+@media (max-width: 430px) {
+  .story-card {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* Small Phone */
+@media (max-width: 320px), (max-height: 568px) {
+  .story-card {
+    width: 100%;
+    max-width: 100%;
   }
 }

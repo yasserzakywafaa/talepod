@@ -1,10 +1,11 @@
 import "./Explore.scss";
 
-import { Button, Container } from "@mui/material";
+import { AutoFixHigh, FilterAlt, SwapVert } from "@mui/icons-material";
+import { Badge, Button, Container } from "@mui/material";
 
-import { AutoFixHigh } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import DreamingGiraffe from "../../assets/images/dreaming_giraffe_with_a_pillow.png";
+import FiltersPanel from "./features/FiltersPanel/FiltersPanel";
 import Footer from "../../components/shared/Footer/Footer";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
 import NoResultsFound from "src/components/shared/NoResults/NoResults";
@@ -18,72 +19,125 @@ const ExplorePage: React.FC = () => {
   const navigate = useNavigate();
   const {
     store: {
-      state: { isFetching, stories },
+      state: { isFetching, filteredStories, activeFiltersCount },
     },
-    manager: { setUp },
+    manager: {
+      setUp,
+      handleToggleFiltersPanel,
+      handleSortStories,
+      handleClearFilters,
+    },
   } = useExploreContext();
 
   const handleOnCreateClick = () => {
     navigate("/create");
   };
 
+  const handleFilterButtonClick = () => {
+    handleToggleFiltersPanel(true);
+  };
+
+  const handleSortButtonClick = () => {
+    handleSortStories();
+  };
+
   useEffect(() => {
     setUp();
+
+    return () => {
+      handleClearFilters();
+    };
   }, []);
 
   return (
     <Page title="Explore Stories | Talepod" className="explore-page">
-      <Container
-        className="explore-container"
-        sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          pt: { xs: 0, sm: 8 },
-          pb: { xs: 8, sm: 12 },
-        }}
-      >
-        {isFetching && <LoaderSpinner style={{ position: "absolute" }} />}
+      <FiltersPanel />
 
-        {!isFetching && stories.length ? (
-          <>
-            <Box component="div" className="bg-image-character">
-              <img src={DreamingGiraffe} width="100%" />
-            </Box>
-
-            {stories.map((story, index) => {
-              return <StoryCard key={index} story={story} />;
-            })}
-          </>
-        ) : (
-          <></>
-        )}
-
-        {!isFetching && !stories.length ? (
-          <>
-            <NoResultsFound />
-
-            <Box
-              width="100%"
-              margin="auto"
-              display="flex"
-              justifyContent="center"
+      <Container className="explore-container">
+        {!isFetching && filteredStories.length ? (
+          <Box
+            mb={1}
+            display="flex"
+            alignItems="center"
+            mt={{ xs: 0, sm: 2 }}
+            className="explore-top-bar"
+            justifyContent={{ xs: "space-between", sm: "end" }}
+          >
+            <Button
+              variant="text"
+              endIcon={<SwapVert />}
+              onClick={handleSortButtonClick}
             >
-              <Button
-                size="large"
-                color="secondary"
-                variant="contained"
-                sx={{ my: 2, px: 2 }}
-                endIcon={<AutoFixHigh />}
-                onClick={handleOnCreateClick}
-              >
-                Create Another Story
-              </Button>
-            </Box>
-          </>
+              Sort
+            </Button>
+
+            <Button variant="text" onClick={handleFilterButtonClick}>
+              Filters
+              {activeFiltersCount ? (
+                <Badge badgeContent={activeFiltersCount} color="secondary">
+                  <FilterAlt color="primary" />
+                </Badge>
+              ) : (
+                <FilterAlt color="primary" />
+              )}
+            </Button>
+          </Box>
         ) : (
           <></>
         )}
+
+        <Box
+          className="explore-container-snap-area"
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "start",
+            pt: { xs: 0, sm: 1 },
+            pb: { xs: 8, sm: 12 },
+          }}
+        >
+          {isFetching && <LoaderSpinner style={{ position: "absolute" }} />}
+
+          {!isFetching && filteredStories.length ? (
+            <>
+              <Box component="div" className="bg-image-character">
+                <img src={DreamingGiraffe} width="100%" />
+              </Box>
+
+              {filteredStories.map((story, index) => {
+                return <StoryCard key={index} story={story} />;
+              })}
+            </>
+          ) : (
+            <></>
+          )}
+
+          {!isFetching && !filteredStories.length ? (
+            <>
+              <NoResultsFound />
+
+              <Box
+                width="100%"
+                margin="auto"
+                display="flex"
+                justifyContent="center"
+              >
+                <Button
+                  size="large"
+                  color="secondary"
+                  variant="contained"
+                  sx={{ my: 2, px: 2 }}
+                  endIcon={<AutoFixHigh />}
+                  onClick={handleOnCreateClick}
+                >
+                  Create Story
+                </Button>
+              </Box>
+            </>
+          ) : (
+            <></>
+          )}
+        </Box>
       </Container>
 
       <Box sx={{ bgcolor: "background.default" }}>

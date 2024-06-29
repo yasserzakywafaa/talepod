@@ -1,26 +1,26 @@
 import "./StoryCreator.scss";
 
-import { Box, Container, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Container } from "@mui/material";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
-import GenerationOptionsForm from "./features/GenerationOptionsForm";
-import GoogleGemini from "./features/GoogleGemini/GoogleGemini";
-import OpenAiGPT from "./features/OpenAiGPT/OpenAiGPT";
-import { useState } from "react";
+import CreateStoryForm from "./features/CreateStoryForm";
+// import GoogleGemini from "./features/GoogleGemini/GoogleGemini";
+import Openai from "./features/Openai/Openai";
+// import { useState } from "react";
 
 export const StoryCreatorContent = () => {
-  const [value, setValue] = useState(0);
+  // const [value, setValue] = useState(0);
 
-  const handleTabsChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
+  // const handleTabsChange = (event: React.SyntheticEvent, newValue: number) => {
+  //   setValue(newValue);
+  // };
 
   return (
     <Container
       className="story-creator-container"
       sx={{ pt: { xs: 4, sm: 4 }, paddingX: 0 }}
     >
-      <GenerationOptionsForm />
+      <CreateStoryForm />
 
       {APP_CONSTANTS.IS_DEV && (
         <Box
@@ -33,7 +33,9 @@ export const StoryCreatorContent = () => {
           className="story-creator-content"
         >
           <Box sx={{ width: "100%" }}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Openai />
+
+            {/* <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <Tabs
                 value={value}
                 onChange={handleTabsChange}
@@ -42,9 +44,9 @@ export const StoryCreatorContent = () => {
                 <Tab label="OpenAi" />
                 <Tab label="Google Gemini" />
               </Tabs>
-            </Box>
+            </Box> */}
 
-            <div
+            {/* <div
               role="tabpanel"
               hidden={value !== 0}
               id={`simple-tabpanel-${0}`}
@@ -52,12 +54,12 @@ export const StoryCreatorContent = () => {
             >
               {value === 0 && (
                 <Box sx={{ p: 3 }}>
-                  <OpenAiGPT />
+                  <Openai />
                 </Box>
               )}
-            </div>
+            </div> */}
 
-            <div
+            {/* <div
               role="tabpanel"
               hidden={value !== 1}
               id={`simple-tabpanel-${1}`}
@@ -69,7 +71,7 @@ export const StoryCreatorContent = () => {
                   <GoogleGemini />
                 </Box>
               )}
-            </div>
+            </div> */}
           </Box>
         </Box>
       )}

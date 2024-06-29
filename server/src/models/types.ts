@@ -10,6 +10,11 @@ export interface Story {
   createdAt: Date;
 }
 
+export interface StoryData extends Partial<Story> {
+  profileInfo: ProfileInfo;
+  storyParams: StoryParams;
+}
+
 export interface StoryAudioFile {
   url: string;
   fileName: string;
@@ -21,4 +26,45 @@ export interface StoryParts {
   summary: string;
   mainStory: string;
   poem: string;
+}
+
+export enum ChildGenderEnum {
+  Boy = "Boy",
+  Girl = "Girl",
+}
+
+export enum AdultGenderEnum {
+  Male = "Male",
+  Female = "Female",
+}
+
+export interface Language {
+  name: string;
+  value: string;
+}
+
+export type ProfileInfo = {
+  name: string;
+  gender: ChildGenderEnum | AdultGenderEnum;
+  age: number;
+  interests: string;
+  language: Language;
+};
+
+export interface StoryParams {
+  tone: Tone;
+  moral: Moral;
+  audioLength: number;
+  maxCharacters: number;
+  environment: Environment;
+}
+
+export type Tone = BasicParam;
+export type Moral = BasicParam;
+export type Environment = BasicParam;
+
+export interface BasicParam {
+  name: string;
+  value: string;
+  description?: string;
 }

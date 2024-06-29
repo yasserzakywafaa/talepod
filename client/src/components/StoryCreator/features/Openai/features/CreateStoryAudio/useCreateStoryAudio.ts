@@ -2,7 +2,7 @@ import {
   Notify,
   ToastTypes,
 } from "src/components/shared/Notification/Notification";
-import { Story, StoryAudioFile } from "src/application/shared/interfaces";
+import { Story, StoryAudioFile } from "src/components/StoryCreator/store/state";
 import axios, { AxiosResponse } from "axios";
 import {
   getRandomString,
@@ -10,30 +10,26 @@ import {
 } from "src/shared/utils/stringUtils";
 
 import END_POINTS from "src/application/shared/endpoints";
-import { OpenAiGPTStore } from "../../store/store";
+import { OpenaiStore } from "../../store/store";
 
 export interface UseTextGeneration {
-  handleIsTextToSpeechGenFetching: (isFetching: boolean) => void;
-  handleGenerateTextToSpeechRequest: (
-    story: Story
-  ) => Promise<StoryAudioFile | undefined>;
+  isCreateAudioFetching: (isFetching: boolean) => void;
+  handleCreateAudio: (story: Story) => Promise<StoryAudioFile | undefined>;
 }
 
-export const useCreateStoryAudio = (
-  store: OpenAiGPTStore
-): UseTextGeneration => {
-  const handleIsTextToSpeechGenFetching = (isFetching: boolean) => {
-    store.updateState("textToSpeechGeneration", {
-      ...store.state.textGeneration,
+export const useCreateStoryAudio = (store: OpenaiStore): UseTextGeneration => {
+  const isCreateAudioFetching = (isFetching: boolean) => {
+    store.updateState("createAudio", {
+      ...store.state.createStory,
       isFetching,
     });
   };
 
-  const handleGenerateTextToSpeechRequest = async (
+  const handleCreateAudio = async (
     story: Story
   ): Promise<StoryAudioFile | undefined> => {
     try {
-      const { name } = store.state.childInfo;
+      const { name } = store.state.profileInfo;
       if (!story) return;
 
       const fileName = `${replaceSpaceWithUnderscore(
@@ -56,7 +52,7 @@ export const useCreateStoryAudio = (
           }
         );
 
-      handleIsTextToSpeechGenFetching(false);
+      isCreateAudioFetching(false);
 
       Notify({
         type: ToastTypes.Success,
@@ -65,10 +61,8 @@ export const useCreateStoryAudio = (
 
       return response.data;
     } catch (error) {
-      console.error("OpenAiSection:>>> Error", {
-        error,
-      });
-      handleIsTextToSpeechGenFetching(false);
+      console.error("❌ Create Audio Error!", { error });
+      isCreateAudioFetching(false);
 
       if (axios.isAxiosError(error) && error.response) {
         Notify({
@@ -91,7 +85,7 @@ export const useCreateStoryAudio = (
   };
 
   return {
-    handleIsTextToSpeechGenFetching,
-    handleGenerateTextToSpeechRequest,
+    isCreateAudioFetching,
+    handleCreateAudio,
   };
 };

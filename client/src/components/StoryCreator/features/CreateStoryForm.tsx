@@ -1,4 +1,9 @@
-import { AdultGenderEnum, ChildGenderEnum, ChildInfo } from "../store/state";
+import {
+  AdultGenderEnum,
+  ChildGenderEnum,
+  ProfileInfo,
+  Story,
+} from "../store/state";
 import {
   Box,
   Button,
@@ -15,35 +20,31 @@ import {
 import {
   Environment,
   Environments,
-} from "src/shared/generatedStory/Environments";
+} from "src/shared/mockedData/Environments";
 import { Language, Languages } from "../../../shared/languages";
-import { Moral, Morals } from "src/shared/generatedStory/Moral";
-import { Tone, Tones } from "src/shared/generatedStory/Tone";
+import { Moral, Morals } from "src/shared/mockedData/Moral";
+import { Tone, Tones } from "src/shared/mockedData/Tone";
 
 import { AutoAwesome } from "@mui/icons-material";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
-import { Story } from "src/application/shared/interfaces";
 import routes from "src/application/routes";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useOpenAiGPTContext } from "./OpenAiGPT/store/Provider";
+import { useOpenaiContext } from "./Openai/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
 
-const GenerationOptionsForm = () => {
+const CreateStoryForm = () => {
   const navigate = useNavigate();
   const {
     store: {
-      state: { childInfo, storyParams: generatedStory },
+      state: { profileInfo, storyParams },
     },
     store: storyCreatorStore,
-    manager: { handleUpdateChildInfo, handleUpdateStoryInfo },
+    manager: { handleUpdateProfileInfo, handleUpdateStoryInfo },
   } = useStoryCreatorContext();
 
-  const { store: OpenaiGPTStore, manager: OpenaiGPTManager } =
-    useOpenAiGPTContext();
-  const { isFetching } = OpenaiGPTStore.state.textGeneration;
-  const { handleIsTextGenFetching, handleGenerateTextRequest } =
-    OpenaiGPTManager;
+  const { store: OpenaiStore, manager: OpenaiManager } = useOpenaiContext();
+  const { isFetching } = OpenaiStore.state.createStory;
+  const { isCreateStoryFetching, handleCreateStoryRequest } = OpenaiManager;
 
   const handleOnFormSubmit = async (
     event: React.FormEvent<HTMLFormElement>
@@ -57,18 +58,23 @@ const GenerationOptionsForm = () => {
       return;
     }
 
-    const { userPrompt, autoTextPrompt } =
-      storyCreatorStore.state.textGeneration;
+    const { createStoryPrompt } = storyCreatorStore.state.createStory;
 
-    if (userPrompt || autoTextPrompt) {
-      handleIsTextGenFetching(true);
+    if (createStoryPrompt) {
+      isCreateStoryFetching(true);
       try {
-        const story: Story = await handleGenerateTextRequest(
-          userPrompt || autoTextPrompt
+        const story: Story = await handleCreateStoryRequest(
+          createStoryPrompt,
+          profileInfo,
+          storyParams
         );
-        handleIsTextGenFetching(false);
+        isCreateStoryFetching(false);
 
-        if (story._id) navigate(routes.story(story._id));
+        if (story._id) {
+          navigate(routes.story(story._id), {
+            state: { storyCreated: true },
+          });
+        }
       } catch (error) {
         console.error("❌ Failed to create a story!", {
           error,
@@ -79,7 +85,7 @@ const GenerationOptionsForm = () => {
 
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    handleUpdateChildInfo(name as keyof ChildInfo, value);
+    handleUpdateProfileInfo(name as keyof ProfileInfo, value);
   };
 
   const handleGenderChange = (
@@ -87,7 +93,7 @@ const GenerationOptionsForm = () => {
     gender: string | null
   ) => {
     if (gender !== null) {
-      handleUpdateChildInfo("gender", gender);
+      handleUpdateProfileInfo("gender", gender);
     }
   };
 
@@ -96,16 +102,16 @@ const GenerationOptionsForm = () => {
 
     switch (name) {
       case "gender":
-        handleUpdateChildInfo(name, value);
+        handleUpdateProfileInfo(name, value);
         break;
 
       case "age":
-        handleUpdateChildInfo(name, value);
+        handleUpdateProfileInfo(name, value);
         break;
 
       case "language":
         const currentCountryValue = Languages.find((c) => c.value === value);
-        handleUpdateChildInfo(name, currentCountryValue as Language);
+        handleUpdateProfileInfo(name, currentCountryValue as Language);
         break;
 
       case "moral":
@@ -126,16 +132,6 @@ const GenerationOptionsForm = () => {
         break;
     }
   };
-
-  useEffect(() => {
-    // console.log("ℹ️  FORM:>>> textGeneration", {
-    //   StoryCreatorState: storyCreatorStore.state.textGeneration.autoTextPrompt,
-    // });
-  }, [storyCreatorStore]);
-
-  useEffect(() => {
-    // console.log("ℹ️  FORM:>>>", { GPTState: OpenaiGPTStore.state });
-  }, [OpenaiGPTStore.state]);
 
   return (
     <Box className="story-creator-form">
@@ -163,7 +159,7 @@ const GenerationOptionsForm = () => {
         flexDirection="row"
         alignItems="center"
         justifyContent="center"
-        className="child-info-form"
+        className="profile-info-form"
         onSubmit={handleOnFormSubmit}
       >
         <TextField
@@ -172,12 +168,12 @@ const GenerationOptionsForm = () => {
           name="name"
           label="Name"
           type="text"
-          value={childInfo.name}
-          className="child-info-form-item"
+          value={profileInfo.name}
+          className="profile-info-form-item"
           onChange={handleFieldChange}
         />
 
-        <FormControl className="child-info-form-item">
+        <FormControl className="profile-info-form-item">
           <InputLabel id="language-select-label">Language</InputLabel>
           <Select
             required
@@ -185,7 +181,7 @@ const GenerationOptionsForm = () => {
             variant="outlined"
             label="Language"
             id="language-select"
-            value={childInfo.language.value}
+            value={profileInfo.language.value}
             labelId="language-select-label"
             onChange={handleOnSelectChange}
           >
@@ -199,14 +195,14 @@ const GenerationOptionsForm = () => {
           </Select>
         </FormControl>
 
-        <FormControl className="child-info-form-item">
+        <FormControl className="profile-info-form-item">
           <InputLabel id="age-select-label">Age</InputLabel>
           <Select
             name="age"
             label="Age"
             variant="outlined"
             id="age-select"
-            value={childInfo.age.toString()}
+            value={profileInfo.age.toString()}
             labelId="story-moral-select-label"
             onChange={handleOnSelectChange}
           >
@@ -218,16 +214,18 @@ const GenerationOptionsForm = () => {
           </Select>
         </FormControl>
 
-        <Box className="child-info-form-item">
+        <Box className="profile-info-form-item">
           <ToggleButtonGroup
             exclusive
-            value={childInfo.gender}
+            value={profileInfo.gender}
             aria-labelledby="gender-toggle"
             onChange={handleGenderChange}
           >
             <ToggleButton
               value={
-                childInfo.age <= 18 ? ChildGenderEnum.Boy : AdultGenderEnum.Male
+                profileInfo.age <= 18
+                  ? ChildGenderEnum.Boy
+                  : AdultGenderEnum.Male
               }
               sx={{
                 color: (theme) => theme.palette.text.primary,
@@ -240,12 +238,14 @@ const GenerationOptionsForm = () => {
                 },
               }}
             >
-              {childInfo.age <= 18 ? ChildGenderEnum.Boy : AdultGenderEnum.Male}
+              {profileInfo.age <= 18
+                ? ChildGenderEnum.Boy
+                : AdultGenderEnum.Male}
             </ToggleButton>
 
             <ToggleButton
               value={
-                childInfo.age <= 18
+                profileInfo.age <= 18
                   ? ChildGenderEnum.Girl
                   : AdultGenderEnum.Female
               }
@@ -260,21 +260,21 @@ const GenerationOptionsForm = () => {
                 },
               }}
             >
-              {childInfo.age <= 18
+              {profileInfo.age <= 18
                 ? ChildGenderEnum.Girl
                 : AdultGenderEnum.Female}
             </ToggleButton>
           </ToggleButtonGroup>
         </Box>
 
-        <FormControl className="child-info-form-item">
+        <FormControl className="profile-info-form-item">
           <InputLabel id="nationality-select-label">Moral</InputLabel>
           <Select
             name="moral"
             label="Moral"
             variant="outlined"
             id="story-moral-select"
-            value={generatedStory.moral.value}
+            value={storyParams.moral.value}
             labelId="story-moral-select-label"
             onChange={handleOnSelectChange}
           >
@@ -288,14 +288,14 @@ const GenerationOptionsForm = () => {
           </Select>
         </FormControl>
 
-        <FormControl className="child-info-form-item">
+        <FormControl className="profile-info-form-item">
           <InputLabel id="nationality-select-label">Tone</InputLabel>
           <Select
             name="tone"
             variant="outlined"
             label="Tone"
             id="story-tone-select"
-            value={generatedStory.tone.value}
+            value={storyParams.tone.value}
             labelId="story-tone-select-label"
             onChange={handleOnSelectChange}
           >
@@ -309,14 +309,14 @@ const GenerationOptionsForm = () => {
           </Select>
         </FormControl>
 
-        <FormControl className="child-info-form-item">
+        <FormControl className="profile-info-form-item">
           <InputLabel id="nationality-select-label">Environment</InputLabel>
           <Select
             name="environment"
             variant="outlined"
             label="Environment"
             id="environment-select"
-            value={generatedStory.environment?.value}
+            value={storyParams.environment?.value}
             labelId="environment-select-label"
             onChange={handleOnSelectChange}
           >
@@ -335,8 +335,8 @@ const GenerationOptionsForm = () => {
           name="interests"
           label="Other Interests"
           type="text"
-          value={childInfo.interests}
-          className="child-info-form-item"
+          value={profileInfo.interests}
+          className="profile-info-form-item"
           onChange={handleFieldChange}
         />
 
@@ -347,7 +347,7 @@ const GenerationOptionsForm = () => {
           component="div"
           alignItems="center"
           justifyContent="center"
-          className="child-info-form-button"
+          className="profile-info-form-button"
         >
           <Button
             type="submit"
@@ -363,4 +363,4 @@ const GenerationOptionsForm = () => {
   );
 };
 
-export default GenerationOptionsForm;
+export default CreateStoryForm;

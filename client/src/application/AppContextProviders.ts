@@ -2,7 +2,7 @@ import { AppWithGoogleAuthContextProvider } from "src/components/shared/SocialLo
 import { ApplicationContextProvider } from "./store/Provider";
 import { ExploreContextProvider } from "src/Pages/Explore/store/Provider";
 import { LoginModalContextProvider } from "src/components/Modals/LoginModal/store/Provider";
-import { OpenAiGPTContextProvider } from "src/components/StoryCreator/features/OpenAiGPT/store/Provider";
+import { OpenaiContextProvider } from "src/components/StoryCreator/features/Openai/store/Provider";
 import React from "react";
 import { RegisterModalContextProvider } from "src/components/Modals/RegisterModal/store/Provider";
 import { StoryCreatorContextProvider } from "src/components/StoryCreator/store/Provider";
@@ -16,7 +16,7 @@ const contextProviders = [
   StoryCreatorContextProvider,
   ExploreContextProvider,
   ViewStoryContextProvider,
-  OpenAiGPTContextProvider,
+  OpenaiContextProvider,
 
   // Authentication
   AppWithGoogleAuthContextProvider,

@@ -1,16 +1,15 @@
 import { Language, Languages } from "src/shared/languages";
 
-import { Environment } from "src/shared/generatedStory/Environments";
-import { Moral } from "src/shared/generatedStory/Moral";
-import { Tone } from "src/shared/generatedStory/Tone";
+import { Environment } from "src/shared/mockedData/Environments";
+import { Moral } from "src/shared/mockedData/Moral";
+import { Tone } from "src/shared/mockedData/Tone";
 
 export interface StoryCreatorInitialState {
   isFetching: boolean;
-  childInfo: ChildInfo;
+  profileInfo: ProfileInfo;
   storyParams: StoryParams;
-  textGeneration: TextGenerationProps;
-  textToSpeechGeneration: TextGenerationProps;
-  imageGeneration: ImageGenerationProps;
+  createStory: CreateStoryProps;
+  createAudio: CreateAudioProps;
 }
 
 export enum ChildGenderEnum {
@@ -23,7 +22,7 @@ export enum AdultGenderEnum {
   Female = "Female",
 }
 
-export type ChildInfo = {
+export type ProfileInfo = {
   name: string;
   gender: ChildGenderEnum | AdultGenderEnum;
   age: number;
@@ -39,45 +38,35 @@ export interface StoryParams {
   environment: Environment;
 }
 
-export interface StoryParts {
+export interface CreateStoryProps {
+  isFetching: boolean;
+  createStoryPrompt: string;
+  story: Story | undefined;
+}
+export interface Story {
+  _id: string;
+  createdAt: Date;
   title: string;
   summary: string;
   mainStory: string;
   poem: string;
+  audioFile?: StoryAudioFile;
+  profileInfo: ProfileInfo;
+  storyParams: StoryParams;
 }
 
-export interface TextGenerationProps {
-  isFetching: boolean;
-  userPrompt: string | undefined;
-  autoTextPrompt: string;
-  autoImagePrompt: string;
-  generatedStory: GeneratedStoryParts | undefined;
+export interface StoryAudioFile {
+  url: string;
+  fileName: string;
+  createdAt: Date;
 }
 
-export interface GeneratedStoryParts extends Partial<StoryParts> {
-  storyId: string;
-  statusCode?: number;
-  url?: string;
-}
-
-export interface ImageGenerationProps {
-  isFetching: boolean;
-  userPrompt: string | undefined;
-  autoTextPrompt: string;
-  autoImagePrompt: string;
-  generatedImage: GeneratedImageProps | undefined;
-}
-
-export interface GeneratedImageProps {
-  title: string;
-  statusCode: number;
-  content: string | string[];
-}
+export type CreateAudioProps = CreateStoryProps;
 
 export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
   return {
     isFetching: false,
-    childInfo: {
+    profileInfo: {
       name: "",
       gender: ChildGenderEnum.Girl || AdultGenderEnum.Female,
       age: 1,
@@ -85,8 +74,8 @@ export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
       language: Languages[0],
     },
     storyParams: {
-      audioLength: 5,
-      maxCharacters: 2000,
+      audioLength: 10,
+      maxCharacters: 5000,
       moral: {
         name: "",
         value: "",
@@ -100,26 +89,15 @@ export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
         value: "",
       },
     },
-    textGeneration: {
+    createStory: {
       isFetching: false,
-      userPrompt: "",
-      autoTextPrompt: "",
-      autoImagePrompt: "",
-      generatedStory: undefined,
+      createStoryPrompt: "",
+      story: undefined,
     },
-    textToSpeechGeneration: {
+    createAudio: {
       isFetching: false,
-      userPrompt: "",
-      autoTextPrompt: "",
-      autoImagePrompt: "",
-      generatedStory: undefined,
-    },
-    imageGeneration: {
-      isFetching: false,
-      userPrompt: "",
-      autoTextPrompt: "",
-      autoImagePrompt: "",
-      generatedImage: undefined,
+      createStoryPrompt: "",
+      story: undefined,
     },
   };
 };

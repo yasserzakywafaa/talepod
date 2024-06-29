@@ -3,21 +3,24 @@ import { Box, Button, Paper, Stack } from "@mui/material";
 import { AudioPlayer } from "src/components/shared/AudioPlayer/AudioPlayer";
 import { AutoAwesome } from "@mui/icons-material";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
-import { Story } from "src/application/shared/interfaces";
-import { useOpenAiGPTContext } from "../../store/Provider";
+import { Story } from "src/components/StoryCreator/store/state";
+import { useOpenaiContext } from "../../store/Provider";
 
 const OpenAiGPTTextToSpeechGeneration = () => {
-  const { store, manager } = useOpenAiGPTContext();
-  const { textGeneration, textToSpeechGeneration } = store.state;
-  const { handleIsTextToSpeechGenFetching, handleGenerateTextToSpeechRequest } =
-    manager;
+  const { store, manager } = useOpenaiContext();
+  const { createStory: textGeneration, createAudio: textToSpeechGeneration } =
+    store.state;
+  const {
+    isCreateAudioFetching: handleIsTextToSpeechGenFetching,
+    handleCreateAudio: handleGenerateTextToSpeechRequest,
+  } = manager;
 
   const handleOnGenerateTextToSpeechClick = async (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent> | undefined
   ) => {
-    if (textGeneration.generatedStory) {
+    if (textGeneration.story) {
       handleIsTextToSpeechGenFetching(true);
-      handleGenerateTextToSpeechRequest(textGeneration.generatedStory as Story);
+      handleGenerateTextToSpeechRequest(textGeneration.story as Story);
     }
   };
 
@@ -33,20 +36,20 @@ const OpenAiGPTTextToSpeechGeneration = () => {
           title="submit-button"
           variant="contained"
           endIcon={<AutoAwesome />}
-          disabled={!textGeneration.generatedStory?.mainStory}
+          disabled={!textGeneration.story?.mainStory}
           onClick={handleOnGenerateTextToSpeechClick}
         >
           Create Audio
         </Button>
       </Stack>
 
-      {textToSpeechGeneration.generatedStory &&
-        textToSpeechGeneration.generatedStory.mainStory && (
+      {textToSpeechGeneration.story &&
+        textToSpeechGeneration.story.mainStory && (
           <>
             <Paper elevation={2} style={{ padding: "1rem" }}>
               <AudioPlayer
-                url={textToSpeechGeneration.generatedStory.mainStory as string}
-                name={textToSpeechGeneration.generatedStory.title!}
+                url={textToSpeechGeneration.story.mainStory as string}
+                name={textToSpeechGeneration.story.title!}
               />
             </Paper>
           </>

@@ -1,10 +1,14 @@
 import "./StoryCard.scss";
 
+import {
+  AdultGenderEnum,
+  ChildGenderEnum,
+  Story,
+} from "src/components/StoryCreator/store/state";
 import { Box, Card, CardActions, CardContent, Typography } from "@mui/material";
+import { Female, Headphones, Male } from "@mui/icons-material";
 
 import { CSSProperties } from "react";
-import { Headphones } from "@mui/icons-material";
-import { Story } from "src/application/shared/interfaces";
 import routes from "src/application/routes";
 import { theme } from "src/application/shared/themes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
@@ -21,6 +25,8 @@ interface StoryCard {
 const StoryCard = (props: StoryCard) => {
   const navigate = useNavigate();
   const { isDesktop } = useDeviceSize();
+  const { audioFile } = props.story;
+  const profileInfo = props.story.profileInfo || {};
 
   const handleOnViewClick = () => {
     navigate(routes.story(props.story._id));
@@ -30,10 +36,8 @@ const StoryCard = (props: StoryCard) => {
     <Card
       className="story-card"
       sx={{
-        mb: 4,
-        maxWidth: 500,
+        mb: 2,
         cursor: "pointer",
-        mr: !isDesktop ? 0 : 4,
         bgcolor: "transparent",
         ":hover": {
           boxShadow: (theme) => `2px 2px 3px ${theme.palette.primary.main}`,
@@ -64,12 +68,42 @@ const StoryCard = (props: StoryCard) => {
 
       <CardActions>
         <Box
-          className="card-tags"
-          sx={{ pl: 1, pr: 2 }}
+          display="flex"
+          className="story-card-tags"
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{ pl: 1, pr: 2, width: "100%" }}
           color={theme.palette.secondary.main}
         >
-          {props.story.audioFile && props.story.audioFile.url && (
-            <Headphones fontSize="small" className="card-tags-item" />
+          <Box
+            display="flex"
+            className="story-card-tags"
+            justifyContent="space-between"
+            sx={{ mr: 2 }}
+          >
+            {audioFile && audioFile.url && (
+              <Headphones fontSize="small" className="story-card-tags-item" />
+            )}
+
+            {(profileInfo.gender === ChildGenderEnum.Girl ||
+              profileInfo.gender === AdultGenderEnum.Female) && (
+              <Female fontSize="small" className="story-card-tags-item" />
+            )}
+
+            {(profileInfo.gender === ChildGenderEnum.Boy ||
+              profileInfo.gender === AdultGenderEnum.Male) && (
+              <Male fontSize="small" className="story-card-tags-item" />
+            )}
+
+            {profileInfo.language && (
+              <span>{profileInfo.language.value.toUpperCase()}</span>
+            )}
+          </Box>
+
+          {props.story.createdAt && (
+            <Typography variant="body2">
+              {new Date(props.story.createdAt).toLocaleDateString('en-GB')}
+            </Typography>
           )}
         </Box>
       </CardActions>

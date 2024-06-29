@@ -1,16 +1,16 @@
-import { AdultGenderEnum, ChildGenderEnum, ChildInfo } from "./state";
+import { AdultGenderEnum, ChildGenderEnum, ProfileInfo } from "./state";
 
 import { Country } from "src/shared/countries";
-import { Environment } from "src/shared/generatedStory/Environments";
-import { Moral } from "src/shared/generatedStory/Moral";
+import { Environment } from "src/shared/mockedData/Environments";
+import { Moral } from "src/shared/mockedData/Moral";
 import { StoryCreatorStore } from "./store";
-import { Tone } from "src/shared/generatedStory/Tone";
-import { getAutoTextGenPromptString } from "../utils/getAutoPromptString";
+import { Tone } from "src/shared/mockedData/Tone";
+import { getCreateStoryPrompt } from "../utils/getStoryPrompts";
 import { useEffect } from "react";
 
 export interface StoryCreatorManager {
-  handleUpdateChildInfo: (
-    name: keyof ChildInfo,
+  handleUpdateProfileInfo: (
+    name: keyof ProfileInfo,
     value: string | number | Country
   ) => void;
   handleUpdateStoryInfo: (
@@ -22,14 +22,16 @@ export interface StoryCreatorManager {
 export const useStoryCreatorManager = (
   store: StoryCreatorStore
 ): StoryCreatorManager => {
-  const handleUpdateChildInfo = (
+  const { state, updateState } = store;
+
+  const handleUpdateProfileInfo = (
     name: string,
     value: string | number | Country
   ) => {
-    store.updateState({
+    updateState({
       ...store.state,
-      childInfo: {
-        ...store.state.childInfo,
+      profileInfo: {
+        ...store.state.profileInfo,
         [name]: value,
       },
     });
@@ -39,7 +41,7 @@ export const useStoryCreatorManager = (
     name: string,
     value: Environment | Moral | Tone
   ) => {
-    store.updateState({
+    updateState({
       ...store.state,
       storyParams: {
         ...store.state.storyParams,
@@ -49,37 +51,32 @@ export const useStoryCreatorManager = (
   };
 
   useEffect(() => {
-    store.updateState({
-      ...store.state,
-      textGeneration: {
-        ...store.state.textGeneration,
-        autoTextPrompt: getAutoTextGenPromptString(store.state),
+    updateState({
+      ...state,
+      createStory: {
+        ...state.createStory,
+        createStoryPrompt: getCreateStoryPrompt(state),
       },
     });
 
-    const { childInfo } = store.state;
-    if (childInfo.age >= 18) {
-      if (childInfo.gender === ChildGenderEnum.Girl) {
-        handleUpdateChildInfo("gender", AdultGenderEnum.Female);
-      } else if (childInfo.gender === ChildGenderEnum.Boy) {
-        handleUpdateChildInfo("gender", AdultGenderEnum.Male);
+    const { profileInfo } = state;
+    if (profileInfo.age >= 18) {
+      if (profileInfo.gender === ChildGenderEnum.Girl) {
+        handleUpdateProfileInfo("gender", AdultGenderEnum.Female);
+      } else if (profileInfo.gender === ChildGenderEnum.Boy) {
+        handleUpdateProfileInfo("gender", AdultGenderEnum.Male);
       }
     } else {
-      if (childInfo.gender === AdultGenderEnum.Female) {
-        handleUpdateChildInfo("gender", ChildGenderEnum.Girl);
-      } else if (childInfo.gender === AdultGenderEnum.Male) {
-        handleUpdateChildInfo("gender", ChildGenderEnum.Boy);
+      if (profileInfo.gender === AdultGenderEnum.Female) {
+        handleUpdateProfileInfo("gender", ChildGenderEnum.Girl);
+      } else if (profileInfo.gender === AdultGenderEnum.Male) {
+        handleUpdateProfileInfo("gender", ChildGenderEnum.Boy);
       }
     }
-
-    console.log("useEffect:>>>", {
-      age: store.state.childInfo.age,
-      gender: store.state.childInfo.gender,
-    });
-  }, [store.state.childInfo, store.state.storyParams]);
+  }, [state.profileInfo, state.storyParams]);
 
   return {
-    handleUpdateChildInfo,
+    handleUpdateProfileInfo,
     handleUpdateStoryInfo,
   };
 };

@@ -9,29 +9,30 @@ import {
   TextField,
   // Typography,
 } from "@mui/material";
-// import { ChangeEvent, FormEvent } from "react";
 
-// import { Google } from "@mui/icons-material";
+// import { AutoAwesome } from "@mui/icons-material";
+// import { FormEvent } from "react";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
-import { useGoogleGeminiContext } from "./store/Provider";
+// import ReactMarkdown from "react-markdown";
+// import TextToSpeechGeneration from "../CreateStoryAudio/CreateStoryAudio";
+import { useOpenaiContext } from "../../store/Provider";
 
-export const GoogleGeminiContent = () => {
-  const { store } = useGoogleGeminiContext();
-  const { isFetching, userPrompt, optionsAutoPrompt } = store.state;
-  // const { handleIsFetching, handleGenerateContent, handleUpdateUserPrompt } =
-  //   manager;
-
-  // const handleOnTextChange = (event: ChangeEvent<HTMLInputElement>) => {
-  //   handleUpdateUserPrompt(event.target.value);
-  // };
+const CreateStory = () => {
+  const { store, manager } = useOpenaiContext();
+  const { createStory } = store.state;
+  const { isFetching, createStoryPrompt } = createStory;
+  const {
+    // isCreateStoryFetching,
+    // handleCreateStoryRequest,
+  } = manager;
 
   // const handleOnFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
   //   event.preventDefault();
   //   event.stopPropagation();
 
-  //   if (userPrompt || optionsAutoPrompt) {
-  //     handleIsFetching(true);
-  //     handleGenerateContent(userPrompt || optionsAutoPrompt);
+  //   if (createStoryPrompt) {
+  //     isCreateStoryFetching(true);
+  //     // handleGenerateTextRequest(createStoryPrompt, profileInfo);
   //   }
   // };
 
@@ -44,6 +45,7 @@ export const GoogleGeminiContent = () => {
         display="flex"
         component="form"
         autoComplete="off"
+        position="relative"
         flexDirection="column"
         // onSubmit={handleOnFormSubmit}
       >
@@ -52,35 +54,36 @@ export const GoogleGeminiContent = () => {
             multiline
             label="Create Story Prompt"
             variant="outlined"
-            value={userPrompt || optionsAutoPrompt}
-            // onChange={handleOnTextChange}
+            value={createStoryPrompt}
+            // onChange={...}
           />
           {/* <Button
             type="submit"
             title="submit-button"
             variant="contained"
-            endIcon={<Google />}
+            endIcon={<AutoAwesome />}
           >
-            Ask Google Gemini
+            Create
           </Button> */}
         </Stack>
       </Box>
-      {/* 
-      {aiAnswer.description && (
+
+      {/* {story && story.mainStory && (
         <>
           <Divider style={{ margin: "2rem 0" }}>
             <Chip label="Answer" size="small" />
           </Divider>
-
           <Card sx={{ minWidth: 275 }}>
             <CardContent>
               <Typography variant="h5" component="div">
-                {aiAnswer.title}
+                {story.title}
               </Typography>
 
-              <Typography variant="h6" component="div">
-                {aiAnswer.description}
-              </Typography>
+              <ReactMarkdown>{story.mainStory as string}</ReactMarkdown>
+            </CardContent>
+
+            <CardContent>
+              <TextToSpeechGeneration />
             </CardContent>
           </Card>
         </>
@@ -88,3 +91,5 @@ export const GoogleGeminiContent = () => {
     </Box>
   );
 };
+
+export default CreateStory;

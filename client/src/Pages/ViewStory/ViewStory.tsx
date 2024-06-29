@@ -13,8 +13,8 @@ import {
   Notify,
   ToastTypes,
 } from "src/components/shared/Notification/Notification";
+import { useLocation, useParams } from "react-router-dom";
 
-import { AutoAwesome } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import DreamingFox from "../../assets/images/dreaming_fox_with_a_pillow.png";
 import Footer from "../../components/shared/Footer/Footer";
@@ -23,11 +23,13 @@ import NoResultsFound from "src/components/shared/NoResults/NoResults";
 import Page from "src/components/shared/Page/Page";
 import ReactMarkdown from "react-markdown";
 import { useEffect } from "react";
-import { useOpenAiGPTContext } from "src/components/StoryCreator/features/OpenAiGPT/store/Provider";
-import { useParams } from "react-router-dom";
+import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
 import { useViewStoryContext } from "./store/Provider";
+import { Lyrics } from "@mui/icons-material";
 
 const ViewStoryPage: React.FC = () => {
+  const location = useLocation();
+  const { storyCreated } = location.state || {};
   const { storyId } = useParams<{ storyId: string }>();
 
   const {
@@ -39,8 +41,8 @@ const ViewStoryPage: React.FC = () => {
     manager: { setUp },
   } = useViewStoryContext();
   const {
-    manager: { handleGenerateTextToSpeechRequest },
-  } = useOpenAiGPTContext();
+    manager: { handleCreateAudio: handleGenerateTextToSpeechRequest },
+  } = useOpenaiContext();
 
   const handleOnCreateAudioClick = async () => {
     handleIsFetching(true);
@@ -65,7 +67,14 @@ const ViewStoryPage: React.FC = () => {
 
   useEffect(() => {
     if (storyId) setUp(storyId);
-  }, [storyId]);
+
+    if (storyCreated) {
+      Notify({
+        type: ToastTypes.Success,
+        content: "Story created successfully.",
+      });
+    }
+  }, [storyId, storyCreated]);
 
   return (
     <Page title="Story | TalePod" className="view-story-page">
@@ -110,7 +119,9 @@ const ViewStoryPage: React.FC = () => {
                 {story.summary}
               </Typography>
 
-              <Divider sx={{ my: 1 }} />
+              <Divider
+                sx={{ my: 1, color: (theme) => theme.palette.text.primary }}
+              />
 
               {!story.audioFile && (
                 <>
@@ -127,7 +138,7 @@ const ViewStoryPage: React.FC = () => {
                     size="large"
                     type="button"
                     variant="contained"
-                    endIcon={<AutoAwesome />}
+                    endIcon={<Lyrics />}
                     onClick={handleOnCreateAudioClick}
                   >
                     Create Audio
@@ -154,12 +165,16 @@ const ViewStoryPage: React.FC = () => {
 
                   <Typography variant="body2" color="textSecondary" mt={2}>
                     Audio created on:{" "}
-                    {new Date(story.audioFile.createdAt).toLocaleDateString()}
+                    {new Date(story.audioFile.createdAt).toLocaleDateString(
+                      "en-GB"
+                    )}
                   </Typography>
                 </Box>
               )}
 
-              <Divider sx={{ my: 2 }} />
+              <Divider
+                sx={{ my: 2, color: (theme) => theme.palette.text.primary }}
+              />
 
               <Typography
                 gutterBottom
