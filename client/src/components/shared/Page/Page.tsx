@@ -54,6 +54,7 @@ const Page = (params: PageProps) => {
       <Container
         maxWidth={false}
         className={pageClassNames}
+        sx={{ overflow: isFetching ? "hidden" : "unset" }}
         {...containerProps}
       >
         {isFetching && <LoaderSpinner />}

@@ -54,33 +54,37 @@ const ExplorePage: React.FC = () => {
       <FiltersPanel />
 
       <Container className="explore-container">
-        <Box
-          mb={1}
-          display="flex"
-          alignItems="center"
-          mt={{ xs: 0, sm: 2 }}
-          className="explore-top-bar"
-          justifyContent={{ xs: "space-between", sm: "end" }}
-        >
-          <Button
-            variant="text"
-            endIcon={<SwapVert />}
-            onClick={handleSortButtonClick}
+        {!isFetching && filteredStories.length ? (
+          <Box
+            mb={1}
+            display="flex"
+            alignItems="center"
+            mt={{ xs: 0, sm: 2 }}
+            className="explore-top-bar"
+            justifyContent={{ xs: "space-between", sm: "end" }}
           >
-            Sort
-          </Button>
+            <Button
+              variant="text"
+              endIcon={<SwapVert />}
+              onClick={handleSortButtonClick}
+            >
+              Sort
+            </Button>
 
-          <Button variant="text" onClick={handleFilterButtonClick}>
-            Filters
-            {activeFiltersCount ? (
-              <Badge badgeContent={activeFiltersCount} color="secondary">
+            <Button variant="text" onClick={handleFilterButtonClick}>
+              Filters
+              {activeFiltersCount ? (
+                <Badge badgeContent={activeFiltersCount} color="secondary">
+                  <FilterAlt color="primary" />
+                </Badge>
+              ) : (
                 <FilterAlt color="primary" />
-              </Badge>
-            ) : (
-              <FilterAlt color="primary" />
-            )}
-          </Button>
-        </Box>
+              )}
+            </Button>
+          </Box>
+        ) : (
+          <></>
+        )}
 
         <Box
           className="explore-container-snap-area"
@@ -94,7 +98,6 @@ const ExplorePage: React.FC = () => {
         >
           {isFetching && <LoaderSpinner style={{ position: "absolute" }} />}
 
-          {/* {!isFetching && stories.length ? ( */}
           {!isFetching && filteredStories.length ? (
             <>
               <Box component="div" className="bg-image-character">
