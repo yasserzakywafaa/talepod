@@ -24,7 +24,7 @@ const ExplorePage: React.FC = () => {
   const navigate = useNavigate();
   const {
     store: {
-      state: { isFetching, filteredStories, activeFiltersCount },
+      state: { isFetching, stories, filteredStories, activeFiltersCount },
     },
     manager: {
       setUp,
@@ -59,7 +59,7 @@ const ExplorePage: React.FC = () => {
       <FiltersPanel />
 
       <Container className="explore-container">
-        {!isFetching && filteredStories.length ? (
+        {!isFetching && stories.length ? (
           <Box
             mb={1}
             display="flex"
@@ -138,16 +138,20 @@ const ExplorePage: React.FC = () => {
                   Create Story
                 </Button>
 
-                <Button
-                  size="large"
-                  color="primary"
-                  variant="outlined"
-                  sx={{ my: 2, mx: 1, px: 2 }}
-                  endIcon={<FilterAltOffOutlined />}
-                  onClick={handleClearFilters}
-                >
-                  Clear Filters
-                </Button>
+                {stories.length ? (
+                  <Button
+                    size="large"
+                    color="primary"
+                    variant="outlined"
+                    sx={{ my: 2, mx: 1, px: 2 }}
+                    endIcon={<FilterAltOffOutlined />}
+                    onClick={handleClearFilters}
+                  >
+                    Clear Filters
+                  </Button>
+                ) : (
+                  <></>
+                )}
               </Box>
             </>
           ) : (
