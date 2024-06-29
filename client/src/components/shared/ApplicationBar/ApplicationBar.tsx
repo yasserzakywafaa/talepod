@@ -1,7 +1,7 @@
 import { useMatch, useNavigate } from "react-router-dom";
 
 import AppBar from "@mui/material/AppBar";
-import { AutoFixHigh } from "@mui/icons-material";
+import { AutoFixHighOutlined } from "@mui/icons-material";
 import BackButton from "./BackButton";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -249,7 +249,7 @@ const ApplicationBar = () => {
                         color="secondary"
                         variant="text"
                         sx={{ my: 2, px: 2 }}
-                        endIcon={<AutoFixHigh />}
+                        endIcon={<AutoFixHighOutlined />}
                         onClick={handleOnCreateClick}
                       >
                         Create Story

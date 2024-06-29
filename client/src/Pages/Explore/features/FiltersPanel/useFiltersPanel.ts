@@ -18,11 +18,11 @@ export const useFiltersPanel = (
       const agrName = name?.toLowerCase();
       const currentName = story.profileInfo.name.toLowerCase().trim();
 
-      story.profileInfo &&
+      return (
+        story.profileInfo &&
         agrName &&
-        (agrName === currentName || agrName.indexOf(currentName) > -1);
-
-      return;
+        (currentName === agrName || currentName.includes(agrName))
+      );
     });
   };
 
