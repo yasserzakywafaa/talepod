@@ -6,16 +6,18 @@ export interface ExploreInitialState {
   filteredStories: Story[];
   filters: ExploreStoryFilters;
   isFiltersPanelOpen: boolean;
+  activeFiltersCount: number;
 }
 
 export interface ExploreStoryFilters {
-  name: string;
+  name: string | undefined;
   gender: string[];
   age: string[];
   language: string[];
   moral: string[];
   tone: string[];
   environment: string[];
+  audio: boolean | undefined;
 }
 
 export const getExploreInitialState = (): ExploreInitialState => {
@@ -24,14 +26,16 @@ export const getExploreInitialState = (): ExploreInitialState => {
     stories: [],
     isFiltersPanelOpen: false,
     filteredStories: [],
+    activeFiltersCount: 0,
     filters: {
-      name: "",
+      name: undefined,
       gender: [],
       age: [],
       language: [],
       moral: [],
       tone: [],
       environment: [],
+      audio: undefined,
     },
   };
 };

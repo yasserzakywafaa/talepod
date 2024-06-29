@@ -1,10 +1,11 @@
 import "./Explore.scss";
 
-import { Button, Container } from "@mui/material";
-
 import { AutoFixHigh, FilterAlt, SwapVert } from "@mui/icons-material";
+import { Badge, Button, Container } from "@mui/material";
+
 import Box from "@mui/material/Box";
 import DreamingGiraffe from "../../assets/images/dreaming_giraffe_with_a_pillow.png";
+import FiltersPanel from "./features/FiltersPanel/FiltersPanel";
 import Footer from "../../components/shared/Footer/Footer";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
 import NoResultsFound from "src/components/shared/NoResults/NoResults";
@@ -13,15 +14,19 @@ import StoryCard from "src/components/shared/StoryCard/StoryCard";
 import { useEffect } from "react";
 import { useExploreContext } from "../Explore/store/Provider";
 import { useNavigate } from "react-router-dom";
-import FiltersPanel from "./features/FiltersPanel/FiltersPanel";
 
 const ExplorePage: React.FC = () => {
   const navigate = useNavigate();
   const {
     store: {
-      state: { isFetching, stories, filteredStories },
+      state: { isFetching, filteredStories, activeFiltersCount },
     },
-    manager: { setUp, toggleFiltersPanel, sortStories },
+    manager: {
+      setUp,
+      handleToggleFiltersPanel,
+      handleSortStories,
+      handleClearFilters,
+    },
   } = useExploreContext();
 
   const handleOnCreateClick = () => {
@@ -29,15 +34,19 @@ const ExplorePage: React.FC = () => {
   };
 
   const handleFilterButtonClick = () => {
-    toggleFiltersPanel(true);
+    handleToggleFiltersPanel(true);
   };
 
   const handleSortButtonClick = () => {
-    sortStories();
+    handleSortStories();
   };
 
   useEffect(() => {
     setUp();
+
+    return () => {
+      handleClearFilters();
+    };
   }, []);
 
   return (
@@ -46,13 +55,12 @@ const ExplorePage: React.FC = () => {
 
       <Container className="explore-container">
         <Box
-          my={1}
-          // display="flex"
-          // TODO: Remove "none" when filtering is ready.
-          display="none" 
+          mb={1}
+          display="flex"
           alignItems="center"
-          justifyContent={{ xs: "space-between", sm: "end" }}
+          mt={{ xs: 0, sm: 2 }}
           className="explore-top-bar"
+          justifyContent={{ xs: "space-between", sm: "end" }}
         >
           <Button
             variant="text"
@@ -62,12 +70,15 @@ const ExplorePage: React.FC = () => {
             Sort
           </Button>
 
-          <Button
-            variant="text"
-            endIcon={<FilterAlt />}
-            onClick={handleFilterButtonClick}
-          >
+          <Button variant="text" onClick={handleFilterButtonClick}>
             Filters
+            {activeFiltersCount ? (
+              <Badge badgeContent={activeFiltersCount} color="secondary">
+                <FilterAlt color="primary" />
+              </Badge>
+            ) : (
+              <FilterAlt color="primary" />
+            )}
           </Button>
         </Box>
 
@@ -90,7 +101,7 @@ const ExplorePage: React.FC = () => {
                 <img src={DreamingGiraffe} width="100%" />
               </Box>
 
-              {stories.map((story, index) => {
+              {filteredStories.map((story, index) => {
                 return <StoryCard key={index} story={story} />;
               })}
             </>
@@ -98,7 +109,7 @@ const ExplorePage: React.FC = () => {
             <></>
           )}
 
-          {!isFetching && !stories.length ? (
+          {!isFetching && !filteredStories.length ? (
             <>
               <NoResultsFound />
 

@@ -1,16 +1,23 @@
-import { Story } from "src/components/StoryCreator/store/state";
 import { ExploreStoryFilters } from "../../store/state";
+import { Story } from "src/components/StoryCreator/store/state";
+
+interface UseFiltersPanelProps {
+  filteredStories: Story[];
+  activeFiltersCount: number;
+}
 
 export const useFiltersPanel = (
   stories: Story[],
   filters: ExploreStoryFilters
-): Story[] => {
+): UseFiltersPanelProps => {
   let filteredStories = [...stories];
 
   // Profile Info
-  const filterByName = (stories: Story[], name: string) => {
+  const filterByName = (stories: Story[], name: string | undefined) => {
     return stories.filter(
-      (story) => story.profileInfo && name === story.profileInfo.name
+      (story) =>
+        story.profileInfo &&
+        name?.toLowerCase() === story.profileInfo.name.toLowerCase().trim()
     );
   };
 
@@ -57,6 +64,10 @@ export const useFiltersPanel = (
     );
   };
 
+  const filterByAudio = (stories: Story[], audio: boolean | undefined) => {
+    return stories.filter((story) => audio === !!story.audioFile?.url);
+  };
+
   const name = filterByName(filteredStories, filters.name);
   const gender = filterByGender(filteredStories, filters.gender);
   const age = filterByAge(filteredStories, filters.age);
@@ -64,18 +75,94 @@ export const useFiltersPanel = (
   const tone = filterByTone(filteredStories, filters.tone);
   const moral = filterByMoral(filteredStories, filters.moral);
   const environment = filterByEnvironment(filteredStories, filters.environment);
+  const audio = filterByAudio(filteredStories, filters.audio);
 
-  filteredStories = [
-    ...name,
-    ...gender,
-    ...age,
-    ...language,
-    ...tone,
-    ...moral,
-    ...environment,
-  ];
+  // Count active filters
+  const getActiveFiltersCount = (): number => {
+    let count = 0;
+    Object.values(filters).forEach((filter) => {
+      // if (filter && filter.length) count++;
+      if (typeof filter === "object") {
+        if (filter.length) count++;
+      }
 
-  console.log("filteredStories:>>>", filteredStories);
+      if (typeof filter !== "object") {
+        if (filter) count++;
+      }
+    });
 
-  return filteredStories;
+    return count;
+  };
+  const activeFiltersCount = getActiveFiltersCount();
+
+  // console.log("filterByField:>>>", {
+  //   name: filters.name,
+  //   gender: filters.gender,
+  //   age: filters.age,
+  //   language: filters.language,
+  //   tone: filters.tone,
+  //   moral: filters.moral,
+  //   environment: filters.environment,
+  //   audio: filters.audio,
+  // });
+
+  // console.log("storiesFilterByField:>>>", {
+  //   name,
+  //   gender,
+  //   age,
+  //   language,
+  //   tone,
+  //   moral,
+  //   environment,
+  //   audio,
+  // });
+
+  if (activeFiltersCount) {
+    filteredStories = [
+      ...name,
+      ...gender,
+      ...age,
+      ...language,
+      ...tone,
+      ...moral,
+      ...environment,
+      ...audio,
+    ];
+  } else {
+    filteredStories = stories;
+  }
+
+  // console.log("filteredStories:>>>", {
+  //   filteredStories,
+  // });
+
+  // const filterByQueries = (stories: Story[]): Story[] => {
+  //   return stories.filter((story) => {
+  //     if (story.profileInfo && story.storyParams) {
+  //       const filterQuery =
+  //         (!filters.name || filters.name === story.profileInfo.name) &&
+  //         (!filters.gender.length ||
+  //           filters.gender.includes(story.profileInfo.gender)) &&
+  //         (!filters.age.length ||
+  //           filters.age.includes(story.profileInfo.age.toString())) &&
+  //         (!filters.language.length ||
+  //           filters.language.includes(story.profileInfo.language.value)) &&
+  //         (!filters.tone.length ||
+  //           filters.tone.includes(story.storyParams.tone.value)) &&
+  //         (!filters.moral.length ||
+  //           filters.moral.includes(story.storyParams.moral.value)) &&
+  //         (!filters.environment.length ||
+  //           filters.environment.includes(story.storyParams.environment.value));
+
+  //       return filterQuery;
+  //     }
+
+  //     return [];
+  //   });
+  // };
+  // console.log("queries:>>>", {
+  //   queries: filterByQueries(stories),
+  // });
+
+  return { filteredStories, activeFiltersCount };
 };

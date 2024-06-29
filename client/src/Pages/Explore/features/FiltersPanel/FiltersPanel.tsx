@@ -1,40 +1,46 @@
+import "./FiltersPanel.scss";
+
 import {
   Box,
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   Button,
+  Checkbox,
+  Drawer,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  InputLabel,
+  ListItemText,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  TextField,
   ToggleButton,
   ToggleButtonGroup,
-  Checkbox,
-  ListItemText,
-  SelectChangeEvent,
-  Drawer,
 } from "@mui/material";
-import { useExploreContext } from "../../store/Provider";
+
 import { AdultGenderEnum } from "src/components/StoryCreator/store/state";
+import { Environments } from "src/shared/mockedData/Environments";
+import { ExploreStoryFilters } from "../../store/state";
 import { Languages } from "src/shared/languages";
 import { Morals } from "src/shared/mockedData/Moral";
-import { Environments } from "src/shared/mockedData/Environments";
 import { Tones } from "src/shared/mockedData/Tone";
-import { ExploreStoryFilters } from "../../store/state";
-
-import "./FiltersPanel.scss";
+import { useExploreContext } from "../../store/Provider";
 
 const FiltersPanel: React.FC = (): JSX.Element => {
   const {
     store: {
       state: { filters, isFiltersPanelOpen },
+    },
+    manager: {
+      handleToggleFiltersPanel,
       handleUpdateFilters,
+      handleFilterStories,
       handleClearFilters,
     },
-    manager: { toggleFiltersPanel, filterStories },
   } = useExploreContext();
 
   const handleOnPanelClose = () => {
-    toggleFiltersPanel(false);
+    handleToggleFiltersPanel(false);
   };
 
   const handleSelectChange = (event: SelectChangeEvent<string[]>) => {
@@ -44,7 +50,15 @@ const FiltersPanel: React.FC = (): JSX.Element => {
 
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+    debugger;
     handleUpdateFilters(name as keyof ExploreStoryFilters, value);
+  };
+
+  const handleAudioCheckboxChange = (
+    event: React.SyntheticEvent<Element, Event>,
+    checked: boolean
+  ) => {
+    handleUpdateFilters("audio", checked ? true : undefined);
   };
 
   const handleGenderChange = (
@@ -57,7 +71,7 @@ const FiltersPanel: React.FC = (): JSX.Element => {
   };
 
   const handleOnApplyFiltersClick = () => {
-    filterStories();
+    handleFilterStories();
     handleOnPanelClose();
   };
 
@@ -136,53 +150,72 @@ const FiltersPanel: React.FC = (): JSX.Element => {
               onChange={handleSelectChange}
             >
               {[...Array(50).keys()].map((value) => (
-                <MenuItem key={value} value={value.toString()}>
-                  <Checkbox checked={filters.age.includes(value.toString())} />
+                <MenuItem key={value} value={(value + 1).toString()}>
+                  <Checkbox
+                    checked={filters.age.includes((value + 1).toString())}
+                  />
                   <ListItemText primary={value + 1} />
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
 
-          <Box className="filters-form-item">
-            <ToggleButtonGroup
-              exclusive
-              value={filters.gender}
-              aria-labelledby="gender-toggle"
-              onChange={handleGenderChange}
-            >
-              <ToggleButton
-                value={AdultGenderEnum.Male}
-                sx={{
-                  color: (theme) => theme.palette.text.primary,
-                  "&.Mui-selected": {
-                    backgroundColor: (theme) => theme.palette.primary.main,
-                    color: (theme) => theme.palette.text.primary,
-                  },
-                  "&.Mui-selected:hover": {
-                    backgroundColor: (theme) => theme.palette.secondary.main,
-                  },
-                }}
-              >
-                {AdultGenderEnum.Male}
-              </ToggleButton>
+          <Box
+            display="flex"
+            alignItems="center"
+            flexDirection={{ xs: "column", sm: "row" }}
+            justifyContent="space-between"
+          >
+            <FormGroup className="filters-form-item">
+              <FormControlLabel
+                name="audio"
+                label="Audio"
+                checked={filters.audio}
+                control={<Checkbox />}
+                onChange={handleAudioCheckboxChange}
+              />
+            </FormGroup>
 
-              <ToggleButton
-                value={AdultGenderEnum.Female}
-                sx={{
-                  color: (theme) => theme.palette.text.primary,
-                  "&.Mui-selected": {
-                    backgroundColor: (theme) => theme.palette.primary.main,
-                    color: (theme) => theme.palette.text.primary,
-                  },
-                  "&.Mui-selected:hover": {
-                    backgroundColor: (theme) => theme.palette.secondary.main,
-                  },
-                }}
+            <Box className="filters-form-item">
+              <ToggleButtonGroup
+                exclusive
+                value={filters.gender}
+                aria-labelledby="gender-toggle"
+                onChange={handleGenderChange}
               >
-                {AdultGenderEnum.Female}
-              </ToggleButton>
-            </ToggleButtonGroup>
+                <ToggleButton
+                  value={AdultGenderEnum.Male}
+                  sx={{
+                    color: (theme) => theme.palette.text.primary,
+                    "&.Mui-selected": {
+                      backgroundColor: (theme) => theme.palette.primary.main,
+                      color: (theme) => theme.palette.text.primary,
+                    },
+                    "&.Mui-selected:hover": {
+                      backgroundColor: (theme) => theme.palette.secondary.main,
+                    },
+                  }}
+                >
+                  {AdultGenderEnum.Male}
+                </ToggleButton>
+
+                <ToggleButton
+                  value={AdultGenderEnum.Female}
+                  sx={{
+                    color: (theme) => theme.palette.text.primary,
+                    "&.Mui-selected": {
+                      backgroundColor: (theme) => theme.palette.primary.main,
+                      color: (theme) => theme.palette.text.primary,
+                    },
+                    "&.Mui-selected:hover": {
+                      backgroundColor: (theme) => theme.palette.secondary.main,
+                    },
+                  }}
+                >
+                  {AdultGenderEnum.Female}
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </Box>
           </Box>
 
           <FormControl className="filters-form-item">

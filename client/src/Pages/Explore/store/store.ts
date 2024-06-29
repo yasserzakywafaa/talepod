@@ -9,45 +9,46 @@ import { useState } from "react";
 
 export interface ExploreStore {
   state: ExploreInitialState;
-  handleIsFetching: (isFetching: boolean) => void;
-  handleToggleFiltersPanel: (isFetching: boolean) => void;
-  handleSortStories: () => void;
-  handleUpdateStory: (stories: Story[]) => void;
-  handleUpdateFilters: (
+  isExploreFetching: (isFetching: boolean) => void;
+  toggleFiltersPanel: (isFetching: boolean) => void;
+  sortStories: () => void;
+  updateStories: (stories: Story[]) => void;
+  updateFilters: (
     key: keyof ExploreStoryFilters,
     value: ExploreStoryFilters[typeof key]
   ) => void;
-  handleApplyFilters: (filteredStories: Story[]) => void;
-  handleClearFilters: () => void;
+  clearFilters: () => void;
+  applyFilters: (filteredStories: Story[]) => void;
+  setActiveFiltersCount: (activeFiltersCount: number) => void;
 }
 
 const useExploreStore = (): ExploreStore => {
   const initialState = getExploreInitialState();
   const [state, setState] = useState<ExploreInitialState>(initialState);
-  const { stories } = state;
+  const { stories, filteredStories } = state;
 
-  const handleIsFetching = (isFetching: boolean) => {
+  const isExploreFetching = (isFetching: boolean) => {
     setState((prev) => ({
       ...prev,
       isFetching,
     }));
   };
 
-  const handleSortStories = () => {
-    setState((prev) => ({
-      ...prev,
-      stories: stories.reverse(),
-    }));
-  };
-
-  const handleToggleFiltersPanel = (isFiltersPanelOpen: boolean) => {
+  const toggleFiltersPanel = (isFiltersPanelOpen: boolean) => {
     setState((prev) => ({
       ...prev,
       isFiltersPanelOpen,
     }));
   };
 
-  const handleUpdateStory = (stories: Story[]) => {
+  const sortStories = () => {
+    setState((prev) => ({
+      ...prev,
+      filteredStories: filteredStories.reverse(),
+    }));
+  };
+
+  const updateStories = (stories: Story[]) => {
     setState((prev) => ({
       ...prev,
       stories,
@@ -55,7 +56,7 @@ const useExploreStore = (): ExploreStore => {
     }));
   };
 
-  const handleUpdateFilters = (
+  const updateFilters = (
     key: keyof ExploreStoryFilters,
     value: ExploreStoryFilters[typeof key]
   ) => {
@@ -68,7 +69,7 @@ const useExploreStore = (): ExploreStore => {
     }));
   };
 
-  const handleClearFilters = () => {
+  const clearFilters = () => {
     setState((prev) => ({
       ...prev,
       filters: getExploreInitialState().filters,
@@ -76,23 +77,30 @@ const useExploreStore = (): ExploreStore => {
     }));
   };
 
-  const handleApplyFilters = (filteredStories: Story[]) => {
+  const applyFilters = (filteredStories: Story[]) => {
     setState((prev) => ({
       ...prev,
-      // stories: filteredStories,
       filteredStories,
+    }));
+  };
+
+  const setActiveFiltersCount = (activeFiltersCount: number) => {
+    setState((prev) => ({
+      ...prev,
+      activeFiltersCount,
     }));
   };
 
   return {
     state,
-    handleIsFetching,
-    handleUpdateStory,
-    handleSortStories,
-    handleToggleFiltersPanel,
-    handleUpdateFilters,
-    handleApplyFilters,
-    handleClearFilters,
+    isExploreFetching,
+    updateStories,
+    sortStories,
+    toggleFiltersPanel,
+    updateFilters,
+    applyFilters,
+    setActiveFiltersCount,
+    clearFilters,
   };
 };
 
