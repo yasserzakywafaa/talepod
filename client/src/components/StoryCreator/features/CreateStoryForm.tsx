@@ -17,15 +17,12 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import {
-  Environment,
-  Environments,
-} from "src/shared/mockedData/Environments";
+import { Environment, Environments } from "src/shared/mockedData/Environments";
 import { Language, Languages } from "../../../shared/languages";
 import { Moral, Morals } from "src/shared/mockedData/Moral";
 import { Tone, Tones } from "src/shared/mockedData/Tone";
 
-import { AutoAwesome } from "@mui/icons-material";
+import { AutoAwesomeOutlined } from "@mui/icons-material";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
@@ -353,7 +350,7 @@ const CreateStoryForm = () => {
             type="submit"
             title="submit-button"
             variant="contained"
-            endIcon={<AutoAwesome />}
+            endIcon={<AutoAwesomeOutlined />}
           >
             Create
           </Button>

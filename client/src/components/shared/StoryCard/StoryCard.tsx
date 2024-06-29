@@ -6,7 +6,11 @@ import {
   Story,
 } from "src/components/StoryCreator/store/state";
 import { Box, Card, CardActions, CardContent, Typography } from "@mui/material";
-import { Female, Headphones, Male } from "@mui/icons-material";
+import {
+  FemaleOutlined,
+  HeadphonesOutlined,
+  MaleOutlined,
+} from "@mui/icons-material";
 
 import { CSSProperties } from "react";
 import routes from "src/application/routes";
@@ -82,17 +86,23 @@ const StoryCard = (props: StoryCard) => {
             sx={{ mr: 2 }}
           >
             {audioFile && audioFile.url && (
-              <Headphones fontSize="small" className="story-card-tags-item" />
+              <HeadphonesOutlined
+                fontSize="small"
+                className="story-card-tags-item"
+              />
             )}
 
             {(profileInfo.gender === ChildGenderEnum.Girl ||
               profileInfo.gender === AdultGenderEnum.Female) && (
-              <Female fontSize="small" className="story-card-tags-item" />
+              <FemaleOutlined
+                fontSize="small"
+                className="story-card-tags-item"
+              />
             )}
 
             {(profileInfo.gender === ChildGenderEnum.Boy ||
               profileInfo.gender === AdultGenderEnum.Male) && (
-              <Male fontSize="small" className="story-card-tags-item" />
+              <MaleOutlined fontSize="small" className="story-card-tags-item" />
             )}
 
             {profileInfo.language && (
@@ -102,7 +112,7 @@ const StoryCard = (props: StoryCard) => {
 
           {props.story.createdAt && (
             <Typography variant="body2">
-              {new Date(props.story.createdAt).toLocaleDateString('en-GB')}
+              {new Date(props.story.createdAt).toLocaleDateString("en-GB")}
             </Typography>
           )}
         </Box>

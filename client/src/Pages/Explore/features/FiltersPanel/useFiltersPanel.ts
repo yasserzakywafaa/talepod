@@ -14,11 +14,16 @@ export const useFiltersPanel = (
 
   // Profile Info
   const filterByName = (stories: Story[], name: string | undefined) => {
-    return stories.filter(
-      (story) =>
-        story.profileInfo &&
-        name?.toLowerCase() === story.profileInfo.name.toLowerCase().trim()
-    );
+    return stories.filter((story) => {
+      const agrName = name?.toLowerCase();
+      const currentName = story.profileInfo.name.toLowerCase().trim();
+
+      story.profileInfo &&
+        agrName &&
+        (agrName === currentName || agrName.indexOf(currentName) > -1);
+
+      return;
+    });
   };
 
   const filterByGender = (stories: Story[], gender: string[]) => {
@@ -128,6 +133,11 @@ export const useFiltersPanel = (
       ...environment,
       ...audio,
     ];
+
+    // Remove duplicates from the filters array
+    filteredStories = filteredStories.filter((story, index) => {
+      return index === filteredStories.findIndex((o) => story._id === o._id);
+    });
   } else {
     filteredStories = stories;
   }

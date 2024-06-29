@@ -19,13 +19,13 @@ import Box from "@mui/material/Box";
 import DreamingFox from "../../assets/images/dreaming_fox_with_a_pillow.png";
 import Footer from "../../components/shared/Footer/Footer";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
+import { LyricsOutlined } from "@mui/icons-material";
 import NoResultsFound from "src/components/shared/NoResults/NoResults";
 import Page from "src/components/shared/Page/Page";
 import ReactMarkdown from "react-markdown";
 import { useEffect } from "react";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
 import { useViewStoryContext } from "./store/Provider";
-import { Lyrics } from "@mui/icons-material";
 
 const ViewStoryPage: React.FC = () => {
   const location = useLocation();
@@ -138,7 +138,7 @@ const ViewStoryPage: React.FC = () => {
                     size="large"
                     type="button"
                     variant="contained"
-                    endIcon={<Lyrics />}
+                    endIcon={<LyricsOutlined />}
                     onClick={handleOnCreateAudioClick}
                   >
                     Create Audio
