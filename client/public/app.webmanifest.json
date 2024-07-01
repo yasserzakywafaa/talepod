@@ -53,12 +53,5 @@
       "purpose": "any"
     }
   ],
-  "description": "This app lets user view data and go offline.",
-  "screenshots": [
-    {
-      "src": "/icons/android-chrome-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png"
-    }
-  ]
+  "description": "This app lets user view data and go offline."
 }

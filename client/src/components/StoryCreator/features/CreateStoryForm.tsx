@@ -231,7 +231,7 @@ const CreateStoryForm = () => {
                   color: (theme) => theme.palette.text.primary,
                 },
                 "&.Mui-selected:hover": {
-                  backgroundColor: (theme) => theme.palette.secondary.main,
+                  backgroundColor: (theme) => theme.palette.primary.main,
                 },
               }}
             >
@@ -253,7 +253,7 @@ const CreateStoryForm = () => {
                   color: (theme) => theme.palette.text.primary,
                 },
                 "&.Mui-selected:hover": {
-                  backgroundColor: (theme) => theme.palette.secondary.main,
+                  backgroundColor: (theme) => theme.palette.primary.main,
                 },
               }}
             >

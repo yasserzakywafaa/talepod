@@ -77,7 +77,11 @@ const ViewStoryPage: React.FC = () => {
   }, [storyId, storyCreated]);
 
   return (
-    <Page title="Story | TalePod" className="view-story-page">
+    <Page
+      title="Story | TalePod"
+      className="view-story-page"
+      isLoading={isFetching}
+    >
       <Container
         className="view-story-container"
         sx={{

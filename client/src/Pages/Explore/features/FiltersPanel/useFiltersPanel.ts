@@ -1,5 +1,10 @@
+import {
+  AdultGenderEnum,
+  ChildGenderEnum,
+  Story,
+} from "src/components/StoryCreator/store/state";
+
 import { ExploreStoryFilters } from "../../store/state";
-import { Story } from "src/components/StoryCreator/store/state";
 
 interface UseFiltersPanelProps {
   filteredStories: Story[];
@@ -26,10 +31,23 @@ export const useFiltersPanel = (
     });
   };
 
-  const filterByGender = (stories: Story[], gender: string[]) => {
-    return stories.filter(
-      (story) => story.profileInfo && gender.includes(story.profileInfo.gender)
-    );
+  const filterByGender = (stories: Story[], gender: string | undefined) => {
+    return stories.filter((story) => {
+      if (story.profileInfo && gender) {
+        if (gender === AdultGenderEnum.Male) {
+          return (
+            story.profileInfo.gender === AdultGenderEnum.Male ||
+            story.profileInfo.gender === ChildGenderEnum.Boy
+          );
+        } else {
+          return (
+            story.profileInfo.gender === AdultGenderEnum.Female ||
+            story.profileInfo.gender === ChildGenderEnum.Girl
+          );
+        }
+      }
+      return "";
+    });
   };
 
   const filterByAge = (stories: Story[], age: string[]) => {

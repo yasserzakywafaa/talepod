@@ -55,7 +55,11 @@ const ExplorePage: React.FC = () => {
   }, []);
 
   return (
-    <Page title="Explore Stories | Talepod" className="explore-page">
+    <Page
+      title="Explore Stories | Talepod"
+      className="explore-page"
+      isLoading={isFetching}
+    >
       <FiltersPanel />
 
       <Container className="explore-container">
@@ -101,7 +105,7 @@ const ExplorePage: React.FC = () => {
             pb: { xs: 8, sm: 12 },
           }}
         >
-          {isFetching && <LoaderSpinner style={{ position: "absolute" }} />}
+          {isFetching && <LoaderSpinner style={{ position: "fixed" }} />}
 
           {!isFetching && filteredStories.length ? (
             <>

@@ -3,7 +3,6 @@ import END_POINTS from "src/application/shared/endpoints";
 import { ExploreStore } from "./store";
 import { ExploreStoryFilters } from "./state";
 import axios from "axios";
-import { useEffect } from "react";
 import { useFiltersPanel } from "../features/FiltersPanel/useFiltersPanel";
 
 export interface ExploreManager {
@@ -53,6 +52,7 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
 
   const handleFilterStories = () => {
     store.applyFilters(filteredStories);
+    store.setActiveFiltersCount(activeFiltersCount);
   };
 
   const handleClearFilters = () => {
@@ -72,10 +72,6 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
       throw new Error(`❌ Failed to fetch Stories :>>> ${error}`);
     }
   };
-
-  useEffect(() => {
-    store.setActiveFiltersCount(activeFiltersCount);
-  }, [activeFiltersCount]);
 
   return {
     setUp,

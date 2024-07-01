@@ -6,6 +6,7 @@ import FAQ from "./features/FAQ";
 import Footer from "../../components/shared/Footer/Footer";
 import Hero from "./features/Hero";
 import Page from "src/components/shared/Page/Page";
+import { useApplicationContext } from "src/application/store/Provider";
 
 // import Highlights from "./features/Highlights";
 // import Features from "./features/Features";
@@ -14,8 +15,14 @@ import Page from "src/components/shared/Page/Page";
 // import Testimonials from "./features/Testimonials";
 
 const Homepage = () => {
+  const {
+    store: {
+      state: { isFetching },
+    },
+  } = useApplicationContext();
+
   return (
-    <Page title="TalePod" className="home-page">
+    <Page title="TalePod" className="home-page" isLoading={isFetching}>
       <Hero />
 
       <Box sx={{ bgcolor: "transparent" }}>

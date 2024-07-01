@@ -11,7 +11,7 @@ export interface ExploreInitialState {
 
 export interface ExploreStoryFilters {
   name: string | undefined;
-  gender: string[];
+  gender: string | undefined;
   age: string[];
   language: string[];
   moral: string[];
@@ -29,7 +29,7 @@ export const getExploreInitialState = (): ExploreInitialState => {
     activeFiltersCount: 0,
     filters: {
       name: undefined,
-      gender: [],
+      gender: undefined,
       age: [],
       language: [],
       moral: [],
