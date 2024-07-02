@@ -278,7 +278,7 @@ const ApplicationBar = () => {
                   >
                     <Box
                       sx={{
-                        p: 2,
+                        p: 1,
                         flexGrow: 1,
                         minWidth: "40dvw",
                         backgroundColor: "background.paper",

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
-const BackToTopButton = () => {
+const ScrollToTopButton = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   const toggleVisibility = () => {
@@ -34,8 +34,8 @@ const BackToTopButton = () => {
         aria-label="scroll back to top"
         sx={{
           position: "fixed",
-          bottom: (theme) => theme.spacing(2),
-          right: (theme) => theme.spacing(2),
+          bottom: (theme) => theme.spacing(6),
+          right: (theme) => theme.spacing(4),
         }}
       >
         <KeyboardArrowUpIcon />
@@ -44,4 +44,4 @@ const BackToTopButton = () => {
   );
 };
 
-export default BackToTopButton;
+export default ScrollToTopButton;

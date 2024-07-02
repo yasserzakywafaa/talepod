@@ -4,10 +4,10 @@ import { Container, ContainerTypeMap } from "@mui/material";
 import { darkTheme, lightTheme } from "src/application/shared/themes";
 
 import ApplicationBar from "../ApplicationBar/ApplicationBar";
-import BackToTopButton from "../BackToTopButton/BackToTopButton";
 import LoaderSpinner from "../Loading/LoaderSpinner";
 import { Notification } from "../Notification/Notification";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
+import ScrollToTopButton from "../BackToTopButton/BackToTopButton";
 import classNames from "classnames";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
@@ -73,7 +73,7 @@ const Page = (params: PageProps) => {
         className={pageClassNames}
         {...containerProps}
       >
-        <BackToTopButton />
+        <ScrollToTopButton />
 
         {isPageLoading && <LoaderSpinner />}
         <Notification />

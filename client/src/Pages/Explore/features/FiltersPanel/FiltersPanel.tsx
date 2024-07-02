@@ -191,7 +191,7 @@ const FiltersPanel: React.FC = (): JSX.Element => {
                 value={AdultGenderEnum.Male}
                 sx={{
                   color: (theme) => theme.palette.text.primary,
-                  borderColor: "rgba(255, 255, 255, 0.23)",
+                  borderColor: "divider",
                   width: { xs: "50%" },
                   "&.Mui-selected": {
                     backgroundColor: (theme) => theme.palette.primary.main,
@@ -209,7 +209,7 @@ const FiltersPanel: React.FC = (): JSX.Element => {
                 value={AdultGenderEnum.Female}
                 sx={{
                   color: (theme) => theme.palette.text.primary,
-                  borderColor: "rgba(255, 255, 255, 0.23)",
+                  borderColor: "divider",
                   width: { xs: "50%" },
                   "&.Mui-selected": {
                     backgroundColor: (theme) => theme.palette.primary.main,

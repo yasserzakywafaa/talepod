@@ -38,7 +38,7 @@ export const lightTheme = createTheme({
       primary: "#333333", // Charcoal
       secondary: "#666666", // Gray
     },
-    divider: "#CCCCCC"
+    divider: "#CCCCCC",
   },
 });
 
@@ -55,6 +55,6 @@ export const darkTheme = createTheme({
       primary: "#FFFFFF", // White
       secondary: "#CCCCCC", // Light Gray
     },
-    divider: "#333333" // Charcoal
+    divider: "#666666", // Charcoal
   },
 });
