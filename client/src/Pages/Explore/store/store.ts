@@ -72,6 +72,7 @@ const useExploreStore = (): ExploreStore => {
   const clearFilters = () => {
     setState((prev) => ({
       ...prev,
+      activeFiltersCount: 0,
       filters: getExploreInitialState().filters,
       filteredStories: stories,
     }));

@@ -43,6 +43,10 @@ const FiltersPanel: React.FC = (): JSX.Element => {
     handleToggleFiltersPanel(false);
   };
 
+  const handleOnCancelClick = () => {
+    handleOnPanelClose();
+  };
+
   const handleSelectChange = (event: SelectChangeEvent<string[]>) => {
     const { name, value } = event.target;
     handleUpdateFilters(name as keyof ExploreStoryFilters, value);
@@ -85,7 +89,7 @@ const FiltersPanel: React.FC = (): JSX.Element => {
       open={isFiltersPanelOpen}
       PaperProps={{
         sx: {
-          width: { xs: "65%", sm: "auto" },
+          width: { xs: "60%", sm: "35%", lg: "auto" },
         },
       }}
       className="filters-panel-container"
@@ -125,7 +129,11 @@ const FiltersPanel: React.FC = (): JSX.Element => {
             >
               {Languages.map((language, index) => {
                 return (
-                  <MenuItem key={index} value={language.value}>
+                  <MenuItem
+                    key={index}
+                    value={language.value}
+                    className="select-menu-item"
+                  >
                     <Checkbox
                       checked={filters.language?.includes(language.value)}
                     />
@@ -150,7 +158,11 @@ const FiltersPanel: React.FC = (): JSX.Element => {
               onChange={handleSelectChange}
             >
               {[...Array(50).keys()].map((value) => (
-                <MenuItem key={value} value={(value + 1).toString()}>
+                <MenuItem
+                  key={value}
+                  value={(value + 1).toString()}
+                  className="select-menu-item"
+                >
                   <Checkbox
                     checked={filters.age.includes((value + 1).toString())}
                   />
@@ -161,61 +173,66 @@ const FiltersPanel: React.FC = (): JSX.Element => {
           </FormControl>
 
           <Box
+            width="100%"
             display="flex"
-            alignItems="center"
+            alignItems={{ xs: "start", sm: "center" }}
+            className="filters-form-item"
             flexDirection={{ xs: "column", sm: "row" }}
             justifyContent="space-between"
           >
-            <FormGroup className="filters-form-item">
+            <ToggleButtonGroup
+              exclusive
+              sx={{ mb: { xs: 1 }, width: { xs: "100%", sm: "auto" } }}
+              value={filters.gender}
+              aria-labelledby="gender-toggle"
+              onChange={handleGenderChange}
+            >
+              <ToggleButton
+                value={AdultGenderEnum.Male}
+                sx={{
+                  color: (theme) => theme.palette.text.primary,
+                  borderColor: "divider",
+                  width: { xs: "50%" },
+                  "&.Mui-selected": {
+                    backgroundColor: (theme) => theme.palette.primary.main,
+                    color: (theme) => theme.palette.text.primary,
+                  },
+                  "&.Mui-selected:hover": {
+                    backgroundColor: (theme) => theme.palette.primary.main,
+                  },
+                }}
+              >
+                {AdultGenderEnum.Male}
+              </ToggleButton>
+
+              <ToggleButton
+                value={AdultGenderEnum.Female}
+                sx={{
+                  color: (theme) => theme.palette.text.primary,
+                  borderColor: "divider",
+                  width: { xs: "50%" },
+                  "&.Mui-selected": {
+                    backgroundColor: (theme) => theme.palette.primary.main,
+                    color: (theme) => theme.palette.text.primary,
+                  },
+                  "&.Mui-selected:hover": {
+                    backgroundColor: (theme) => theme.palette.primary.main,
+                  },
+                }}
+              >
+                {AdultGenderEnum.Female}
+              </ToggleButton>
+            </ToggleButtonGroup>
+
+            <FormGroup>
               <FormControlLabel
                 name="audio"
-                label="Audio"
+                label="Story audio"
                 checked={filters.audio}
                 control={<Checkbox />}
                 onChange={handleAudioCheckboxChange}
               />
             </FormGroup>
-
-            <Box className="filters-form-item">
-              <ToggleButtonGroup
-                exclusive
-                value={filters.gender}
-                aria-labelledby="gender-toggle"
-                onChange={handleGenderChange}
-              >
-                <ToggleButton
-                  value={AdultGenderEnum.Male}
-                  sx={{
-                    color: (theme) => theme.palette.text.primary,
-                    "&.Mui-selected": {
-                      backgroundColor: (theme) => theme.palette.primary.main,
-                      color: (theme) => theme.palette.text.primary,
-                    },
-                    "&.Mui-selected:hover": {
-                      backgroundColor: (theme) => theme.palette.secondary.main,
-                    },
-                  }}
-                >
-                  {AdultGenderEnum.Male}
-                </ToggleButton>
-
-                <ToggleButton
-                  value={AdultGenderEnum.Female}
-                  sx={{
-                    color: (theme) => theme.palette.text.primary,
-                    "&.Mui-selected": {
-                      backgroundColor: (theme) => theme.palette.primary.main,
-                      color: (theme) => theme.palette.text.primary,
-                    },
-                    "&.Mui-selected:hover": {
-                      backgroundColor: (theme) => theme.palette.secondary.main,
-                    },
-                  }}
-                >
-                  {AdultGenderEnum.Female}
-                </ToggleButton>
-              </ToggleButtonGroup>
-            </Box>
           </Box>
 
           <FormControl className="filters-form-item">
@@ -233,7 +250,11 @@ const FiltersPanel: React.FC = (): JSX.Element => {
             >
               {Morals.map((moral, index) => {
                 return (
-                  <MenuItem key={index} value={moral.value}>
+                  <MenuItem
+                    key={index}
+                    value={moral.value}
+                    className="select-menu-item"
+                  >
                     <Checkbox checked={filters.moral?.includes(moral.value)} />
                     <ListItemText primary={moral.name} />
                   </MenuItem>
@@ -257,7 +278,11 @@ const FiltersPanel: React.FC = (): JSX.Element => {
             >
               {Tones.map((tone, index) => {
                 return (
-                  <MenuItem key={index} value={tone.value}>
+                  <MenuItem
+                    key={index}
+                    value={tone.value}
+                    className="select-menu-item"
+                  >
                     <Checkbox checked={filters.tone?.includes(tone.value)} />
                     <ListItemText primary={tone.name} />
                   </MenuItem>
@@ -281,7 +306,11 @@ const FiltersPanel: React.FC = (): JSX.Element => {
             >
               {Environments.map((environment, index) => {
                 return (
-                  <MenuItem key={index} value={environment.value}>
+                  <MenuItem
+                    key={index}
+                    value={environment.value}
+                    className="select-menu-item"
+                  >
                     <Checkbox
                       checked={filters.environment.includes(environment.value)}
                     />
@@ -294,7 +323,6 @@ const FiltersPanel: React.FC = (): JSX.Element => {
         </Box>
 
         <Box
-          mt={2}
           width="100%"
           display="flex"
           alignItems="center"
@@ -308,7 +336,7 @@ const FiltersPanel: React.FC = (): JSX.Element => {
             size="small"
             variant="text"
             color="secondary"
-            onClick={handleOnPanelClose}
+            onClick={handleOnCancelClick}
           >
             Cancel
           </Button>

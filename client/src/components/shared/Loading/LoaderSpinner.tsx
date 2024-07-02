@@ -1,8 +1,7 @@
 import "./LoaderSpinner.scss";
 
-import loaderGIF from "../../../assets/images/loader.gif";
-
-// import { CircularProgress } from "@material-ui/core";
+// import loaderGIF from "../../../assets/images/loader.gif";
+import { CircularProgress } from "@mui/material";
 
 interface LoaderSpinnerProps {
   style?: React.CSSProperties;
@@ -15,8 +14,8 @@ const LoaderSpinner = (props: LoaderSpinnerProps) => {
       style={style}
       className="loader-spinner-wrapper flex justify--center align--center"
     >
-      {/* <CircularProgress disableShrink style={{ color: "#FFF" }} /> */}
-      <img src={loaderGIF} alt="Loader Spinner" className="loader-image" />
+      <CircularProgress color="primary" />
+      {/* <img src={loaderGIF} alt="Loader Spinner" className="loader-image" /> */}
     </div>
   );
 };

@@ -6,7 +6,6 @@ import {
   CardContent,
   CardMedia,
   Container,
-  Divider,
   Typography,
 } from "@mui/material";
 import {
@@ -77,7 +76,11 @@ const ViewStoryPage: React.FC = () => {
   }, [storyId, storyCreated]);
 
   return (
-    <Page title="Story | TalePod" className="view-story-page">
+    <Page
+      title="Story | TalePod"
+      className="view-story-page"
+      isLoading={isFetching}
+    >
       <Container
         className="view-story-container"
         sx={{
@@ -119,62 +122,65 @@ const ViewStoryPage: React.FC = () => {
                 {story.summary}
               </Typography>
 
-              <Divider
-                sx={{ my: 1, color: (theme) => theme.palette.text.primary }}
-              />
+              <Card
+                sx={{
+                  textAlign: "center",
+                  mt: 1,
+                  mb: 2,
+                  py: 2,
+                  px: 1,
+                  backgroundColor: "transparent",
+                }}
+              >
+                {!story.audioFile && (
+                  <>
+                    <Typography
+                      variant="h5"
+                      component="h5"
+                      gutterBottom
+                      sx={{ color: (theme) => theme.palette.primary.main }}
+                    >
+                      Create audio for this story
+                    </Typography>
 
-              {!story.audioFile && (
-                <>
-                  <Typography
-                    variant="h5"
-                    component="h2"
-                    gutterBottom
-                    sx={{ color: (theme) => theme.palette.primary.main }}
-                  >
-                    Create audio for this story
-                  </Typography>
+                    <Button
+                      size="large"
+                      type="button"
+                      variant="contained"
+                      endIcon={<LyricsOutlined />}
+                      onClick={handleOnCreateAudioClick}
+                    >
+                      Create Audio
+                    </Button>
+                  </>
+                )}
 
-                  <Button
-                    size="large"
-                    type="button"
-                    variant="contained"
-                    endIcon={<LyricsOutlined />}
-                    onClick={handleOnCreateAudioClick}
-                  >
-                    Create Audio
-                  </Button>
-                </>
-              )}
+                {story.audioFile && (
+                  <Box mt={2}>
+                    <Typography
+                      variant="h5"
+                      component="h5"
+                      gutterBottom
+                      sx={{ color: (theme) => theme.palette.primary.main }}
+                    >
+                      Listen to the Story
+                    </Typography>
 
-              {story.audioFile && (
-                <Box mt={2}>
-                  <Typography
-                    variant="h5"
-                    component="h2"
-                    gutterBottom
-                    sx={{ color: (theme) => theme.palette.primary.main }}
-                  >
-                    Listen to the Story
-                  </Typography>
+                    <CardMedia
+                      component="audio"
+                      controls
+                      src={story.audioFile.url}
+                    />
 
-                  <CardMedia
-                    component="audio"
-                    controls
-                    src={story.audioFile.url}
-                  />
-
-                  <Typography variant="body2" color="textSecondary" mt={2}>
-                    Audio created on:{" "}
-                    {new Date(story.audioFile.createdAt).toLocaleDateString(
-                      "en-GB"
-                    )}
-                  </Typography>
-                </Box>
-              )}
-
-              <Divider
-                sx={{ my: 2, color: (theme) => theme.palette.text.primary }}
-              />
+                    <Typography variant="body2" color="textSecondary" mt={2}>
+                      Audio created on:{" "}
+                      {new Date(story.audioFile.createdAt).toLocaleDateString(
+                        "en-GB"
+                      )}
+                    </Typography>
+                  </Box>
+                )}
+              </Card>
 
               <Typography
                 gutterBottom

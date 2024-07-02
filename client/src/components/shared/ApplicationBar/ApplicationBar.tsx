@@ -102,7 +102,11 @@ const ApplicationBar = () => {
                 justifyContent: "space-between",
                 flexShrink: 0,
                 borderRadius: "4px",
-                backdropFilter: "blur(24px)",
+                backdropFilter: {
+                  xs: pagesMatch.isHomePage ? "none" : "blur(24px)",
+                  sm: pagesMatch.isHomePage ? "none" : "blur(24px)",
+                  lg: "blur(24px)",
+                },
                 maxHeight: 40,
                 borderColor: "divider",
                 boxShadow: isDesktop
@@ -274,7 +278,7 @@ const ApplicationBar = () => {
                   >
                     <Box
                       sx={{
-                        p: 2,
+                        p: 1,
                         flexGrow: 1,
                         minWidth: "40dvw",
                         backgroundColor: "background.paper",

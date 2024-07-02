@@ -7,6 +7,7 @@ import ApplicationBar from "../ApplicationBar/ApplicationBar";
 import LoaderSpinner from "../Loading/LoaderSpinner";
 import { Notification } from "../Notification/Notification";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
+import ScrollToTopButton from "../BackToTopButton/BackToTopButton";
 import classNames from "classnames";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
@@ -14,17 +15,26 @@ import { useEffect } from "react";
 export interface PageProps {
   title: string;
   className?: string;
+  isLoading?: boolean;
   children?: React.ReactNode;
   containerProps?: OverridableComponent<ContainerTypeMap<{}, "div">>;
 }
 
 const Page = (params: PageProps) => {
-  const { children, title, className = "", containerProps = {} } = params;
+  const {
+    isLoading,
+    children,
+    title,
+    className = "",
+    containerProps = {},
+  } = params;
   const {
     store: {
       state: { isFetching, themeMode },
     },
   } = useApplicationContext();
+
+  const isPageLoading = isLoading || isFetching;
 
   const pageClassNames = classNames({
     container: true,
@@ -34,6 +44,13 @@ const Page = (params: PageProps) => {
   useEffect(() => {
     document.title = title;
   }, [title]);
+
+  useEffect(() => {
+    // Prevent scrolling while page is loading
+    const bodyNode = document.getElementsByTagName("body")[0];
+    if (isPageLoading) bodyNode.style.overflow = "hidden";
+    else bodyNode.removeAttribute("style");
+  }, [isPageLoading]);
 
   return (
     <>
@@ -54,10 +71,11 @@ const Page = (params: PageProps) => {
       <Container
         maxWidth={false}
         className={pageClassNames}
-        sx={{ overflow: isFetching ? "hidden" : "unset" }}
         {...containerProps}
       >
-        {isFetching && <LoaderSpinner />}
+        <ScrollToTopButton />
+
+        {isPageLoading && <LoaderSpinner />}
         <Notification />
         <ApplicationBar />
         <>{children}</>

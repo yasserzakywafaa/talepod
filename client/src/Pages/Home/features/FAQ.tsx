@@ -30,8 +30,8 @@ export default function FAQ() {
       }}
     >
       <Typography
-        component="h2"
-        variant="h4"
+        component="h5"
+        variant="h5"
         color="text.primary"
         sx={{
           width: { sm: "100%", md: "60%" },

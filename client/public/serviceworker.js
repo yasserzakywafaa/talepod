@@ -1,7 +1,5 @@
-const _this = this;
 const version = 1;
-// const isOnline = true;
-const host = _this.location.origin;
+const host = self.location.origin;
 const CACHE_NAME = `talepod-v${version}`;
 const urlsToCache = ["/", "/index.html", "/create", "/explore", "/story/:id"];
 
@@ -11,25 +9,25 @@ const onInstall = (event) => {
     caches
       .open(CACHE_NAME)
       .then((cache) => cache.addAll(urlsToCache))
-      .catch((error) => console.error("❌ Error", { error }))
+      .catch((error) =>
+        console.error("❌ Failed to install Service Worker!", { error })
+      )
   );
 };
-
-/*******/
 
 // Listen for requests
 const onFetch = (event) => {
   const { url } = event.request;
 
-  // Bypass service worker for API requests
-  if (event.request.url.includes("/api/")) return;
+  // TODO: Uncomment if serving the client through server side.
+  // // Bypass service worker for API requests
+  // if (event.request.url.includes("/api/")) return;
 
   if (url.includes(host)) {
     event.respondWith(
       fetch(event.request)
         .then((networkResponse) => {
-          // Clone response to store in cache instead of original response
-          // to avoid browser errors
+          // Clone response to store in cache instead of original response to avoid browser errors
           const cacheCopy = networkResponse.clone();
           caches
             .open(CACHE_NAME)
@@ -37,7 +35,10 @@ const onFetch = (event) => {
               cache.put(event.request, cacheCopy);
             })
             .catch((error) =>
-              console.error("❌ ServiceWorker error!", { error })
+              console.error(
+                `❌ Failed to open ${CACHE_NAME} in ServiceWorker!`,
+                { error }
+              )
             );
           return networkResponse;
         })
@@ -48,28 +49,7 @@ const onFetch = (event) => {
         })
     );
   } else return;
-
-  // State while revalidate strategy
-  // if (url.includes(host)) {
-  //   event.respondWith(
-  //     caches.match(event.request).then((cachedResponse) => {
-  //       // Even if the response is in the cache, we fetch it
-  //       // and update the cache for future usage
-  //       const fetchPromise = fetch(event.request).then((networkResponse) => {
-  //         const cacheCopy = networkResponse.clone();
-  //         caches.open(CACHE_NAME).then((cache) => {
-  //           cache.put(event.request, cacheCopy);
-  //           return networkResponse;
-  //         });
-  //       });
-  //       // We use the currently cached version if it's there
-  //       return cachedResponse || fetchPromise; // cached or a network fetch
-  //     })
-  //   );
-  // } else return;
 };
-
-/*******/
 
 // Activate service worker
 const onActivate = (event) => {
@@ -89,6 +69,6 @@ const clearCaches = async () => {
   await Promise.all(oldCacheNames.map((cacheName) => caches.delete(cacheName)));
 };
 
-_this.addEventListener("install", onInstall);
-_this.addEventListener("activate", onActivate);
-_this.addEventListener("fetch", onFetch);
+self.addEventListener("install", onInstall);
+self.addEventListener("activate", onActivate);
+self.addEventListener("fetch", onFetch);
