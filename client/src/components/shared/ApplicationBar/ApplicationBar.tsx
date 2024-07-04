@@ -1,14 +1,21 @@
+import {
+  AutoFixHighOutlined,
+  HomeOutlined,
+  Menu,
+  ModeNightOutlined,
+  SearchOutlined,
+  WbSunnyOutlined,
+} from "@mui/icons-material";
 import { useMatch, useNavigate } from "react-router-dom";
 
 import AppBar from "@mui/material/AppBar";
-import { AutoFixHighOutlined } from "@mui/icons-material";
 import BackButton from "./BackButton";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
+import { Divider } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
-import MenuIcon from "@mui/icons-material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal";
 import ToggleColorMode from "src/components/shared/ToggleColorMode";
@@ -121,14 +128,27 @@ const ApplicationBar = () => {
                 <>
                   <Box sx={{ display: { xs: "none", md: "flex" } }}>
                     <MenuItem onClick={handleOnMenuItemClick("home")}>
-                      Home
+                      <HomeOutlined
+                        fontSize="medium"
+                        color="primary"
+                        sx={{ mr: 1 }}
+                      />
+                      <Typography variant="body1" color="text.primary">
+                        Home
+                      </Typography>
                     </MenuItem>
 
                     <MenuItem
                       sx={{ py: "6px", px: "12px" }}
                       onClick={handleOnMenuItemClick("explore")}
                     >
-                      <Typography variant="body2" color="text.primary">
+                      <SearchOutlined
+                        fontSize="medium"
+                        color="primary"
+                        sx={{ mr: 1 }}
+                      />
+
+                      <Typography variant="body1" color="text.primary">
                         Explore
                       </Typography>
                     </MenuItem>
@@ -137,7 +157,12 @@ const ApplicationBar = () => {
                       sx={{ py: "6px", px: "12px" }}
                       onClick={handleOnMenuItemClick("create")}
                     >
-                      <Typography variant="body2" color="text.primary">
+                      <AutoFixHighOutlined
+                        fontSize="medium"
+                        color="primary"
+                        sx={{ mr: 1 }}
+                      />
+                      <Typography variant="body1" color="text.primary">
                         Create Story
                       </Typography>
                     </MenuItem>
@@ -268,7 +293,7 @@ const ApplicationBar = () => {
                     onClick={toggleDrawer(true)}
                     sx={{ minWidth: "30px", p: "4px" }}
                   >
-                    <MenuIcon />
+                    <Menu />
                   </Button>
 
                   <Drawer
@@ -279,35 +304,62 @@ const ApplicationBar = () => {
                     <Box
                       sx={{
                         p: 1,
+                        pt: 2,
                         flexGrow: 1,
-                        minWidth: "40dvw",
+                        minWidth: "50dvw",
                         backgroundColor: "background.paper",
                       }}
                     >
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "end",
-                          flexGrow: 1,
-                        }}
-                      >
-                        <ToggleColorMode
-                          mode={themeMode}
-                          toggleColorMode={toggleThemeMode}
-                        />
-                      </Box>
-
                       <MenuItem onClick={handleOnMenuItemClick("home")}>
-                        Home
+                        <HomeOutlined
+                          fontSize="medium"
+                          color="primary"
+                          sx={{ mr: 1 }}
+                        />
+                        <Typography variant="h6">Home</Typography>
                       </MenuItem>
 
                       <MenuItem onClick={handleOnMenuItemClick("explore")}>
-                        Explore
+                        <SearchOutlined
+                          fontSize="medium"
+                          color="primary"
+                          sx={{ mr: 1 }}
+                        />
+
+                        <Typography variant="h6">Explore</Typography>
                       </MenuItem>
 
                       <MenuItem onClick={handleOnMenuItemClick("create")}>
-                        Create Story
+                        <AutoFixHighOutlined
+                          fontSize="medium"
+                          color="primary"
+                          sx={{ mr: 1 }}
+                        />
+                        <Typography variant="h6">Create Story</Typography>
+                      </MenuItem>
+
+                      <Divider sx={{ width: "80%", margin: "auto" }} />
+
+                      <MenuItem onClick={toggleThemeMode}>
+                        {themeMode === "dark" ? (
+                          <WbSunnyOutlined
+                            fontSize="medium"
+                            color="secondary"
+                            sx={{ mr: 1 }}
+                          />
+                        ) : (
+                          <ModeNightOutlined
+                            fontSize="medium"
+                            color="secondary"
+                            sx={{ mr: 1 }}
+                          />
+                        )}
+
+                        <Typography variant="h6">Appearance</Typography>
+                        {/* <ToggleColorMode
+                          mode={themeMode}
+                          toggleColorMode={toggleThemeMode}
+                        /> */}
                       </MenuItem>
 
                       {pagesMatch.isHomePage && (

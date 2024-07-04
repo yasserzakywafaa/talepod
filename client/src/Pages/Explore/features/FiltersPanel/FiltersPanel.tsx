@@ -16,6 +16,7 @@ import {
   TextField,
   ToggleButton,
   ToggleButtonGroup,
+  Typography,
 } from "@mui/material";
 
 import { AdultGenderEnum } from "src/components/StoryCreator/store/state";
@@ -54,7 +55,6 @@ const FiltersPanel: React.FC = (): JSX.Element => {
 
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    debugger;
     handleUpdateFilters(name as keyof ExploreStoryFilters, value);
   };
 
@@ -95,6 +95,12 @@ const FiltersPanel: React.FC = (): JSX.Element => {
       className="filters-panel-container"
       onClose={handleOnPanelClose}
     >
+      <Box textAlign="center" mt="1rem">
+        <Typography variant="h5" color="primary">
+          Filter Stories
+        </Typography>
+      </Box>
+
       <Box
         height="100%"
         display="flex"

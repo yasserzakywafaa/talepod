@@ -58,8 +58,6 @@ export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
         }
       );
 
-      isCreateStoryFetching(false);
-
       store.updateState("createStory", {
         ...store.state.createStory,
         story: {
@@ -67,7 +65,7 @@ export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
         },
       });
 
-      console.log("✅ response", { response });
+      // console.log("✅ response", { response });
 
       Notify({
         type: ToastTypes.Success,
@@ -76,7 +74,6 @@ export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
 
       return response.data;
     } catch (error) {
-      isCreateStoryFetching(false);
       if (axios.isAxiosError(error) && error.response) {
         Notify({
           content: error.response.statusText,

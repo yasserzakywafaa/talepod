@@ -1,14 +1,4 @@
-import {
-  Box,
-  // Button,
-  // Card,
-  // CardContent,
-  // Chip,
-  // Divider,
-  Stack,
-  TextField,
-  // Typography,
-} from "@mui/material";
+import { Box, Stack, TextField } from "@mui/material";
 
 // import { AutoAwesome } from "@mui/icons-material";
 // import { FormEvent } from "react";
@@ -51,6 +41,7 @@ const CreateStory = () => {
       >
         <Stack spacing={2} flexGrow={1}>
           <TextField
+            disabled
             multiline
             label="Create Story Prompt"
             variant="outlined"

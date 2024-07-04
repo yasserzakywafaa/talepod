@@ -15,13 +15,15 @@ import {
 import { useLocation, useParams } from "react-router-dom";
 
 import Box from "@mui/material/Box";
-import DreamingFox from "../../assets/images/dreaming_fox_with_a_pillow.png";
 import Footer from "../../components/shared/Footer/Footer";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
 import { LyricsOutlined } from "@mui/icons-material";
-import NoResultsFound from "src/components/shared/NoResults/NoResults";
 import Page from "src/components/shared/Page/Page";
+import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import ReactMarkdown from "react-markdown";
+import StoryNotFound from "./features/StoryNotFound";
+import ViewStoryInfo from "./features/ViewStoryInfo";
+import ViewStorySEO from "./features/ViewStorySEO";
 import { useEffect } from "react";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
 import { useViewStoryContext } from "./store/Provider";
@@ -90,114 +92,125 @@ const ViewStoryPage: React.FC = () => {
       >
         {isFetching && <LoaderSpinner style={{ position: "fixed" }} />}
 
-        {!story && <NoResultsFound />}
+        {!story && <StoryNotFound />}
 
         {story && (
-          <Card
-            className="view-story-card"
-            sx={{
-              backgroundColor: "transparent",
-            }}
-          >
-            <Box component="div" className="bg-image-character">
-              <img src={DreamingFox} width="100%" />
-            </Box>
-            <CardContent className="view-story-card-content">
-              <Typography
-                gutterBottom
-                variant="h3"
-                component="h3"
-                color="primary"
-                sx={{ fontSize: { xs: "2rem" } }}
-                className="view-story-card-title"
-              >
-                {story.title}
-              </Typography>
+          <>
+            <Card className="view-story-card">
+              <Box component="div" className="bg-image-character">
+                <RandomImage />
+              </Box>
+              <CardContent className="view-story-card-content">
+                <Typography
+                  gutterBottom
+                  variant="h3"
+                  component="h3"
+                  color="primary"
+                  sx={{ fontSize: { xs: "2rem" } }}
+                  className="view-story-card-title"
+                >
+                  {story.title}
+                </Typography>
 
-              <Typography
-                paragraph
-                variant="body1"
-                className="view-story-card-summary"
-              >
-                {story.summary}
-              </Typography>
+                <Typography
+                  paragraph
+                  variant="body1"
+                  className="view-story-card-summary"
+                >
+                  {story.summary}
+                </Typography>
 
-              <Card
-                sx={{
-                  textAlign: "center",
-                  mt: 1,
-                  mb: 2,
-                  py: 2,
-                  px: 1,
-                  backgroundColor: "transparent",
-                }}
-              >
-                {!story.audioFile && (
-                  <>
-                    <Typography
-                      variant="h5"
-                      component="h5"
-                      gutterBottom
-                      sx={{ color: (theme) => theme.palette.primary.main }}
-                    >
-                      Create audio for this story
-                    </Typography>
+                <Card
+                  sx={{
+                    textAlign: "center",
+                    mt: 1,
+                    mb: 2,
+                    py: 2,
+                    px: 1,
+                    backgroundColor: "transparent",
+                  }}
+                >
+                  {!story.audioFile && (
+                    <>
+                      <Typography
+                        variant="h5"
+                        component="h5"
+                        gutterBottom
+                        sx={{ color: (theme) => theme.palette.primary.main }}
+                      >
+                        Create audio for this story
+                      </Typography>
 
-                    <Button
-                      size="large"
-                      type="button"
-                      variant="contained"
-                      endIcon={<LyricsOutlined />}
-                      onClick={handleOnCreateAudioClick}
-                    >
-                      Create Audio
-                    </Button>
-                  </>
-                )}
+                      <Button
+                        size="large"
+                        type="button"
+                        variant="contained"
+                        endIcon={<LyricsOutlined />}
+                        onClick={handleOnCreateAudioClick}
+                      >
+                        Create Audio
+                      </Button>
+                    </>
+                  )}
 
-                {story.audioFile && (
-                  <Box mt={2}>
-                    <Typography
-                      variant="h5"
-                      component="h5"
-                      gutterBottom
-                      sx={{ color: (theme) => theme.palette.primary.main }}
-                    >
-                      Listen to the Story
-                    </Typography>
+                  {story.audioFile && (
+                    <Box mt={2}>
+                      <Typography
+                        variant="h5"
+                        component="h5"
+                        gutterBottom
+                        sx={{ color: (theme) => theme.palette.primary.main }}
+                      >
+                        Listen to the Story
+                      </Typography>
 
-                    <CardMedia
-                      component="audio"
-                      controls
-                      src={story.audioFile.url}
-                    />
+                      <CardMedia
+                        component="audio"
+                        controls
+                        src={story.audioFile.url}
+                      />
 
-                    <Typography variant="body2" color="textSecondary" mt={2}>
-                      Audio created on:{" "}
-                      {new Date(story.audioFile.createdAt).toLocaleDateString(
-                        "en-GB"
-                      )}
-                    </Typography>
-                  </Box>
-                )}
-              </Card>
+                      <Typography variant="body2" color="textSecondary" mt={2}>
+                        Audio created on:{" "}
+                        <b>
+                          {new Date(story.audioFile.createdAt).toLocaleString(
+                            "en-GB",
+                            {
+                              timeStyle: "short",
+                              dateStyle: "short",
+                            }
+                          )}
+                        </b>
+                      </Typography>
+                    </Box>
+                  )}
+                </Card>
 
-              <Typography
-                gutterBottom
-                variant="h5"
-                component="h2"
-                sx={{ color: (theme) => theme.palette.primary.main }}
-              >
-                Story
-              </Typography>
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="h2"
+                  sx={{ color: (theme) => theme.palette.primary.main }}
+                >
+                  Story
+                </Typography>
 
-              <ReactMarkdown>{story.mainStory}</ReactMarkdown>
+                <ReactMarkdown>{story.mainStory}</ReactMarkdown>
 
-              <ReactMarkdown className="italics bold">
-                {story.poem.split(".").join("\n")}
-              </ReactMarkdown>
-            </CardContent>
-          </Card>
+                <ReactMarkdown className="italics bold">
+                  {story.poem.split(".").join("\n")}
+                </ReactMarkdown>
+
+                <ViewStoryInfo story={story} />
+              </CardContent>
+            </Card>
+
+            <Card className="view-story-seo-card">
+              <CardContent className="view-story-seo-card-content">
+                <ViewStorySEO />
+              </CardContent>
+            </Card>
+          </>
         )}
       </Container>
 

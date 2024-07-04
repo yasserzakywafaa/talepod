@@ -1,3 +1,22 @@
+.view-story-card {
+  background-color: transparent;
+  .view-story-card-footer-info {
+    background-color: transparent;
+    .view-story-card-footer-info-tags {
+      .view-story-card-footer-info-tag {
+        margin-right: 0.5rem;
+        margin-top: 0.5rem;
+      }
+    }
+  }
+}
+
+.view-story-seo-card {
+  display: none;
+  margin-top: 1rem;
+  background-color: transparent;
+}
+
 /* iPhone 5/5S/5C/SE (1st generation) */
 @media (max-width: 320px), (max-height: 568px) {
   .view-story-container {

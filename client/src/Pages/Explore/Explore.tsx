@@ -9,12 +9,12 @@ import {
 import { Badge, Button, Container } from "@mui/material";
 
 import Box from "@mui/material/Box";
-import DreamingGiraffe from "../../assets/images/dreaming_giraffe_with_a_pillow.png";
 import FiltersPanel from "./features/FiltersPanel/FiltersPanel";
 import Footer from "../../components/shared/Footer/Footer";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
 import NoResultsFound from "src/components/shared/NoResults/NoResults";
 import Page from "src/components/shared/Page/Page";
+import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import StoryCard from "src/components/shared/StoryCard/StoryCard";
 import { useEffect } from "react";
 import { useExploreContext } from "../Explore/store/Provider";
@@ -110,7 +110,7 @@ const ExplorePage: React.FC = () => {
           {!isFetching && filteredStories.length ? (
             <>
               <Box component="div" className="bg-image-character">
-                <img src={DreamingGiraffe} width="100%" />
+                <RandomImage />
               </Box>
 
               {filteredStories.map((story, index) => {

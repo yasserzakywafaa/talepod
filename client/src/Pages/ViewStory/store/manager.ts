@@ -21,9 +21,10 @@ export const useViewStoryManager = (
       const response = await axios.get(
         END_POINTS.STORIES.GET_STORY_BY_ID(storyId)
       );
-
       store.handleUpdateStory(response.data);
     } catch (error) {
+      store.handleUpdateStory(undefined);
+      store.handleIsFetching(false);
       throw new Error(`❌ Failed to fetch Story by Id :>>> ${error}`);
     }
   };

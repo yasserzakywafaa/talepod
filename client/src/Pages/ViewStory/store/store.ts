@@ -6,7 +6,7 @@ import { useState } from "react";
 export interface ViewStoryStore {
   state: ViewStoryInitialState;
   handleIsFetching: (isFetching: boolean) => void;
-  handleUpdateStory: (stories: Story) => void;
+  handleUpdateStory: (stories: Story | undefined) => void;
 }
 
 const useViewStoryStore = (): ViewStoryStore => {
