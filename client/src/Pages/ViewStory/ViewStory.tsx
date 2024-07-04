@@ -96,7 +96,10 @@ const ViewStoryPage: React.FC = () => {
 
         {story && (
           <>
-            <Card className="view-story-card">
+            <Card
+              className="view-story-card"
+              sx={{ backgroundColor: "transparent" }}
+            >
               <Box component="div" className="bg-image-character">
                 <RandomImage />
               </Box>
