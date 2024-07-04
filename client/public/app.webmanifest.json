@@ -11,6 +11,14 @@
   "lang": "en",
   "dir": "ltr",
   "display_override": ["window-controls-overlay"],
+  "id": "talepod_v1.0.0",
+  "launch_handler": {
+    "client_mode": ["focus-existing", "auto"]
+  },
+  "iarc_rating_id": "e58c174a-81d2-5c3c-32cc-34b8de4a52e9",
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "scope_extensions": [{ "origin": "*.talepod.com" }],
   "shortcuts": [
     {
       "name": "Create Story",

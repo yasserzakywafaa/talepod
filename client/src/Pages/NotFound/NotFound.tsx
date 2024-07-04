@@ -1,10 +1,12 @@
-import { Box, Button, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import routes from "src/application/routes";
-import Page from "src/components/shared/Page/Page";
-import { ReactComponent as NotFound404 } from "../../assets/images/not_found_404/not_found_404_2.svg";
-
 import "./NotFound.scss";
+
+import { Box, Button, Typography } from "@mui/material";
+
+import BunnyNotFound from "../../assets/images/not_found_404/confused_bunny_with_magnifier.png";
+import { HomeOutlined } from "@mui/icons-material";
+import Page from "src/components/shared/Page/Page";
+import routes from "src/application/routes";
+import { useNavigate } from "react-router-dom";
 
 const NotFoundPage = () => {
   const navigate = useNavigate();
@@ -24,10 +26,11 @@ const NotFoundPage = () => {
             className="not-found-card-wrapper "
           >
             <Box component="div" className="not-found-image">
-              <NotFound404 />
+              <img src={BunnyNotFound} width="100%" />
             </Box>
 
             <Box
+              marginY={4}
               display="flex"
               component="div"
               alignItems="center"
@@ -35,13 +38,16 @@ const NotFoundPage = () => {
               justifyContent="center"
               className="unauthorized-card-wrapper"
             >
-              <Typography variant="h3">Page Not Found</Typography>
+              <Typography variant="h5" textAlign="center">
+                Page Not Found
+              </Typography>
 
               <Button
-                sx={{ marginY: "4rem" }}
+                sx={{ marginY: "2rem" }}
                 size="large"
                 type="button"
                 variant="contained"
+                endIcon={<HomeOutlined />}
                 onClick={handleOnClick}
               >
                 Go back home
