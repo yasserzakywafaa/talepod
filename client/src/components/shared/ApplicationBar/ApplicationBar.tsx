@@ -3,6 +3,7 @@ import {
   HomeOutlined,
   Menu,
   ModeNightOutlined,
+  RefreshOutlined,
   SearchOutlined,
   WbSunnyOutlined,
 } from "@mui/icons-material";
@@ -75,6 +76,12 @@ const ApplicationBar = () => {
       case "create":
         navigate(routes.create);
         break;
+      case "refresh":
+        window.location.reload();
+        break;
+      // case "install":
+      //   navigate(routes.install);
+      //   break;
 
       default:
         scrollToSection(sectionId);
@@ -356,11 +363,25 @@ const ApplicationBar = () => {
                         )}
 
                         <Typography variant="h6">Appearance</Typography>
-                        {/* <ToggleColorMode
-                          mode={themeMode}
-                          toggleColorMode={toggleThemeMode}
-                        /> */}
                       </MenuItem>
+
+                      <MenuItem onClick={handleOnMenuItemClick("refresh")}>
+                        <RefreshOutlined
+                          fontSize="medium"
+                          color="secondary"
+                          sx={{ mr: 1 }}
+                        />
+                        <Typography variant="h6">Refresh App</Typography>
+                      </MenuItem>
+
+                      {/* <MenuItem onClick={handleOnMenuItemClick("install")}>
+                        <InstallMobileOutlined
+                          fontSize="medium"
+                          color="secondary"
+                          sx={{ mr: 1 }}
+                        />
+                        <Typography variant="h6">Install App</Typography>
+                      </MenuItem> */}
 
                       {pagesMatch.isHomePage && (
                         <>

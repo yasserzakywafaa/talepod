@@ -103,11 +103,13 @@ const ViewStoryPage: React.FC = () => {
           pb: 4,
         }}
       >
-        {isFetching && <LoaderSpinner style={{ position: "fixed" }} />}
+        {isFetching && !story && (
+          <LoaderSpinner style={{ position: "fixed" }} />
+        )}
 
-        {!story && <StoryNotFound />}
+        {!isFetching && !story && <StoryNotFound />}
 
-        {story && (
+        {!isFetching && story && (
           <>
             <Card
               className="view-story-card"

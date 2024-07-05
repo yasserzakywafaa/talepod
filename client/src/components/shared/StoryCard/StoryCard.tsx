@@ -5,7 +5,14 @@ import {
   ChildGenderEnum,
   Story,
 } from "src/components/StoryCreator/store/state";
-import { Box, Card, CardActions, CardContent, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardActions,
+  CardContent,
+  Chip,
+  Typography,
+} from "@mui/material";
 import {
   FemaleOutlined,
   HeadphonesOutlined,
@@ -76,12 +83,12 @@ const StoryCard = (props: StoryCard) => {
           className="story-card-tags"
           justifyContent="space-between"
           alignItems="center"
-          sx={{ pl: 1, pr: 2, width: "100%" }}
+          sx={{ pl: 1, pr: 1, width: "100%" }}
           color={theme.palette.secondary.main}
         >
           <Box
             display="flex"
-            className="story-card-tags"
+            className="story-card-tags-wrapper"
             justifyContent="space-between"
             sx={{ mr: 2 }}
           >
@@ -106,17 +113,23 @@ const StoryCard = (props: StoryCard) => {
             )}
 
             {profileInfo.language && (
-              <span>{profileInfo.language.value.toUpperCase()}</span>
+              <span className="story-card-tags-item">
+                {" "}
+                {profileInfo.language.value.toUpperCase()}
+              </span>
             )}
           </Box>
 
           {props.story.createdAt && (
-            <Typography variant="body2">
-              {new Date(props.story.createdAt).toLocaleString("en-GB", {
+            <Chip
+              size="small"
+              variant="outlined"
+              label={new Date(props.story.createdAt).toLocaleString("en-GB", {
                 timeStyle: "short",
                 dateStyle: "short",
               })}
-            </Typography>
+              color="secondary"
+            />
           )}
         </Box>
       </CardActions>
