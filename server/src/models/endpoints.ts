@@ -12,6 +12,7 @@ const END_POINTS = {
   OPENAI: {
     CREATE: {
       STORY: `/api/v1/openai/create/story`,
+      STORY_SEO: `/api/v1/story-seo`,
       STORY_AUDIO: `/api/v1/openai/create/story-audio`,
       IMAGES: `/api/v1/openai/create/images`,
     },

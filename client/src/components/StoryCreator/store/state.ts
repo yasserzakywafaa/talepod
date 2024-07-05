@@ -53,6 +53,12 @@ export interface Story {
   audioFile?: StoryAudioFile;
   profileInfo: ProfileInfo;
   storyParams: StoryParams;
+  seo?: StorySeo;
+}
+
+export interface StorySeo {
+  createdAt: Date;
+  content: string;
 }
 
 export interface StoryAudioFile {
@@ -60,6 +66,14 @@ export interface StoryAudioFile {
   fileName: string;
   createdAt: Date;
 }
+
+export type AudioFileVoice =
+  | "alloy"
+  | "echo"
+  | "fable"
+  | "onyx"
+  | "nova"
+  | "shimmer";
 
 export type CreateAudioProps = CreateStoryProps;
 

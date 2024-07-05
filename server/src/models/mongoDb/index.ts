@@ -1,5 +1,5 @@
 import { MongoClient, ObjectId } from "mongodb";
-import { ProfileInfo, Story, StoryData, StoryParams } from "../types";
+import { ProfileInfo, Story, StoryData, StoryParams, StorySeo } from "../types";
 import { createDocument, updateDocument } from "./crudOperations";
 
 import CONFIG from "../../config";
@@ -97,6 +97,18 @@ const saveStoryToDb = async (
   }
 };
 
+const saveStorySeoToDb = async (
+  storyId: string,
+  storeSeo: StorySeo
+): Promise<void> => {
+  try {
+    await updateDocument(storyId, DBCollections.Stories, { seo: storeSeo });
+    console.log("✅ Story SEO saved to DB successfully");
+  } catch (error) {
+    throw new Error("❌ Error saving story SEO to DB", { cause: error });
+  }
+};
+
 const saveFileDataToDb = async (
   storyId: string,
   audioFileName: string,
@@ -125,5 +137,6 @@ export {
   databaseInit,
   closeDatabase,
   saveStoryToDb,
+  saveStorySeoToDb,
   saveFileDataToDb,
 };

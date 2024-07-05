@@ -42,14 +42,14 @@ const ViewStoryPage: React.FC = () => {
     manager: { setUp },
   } = useViewStoryContext();
   const {
-    manager: { handleCreateAudio: handleGenerateTextToSpeechRequest },
+    manager: { handleCreateAudio },
   } = useOpenaiContext();
 
   const handleOnCreateAudioClick = async () => {
     handleIsFetching(true);
     if (story.mainStory) {
       try {
-        const audioFile = await handleGenerateTextToSpeechRequest(story);
+        const audioFile = await handleCreateAudio(story);
         if (audioFile && audioFile.url) {
           handleUpdateStory({
             ...story,
@@ -76,6 +76,19 @@ const ViewStoryPage: React.FC = () => {
       });
     }
   }, [storyId, storyCreated]);
+
+  useEffect(() => {
+    if (story && story._id) {
+      document.title = story.title;
+
+      const metaTag = document.createElement("meta");
+      metaTag.setAttribute("name", "description");
+
+      metaTag.setAttribute("content", story.summary);
+
+      document.head.appendChild(metaTag);
+    }
+  }, [story]);
 
   return (
     <Page
@@ -208,11 +221,8 @@ const ViewStoryPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card className="view-story-seo-card">
-              <CardContent className="view-story-seo-card-content">
-                <ViewStorySEO />
-              </CardContent>
-            </Card>
+            {/* {story.seo ? <ViewStorySEO story={story} /> : <></>} */}
+            <ViewStorySEO story={story} />
           </>
         )}
       </Container>

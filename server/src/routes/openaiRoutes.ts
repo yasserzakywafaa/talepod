@@ -8,6 +8,11 @@ const openAIRouter = Router();
 openAIRouter.post(END_POINTS.OPENAI.CREATE.STORY, OpenAIController.createStory);
 
 openAIRouter.post(
+  END_POINTS.OPENAI.CREATE.STORY_SEO,
+  OpenAIController.createStorySeo
+);
+
+openAIRouter.post(
   END_POINTS.OPENAI.CREATE.STORY_AUDIO,
   OpenAIController.createStoryAudio
 );

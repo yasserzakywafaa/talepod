@@ -1,8 +1,12 @@
 import {
+  AudioFileVoice,
+  Story,
+  StoryAudioFile,
+} from "src/components/StoryCreator/store/state";
+import {
   Notify,
   ToastTypes,
 } from "src/components/shared/Notification/Notification";
-import { Story, StoryAudioFile } from "src/components/StoryCreator/store/state";
 import axios, { AxiosResponse } from "axios";
 import {
   getRandomString,
@@ -36,11 +40,14 @@ export const useCreateStoryAudio = (store: OpenaiStore): UseTextGeneration => {
         story.title
       ).toLowerCase()}_${name}_${getRandomString()}`;
 
+      const audioFileVoice: AudioFileVoice = "nova";
+
       const response: AxiosResponse<StoryAudioFile, StoryAudioFile> =
         await axios.post(
-          END_POINTS.OPENAI.GENERATE.STORY_AUdio,
+          END_POINTS.OPENAI.GENERATE.STORY_AUDIO,
           {
             fileName,
+            audioFileVoice,
             storyId: story._id,
             userPrompt: `${story.mainStory} ${story.poem}`,
           },

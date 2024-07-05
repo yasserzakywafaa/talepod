@@ -1,4 +1,4 @@
-import { ProfileInfo, StoryCreatorInitialState } from "../store/state";
+import { ProfileInfo, Story, StoryCreatorInitialState } from "../store/state";
 
 export const getCreateStoryPrompt = (
   promptParams: StoryCreatorInitialState
@@ -50,6 +50,15 @@ export const getCreateImagePrompt = (childInfo: ProfileInfo): string => {
   const { name, gender, age } = childInfo;
 
   const fullDynamicPrompt = `A ${age} years old ${gender} named ${name}, with physical characteristics`;
+
+  return fullDynamicPrompt;
+};
+
+export const getStorySeoPrompt = (story: Story): string => {
+  const { summary } = story;
+
+  const fullDynamicPrompt = `Write a seo optimized text that attracts organic traffic to ${window.location.origin} to place after a bedtime story, with the following story parameters and position the text inside the appropriate HTML tags to use: Story summary: ${summary}.
+  In the response, don't mention anything other than the required seo optimized text and include it around curly braces "{ }" so that it can be easily extracted by the development team.`;
 
   return fullDynamicPrompt;
 };

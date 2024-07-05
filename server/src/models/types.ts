@@ -8,11 +8,17 @@ export interface Story {
   poem: string;
   audioFile?: StoryAudioFile;
   createdAt: Date;
+  seo?: StorySeo;
 }
 
 export interface StoryData extends Partial<Story> {
   profileInfo: ProfileInfo;
   storyParams: StoryParams;
+}
+
+export interface StorySeo {
+  createdAt: Date;
+  content: string;
 }
 
 export interface StoryAudioFile {
