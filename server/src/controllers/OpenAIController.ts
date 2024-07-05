@@ -36,7 +36,7 @@ export const createStory = async (
         },
       ],
       model: CONFIG.OPENAI_MODEL_NAME,
-      temperature: 0,
+      n: 1,
     });
     const openaiResponse = createRequest.choices[0].message.content;
 
@@ -106,12 +106,12 @@ export const createStorySeo = async (
         },
       ],
       model: CONFIG.OPENAI_MODEL_NAME,
-      temperature: 0,
+      n: 1,
     });
     const openaiResponse = createRequest.choices[0].message.content;
 
     const storySEO: StorySeo = {
-      content: openaiResponse.replace(/{|}/g, ""),
+      content: openaiResponse.replace(/{|}/g, "").trim(),
       createdAt: new Date(),
     };
 

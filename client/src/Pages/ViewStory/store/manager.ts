@@ -21,7 +21,7 @@ export const useViewStoryManager = (
 
   const setUp = async (storyId: string) => {
     store.handleIsFetching(true);
-    // await fetchStoryById(storyId);
+    await fetchStoryById(storyId);
     const story = await fetchStoryById(storyId);
 
     if (!story.seo) {
@@ -53,15 +53,10 @@ export const useViewStoryManager = (
         story._id,
         userSeoPrompt
       );
-      storySEO.content = storySEO.content.replace(/{|}/g, "");
-
       const updatedStory: Story = {
         ...story,
         seo: storySEO,
       };
-
-      console.log("✅ ViewStory Manager:>>>", { updatedStory });
-
       store.handleUpdateStory(updatedStory);
     } catch (error) {
       store.handleIsFetching(false);
