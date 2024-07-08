@@ -24,6 +24,7 @@ import ReactMarkdown from "react-markdown";
 import StoryNotFound from "./features/StoryNotFound";
 import ViewStoryInfo from "./features/ViewStoryInfo";
 import ViewStorySEO from "./features/ViewStorySEO";
+import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useEffect } from "react";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
 import { useViewStoryContext } from "./store/Provider";
@@ -32,6 +33,8 @@ const ViewStoryPage: React.FC = () => {
   const location = useLocation();
   const { storyCreated } = location.state || {};
   const { storyId } = useParams<{ storyId: string }>();
+
+  const { isDesktop } = useDeviceSize();
 
   const {
     store: {
@@ -99,7 +102,7 @@ const ViewStoryPage: React.FC = () => {
       <Container
         className="view-story-container"
         sx={{
-          pt: { xs: 4 },
+          pt: { xs: 1 },
           pb: 4,
         }}
       >
@@ -109,43 +112,41 @@ const ViewStoryPage: React.FC = () => {
 
         {!isFetching && !story && <StoryNotFound />}
 
-        {!isFetching && story && (
+        {story && (
           <>
-            <Card
-              className="view-story-card"
-              sx={{ backgroundColor: "transparent" }}
-            >
+            <Card className="view-story-card">
               <Box component="div" className="bg-image-character">
                 <RandomImage />
               </Box>
               <CardContent className="view-story-card-content">
                 <Typography
                   gutterBottom
-                  variant="h3"
-                  component="h3"
+                  variant="h4"
+                  component="h1"
                   color="primary"
-                  sx={{ fontSize: { xs: "2rem" } }}
+                  sx={{ fontSize: { xs: "2rem", sm: "2.25rem" } }}
                   className="view-story-card-title"
                 >
                   {story.title}
                 </Typography>
 
                 <Typography
-                  paragraph
-                  variant="body1"
+                  variant="h5"
+                  component="h2"
                   className="view-story-card-summary"
+                  sx={{ fontSize: { xs: "1.2rem", sm: "1.5rem" } }}
                 >
                   {story.summary}
                 </Typography>
 
                 <Card
+                  className="view-story-card-story-wrapper"
                   sx={{
                     textAlign: "center",
                     mt: 1,
                     mb: 2,
-                    py: 2,
+                    py: 1,
                     px: 1,
-                    backgroundColor: "transparent",
                   }}
                 >
                   {!story.audioFile && (
@@ -174,8 +175,8 @@ const ViewStoryPage: React.FC = () => {
                   {story.audioFile && (
                     <Box mt={2}>
                       <Typography
-                        variant="h5"
-                        component="h5"
+                        variant="h6"
+                        component="h6"
                         gutterBottom
                         sx={{ color: (theme) => theme.palette.primary.main }}
                       >
@@ -204,26 +205,29 @@ const ViewStoryPage: React.FC = () => {
                   )}
                 </Card>
 
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="h2"
-                  sx={{ color: (theme) => theme.palette.primary.main }}
-                >
-                  Story
-                </Typography>
+                {isDesktop ? (
+                  <Typography
+                    gutterBottom
+                    variant="h6"
+                    component="h6"
+                    sx={{ color: (theme) => theme.palette.primary.main }}
+                  >
+                    Story
+                  </Typography>
+                ) : (
+                  <></>
+                )}
 
-                <ReactMarkdown>{story.mainStory}</ReactMarkdown>
+                <Box component="article" className="view-story-card-main-story">
+                  <ReactMarkdown>{story.mainStory}</ReactMarkdown>
+                </Box>
 
-                <ReactMarkdown className="italics bold">
-                  {story.poem.split(".").join("\n")}
-                </ReactMarkdown>
+                <pre className="italics view-story-card-poem">{story.poem}</pre>
 
                 <ViewStoryInfo story={story} />
               </CardContent>
             </Card>
 
-            {/* {story.seo ? <ViewStorySEO story={story} /> : <></>} */}
             <ViewStorySEO story={story} />
           </>
         )}

@@ -49,7 +49,7 @@ export const useCreateStoryAudio = (store: OpenaiStore): UseTextGeneration => {
             fileName,
             audioFileVoice,
             storyId: story._id,
-            userPrompt: `${story.mainStory} ${story.poem}`,
+            storyText: `${story.mainStory} ${story.poem}`,
           },
           {
             headers: {

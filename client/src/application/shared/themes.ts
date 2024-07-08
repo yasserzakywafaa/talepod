@@ -17,13 +17,22 @@ export const theme = createTheme({
   typography: {
     fontFamily: "Arial, sans-serif",
   },
-  // components: {
-  //   MuiCssBaseline: {
-  //     styleOverrides: {
-  //       body: {},
-  //     },
-  //   },
-  // },
+  components: {
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "transparent",
+        },
+      },
+    },
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "transparent",
+        },
+      },
+    },
+  },
 });
 
 export const lightTheme = createTheme({
@@ -48,7 +57,6 @@ export const darkTheme = createTheme({
     ...theme.palette,
     mode: "dark",
     background: {
-      // default: "#333333", // (Charcoal) Dark Background
       default: darkBackground,
     },
     text: {

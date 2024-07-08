@@ -57,9 +57,8 @@ const ApplicationBar = () => {
     isExplorePage: !!useMatch(routes.explore),
     isViewStoryPage: !!useMatch(routes.story(":id")),
     isCheckoutPage: !!useMatch(routes.checkout),
-    isUnauthorizedPage: !!useMatch(routes.unauthorized),
   };
-  const isNotFoundPage = Object.values(pagesMatch).every((p) => p === false);
+  const isAppBarVisible = Object.values(pagesMatch).every((p) => p === false);
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setIsDrawerOpen(newOpen);
@@ -97,7 +96,7 @@ const ApplicationBar = () => {
 
   return (
     <>
-      {!isNotFoundPage && (
+      {!isAppBarVisible && (
         <AppBar
           position="fixed"
           sx={{

@@ -7,41 +7,56 @@ export const getCreateStoryPrompt = (
 ): string => {
   const { name, gender, age, interests, language } = promptParams.profileInfo;
 
-  const { moral, tone, audioLength, environment } = promptParams.storyParams;
+  const { moral, tone, environment, maxCharacters } = promptParams.storyParams;
 
-  const fullDynamicPrompt = `Write a story that is ${audioLength} minutes long ${
+  // `Write a story that is ${audioLength} minutes long ${
+  const fullDynamicPrompt = `Write a story ${
     language.value ? ` in the language of ${language.name},` : "English"
-  } with the following outputs inside of the curly brackets to be ready for the data ETL process.
-    Make sure the Title, Story summary, Story, and Poem are each between curly brackets so the development team can split the data into those fields respectively.
+  } with the following outputs inside of the curly brackets for the data ETL process.
+    Make sure the Title, Story summary, Story, and Poem are each between curly brackets for easy data extraction.
 
-    {Provide here the story title}
+    Consider the following parameters while creating the story:
+    	• Use appropriate punctuation (commas, periods, question marks) to guide natural pauses and intonation.
+      •	Break longer sentences into shorter, more manageable chunks.
+      •	Use contractions to mimic natural speech patterns (e.g., “I'm” instead of “I am”).
+      •	Use phonetic spelling for words that might be mispronounced by the TTS engine.
+      •	Emphasize important words by capitalizing them or using asterisks (e.g., “This is IMPORTANT).
+      •	If supported by Openai TTS service, use custom pronunciation dictionaries for correct pronunciation of names and specialized terms.
+      •	Make the story sound engaging and natural.
+      •	Ensure the language is simple, soothing, and appropriate for children aged 1-12.
 
-    {Provide here the story summary that is not longer than 120 characters Outlining the basic plot and key elements of the story.}
+    {Provide the story title here}
 
-    {Provide here the story with 4-5 scenes or chapters. Refrain from mentioning the chapters. 
-    Just provide the text of the story as it is a bedtime story for kids hence build the drama accordingly and ensure a length of ${audioLength} minutes as mentioned above.}
+    {Provide a story summary here, not longer than 120 characters, outlining the basic plot and key elements of the story here.}
 
-    {Provide here the story poem: Create a bedtime poem that summarizes the story in 4-6 rhyming verses}
+    {Provide the story here with 4-5 scenes or chapters. Refrain from mentioning the chapters. 
+    Just provide the text of the story as it is a bedtime story for kids, building the drama accordingly. Ensure the story is about ${maxCharacters} characters in length.}
 
-    ${tone.value ? `The tone of the story to be ${tone.name}.` : ""}
+    {Provide a bedtime poem here that summarizes the story in 4-6 rhyming verses}
+
+    ${tone.value ? `The tone of the story is to be ${tone.name}.` : ""}
 
     ${
       moral.value
-        ? `Value or theme: The value the parent wants to teach their kid through the story is ${moral.name}.`
+        ? `Value or theme: The value to teach through the story is ${moral.name}.`
         : ""
     }
 
     ${
       environment.value
-        ? `Environment: the environment of the story is at the ${environment.name}.`
+        ? `Environment: The environment of the story is a/an ${environment.name}.`
         : ""
     }
-  
-    The characters of the story are: The protagonist/main character is ${name}, a ${age}-year-old ${gender.toLowerCase()}.
+
+    Characters:
+     - Protagonist: ${name}, a ${age}-year-old ${gender.toLowerCase()}.
+     - Supporting Characters: ${
+       interests.length
+         ? `Friends around ${interests} (please create 2-3 friends with simple, easy-to-pronounce names and brief descriptions)`
+         : ""
+     }
     
-    ${interests.length ? `Supporting characters to be around ${interests}` : ""}
-    
-    Please ensure that the story is kids compliant. All kids between 1 year and 12 years old, so no explicit content outside this age range.`;
+    Ensure the story is compliant for children aged 1-12, with no explicit content outside this age range.`;
 
   return fullDynamicPrompt;
 };

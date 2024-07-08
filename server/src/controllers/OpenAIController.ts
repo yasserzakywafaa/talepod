@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { Story, StoryAudioFile, StorySeo } from "src/models/types";
+import { Story, StoryAudioFile, StoryParts, StorySeo } from "src/models/types";
 import {
   saveFileDataToDb,
   saveStorySeoToDb,
@@ -11,6 +11,7 @@ import { IMAGES_SIZES } from "../models/openaiModel";
 import OpenAi from "openai";
 import extractStoryParts from "../utils/extractStoryParts";
 import fs from "fs";
+import retry from "../utils/retryFunction";
 import { uploadFileToS3 } from "../models/amazonS3";
 
 const openai = new OpenAi();
@@ -22,13 +23,14 @@ export const createStory = async (
 ) => {
   const { storyPrompt, profileInfo, storyParams } = request.body;
 
-  // OpenAI Text Generation API Call
-  try {
+  const createStoryRequest = async (): Promise<string> => {
+    // OpenAI Text Generation API Call
     const createRequest = await openai.chat.completions.create({
       messages: [
         {
           role: "system",
-          content: "You are a Story Creator.",
+          content:
+            "You are a friendly and expressive storyteller that is an experts on storytelling. Your stories should sound natural and conversational.",
         },
         {
           role: "user",
@@ -38,39 +40,46 @@ export const createStory = async (
       model: CONFIG.OPENAI_MODEL_NAME,
       n: 1,
     });
-    const openaiResponse = createRequest.choices[0].message.content;
+
+    return createRequest.choices[0].message.content;
+  };
+
+  const createAndExtractStoryParts = async (): Promise<StoryParts> => {
+    const openaiResponse = await createStoryRequest();
 
     if (openaiResponse.length) {
       // Extract the parts from the story
-      const storyParts = extractStoryParts(openaiResponse);
+      return extractStoryParts(openaiResponse);
+    } else {
+      throw new Error("❌ Failed to create a story!");
+    }
+  };
 
-      try {
-        // Save story to MongoDB Atlas
-        const storyId = await saveStoryToDb(
-          {
-            ...storyParts,
-            createdAt: new Date(),
-          },
-          profileInfo,
-          storyParams
-        );
+  try {
+    const storyParts = await retry(createAndExtractStoryParts, 3, 2000);
 
-        const newStoryData = {
+    try {
+      // Save story to MongoDB Atlas
+      const storyId = await saveStoryToDb(
+        {
           ...storyParts,
-          _id: storyId,
           createdAt: new Date(),
-          profileInfo,
-          storyParams,
-        };
+        },
+        profileInfo,
+        storyParams
+      );
 
-        response.json({
-          ...newStoryData,
-        });
-      } catch (error) {
-        throw new Error("❌ Failed to save the created story to Db", {
-          cause: error,
-        });
-      }
+      response.json({
+        ...storyParts,
+        _id: storyId,
+        profileInfo,
+        storyParams,
+        createdAt: new Date(),
+      });
+    } catch (error) {
+      throw new Error("❌ Failed to save the created story to Db", {
+        cause: error,
+      });
     }
 
     console.log("✅  Story Created Successfully", {
@@ -145,20 +154,16 @@ export const createStoryAudio = async (
   response: Response,
   next: NextFunction
 ) => {
-  const { storyId, userPrompt, fileName, audioFileVoice } = request.body;
-  const {
-    SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH,
-    SERVER_TEXT_TO_SPEECH_PATH,
-    OPENAI_TTS_MODEL_NAME,
-  } = CONFIG;
+  const { storyId, storyText, fileName, audioFileVoice } = request.body;
+  const { SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH } = CONFIG;
 
   // OpenAI Text-to-Speech Generation API Call
   try {
     const createRequest = await openai.audio.speech.create({
-      speed: 1.0,
-      voice: audioFileVoice ?? "nova",
-      input: userPrompt,
+      speed: 0.98,
+      input: storyText,
       response_format: "mp3",
+      voice: audioFileVoice ?? "nova",
       model: CONFIG.OPENAI_TTS_MODEL_NAME || "tts-1-hd",
     });
 

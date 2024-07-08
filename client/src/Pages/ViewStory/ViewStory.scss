@@ -1,7 +1,12 @@
 .view-story-card {
-  background-color: transparent;
+  .view-story-card-content {
+    .view-story-card-poem {
+      white-space: pre-line;
+      font-family: Arial, sans-serif;
+    }
+  }
+
   .view-story-card-footer-info {
-    background-color: transparent;
     .view-story-card-footer-info-tags {
       .view-story-card-footer-info-tag {
         margin-right: 0.5rem;

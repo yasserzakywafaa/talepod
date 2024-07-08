@@ -89,7 +89,7 @@ export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
     },
     storyParams: {
       audioLength: 10,
-      maxCharacters: 5000,
+      maxCharacters: 4000,
       moral: {
         name: "",
         value: "",
