@@ -1,3 +1,15 @@
 # https://www.robotstxt.org/robotstxt.html
+
+# Sitemap location
+Sitemap: https://www.talepod.com/sitemap.xml
+
+# Block specific robots from accessing certain parts
+User-agent: BadBot
+Disallow: /
+
 User-agent: *
-Disallow:
+Disallow: /private/
+Allow: /
+Allow: /explore/
+Allow: /create/
+Allow: /story/id

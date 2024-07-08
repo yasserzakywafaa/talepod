@@ -16,7 +16,7 @@ export const getCreateStoryPrompt = (
     Make sure the Title, Story summary, Story, and Poem are each between curly brackets for easy data extraction.
 
     Consider the following parameters while creating the story:
-    	• Use appropriate punctuation (commas, periods, question marks) to guide natural pauses and intonation.
+      • Use appropriate punctuation (commas, periods, question marks) to guide natural pauses and intonation.
       •	Break longer sentences into shorter, more manageable chunks.
       •	Use contractions to mimic natural speech patterns (e.g., “I'm” instead of “I am”).
       •	Use phonetic spelling for words that might be mispronounced by the TTS engine.
@@ -79,17 +79,34 @@ export const getStorySeoPrompt = (story: Story): string => {
     (word) => word.keywordDifficulty
   );
 
-  const fullDynamicPrompt = `Write a seo optimized text that attracts organic traffic to ${appLink} to place after a bedtime story, 
-  with the following story parameters and position the text inside the appropriate HTML tags to use: Story summary: ${summary}. 
-  The text should include at least one <h2> ta, and create it in the language of ${
+  const fullDynamicPrompt = `Write an SEO-optimized text that attracts organic traffic to ${appLink} to place after a bedtime story, 
+  with the following story parameters and position the text inside the appropriate HTML tags to use: 
+  
+  Story summary: ${summary}. 
+
+  The text should include at least one <h2> tag, and create it in the language of ${
     profileInfo.language.name
   }.
   ${
-    keywordsByLang
-      ? `Also include the following keywords and their respective volume and keyword difficulty: ${keywords}; ${keywordsVolume}; ${keywordsDifficulty}`
+    keywordsByLang.length
+      ? `Also include the following keywords and their respective volume and keyword difficulty: 
+      
+      • Keywords: ${keywords}
+      • Volume: ${keywordsVolume}
+      • Keyword Difficulty: ${keywordsDifficulty}
+      `
       : ""
   }
-  In the response, don't mention anything other than the required seo optimized text and include it around curly braces "{ }" so that it can be easily extracted by the development team.`;
+
+  Ensure the keywords are naturally integrated into the text. 
+  Include internal links only to this site (${appLink}) and a call to action. 
+  Any hyperlink should open in a new tab. 
+
+  In the response, don't mention anything other than the required SEO-optimized text and include it around curly brackets for easy data extraction.`;
+
+  console.log("SEO Text:>>>", {
+    fullDynamicPrompt,
+  });
 
   return fullDynamicPrompt;
 };

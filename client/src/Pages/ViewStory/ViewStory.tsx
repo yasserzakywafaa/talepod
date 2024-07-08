@@ -86,7 +86,6 @@ const ViewStoryPage: React.FC = () => {
 
       const metaTag = document.createElement("meta");
       metaTag.setAttribute("name", "description");
-
       metaTag.setAttribute("content", story.summary);
 
       document.head.appendChild(metaTag);
@@ -114,7 +113,11 @@ const ViewStoryPage: React.FC = () => {
 
         {story && (
           <>
-            <Card className="view-story-card">
+            <Card
+              className="view-story-card"
+              vocab="https://schema.org"
+              typeof="ShortStory"
+            >
               <Box component="div" className="bg-image-character">
                 <RandomImage />
               </Box>
@@ -124,8 +127,9 @@ const ViewStoryPage: React.FC = () => {
                   variant="h4"
                   component="h1"
                   color="primary"
-                  sx={{ fontSize: { xs: "2rem", sm: "2.25rem" } }}
+                  property="name"
                   className="view-story-card-title"
+                  sx={{ fontSize: { xs: "2rem", sm: "2.25rem" } }}
                 >
                   {story.title}
                 </Typography>

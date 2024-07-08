@@ -13,9 +13,10 @@ const ViewStorySEO = (props: ViewStorySeoParams): JSX.Element => {
 
   return story.seo ? (
     <Card className="view-story-seo-card" sx={{ mt: 2 }}>
-      <CardContent className="view-story-seo-card-content">
-        <span dangerouslySetInnerHTML={{ __html: story.seo?.content }} />
-      </CardContent>
+      <CardContent
+        className="view-story-seo-card-content"
+        dangerouslySetInnerHTML={{ __html: story.seo?.content }}
+      />
     </Card>
   ) : (
     <></>

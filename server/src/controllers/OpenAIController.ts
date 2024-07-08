@@ -118,7 +118,6 @@ export const createStorySeo = async (
       n: 1,
     });
     const openaiResponse = createRequest.choices[0].message.content;
-
     const storySEO: StorySeo = {
       content: openaiResponse.replace(/{|}/g, "").trim(),
       createdAt: new Date(),

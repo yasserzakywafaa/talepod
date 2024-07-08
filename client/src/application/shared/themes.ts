@@ -1,6 +1,5 @@
 import { createTheme } from "@mui/material/styles";
 
-// const mainColor = "#bb86fc"; // Indigo
 const primaryColor = "#ad932d"; // Dark Goldenrod
 const secondaryColor = "#00BFFF"; // Deep Sky Blue
 const darkBackground = "linear-gradient(to top, #000000, #2E3B4E)"; // Night Sky
