@@ -21,6 +21,7 @@ import { LyricsOutlined } from "@mui/icons-material";
 import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import ReactMarkdown from "react-markdown";
+import ShareStory from "./features/ShareStory";
 import StoryNotFound from "./features/StoryNotFound";
 import ViewStoryInfo from "./features/ViewStoryInfo";
 import ViewStorySEO from "./features/ViewStorySEO";
@@ -33,7 +34,6 @@ const ViewStoryPage: React.FC = () => {
   const location = useLocation();
   const { storyCreated } = location.state || {};
   const { storyId } = useParams<{ storyId: string }>();
-
   const { isDesktop } = useDeviceSize();
 
   const {
@@ -229,6 +229,8 @@ const ViewStoryPage: React.FC = () => {
                 <pre className="italics view-story-card-poem">{story.poem}</pre>
 
                 <ViewStoryInfo story={story} />
+
+                <ShareStory url={window.location.href} story={story} />
               </CardContent>
             </Card>
 

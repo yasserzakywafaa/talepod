@@ -1,9 +1,9 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import IconButton from "@mui/material/IconButton";
+// import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
-import Stack from "@mui/material/Stack";
-import TwitterIcon from "@mui/icons-material/X";
+// import Stack from "@mui/material/Stack";
+// import TwitterIcon from "@mui/icons-material/X";
 import Typography from "@mui/material/Typography";
 
 const Copyright = () => {
@@ -64,7 +64,7 @@ const Footer = () => {
           <Copyright />
         </Box>
 
-        <Stack
+        {/* <Stack
           direction="row"
           justifyContent="left"
           spacing={1}
@@ -81,7 +81,7 @@ const Footer = () => {
           >
             <TwitterIcon />
           </IconButton>
-        </Stack>
+        </Stack> */}
       </Box>
     </Container>
   );
