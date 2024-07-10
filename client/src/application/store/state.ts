@@ -1,3 +1,4 @@
+import APP_CONSTANTS from "../shared/app_constants";
 import { PaletteMode } from "@mui/material";
 
 export interface ApplicationInitialState {
@@ -6,8 +7,13 @@ export interface ApplicationInitialState {
 }
 
 export const getApplicationInitialState = (): ApplicationInitialState => {
+  const appThemMode =
+    (localStorage.getItem(
+      APP_CONSTANTS.DESIGN.LOCAL_STORAGE_APP_THEME
+    ) as PaletteMode) || "dark";
+
   return {
     isFetching: false,
-    themeMode: "dark",
+    themeMode: appThemMode,
   };
 };

@@ -1,22 +1,42 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import { Divider } from "@mui/material";
 // import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 // import Stack from "@mui/material/Stack";
-// import TwitterIcon from "@mui/icons-material/X";
 import Typography from "@mui/material/Typography";
+import routes from "src/application/routes";
+import { useNavigate } from "react-router-dom";
 
 const Copyright = () => {
   return (
     <Typography variant="body2" color="text.secondary" mt={1}>
       {"Copyright © "}
-      <Link href="https://talepod.com/">TalePod&nbsp;</Link>
+      <Link href={routes.home}>TalePod&nbsp;</Link>
       {new Date().getFullYear()}
     </Typography>
   );
 };
 
 const Footer = () => {
+  const navigate = useNavigate();
+
+  const handleFooterLinkItemClick =
+    (name: string) =>
+    (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+      event.preventDefault();
+
+      switch (name) {
+        case "privacy-policy":
+          navigate(routes.privacyPolicy);
+          break;
+
+        case "terms-of-service":
+          navigate(routes.termsOfService);
+          break;
+      }
+    };
+
   return (
     <Container
       sx={{
@@ -33,34 +53,37 @@ const Footer = () => {
         sx={{
           width: "100%",
           display: "flex",
+          flexDirection: "column",
           justifyContent: "space-between",
         }}
       >
-        <Box
-          display={{ xs: "flex", sm: "unset" }}
-          flexDirection={{ xs: "column" }}
-          mr={{ xs: 0, sm: 3 }}
-        >
+        <Box display="flex" justifyContent="center" alignContent="center">
           <Link
+            sx={{ pt: "5px" }}
             color="text.secondary"
-            href="#"
-            sx={{ mb: 2, mr: { xs: 0, sm: 2 } }}
-          >
-            Contact
-          </Link>
-
-          <Link
-            color="text.secondary"
-            href="#"
-            sx={{ mb: 2, mr: { xs: 0, sm: 2 } }}
+            href={routes.privacyPolicy}
+            onClick={handleFooterLinkItemClick("privacy-policy")}
           >
             Privacy Policy
           </Link>
 
-          <Link color="text.secondary" href="#" sx={{ mb: 2 }}>
+          <Divider
+            variant="middle"
+            orientation="vertical"
+            sx={{ width: "3px", height: "20px", mx: 1 }}
+          />
+
+          <Link
+            sx={{ pt: "5px" }}
+            color="text.secondary"
+            href={routes.termsOfService}
+            onClick={handleFooterLinkItemClick("terms-of-service")}
+          >
             Terms of Service
           </Link>
+        </Box>
 
+        <Box display="flex" justifyContent="center" alignContent="center">
           <Copyright />
         </Box>
 

@@ -1,7 +1,6 @@
 import "./CreateStory.scss";
 
 import Box from "@mui/material/Box";
-import Footer from "../../components/shared/Footer/Footer";
 import Page from "src/components/shared/Page/Page";
 import StoryCreator from "src/components/StoryCreator/StoryCreator";
 import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.png";
@@ -37,10 +36,6 @@ const CreateStoryPage = () => {
       </Box>
 
       <StoryCreator />
-
-      <Box sx={{ bgcolor: "background.default" }}>
-        <Footer />
-      </Box>
     </Page>
   );
 };

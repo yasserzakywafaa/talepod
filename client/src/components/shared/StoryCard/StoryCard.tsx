@@ -21,7 +21,6 @@ import {
 
 import { CSSProperties } from "react";
 import routes from "src/application/routes";
-import { theme } from "src/application/shared/themes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useNavigate } from "react-router-dom";
 
@@ -83,8 +82,12 @@ const StoryCard = (props: StoryCard) => {
           className="story-card-tags"
           justifyContent="space-between"
           alignItems="center"
-          sx={{ pl: 1, pr: 1, width: "100%" }}
-          color={theme.palette.secondary.main}
+          sx={{
+            pl: 1,
+            pr: 1,
+            width: "100%",
+            color: (theme) => theme.palette.secondary.main,
+          }}
         >
           <Box
             display="flex"

@@ -16,6 +16,17 @@
   }
 }
 
+.view-story-seo-card {
+  .view-story-seo-card-content {
+    a {
+      color: #ad932d;
+      &:visited {
+        color: #00bfff;
+      }
+    }
+  }
+}
+
 /* iPhone 5/5S/5C/SE (1st generation) */
 @media (max-width: 320px), (max-height: 568px) {
   .view-story-container {

@@ -1,5 +1,7 @@
 const APP_CONSTANTS = {
-  DESIGN: {},
+  DESIGN: {
+    LOCAL_STORAGE_APP_THEME: "appTheme",
+  },
   DEV_CLIENT_PORT: process.env.REACT_APP_PORT,
   DEV_SERVER_PORT: process.env.REACT_APP_SERVER_PORT,
   DEV_API_URL: process.env.REACT_APP_DEV_API_URL,

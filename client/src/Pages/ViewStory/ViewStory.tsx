@@ -5,6 +5,7 @@ import {
   Card,
   CardContent,
   CardMedia,
+  Chip,
   Container,
   Typography,
 } from "@mui/material";
@@ -15,7 +16,6 @@ import {
 import { useLocation, useParams } from "react-router-dom";
 
 import Box from "@mui/material/Box";
-import Footer from "../../components/shared/Footer/Footer";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
 import { LyricsOutlined } from "@mui/icons-material";
 import Page from "src/components/shared/Page/Page";
@@ -82,8 +82,6 @@ const ViewStoryPage: React.FC = () => {
 
   useEffect(() => {
     if (story && story._id) {
-      document.title = story.title;
-
       const metaTag = document.createElement("meta");
       metaTag.setAttribute("name", "description");
       metaTag.setAttribute("content", story.summary);
@@ -94,7 +92,7 @@ const ViewStoryPage: React.FC = () => {
 
   return (
     <Page
-      title="Story | TalePod"
+      title={story.title}
       className="view-story-page"
       isLoading={isFetching}
     >
@@ -193,18 +191,23 @@ const ViewStoryPage: React.FC = () => {
                         src={story.audioFile.url}
                       />
 
-                      <Typography variant="body2" color="textSecondary" mt={2}>
-                        Audio created on:{" "}
-                        <b>
-                          {new Date(story.audioFile.createdAt).toLocaleString(
-                            "en-GB",
-                            {
-                              timeStyle: "short",
-                              dateStyle: "short",
-                            }
-                          )}
-                        </b>
-                      </Typography>
+                      <Chip
+                        variant="outlined"
+                        label={
+                          <span color="textSecondary">
+                            Audio created on:{" "}
+                            <b>
+                              {new Date(
+                                story.audioFile.createdAt
+                              ).toLocaleString("en-GB", {
+                                timeStyle: "short",
+                                dateStyle: "short",
+                              })}
+                            </b>
+                          </span>
+                        }
+                        color="primary"
+                      />
                     </Box>
                   )}
                 </Card>
@@ -238,10 +241,6 @@ const ViewStoryPage: React.FC = () => {
           </>
         )}
       </Container>
-
-      <Box sx={{ bgcolor: "background.default" }}>
-        <Footer />
-      </Box>
     </Page>
   );
 };

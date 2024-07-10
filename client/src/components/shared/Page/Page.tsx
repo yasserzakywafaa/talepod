@@ -3,7 +3,9 @@ import "./Page.scss";
 import { Container, ContainerTypeMap } from "@mui/material";
 import { darkTheme, lightTheme } from "src/application/shared/themes";
 
+import APP_CONSTANTS from "src/application/shared/app_constants";
 import ApplicationBar from "../ApplicationBar/ApplicationBar";
+import Footer from "../Footer/Footer";
 import LoaderSpinner from "../Loading/LoaderSpinner";
 import { Notification } from "../Notification/Notification";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
@@ -42,6 +44,19 @@ const Page = (params: PageProps) => {
   });
 
   useEffect(() => {
+    localStorage.setItem(
+      APP_CONSTANTS.DESIGN.LOCAL_STORAGE_APP_THEME,
+      themeMode
+    );
+    const themeColorMetaTag = document.getElementById("theme-color");
+    themeColorMetaTag &&
+      themeColorMetaTag.setAttribute(
+        "content",
+        themeMode === "dark" ? "#2E3B4E" : "#F5F5F5"
+      );
+  }, []);
+
+  useEffect(() => {
     document.title = title;
   }, [title]);
 
@@ -76,9 +91,14 @@ const Page = (params: PageProps) => {
         <ScrollToTopButton />
 
         {isPageLoading && <LoaderSpinner />}
+
         <Notification />
+
         <ApplicationBar />
+
         <>{children}</>
+
+        <Footer />
       </Container>
     </>
   );

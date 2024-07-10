@@ -10,7 +10,6 @@ import { Badge, Button, Container } from "@mui/material";
 
 import Box from "@mui/material/Box";
 import FiltersPanel from "./features/FiltersPanel/FiltersPanel";
-import Footer from "../../components/shared/Footer/Footer";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
 import NoResultsFound from "src/components/shared/NoResults/NoResults";
 import Page from "src/components/shared/Page/Page";
@@ -163,10 +162,6 @@ const ExplorePage: React.FC = () => {
           )}
         </Box>
       </Container>
-
-      <Box sx={{ bgcolor: "background.default" }}>
-        <Footer />
-      </Box>
     </Page>
   );
 };

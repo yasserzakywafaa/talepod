@@ -32,11 +32,8 @@ const ShareStory = (props: ShareStory) => {
   const fallbackCopyTextToClipboard = (text: string) => {
     const textArea = document.createElement("textarea");
     textArea.value = text;
-
     // Position textarea off-screen
-    textArea.style.position = "fixed";
-    textArea.style.top = "-9999px";
-
+    textArea.style.display = "none";
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
@@ -47,7 +44,6 @@ const ShareStory = (props: ShareStory) => {
       setIsUrlCopied(true);
     } catch (err) {
       console.error("Fallback: Oops, unable to copy", err);
-      //   setSnackbarMessage('Failed to copy the link.');
       setIsUrlCopied(true);
     } finally {
       document.body.removeChild(textArea);
@@ -164,6 +160,7 @@ const ShareStory = (props: ShareStory) => {
       <Snackbar
         open={isUrlCopied}
         autoHideDuration={3000}
+        sx={{ bottom: "48px", left: "24px" }}
         onClose={handleCloseSnackBar}
       >
         <Card

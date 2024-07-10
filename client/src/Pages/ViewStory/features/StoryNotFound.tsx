@@ -35,7 +35,7 @@ const StoryNotFound: React.FC = () => {
             className="unauthorized-card-wrapper"
           >
             <Typography variant="h5" textAlign="center">
-              We could not find the story you are looking for.
+              We could not find the story you are looking for
             </Typography>
 
             <Button
