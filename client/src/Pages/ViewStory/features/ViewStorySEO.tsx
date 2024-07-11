@@ -1,5 +1,26 @@
-const ViewStorySEO = () => {
-  return <></>;
+import { Card, CardContent } from "@mui/material";
+
+import { Story } from "src/components/StoryCreator/store/state";
+
+interface ViewStorySeoParams {
+  story: Story;
+}
+
+const ViewStorySEO = (props: ViewStorySeoParams): JSX.Element => {
+  const { story } = props;
+
+  if (!story.seo) return <></>;
+
+  return story.seo ? (
+    <Card className="view-story-seo-card" sx={{ mt: 2 }}>
+      <CardContent
+        className="view-story-seo-card-content"
+        dangerouslySetInnerHTML={{ __html: story.seo?.content }}
+      />
+    </Card>
+  ) : (
+    <></>
+  );
 };
 
 export default ViewStorySEO;

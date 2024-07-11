@@ -1,8 +1,8 @@
 import { createTheme } from "@mui/material/styles";
 
-// const mainColor = "#bb86fc"; // Indigo
 const primaryColor = "#ad932d"; // Dark Goldenrod
-const secondaryColor = "#00BFFF"; // Deep Sky Blue
+const secondaryColorForDarkTheme = "#00BFFF"; // Deep Sky Blue
+const secondaryColorForLightTheme = "#0080ab"; // Dark Deep Sky Blue
 const darkBackground = "linear-gradient(to top, #000000, #2E3B4E)"; // Night Sky
 
 export const theme = createTheme({
@@ -11,25 +11,37 @@ export const theme = createTheme({
       main: primaryColor,
     },
     secondary: {
-      main: secondaryColor,
+      main: secondaryColorForDarkTheme,
     },
   },
   typography: {
     fontFamily: "Arial, sans-serif",
   },
-  // components: {
-  //   MuiCssBaseline: {
-  //     styleOverrides: {
-  //       body: {},
-  //     },
-  //   },
-  // },
+  components: {
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "transparent",
+        },
+      },
+    },
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "transparent",
+        },
+      },
+    },
+  },
 });
 
 export const lightTheme = createTheme({
   ...theme,
   palette: {
     ...theme.palette,
+    secondary: {
+      main: secondaryColorForLightTheme,
+    },
     mode: "light",
     background: {
       default: "#F5F5F5", // Light Gray
@@ -40,6 +52,19 @@ export const lightTheme = createTheme({
     },
     divider: "#CCCCCC",
   },
+  components: {
+    ...theme.components,
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          color: primaryColor,
+          "&:visited": {
+            color: secondaryColorForLightTheme,
+          },
+        },
+      },
+    },
+  },
 });
 
 export const darkTheme = createTheme({
@@ -48,13 +73,25 @@ export const darkTheme = createTheme({
     ...theme.palette,
     mode: "dark",
     background: {
-      // default: "#333333", // (Charcoal) Dark Background
       default: darkBackground,
     },
     text: {
       primary: "#FFFFFF", // White
-      secondary: "#CCCCCC", // Light Gray
+      secondary: "#FFFFFF", // White
     },
     divider: "#666666", // Charcoal
+  },
+  components: {
+    ...theme.components,
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          color: primaryColor,
+          "&:visited": {
+            color: secondaryColorForDarkTheme,
+          },
+        },
+      },
+    },
   },
 });

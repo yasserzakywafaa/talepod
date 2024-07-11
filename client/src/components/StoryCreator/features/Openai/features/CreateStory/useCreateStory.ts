@@ -6,6 +6,7 @@ import {
   ProfileInfo,
   Story,
   StoryParams,
+  StorySeo,
 } from "src/components/StoryCreator/store/state";
 import axios, { AxiosResponse } from "axios";
 
@@ -20,6 +21,10 @@ export interface UseTextGeneration {
     profileInfo: ProfileInfo,
     storyParams: StoryParams
   ) => Promise<Story>;
+  handleCreateStorySeoRequest: (
+    storyId: string,
+    userSeoPrompt: string
+  ) => Promise<StorySeo>;
 }
 
 export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
@@ -65,8 +70,6 @@ export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
         },
       });
 
-      // console.log("✅ response", { response });
-
       Notify({
         type: ToastTypes.Success,
         content: "Story created successfully.",
@@ -89,9 +92,49 @@ export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
     }
   };
 
+  const handleCreateStorySeoRequest = async (
+    storyId: string,
+    userSeoPrompt: string
+  ): Promise<StorySeo> => {
+    try {
+      const response: AxiosResponse<StorySeo, StorySeo> = await axios.post(
+        END_POINTS.OPENAI.GENERATE.STORY_SEO,
+        {
+          storyId,
+          userSeoPrompt,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Custom-Header": new Date().toISOString(),
+          },
+        }
+      );
+
+      if (store.state.createStory.story) {
+        const updatedStory: Story = {
+          ...store.state.createStory.story,
+          seo: response.data,
+        };
+
+        console.log("✅ updatedStory", { updatedStory });
+
+        // store.updateState("createStory", {
+        //   ...store.state.createStory,
+        //   story: updatedStory,
+        // });
+      }
+
+      return response.data;
+    } catch (error) {
+      throw new Error(`❌  Failed to create story SEO!  ${error}`);
+    }
+  };
+
   return {
     isCreateStoryFetching,
     handleUpdateCreateStoryPrompt,
     handleCreateStoryRequest,
+    handleCreateStorySeoRequest,
   };
 };

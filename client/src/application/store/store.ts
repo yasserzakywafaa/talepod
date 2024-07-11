@@ -1,5 +1,6 @@
 import { ApplicationInitialState, getApplicationInitialState } from "./state";
 
+import APP_CONSTANTS from "../shared/app_constants";
 import { useState } from "react";
 
 export interface ApplicationStore {
@@ -26,12 +27,33 @@ const useApplicationStore = (): ApplicationStore => {
   };
 
   const toggleThemeMode = () => {
+    let appTheme = state.themeMode;
+    const themeColorMetaTag = document.getElementById("theme-color");
+
     setState((prev) => {
+      appTheme = prev.themeMode === "dark" ? "light" : "dark";
       return {
         ...prev,
-        themeMode: prev.themeMode === "dark" ? "light" : "dark",
+        themeMode: appTheme,
       };
     });
+
+    localStorage.setItem(
+      APP_CONSTANTS.DESIGN.LOCAL_STORAGE_APP_THEME,
+      appTheme
+    );
+
+    switch (appTheme) {
+      case "light":
+        themeColorMetaTag &&
+          themeColorMetaTag.setAttribute("content", "#F5F5F5");
+        break;
+
+      case "dark":
+        themeColorMetaTag &&
+          themeColorMetaTag.setAttribute("content", "#2E3B4E");
+        break;
+    }
   };
 
   return {

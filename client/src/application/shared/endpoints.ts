@@ -31,7 +31,8 @@ const END_POINTS = {
   OPENAI: {
     GENERATE: {
       STORY: `${publicApiUrl}/api/v1/openai/create/story`,
-      STORY_AUdio: `${publicApiUrl}/api/v1/openai/create/story-audio`,
+      STORY_SEO: `${publicApiUrl}/api/v1/story-seo`,
+      STORY_AUDIO: `${publicApiUrl}/api/v1/openai/create/story-audio`,
       IMAGES: `${publicApiUrl}/api/v1/openai/create/images`,
     },
   },

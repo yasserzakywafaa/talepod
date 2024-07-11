@@ -2,10 +2,57 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="theme-color" id="theme-color" content="#F5F5F5" />
+    <meta name="msapplication-TileColor" content="#F5F5F5" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#2E3B4E" />
-    <meta name="description" content="TalePod | Story Creator" />
-    <link rel="icon" href="%PUBLIC_URL%/icons/logo.png" />
+    <meta
+      name="description"
+      content="Personalize bedtime stories tailored to your child's dreams and imagination"
+    />
+    <meta
+      name="keywords"
+      content="bedtime stories for kids, bedtime story, bedtime stories for adults, short bedtime stories"
+    />
+    <meta name="author" content="TalePod" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <!-- <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' https://*.talepod.com; img-src 'self' data: https://*.talepod.com; script-src 'self' https://*.talepod.com;"
+    /> -->
+
+    <!-- Open Graph tags (for social media) -->
+    <meta property="og:url" content="https://www.talepod.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Create Bedtime Stories with TalePod" />
+    <meta
+      property="og:description"
+      content="Personalize bedtime stories tailored to your child's dreams and imagination."
+    />
+    <meta property="og:image" content="%PUBLIC_URL%/icons/icon_512x512.png" />
+
+    <!-- Twitter Card tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Create Bedtime Stories" />
+    <meta
+      name="twitter:description"
+      content="Create custom personalized bedtime stories tailored to your child's dreams and imagination."
+    />
+    <meta name="twitter:image" content="%PUBLIC_URL%/icons/icon_512x512.png" />
+    <!-- End of Open Graph tags (for social media) -->
+
+    <link rel="canonical" href="https://www.talepod.com/" />
+    <link
+      rel="icon"
+      href="%PUBLIC_URL%/icons/favicon.ico"
+      type="image/x-icon"
+    />
+    <link
+      rel="shortcut icon"
+      href="%PUBLIC_URL%/icons/favicon.ico"
+      type="image/x-icon"
+    />
+
     <link
       rel="apple-touch-icon"
       sizes="180x180"
@@ -28,12 +75,22 @@
       href="%PUBLIC_URL%/icons/safari_pinned_tab.svg"
       color="#ad932d"
     />
-    <meta name="msapplication-TileColor" content="#00BFFF" />
-
     <link rel="manifest" href="%PUBLIC_URL%/app.webmanifest.json" />
+    <link rel="alternate" hreflang="en" href="https://www.talepod.com/" />
+
     <title>TalePod</title>
     <script src="%PUBLIC_URL%/sw-register.js"></script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "TalePod",
+        "url": "https://www.talepod.com"
+      }
+    </script>
   </head>
+
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>

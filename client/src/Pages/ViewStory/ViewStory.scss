@@ -1,7 +1,12 @@
 .view-story-card {
-  background-color: transparent;
+  .view-story-card-content {
+    .view-story-card-poem {
+      white-space: pre-line;
+      font-family: Arial, sans-serif;
+    }
+  }
+
   .view-story-card-footer-info {
-    background-color: transparent;
     .view-story-card-footer-info-tags {
       .view-story-card-footer-info-tag {
         margin-right: 0.5rem;
@@ -12,9 +17,14 @@
 }
 
 .view-story-seo-card {
-  display: none;
-  margin-top: 1rem;
-  background-color: transparent;
+  .view-story-seo-card-content {
+    a {
+      color: #ad932d;
+      &:visited {
+        color: #00bfff;
+      }
+    }
+  }
 }
 
 /* iPhone 5/5S/5C/SE (1st generation) */

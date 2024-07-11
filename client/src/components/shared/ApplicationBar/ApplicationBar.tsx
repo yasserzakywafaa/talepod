@@ -1,8 +1,10 @@
 import {
+  AlternateEmailOutlined,
   AutoFixHighOutlined,
   HomeOutlined,
   Menu,
   ModeNightOutlined,
+  RefreshOutlined,
   SearchOutlined,
   WbSunnyOutlined,
 } from "@mui/icons-material";
@@ -54,11 +56,13 @@ const ApplicationBar = () => {
     isHomePage: !!useMatch(routes.home),
     isCreatePage: !!useMatch(routes.create),
     isExplorePage: !!useMatch(routes.explore),
+    isContactPage: !!useMatch(routes.contact),
     isViewStoryPage: !!useMatch(routes.story(":id")),
     isCheckoutPage: !!useMatch(routes.checkout),
-    isUnauthorizedPage: !!useMatch(routes.unauthorized),
+    isPrivacyPolicy: !!useMatch(routes.privacyPolicy),
+    isTermsOfService: !!useMatch(routes.termsAndConditions),
   };
-  const isNotFoundPage = Object.values(pagesMatch).every((p) => p === false);
+  const isAppBarVisible = Object.values(pagesMatch).every((p) => p === false);
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setIsDrawerOpen(newOpen);
@@ -75,6 +79,15 @@ const ApplicationBar = () => {
       case "create":
         navigate(routes.create);
         break;
+      case "contact":
+        navigate(routes.contact);
+        break;
+      case "refresh":
+        window.location.reload();
+        break;
+      // case "install":
+      //   navigate(routes.install);
+      //   break;
 
       default:
         scrollToSection(sectionId);
@@ -90,7 +103,7 @@ const ApplicationBar = () => {
 
   return (
     <>
-      {!isNotFoundPage && (
+      {!isAppBarVisible && (
         <AppBar
           position="fixed"
           sx={{
@@ -164,6 +177,20 @@ const ApplicationBar = () => {
                       />
                       <Typography variant="body1" color="text.primary">
                         Create Story
+                      </Typography>
+                    </MenuItem>
+
+                    <MenuItem
+                      sx={{ py: "6px", px: "12px" }}
+                      onClick={handleOnMenuItemClick("contact")}
+                    >
+                      <AlternateEmailOutlined
+                        fontSize="medium"
+                        color="primary"
+                        sx={{ mr: 1 }}
+                      />
+                      <Typography variant="body1" color="text.primary">
+                        Contact Us
                       </Typography>
                     </MenuItem>
 
@@ -338,6 +365,15 @@ const ApplicationBar = () => {
                         <Typography variant="h6">Create Story</Typography>
                       </MenuItem>
 
+                      <MenuItem onClick={handleOnMenuItemClick("contact")}>
+                        <AlternateEmailOutlined
+                          fontSize="medium"
+                          color="primary"
+                          sx={{ mr: 1 }}
+                        />
+                        <Typography variant="h6">Contact Us</Typography>
+                      </MenuItem>
+
                       <Divider sx={{ width: "80%", margin: "auto" }} />
 
                       <MenuItem onClick={toggleThemeMode}>
@@ -356,11 +392,25 @@ const ApplicationBar = () => {
                         )}
 
                         <Typography variant="h6">Appearance</Typography>
-                        {/* <ToggleColorMode
-                          mode={themeMode}
-                          toggleColorMode={toggleThemeMode}
-                        /> */}
                       </MenuItem>
+
+                      <MenuItem onClick={handleOnMenuItemClick("refresh")}>
+                        <RefreshOutlined
+                          fontSize="medium"
+                          color="secondary"
+                          sx={{ mr: 1 }}
+                        />
+                        <Typography variant="h6">Refresh App</Typography>
+                      </MenuItem>
+
+                      {/* <MenuItem onClick={handleOnMenuItemClick("install")}>
+                        <InstallMobileOutlined
+                          fontSize="medium"
+                          color="secondary"
+                          sx={{ mr: 1 }}
+                        />
+                        <Typography variant="h6">Install App</Typography>
+                      </MenuItem> */}
 
                       {pagesMatch.isHomePage && (
                         <>

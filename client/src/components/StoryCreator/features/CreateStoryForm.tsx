@@ -23,7 +23,6 @@ import { Moral, Morals } from "src/shared/mockedData/Moral";
 import { Tone, Tones } from "src/shared/mockedData/Tone";
 
 import { AutoAwesomeOutlined } from "@mui/icons-material";
-import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 import { useOpenaiContext } from "./Openai/store/Provider";
@@ -39,8 +38,7 @@ const CreateStoryForm = () => {
     manager: { handleUpdateProfileInfo, handleUpdateStoryInfo },
   } = useStoryCreatorContext();
 
-  const { store: OpenaiStore, manager: OpenaiManager } = useOpenaiContext();
-  const { isFetching } = OpenaiStore.state.createStory;
+  const { manager: OpenaiManager } = useOpenaiContext();
   const { isCreateStoryFetching, handleCreateStoryRequest } = OpenaiManager;
 
   const handleOnFormSubmit = async (
@@ -142,8 +140,6 @@ const CreateStoryForm = () => {
       >
         Define your story
       </Typography>
-
-      {isFetching && <LoaderSpinner style={{ position: "fixed" }} />}
 
       <Box
         marginY={4}

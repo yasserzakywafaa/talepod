@@ -3,6 +3,7 @@ import {
   Story,
   StoryAudioFile,
   StoryParams,
+  StorySeo,
 } from "src/components/StoryCreator/store/state";
 import {
   getCreateImagePrompt,
@@ -27,6 +28,10 @@ export interface OpenaiManager {
     profileInfo: ProfileInfo,
     storyParams: StoryParams
   ) => Promise<Story>;
+  handleCreateStorySeoRequest: (
+    storyId: string,
+    userSeoPrompt: string
+  ) => Promise<StorySeo>;
   // Create Audio
   isCreateAudioFetching: (isFetching: boolean) => void;
   handleCreateAudio: (story: Story) => Promise<StoryAudioFile | undefined>;
@@ -42,6 +47,7 @@ export const useOpenAiGPTManager = (store: OpenaiStore): OpenaiManager => {
     isCreateStoryFetching,
     handleUpdateCreateStoryPrompt,
     handleCreateStoryRequest,
+    handleCreateStorySeoRequest,
   } = useCreateStory(store);
 
   const { isCreateAudioFetching, handleCreateAudio } =
@@ -85,6 +91,7 @@ export const useOpenAiGPTManager = (store: OpenaiStore): OpenaiManager => {
     isCreateStoryFetching,
     handleCreateStoryRequest,
     handleUpdateCreateStoryPrompt,
+    handleCreateStorySeoRequest,
     // Create Audio
     isCreateAudioFetching,
     handleCreateAudio,
