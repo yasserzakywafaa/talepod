@@ -1,4 +1,9 @@
-import { ProfileInfo, Story, StoryCreatorInitialState } from "../store/state";
+import {
+  ChildGenderEnum,
+  ProfileInfo,
+  Story,
+  StoryCreatorInitialState,
+} from "../store/state";
 
 import { Keywords } from "src/shared/seo";
 
@@ -8,6 +13,11 @@ export const getCreateStoryPrompt = (
   const { name, gender, age, interests, language } = promptParams.profileInfo;
 
   const { moral, tone, environment, maxCharacters } = promptParams.storyParams;
+
+  const genderWord =
+    gender === ChildGenderEnum.Boy || gender === ChildGenderEnum.Girl
+      ? "child"
+      : gender.toLowerCase();
 
   // `Write a story that is ${audioLength} minutes long ${
   const fullDynamicPrompt = `Write a story ${
@@ -49,7 +59,7 @@ export const getCreateStoryPrompt = (
     }
 
     Characters:
-     - Protagonist: ${name}, a ${age}-year-old ${gender.toLowerCase()}.
+     - Protagonist: ${name}, a ${age}-year-old ${genderWord}.
      - Supporting Characters: ${
        interests.length
          ? `Friends around ${interests} (please create 2-3 friends with simple, easy-to-pronounce names and brief descriptions)`
@@ -64,7 +74,7 @@ export const getCreateStoryPrompt = (
 export const getCreateImagePrompt = (childInfo: ProfileInfo): string => {
   const { name, gender, age } = childInfo;
 
-  const fullDynamicPrompt = `A ${age} years old ${gender} named ${name}, with physical characteristics`;
+  const fullDynamicPrompt = `A ${age} years old ${gender.toLowerCase()} named ${name}, with physical characteristics`;
 
   return fullDynamicPrompt;
 };

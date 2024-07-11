@@ -192,6 +192,7 @@ const ViewStoryPage: React.FC = () => {
                       />
 
                       <Chip
+                        sx={{ mt: 1 }}
                         variant="outlined"
                         label={
                           <span color="textSecondary">

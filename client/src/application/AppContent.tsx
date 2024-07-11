@@ -15,8 +15,15 @@ import { useApplicationContext } from "./store/Provider";
 const HomePage = lazy(() => import("../Pages/Home/Home"));
 const CreateStoryPage = lazy(() => import("../Pages/CreateStory/CreateStory"));
 const ExplorePage = lazy(() => import("../Pages/Explore/Explore"));
+const ContactPage = lazy(() => import("../Pages/Contact/Contact"));
 const ViewStoryPage = lazy(() => import("../Pages/ViewStory/ViewStory"));
 const CheckoutPage = lazy(() => import("../Pages/Checkout/CheckoutPage"));
+const PrivacyPolicyPage = lazy(
+  () => import("../Pages/PrivacyPolicy/PrivacyPolicy")
+);
+const TermsAndConditionsPage = lazy(
+  () => import("../Pages/TermsAndConditions/TermsAndConditions")
+);
 const UnauthorizedPage = lazy(
   () => import("../Pages/Unauthorized/Unauthorized")
 );
@@ -38,10 +45,19 @@ const AppContent = () => {
 
           <Route index path={routes.explore} element={<ExplorePage />} />
 
+          <Route index path={routes.contact} element={<ContactPage />} />
+
           <Route
             index
             path={routes.story(":storyId")}
             element={<ViewStoryPage />}
+          />
+
+          <Route path={routes.privacyPolicy} element={<PrivacyPolicyPage />} />
+
+          <Route
+            path={routes.termsAndConditions}
+            element={<TermsAndConditionsPage />}
           />
 
           <Route path={routes.checkout} element={<CheckoutPage />} />

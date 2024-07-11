@@ -84,7 +84,7 @@ const Page = (params: PageProps) => {
         }}
       />
       <Container
-        maxWidth={false}
+        // maxWidth={false}
         className={pageClassNames}
         {...containerProps}
       >

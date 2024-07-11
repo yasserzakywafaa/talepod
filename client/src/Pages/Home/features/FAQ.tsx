@@ -6,14 +6,35 @@ import Container from "@mui/material/Container";
 import { ExpandMoreOutlined } from "@mui/icons-material";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
+import routes from "src/application/routes";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 export default function FAQ() {
+  const navigate = useNavigate();
   const [expanded, setExpanded] = useState<string | false>(false);
 
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
+    };
+
+  const handleLinkClick =
+    (name: string) =>
+    (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+      event.preventDefault();
+
+      switch (name) {
+        case "create":
+          navigate(routes.create);
+          break;
+        case "explore":
+          navigate(routes.explore);
+          break;
+        case "contact":
+          navigate(routes.contact);
+          break;
+      }
     };
 
   return (
@@ -50,8 +71,8 @@ export default function FAQ() {
             aria-controls="panel1d-content"
             id="panel1d-header"
           >
-            <Typography component="h3" variant="subtitle2">
-              How do I contact customer support if I have a question or issue?
+            <Typography component="h3" variant="subtitle1">
+              How do I create a bedtime story on your platform?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -60,13 +81,19 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: "100%", md: "70%" } }}
             >
-              You can reach our customer support team by emailing
-              <Link> support@email.com </Link>
-              or calling our toll-free number. We&apos;re here to assist you
-              promptly.
+              To create a bedtime story, simply navigate to the{" "}
+              <Link
+                href={`${window.location.origin}/create`}
+                onClick={handleLinkClick("create")}
+              >
+                Create Story
+              </Link>{" "}
+              section and fill in the fields to create your own personalized
+              story.
             </Typography>
           </AccordionDetails>
         </Accordion>
+
         <Accordion
           expanded={expanded === "panel2"}
           onChange={handleChange("panel2")}
@@ -76,8 +103,8 @@ export default function FAQ() {
             aria-controls="panel2d-content"
             id="panel2d-header"
           >
-            <Typography component="h3" variant="subtitle2">
-              Can I return the product if it doesn&apos;t meet my expectations?
+            <Typography component="h3" variant="subtitle1">
+              Can I read and listen to stories created by other users?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -86,12 +113,20 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: "100%", md: "70%" } }}
             >
-              Absolutely! We offer a hassle-free return policy. If you&apos;re
-              not completely satisfied, you can return the product within
-              [number of days] days for a full refund or exchange.
+              Absolutely! You can explore and enjoy a wide range of stories
+              created by our team and other users. Browse through the{" "}
+              <Link
+                href={`${window.location.origin}/explore`}
+                onClick={handleLinkClick("explore")}
+              >
+                Stories
+              </Link>{" "}
+              section to find both text and audio versions of various bedtime
+              stories.
             </Typography>
           </AccordionDetails>
         </Accordion>
+
         <Accordion
           expanded={expanded === "panel3"}
           onChange={handleChange("panel3")}
@@ -101,8 +136,8 @@ export default function FAQ() {
             aria-controls="panel3d-content"
             id="panel3d-header"
           >
-            <Typography component="h3" variant="subtitle2">
-              What makes your product stand out from others in the market?
+            <Typography component="h3" variant="subtitle1">
+              Is there a way to filter stories based on age or genre?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -111,13 +146,13 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: "100%", md: "70%" } }}
             >
-              Our product distinguishes itself through its adaptability,
-              durability, and innovative features. We prioritize user
-              satisfaction and continually strive to exceed expectations in
-              every aspect.
+              Absolutely! Our platform allows you to filter stories by age group
+              and genre, ensuring you find the perfect story for your child's
+              bedtime.
             </Typography>
           </AccordionDetails>
         </Accordion>
+
         <Accordion
           expanded={expanded === "panel4"}
           onChange={handleChange("panel4")}
@@ -127,8 +162,8 @@ export default function FAQ() {
             aria-controls="panel4d-content"
             id="panel4d-header"
           >
-            <Typography component="h3" variant="subtitle2">
-              Is there a warranty on the product, and what does it cover?
+            <Typography component="h3" variant="subtitle1">
+              How do I contact customer support if I have a question or issue?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -137,10 +172,66 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: "100%", md: "70%" } }}
             >
-              Yes, our product comes with a [length of warranty] warranty. It
-              covers defects in materials and workmanship. If you encounter any
-              issues covered by the warranty, please contact our customer
-              support for assistance.
+              If you have any questions or encounter any issues, you can contact
+              our customer support team by clicking on the{" "}
+              <Link
+                href={`${window.location.origin}/contact`}
+                onClick={handleLinkClick("contact")}
+              >
+                Support
+              </Link>{" "}
+              link in the footer of the website
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion
+          expanded={expanded === "panel5"}
+          onChange={handleChange("panel5")}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreOutlined />}
+            aria-controls="panel5d-content"
+            id="panel5d-header"
+          >
+            <Typography component="h3" variant="subtitle1">
+              Are there any guidelines for creating stories?
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography
+              variant="body2"
+              gutterBottom
+              sx={{ maxWidth: { sm: "100%", md: "70%" } }}
+            >
+              We make sure that all stories created are appropriate for children
+              and suitable for young audiences.
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion
+          expanded={expanded === "panel6"}
+          onChange={handleChange("panel6")}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreOutlined />}
+            aria-controls="panel6d-content"
+            id="panel6d-header"
+          >
+            <Typography component="h3" variant="subtitle1">
+              Can I share the stories I create on social media?
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography
+              variant="body2"
+              gutterBottom
+              sx={{ maxWidth: { sm: "100%", md: "70%" } }}
+            >
+              Yes, you can share your stories on social media directly from our
+              platform. Use the share button on your story page to post it on
+              various social media platforms.
             </Typography>
           </AccordionDetails>
         </Accordion>

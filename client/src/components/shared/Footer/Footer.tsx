@@ -1,3 +1,5 @@
+import "./Footer.scss";
+
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { Divider } from "@mui/material";
@@ -31,21 +33,19 @@ const Footer = () => {
           navigate(routes.privacyPolicy);
           break;
 
-        case "terms-of-service":
-          navigate(routes.termsOfService);
+        case "terms-and-conditions":
+          navigate(routes.termsAndConditions);
           break;
       }
     };
 
   return (
     <Container
+      className="footer"
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
         gap: { xs: 4, sm: 8 },
-        pb: { xs: 4, sm: 4 },
-        pt: { xs: 2, sm: 2 },
+        mt: { xs: 2, sm: 2 },
+        p: { xs: 2, sm: 2 },
         textAlign: { sm: "center", md: "left" },
       }}
     >
@@ -76,10 +76,10 @@ const Footer = () => {
           <Link
             sx={{ pt: "5px" }}
             color="text.secondary"
-            href={routes.termsOfService}
-            onClick={handleFooterLinkItemClick("terms-of-service")}
+            href={routes.termsAndConditions}
+            onClick={handleFooterLinkItemClick("terms-and-conditions")}
           >
-            Terms of Service
+            Terms and Conditions
           </Link>
         </Box>
 
