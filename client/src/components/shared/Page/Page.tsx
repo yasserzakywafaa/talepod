@@ -62,9 +62,15 @@ const Page = (params: PageProps) => {
 
   useEffect(() => {
     // Prevent scrolling while page is loading
+    const htmlNode = document.getElementsByTagName("html")[0];
     const bodyNode = document.getElementsByTagName("body")[0];
-    if (isPageLoading) bodyNode.style.overflow = "hidden";
-    else bodyNode.removeAttribute("style");
+    if (isPageLoading) {
+      htmlNode.style.overflow = "hidden";
+      bodyNode.style.overflow = "hidden";
+    } else {
+      htmlNode.removeAttribute("style");
+      bodyNode.removeAttribute("style");
+    }
   }, [isPageLoading]);
 
   return (

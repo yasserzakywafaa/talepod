@@ -21,7 +21,6 @@ export const useViewStoryManager = (
 
   const setUp = async (storyId: string) => {
     store.handleIsFetching(true);
-    await fetchStoryById(storyId);
     const story = await fetchStoryById(storyId);
 
     if (!story.seo) {

@@ -1,5 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import { Story, StoryAudioFile, StoryParts, StorySeo } from "src/models/types";
+import {
+  ProfileInfo,
+  Story,
+  StoryAudioFile,
+  StoryParams,
+  StoryParts,
+  StorySeo,
+} from "src/models/types";
 import {
   saveFileDataToDb,
   saveStorySeoToDb,
@@ -21,7 +28,10 @@ export const createStory = async (
   response: Response,
   next: NextFunction
 ) => {
-  const { storyPrompt, profileInfo, storyParams } = request.body;
+  // const { storyPrompt, profileInfo, storyParams } = request.body;
+  const { storyPrompt } = request.body;
+  const profileInfo = request.body.profileInfo as ProfileInfo;
+  const storyParams = request.body.storyParams as StoryParams;
 
   const createStoryRequest = async (): Promise<string> => {
     // OpenAI Text Generation API Call
@@ -57,6 +67,19 @@ export const createStory = async (
 
   try {
     const storyParts = await retry(createAndExtractStoryParts, 3, 2000);
+    const storyCharacters = storyParts.mainStory.length;
+    const poemCharacters = storyParts.poem.length;
+    const totalCharacters = (storyParts.mainStory + storyParts.poem).length;
+    console.log("ℹ️ Story and Poem Total Characters: ", {
+      storyCharacters,
+      poemCharacters,
+      totalCharacters,
+    });
+
+    // Count the total characters in the story
+    if (totalCharacters > 4000) {
+      throw new Error("❌ The story exceeds the maximum number of characters!");
+    }
 
     try {
       // Save story to MongoDB Atlas
@@ -66,7 +89,10 @@ export const createStory = async (
           createdAt: new Date(),
         },
         profileInfo,
-        storyParams
+        {
+          ...storyParams,
+          totalCharacters,
+        }
       );
 
       response.json({
@@ -82,7 +108,7 @@ export const createStory = async (
       });
     }
 
-    console.log("✅  Story Created Successfully", {
+    console.log("✅ Story Created Successfully", {
       request: request.path,
       MODEL_NAME: CONFIG.OPENAI_MODEL_NAME,
     });
@@ -90,7 +116,7 @@ export const createStory = async (
     console.error("❌ Failed to create a story!", {
       error,
     });
-    next(error);
+    next(`❌ Failed to create a story! ${error}`);
   }
 };
 

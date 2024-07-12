@@ -109,6 +109,18 @@ const ViewStoryInfo = (props: ViewStoryInfoParams) => {
                 label={renderChipLabel("Tone", story.storyParams.tone.name)}
               />
             )}
+
+            {story.storyParams.totalCharacters && (
+              <Chip
+                color="secondary"
+                variant="outlined"
+                className="view-story-card-footer-info-tag"
+                label={renderChipLabel(
+                  "Story Length",
+                  `${story.storyParams.totalCharacters}`
+                )}
+              />
+            )}
           </Box>
         </Box>
       </CardContent>

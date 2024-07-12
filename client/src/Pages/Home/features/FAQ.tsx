@@ -88,8 +88,7 @@ export default function FAQ() {
               >
                 Create Story
               </Link>{" "}
-              section and fill in the fields to create your own personalized
-              story.
+              page and fill in the fields to create your own personalized story.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -114,14 +113,16 @@ export default function FAQ() {
               sx={{ maxWidth: { sm: "100%", md: "70%" } }}
             >
               Absolutely! You can explore and enjoy a wide range of stories
-              created by our team and other users. Browse through the{" "}
+              created by our team and other users.
+              <br />
+              Browse through the{" "}
               <Link
                 href={`${window.location.origin}/explore`}
                 onClick={handleLinkClick("explore")}
               >
-                Stories
+                Explore
               </Link>{" "}
-              section to find both text and audio versions of various bedtime
+              page to find both text and audio versions of various bedtime
               stories.
             </Typography>
           </AccordionDetails>
@@ -146,7 +147,7 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: "100%", md: "70%" } }}
             >
-              Absolutely! Our platform allows you to filter stories by age group
+              Certainly! Our platform allows you to filter stories by age group
               and genre, ensuring you find the perfect story for your child's
               bedtime.
             </Typography>
@@ -173,14 +174,14 @@ export default function FAQ() {
               sx={{ maxWidth: { sm: "100%", md: "70%" } }}
             >
               If you have any questions or encounter any issues, you can contact
-              our customer support team by clicking on the{" "}
+              our customer support team by visiting the{" "}
               <Link
                 href={`${window.location.origin}/contact`}
                 onClick={handleLinkClick("contact")}
               >
-                Support
+                Contact
               </Link>{" "}
-              link in the footer of the website
+              page from our menu.
             </Typography>
           </AccordionDetails>
         </Accordion>

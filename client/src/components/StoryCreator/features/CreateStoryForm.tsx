@@ -63,17 +63,17 @@ const CreateStoryForm = () => {
           profileInfo,
           storyParams
         );
-        isCreateStoryFetching(false);
 
         if (story._id) {
-          navigate(routes.story(story._id), {
-            state: { storyCreated: true },
-          });
+          navigate(routes.story(story._id), { replace: false });
+          window.localStorage.setItem("newStoryCreated", "true");
         }
       } catch (error) {
         console.error("❌ Failed to create a story!", {
           error,
         });
+      } finally {
+        isCreateStoryFetching(false);
       }
     }
   };
