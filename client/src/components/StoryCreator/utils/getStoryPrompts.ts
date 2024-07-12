@@ -12,7 +12,8 @@ export const getCreateStoryPrompt = (
 ): string => {
   const { name, gender, age, interests, language } = promptParams.profileInfo;
 
-  const { moral, tone, environment, maxCharacters } = promptParams.storyParams;
+  const { moral, tone, environment, minCharacters, maxCharacters } =
+    promptParams.storyParams;
 
   const genderWord =
     gender === ChildGenderEnum.Boy || gender === ChildGenderEnum.Girl
@@ -24,6 +25,7 @@ export const getCreateStoryPrompt = (
     language.value ? ` in the language of ${language.name},` : "English"
   } with the following outputs inside of the curly brackets for the data ETL process.
     Make sure the Title, Story summary, Story, and Poem are each between curly brackets for easy data extraction.
+    Both the Story and the Poem combined MUST BE between ${minCharacters} and ${maxCharacters} characters in length.
 
     Consider the following parameters while creating the story:
       • Use appropriate punctuation (commas, periods, question marks) to guide natural pauses and intonation.
@@ -37,10 +39,10 @@ export const getCreateStoryPrompt = (
 
     {Provide the story title here}
 
-    {Provide a story summary here, not longer than 120 characters, outlining the basic plot and key elements of the story here.}
+    {Provide a story summary here, not longer than 100 characters, outlining the basic plot and key elements of the story here.}
 
-    {Provide the story here with 4-5 scenes or chapters. Refrain from mentioning the chapters. 
-    Just provide the text of the story as it is a bedtime story for kids, building the drama accordingly. Ensure the story is about ${maxCharacters} characters in length.}
+    {Provide the story here with several scenes or chapters. Refrain from mentioning the chapters.
+    Just provide the text of the story as it is a bedtime story for kids, building the drama accordingly.}
 
     {Provide a bedtime poem here that summarizes the story in 4-6 rhyming verses}
 
@@ -113,10 +115,6 @@ export const getStorySeoPrompt = (story: Story): string => {
   Any hyperlink should open in a new tab. 
 
   In the response, don't mention anything other than the required SEO-optimized text and include it around curly brackets for easy data extraction.`;
-
-  console.log("SEO Text:>>>", {
-    fullDynamicPrompt,
-  });
 
   return fullDynamicPrompt;
 };

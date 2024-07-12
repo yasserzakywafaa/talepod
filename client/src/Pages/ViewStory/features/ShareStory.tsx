@@ -19,7 +19,6 @@ interface ShareStory {
 const ShareStory = (props: ShareStory) => {
   const { url } = props;
   const [isUrlCopied, setIsUrlCopied] = useState(false);
-  console.log(isUrlCopied);
 
   const handleCopyUrlToClipboard = () => {
     if (navigator.clipboard && navigator.clipboard.writeText) {

@@ -13,7 +13,6 @@ import {
   Notify,
   ToastTypes,
 } from "src/components/shared/Notification/Notification";
-import { useLocation, useParams } from "react-router-dom";
 
 import Box from "@mui/material/Box";
 import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
@@ -28,11 +27,10 @@ import ViewStorySEO from "./features/ViewStorySEO";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useEffect } from "react";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
+import { useParams } from "react-router-dom";
 import { useViewStoryContext } from "./store/Provider";
 
 const ViewStoryPage: React.FC = () => {
-  const location = useLocation();
-  const { storyCreated } = location.state || {};
   const { storyId } = useParams<{ storyId: string }>();
   const { isDesktop } = useDeviceSize();
 
@@ -71,22 +69,25 @@ const ViewStoryPage: React.FC = () => {
 
   useEffect(() => {
     if (storyId) setUp(storyId);
-
-    if (storyCreated) {
-      Notify({
-        type: ToastTypes.Success,
-        content: "Story created successfully.",
-      });
-    }
-  }, [storyId, storyCreated]);
+  }, [storyId]);
 
   useEffect(() => {
     if (story && story._id) {
-      const metaTag = document.createElement("meta");
-      metaTag.setAttribute("name", "description");
-      metaTag.setAttribute("content", story.summary);
+      const metaTag = document
+        .getElementsByTagName("meta")
+        .namedItem("description");
 
-      document.head.appendChild(metaTag);
+      metaTag?.setAttribute("content", story.summary);
+
+      const newStoryCreated =
+        window.localStorage.getItem("newStoryCreated") === "true";
+      if (newStoryCreated) {
+        Notify({
+          type: ToastTypes.Success,
+          content: "Story created successfully.",
+        });
+        window.localStorage.removeItem("newStoryCreated");
+      }
     }
   }, [story]);
 

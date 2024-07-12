@@ -38,8 +38,8 @@ const StoryCard = (props: StoryCard) => {
   const { audioFile } = props.story;
   const profileInfo = props.story.profileInfo || {};
 
-  const handleOnViewClick = () => {
-    navigate(routes.story(props.story._id));
+  const handleOnCardClick = () => {
+    navigate(routes.story(props.story._id), {});
   };
 
   return (
@@ -55,7 +55,7 @@ const StoryCard = (props: StoryCard) => {
           transition: "200ms",
         },
       }}
-      onClick={handleOnViewClick}
+      onClick={handleOnCardClick}
     >
       <CardContent className="story-card-content">
         <Typography

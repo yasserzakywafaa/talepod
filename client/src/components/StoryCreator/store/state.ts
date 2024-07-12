@@ -34,7 +34,9 @@ export interface StoryParams {
   tone: Tone;
   moral: Moral;
   audioLength: number;
+  minCharacters: number;
   maxCharacters: number;
+  totalCharacters: number;
   environment: Environment;
 }
 
@@ -89,7 +91,9 @@ export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
     },
     storyParams: {
       audioLength: 10,
+      minCharacters: 3900,
       maxCharacters: 4000,
+      totalCharacters: 4000,
       moral: {
         name: "",
         value: "",

@@ -35,7 +35,9 @@ export const getViewStoryInitialState = (): ViewStoryInitialState => {
       },
       storyParams: {
         audioLength: 10,
-        maxCharacters: 5000,
+        minCharacters: 3900,
+        maxCharacters: 4000,
+        totalCharacters: 4000,
         moral: {
           name: "",
           value: "",
