@@ -6,20 +6,23 @@ const END_POINTS = {
   },
   GOOGLE_GEMINI: {
     CREATE: {
-      STORY: `/api/v1/gemini/create/story`,
+      STORY: "/api/v1/gemini/create/story",
     },
   },
   OPENAI: {
     CREATE: {
-      STORY: `/api/v1/openai/create/story`,
-      STORY_SEO: `/api/v1/story-seo`,
-      STORY_AUDIO: `/api/v1/openai/create/story-audio`,
-      IMAGES: `/api/v1/openai/create/images`,
+      STORY: "/api/v1/openai/create/story",
+      STORY_SEO: "/api/v1/story-seo",
+      STORY_AUDIO: "/api/v1/openai/create/story-audio",
+      IMAGES: "/api/v1/openai/create/images",
     },
   },
   STORIES: {
-    GET_ALL_STORIES: `/api/v1/stories`,
+    GET_ALL_STORIES: "/api/v1/stories",
     GET_STORY_BY_ID: (storyId: string) => `/api/v1/story/${storyId}`,
+  },
+  CONTACT: {
+    SUPPORT: "/api/v1/contact-support",
   },
 };
 

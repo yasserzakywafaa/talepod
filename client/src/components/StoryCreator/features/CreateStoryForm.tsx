@@ -15,7 +15,6 @@ import {
   TextField,
   ToggleButton,
   ToggleButtonGroup,
-  Typography,
 } from "@mui/material";
 import { Environment, Environments } from "src/shared/mockedData/Environments";
 import { Language, Languages } from "../../../shared/languages";
@@ -130,17 +129,6 @@ const CreateStoryForm = () => {
 
   return (
     <Box className="story-creator-form">
-      <Typography
-        sx={{
-          fontSize: { xs: 20, sm: 30 },
-          mt: 2,
-          mb: 4,
-          color: (theme) => theme.palette.primary.main,
-        }}
-      >
-        Define your story
-      </Typography>
-
       <Box
         marginY={4}
         display="flex"
@@ -162,11 +150,11 @@ const CreateStoryForm = () => {
           label="Name"
           type="text"
           value={profileInfo.name}
-          className="profile-info-form-item"
+          className="form-item"
           onChange={handleFieldChange}
         />
 
-        <FormControl className="profile-info-form-item">
+        <FormControl className="form-item">
           <InputLabel id="language-select-label">Language</InputLabel>
           <Select
             required
@@ -188,7 +176,7 @@ const CreateStoryForm = () => {
           </Select>
         </FormControl>
 
-        <FormControl className="profile-info-form-item">
+        <FormControl className="form-item">
           <InputLabel id="age-select-label">Age</InputLabel>
           <Select
             name="age"
@@ -207,7 +195,7 @@ const CreateStoryForm = () => {
           </Select>
         </FormControl>
 
-        <Box className="profile-info-form-item">
+        <Box className="form-item">
           <ToggleButtonGroup
             exclusive
             value={profileInfo.gender}
@@ -260,7 +248,7 @@ const CreateStoryForm = () => {
           </ToggleButtonGroup>
         </Box>
 
-        <FormControl className="profile-info-form-item">
+        <FormControl className="form-item">
           <InputLabel id="nationality-select-label">Moral</InputLabel>
           <Select
             name="moral"
@@ -281,7 +269,7 @@ const CreateStoryForm = () => {
           </Select>
         </FormControl>
 
-        <FormControl className="profile-info-form-item">
+        <FormControl className="form-item">
           <InputLabel id="nationality-select-label">Tone</InputLabel>
           <Select
             name="tone"
@@ -302,7 +290,7 @@ const CreateStoryForm = () => {
           </Select>
         </FormControl>
 
-        <FormControl className="profile-info-form-item">
+        <FormControl className="form-item">
           <InputLabel id="nationality-select-label">Environment</InputLabel>
           <Select
             name="environment"
@@ -329,13 +317,14 @@ const CreateStoryForm = () => {
           label="Other Interests"
           type="text"
           value={profileInfo.interests}
-          className="profile-info-form-item"
+          className="form-item"
           onChange={handleFieldChange}
         />
 
         <Box
           display="flex"
           marginX={2}
+          marginY={2}
           width="100%"
           component="div"
           alignItems="center"

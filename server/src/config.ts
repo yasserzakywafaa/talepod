@@ -47,6 +47,10 @@ const CONFIG = {
   HOST_AWS_ACCESS_KEY: process.env.HOST_AWS_ACCESS_KEY,
   HOST_AWS_SECRET_KEY: process.env.HOST_AWS_SECRET_KEY,
   HOST_AWS_REGION: process.env.HOST_AWS_REGION,
+
+  // Email Service
+  EMAIL: process.env.EMAIL,
+  PASSWORD: process.env.PASSWORD,
 };
 
 export default CONFIG;

@@ -1,5 +1,6 @@
 import { AppWithGoogleAuthContextProvider } from "src/components/shared/SocialLogins/GoogleAuth/store/Provider";
 import { ApplicationContextProvider } from "./store/Provider";
+import { ContactContextProvider } from "src/Pages/Contact/store/Provider";
 import { ExploreContextProvider } from "src/Pages/Explore/store/Provider";
 import { LoginModalContextProvider } from "src/components/Modals/LoginModal/store/Provider";
 import { OpenaiContextProvider } from "src/components/StoryCreator/features/Openai/store/Provider";
@@ -17,6 +18,7 @@ const contextProviders = [
   ExploreContextProvider,
   OpenaiContextProvider,
   ViewStoryContextProvider,
+  ContactContextProvider,
 
   // Authentication
   AppWithGoogleAuthContextProvider,
