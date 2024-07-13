@@ -76,3 +76,10 @@ export interface BasicParam {
   value: string;
   description?: string;
 }
+
+export interface ContactFormState {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}

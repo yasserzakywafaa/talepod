@@ -1,5 +1,7 @@
 import "./CreateStory.scss";
 
+import { Container, Typography } from "@mui/material";
+
 import Box from "@mui/material/Box";
 import Page from "src/components/shared/Page/Page";
 import StoryCreator from "src/components/StoryCreator/StoryCreator";
@@ -31,11 +33,32 @@ const CreateStoryPage = () => {
         isPageFetching || isCreateStoryFetching || isCreateAudioFetching
       }
     >
-      <Box component="div" className="bg-image-character">
-        <img src={Unicorn} width="100%" />
-      </Box>
+      <Container>
+        <Box component="div" className="bg-image-character">
+          <img src={Unicorn} width="100%" />
+        </Box>
 
-      <StoryCreator />
+        <Box sx={{ textAlign: "center" }}>
+          <Typography
+            sx={{
+              fontSize: { xs: 20, sm: 30 },
+              mt: 2,
+              mb: 1,
+              color: (theme) => theme.palette.primary.main,
+            }}
+          >
+            Define your story
+          </Typography>
+
+          <Typography variant="subtitle1">
+            Personalize bedtime story by filling in the details below. The name
+            is required, and the rest of the fields are optional to customize
+            your story.
+          </Typography>
+        </Box>
+
+        <StoryCreator />
+      </Container>
     </Page>
   );
 };

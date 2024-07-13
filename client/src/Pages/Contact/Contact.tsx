@@ -5,10 +5,21 @@ import { Container, Grid, Typography } from "@mui/material";
 import ContactForm from "./features/ContactForm";
 import ContactMap from "./features/ContactMap";
 import Page from "src/components/shared/Page/Page";
+import { useContactContext } from "./store/Provider";
 
 const ContactPage = () => {
+  const {
+    store: {
+      state: { isFetching },
+    },
+  } = useContactContext();
+
   return (
-    <Page title="Contact Us | TalePod" className="contact-page">
+    <Page
+      title="Contact Us | TalePod"
+      className="contact-page"
+      isLoading={isFetching}
+    >
       <Container
         className="view-story-container"
         sx={{

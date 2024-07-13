@@ -41,6 +41,9 @@ const END_POINTS = {
     GET_STORY_BY_ID: (storyId: string) =>
       `${publicApiUrl}/api/v1/story/${storyId}`,
   },
+  CONTACT: {
+    SUPPORT: `${publicApiUrl}/api/v1/contact-support`,
+  },
 };
 
 export default END_POINTS;

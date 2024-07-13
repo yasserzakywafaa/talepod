@@ -11,12 +11,6 @@ const ContactForm = () => {
 
   const handleOnFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-
-    console.log("handleOnFieldChange", {
-      name,
-      value,
-    });
-
     handleUpdateContactForm(name, value);
   };
 

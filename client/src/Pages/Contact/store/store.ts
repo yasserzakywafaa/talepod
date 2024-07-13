@@ -4,6 +4,7 @@ import { useState } from "react";
 
 export interface ContactStore {
   state: ContactInitialState;
+  resetFormState: () => void;
   handleIsFetching: (isFetching: boolean) => void;
   updateContactForm: (key: string, value: string) => void;
 }
@@ -30,8 +31,13 @@ const useContactStore = (): ContactStore => {
     }));
   };
 
+  const resetFormState = () => {
+    setState(initialState);
+  };
+
   return {
     state,
+    resetFormState,
     handleIsFetching,
     updateContactForm,
   };
