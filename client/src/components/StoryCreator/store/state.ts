@@ -10,6 +10,7 @@ export interface StoryCreatorInitialState {
   storyParams: StoryParams;
   createStory: CreateStoryProps;
   createAudio: CreateAudioProps;
+  isStorySettingsExpanded: boolean;
 }
 
 export enum ChildGenderEnum {
@@ -82,6 +83,7 @@ export type CreateAudioProps = CreateStoryProps;
 export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
   return {
     isFetching: false,
+    isStorySettingsExpanded: false,
     profileInfo: {
       name: "",
       gender: ChildGenderEnum.Girl || AdultGenderEnum.Female,
