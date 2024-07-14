@@ -1,10 +1,7 @@
 import {
-  AdultGenderEnum,
-  ChildGenderEnum,
-  ProfileInfo,
-  Story,
-} from "../store/state";
-import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Button,
   FormControl,
@@ -16,22 +13,32 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
+import {
+  AdultGenderEnum,
+  ChildGenderEnum,
+  ProfileInfo,
+  Story,
+} from "../store/state";
+import { AutoAwesomeOutlined, ExpandMoreOutlined } from "@mui/icons-material";
 import { Environment, Environments } from "src/shared/mockedData/Environments";
 import { Language, Languages } from "../../../shared/languages";
 import { Moral, Morals } from "src/shared/mockedData/Moral";
 import { Tone, Tones } from "src/shared/mockedData/Tone";
 
-import { AutoAwesomeOutlined } from "@mui/icons-material";
+import StorySettings from "./StorySettings";
+import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 import routes from "src/application/routes";
+import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useNavigate } from "react-router-dom";
 import { useOpenaiContext } from "./Openai/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
 
 const CreateStoryForm = () => {
   const navigate = useNavigate();
+  const { isDesktop } = useDeviceSize();
   const {
     store: {
-      state: { profileInfo, storyParams },
+      state: { profileInfo, storyParams, isStorySettingsExpanded },
     },
     store: storyCreatorStore,
     manager: { handleUpdateProfileInfo, handleUpdateStoryInfo },
@@ -40,6 +47,24 @@ const CreateStoryForm = () => {
   const { manager: OpenaiManager } = useOpenaiContext();
   const { isCreateStoryFetching, handleCreateStoryRequest } = OpenaiManager;
 
+  const isCreateButtonDisabled = (): boolean => {
+    if (
+      hasCensoredWords(profileInfo.name) ||
+      hasCensoredWords(profileInfo.interests)
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
+  const isFormHasErrors = (): boolean => {
+    return (
+      hasCensoredWords(profileInfo.name) ||
+      hasCensoredWords(profileInfo.interests)
+    );
+  };
+
   const handleOnFormSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
@@ -47,7 +72,7 @@ const CreateStoryForm = () => {
     event.stopPropagation();
 
     const form = event.currentTarget;
-    if (!form.checkValidity()) {
+    if (!form.checkValidity() || isFormHasErrors()) {
       form.reportValidity();
       return;
     }
@@ -127,12 +152,18 @@ const CreateStoryForm = () => {
     }
   };
 
+  const handleToggleStorySettings = (
+    event: React.SyntheticEvent,
+    expanded: boolean
+  ) => {
+    storyCreatorStore.toggleStorySettings(expanded);
+  };
+
   return (
     <Box className="story-creator-form">
       <Box
         marginY={4}
         display="flex"
-        noValidate
         width="100%"
         flexWrap="wrap"
         component="form"
@@ -140,8 +171,8 @@ const CreateStoryForm = () => {
         flexDirection="row"
         alignItems="center"
         justifyContent="center"
-        className="profile-info-form"
         onSubmit={handleOnFormSubmit}
+        className="story-creator-form-wrapper"
       >
         <TextField
           required
@@ -151,6 +182,10 @@ const CreateStoryForm = () => {
           type="text"
           value={profileInfo.name}
           className="form-item"
+          error={hasCensoredWords(profileInfo.name)}
+          helperText={
+            hasCensoredWords(profileInfo.name) && "Not Appropriate 🙈"
+          }
           onChange={handleFieldChange}
         />
 
@@ -248,78 +283,43 @@ const CreateStoryForm = () => {
           </ToggleButtonGroup>
         </Box>
 
-        <FormControl className="form-item">
-          <InputLabel id="nationality-select-label">Moral</InputLabel>
-          <Select
-            name="moral"
-            label="Moral"
-            variant="outlined"
-            id="story-moral-select"
-            value={storyParams.moral.value}
-            labelId="story-moral-select-label"
-            onChange={handleOnSelectChange}
-          >
-            {Morals.map((moral, index) => {
-              return (
-                <MenuItem key={index} value={moral.value}>
-                  {moral.name}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
+        {isDesktop && (
+          <StorySettings
+            profileInfo={profileInfo}
+            storyParams={storyParams}
+            handleFieldChange={handleFieldChange}
+            handleOnSelectChange={handleOnSelectChange}
+          />
+        )}
 
-        <FormControl className="form-item">
-          <InputLabel id="nationality-select-label">Tone</InputLabel>
-          <Select
-            name="tone"
-            variant="outlined"
-            label="Tone"
-            id="story-tone-select"
-            value={storyParams.tone.value}
-            labelId="story-tone-select-label"
-            onChange={handleOnSelectChange}
+        {!isDesktop && (
+          <Accordion
+            className="story-settings-form"
+            expanded={isStorySettingsExpanded}
+            onChange={handleToggleStorySettings}
           >
-            {Tones.map((tone, index) => {
-              return (
-                <MenuItem key={index} value={tone.value}>
-                  {tone.name}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
-
-        <FormControl className="form-item">
-          <InputLabel id="nationality-select-label">Environment</InputLabel>
-          <Select
-            name="environment"
-            variant="outlined"
-            label="Environment"
-            id="environment-select"
-            value={storyParams.environment?.value}
-            labelId="environment-select-label"
-            onChange={handleOnSelectChange}
-          >
-            {Environments.map((environment, index) => {
-              return (
-                <MenuItem key={index} value={environment.value}>
-                  {environment.name}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
-
-        <TextField
-          id="interests"
-          name="interests"
-          label="Other Interests"
-          type="text"
-          value={profileInfo.interests}
-          className="form-item"
-          onChange={handleFieldChange}
-        />
+            <AccordionSummary
+              expandIcon={<ExpandMoreOutlined />}
+              id="story-settings-form-accordion-summary"
+              className="story-settings-form-accordion-summary"
+              aria-controls="story-settings-form-accordion-summary"
+            >
+              More story settings (optional)
+            </AccordionSummary>
+            <AccordionDetails
+              id="story-settings-form-accordion-details"
+              className="story-settings-form-accordion-details"
+              aria-controls="story-settings-form-accordion-details"
+            >
+              <StorySettings
+                profileInfo={profileInfo}
+                storyParams={storyParams}
+                handleFieldChange={handleFieldChange}
+                handleOnSelectChange={handleOnSelectChange}
+              />
+            </AccordionDetails>
+          </Accordion>
+        )}
 
         <Box
           display="flex"
@@ -329,12 +329,13 @@ const CreateStoryForm = () => {
           component="div"
           alignItems="center"
           justifyContent="center"
-          className="profile-info-form-button"
+          className="story-creator-form-wrapper-button"
         >
           <Button
             type="submit"
             title="submit-button"
             variant="contained"
+            disabled={isCreateButtonDisabled()}
             endIcon={<AutoAwesomeOutlined />}
           >
             Create

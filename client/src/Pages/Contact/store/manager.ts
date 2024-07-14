@@ -24,7 +24,6 @@ export const useContactManager = (store: ContactStore): ContactManager => {
     store.handleIsFetching(true);
 
     try {
-      // const response: AxiosResponse<ContactFormState, ContactFormState> =
       await axios.post(
         END_POINTS.CONTACT.SUPPORT,
         {

@@ -5,6 +5,7 @@ import { useState } from "react";
 export interface StoryCreatorStore {
   state: StoryCreatorInitialState;
   updateState: (newState: StoryCreatorInitialState) => void;
+  toggleStorySettings: (isStorySettingsExpanded: boolean) => void;
 }
 
 const useStoryCreatorStore = (): StoryCreatorStore => {
@@ -15,9 +16,17 @@ const useStoryCreatorStore = (): StoryCreatorStore => {
     setState(newState);
   };
 
+  const toggleStorySettings = (isStorySettingsExpanded: boolean) => {
+    setState((prev) => ({
+      ...prev,
+      isStorySettingsExpanded: !prev.isStorySettingsExpanded,
+    }));
+  };
+
   return {
     state,
     updateState,
+    toggleStorySettings,
   };
 };
 

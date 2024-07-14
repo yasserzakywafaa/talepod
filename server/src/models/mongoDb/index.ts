@@ -115,14 +115,12 @@ const saveFileDataToDb = async (
   audioFileS3Uri: string
 ): Promise<void> => {
   try {
-    // const collection = database.collection(DBCollections.Stories);
     const audioFile = {
       fileName: audioFileName,
       url: audioFileS3Uri,
       createdAt: new Date(),
     };
 
-    // await collection.insertOne(audioFile);
     await updateDocument(storyId, DBCollections.Stories, { audioFile });
 
     console.log("✅ File saved to DB successfully");

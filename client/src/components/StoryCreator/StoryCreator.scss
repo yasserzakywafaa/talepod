@@ -3,7 +3,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  .profile-info-form {
+  .story-creator-form-wrapper {
     position: relative;
     margin: 0;
     .form-item {
@@ -12,12 +12,26 @@
       margin-left: 1rem;
       margin-right: 1rem;
     }
+
+    .story-settings-form {
+      margin-top: 0.5rem;
+      .story-settings-form-accordion-details {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 0;
+      }
+      .form-item {
+        flex-basis: 40%;
+        margin-bottom: 1rem;
+      }
+    }
   }
 }
 
 @media only screen and (max-width: 768px) {
   .story-creator-form {
-    .profile-info-form {
+    .story-creator-form-wrapper {
       .form-item {
         flex-basis: 40%;
       }
