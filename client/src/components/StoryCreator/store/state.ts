@@ -1,8 +1,7 @@
+import { Environment, Environments } from "src/shared/mockedData/Environments";
 import { Language, Languages } from "src/shared/languages";
-
-import { Environment } from "src/shared/mockedData/Environments";
-import { Moral } from "src/shared/mockedData/Moral";
-import { Tone } from "src/shared/mockedData/Tone";
+import { Moral, Morals } from "src/shared/mockedData/Moral";
+import { Tone, Tones } from "src/shared/mockedData/Tone";
 
 export interface StoryCreatorInitialState {
   isFetching: boolean;
@@ -87,27 +86,19 @@ export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
     profileInfo: {
       name: "",
       gender: ChildGenderEnum.Girl || AdultGenderEnum.Female,
-      age: 1,
+      age: Math.floor(Math.random() * 50),
       interests: "",
-      language: Languages[0],
+      language: Languages[Math.floor(Math.random() * Languages.length)],
     },
     storyParams: {
       audioLength: 10,
       minCharacters: 3900,
       maxCharacters: 4000,
       totalCharacters: 4000,
-      moral: {
-        name: "",
-        value: "",
-      },
-      tone: {
-        name: "",
-        value: "",
-      },
-      environment: {
-        name: "",
-        value: "",
-      },
+      moral: Morals[Math.floor(Math.random() * Morals.length)],
+      tone: Tones[Math.floor(Math.random() * Tones.length)],
+      environment:
+        Environments[Math.floor(Math.random() * Environments.length)],
     },
     createStory: {
       isFetching: false,

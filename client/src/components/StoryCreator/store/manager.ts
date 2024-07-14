@@ -60,7 +60,7 @@ export const useStoryCreatorManager = (
     });
 
     const { profileInfo } = state;
-    if (profileInfo.age >= 18) {
+    if (profileInfo.age >= 19) {
       if (profileInfo.gender === ChildGenderEnum.Girl) {
         handleUpdateProfileInfo("gender", AdultGenderEnum.Female);
       } else if (profileInfo.gender === ChildGenderEnum.Boy) {

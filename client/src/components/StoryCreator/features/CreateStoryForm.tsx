@@ -26,6 +26,7 @@ import { Moral, Morals } from "src/shared/mockedData/Moral";
 import { Tone, Tones } from "src/shared/mockedData/Tone";
 
 import StorySettings from "./StorySettings";
+import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 import routes from "src/application/routes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useNavigate } from "react-router-dom";
@@ -46,6 +47,24 @@ const CreateStoryForm = () => {
   const { manager: OpenaiManager } = useOpenaiContext();
   const { isCreateStoryFetching, handleCreateStoryRequest } = OpenaiManager;
 
+  const isCreateButtonDisabled = (): boolean => {
+    if (
+      hasCensoredWords(profileInfo.name) ||
+      hasCensoredWords(profileInfo.interests)
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
+  const isFormHasErrors = (): boolean => {
+    return (
+      hasCensoredWords(profileInfo.name) ||
+      hasCensoredWords(profileInfo.interests)
+    );
+  };
+
   const handleOnFormSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
@@ -53,7 +72,7 @@ const CreateStoryForm = () => {
     event.stopPropagation();
 
     const form = event.currentTarget;
-    if (!form.checkValidity()) {
+    if (!form.checkValidity() || isFormHasErrors()) {
       form.reportValidity();
       return;
     }
@@ -145,7 +164,6 @@ const CreateStoryForm = () => {
       <Box
         marginY={4}
         display="flex"
-        noValidate
         width="100%"
         flexWrap="wrap"
         component="form"
@@ -164,6 +182,10 @@ const CreateStoryForm = () => {
           type="text"
           value={profileInfo.name}
           className="form-item"
+          error={hasCensoredWords(profileInfo.name)}
+          helperText={
+            hasCensoredWords(profileInfo.name) && "Not Appropriate 🙈"
+          }
           onChange={handleFieldChange}
         />
 
@@ -313,6 +335,7 @@ const CreateStoryForm = () => {
             type="submit"
             title="submit-button"
             variant="contained"
+            disabled={isCreateButtonDisabled()}
             endIcon={<AutoAwesomeOutlined />}
           >
             Create

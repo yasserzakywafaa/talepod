@@ -1,21 +1,36 @@
 export interface Language {
   name: string;
-  value: string;
+  value: SupportedLanguages;
+}
+
+export enum SupportedLanguages {
+  en = "en",
+  ar = "ar",
+  es = "es",
+  fr = "fr",
+  de = "de",
+  pt = "pt",
+  it = "it",
+  ja = "ja",
+  ko = "ko",
+  ru = "ru",
+  hi = "hi",
+  zh_Hans = "zh-Hans",
+  zh_Hant = "zh-Hant",
 }
 
 export const Languages: Language[] = [
-  { name: "English", value: "en" },
-  { name: "Arabic", value: "ar" },
-  { name: "Spanish", value: "es" },
-  { name: "French", value: "fr" },
-  { name: "German", value: "de" },
-  { name: "Chinese (Simplified)", value: "zh-Hans" },
-  { name: "Chinese (Traditional)", value: "zh-Hant" },
-  { name: "Japanese", value: "ja" },
-  { name: "Korean", value: "ko" },
-  { name: "Russian", value: "ru" },
-  { name: "Portuguese", value: "pt" },
-  { name: "Italian", value: "it" },
-  { name: "Hindi", value: "hi" },
-  { name: "Bengali", value: "bn" },
+  { name: "English", value: SupportedLanguages.en },
+  { name: "Arabic", value: SupportedLanguages.ar },
+  { name: "Spanish", value: SupportedLanguages.es },
+  { name: "French", value: SupportedLanguages.fr },
+  { name: "German", value: SupportedLanguages.de },
+  { name: "Portuguese", value: SupportedLanguages.pt },
+  { name: "Italian", value: SupportedLanguages.it },
+  { name: "Japanese", value: SupportedLanguages.ja },
+  { name: "Korean", value: SupportedLanguages.ko },
+  { name: "Russian", value: SupportedLanguages.ru },
+  { name: "Hindi", value: SupportedLanguages.hi },
+  { name: "Chinese (Simplified)", value: SupportedLanguages.zh_Hans },
+  { name: "Chinese (Traditional)", value: SupportedLanguages.zh_Hant },
 ];

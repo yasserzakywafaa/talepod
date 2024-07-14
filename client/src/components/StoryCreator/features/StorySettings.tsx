@@ -11,6 +11,7 @@ import { ProfileInfo, StoryParams } from "../store/state";
 import { Environments } from "src/shared/mockedData/Environments";
 import { Morals } from "src/shared/mockedData/Moral";
 import { Tones } from "src/shared/mockedData/Tone";
+import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 
 export interface StorySettingsParams {
   profileInfo: ProfileInfo;
@@ -89,12 +90,16 @@ const StorySettings = (props: StorySettingsParams) => {
       </FormControl>
 
       <TextField
+        type="text"
         id="interests"
         name="interests"
-        label="Other Interests"
-        type="text"
-        value={profileInfo.interests}
         className="form-item"
+        label="Other Interests"
+        value={profileInfo.interests}
+        error={hasCensoredWords(profileInfo.interests)}
+        helperText={
+          hasCensoredWords(profileInfo.interests) && "Not Appropriate 🙈"
+        }
         onChange={handleFieldChange}
       />
     </>
