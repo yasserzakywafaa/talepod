@@ -3,6 +3,7 @@ import { ObjectId } from "mongodb";
 export interface Story {
   _id: ObjectId;
   title: string;
+  slug: string;
   summary: string;
   mainStory: string;
   poem: string;

@@ -11,8 +11,8 @@ storiesRouter.get(
 );
 
 storiesRouter.get(
-  END_POINTS.STORIES.GET_STORY_BY_ID(":id"),
-  StoriesController.getStoryById
+  END_POINTS.STORIES.GET_STORY_BY_ID(":slug"),
+  StoriesController.getStoryBySlug
 );
 
 export default storiesRouter;

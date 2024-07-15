@@ -1,10 +1,11 @@
 import "./Contact.scss";
 
-import { Container, Grid, Typography } from "@mui/material";
+import { Box, Container, Grid, Typography } from "@mui/material";
 
 import ContactForm from "./features/ContactForm";
 import ContactMap from "./features/ContactMap";
 import Page from "src/components/shared/Page/Page";
+import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import { useContactContext } from "./store/Provider";
 
 const ContactPage = () => {
@@ -20,6 +21,10 @@ const ContactPage = () => {
       className="contact-page"
       isLoading={isFetching}
     >
+      <Box component="div" className="bg-image-character">
+        <RandomImage />
+      </Box>
+
       <Container
         className="view-story-container"
         sx={{

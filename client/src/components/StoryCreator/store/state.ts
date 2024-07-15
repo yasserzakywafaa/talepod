@@ -47,14 +47,15 @@ export interface CreateStoryProps {
 }
 export interface Story {
   _id: string;
-  createdAt: Date;
   title: string;
+  slug: string;
   summary: string;
   mainStory: string;
   poem: string;
   audioFile?: StoryAudioFile;
   profileInfo: ProfileInfo;
   storyParams: StoryParams;
+  createdAt: Date;
   seo?: StorySeo;
 }
 
@@ -79,13 +80,20 @@ export type AudioFileVoice =
 
 export type CreateAudioProps = CreateStoryProps;
 
+export const Genders = [
+  ChildGenderEnum.Boy,
+  ChildGenderEnum.Girl,
+  AdultGenderEnum.Male,
+  AdultGenderEnum.Female,
+];
+
 export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
   return {
     isFetching: false,
     isStorySettingsExpanded: false,
     profileInfo: {
       name: "",
-      gender: ChildGenderEnum.Girl || AdultGenderEnum.Female,
+      gender: Genders[Math.floor(Math.random() * Genders.length)],
       age: Math.floor(Math.random() * 50),
       interests: "",
       language: Languages[Math.floor(Math.random() * Languages.length)],

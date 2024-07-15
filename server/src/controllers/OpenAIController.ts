@@ -7,6 +7,7 @@ import {
   StoryParts,
   StorySeo,
 } from "src/models/types";
+import { getSlugFromText, replaceSpaceWithDash } from "../utils/stringUtils";
 import {
   saveFileDataToDb,
   saveStorySeoToDb,
@@ -28,7 +29,6 @@ export const createStory = async (
   response: Response,
   next: NextFunction
 ) => {
-  // const { storyPrompt, profileInfo, storyParams } = request.body;
   const { storyPrompt } = request.body;
   const profileInfo = request.body.profileInfo as ProfileInfo;
   const storyParams = request.body.storyParams as StoryParams;
@@ -67,12 +67,10 @@ export const createStory = async (
 
   try {
     const storyParts = await retry(createAndExtractStoryParts, 3, 2000);
-    const storyCharacters = storyParts.mainStory.length;
-    const poemCharacters = storyParts.poem.length;
     const totalCharacters = (storyParts.mainStory + storyParts.poem).length;
     console.log("ℹ️ Story and Poem Total Characters: ", {
-      storyCharacters,
-      poemCharacters,
+      storyCharacters: storyParts.mainStory.length,
+      poemCharacters: storyParts.poem.length,
       totalCharacters,
     });
 
@@ -81,22 +79,25 @@ export const createStory = async (
       throw new Error("❌ The story exceeds the maximum number of characters!");
     }
 
+    const storyData: Partial<Story> = {
+      ...storyParts,
+      createdAt: new Date(),
+      slug: getSlugFromText(storyParts.title),
+    };
+    const updatedStoryParams: StoryParams = {
+      ...storyParams,
+      totalCharacters,
+    };
     try {
       // Save story to MongoDB Atlas
       const storyId = await saveStoryToDb(
-        {
-          ...storyParts,
-          createdAt: new Date(),
-        },
+        storyData,
         profileInfo,
-        {
-          ...storyParams,
-          totalCharacters,
-        }
+        updatedStoryParams
       );
 
       response.json({
-        ...storyParts,
+        ...storyData,
         _id: storyId,
         profileInfo,
         storyParams,
@@ -110,6 +111,7 @@ export const createStory = async (
 
     console.log("✅ Story Created Successfully", {
       request: request.path,
+      storySlug: storyData.slug,
       MODEL_NAME: CONFIG.OPENAI_MODEL_NAME,
     });
   } catch (error) {
@@ -145,8 +147,12 @@ export const createStorySeo = async (
     });
     const openaiResponse = createRequest.choices[0].message.content;
     const storySEO: StorySeo = {
-      content: openaiResponse.replace(/{|}/g, "").trim(),
       createdAt: new Date(),
+      content: openaiResponse
+        .replace(/{|}/g, "")
+        .replaceAll("```", "")
+        .replaceAll("html", "")
+        .trim(),
     };
 
     if (openaiResponse.length) {

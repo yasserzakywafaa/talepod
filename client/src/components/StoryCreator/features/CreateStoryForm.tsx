@@ -88,8 +88,8 @@ const CreateStoryForm = () => {
           storyParams
         );
 
-        if (story._id) {
-          navigate(routes.story(story._id), { replace: false });
+        if (story._id && story.slug) {
+          navigate(routes.story(story.slug), { replace: false });
           window.localStorage.setItem("newStoryCreated", "true");
         }
       } catch (error) {

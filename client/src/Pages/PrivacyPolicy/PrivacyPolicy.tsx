@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 
 import Page from "src/components/shared/Page/Page";
+import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 
@@ -31,6 +32,9 @@ const PrivacyPolicyPage = () => {
       isLoading={false}
     >
       <Container sx={{ mt: 3 }}>
+        <Box component="div" className="bg-image-character">
+          <RandomImage />
+        </Box>
         <Typography variant="h4" gutterBottom>
           Privacy Policy
         </Typography>

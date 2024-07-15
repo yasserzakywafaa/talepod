@@ -84,7 +84,8 @@ export const getCreateImagePrompt = (childInfo: ProfileInfo): string => {
 export const getStorySeoPrompt = (story: Story): string => {
   const { summary, profileInfo } = story;
   const appLink = "www.talepod.com";
-  const keywordsByLang = Keywords[profileInfo.language.value];
+  const keywordsByLang = Keywords[profileInfo.language.value] || [];
+
   const keywords = keywordsByLang.flatMap((word) => word.keyword);
   const keywordsVolume = keywordsByLang.flatMap((word) => word.keywordVolume);
   const keywordsDifficulty = keywordsByLang.flatMap(
@@ -110,9 +111,10 @@ export const getStorySeoPrompt = (story: Story): string => {
       : ""
   }
 
-  Ensure the keywords are naturally integrated into the text. 
-  Include internal links only to this site (${appLink}) and a call to action. 
-  Any hyperlink should open in a new tab. 
+  Ensure the keywords are naturally integrated into the text.
+  Include internal links only to this site (${appLink}) and a call to action.
+  Do not include the keywords into the internal links, internal links refer ONLY to this site (${appLink}).
+  Any hyperlink should open in a new tab.
 
   In the response, don't mention anything other than the required SEO-optimized text and include it around curly brackets for easy data extraction.`;
 
