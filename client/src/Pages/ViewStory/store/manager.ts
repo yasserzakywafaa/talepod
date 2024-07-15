@@ -7,8 +7,8 @@ import { getStorySeoPrompt } from "src/components/StoryCreator/utils/getStoryPro
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
 
 export interface ViewStoryManager {
-  setUp: (storyId: string) => Promise<void>;
-  fetchStoryById: (storyId: string) => Promise<Story>;
+  setUp: (slug: string) => Promise<void>;
+  fetchStoryBySlug: (slug: string) => Promise<Story>;
   createSeoTextForStory: (story: Story, userSeoPrompt: string) => Promise<void>;
 }
 
@@ -19,9 +19,9 @@ export const useViewStoryManager = (
     manager: { handleCreateStorySeoRequest },
   } = useOpenaiContext();
 
-  const setUp = async (storyId: string) => {
+  const setUp = async (slug: string) => {
     store.handleIsFetching(true);
-    const story = await fetchStoryById(storyId);
+    const story = await fetchStoryBySlug(slug);
 
     if (!story.seo) {
       const storySeoPrompt = getStorySeoPrompt(story);
@@ -31,10 +31,10 @@ export const useViewStoryManager = (
     store.handleIsFetching(false);
   };
 
-  const fetchStoryById = async (storyId: string): Promise<Story> => {
+  const fetchStoryBySlug = async (slug: string): Promise<Story> => {
     try {
       const response: AxiosResponse<Story, Story> = await axios.get(
-        END_POINTS.STORIES.GET_STORY_BY_ID(storyId)
+        END_POINTS.STORIES.GET_STORY_BY_SLUG(slug)
       );
       store.handleUpdateStory(response.data);
 
@@ -42,7 +42,7 @@ export const useViewStoryManager = (
     } catch (error) {
       store.handleUpdateStory(undefined);
       store.handleIsFetching(false);
-      throw new Error(`❌ Failed to fetch Story by Id :>>> ${error}`);
+      throw new Error(`❌ Failed to get Story by Slug :>>> ${error}`);
     }
   };
 
@@ -65,7 +65,7 @@ export const useViewStoryManager = (
 
   return {
     setUp,
-    fetchStoryById,
+    fetchStoryBySlug,
     createSeoTextForStory,
   };
 };

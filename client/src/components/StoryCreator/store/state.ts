@@ -47,14 +47,15 @@ export interface CreateStoryProps {
 }
 export interface Story {
   _id: string;
-  createdAt: Date;
   title: string;
+  slug: string;
   summary: string;
   mainStory: string;
   poem: string;
   audioFile?: StoryAudioFile;
   profileInfo: ProfileInfo;
   storyParams: StoryParams;
+  createdAt: Date;
   seo?: StorySeo;
 }
 

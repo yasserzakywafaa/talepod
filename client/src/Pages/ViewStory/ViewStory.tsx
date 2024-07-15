@@ -31,7 +31,7 @@ import { useParams } from "react-router-dom";
 import { useViewStoryContext } from "./store/Provider";
 
 const ViewStoryPage: React.FC = () => {
-  const { storyId } = useParams<{ storyId: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const { isDesktop } = useDeviceSize();
 
   const {
@@ -68,8 +68,8 @@ const ViewStoryPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (storyId) setUp(storyId);
-  }, [storyId]);
+    if (slug) setUp(slug);
+  }, [slug]);
 
   useEffect(() => {
     if (story && story._id) {

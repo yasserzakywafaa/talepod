@@ -1,11 +1,11 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { Db, MongoClient, ObjectId } from "mongodb";
 import { ProfileInfo, Story, StoryData, StoryParams, StorySeo } from "../types";
 import { createDocument, updateDocument } from "./crudOperations";
 
 import CONFIG from "../../config";
 
 let dbClient: MongoClient;
-let database: any;
+let database: Db;
 
 export enum DBNames {
   TALEPOD_DEV = "talepod_dev",
@@ -34,6 +34,7 @@ const getMongoDbUri = (): string => {
 
 const getDatabaseName = (): string => {
   return CONFIG.IS_DEV ? DBNames.TALEPOD_DEV : DBNames.TALEPOD_PROD;
+  // return DBNames.TALEPOD_PROD;
 };
 
 const databaseInit = async () => {
@@ -47,8 +48,8 @@ const databaseInit = async () => {
 
     console.info("✅ Connected to MongoDB Atlas", { dbName });
 
-    // Create necessary collections
     await createCollections();
+    await createIndexes();
   } catch (error) {
     console.error("❌ Failed to connect to MongoDB Atlas", error);
   }
@@ -63,10 +64,37 @@ const createCollections = async () => {
       .toArray();
     if (collection.length === 0) {
       await database.createCollection(collectionName);
-      console.info(`-- ✅ Collection '${collectionName}' created`);
+      console.info(`✅ Collection '${collectionName}' created`);
     } else {
       console.info(`-- ℹ️  Collection '${collectionName}' already exists`);
     }
+  }
+};
+
+const createIndexes = async () => {
+  try {
+    const storiesCollection = database.collection(DBCollections.Stories);
+    // Create compound index for these fields
+    await storiesCollection.createIndex({ slug: 1, createdAt: -1 });
+    console.info(
+      "-- ℹ️  Compound index created on 'slug' and 'createdAt' fields"
+    );
+
+    // Text index for name search
+    await storiesCollection.createIndex({ name: "text" });
+    console.info("-- ℹ️  Compound index created on 'name' field");
+
+    // Compound index on frequently queried combinations
+    await storiesCollection.createIndex({ gender: 1, language: 1, age: 1 });
+    console.info(
+      "-- ℹ️  Compound index created on 'gender', 'language' and 'age' fields"
+    );
+    await storiesCollection.createIndex({ environment: 1, moral: -1, tone: 1 });
+    console.info(
+      "-- ℹ️  Compound index created on 'environment', 'moral' and 'tone' fields"
+    );
+  } catch (error) {
+    console.error("❌ Error creating index:", error);
   }
 };
 
@@ -88,7 +116,10 @@ const saveStoryToDb = async (
       profileInfo,
       storyParams,
     };
-    const storyId = await createDocument(storyData, DBCollections.Stories);
+    const storyId: ObjectId = await createDocument(
+      storyData,
+      DBCollections.Stories
+    );
     console.log("✅ Story saved to DB successfully");
 
     return storyId;

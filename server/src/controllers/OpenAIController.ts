@@ -18,6 +18,7 @@ import { IMAGES_SIZES } from "../models/openaiModel";
 import OpenAi from "openai";
 import extractStoryParts from "../utils/extractStoryParts";
 import fs from "fs";
+import { replaceSpaceWithDash } from "../utils/stringUtils";
 import retry from "../utils/retryFunction";
 import { uploadFileToS3 } from "../models/amazonS3";
 
@@ -28,7 +29,6 @@ export const createStory = async (
   response: Response,
   next: NextFunction
 ) => {
-  // const { storyPrompt, profileInfo, storyParams } = request.body;
   const { storyPrompt } = request.body;
   const profileInfo = request.body.profileInfo as ProfileInfo;
   const storyParams = request.body.storyParams as StoryParams;
@@ -67,12 +67,10 @@ export const createStory = async (
 
   try {
     const storyParts = await retry(createAndExtractStoryParts, 3, 2000);
-    const storyCharacters = storyParts.mainStory.length;
-    const poemCharacters = storyParts.poem.length;
     const totalCharacters = (storyParts.mainStory + storyParts.poem).length;
     console.log("ℹ️ Story and Poem Total Characters: ", {
-      storyCharacters,
-      poemCharacters,
+      storyCharacters: storyParts.mainStory.length,
+      poemCharacters: storyParts.poem.length,
       totalCharacters,
     });
 
@@ -82,17 +80,20 @@ export const createStory = async (
     }
 
     try {
+      const storyData: Partial<Story> = {
+        ...storyParts,
+        createdAt: new Date(),
+        slug: replaceSpaceWithDash(storyParts.title.toLowerCase()),
+      };
+      const updatedStoryParams: StoryParams = {
+        ...storyParams,
+        totalCharacters,
+      };
       // Save story to MongoDB Atlas
       const storyId = await saveStoryToDb(
-        {
-          ...storyParts,
-          createdAt: new Date(),
-        },
+        storyData,
         profileInfo,
-        {
-          ...storyParams,
-          totalCharacters,
-        }
+        updatedStoryParams
       );
 
       response.json({
@@ -145,8 +146,12 @@ export const createStorySeo = async (
     });
     const openaiResponse = createRequest.choices[0].message.content;
     const storySEO: StorySeo = {
-      content: openaiResponse.replace(/{|}/g, "").trim(),
       createdAt: new Date(),
+      content: openaiResponse
+        .replace(/{|}/g, "")
+        .replaceAll("```", "")
+        .replaceAll("html", "")
+        .trim(),
     };
 
     if (openaiResponse.length) {

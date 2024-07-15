@@ -25,6 +25,7 @@ import { ExploreStoryFilters } from "../../store/state";
 import { Languages } from "src/shared/languages";
 import { Morals } from "src/shared/mockedData/Moral";
 import { Tones } from "src/shared/mockedData/Tone";
+import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 import { useExploreContext } from "../../store/Provider";
 
 const FiltersPanel: React.FC = (): JSX.Element => {
@@ -116,6 +117,8 @@ const FiltersPanel: React.FC = (): JSX.Element => {
             variant="outlined"
             value={filters.name}
             className="filters-form-item"
+            error={hasCensoredWords(filters.name!)}
+            helperText={hasCensoredWords(filters.name!) && "Not Appropriate 🙈"}
             onChange={handleFieldChange}
           />
 

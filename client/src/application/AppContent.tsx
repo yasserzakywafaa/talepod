@@ -49,7 +49,7 @@ const AppContent = () => {
 
           <Route
             index
-            path={routes.story(":storyId")}
+            path={routes.story(":slug")}
             element={<ViewStoryPage />}
           />
 

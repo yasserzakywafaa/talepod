@@ -34,8 +34,8 @@ export const updateDocument = async (
   const stories = database.collection(collectionName);
 
   console.log("ℹ️  updateDocument:>>>", {
-    storyId,
     collection: DBCollections.Stories,
+    storyId,
     fieldsToUpdate,
   });
 
@@ -43,7 +43,7 @@ export const updateDocument = async (
     const result = await stories.findOneAndUpdate(
       { _id: new ObjectId(storyId) },
       { $set: fieldsToUpdate },
-      { returnOriginal: false }
+      { returnDocument: "after" }
     );
 
     if (result.value) {

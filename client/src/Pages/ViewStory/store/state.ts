@@ -17,6 +17,7 @@ export const getViewStoryInitialState = (): ViewStoryInitialState => {
     story: {
       _id: "",
       title: "",
+      slug: "",
       summary: "",
       mainStory: "",
       poem: "",

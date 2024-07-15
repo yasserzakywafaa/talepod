@@ -39,7 +39,7 @@ const StoryCard = (props: StoryCard) => {
   const profileInfo = props.story.profileInfo || {};
 
   const handleOnCardClick = () => {
-    navigate(routes.story(props.story._id), {});
+    navigate(routes.story(props.story.slug), { replace: false });
   };
 
   return (

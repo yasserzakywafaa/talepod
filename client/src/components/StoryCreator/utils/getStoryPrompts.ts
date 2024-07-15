@@ -110,9 +110,10 @@ export const getStorySeoPrompt = (story: Story): string => {
       : ""
   }
 
-  Ensure the keywords are naturally integrated into the text. 
-  Include internal links only to this site (${appLink}) and a call to action. 
-  Any hyperlink should open in a new tab. 
+  Ensure the keywords are naturally integrated into the text.
+  Include internal links only to this site (${appLink}) and a call to action.
+  Do not include the keywords into the internal links, internal links refer ONLY to this site (${appLink}).
+  Any hyperlink should open in a new tab.
 
   In the response, don't mention anything other than the required SEO-optimized text and include it around curly brackets for easy data extraction.`;
 
