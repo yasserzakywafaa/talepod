@@ -84,7 +84,8 @@ export const getCreateImagePrompt = (childInfo: ProfileInfo): string => {
 export const getStorySeoPrompt = (story: Story): string => {
   const { summary, profileInfo } = story;
   const appLink = "www.talepod.com";
-  const keywordsByLang = Keywords[profileInfo.language.value];
+  const keywordsByLang = Keywords[profileInfo.language.value] || [];
+
   const keywords = keywordsByLang.flatMap((word) => word.keyword);
   const keywordsVolume = keywordsByLang.flatMap((word) => word.keywordVolume);
   const keywordsDifficulty = keywordsByLang.flatMap(

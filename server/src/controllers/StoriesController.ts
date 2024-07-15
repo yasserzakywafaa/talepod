@@ -1,9 +1,10 @@
-import { Collection, WithId } from "mongodb";
 import { DBCollections, database } from "../models/mongoDb";
 import { NextFunction, Request, Response } from "express";
 
-import { replaceSpaceWithDash } from "../utils/stringUtils";
-import { updateDocument } from "../models/mongoDb/crudOperations";
+import { Collection } from "mongodb";
+
+// import { getSlugFromText } from "../utils/stringUtils";
+// import { updateDocument } from "../models/mongoDb/crudOperations";
 
 let globalAllStories;
 
@@ -61,23 +62,23 @@ export const getStoryBySlug = async (
   }
 };
 
-// FOR DEVELOPMENT USE ONLY
-const bulkUpdateStoriesByField = (allStories) => {
-  try {
-    allStories.forEach(async (story) => {
-      await updateDocument(story._id.toString(), DBCollections.Stories, {
-        // slug: replaceSpaceWithDash(story.title.toLowerCase()),
-        seo: undefined,
-      });
-      console.log("ℹ️ Story title:>>>", {
-        storyTitle: story.title,
-        storySeo: story.seo,
-      });
-    });
-  } catch (error) {
-    throw new Error("❌ Failed to update story slug", { cause: error });
-  }
-};
+// // FOR DEVELOPMENT USE ONLY
+// const bulkUpdateStoriesByField = (allStories) => {
+//   try {
+//     allStories.forEach(async (story) => {
+//       // await updateDocument(story._id.toString(), DBCollections.Stories, {
+//       //   // // slug: replaceSpaceWithDash(story.title.toLowerCase()),
+//       //   // slug: getSlugFromText(story.title),
+//       // });
+//       console.log("ℹ️ Story title:>>>", {
+//         storyTitle: story.title,
+//         storySlug: getSlugFromText(story.title),
+//       });
+//     });
+//   } catch (error) {
+//     throw new Error("❌ Failed to update story slug", { cause: error });
+//   }
+// };
 
 const GoogleGeminiController = {
   getAllStories,

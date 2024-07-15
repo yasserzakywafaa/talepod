@@ -22,13 +22,12 @@ export const useViewStoryManager = (
   const setUp = async (slug: string) => {
     store.handleIsFetching(true);
     const story = await fetchStoryBySlug(slug);
+    store.handleIsFetching(false);
 
     if (!story.seo) {
       const storySeoPrompt = getStorySeoPrompt(story);
       await createSeoTextForStory(story, storySeoPrompt);
     }
-
-    store.handleIsFetching(false);
   };
 
   const fetchStoryBySlug = async (slug: string): Promise<Story> => {

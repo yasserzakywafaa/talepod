@@ -7,6 +7,7 @@ import {
   StoryParts,
   StorySeo,
 } from "src/models/types";
+import { getSlugFromText, replaceSpaceWithDash } from "../utils/stringUtils";
 import {
   saveFileDataToDb,
   saveStorySeoToDb,
@@ -18,7 +19,6 @@ import { IMAGES_SIZES } from "../models/openaiModel";
 import OpenAi from "openai";
 import extractStoryParts from "../utils/extractStoryParts";
 import fs from "fs";
-import { replaceSpaceWithDash } from "../utils/stringUtils";
 import retry from "../utils/retryFunction";
 import { uploadFileToS3 } from "../models/amazonS3";
 
@@ -79,16 +79,16 @@ export const createStory = async (
       throw new Error("❌ The story exceeds the maximum number of characters!");
     }
 
+    const storyData: Partial<Story> = {
+      ...storyParts,
+      createdAt: new Date(),
+      slug: getSlugFromText(storyParts.title),
+    };
+    const updatedStoryParams: StoryParams = {
+      ...storyParams,
+      totalCharacters,
+    };
     try {
-      const storyData: Partial<Story> = {
-        ...storyParts,
-        createdAt: new Date(),
-        slug: replaceSpaceWithDash(storyParts.title.toLowerCase()),
-      };
-      const updatedStoryParams: StoryParams = {
-        ...storyParams,
-        totalCharacters,
-      };
       // Save story to MongoDB Atlas
       const storyId = await saveStoryToDb(
         storyData,
@@ -97,7 +97,7 @@ export const createStory = async (
       );
 
       response.json({
-        ...storyParts,
+        ...storyData,
         _id: storyId,
         profileInfo,
         storyParams,
@@ -111,6 +111,7 @@ export const createStory = async (
 
     console.log("✅ Story Created Successfully", {
       request: request.path,
+      storySlug: storyData.slug,
       MODEL_NAME: CONFIG.OPENAI_MODEL_NAME,
     });
   } catch (error) {
