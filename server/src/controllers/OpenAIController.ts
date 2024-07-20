@@ -49,6 +49,8 @@ export const createStory = async (
       ],
       model: CONFIG.OPENAI_MODEL_NAME,
       n: 1,
+      max_tokens: 1000,
+      temperature: 0.4,
     });
 
     return createRequest.choices[0].message.content;
