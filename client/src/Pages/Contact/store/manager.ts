@@ -55,7 +55,7 @@ export const useContactManager = (store: ContactStore): ContactManager => {
           type: ToastTypes.Error,
         });
       }
-      throw new Error(`❌  Failed to create a story!  ${error}`);
+      throw new Error(`❌  Failed to send email!  ${error}`);
     } finally {
       store.handleIsFetching(false);
     }

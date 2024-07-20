@@ -13,18 +13,22 @@ export const contactSupport = async (
 
   // Configure the transporter for nodemailer
   const transporter = nodeMailer.createTransport({
-    host: "smtp.zoho.eu",
+    host: CONFIG.SMTP,
     port: 465,
     secure: true,
     auth: {
       user: CONFIG.EMAIL,
       pass: CONFIG.PASSWORD,
     },
+    debug: true, // show debug output
+    logger: true, // log information in console
   });
 
   // Mail options for the admin
   const mailOptionsAdmin = {
-    from: email,
+    // from: email,
+    // TODO: Change to be the user's email from the form
+    from: CONFIG.EMAIL,
     to: CONFIG.EMAIL,
     subject: `New Contact Form Submission: ${subject}`,
     text: `You have received a new message from ${name} | (${email}):\n\n${message}`,
@@ -52,10 +56,10 @@ export const contactSupport = async (
 
     response.status(200).send("✅ Emails sent successfully");
   } catch (error) {
-    console.error("❌ Failed to to send email!", {
+    console.error("❌ Failed to send email!", {
       error,
     });
-    next(`❌ Failed to to send email!${error}`);
+    next(`❌ Failed to send email!${error}`);
   }
 };
 
