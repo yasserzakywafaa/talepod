@@ -49,6 +49,7 @@ const CONFIG = {
   HOST_AWS_REGION: process.env.HOST_AWS_REGION,
 
   // Email Service
+  SMTP: process.env.SMTP,
   EMAIL: process.env.EMAIL,
   PASSWORD: process.env.PASSWORD,
 };
