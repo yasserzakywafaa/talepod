@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
-export interface SwipeToRefreshProps {
+export interface UseSwipeToRefreshProps {
   threshold?: number;
   onRefresh?: () => Promise<void>;
 }
 
-const useSwipeToRefresh = (props: SwipeToRefreshProps) => {
+const useSwipeToRefresh = (props: UseSwipeToRefreshProps) => {
   //   const maxThreshold = 200;
   const { threshold = 100, onRefresh } = props;
   const [isRefreshing, setIsRefreshing] = useState(false);

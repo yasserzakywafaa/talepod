@@ -1,6 +1,6 @@
 import "./Page.scss";
 
-import { Box, Container, ContainerTypeMap, Typography } from "@mui/material";
+import { Container, ContainerTypeMap } from "@mui/material";
 import { darkTheme, lightTheme } from "src/application/shared/themes";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
@@ -10,10 +10,10 @@ import LoaderSpinner from "../Loading/LoaderSpinner";
 import { Notification } from "../Notification/Notification";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import ScrollToTopButton from "../BackToTopButton/BackToTopButton";
+import SwipeToRefresh from "./features/SwipeToRefresh/SwipeToRefresh";
 import classNames from "classnames";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
-import useSwipeToRefresh from "src/shared/hooks/useSwipeToRefresh";
 
 export interface PageProps {
   title: string;
@@ -41,13 +41,7 @@ const Page = (params: PageProps) => {
     },
   } = useApplicationContext();
 
-  const swipeDownThreshold = swipeDownToRefreshThreshold || 75;
-  const { isRefreshing, swipeDistance } = useSwipeToRefresh({
-    threshold: swipeDownThreshold,
-    onRefresh: onRefresh,
-  });
-
-  const isPageLoading = isLoading || isFetching || isRefreshing;
+  const isPageLoading = isLoading || isFetching;
 
   const pageClassNames = classNames({
     container: true,
@@ -89,11 +83,6 @@ const Page = (params: PageProps) => {
       <div
         className="gradient-background"
         style={{
-          position: "fixed",
-          zIndex: -1,
-          width: "100%",
-          height: "100%",
-          backgroundRepeat: "no-repeat",
           background:
             themeMode === "dark"
               ? darkTheme.palette.background.default
@@ -103,43 +92,20 @@ const Page = (params: PageProps) => {
       <Container
         // maxWidth={false}
         className={pageClassNames}
-        // sx={{ paddingTop: isRefreshing ? "0.5rem" : 0 }}
         {...containerProps}
       >
-        <ScrollToTopButton />
-
         {isPageLoading && <LoaderSpinner />}
 
-        {swipeDistance > 0 && !isRefreshing && (
-          <Box
-            sx={{
-              position: "sticky",
-              top: "1rem",
-              left: 0,
-              right: 0,
-              zIndex: 1,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              minHeight: "50px",
-              maxHeight: "100px",
-              height: `${swipeDistance}px`,
-              transition: "height 0.2s ease-out",
-              marginBottom: "1rem",
-              backgroundColor: "rgba(0, 0, 0, 0.1)",
-            }}
-          >
-            {swipeDistance >= swipeDownThreshold ? (
-              <Typography>Release to refresh...</Typography>
-            ) : (
-              <Typography>Pull to refresh...</Typography>
-            )}
-          </Box>
-        )}
+        <SwipeToRefresh
+          threshold={swipeDownToRefreshThreshold || 75}
+          onRefresh={onRefresh}
+        />
 
         <Notification />
 
         <ApplicationBar />
+
+        <ScrollToTopButton />
 
         <>{children}</>
 
