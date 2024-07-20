@@ -10,6 +10,7 @@ import LoaderSpinner from "../Loading/LoaderSpinner";
 import { Notification } from "../Notification/Notification";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import ScrollToTopButton from "../BackToTopButton/BackToTopButton";
+import SwipeToRefresh from "./features/SwipeToRefresh/SwipeToRefresh";
 import classNames from "classnames";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
@@ -19,16 +20,20 @@ export interface PageProps {
   className?: string;
   isLoading?: boolean;
   children?: React.ReactNode;
+  swipeDownToRefreshThreshold?: number;
+  onRefresh?: () => Promise<void>;
   containerProps?: OverridableComponent<ContainerTypeMap<{}, "div">>;
 }
 
 const Page = (params: PageProps) => {
   const {
-    isLoading,
-    children,
     title,
+    children,
+    isLoading,
     className = "",
     containerProps = {},
+    swipeDownToRefreshThreshold,
+    onRefresh,
   } = params;
   const {
     store: {
@@ -78,11 +83,6 @@ const Page = (params: PageProps) => {
       <div
         className="gradient-background"
         style={{
-          position: "fixed",
-          zIndex: -1,
-          width: "100%",
-          height: "100%",
-          backgroundRepeat: "no-repeat",
           background:
             themeMode === "dark"
               ? darkTheme.palette.background.default
@@ -94,13 +94,18 @@ const Page = (params: PageProps) => {
         className={pageClassNames}
         {...containerProps}
       >
-        <ScrollToTopButton />
-
         {isPageLoading && <LoaderSpinner />}
+
+        <SwipeToRefresh
+          threshold={swipeDownToRefreshThreshold || 75}
+          onRefresh={onRefresh}
+        />
 
         <Notification />
 
         <ApplicationBar />
+
+        <ScrollToTopButton />
 
         <>{children}</>
 

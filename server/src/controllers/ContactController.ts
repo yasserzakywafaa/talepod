@@ -13,7 +13,9 @@ export const contactSupport = async (
 
   // Configure the transporter for nodemailer
   const transporter = nodeMailer.createTransport({
-    service: "gmail",
+    host: "smtp.zoho.eu",
+    port: 465,
+    secure: true,
     auth: {
       user: CONFIG.EMAIL,
       pass: CONFIG.PASSWORD,
