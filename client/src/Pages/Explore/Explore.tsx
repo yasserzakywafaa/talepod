@@ -58,6 +58,8 @@ const ExplorePage: React.FC = () => {
       title="Explore Stories | Talepod"
       className="explore-page"
       isLoading={isFetching}
+      swipeDownToRefreshThreshold={50}
+      onRefresh={setUp}
     >
       <FiltersPanel />
 

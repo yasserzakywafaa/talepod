@@ -1,6 +1,6 @@
 import "./Page.scss";
 
-import { Container, ContainerTypeMap } from "@mui/material";
+import { Box, Container, ContainerTypeMap, Typography } from "@mui/material";
 import { darkTheme, lightTheme } from "src/application/shared/themes";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
@@ -13,22 +13,27 @@ import ScrollToTopButton from "../BackToTopButton/BackToTopButton";
 import classNames from "classnames";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
+import useSwipeToRefresh from "src/shared/hooks/useSwipeToRefresh";
 
 export interface PageProps {
   title: string;
   className?: string;
   isLoading?: boolean;
   children?: React.ReactNode;
+  swipeDownToRefreshThreshold?: number;
+  onRefresh?: () => Promise<void>;
   containerProps?: OverridableComponent<ContainerTypeMap<{}, "div">>;
 }
 
 const Page = (params: PageProps) => {
   const {
-    isLoading,
-    children,
     title,
+    children,
+    isLoading,
     className = "",
     containerProps = {},
+    swipeDownToRefreshThreshold,
+    onRefresh,
   } = params;
   const {
     store: {
@@ -36,7 +41,13 @@ const Page = (params: PageProps) => {
     },
   } = useApplicationContext();
 
-  const isPageLoading = isLoading || isFetching;
+  const swipeDownThreshold = swipeDownToRefreshThreshold || 75;
+  const { isRefreshing, swipeDistance } = useSwipeToRefresh({
+    threshold: swipeDownThreshold,
+    onRefresh: onRefresh,
+  });
+
+  const isPageLoading = isLoading || isFetching || isRefreshing;
 
   const pageClassNames = classNames({
     container: true,
@@ -92,11 +103,39 @@ const Page = (params: PageProps) => {
       <Container
         // maxWidth={false}
         className={pageClassNames}
+        // sx={{ paddingTop: isRefreshing ? "0.5rem" : 0 }}
         {...containerProps}
       >
         <ScrollToTopButton />
 
         {isPageLoading && <LoaderSpinner />}
+
+        {swipeDistance > 0 && !isRefreshing && (
+          <Box
+            sx={{
+              position: "sticky",
+              top: "1rem",
+              left: 0,
+              right: 0,
+              zIndex: 1,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: "50px",
+              maxHeight: "100px",
+              height: `${swipeDistance}px`,
+              transition: "height 0.2s ease-out",
+              marginBottom: "1rem",
+              backgroundColor: "rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            {swipeDistance >= swipeDownThreshold ? (
+              <Typography>Release to refresh...</Typography>
+            ) : (
+              <Typography>Pull to refresh...</Typography>
+            )}
+          </Box>
+        )}
 
         <Notification />
 
