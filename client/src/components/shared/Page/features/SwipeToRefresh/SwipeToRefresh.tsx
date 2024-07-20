@@ -7,7 +7,7 @@ import {
 } from "@mui/icons-material";
 import { Box, Typography } from "@mui/material";
 
-import useSwipeToRefresh from "src/shared/hooks/useSwipeToRefresh";
+import useSwipeToRefresh from "./useSwipeToRefresh";
 
 export interface SwipeToRefreshProps {
   threshold?: number;
