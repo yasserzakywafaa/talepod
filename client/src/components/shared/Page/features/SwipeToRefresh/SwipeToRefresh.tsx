@@ -16,7 +16,7 @@ export interface SwipeToRefreshProps {
 
 const SwipeToRefresh = (params: SwipeToRefreshProps) => {
   const { threshold, onRefresh } = params;
-  const swipeDownThreshold = threshold || 75;
+  const swipeDownThreshold = threshold || 100;
 
   const { isRefreshing, swipeDistance } = useSwipeToRefresh({
     threshold: swipeDownThreshold,

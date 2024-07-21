@@ -97,7 +97,7 @@ const Page = (params: PageProps) => {
         {isPageLoading && <LoaderSpinner />}
 
         <SwipeToRefresh
-          threshold={swipeDownToRefreshThreshold || 75}
+          threshold={swipeDownToRefreshThreshold}
           onRefresh={onRefresh}
         />
 
