@@ -46,6 +46,8 @@ const ViewStoryPage: React.FC = () => {
     manager: { handleCreateAudio },
   } = useOpenaiContext();
 
+  const hasDirectionRtl = story.profileInfo.language.value === "ar";
+
   const handleOnCreateAudioClick = async () => {
     handleIsFetching(true);
     if (story.mainStory) {
@@ -127,7 +129,9 @@ const ViewStoryPage: React.FC = () => {
                   component="h1"
                   color="primary"
                   property="name"
-                  className="view-story-card-title"
+                  className={`view-story-card-title ${
+                    hasDirectionRtl ? "direction-rtl" : ""
+                  }`}
                   sx={{ fontSize: { xs: "2rem", sm: "2.25rem" } }}
                 >
                   {story.title}
@@ -136,7 +140,9 @@ const ViewStoryPage: React.FC = () => {
                 <Typography
                   variant="h5"
                   component="h2"
-                  className="view-story-card-summary"
+                  className={`view-story-card-summary ${
+                    hasDirectionRtl ? "direction-rtl" : ""
+                  }`}
                   sx={{ fontSize: { xs: "1.2rem", sm: "1.5rem" } }}
                 >
                   {story.summary}
@@ -227,11 +233,22 @@ const ViewStoryPage: React.FC = () => {
                   <></>
                 )}
 
-                <Box component="article" className="view-story-card-main-story">
+                <Box
+                  component="article"
+                  className={`view-story-card-main-story ${
+                    hasDirectionRtl ? "direction-rtl" : ""
+                  }`}
+                >
                   <ReactMarkdown>{story.mainStory}</ReactMarkdown>
                 </Box>
 
-                <pre className="italics view-story-card-poem">{story.poem}</pre>
+                <pre
+                  className={`italics view-story-card-poem ${
+                    hasDirectionRtl ? "direction-rtl" : ""
+                  }`}
+                >
+                  {story.poem}
+                </pre>
 
                 <ViewStoryInfo story={story} />
 
