@@ -28,14 +28,14 @@ export const getExploreInitialState = (): ExploreInitialState => {
     filteredStories: [],
     activeFiltersCount: 0,
     filters: {
-      name: undefined,
-      gender: undefined,
+      name: "",
+      gender: "",
       age: [],
       language: [],
       moral: [],
       tone: [],
       environment: [],
-      audio: undefined,
+      audio: false,
     },
   };
 };

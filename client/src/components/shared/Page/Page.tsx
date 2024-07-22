@@ -21,6 +21,7 @@ export interface PageProps {
   isLoading?: boolean;
   children?: React.ReactNode;
   swipeDownToRefreshThreshold?: number;
+  noSwipeToRefresh?: boolean;
   onRefresh?: () => Promise<void>;
   containerProps?: OverridableComponent<ContainerTypeMap<{}, "div">>;
 }
@@ -32,6 +33,7 @@ const Page = (params: PageProps) => {
     isLoading,
     className = "",
     containerProps = {},
+    noSwipeToRefresh,
     swipeDownToRefreshThreshold,
     onRefresh,
   } = params;
@@ -96,10 +98,12 @@ const Page = (params: PageProps) => {
       >
         {isPageLoading && <LoaderSpinner />}
 
-        <SwipeToRefresh
-          threshold={swipeDownToRefreshThreshold}
-          onRefresh={onRefresh}
-        />
+        {!noSwipeToRefresh && (
+          <SwipeToRefresh
+            threshold={swipeDownToRefreshThreshold}
+            onRefresh={onRefresh}
+          />
+        )}
 
         <Notification />
 

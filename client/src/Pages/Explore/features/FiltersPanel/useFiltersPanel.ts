@@ -9,6 +9,7 @@ import { ExploreStoryFilters } from "../../store/state";
 interface UseFiltersPanelProps {
   filteredStories: Story[];
   activeFiltersCount: number;
+  getActiveFiltersCount: (filters: ExploreStoryFilters) => number;
 }
 
 export const useFiltersPanel = (
@@ -101,7 +102,7 @@ export const useFiltersPanel = (
   const audio = filterByAudio(filteredStories, filters.audio);
 
   // Count active filters
-  const getActiveFiltersCount = (): number => {
+  const getActiveFiltersCount = (filters: ExploreStoryFilters): number => {
     let count = 0;
     Object.values(filters).forEach((filter) => {
       // if (filter && filter.length) count++;
@@ -116,7 +117,7 @@ export const useFiltersPanel = (
 
     return count;
   };
-  const activeFiltersCount = getActiveFiltersCount();
+  const activeFiltersCount = getActiveFiltersCount(filters);
 
   // console.log("filterByField:>>>", {
   //   name: filters.name,
@@ -192,5 +193,5 @@ export const useFiltersPanel = (
   //   queries: filterByQueries(stories),
   // });
 
-  return { filteredStories, activeFiltersCount };
+  return { filteredStories, activeFiltersCount, getActiveFiltersCount };
 };

@@ -2,6 +2,8 @@ import { DBCollections, database } from "../models/mongoDb";
 import { NextFunction, Request, Response } from "express";
 
 import { Collection } from "mongodb";
+import { StoryFilters } from "../models/types";
+import { getQuery } from "../models/mongoDb/query";
 
 // import { getSlugFromText } from "../utils/stringUtils";
 // import { updateDocument } from "../models/mongoDb/crudOperations";
@@ -15,14 +17,34 @@ export const getAllStories = async (
 ) => {
   try {
     const stories = database.collection(DBCollections.Stories);
-    const allStories = await stories.find().sort({ createdAt: -1 }).toArray(); // Convert the cursor to an array
+    // const allStories = await stories.find().sort({ createdAt: -1 }).toArray(); // Convert the cursor to an array
 
-    globalAllStories = allStories;
+    // const page = parseInt(JSON.stringify(request.query.page)) || 1;
+    // const pageSize = 20;
+    const filters: StoryFilters = JSON.parse(
+      (request.query.filters as string) || "{}"
+    );
+    const filtersQuery = getQuery(filters);
+
+    const filteredStories = await stories
+      .find(filtersQuery)
+      .sort({ createdAt: -1 })
+      // .skip((page - 1) * pageSize)
+      // .limit(pageSize)
+      .toArray();
+
+    console.log("ℹ️  request.params:>>>", {
+      filters,
+      filtersQuery,
+      data: filteredStories.map((d) => d.title),
+    });
+
+    globalAllStories = filteredStories;
     // bulkUpdateStoriesByField(globalAllStories);
 
     console.log("ℹ️  Fetched all stories successfully");
 
-    response.status(200).json(allStories);
+    response.status(200).json(filteredStories);
   } catch (error) {
     console.error("❌ Failed to get all stories!", {
       error,

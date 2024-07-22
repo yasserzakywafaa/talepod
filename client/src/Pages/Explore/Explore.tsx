@@ -23,13 +23,13 @@ const ExplorePage: React.FC = () => {
   const navigate = useNavigate();
   const {
     store: {
-      state: { isFetching, stories, filteredStories, activeFiltersCount },
+      state: { isFetching, filteredStories, activeFiltersCount },
     },
     manager: {
       setUp,
-      handleToggleFiltersPanel,
       handleSortStories,
       handleClearFilters,
+      handleToggleFiltersPanel,
     },
   } = useExploreContext();
 
@@ -47,10 +47,6 @@ const ExplorePage: React.FC = () => {
 
   useEffect(() => {
     setUp();
-
-    return () => {
-      handleClearFilters();
-    };
   }, []);
 
   return (
@@ -63,7 +59,7 @@ const ExplorePage: React.FC = () => {
       <FiltersPanel />
 
       <Container className="explore-container">
-        {!isFetching && stories.length ? (
+        {!isFetching ? (
           <Box
             mb={1}
             display="flex"
@@ -142,20 +138,16 @@ const ExplorePage: React.FC = () => {
                   Create Story
                 </Button>
 
-                {stories.length ? (
-                  <Button
-                    size="large"
-                    color="primary"
-                    variant="outlined"
-                    sx={{ my: 2, mx: 1, px: 2 }}
-                    endIcon={<FilterAltOffOutlined />}
-                    onClick={handleClearFilters}
-                  >
-                    Clear Filters
-                  </Button>
-                ) : (
-                  <></>
-                )}
+                <Button
+                  size="large"
+                  color="primary"
+                  variant="outlined"
+                  sx={{ my: 2, mx: 1, px: 2 }}
+                  endIcon={<FilterAltOffOutlined />}
+                  onClick={handleClearFilters}
+                >
+                  Clear Filters
+                </Button>
               </Box>
             </>
           ) : (

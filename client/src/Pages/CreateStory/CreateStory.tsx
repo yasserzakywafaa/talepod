@@ -29,6 +29,7 @@ const CreateStoryPage = () => {
     <Page
       title="Create Bedtime Stories | TalePod"
       className="create-story-page"
+      noSwipeToRefresh={true}
       isLoading={
         isPageFetching || isCreateStoryFetching || isCreateAudioFetching
       }
