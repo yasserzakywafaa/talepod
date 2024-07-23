@@ -24,8 +24,8 @@ export interface ExploreManager {
 export const useExploreManager = (store: ExploreStore): ExploreManager => {
   const { stories, filters } = store.state;
   const initialFilters = getExploreInitialState().filters;
-  const { filteredStories, activeFiltersCount, getActiveFiltersCount } =
-    useFiltersPanel(stories, filters);
+  const { activeFiltersCount, getActiveFiltersCount } =
+    useFiltersPanel(filters);
 
   const setUp = async () => {
     store.isExploreFetching(true);
@@ -73,7 +73,7 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
   };
 
   const handleFilterStories = async () => {
-    store.applyFilters(filteredStories);
+    store.applyFilters(stories);
     store.setActiveFiltersCount(activeFiltersCount);
     replaceUrl(filters);
     await handleFetchStories();

@@ -18,14 +18,14 @@ export interface ExploreStore {
     value: ExploreStoryFilters[typeof key]
   ) => void;
   clearFilters: () => void;
-  applyFilters: (filteredStories: Story[]) => void;
+  applyFilters: (stories: Story[]) => void;
   setActiveFiltersCount: (activeFiltersCount: number) => void;
 }
 
 const useExploreStore = (): ExploreStore => {
   const initialState = getExploreInitialState();
   const [state, setState] = useState<ExploreInitialState>(initialState);
-  const { stories, filteredStories } = state;
+  const { stories } = state;
 
   const isExploreFetching = (isFetching: boolean) => {
     setState((prev) => ({
@@ -44,7 +44,7 @@ const useExploreStore = (): ExploreStore => {
   const sortStories = () => {
     setState((prev) => ({
       ...prev,
-      filteredStories: filteredStories.reverse(),
+      stories: stories.reverse(),
     }));
   };
 
@@ -52,7 +52,6 @@ const useExploreStore = (): ExploreStore => {
     setState((prev) => ({
       ...prev,
       stories,
-      filteredStories: stories,
     }));
   };
 
@@ -74,14 +73,14 @@ const useExploreStore = (): ExploreStore => {
       ...prev,
       activeFiltersCount: 0,
       filters: getExploreInitialState().filters,
-      filteredStories: stories,
+      stories,
     }));
   };
 
-  const applyFilters = (filteredStories: Story[]) => {
+  const applyFilters = (stories: Story[]) => {
     setState((prev) => ({
       ...prev,
-      filteredStories,
+      stories,
     }));
   };
 

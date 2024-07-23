@@ -3,7 +3,6 @@ import { Story } from "src/components/StoryCreator/store/state";
 export interface ExploreInitialState {
   isFetching: boolean;
   stories: Story[];
-  filteredStories: Story[];
   filters: ExploreStoryFilters;
   isFiltersPanelOpen: boolean;
   activeFiltersCount: number;
@@ -12,7 +11,7 @@ export interface ExploreInitialState {
 export interface ExploreStoryFilters {
   name: string | undefined;
   gender: string | undefined;
-  age: string[];
+  age: number[];
   language: string[];
   moral: string[];
   tone: string[];
@@ -25,7 +24,6 @@ export const getExploreInitialState = (): ExploreInitialState => {
     isFetching: false,
     stories: [],
     isFiltersPanelOpen: false,
-    filteredStories: [],
     activeFiltersCount: 0,
     filters: {
       name: "",

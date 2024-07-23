@@ -27,10 +27,11 @@ export const getAllStories = async (
     const filtersQuery = getQuery(filters);
 
     const filteredStories = await stories
-      .find(filtersQuery)
-      .sort({ createdAt: -1 })
-      // .skip((page - 1) * pageSize)
-      // .limit(pageSize)
+      .find(filtersQuery, {
+        sort: { createdAt: -1 },
+        // skip: (page - 1) * pageSize,
+        // limit: pageSize,
+      })
       .toArray();
 
     console.log("ℹ️  request.params:>>>", {

@@ -87,7 +87,7 @@ export interface ContactFormState {
 
 export interface StoryFilters {
   name: string | undefined;
-  gender: string | undefined;
+  gender: AdultGenderEnum | undefined;
   age: number[];
   language: string[];
   moral: string[];
@@ -104,5 +104,5 @@ export enum StoryFiltersEnum {
   moral = "storyParams.moral.value",
   tone = "storyParams.tone.value",
   environment = "storyParams.environment.value",
-  audio = "storyParams.audio",
+  audio = "audioFile.url",
 }

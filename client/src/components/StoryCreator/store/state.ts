@@ -22,9 +22,22 @@ export enum AdultGenderEnum {
   Female = "Female",
 }
 
+export enum AgeGroupEnum {
+  Child = "Child",
+  Adult = "Adult",
+}
+
+export const Genders = [
+  ChildGenderEnum.Boy,
+  ChildGenderEnum.Girl,
+  AdultGenderEnum.Male,
+  AdultGenderEnum.Female,
+];
+
 export type ProfileInfo = {
   name: string;
   gender: ChildGenderEnum | AdultGenderEnum;
+  // gender: AgeGroupEnum;
   age: number;
   interests: string;
   language: Language;
@@ -80,20 +93,16 @@ export type AudioFileVoice =
 
 export type CreateAudioProps = CreateStoryProps;
 
-export const Genders = [
-  ChildGenderEnum.Boy,
-  ChildGenderEnum.Girl,
-  AdultGenderEnum.Male,
-  AdultGenderEnum.Female,
-];
-
 export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
+  // const ageGroupArray = Object.values(AgeGroupEnum);
+
   return {
     isFetching: false,
     isStorySettingsExpanded: false,
     profileInfo: {
       name: "",
       gender: Genders[Math.floor(Math.random() * Genders.length)],
+      // gender: ageGroupArray[Math.floor(Math.random() * ageGroupArray.length)],
       age: Math.floor(Math.random() * 50),
       interests: "",
       language: Languages[Math.floor(Math.random() * Languages.length)],

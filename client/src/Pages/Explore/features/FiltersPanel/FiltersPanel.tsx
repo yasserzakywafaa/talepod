@@ -54,6 +54,15 @@ const FiltersPanel: React.FC = (): JSX.Element => {
     handleUpdateFilters(name as keyof ExploreStoryFilters, value);
   };
 
+  const handleAgeSelectChange = (event: SelectChangeEvent<string[]>) => {
+    const { name, value } = event.target;
+    let updatedValue: any = value;
+    if (typeof value === "object") {
+      updatedValue = value.map((v) => parseInt(v));
+    }
+    handleUpdateFilters(name as keyof ExploreStoryFilters, updatedValue);
+  };
+
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     handleUpdateFilters(name as keyof ExploreStoryFilters, value);
@@ -161,10 +170,10 @@ const FiltersPanel: React.FC = (): JSX.Element => {
               label="Age"
               variant="outlined"
               id="age-select"
-              value={filters.age}
+              value={filters.age.map((a) => a.toString())}
               labelId="filters-age-select-label"
               renderValue={(selected) => selected.join(", ")}
-              onChange={handleSelectChange}
+              onChange={handleAgeSelectChange}
             >
               {[...Array(50).keys()].map((value) => (
                 <MenuItem
@@ -173,7 +182,8 @@ const FiltersPanel: React.FC = (): JSX.Element => {
                   className="select-menu-item"
                 >
                   <Checkbox
-                    checked={filters.age.includes((value + 1).toString())}
+                    // checked={filters.age.includes((value + 1).toString())}
+                    checked={filters.age.includes(value + 1)}
                   />
                   <ListItemText primary={value + 1} />
                 </MenuItem>

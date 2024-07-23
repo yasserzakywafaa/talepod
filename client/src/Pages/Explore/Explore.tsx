@@ -23,7 +23,7 @@ const ExplorePage: React.FC = () => {
   const navigate = useNavigate();
   const {
     store: {
-      state: { isFetching, filteredStories, activeFiltersCount },
+      state: { isFetching, stories, activeFiltersCount },
     },
     manager: {
       setUp,
@@ -47,6 +47,10 @@ const ExplorePage: React.FC = () => {
 
   useEffect(() => {
     setUp();
+
+    return () => {
+      handleClearFilters();
+    };
   }, []);
 
   return (
@@ -54,6 +58,7 @@ const ExplorePage: React.FC = () => {
       title="Explore Stories | Talepod"
       className="explore-page"
       isLoading={isFetching}
+      swipeToRefresh={true}
       onRefresh={setUp}
     >
       <FiltersPanel />
@@ -103,13 +108,13 @@ const ExplorePage: React.FC = () => {
         >
           {isFetching && <LoaderSpinner style={{ position: "fixed" }} />}
 
-          {!isFetching && filteredStories.length ? (
+          {!isFetching && stories.length ? (
             <>
               <Box component="div" className="bg-image-character">
                 <RandomImage />
               </Box>
 
-              {filteredStories.map((story, index) => {
+              {stories.map((story, index) => {
                 return <StoryCard key={index} story={story} />;
               })}
             </>
@@ -117,7 +122,7 @@ const ExplorePage: React.FC = () => {
             <></>
           )}
 
-          {!isFetching && !filteredStories.length ? (
+          {!isFetching && !stories.length ? (
             <>
               <NoResultsFound />
 
