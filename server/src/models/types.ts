@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import { ObjectId, WithId } from "mongodb";
 
 export interface Story {
   _id: ObjectId;
@@ -106,3 +106,16 @@ export enum StoryFiltersEnum {
   environment = "storyParams.environment.value",
   audio = "audioFile.url",
 }
+
+export interface PageResponse<T> {
+  results: T[];
+  paging: PagingInfo;
+}
+
+export interface PagingInfo {
+  pageNumber: number;
+  pageSize: number;
+  totalCount: number;
+}
+
+export type DocumentWithId = WithId<Document>

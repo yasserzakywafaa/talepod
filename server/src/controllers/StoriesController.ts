@@ -1,26 +1,29 @@
 import { DBCollections, database } from "../models/mongoDb";
 import { NextFunction, Request, Response } from "express";
 
-import { Collection } from "mongodb";
-import { StoryFilters } from "../models/types";
+import { Collection, WithId } from "mongodb";
+import { DocumentWithId, PageResponse, StoryFilters } from "../models/types";
 import { getQuery } from "../models/mongoDb/query";
 
 // import { getSlugFromText } from "../utils/stringUtils";
 // import { updateDocument } from "../models/mongoDb/crudOperations";
 
-let globalAllStories;
+// let globalAllStories;
 
 export const getAllStories = async (
   request: Request,
-  response: Response,
+  response: Response<PageResponse<DocumentWithId>>,
   next: NextFunction
 ) => {
   try {
     const stories = database.collection(DBCollections.Stories);
-    // const allStories = await stories.find().sort({ createdAt: -1 }).toArray(); // Convert the cursor to an array
 
-    // const page = parseInt(JSON.stringify(request.query.page)) || 1;
-    // const pageSize = 20;
+    const totalCount = await stories.countDocuments();
+    const pageNumber = parseInt(JSON.stringify(request.query.page)) || 1;
+    // const pageSize = parseInt(JSON.stringify(request.query.page)) || 20;
+    const pageSize = parseInt(JSON.stringify(request.query.page));
+    const totalPagesCount = pageSize ? Math.round(totalCount / pageSize) : 0;
+
     const filters: StoryFilters = JSON.parse(
       (request.query.filters as string) || "{}"
     );
@@ -29,23 +32,34 @@ export const getAllStories = async (
     const filteredStories = await stories
       .find(filtersQuery, {
         sort: { createdAt: -1 },
-        // skip: (page - 1) * pageSize,
-        // limit: pageSize,
+        skip: (pageNumber - 1) * pageSize,
+        limit: pageSize,
       })
       .toArray();
 
     console.log("ℹ️  request.params:>>>", {
       filters,
+      pageSize,
       filtersQuery,
+      totalCount,
+      totalPagesCount,
       data: filteredStories.map((d) => d.title),
     });
 
-    globalAllStories = filteredStories;
-    // bulkUpdateStoriesByField(globalAllStories);
-
     console.log("ℹ️  Fetched all stories successfully");
 
-    response.status(200).json(filteredStories);
+    const paging = {
+      pageNumber,
+      pageSize,
+      totalPagesCount,
+      totalCount,
+    };
+
+    response.status(200).json(filteredStories as any);
+    // response.status(200).json({
+    //   paging,
+    //   results: filteredStories as DocumentWithId[],
+    // });
   } catch (error) {
     console.error("❌ Failed to get all stories!", {
       error,
