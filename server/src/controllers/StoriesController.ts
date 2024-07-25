@@ -1,14 +1,14 @@
 import { DBCollections, database } from "../models/mongoDb";
+import {
+  DocumentWithId,
+  PageResponse,
+  PagingInfo,
+  StoryFilters,
+} from "src/models/types";
 import { NextFunction, Request, Response } from "express";
 
-import { Collection, WithId } from "mongodb";
-import { DocumentWithId, PageResponse, StoryFilters } from "../models/types";
+import { Collection } from "mongodb";
 import { getQuery } from "../models/mongoDb/query";
-
-// import { getSlugFromText } from "../utils/stringUtils";
-// import { updateDocument } from "../models/mongoDb/crudOperations";
-
-// let globalAllStories;
 
 export const getAllStories = async (
   request: Request,
@@ -18,16 +18,13 @@ export const getAllStories = async (
   try {
     const stories = database.collection(DBCollections.Stories);
 
-    const totalCount = await stories.countDocuments();
-    const pageNumber = parseInt(JSON.stringify(request.query.page)) || 1;
-    // const pageSize = parseInt(JSON.stringify(request.query.page)) || 20;
-    const pageSize = parseInt(JSON.stringify(request.query.page));
-    const totalPagesCount = pageSize ? Math.round(totalCount / pageSize) : 0;
-
     const filters: StoryFilters = JSON.parse(
       (request.query.filters as string) || "{}"
     );
+    const { pageNumber, pageSize } = filters;
     const filtersQuery = getQuery(filters);
+    const totalCount = await stories.countDocuments();
+    const totalPagesCount = pageSize ? Math.round(totalCount / pageSize) : 0;
 
     const filteredStories = await stories
       .find(filtersQuery, {
@@ -37,29 +34,24 @@ export const getAllStories = async (
       })
       .toArray();
 
-    console.log("ℹ️  request.params:>>>", {
+    console.log("ℹ️  Fetched all stories successfully", {
       filters,
-      pageSize,
-      filtersQuery,
       totalCount,
       totalPagesCount,
-      data: filteredStories.map((d) => d.title),
+      // filteredStories: filteredStories.map((d) => d.title),
     });
 
-    console.log("ℹ️  Fetched all stories successfully");
-
-    const paging = {
+    const paging: PagingInfo = {
       pageNumber,
       pageSize,
       totalPagesCount,
       totalCount,
     };
 
-    response.status(200).json(filteredStories as any);
-    // response.status(200).json({
-    //   paging,
-    //   results: filteredStories as DocumentWithId[],
-    // });
+    response.status(200).json({
+      results: filteredStories as DocumentWithId[],
+      paging,
+    });
   } catch (error) {
     console.error("❌ Failed to get all stories!", {
       error,
@@ -100,6 +92,7 @@ export const getStoryBySlug = async (
 };
 
 // // FOR DEVELOPMENT USE ONLY
+// let globalAllStories;
 // const bulkUpdateStoriesByField = (allStories) => {
 //   try {
 //     allStories.forEach(async (story) => {
@@ -117,9 +110,9 @@ export const getStoryBySlug = async (
 //   }
 // };
 
-const GoogleGeminiController = {
+const StoriesController = {
   getAllStories,
   getStoryBySlug,
 };
 
-export default GoogleGeminiController;
+export default StoriesController;

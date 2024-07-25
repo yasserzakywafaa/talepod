@@ -29,6 +29,7 @@ const ExplorePage: React.FC = () => {
       setUp,
       handleSortStories,
       handleClearFilters,
+      handleResetFilters,
       handleToggleFiltersPanel,
     },
   } = useExploreContext();
@@ -49,7 +50,7 @@ const ExplorePage: React.FC = () => {
     setUp();
 
     return () => {
-      handleClearFilters();
+      handleResetFilters();
     };
   }, []);
 
@@ -58,8 +59,6 @@ const ExplorePage: React.FC = () => {
       title="Explore Stories | Talepod"
       className="explore-page"
       isLoading={isFetching}
-      swipeToRefresh={true}
-      onRefresh={setUp}
     >
       <FiltersPanel />
 

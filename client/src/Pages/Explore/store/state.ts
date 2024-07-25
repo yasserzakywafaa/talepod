@@ -1,3 +1,4 @@
+import { PagingInfo } from "src/shared/types";
 import { Story } from "src/components/StoryCreator/store/state";
 
 export interface ExploreInitialState {
@@ -6,6 +7,7 @@ export interface ExploreInitialState {
   filters: ExploreStoryFilters;
   isFiltersPanelOpen: boolean;
   activeFiltersCount: number;
+  pagingInfo: PagingInfo;
 }
 
 export interface ExploreStoryFilters {
@@ -34,6 +36,10 @@ export const getExploreInitialState = (): ExploreInitialState => {
       tone: [],
       environment: [],
       audio: false,
+    },
+    pagingInfo: {
+      pageNumber: 1,
+      pageSize: 20,
     },
   };
 };

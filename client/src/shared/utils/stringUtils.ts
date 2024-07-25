@@ -1,5 +1,3 @@
-import { ExploreStoryFilters } from "src/Pages/Explore/store/state";
-
 /**
  * Get available space size
  */
@@ -71,53 +69,3 @@ export const replaceSpaceWithUnderscore = (string: string) => {
  * Convert bytes into Megabytes
  */
 export const convertToMB = (bytes: number) => (bytes / 1000000).toFixed(0);
-
-/**
- * Parse query string to filter object
- */
-export const parseQueryString = (queryString: string) => {
-  const params = new URLSearchParams(queryString);
-  const filters: any = {};
-  for (const [key, value] of params.entries()) {
-    try {
-      filters[key] = JSON.parse(value);
-    } catch (e) {
-      filters[key] = value;
-    }
-  }
-
-  return filters;
-};
-
-/**
- * Create Query Params to URL
- */
-export const createQueryString = (filters: ExploreStoryFilters) => {
-  const params = new URLSearchParams();
-
-  Object.keys(filters).forEach((key: keyof ExploreStoryFilters) => {
-    const filter = filters[key];
-    if (Array.isArray(filter)) {
-      if (filter.length > 0) {
-        params.append(key, JSON.stringify(filter));
-      } else {
-        params.append(key, JSON.stringify([]));
-      }
-    } else if (filter !== undefined && filter !== null) {
-      params.append(key, filter as string);
-    } else {
-      params.append(key, "");
-    }
-  });
-
-  return params.toString();
-};
-
-/**
- * Replace URL with given parameters
- */
-export const replaceUrl = (filters: ExploreStoryFilters) => {
-  const queryString = createQueryString(filters);
-  const urlWithQuery = `${window.location.origin}${window.location.pathname}?${queryString}`;
-  history.replaceState(null, "", urlWithQuery);
-};

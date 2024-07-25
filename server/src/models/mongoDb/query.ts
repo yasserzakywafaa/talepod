@@ -3,7 +3,7 @@ import {
   ChildGenderEnum,
   StoryFilters,
   StoryFiltersEnum,
-} from "../types";
+} from "../types/story";
 import { Filter, FilterOperators } from "mongodb";
 
 type QueryConditionKey = keyof typeof StoryFiltersEnum;
