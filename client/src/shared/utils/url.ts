@@ -50,28 +50,28 @@ export const replaceUrl = (filters: ExploreStoryFilters) => {
   history.replaceState(null, "", urlWithQuery);
 };
 
-/**
- * Update URL with given key and value
- */
-export const updateUrlParams = (key: string, value: string): void => {
-  const params = new URLSearchParams(window.location.search);
-  if (value !== undefined && value !== null) {
-    params.set(key, value);
-  } else {
-    params.delete(key);
-  }
-  window.history.pushState(
-    {},
-    "",
-    `${window.location.pathname}?${params.toString()}`
-  );
-};
+// /**
+//  * Update URL with given key and value
+//  */
+// export const updateUrlParams = (key: string, value: string): void => {
+//   const params = new URLSearchParams(window.location.search);
+//   if (value !== undefined && value !== null) {
+//     params.set(key, value);
+//   } else {
+//     params.delete(key);
+//   }
+//   window.history.pushState(
+//     {},
+//     "",
+//     `${window.location.pathname}?${params.toString()}`
+//   );
+// };
 
-/**
- * Get specific value from URL with given key
- */
-export const getUrlParams = (key: string): string => {
-  const params = new URLSearchParams(window.location.search);
+// /**
+//  * Get specific value from URL with given key
+//  */
+// export const getUrlParams = (key: string): string => {
+//   const params = new URLSearchParams(window.location.search);
 
-  return params.get(key) || "";
-};
+//   return params.get(key) || "";
+// };

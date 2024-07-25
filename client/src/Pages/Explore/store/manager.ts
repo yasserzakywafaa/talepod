@@ -15,6 +15,7 @@ export interface ExploreManager {
   handleResetFilters: () => void;
   handleFilterStories: () => void;
   handleUpdateUrlByFilters: () => void;
+  handleGetStoriesByPage: (pageNumber: number) => void;
   handleFetchStories: (filters?: ExploreStoryFilters) => Promise<void>;
   handleToggleFiltersPanel: (isOpen: boolean) => void;
   handleUpdateFilters: (
@@ -24,10 +25,13 @@ export interface ExploreManager {
 }
 
 export const useExploreManager = (store: ExploreStore): ExploreManager => {
-  const { stories, filters } = store.state;
-  const { filters: initFilters, pagingInfo: initPagingInfo } =
+  const { stories, filters, pagingInfo } = store.state;
+  const { filters: initialFilters, pagingInfo: initialPagingInfo } =
     getExploreInitialState();
-  const initialFilters = { ...initFilters, ...initPagingInfo };
+  const initialFiltersWithPaging: ExploreStoryFilters = {
+    ...initialFilters,
+    ...initialPagingInfo,
+  };
   const { activeFiltersCount, getActiveFiltersCount } =
     useFiltersPanel(filters);
 
@@ -38,27 +42,27 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
     store.isExploreFetching(false);
   };
 
-  const handleUpdateUrlByFilters = async (): Promise<
-    ExploreStoryFilters | undefined
-  > => {
+  const handleUpdateUrlByFilters = async (): Promise<ExploreStoryFilters> => {
     if (!window.location.search.length) {
       // Append empty filters to URL
-      replaceUrl(initialFilters);
+      replaceUrl(initialFiltersWithPaging);
 
-      return;
+      return initialFiltersWithPaging;
     }
 
     // Update current filters from URL (if any)
     const urlParams = window.location.search.replace("?", "");
     const parsedFilters: ExploreStoryFilters = parseQueryString(urlParams);
 
-    Object.keys(parsedFilters).forEach((key: keyof ExploreStoryFilters) => {
-      const value = parsedFilters[key];
-      store.updateFilters(key, value);
-    });
-    store.setActiveFiltersCount(getActiveFiltersCount(parsedFilters));
+    return new Promise((resolve) => {
+      Object.keys(parsedFilters).forEach((key: keyof ExploreStoryFilters) => {
+        const value = parsedFilters[key];
+        store.updateFilters(key, value);
+      });
+      store.setActiveFiltersCount(getActiveFiltersCount(parsedFilters));
 
-    return parsedFilters;
+      resolve(parsedFilters);
+    });
   };
 
   const handleToggleFiltersPanel = (isOpen: boolean) => {
@@ -80,15 +84,30 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
     store.applyFilters(stories);
     store.setActiveFiltersCount(activeFiltersCount);
     replaceUrl(filters);
-    await handleFetchStories();
+    const updatedFiltersWithPaging = {
+      ...filters,
+      ...initialPagingInfo,
+    };
+    await handleFetchStories(updatedFiltersWithPaging, !!activeFiltersCount);
+  };
+
+  const handleGetStoriesByPage = async (pageNumber: number) => {
+    store.updatePageNumber(pageNumber);
+    const updatedFilters = {
+      ...filters,
+      pageNumber,
+      pageSize: pagingInfo.pageSize,
+    };
+    replaceUrl(updatedFilters);
+    await handleFetchStories(updatedFilters);
   };
 
   const handleClearFilters = async () => {
     store.clearFilters();
     store.setActiveFiltersCount(0);
     store.toggleFiltersPanel(false);
-    replaceUrl(initialFilters);
-    await handleFetchStories(initialFilters);
+    replaceUrl(initialFiltersWithPaging);
+    await handleFetchStories(initialFiltersWithPaging, false);
   };
 
   const handleResetFilters = () => {
@@ -97,22 +116,26 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
   };
 
   const handleFetchStories = async (
-    newFilters?: ExploreStoryFilters
+    newFilters: ExploreStoryFilters,
+    hasActiveFilters?: boolean
   ): Promise<void> => {
     const updatedFilters = newFilters ?? filters;
-    // const pageSize = parseInt(getUrlParams("pageSize")) || 20;
-    // const pageNumber = parseInt(getUrlParams("pageNumber")) || 1;
+
+    console.log("ℹ️  handleFetchStories", {
+      activeFiltersCount,
+    });
 
     store.isExploreFetching(true);
+
     try {
       const response: AxiosResponse<ApiResponseWithPaging<Story[]>> =
         await axios.get(END_POINTS.STORIES.GET_ALL_STORIES, {
           params: {
             filters: JSON.stringify(updatedFilters),
-            // pageSize,
-            // pageNumber,
+            hasActiveFilters: hasActiveFilters || activeFiltersCount > 1,
           } as ApiRequestParams,
         });
+      store.updatePagingInfo(response.data.paging);
       store.updateStories(response.data.results);
     } catch (error) {
       throw new Error(`❌ Failed to fetch Stories :>>> ${error}`);
@@ -129,6 +152,7 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
     handleFilterStories,
     handleUpdateFilters,
     handleFetchStories,
+    handleGetStoriesByPage,
     handleToggleFiltersPanel,
     handleUpdateUrlByFilters,
   };

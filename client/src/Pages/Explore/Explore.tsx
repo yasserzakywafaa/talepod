@@ -6,7 +6,7 @@ import {
   FilterAltOutlined,
   SwapVertOutlined,
 } from "@mui/icons-material";
-import { Badge, Button, Container } from "@mui/material";
+import { Badge, Button, Container, Pagination } from "@mui/material";
 
 import Box from "@mui/material/Box";
 import FiltersPanel from "./features/FiltersPanel/FiltersPanel";
@@ -23,13 +23,14 @@ const ExplorePage: React.FC = () => {
   const navigate = useNavigate();
   const {
     store: {
-      state: { isFetching, stories, activeFiltersCount },
+      state: { isFetching, stories, activeFiltersCount, pagingInfo },
     },
     manager: {
       setUp,
       handleSortStories,
       handleClearFilters,
       handleResetFilters,
+      handleGetStoriesByPage,
       handleToggleFiltersPanel,
     },
   } = useExploreContext();
@@ -44,6 +45,13 @@ const ExplorePage: React.FC = () => {
 
   const handleSortButtonClick = () => {
     handleSortStories();
+  };
+
+  const handlePaginationItemClick = (
+    event: React.ChangeEvent<unknown>,
+    pageNumber: number
+  ) => {
+    handleGetStoriesByPage(pageNumber);
   };
 
   useEffect(() => {
@@ -116,6 +124,35 @@ const ExplorePage: React.FC = () => {
               {stories.map((story, index) => {
                 return <StoryCard key={index} story={story} />;
               })}
+
+              {pagingInfo.totalPagesCount && pagingInfo.totalPagesCount > 1 ? (
+                <Box
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: "1rem",
+                  }}
+                >
+                  <Pagination
+                    shape="rounded"
+                    variant="outlined"
+                    color="primary"
+                    page={pagingInfo.pageNumber}
+                    count={pagingInfo.totalPagesCount}
+                    onChange={handlePaginationItemClick}
+                    // renderItem={(item) => (
+                    //   <PaginationItem
+                    //     {...item}
+                    //     selected={item.page === pagingInfo.pageNumber}
+                    //   />
+                    // )}
+                  />
+                </Box>
+              ) : (
+                <></>
+              )}
             </>
           ) : (
             <></>

@@ -16,17 +16,17 @@ export const getAllStories = async (
   next: NextFunction
 ) => {
   try {
-    const stories = database.collection(DBCollections.Stories);
+    const allStories = database.collection(DBCollections.Stories);
+    const allStoriesCount = await allStories.countDocuments();
 
+    const hasActiveFilters: boolean = request.query.hasActiveFilters === "true";
     const filters: StoryFilters = JSON.parse(
       (request.query.filters as string) || "{}"
     );
     const { pageNumber, pageSize } = filters;
     const filtersQuery = getQuery(filters);
-    const totalCount = await stories.countDocuments();
-    const totalPagesCount = pageSize ? Math.round(totalCount / pageSize) : 0;
 
-    const filteredStories = await stories
+    const filteredStories = await allStories
       .find(filtersQuery, {
         sort: { createdAt: -1 },
         skip: (pageNumber - 1) * pageSize,
@@ -34,9 +34,19 @@ export const getAllStories = async (
       })
       .toArray();
 
+    const totalCount = hasActiveFilters
+      ? filteredStories.length
+      : allStoriesCount;
+    const totalPagesCount = pageSize ? Math.round(totalCount / pageSize) : 0;
+
     console.log("ℹ️  Fetched all stories successfully", {
+      pageNumber,
+      pageSize,
       filters,
+      hasActiveFilters,
       totalCount,
+      allStoriesCount,
+      filteredStoriesLength: filteredStories.length,
       totalPagesCount,
       // filteredStories: filteredStories.map((d) => d.title),
     });

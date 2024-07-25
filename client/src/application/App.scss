@@ -1,4 +1,5 @@
 #root {
+  scroll-behavior: smooth;
   .ellipsis {
     white-space: nowrap; /* Prevents text from wrapping */
     overflow: hidden; /* Hides the overflow text */

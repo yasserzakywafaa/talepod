@@ -4,6 +4,7 @@ import {
   getExploreInitialState,
 } from "./state";
 
+import { PagingInfo } from "src/shared/types";
 import { Story } from "src/components/StoryCreator/store/state";
 import { useState } from "react";
 
@@ -13,6 +14,8 @@ export interface ExploreStore {
   toggleFiltersPanel: (isFetching: boolean) => void;
   sortStories: () => void;
   updateStories: (stories: Story[]) => void;
+  updatePageNumber: (pageNumber: number) => void;
+  updatePagingInfo: (pagingInfo: PagingInfo) => void;
   updateFilters: (
     key: keyof ExploreStoryFilters,
     value: ExploreStoryFilters[typeof key]
@@ -68,6 +71,23 @@ const useExploreStore = (): ExploreStore => {
     }));
   };
 
+  const updatePageNumber = (pageNumber: number) => {
+    setState((prev) => ({
+      ...prev,
+      pagingInfo: {
+        ...prev.pagingInfo,
+        pageNumber,
+      },
+    }));
+  };
+
+  const updatePagingInfo = (pagingInfo: PagingInfo) => {
+    setState((prev) => ({
+      ...prev,
+      pagingInfo,
+    }));
+  };
+
   const clearFilters = () => {
     setState((prev) => ({
       ...prev,
@@ -96,6 +116,8 @@ const useExploreStore = (): ExploreStore => {
     isExploreFetching,
     updateStories,
     sortStories,
+    updatePageNumber,
+    updatePagingInfo,
     toggleFiltersPanel,
     updateFilters,
     applyFilters,
