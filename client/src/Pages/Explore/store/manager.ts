@@ -7,6 +7,7 @@ import END_POINTS from "src/application/shared/endpoints";
 import { ExploreStore } from "./store";
 import { Story } from "src/components/StoryCreator/store/state";
 import { useFiltersPanel } from "../features/FiltersPanel/useFiltersPanel";
+import { scrollToTop } from "src/shared/utils/scrollTo";
 
 export interface ExploreManager {
   setUp: () => Promise<void>;
@@ -15,7 +16,7 @@ export interface ExploreManager {
   handleResetFilters: () => void;
   handleFilterStories: () => void;
   handleUpdateUrlByFilters: () => void;
-  handleGetStoriesByPage: (pageNumber: number) => void;
+  handleGetStoriesByPage: (pageNumber: number) => Promise<void>;
   handleFetchStories: (filters?: ExploreStoryFilters) => Promise<void>;
   handleToggleFiltersPanel: (isOpen: boolean) => void;
   handleUpdateFilters: (
@@ -100,6 +101,7 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
     };
     replaceUrl(updatedFilters);
     await handleFetchStories(updatedFilters);
+    scrollToTop();
   };
 
   const handleClearFilters = async () => {

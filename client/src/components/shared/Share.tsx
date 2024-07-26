@@ -12,12 +12,12 @@ import { Story } from "src/components/StoryCreator/store/state";
 import { useState } from "react";
 
 interface ShareStory {
-  url: string;
-  story: Story;
+  url?: string;
+  story?: Story;
 }
 
-const ShareStory = (props: ShareStory) => {
-  const { url } = props;
+const Share = (props: ShareStory) => {
+  const url = props.url || window.location.href;
   const [isUrlCopied, setIsUrlCopied] = useState(false);
 
   const handleCopyUrlToClipboard = () => {
@@ -77,7 +77,7 @@ const ShareStory = (props: ShareStory) => {
       justifyContent="center"
       alignItems="center"
       flexWrap="wrap"
-      mt={4}
+      m={2}
       gap={2}
     >
       <Tooltip title="Copy link">
@@ -177,4 +177,4 @@ const ShareStory = (props: ShareStory) => {
   );
 };
 
-export default ShareStory;
+export default Share;

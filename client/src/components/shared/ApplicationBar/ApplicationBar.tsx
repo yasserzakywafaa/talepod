@@ -24,7 +24,7 @@ import ToggleColorMode from "src/components/shared/ToggleColorMode";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import routes from "src/application/routes";
-import { scrollToSection } from "src/shared/utils/scrollToSection";
+import { scrollToSection } from "src/shared/utils/scrollTo";
 import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 // import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";

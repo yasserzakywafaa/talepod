@@ -15,12 +15,11 @@ import {
 } from "src/components/shared/Notification/Notification";
 
 import Box from "@mui/material/Box";
-import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
 import { LyricsOutlined } from "@mui/icons-material";
 import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import ReactMarkdown from "react-markdown";
-import ShareStory from "./features/ShareStory";
+import Share from "../../components/shared/Share";
 import StoryNotFound from "./features/StoryNotFound";
 import ViewStoryInfo from "./features/ViewStoryInfo";
 import ViewStorySEO from "./features/ViewStorySEO";
@@ -106,10 +105,6 @@ const ViewStoryPage: React.FC = () => {
           pb: 4,
         }}
       >
-        {isFetching && !story && (
-          <LoaderSpinner style={{ position: "fixed" }} />
-        )}
-
         {!isFetching && !story && <StoryNotFound />}
 
         {story && (
@@ -252,7 +247,7 @@ const ViewStoryPage: React.FC = () => {
 
                 <ViewStoryInfo story={story} />
 
-                <ShareStory url={window.location.href} story={story} />
+                <Share story={story} />
               </CardContent>
             </Card>
 

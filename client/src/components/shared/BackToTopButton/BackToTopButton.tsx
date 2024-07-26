@@ -2,6 +2,7 @@ import { Fab, Zoom } from "@mui/material";
 import { useEffect, useState } from "react";
 
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { scrollToTop } from "src/shared/utils/scrollTo";
 
 const ScrollToTopButton = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -9,13 +10,6 @@ const ScrollToTopButton = () => {
   const toggleVisibility = () => {
     if (window.scrollY > 200) setIsVisible(true);
     else setIsVisible(false);
-  };
-
-  const handleScrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
   };
 
   useEffect(() => {
@@ -30,7 +24,7 @@ const ScrollToTopButton = () => {
       <Fab
         color="primary"
         size="small"
-        onClick={handleScrollToTop}
+        onClick={scrollToTop}
         aria-label="scroll back to top"
         sx={{
           position: "fixed",
