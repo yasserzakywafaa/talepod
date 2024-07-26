@@ -8,6 +8,7 @@ import {
   SearchOutlined,
   WbSunnyOutlined,
 } from "@mui/icons-material";
+import { useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
 
 import AppBar from "@mui/material/AppBar";
@@ -29,7 +30,7 @@ import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 // import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 // import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
-import { useState } from "react";
+// import { InstallAppModal } from "src/components/Modals/InstallAppModal/InstallAppModal";
 
 const ApplicationBar = () => {
   const navigate = useNavigate();
@@ -477,6 +478,7 @@ const ApplicationBar = () => {
       {/* Modals */}
       <LoginModal />
       <RegisterModal />
+      {/* <InstallAppModal /> */}
     </>
   );
 };
