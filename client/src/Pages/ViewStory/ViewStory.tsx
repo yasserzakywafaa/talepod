@@ -199,14 +199,14 @@ const ViewStoryPage: React.FC = () => {
                         label={
                           <span color="textSecondary">
                             Audio created on:{" "}
-                            <b>
+                            <span className="bold">
                               {new Date(
                                 story.audioFile.createdAt
                               ).toLocaleString("en-GB", {
                                 timeStyle: "short",
                                 dateStyle: "short",
                               })}
-                            </b>
+                            </span>
                           </span>
                         }
                         color="primary"

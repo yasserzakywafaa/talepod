@@ -5,6 +5,7 @@ import Divider from "@mui/material/Divider";
 import FAQ from "./features/FAQ";
 import Hero from "./features/Hero";
 import Page from "src/components/shared/Page/Page";
+import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
 import { useApplicationContext } from "src/application/store/Provider";
 
 // import Highlights from "./features/Highlights";
@@ -32,7 +33,9 @@ const Homepage = () => {
         {/* <Highlights /> */}
         {/* <Divider /> */}
         {/* <Pricing /> */}
-        {/* <Divider /> */}
+        <PersonalizedBedtimeStoryText />
+        <Divider />
+
         <FAQ />
         <Divider />
       </Box>

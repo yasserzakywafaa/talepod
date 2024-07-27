@@ -13,7 +13,7 @@ const ViewStoryInfo = (props: ViewStoryInfoParams) => {
     return (
       <span>
         {key}: {""}
-        <b>{value}</b>
+        <span className="bold">{value}</span>
       </span>
     );
   };

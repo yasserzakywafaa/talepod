@@ -6,7 +6,14 @@ import {
   Snackbar,
   Tooltip,
 } from "@mui/material";
-import { Facebook, Link, Telegram, WhatsApp } from "@mui/icons-material";
+import {
+  Facebook,
+  Instagram,
+  Link,
+  Telegram,
+  WhatsApp,
+  X,
+} from "@mui/icons-material";
 
 import { Story } from "src/components/StoryCreator/store/state";
 import { useState } from "react";
@@ -77,8 +84,8 @@ const Share = (props: ShareStory) => {
       justifyContent="center"
       alignItems="center"
       flexWrap="wrap"
-      m={2}
-      gap={2}
+      my={2}
+      gap={1}
     >
       <Tooltip title="Copy link">
         <IconButton onClick={handleCopyUrlToClipboard} color="primary">
@@ -116,6 +123,30 @@ const Share = (props: ShareStory) => {
         </IconButton>
       </Tooltip>
 
+      <Tooltip title="Share on Instagram">
+        <IconButton
+          component="a"
+          href={`https://www.instagram.com/?url=${url}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          color="primary"
+        >
+          <Instagram />
+        </IconButton>
+      </Tooltip>
+
+      <Tooltip title="Share on X">
+        <IconButton
+          component="a"
+          href={`https://x.com/share?url=${url}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          color="primary"
+        >
+          <X />
+        </IconButton>
+      </Tooltip>
+
       <Tooltip title="Share on Telegram">
         <IconButton
           component="a"
@@ -127,34 +158,6 @@ const Share = (props: ShareStory) => {
           <Telegram />
         </IconButton>
       </Tooltip>
-
-      {/* <Tooltip title="Share on X">
-        <IconButton
-          component="a"
-          href={`https://twitter.com/share?url=${encodeURIComponent(
-            url
-          )}&text=Check%20out%20this%20story!`}
-          target="_blank"
-          rel="noopener noreferrer"
-          color="primary"
-        >
-          <X />
-        </IconButton>
-      </Tooltip> */}
-
-      {/* <Tooltip title="Share on LinkedIn">
-        <IconButton
-          component="a"
-          href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-            url
-          )}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          color="primary"
-        >
-          <LinkedIn />
-        </IconButton>
-      </Tooltip> */}
 
       <Snackbar
         open={isUrlCopied}

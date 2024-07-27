@@ -1,4 +1,5 @@
-import { AutoFixHighOutlined } from "@mui/icons-material";
+import { AutoFixHighOutlined, SearchOutlined } from "@mui/icons-material";
+
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -9,8 +10,12 @@ import { useNavigate } from "react-router-dom";
 export default function Hero() {
   const navigate = useNavigate();
 
-  const handleStartNowClick = () => {
+  const handleCreateStoryClick = () => {
     navigate("/create");
+  };
+
+  const handleExploreClick = () => {
+    navigate("/explore");
   };
 
   return (
@@ -36,7 +41,7 @@ export default function Hero() {
             flexDirection: { xs: "column", md: "row" },
             alignSelf: "center",
             textAlign: "center",
-            fontSize: { xs: "3rem", sm: "3.5rem" },
+            fontSize: { xs: "2rem", sm: "3.5rem" },
             color: (theme) => theme.palette.text.primary,
           }}
         >
@@ -45,10 +50,10 @@ export default function Hero() {
             component="span"
             variant="h1"
             sx={{
-              fontSize: "clamp(3rem, 10vw, 4rem)",
+              fontSize: { xs: "2rem", sm: "3.5rem" },
               color: (theme) =>
                 theme.palette.mode === "light"
-                  ? "primary.main"
+                  ? "secondary.main"
                   : "primary.light",
             }}
           >
@@ -66,16 +71,36 @@ export default function Hero() {
           {/* Make bedtime magical and memorable. */}
         </Typography>
 
-        <Button
-          size="large"
-          color="primary"
-          variant="contained"
-          sx={{ my: 2, px: 2 }}
-          endIcon={<AutoFixHighOutlined />}
-          onClick={handleStartNowClick}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
+            width: { xs: "100%", sm: "30%" },
+          }}
         >
-          Create Story
-        </Button>
+          <Button
+            size="large"
+            color="secondary"
+            variant="contained"
+            sx={{ my: 2, px: 2 }}
+            endIcon={<SearchOutlined />}
+            onClick={handleExploreClick}
+          >
+            Explore
+          </Button>
+
+          <Button
+            size="large"
+            color="primary"
+            variant="contained"
+            sx={{ my: 2, px: 2 }}
+            endIcon={<AutoFixHighOutlined />}
+            onClick={handleCreateStoryClick}
+          >
+            Create Story
+          </Button>
+        </Box>
       </Container>
     </Box>
   );
