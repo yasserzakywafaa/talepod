@@ -4,7 +4,8 @@ import {
   PageResponse,
   PagingInfo,
   StoryFilters,
-} from "src/models/types";
+  StoryFiltersEnum,
+} from "../models/types";
 import { NextFunction, Request, Response } from "express";
 
 import { Collection } from "mongodb";
@@ -16,39 +17,47 @@ export const getAllStories = async (
   next: NextFunction
 ) => {
   try {
-    const allStories = database.collection(DBCollections.Stories);
-    const allStoriesCount = await allStories.countDocuments();
-
     const hasActiveFilters: boolean = request.query.hasActiveFilters === "true";
     const filters: StoryFilters = JSON.parse(
       (request.query.filters as string) || "{}"
     );
-    const { pageNumber, pageSize } = filters;
-    const filtersQuery = getQuery(filters);
+    const { pageNumber = 1, pageSize = 20 } = filters;
 
-    const filteredStories = await allStories
-      .find(filtersQuery, {
-        sort: { createdAt: -1 },
-        skip: (pageNumber - 1) * pageSize,
-        limit: pageSize,
-      })
+    // Get all stories in collection
+    const allStoriesDocuments = database.collection(DBCollections.Stories);
+    const allStoriesDocumentsCount = await allStoriesDocuments.countDocuments();
+
+    // Get all stories by filters (if any)
+    const totalFilteredStories = allStoriesDocuments
+      .find(getQuery(filters))
+      .sort({ createdAt: -1, [StoryFiltersEnum.language]: -1 });
+    const totalFilteredStoriesCount = (await totalFilteredStories.toArray())
+      .length;
+
+    // Get only the pagination stories by same filter (if any)
+    const totalFilteredStoriesClone = allStoriesDocuments
+      .find(getQuery(filters))
+      .sort({ createdAt: -1, [StoryFiltersEnum.language]: -1 })
+      .clone();
+    const filteredStories = await totalFilteredStoriesClone
+      .skip((Number(pageNumber) - 1) * Number(pageSize))
+      .limit(pageSize)
       .toArray();
 
     const totalCount = hasActiveFilters
-      ? filteredStories.length
-      : allStoriesCount;
-    const totalPagesCount = pageSize ? Math.round(totalCount / pageSize) : 0;
+      ? totalFilteredStoriesCount
+      : allStoriesDocumentsCount;
+
+    const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
 
     console.log("ℹ️  Fetched all stories successfully", {
-      pageNumber,
-      pageSize,
       filters,
       hasActiveFilters,
+      allStoriesDocumentsCount,
+      totalFilteredStoriesCount,
+      filteredStoriesCount: filteredStories.length,
       totalCount,
-      allStoriesCount,
-      filteredStoriesLength: filteredStories.length,
       totalPagesCount,
-      // filteredStories: filteredStories.map((d) => d.title),
     });
 
     const paging: PagingInfo = {

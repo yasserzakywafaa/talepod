@@ -6,8 +6,8 @@ import { parseQueryString, replaceUrl } from "src/shared/utils/url";
 import END_POINTS from "src/application/shared/endpoints";
 import { ExploreStore } from "./store";
 import { Story } from "src/components/StoryCreator/store/state";
-import { useFiltersPanel } from "../features/FiltersPanel/useFiltersPanel";
 import { scrollToTop } from "src/shared/utils/scrollTo";
+import { useFiltersPanel } from "../features/FiltersPanel/useFiltersPanel";
 
 export interface ExploreManager {
   setUp: () => Promise<void>;
@@ -25,6 +25,11 @@ export interface ExploreManager {
   ) => void;
 }
 
+interface UpdateUrlByFiltersResults {
+  parsedFilters: ExploreStoryFilters;
+  newActiveFiltersCount: number;
+}
+
 export const useExploreManager = (store: ExploreStore): ExploreManager => {
   const { stories, filters, pagingInfo } = store.state;
   const { filters: initialFilters, pagingInfo: initialPagingInfo } =
@@ -38,32 +43,45 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
 
   const setUp = async () => {
     store.isExploreFetching(true);
-    const newFilters = await handleUpdateUrlByFilters();
-    await handleFetchStories(newFilters);
+    const { parsedFilters, newActiveFiltersCount } = handleUpdateUrlByFilters();
+    await handleFetchStories(parsedFilters, !!newActiveFiltersCount);
     store.isExploreFetching(false);
   };
 
-  const handleUpdateUrlByFilters = async (): Promise<ExploreStoryFilters> => {
+  const handleUpdateUrlByFilters = (): UpdateUrlByFiltersResults => {
     if (!window.location.search.length) {
       // Append empty filters to URL
       replaceUrl(initialFiltersWithPaging);
+      const newFilters = {
+        parsedFilters: initialFiltersWithPaging,
+        newActiveFiltersCount: 0,
+      };
 
-      return initialFiltersWithPaging;
+      return newFilters;
     }
 
     // Update current filters from URL (if any)
     const urlParams = window.location.search.replace("?", "");
     const parsedFilters: ExploreStoryFilters = parseQueryString(urlParams);
+    const newActiveFiltersCount = getActiveFiltersCount(parsedFilters);
 
-    return new Promise((resolve) => {
-      Object.keys(parsedFilters).forEach((key: keyof ExploreStoryFilters) => {
-        const value = parsedFilters[key];
-        store.updateFilters(key, value);
-      });
-      store.setActiveFiltersCount(getActiveFiltersCount(parsedFilters));
-
-      resolve(parsedFilters);
+    Object.keys(parsedFilters).forEach((key: keyof ExploreStoryFilters) => {
+      const value = parsedFilters[key];
+      store.updateFilters(key, value);
     });
+    store.setActiveFiltersCount(getActiveFiltersCount(parsedFilters));
+
+    console.log("ℹ️  handleUpdateUrlByFilters:>>>", {
+      getActiveFiltersCount: getActiveFiltersCount(parsedFilters),
+      activeFiltersCount: store.state.activeFiltersCount,
+    });
+
+    const newFilters = {
+      parsedFilters,
+      newActiveFiltersCount,
+    };
+
+    return newFilters;
   };
 
   const handleToggleFiltersPanel = (isOpen: boolean) => {
@@ -100,7 +118,7 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
       pageSize: pagingInfo.pageSize,
     };
     replaceUrl(updatedFilters);
-    await handleFetchStories(updatedFilters);
+    await handleFetchStories(updatedFilters, !!activeFiltersCount);
     scrollToTop();
   };
 
@@ -122,11 +140,6 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
     hasActiveFilters?: boolean
   ): Promise<void> => {
     const updatedFilters = newFilters ?? filters;
-
-    console.log("ℹ️  handleFetchStories", {
-      activeFiltersCount,
-    });
-
     store.isExploreFetching(true);
 
     try {
@@ -134,7 +147,7 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
         await axios.get(END_POINTS.STORIES.GET_ALL_STORIES, {
           params: {
             filters: JSON.stringify(updatedFilters),
-            hasActiveFilters: hasActiveFilters || activeFiltersCount > 1,
+            hasActiveFilters,
           } as ApiRequestParams,
         });
       store.updatePagingInfo(response.data.paging);
