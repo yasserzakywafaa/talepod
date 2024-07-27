@@ -26,8 +26,8 @@ export const StoryCreatorContent = () => {
       {APP_CONSTANTS.IS_DEV && (
         <Box
           width="100%"
-          // display="none"
-          display="flex"
+          display="none"
+          // display="flex"
           component="div"
           paddingX="1rem"
           flexDirection="row"

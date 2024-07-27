@@ -1,18 +1,19 @@
+import { PagingInfo } from "src/shared/types";
 import { Story } from "src/components/StoryCreator/store/state";
 
 export interface ExploreInitialState {
   isFetching: boolean;
   stories: Story[];
-  filteredStories: Story[];
   filters: ExploreStoryFilters;
   isFiltersPanelOpen: boolean;
   activeFiltersCount: number;
+  pagingInfo: PagingInfo;
 }
 
 export interface ExploreStoryFilters {
   name: string | undefined;
   gender: string | undefined;
-  age: string[];
+  age: number[];
   language: string[];
   moral: string[];
   tone: string[];
@@ -25,17 +26,20 @@ export const getExploreInitialState = (): ExploreInitialState => {
     isFetching: false,
     stories: [],
     isFiltersPanelOpen: false,
-    filteredStories: [],
     activeFiltersCount: 0,
     filters: {
-      name: undefined,
-      gender: undefined,
+      name: "",
+      gender: "",
       age: [],
       language: [],
       moral: [],
       tone: [],
       environment: [],
-      audio: undefined,
+      audio: false,
+    },
+    pagingInfo: {
+      pageNumber: 1,
+      pageSize: 20,
     },
   };
 };

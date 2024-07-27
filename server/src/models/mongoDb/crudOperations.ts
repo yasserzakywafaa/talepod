@@ -1,5 +1,5 @@
 import { DBCollections, database } from ".";
-import { Story, StoryData } from "../types";
+import { Story, StoryData } from "../types/story";
 
 import { ObjectId } from "mongodb";
 

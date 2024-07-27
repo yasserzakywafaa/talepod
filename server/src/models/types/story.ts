@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import { PagingInfo } from "./api";
 
 export interface Story {
   _id: ObjectId;
@@ -83,4 +84,26 @@ export interface ContactFormState {
   email: string;
   subject: string;
   message: string;
+}
+
+export interface StoryFilters extends PagingInfo {
+  name: string | undefined;
+  gender: AdultGenderEnum | undefined;
+  age: number[];
+  language: string[];
+  moral: string[];
+  tone: string[];
+  environment: string[];
+  audio: boolean | undefined;
+}
+
+export enum StoryFiltersEnum {
+  name = "profileInfo.name",
+  gender = "profileInfo.gender",
+  age = "profileInfo.age",
+  language = "profileInfo.language.value",
+  moral = "storyParams.moral.value",
+  tone = "storyParams.tone.value",
+  environment = "storyParams.environment.value",
+  audio = "audioFile.url",
 }

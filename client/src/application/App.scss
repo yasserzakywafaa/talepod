@@ -1,15 +1,12 @@
+// MAIN
+@import "../assets/scss/grid.scss";
+
 #root {
+  scroll-behavior: smooth;
   .ellipsis {
     white-space: nowrap; /* Prevents text from wrapping */
     overflow: hidden; /* Hides the overflow text */
     text-overflow: ellipsis; /* Adds ellipsis at the end of the text */
-  }
-
-  .italics {
-    font-style: italic;
-  }
-  .bold {
-    font-weight: 600;
   }
 
   .bg-image-character {
@@ -26,4 +23,12 @@
 
 img {
   pointer-events: none;
+}
+
+.direction-rtl {
+  direction: rtl;
+}
+
+hr {
+  margin: 2rem 0;
 }

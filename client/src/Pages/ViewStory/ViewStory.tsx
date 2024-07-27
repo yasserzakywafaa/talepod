@@ -15,12 +15,11 @@ import {
 } from "src/components/shared/Notification/Notification";
 
 import Box from "@mui/material/Box";
-import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
 import { LyricsOutlined } from "@mui/icons-material";
 import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import ReactMarkdown from "react-markdown";
-import ShareStory from "./features/ShareStory";
+import Share from "../../components/shared/Share";
 import StoryNotFound from "./features/StoryNotFound";
 import ViewStoryInfo from "./features/ViewStoryInfo";
 import ViewStorySEO from "./features/ViewStorySEO";
@@ -45,6 +44,8 @@ const ViewStoryPage: React.FC = () => {
   const {
     manager: { handleCreateAudio },
   } = useOpenaiContext();
+
+  const hasDirectionRtl = story.profileInfo.language.value === "ar";
 
   const handleOnCreateAudioClick = async () => {
     handleIsFetching(true);
@@ -104,10 +105,6 @@ const ViewStoryPage: React.FC = () => {
           pb: 4,
         }}
       >
-        {isFetching && !story && (
-          <LoaderSpinner style={{ position: "fixed" }} />
-        )}
-
         {!isFetching && !story && <StoryNotFound />}
 
         {story && (
@@ -127,7 +124,9 @@ const ViewStoryPage: React.FC = () => {
                   component="h1"
                   color="primary"
                   property="name"
-                  className="view-story-card-title"
+                  className={`view-story-card-title ${
+                    hasDirectionRtl ? "direction-rtl" : ""
+                  }`}
                   sx={{ fontSize: { xs: "2rem", sm: "2.25rem" } }}
                 >
                   {story.title}
@@ -136,7 +135,9 @@ const ViewStoryPage: React.FC = () => {
                 <Typography
                   variant="h5"
                   component="h2"
-                  className="view-story-card-summary"
+                  className={`view-story-card-summary ${
+                    hasDirectionRtl ? "direction-rtl" : ""
+                  }`}
                   sx={{ fontSize: { xs: "1.2rem", sm: "1.5rem" } }}
                 >
                   {story.summary}
@@ -198,14 +199,14 @@ const ViewStoryPage: React.FC = () => {
                         label={
                           <span color="textSecondary">
                             Audio created on:{" "}
-                            <b>
+                            <span className="bold">
                               {new Date(
                                 story.audioFile.createdAt
                               ).toLocaleString("en-GB", {
                                 timeStyle: "short",
                                 dateStyle: "short",
                               })}
-                            </b>
+                            </span>
                           </span>
                         }
                         color="primary"
@@ -227,15 +228,26 @@ const ViewStoryPage: React.FC = () => {
                   <></>
                 )}
 
-                <Box component="article" className="view-story-card-main-story">
+                <Box
+                  component="article"
+                  className={`view-story-card-main-story ${
+                    hasDirectionRtl ? "direction-rtl" : ""
+                  }`}
+                >
                   <ReactMarkdown>{story.mainStory}</ReactMarkdown>
                 </Box>
 
-                <pre className="italics view-story-card-poem">{story.poem}</pre>
+                <pre
+                  className={`italics view-story-card-poem ${
+                    hasDirectionRtl ? "direction-rtl" : ""
+                  }`}
+                >
+                  {story.poem}
+                </pre>
 
                 <ViewStoryInfo story={story} />
 
-                <ShareStory url={window.location.href} story={story} />
+                <Share story={story} />
               </CardContent>
             </Card>
 

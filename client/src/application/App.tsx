@@ -1,4 +1,3 @@
-import "../assets/scss/App.scss";
 import "../assets/scss/fonts.scss";
 import "../assets/scss/default.scss";
 

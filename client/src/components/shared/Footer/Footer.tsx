@@ -44,7 +44,7 @@ const Footer = () => {
       className="footer"
       sx={{
         gap: { xs: 4, sm: 8 },
-        mt: { xs: 2, sm: 2 },
+        // mt: { xs: 2, sm: 2 },
         p: { xs: 2, sm: 2 },
         textAlign: { sm: "center", md: "left" },
       }}

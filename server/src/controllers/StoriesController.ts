@@ -1,28 +1,76 @@
 import { DBCollections, database } from "../models/mongoDb";
+import {
+  DocumentWithId,
+  PageResponse,
+  PagingInfo,
+  StoryFilters,
+  StoryFiltersEnum,
+} from "../models/types";
 import { NextFunction, Request, Response } from "express";
 
 import { Collection } from "mongodb";
-
-// import { getSlugFromText } from "../utils/stringUtils";
-// import { updateDocument } from "../models/mongoDb/crudOperations";
-
-let globalAllStories;
+import { getQuery } from "../models/mongoDb/query";
 
 export const getAllStories = async (
   request: Request,
-  response: Response,
+  response: Response<PageResponse<DocumentWithId>>,
   next: NextFunction
 ) => {
   try {
-    const stories = database.collection(DBCollections.Stories);
-    const allStories = await stories.find().sort({ createdAt: -1 }).toArray(); // Convert the cursor to an array
+    const hasActiveFilters: boolean = request.query.hasActiveFilters === "true";
+    const filters: StoryFilters = JSON.parse(
+      (request.query.filters as string) || "{}"
+    );
+    const { pageNumber = 1, pageSize = 20 } = filters;
 
-    globalAllStories = allStories;
-    // bulkUpdateStoriesByField(globalAllStories);
+    // Get all stories in collection
+    const allStoriesDocuments = database.collection(DBCollections.Stories);
+    const allStoriesDocumentsCount = await allStoriesDocuments.countDocuments();
 
-    console.log("ℹ️  Fetched all stories successfully");
+    // Get all stories by filters (if any)
+    const totalFilteredStories = allStoriesDocuments
+      .find(getQuery(filters))
+      .sort({ createdAt: -1, [StoryFiltersEnum.language]: -1 });
+    const totalFilteredStoriesCount = (await totalFilteredStories.toArray())
+      .length;
 
-    response.status(200).json(allStories);
+    // Get only the pagination stories by same filter (if any)
+    const totalFilteredStoriesClone = allStoriesDocuments
+      .find(getQuery(filters))
+      .sort({ createdAt: -1, [StoryFiltersEnum.language]: -1 })
+      .clone();
+    const filteredStories = await totalFilteredStoriesClone
+      .skip((Number(pageNumber) - 1) * Number(pageSize))
+      .limit(pageSize)
+      .toArray();
+
+    const totalCount = hasActiveFilters
+      ? totalFilteredStoriesCount
+      : allStoriesDocumentsCount;
+
+    const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
+
+    console.log("ℹ️  Fetched all stories successfully", {
+      filters,
+      hasActiveFilters,
+      allStoriesDocumentsCount,
+      totalFilteredStoriesCount,
+      filteredStoriesCount: filteredStories.length,
+      totalCount,
+      totalPagesCount,
+    });
+
+    const paging: PagingInfo = {
+      pageNumber,
+      pageSize,
+      totalPagesCount,
+      totalCount,
+    };
+
+    response.status(200).json({
+      results: filteredStories as DocumentWithId[],
+      paging,
+    });
   } catch (error) {
     console.error("❌ Failed to get all stories!", {
       error,
@@ -63,6 +111,7 @@ export const getStoryBySlug = async (
 };
 
 // // FOR DEVELOPMENT USE ONLY
+// let globalAllStories;
 // const bulkUpdateStoriesByField = (allStories) => {
 //   try {
 //     allStories.forEach(async (story) => {
@@ -80,9 +129,9 @@ export const getStoryBySlug = async (
 //   }
 // };
 
-const GoogleGeminiController = {
+const StoriesController = {
   getAllStories,
   getStoryBySlug,
 };
 
-export default GoogleGeminiController;
+export default StoriesController;

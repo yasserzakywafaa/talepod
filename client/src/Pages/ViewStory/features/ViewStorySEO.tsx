@@ -8,13 +8,16 @@ interface ViewStorySeoParams {
 
 const ViewStorySEO = (props: ViewStorySeoParams): JSX.Element => {
   const { story } = props;
+  const hasDirectionRtl = story.profileInfo.language.value === "ar";
 
   if (!story.seo) return <></>;
 
   return story.seo ? (
     <Card className="view-story-seo-card" sx={{ mt: 2 }}>
       <CardContent
-        className="view-story-seo-card-content"
+        className={`view-story-seo-card-content ${
+          hasDirectionRtl ? "direction-rtl" : ""
+        }`}
         dangerouslySetInnerHTML={{ __html: story.seo?.content }}
       />
     </Card>

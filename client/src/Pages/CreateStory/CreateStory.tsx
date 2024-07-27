@@ -1,6 +1,18 @@
 import "./CreateStory.scss";
 
-import { Container, Typography } from "@mui/material";
+import {
+  Container,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+} from "@mui/material";
+import {
+  Looks3Outlined,
+  LooksOneOutlined,
+  LooksTwoOutlined,
+} from "@mui/icons-material";
 
 import Box from "@mui/material/Box";
 import Page from "src/components/shared/Page/Page";
@@ -58,6 +70,44 @@ const CreateStoryPage = () => {
         </Box>
 
         <StoryCreator />
+
+        <Container sx={{ my: 4 }}>
+          <Typography variant="h5" gutterBottom>
+            Tips for Crafting the Perfect Bedtime Story
+          </Typography>
+
+          <List>
+            <ListItem>
+              <ListItemIcon>
+                <LooksOneOutlined fontSize="large" color="secondary" />
+              </ListItemIcon>
+              <ListItemText
+                primary="Include Familiar Elements"
+                secondary="Incorporate elements from your child's daily life to make the story more relatable."
+              />
+            </ListItem>
+
+            <ListItem>
+              <ListItemIcon>
+                <LooksTwoOutlined fontSize="large" color="secondary" />
+              </ListItemIcon>
+              <ListItemText
+                primary="Add a Moral Lesson"
+                secondary="Teach valuable lessons through the story to instill good values and behaviors."
+              />
+            </ListItem>
+
+            <ListItem>
+              <ListItemIcon>
+                <Looks3Outlined fontSize="large" color="secondary" />
+              </ListItemIcon>
+              <ListItemText
+                primary="Keep It Interactive"
+                secondary="Ask questions and encourage your child to participate in the story to keep them engaged."
+              />
+            </ListItem>
+          </List>
+        </Container>
       </Container>
     </Page>
   );

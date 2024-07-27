@@ -37,6 +37,7 @@ const StoryCard = (props: StoryCard) => {
   const { isDesktop } = useDeviceSize();
   const { audioFile } = props.story;
   const profileInfo = props.story.profileInfo || {};
+  const hasDirectionRtl = props.story.profileInfo.language.value === "ar";
 
   const handleOnCardClick = () => {
     navigate(routes.story(props.story.slug), { replace: false });
@@ -62,7 +63,9 @@ const StoryCard = (props: StoryCard) => {
           gutterBottom
           variant="h5"
           component="div"
-          className={`story-card-title ${!isDesktop ? "ellipsis" : ""}`}
+          className={`story-card-title ${!isDesktop ? "ellipsis" : ""} ${
+            hasDirectionRtl ? "direction-rtl" : ""
+          }`}
         >
           {props.story.title}
         </Typography>
@@ -70,7 +73,9 @@ const StoryCard = (props: StoryCard) => {
         <Typography
           variant="body2"
           color="text.secondary"
-          className="story-card-summary"
+          className={`story-card-summary ${
+            hasDirectionRtl ? "direction-rtl" : ""
+          }`}
         >
           {props.story.summary}
         </Typography>

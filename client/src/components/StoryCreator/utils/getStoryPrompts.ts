@@ -1,5 +1,5 @@
 import {
-  ChildGenderEnum,
+  AgeGroupEnum,
   ProfileInfo,
   Story,
   StoryCreatorInitialState,
@@ -10,15 +10,19 @@ import { Keywords } from "src/shared/seo";
 export const getCreateStoryPrompt = (
   promptParams: StoryCreatorInitialState
 ): string => {
-  const { name, gender, age, interests, language } = promptParams.profileInfo;
+  const { name, age, interests, language } = promptParams.profileInfo;
 
   const { moral, tone, environment, minCharacters, maxCharacters } =
     promptParams.storyParams;
 
+  // const genderWord =
+  //   gender === ChildGenderEnum.Boy || gender === ChildGenderEnum.Girl
+  //     ? "child"
+  //     : gender.toLowerCase();
   const genderWord =
-    gender === ChildGenderEnum.Boy || gender === ChildGenderEnum.Girl
-      ? "child"
-      : gender.toLowerCase();
+    age < 19
+      ? AgeGroupEnum.Child.toLowerCase()
+      : AgeGroupEnum.Adult.toLowerCase();
 
   // `Write a story that is ${audioLength} minutes long ${
   const fullDynamicPrompt = `Write a story ${

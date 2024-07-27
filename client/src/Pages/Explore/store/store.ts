@@ -4,6 +4,7 @@ import {
   getExploreInitialState,
 } from "./state";
 
+import { PagingInfo } from "src/shared/types";
 import { Story } from "src/components/StoryCreator/store/state";
 import { useState } from "react";
 
@@ -13,19 +14,21 @@ export interface ExploreStore {
   toggleFiltersPanel: (isFetching: boolean) => void;
   sortStories: () => void;
   updateStories: (stories: Story[]) => void;
+  updatePageNumber: (pageNumber: number) => void;
+  updatePagingInfo: (pagingInfo: PagingInfo) => void;
   updateFilters: (
     key: keyof ExploreStoryFilters,
     value: ExploreStoryFilters[typeof key]
   ) => void;
   clearFilters: () => void;
-  applyFilters: (filteredStories: Story[]) => void;
+  applyFilters: (stories: Story[]) => void;
   setActiveFiltersCount: (activeFiltersCount: number) => void;
 }
 
 const useExploreStore = (): ExploreStore => {
   const initialState = getExploreInitialState();
   const [state, setState] = useState<ExploreInitialState>(initialState);
-  const { stories, filteredStories } = state;
+  const { stories } = state;
 
   const isExploreFetching = (isFetching: boolean) => {
     setState((prev) => ({
@@ -44,7 +47,7 @@ const useExploreStore = (): ExploreStore => {
   const sortStories = () => {
     setState((prev) => ({
       ...prev,
-      filteredStories: filteredStories.reverse(),
+      stories: stories.reverse(),
     }));
   };
 
@@ -52,7 +55,6 @@ const useExploreStore = (): ExploreStore => {
     setState((prev) => ({
       ...prev,
       stories,
-      filteredStories: stories,
     }));
   };
 
@@ -69,19 +71,36 @@ const useExploreStore = (): ExploreStore => {
     }));
   };
 
+  const updatePageNumber = (pageNumber: number) => {
+    setState((prev) => ({
+      ...prev,
+      pagingInfo: {
+        ...prev.pagingInfo,
+        pageNumber,
+      },
+    }));
+  };
+
+  const updatePagingInfo = (pagingInfo: PagingInfo) => {
+    setState((prev) => ({
+      ...prev,
+      pagingInfo,
+    }));
+  };
+
   const clearFilters = () => {
     setState((prev) => ({
       ...prev,
       activeFiltersCount: 0,
       filters: getExploreInitialState().filters,
-      filteredStories: stories,
+      stories,
     }));
   };
 
-  const applyFilters = (filteredStories: Story[]) => {
+  const applyFilters = (stories: Story[]) => {
     setState((prev) => ({
       ...prev,
-      filteredStories,
+      stories,
     }));
   };
 
@@ -97,6 +116,8 @@ const useExploreStore = (): ExploreStore => {
     isExploreFetching,
     updateStories,
     sortStories,
+    updatePageNumber,
+    updatePagingInfo,
     toggleFiltersPanel,
     updateFilters,
     applyFilters,

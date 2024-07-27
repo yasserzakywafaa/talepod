@@ -1,5 +1,11 @@
 import { Db, MongoClient, ObjectId } from "mongodb";
-import { ProfileInfo, Story, StoryData, StoryParams, StorySeo } from "../types";
+import {
+  ProfileInfo,
+  Story,
+  StoryData,
+  StoryParams,
+  StorySeo,
+} from "../types/story";
 import { createDocument, updateDocument } from "./crudOperations";
 
 import CONFIG from "../../config";

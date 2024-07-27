@@ -21,6 +21,7 @@ export interface PageProps {
   isLoading?: boolean;
   children?: React.ReactNode;
   swipeDownToRefreshThreshold?: number;
+  swipeToRefresh?: boolean;
   onRefresh?: () => Promise<void>;
   containerProps?: OverridableComponent<ContainerTypeMap<{}, "div">>;
 }
@@ -32,6 +33,7 @@ const Page = (params: PageProps) => {
     isLoading,
     className = "",
     containerProps = {},
+    swipeToRefresh,
     swipeDownToRefreshThreshold,
     onRefresh,
   } = params;
@@ -68,14 +70,8 @@ const Page = (params: PageProps) => {
   useEffect(() => {
     // Prevent scrolling while page is loading
     const htmlNode = document.getElementsByTagName("html")[0];
-    const bodyNode = document.getElementsByTagName("body")[0];
-    if (isPageLoading) {
-      htmlNode.style.overflow = "hidden";
-      bodyNode.style.overflow = "hidden";
-    } else {
-      htmlNode.removeAttribute("style");
-      bodyNode.removeAttribute("style");
-    }
+    if (isPageLoading) htmlNode.style.overflow = "hidden";
+    else htmlNode.removeAttribute("style");
   }, [isPageLoading]);
 
   return (
@@ -96,16 +92,19 @@ const Page = (params: PageProps) => {
       >
         {isPageLoading && <LoaderSpinner />}
 
-        <SwipeToRefresh
-          threshold={swipeDownToRefreshThreshold || 75}
-          onRefresh={onRefresh}
-        />
+        {swipeToRefresh && (
+          <SwipeToRefresh
+            threshold={swipeDownToRefreshThreshold}
+            onRefresh={onRefresh}
+          />
+        )}
 
         <Notification />
 
         <ApplicationBar />
 
         <ScrollToTopButton />
+
 
         <>{children}</>
 

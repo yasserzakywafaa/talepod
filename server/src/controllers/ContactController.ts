@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import CONFIG from "../config";
-import { ContactFormState } from "../models/types";
+import { ContactFormState } from "../models/types/story";
 import nodeMailer from "nodemailer";
 
 export const contactSupport = async (
