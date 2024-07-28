@@ -2,7 +2,7 @@ import "./NotFound.scss";
 
 import { Box, Button, Typography } from "@mui/material";
 
-import BunnyNotFound from "../../assets/images/not_found_404/confused_bunny_with_magnifier.png";
+import BunnyNotFound from "../../assets/images/not_found_404/confused_bunny_with_magnifier.webp";
 import { HomeOutlined } from "@mui/icons-material";
 import Page from "src/components/shared/Page/Page";
 import routes from "src/application/routes";

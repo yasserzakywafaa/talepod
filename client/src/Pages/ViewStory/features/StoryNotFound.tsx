@@ -1,6 +1,6 @@
 import { Box, Button, Typography } from "@mui/material";
 
-import BunnyNoStoryFound from "../../../assets/images/sad_bunny_with_book_and_cloud.png";
+import BunnyNoStoryFound from "../../../assets/images/sad_bunny_with_book_and_cloud.webp";
 import { SearchOutlined } from "@mui/icons-material";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";

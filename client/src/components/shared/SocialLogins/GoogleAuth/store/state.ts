@@ -1,9 +1,9 @@
-import { CredentialResponse } from "@react-oauth/google";
+// import { CredentialResponse } from "@react-oauth/google";
 
 export interface GoogleAuthInitialState {
   isFetching: boolean;
-  // tokenResponse: TokenResponse | undefined;
-  tokenResponse: CredentialResponse | undefined;
+  // tokenResponse: CredentialResponse | undefined;
+  tokenResponse: undefined;
 }
 
 export interface GoogleAuthAIAnswerProps {

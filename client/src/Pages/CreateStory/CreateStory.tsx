@@ -17,7 +17,7 @@ import {
 import Box from "@mui/material/Box";
 import Page from "src/components/shared/Page/Page";
 import StoryCreator from "src/components/StoryCreator/StoryCreator";
-import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.png";
+import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.webp";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
 
@@ -63,9 +63,8 @@ const CreateStoryPage = () => {
           </Typography>
 
           <Typography variant="subtitle1">
-            Personalize bedtime story by filling in the details below. The name
-            is required, and the rest of the fields are optional to customize
-            your story.
+            Personalize your bedtime story by filling in the required "Name" for
+            your child.
           </Typography>
         </Box>
 

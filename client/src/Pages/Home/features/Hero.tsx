@@ -3,7 +3,7 @@ import { AutoFixHighOutlined, SearchOutlined } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import MainCharacter from "../../../assets/images/sleeping_bunny_with_a_moon.png";
+import MainCharacter from "../../../assets/images/sleeping_bunny_with_a_moon.webp";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 
@@ -31,7 +31,13 @@ export default function Hero() {
         }}
       >
         <Box sx={{ maxWidth: "300px" }}>
-          <img src={MainCharacter} width="100%" />
+          <img
+            width="100%"
+            height="100%"
+            src={MainCharacter}
+            alt="home-page-image"
+            aria-label="rabbit-sleeping-on-a-pillow"
+          />
         </Box>
 
         <Typography
@@ -68,28 +74,17 @@ export default function Hero() {
         >
           Craft personalized bedtime stories tailored to your child's dreams and
           imagination.
-          {/* Make bedtime magical and memorable. */}
         </Typography>
 
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-around",
+            flexWrap: "wrap",
             alignItems: "center",
-            width: { xs: "100%", sm: "30%" },
+            justifyContent: "space-around",
+            width: { xs: "100%", sm: "40%" },
           }}
         >
-          <Button
-            size="large"
-            color="secondary"
-            variant="contained"
-            sx={{ my: 2, px: 2 }}
-            endIcon={<SearchOutlined />}
-            onClick={handleExploreClick}
-          >
-            Explore
-          </Button>
-
           <Button
             size="large"
             color="primary"
@@ -99,6 +94,17 @@ export default function Hero() {
             onClick={handleCreateStoryClick}
           >
             Create Story
+          </Button>
+
+          <Button
+            size="large"
+            color="secondary"
+            variant="contained"
+            sx={{ my: 2, px: 2 }}
+            endIcon={<SearchOutlined />}
+            onClick={handleExploreClick}
+          >
+            Explore
           </Button>
         </Box>
       </Container>

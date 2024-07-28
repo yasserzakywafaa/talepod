@@ -2,8 +2,8 @@ import { GoogleAuthManager, useGoogleAuthManager } from "./manager";
 import React, { PropsWithChildren, createContext, useContext } from "react";
 import useGoogleAuthStore, { GoogleAuthStore } from "./store";
 
-import APP_CONSTANTS from "src/application/shared/app_constants";
-import { GoogleOAuthProvider } from "@react-oauth/google";
+// import APP_CONSTANTS from "src/application/shared/app_constants";
+// import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export interface GoogleAuthContextProps {
   store: GoogleAuthStore;
@@ -44,7 +44,9 @@ export const GoogleAuthContextProvider = (
 export const AppWithGoogleAuthContextProvider: React.FC<PropsWithChildren> = ({
   children,
 }) => (
-  <GoogleOAuthProvider clientId={APP_CONSTANTS.GOOGLE_AUTH_CLIENT_ID || ""}>
+  <>
+    {/* <GoogleOAuthProvider clientId={APP_CONSTANTS.GOOGLE_AUTH_CLIENT_ID || ""}>
     <GoogleAuthContextProvider>{children}</GoogleAuthContextProvider>
-  </GoogleOAuthProvider>
+  </GoogleOAuthProvider> */}
+  </>
 );

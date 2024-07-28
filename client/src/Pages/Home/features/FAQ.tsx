@@ -129,32 +129,6 @@ export default function FAQ() {
         </Accordion>
 
         <Accordion
-          expanded={expanded === "panel3"}
-          onChange={handleChange("panel3")}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreOutlined />}
-            aria-controls="panel3d-content"
-            id="panel3d-header"
-          >
-            <Typography component="h3" variant="subtitle1">
-              Is there a way to filter stories based on age or genre?
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography
-              variant="body2"
-              gutterBottom
-              sx={{ maxWidth: { sm: "100%", md: "70%" } }}
-            >
-              Certainly! Our platform allows you to filter stories by age group
-              and genre, ensuring you find the perfect story for your child's
-              bedtime.
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-
-        <Accordion
           expanded={expanded === "panel4"}
           onChange={handleChange("panel4")}
         >
@@ -233,6 +207,32 @@ export default function FAQ() {
               Yes, you can share your stories on social media directly from our
               platform. Use the share button on your story page to post it on
               various social media platforms.
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion
+          expanded={expanded === "panel3"}
+          onChange={handleChange("panel3")}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreOutlined />}
+            aria-controls="panel3d-content"
+            id="panel3d-header"
+          >
+            <Typography component="h3" variant="subtitle1">
+              Is there a way to filter stories based on age or genre?
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography
+              variant="body2"
+              gutterBottom
+              sx={{ maxWidth: { sm: "100%", md: "70%" } }}
+            >
+              Certainly! Our platform allows you to filter stories by age group
+              and genre, ensuring you find the perfect story for your child's
+              bedtime.
             </Typography>
           </AccordionDetails>
         </Accordion>

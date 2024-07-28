@@ -44,7 +44,6 @@ const Footer = () => {
       className="footer"
       sx={{
         gap: { xs: 4, sm: 8 },
-        // mt: { xs: 2, sm: 2 },
         p: { xs: 2, sm: 2 },
         textAlign: { sm: "center", md: "left" },
       }}
@@ -86,25 +85,6 @@ const Footer = () => {
         <Box display="flex" justifyContent="center" alignContent="center">
           <Copyright />
         </Box>
-
-        {/* <Stack
-          direction="row"
-          justifyContent="left"
-          spacing={1}
-          useFlexGap
-          sx={{
-            color: "text.secondary",
-          }}
-        >
-          <IconButton
-            color="inherit"
-            href="https://twitter.com/MaterialUI"
-            aria-label="X"
-            sx={{ alignSelf: "center" }}
-          >
-            <TwitterIcon />
-          </IconButton>
-        </Stack> */}
       </Box>
     </Container>
   );
