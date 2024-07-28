@@ -1,4 +1,4 @@
-import { AppWithGoogleAuthContextProvider } from "src/components/shared/SocialLogins/GoogleAuth/store/Provider";
+// import { AppWithGoogleAuthContextProvider } from "src/components/shared/SocialLogins/GoogleAuth/store/Provider";
 import { ApplicationContextProvider } from "./store/Provider";
 import { ContactContextProvider } from "src/Pages/Contact/store/Provider";
 import { ExploreContextProvider } from "src/Pages/Explore/store/Provider";
@@ -21,7 +21,7 @@ const contextProviders = [
   ContactContextProvider,
 
   // Authentication
-  AppWithGoogleAuthContextProvider,
+  // AppWithGoogleAuthContextProvider,
 ];
 
 const AppContextProviders: React.FC<{ children: React.ReactNode }> =

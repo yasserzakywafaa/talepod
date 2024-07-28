@@ -79,8 +79,9 @@ export default function Hero() {
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-around",
+            flexWrap: "wrap",
             alignItems: "center",
+            justifyContent: "space-around",
             width: { xs: "100%", sm: "40%" },
           }}
         >
