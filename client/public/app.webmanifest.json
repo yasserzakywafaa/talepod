@@ -1,17 +1,17 @@
 {
-  "name": "TalePod",
-  "short_name": "TalePod",
+  "name": "TALEPOD",
+  "short_name": "TALEPOD",
   "description": "Create Custom Bedtime Stories",
+  "scope": "/",
   "start_url": "/",
+  "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#ad932d",
   "background_color": "#2E3B4E",
-  "scope": "/",
-  "display": "standalone",
   "lang": "en",
   "dir": "ltr",
-  "display_override": ["window-controls-overlay"],
   "id": "talepod_v1.0.0",
+  "display_override": ["window-controls-overlay"],
   "launch_handler": {
     "client_mode": ["focus-existing", "auto"]
   },
@@ -60,21 +60,18 @@
       "type": "image/png",
       "purpose": "maskable"
     },
-
     {
       "src": "/icons/icon_96x96.png",
       "sizes": "96x96",
       "type": "image/png",
       "purpose": "maskable"
     },
-
     {
       "src": "/icons/icon_144x144.png",
       "sizes": "144x144",
       "type": "image/png",
       "purpose": "maskable"
     },
-
     {
       "src": "/icons/icon_192x192.png",
       "sizes": "192x192",

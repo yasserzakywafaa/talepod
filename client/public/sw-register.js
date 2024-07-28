@@ -1,6 +1,5 @@
 // main thread
 if ("serviceWorker" in window.navigator) {
-  // console.log("ServiceWorker:>>>");
   navigator.serviceWorker
     .register("/serviceworker.js")
     .then((registration) => {

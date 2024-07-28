@@ -2,7 +2,7 @@ import "./Unauthorized.scss";
 
 import { Box, Button, Typography } from "@mui/material";
 
-import BunnySurprised from "../../assets/images/unauthorized_401/surprised_bunny.png";
+import BunnySurprised from "../../assets/images/unauthorized_401/surprised_bunny.webp";
 import { HomeOutlined } from "@mui/icons-material";
 import Page from "src/components/shared/Page/Page";
 import routes from "src/application/routes";

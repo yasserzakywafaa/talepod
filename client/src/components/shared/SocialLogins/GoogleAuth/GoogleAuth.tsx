@@ -1,28 +1,29 @@
-import { GoogleLogin } from "@react-oauth/google";
-import { useApplicationContext } from "src/application/store/Provider";
-import { useGoogleAuthContext } from "./store/Provider";
+// import { GoogleLogin } from "@react-oauth/google";
+// import { useApplicationContext } from "src/application/store/Provider";
+// import { useGoogleAuthContext } from "./store/Provider";
 
 const GoogleAuth = () => {
-  const {
-    manager: { handleOnLoginSuccess, handleOnLoginError },
-  } = useGoogleAuthContext();
+  // const {
+  //   manager: { handleOnLoginSuccess, handleOnLoginError },
+  // } = useGoogleAuthContext();
 
-  const {
-    manager: { handleIsFetching },
-  } = useApplicationContext();
+  // const {
+  //   manager: { handleIsFetching },
+  // } = useApplicationContext();
 
-  const handleClickListener = () => handleIsFetching(true);
-  const handleCloseCallback = () => handleIsFetching(false);
+  // const handleClickListener = () => handleIsFetching(true);
+  // const handleCloseCallback = () => handleIsFetching(false);
 
-  const handleCallback = (response: { id: string; password: string }) => {
-    debugger;
-    console.log("Google Login Response :>>> handleCallback:>>>", {
-      response,
-    });
-  };
+  // const handleCallback = (response: { id: string; password: string }) => {
+  //   debugger;
+  //   console.log("Google Login Response :>>> handleCallback:>>>", {
+  //     response,
+  //   });
+  // };
 
   return (
-    <GoogleLogin
+    <>
+      {/* <GoogleLogin
       size="large"
       shape="square"
       context="use"
@@ -36,7 +37,8 @@ const GoogleAuth = () => {
       native_callback={handleCallback}
       click_listener={handleClickListener}
       intermediate_iframe_close_callback={handleCloseCallback}
-    />
+    /> */}
+    </>
   );
 };
 

@@ -78,7 +78,10 @@ const ViewStoryPage: React.FC = () => {
         .getElementsByTagName("meta")
         .namedItem("description");
 
-      metaTag?.setAttribute("content", story.summary);
+      metaTag?.setAttribute(
+        "content",
+        `Discover more bedtime stories for children and families on TalePod | ${story.summary}`
+      );
 
       const newStoryCreated =
         window.localStorage.getItem("newStoryCreated") === "true";
@@ -94,7 +97,7 @@ const ViewStoryPage: React.FC = () => {
 
   return (
     <Page
-      title={story.title}
+      title={`Bedtime story on TalePod | ${story.title}`}
       className="view-story-page"
       isLoading={isFetching}
     >

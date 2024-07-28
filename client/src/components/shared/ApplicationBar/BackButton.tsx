@@ -8,6 +8,7 @@ interface BackButtonProps {
 const BackButton = (props: BackButtonProps) => {
   return (
     <IconButton
+      aria-label="back-button"
       className="back-button"
       sx={{ color: (theme) => theme.palette.primary.main }}
       onClick={props.onClick}

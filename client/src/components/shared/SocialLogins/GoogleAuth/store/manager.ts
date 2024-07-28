@@ -1,10 +1,10 @@
-import { CredentialResponse } from "@react-oauth/google";
+// import { CredentialResponse } from "@react-oauth/google";
 import { GoogleAuthStore } from "./store";
 
 export interface GoogleAuthManager {
   handleIsFetching: (isFetching: boolean) => void;
-  handleOnLoginSuccess: (credentialResponse: CredentialResponse) => void;
-  // handleOnLoginSuccess: (response: { id: string; password: string }) => void;
+  handleOnLoginSuccess: (credentialResponse: any) => void;
+  // handleOnLoginSuccess: (credentialResponse: CredentialResponse) => void;
   handleOnLoginError: () => void;
 }
 
@@ -15,7 +15,8 @@ export const useGoogleAuthManager = (
     store.updateState("isFetching", isFetching);
   };
 
-  const handleOnLoginSuccess = (credentialResponse: CredentialResponse) => {
+  // const handleOnLoginSuccess = (credentialResponse: CredentialResponse) => {
+  const handleOnLoginSuccess = (credentialResponse: any) => {
     store.updateState("tokenResponse", credentialResponse);
     console.log("Google Login Response :>>>", {
       credentialResponse,

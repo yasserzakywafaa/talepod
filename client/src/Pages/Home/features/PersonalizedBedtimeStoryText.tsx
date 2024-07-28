@@ -33,7 +33,13 @@ const PersonalizedBedtimeStoryText = () => {
         my: 4,
       }}
     >
-      <Typography variant="h4" color="primary" gutterBottom>
+      <Typography
+        mb={4}
+        gutterBottom
+        variant="h4"
+        color="primary"
+        textAlign="center"
+      >
         How to Create a New Personalized Bedtime Story Each Day with TalePod
       </Typography>
 
