@@ -1,5 +1,7 @@
 import { createTheme } from "@mui/material/styles";
 
+const white = "#FFFFFF";
+const charcoal = "#333333"; // Dark Goldenrod
 const primaryColor = "#ad932d"; // Dark Goldenrod
 const secondaryColorForDarkTheme = "#00BFFF"; // Deep Sky Blue
 const secondaryColorForLightTheme = "#0080ab"; // Dark Deep Sky Blue
@@ -75,9 +77,10 @@ export const lightTheme = createTheme({
     MuiLink: {
       styleOverrides: {
         root: {
-          color: primaryColor,
+          color: charcoal,
+          fontFamily: "LexendDeca-Bold",
           "&:visited": {
-            color: secondaryColorForLightTheme,
+            color: charcoal,
           },
         },
       },
@@ -104,9 +107,10 @@ export const darkTheme = createTheme({
     MuiLink: {
       styleOverrides: {
         root: {
-          color: primaryColor,
+          color: white,
+          fontFamily: "LexendDeca-Bold",
           "&:visited": {
-            color: secondaryColorForDarkTheme,
+            color: white,
           },
         },
       },

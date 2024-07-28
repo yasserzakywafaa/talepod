@@ -63,9 +63,8 @@ const CreateStoryPage = () => {
           </Typography>
 
           <Typography variant="subtitle1">
-            Personalize bedtime story by filling in the details below. The name
-            is required, and the rest of the fields are optional to customize
-            your story.
+            Personalize your bedtime story by filling in the required "Name" for
+            your child.
           </Typography>
         </Box>
 

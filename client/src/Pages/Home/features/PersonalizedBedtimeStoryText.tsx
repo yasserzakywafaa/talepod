@@ -6,6 +6,7 @@ import {
   LocalLibraryOutlined,
 } from "@mui/icons-material";
 import {
+  Box,
   Button,
   Container,
   List,
@@ -119,16 +120,18 @@ const PersonalizedBedtimeStoryText = () => {
         little one.
       </Typography>
 
-      <Button
-        size="large"
-        color="primary"
-        variant="contained"
-        sx={{ my: 2, px: 2 }}
-        endIcon={<AutoFixHighOutlined />}
-        onClick={handleStartNowClick}
-      >
-        Create Story
-      </Button>
+      <Box width="100%" textAlign="center">
+        <Button
+          size="large"
+          color="primary"
+          variant="contained"
+          sx={{ my: 2, px: 2 }}
+          endIcon={<AutoFixHighOutlined />}
+          onClick={handleStartNowClick}
+        >
+          Create Story
+        </Button>
+      </Box>
     </Container>
   );
 };
