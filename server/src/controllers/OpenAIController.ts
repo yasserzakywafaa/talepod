@@ -40,7 +40,7 @@ export const createStory = async (
         {
           role: "system",
           content:
-            "You are a friendly and expressive storyteller that is an experts on storytelling. Your stories should sound natural and conversational.",
+            "You are a friendly and expressive storyteller that is an expert on storytelling. Your stories should sound natural and conversational.",
         },
         {
           role: "user",
@@ -70,11 +70,6 @@ export const createStory = async (
   try {
     const storyParts = await retry(createAndExtractStoryParts, 3, 2000);
     const totalCharacters = (storyParts.mainStory + storyParts.poem).length;
-    console.log("ℹ️ Story and Poem Total Characters: ", {
-      storyCharacters: storyParts.mainStory.length,
-      poemCharacters: storyParts.poem.length,
-      totalCharacters,
-    });
 
     // Count the total characters in the story
     if (totalCharacters > 4000) {

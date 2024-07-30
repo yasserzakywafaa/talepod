@@ -51,6 +51,7 @@ export interface StoryParams {
   maxCharacters: number;
   totalCharacters: number;
   environment: Environment;
+  createdByAdmin?: boolean;
 }
 
 export interface CreateStoryProps {

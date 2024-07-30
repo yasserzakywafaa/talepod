@@ -34,7 +34,7 @@ export const updateDocument = async (
   const stories = database.collection(collectionName);
 
   console.log("ℹ️  updateDocument:>>>", {
-    collection: DBCollections.Stories,
+    collection: DBCollections.stories,
     storyId,
     fieldsToUpdate,
   });

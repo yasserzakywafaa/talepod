@@ -139,6 +139,15 @@ const StoryCard = (props: StoryCard) => {
               color="secondary"
             />
           )}
+
+          {props.story.storyParams.createdByAdmin && (
+            <Chip
+              size="small"
+              variant="outlined"
+              label="Original"
+              color="primary"
+            />
+          )}
         </Box>
       </CardActions>
     </Card>

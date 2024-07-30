@@ -24,7 +24,7 @@ export const getAllStories = async (
     const { pageNumber = 1, pageSize = 20 } = filters;
 
     // Get all stories in collection
-    const allStoriesDocuments = database.collection(DBCollections.Stories);
+    const allStoriesDocuments = database.collection(DBCollections.stories);
     const allStoriesDocumentsCount = await allStoriesDocuments.countDocuments();
 
     // Get all stories by filters (if any)
@@ -91,7 +91,7 @@ export const getStoryBySlug = async (
   }
 
   try {
-    const stories: Collection = database.collection(DBCollections.Stories);
+    const stories: Collection = database.collection(DBCollections.stories);
     const story = await stories.findOne({ slug: storySlug });
 
     if (!story || !storySlug) {

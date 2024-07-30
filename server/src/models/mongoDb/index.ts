@@ -19,8 +19,9 @@ export enum DBNames {
 }
 
 export enum DBCollections {
-  Stories = "Stories",
-  Users = "Users",
+  stories = "stories",
+  stories_library = "stories_library",
+  users = "users",
 }
 
 const getMongoDbUri = (): string => {
@@ -79,7 +80,7 @@ const createCollections = async () => {
 
 const createIndexes = async () => {
   try {
-    const storiesCollection = database.collection(DBCollections.Stories);
+    const storiesCollection = database.collection(DBCollections.stories);
     // Create compound index for these fields
     await storiesCollection.createIndex({ slug: 1, createdAt: -1 });
     console.info(
@@ -124,7 +125,8 @@ const saveStoryToDb = async (
     };
     const storyId: ObjectId = await createDocument(
       storyData,
-      DBCollections.Stories
+      DBCollections.stories
+      // DBCollections.stories_library
     );
     console.log("✅ Story saved to DB successfully");
 
@@ -139,7 +141,7 @@ const saveStorySeoToDb = async (
   storeSeo: StorySeo
 ): Promise<void> => {
   try {
-    await updateDocument(storyId, DBCollections.Stories, { seo: storeSeo });
+    await updateDocument(storyId, DBCollections.stories, { seo: storeSeo });
     console.log("✅ Story SEO saved to DB successfully");
   } catch (error) {
     throw new Error("❌ Error saving story SEO to DB", { cause: error });
@@ -158,7 +160,7 @@ const saveFileDataToDb = async (
       createdAt: new Date(),
     };
 
-    await updateDocument(storyId, DBCollections.Stories, { audioFile });
+    await updateDocument(storyId, DBCollections.stories, { audioFile });
 
     console.log("✅ File saved to DB successfully");
   } catch (error) {
