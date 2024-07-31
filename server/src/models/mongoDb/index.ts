@@ -138,10 +138,10 @@ const saveStoryToDb = async (
 
 const saveStorySeoToDb = async (
   storyId: string,
-  storeSeo: StorySeo
+  storySeo: StorySeo
 ): Promise<void> => {
   try {
-    await updateDocument(storyId, DBCollections.stories, { seo: storeSeo });
+    await updateDocument(storyId, { seo: storySeo });
     console.log("✅ Story SEO saved to DB successfully");
   } catch (error) {
     throw new Error("❌ Error saving story SEO to DB", { cause: error });
@@ -160,7 +160,7 @@ const saveFileDataToDb = async (
       createdAt: new Date(),
     };
 
-    await updateDocument(storyId, DBCollections.stories, { audioFile });
+    await updateDocument(storyId, { audioFile });
 
     console.log("✅ File saved to DB successfully");
   } catch (error) {

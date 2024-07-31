@@ -9,7 +9,6 @@ import {
   SearchOutlined,
   WbSunnyOutlined,
 } from "@mui/icons-material";
-import { useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
 
 import AppBar from "@mui/material/AppBar";
@@ -19,6 +18,9 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { Divider } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
+// import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
+// import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
+import { InstallAppModal } from "src/components/Modals/InstallAppModal/InstallAppModal";
 import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
 import MenuItem from "@mui/material/MenuItem";
 import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal";
@@ -28,11 +30,9 @@ import Typography from "@mui/material/Typography";
 import routes from "src/application/routes";
 import { scrollToSection } from "src/shared/utils/scrollTo";
 import { useApplicationContext } from "src/application/store/Provider";
-import useDeviceSize from "src/shared/hooks/useDeviceSize";
-// import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
-// import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
-import { InstallAppModal } from "src/components/Modals/InstallAppModal/InstallAppModal";
 import { useDetectBrowserType } from "src/shared/hooks/useDetectBrowserType";
+import useDeviceSize from "src/shared/hooks/useDeviceSize";
+import { useState } from "react";
 
 const ApplicationBar = () => {
   const navigate = useNavigate();

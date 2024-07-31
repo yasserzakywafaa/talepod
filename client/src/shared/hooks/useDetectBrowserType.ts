@@ -28,6 +28,9 @@ export const useDetectBrowserType = () => {
 
   // Detects if device is on iOS
   const isIos = /iphone|ipad|ipod/.test(userAgent.toLowerCase());
+  const isMacOs = /Macintosh|Mac OS X/.test(userAgent);
+  const isWindows = /windows/.test(userAgent);
+  const isAndroid = /android/.test(userAgent);
 
   switch (true) {
     case hasIndex(BrowsersEnum.Opera):
@@ -52,5 +55,5 @@ export const useDetectBrowserType = () => {
       break;
   }
 
-  return { BROWSER, isInStandaloneMode, isIos };
+  return { BROWSER, isInStandaloneMode, isAndroid, isIos, isMacOs, isWindows };
 };

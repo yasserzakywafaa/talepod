@@ -1,9 +1,11 @@
+import "./InstallAppModal.scss";
+
 import { Box, Dialog, DialogContent } from "@mui/material";
+
 import InstallWebAppOnAndroid from "./features/InstallWebAppOnAndroid";
 import InstallWebAppOnIos from "./features/InstallWebAppOnIos";
+import InstallWebAppOnMacOs from "./features/InstallWebAppOnMacOs";
 import { useDetectBrowserType } from "src/shared/hooks/useDetectBrowserType";
-
-import "./InstallAppModal.scss";
 
 interface InstallAppModalProps {
   isInstallAppDialogOpen: boolean;
@@ -12,7 +14,7 @@ interface InstallAppModalProps {
 
 export const InstallAppModal = (props: InstallAppModalProps) => {
   const { isInstallAppDialogOpen, setIsInstallAppDialogOpen } = props;
-  const { isIos } = useDetectBrowserType();
+  const { isAndroid, isIos, isMacOs } = useDetectBrowserType();
 
   const handleOnDialogClose = () => {
     setIsInstallAppDialogOpen(false);
@@ -24,7 +26,11 @@ export const InstallAppModal = (props: InstallAppModalProps) => {
         {/* <DialogTitle>Install App</DialogTitle> */}
 
         <DialogContent>
-          {isIos ? <InstallWebAppOnIos /> : <InstallWebAppOnAndroid />}
+          {isAndroid && <InstallWebAppOnAndroid />}
+
+          {isIos && <InstallWebAppOnIos />}
+
+          {isMacOs && <InstallWebAppOnMacOs />}
         </DialogContent>
       </Dialog>
     </Box>

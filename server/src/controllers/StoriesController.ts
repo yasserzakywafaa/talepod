@@ -1,14 +1,15 @@
-import { DBCollections, database } from "../models/mongoDb";
 import {
   AggregationResult,
   DocumentWithId,
   PageResponse,
   PagingInfo,
+  Story,
   StoryFilters,
 } from "../models/types";
+import { Collection, WithId } from "mongodb";
+import { DBCollections, database } from "../models/mongoDb";
 import { NextFunction, Request, Response } from "express";
 
-import { Collection } from "mongodb";
 import { getQuery } from "../models/mongoDb/query";
 
 export const getAllStories = async (
@@ -144,17 +145,34 @@ export const getStoryBySlug = async (
   }
 
   try {
-    const stories: Collection = database.collection(DBCollections.stories);
-    const story = await stories.findOne({ slug: storySlug });
+    // Use MongoDB’s $unionWith aggregation pipeline stage
+    // to perform a union of the two collections and then filter by the slug.
+    const pipeline = [
+      {
+        $unionWith: {
+          coll: DBCollections.stories_library,
+          pipeline: [],
+        },
+      },
+      { $match: { slug: storySlug } },
+      { $limit: 1 },
+    ];
 
-    if (!story || !storySlug) {
-      response.status(404).json({ message: "❌ Story not found" });
-      return;
+    const results = await database
+      .collection(DBCollections.stories)
+      .aggregate(pipeline)
+      .toArray();
+
+    if (results.length > 0) {
+      const story = results[0] as Story;
+      console.log("✅ Get Story by slug:", {
+        storySlug,
+        storyTitle: story.title,
+      });
+      response.status(200).json(story);
+    } else {
+      response.status(404).json({ message: "❌ Story not found!" });
     }
-
-    console.log("ℹ️  Get Story", { storySlug, storyTitle: story.title });
-
-    response.status(200).json(story);
   } catch (error) {
     console.error("❌ Failed to get Story by slug!", {
       error,

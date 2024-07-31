@@ -28,30 +28,38 @@ export const getDocumentById = async (
 // Update a document by ID
 export const updateDocument = async (
   storyId: string,
-  collectionName: DBCollections,
   fieldsToUpdate: Partial<Story>
 ) => {
-  const stories = database.collection(collectionName);
+  const collectionsToSearch = [
+    DBCollections.stories,
+    DBCollections.stories_library,
+  ];
+  let result = null;
 
   console.log("ℹ️  updateDocument:>>>", {
-    collection: DBCollections.stories,
     storyId,
     fieldsToUpdate,
   });
 
   try {
-    const result = await stories.findOneAndUpdate(
-      { _id: new ObjectId(storyId) },
-      { $set: fieldsToUpdate },
-      { returnDocument: "after" }
-    );
+    for (const collection of collectionsToSearch) {
+      const stories = database.collection(collection);
 
-    if (result.value) {
-      console.log("✅ Document updated successfully.");
+      result = await stories.findOneAndUpdate(
+        { _id: new ObjectId(storyId) },
+        { $set: fieldsToUpdate },
+        { returnDocument: "after" }
+      );
 
-      return result.value;
+      if (result && result.value) {
+        console.log(
+          `✅ Document updated successfully in collection: ${collection}.`
+        );
+        return result.value;
+      }
     }
   } catch (error) {
+    console.error(`❌ Error updating document:`, error);
     throw new Error("❌ Failed to update document!", { cause: error });
   }
 };

@@ -45,7 +45,7 @@ const ViewStoryPage: React.FC = () => {
     manager: { handleCreateAudio },
   } = useOpenaiContext();
 
-  const hasDirectionRtl = story.profileInfo.language.value === "ar";
+  const hasDirectionRtl = story && story.profileInfo.language.value === "ar";
 
   const handleOnCreateAudioClick = async () => {
     handleIsFetching(true);
@@ -97,7 +97,7 @@ const ViewStoryPage: React.FC = () => {
 
   return (
     <Page
-      title={`Bedtime story on TalePod | ${story.title}`}
+      title={`Bedtime story on TalePod | ${story && story.title}`}
       className="view-story-page"
       isLoading={isFetching}
     >
