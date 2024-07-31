@@ -128,7 +128,7 @@ const StoryCard = (props: StoryCard) => {
             )}
           </Box>
 
-          {props.story.createdAt && (
+          {!props.story.storyParams.createdByAdmin && props.story.createdAt && (
             <Chip
               size="small"
               variant="outlined"

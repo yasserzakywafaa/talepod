@@ -18,6 +18,7 @@ export interface ExploreStoryFilters {
   moral: string[];
   tone: string[];
   environment: string[];
+  createdByAdmin: boolean | undefined;
   audio: boolean | undefined;
 }
 
@@ -35,6 +36,7 @@ export const getExploreInitialState = (): ExploreInitialState => {
       moral: [],
       tone: [],
       environment: [],
+      createdByAdmin: false,
       audio: false,
     },
     pagingInfo: {

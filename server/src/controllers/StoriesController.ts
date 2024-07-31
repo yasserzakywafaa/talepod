@@ -1,10 +1,10 @@
 import { DBCollections, database } from "../models/mongoDb";
 import {
+  AggregationResult,
   DocumentWithId,
   PageResponse,
   PagingInfo,
   StoryFilters,
-  StoryFiltersEnum,
 } from "../models/types";
 import { NextFunction, Request, Response } from "express";
 
@@ -23,54 +23,107 @@ export const getAllStories = async (
     );
     const { pageNumber = 1, pageSize = 20 } = filters;
 
-    // Get all stories in collection
-    const allStoriesDocuments = database.collection(DBCollections.stories);
-    const allStoriesDocumentsCount = await allStoriesDocuments.countDocuments();
+    // Aggregation pipeline
+    const pipeline = [
+      {
+        $unionWith: {
+          coll: DBCollections.stories,
+          pipeline: [{ $match: getQuery(filters) }],
+        },
+      },
+      // Build the match stage for filters
+      ...(hasActiveFilters ? [{ $match: getQuery(filters) }] : []),
+      { $sort: { createdAt: -1 } },
+      {
+        $facet: {
+          metadata: [
+            { $count: "totalStoriesCount" },
+            { $addFields: { pageNumber, pageSize } },
+          ],
+          // Paginate results
+          results: [
+            { $skip: (pageNumber - 1) * pageSize },
+            { $limit: pageSize },
+          ],
+        },
+      },
+    ];
 
-    // Get all stories by filters (if any)
-    const totalFilteredStories = allStoriesDocuments
-      .find(getQuery(filters))
-      .sort({ createdAt: -1, [StoryFiltersEnum.language]: -1 });
-    const totalFilteredStoriesCount = (await totalFilteredStories.toArray())
-      .length;
-
-    // Get only the pagination stories by same filter (if any)
-    const totalFilteredStoriesClone = allStoriesDocuments
-      .find(getQuery(filters))
-      .sort({ createdAt: -1, [StoryFiltersEnum.language]: -1 })
-      .clone();
-    const filteredStories = await totalFilteredStoriesClone
-      .skip((Number(pageNumber) - 1) * Number(pageSize))
-      .limit(pageSize)
+    const aggregatedStories = await database
+      .collection(DBCollections.stories_library)
+      .aggregate(pipeline)
       .toArray();
-
-    const totalCount = hasActiveFilters
-      ? totalFilteredStoriesCount
-      : allStoriesDocumentsCount;
+    const { metadata, results } = aggregatedStories[0] as AggregationResult;
+    const totalCount = metadata[0] ? metadata[0].totalStoriesCount : 0;
 
     const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
 
     console.log("ℹ️  Fetched all stories successfully", {
       filters,
       hasActiveFilters,
-      allStoriesDocumentsCount,
-      totalFilteredStoriesCount,
-      filteredStoriesCount: filteredStories.length,
-      totalCount,
+      metadata,
       totalPagesCount,
     });
 
     const paging: PagingInfo = {
       pageNumber,
       pageSize,
-      totalPagesCount,
       totalCount,
+      totalPagesCount,
     };
 
     response.status(200).json({
-      results: filteredStories as DocumentWithId[],
+      results,
       paging,
     });
+
+    // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // // Get all stories in collection
+    // const allStoriesDocuments = database.collection(DBCollections.stories);
+    // const allStoriesDocumentsCount = await allStoriesDocuments.countDocuments();
+
+    // // Get all stories by filters (if any)
+    // const filteredDocuments = allStoriesDocuments
+    //   .find(getQuery(filters))
+    //   .sort({ createdAt: -1, [StoryFiltersEnum.language]: -1 });
+    // const filteredStoriesCount = (await filteredDocuments.toArray()).length;
+
+    // // Get only the pagination stories by same filter (if any)
+    // const filteredDocumentsClone = allStoriesDocuments
+    //   .find(getQuery(filters))
+    //   .sort({ createdAt: -1, [StoryFiltersEnum.language]: -1 })
+    //   .clone();
+    // const filteredStories = await filteredDocumentsClone
+    //   .skip((Number(pageNumber) - 1) * Number(pageSize))
+    //   .limit(pageSize)
+    //   .toArray();
+
+    // const totalCount = hasActiveFilters
+    //   ? filteredStoriesCount
+    //   : allStoriesDocumentsCount;
+
+    // const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
+
+    // console.log("ℹ️  Fetched all stories successfully", {
+    //   filters,
+    //   hasActiveFilters,
+    //   allStoriesDocumentsCount,
+    //   filteredStoriesCount,
+    //   totalCount,
+    //   totalPagesCount,
+    // });
+
+    // const paging: PagingInfo = {
+    //   pageNumber,
+    //   pageSize,
+    //   totalPagesCount,
+    //   totalCount,
+    // };
+    // response.status(200).json({
+    //   results: filteredStories as DocumentWithId[],
+    //   paging,
+    // });
   } catch (error) {
     console.error("❌ Failed to get all stories!", {
       error,

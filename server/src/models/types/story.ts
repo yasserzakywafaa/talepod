@@ -94,6 +94,7 @@ export interface StoryFilters extends PagingInfo {
   moral: string[];
   tone: string[];
   environment: string[];
+  createdByAdmin: boolean | undefined;
   audio: boolean | undefined;
 }
 
@@ -105,5 +106,6 @@ export enum StoryFiltersEnum {
   moral = "storyParams.moral.value",
   tone = "storyParams.tone.value",
   environment = "storyParams.environment.value",
+  createdByAdmin = "storyParams.createdByAdmin",
   audio = "audioFile.url",
 }
