@@ -2,6 +2,7 @@ import {
   AlternateEmailOutlined,
   AutoFixHighOutlined,
   HomeOutlined,
+  InstallMobileOutlined,
   Menu,
   ModeNightOutlined,
   RefreshOutlined,
@@ -30,17 +31,22 @@ import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 // import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 // import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
-// import { InstallAppModal } from "src/components/Modals/InstallAppModal/InstallAppModal";
+import { InstallAppModal } from "src/components/Modals/InstallAppModal/InstallAppModal";
+import { useDetectBrowserType } from "src/shared/hooks/useDetectBrowserType";
 
 const ApplicationBar = () => {
   const navigate = useNavigate();
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isInstallAppDialogOpen, setIsInstallAppDialogOpen] =
+    useState<boolean>(false);
   const {
     store: {
       state: { themeMode },
       toggleThemeMode,
     },
   } = useApplicationContext();
+  const { isInStandaloneMode } = useDetectBrowserType();
 
   // const {
   //   store: { handleToggleLoginModal },
@@ -49,8 +55,6 @@ const ApplicationBar = () => {
   // const {
   //   store: { handleToggleRegisterModal },
   // } = useRegisterModalContext();
-
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Add all the pages the will contain the AppBar
   const pagesMatch = {
@@ -86,9 +90,9 @@ const ApplicationBar = () => {
       case "refresh":
         window.location.reload();
         break;
-      // case "install":
-      //   navigate(routes.install);
-      //   break;
+      case "install":
+        setIsInstallAppDialogOpen(true);
+        break;
 
       default:
         scrollToSection(sectionId);
@@ -377,6 +381,17 @@ const ApplicationBar = () => {
 
                       <Divider sx={{ width: "80%", margin: "auto" }} />
 
+                      {!isInStandaloneMode && (
+                        <MenuItem onClick={handleOnMenuItemClick("install")}>
+                          <InstallMobileOutlined
+                            fontSize="medium"
+                            color="secondary"
+                            sx={{ mr: 1 }}
+                          />
+                          <Typography variant="h6">Install App</Typography>
+                        </MenuItem>
+                      )}
+
                       <MenuItem onClick={toggleThemeMode}>
                         {themeMode === "dark" ? (
                           <WbSunnyOutlined
@@ -403,15 +418,6 @@ const ApplicationBar = () => {
                         />
                         <Typography variant="h6">Refresh App</Typography>
                       </MenuItem>
-
-                      {/* <MenuItem onClick={handleOnMenuItemClick("install")}>
-                        <InstallMobileOutlined
-                          fontSize="medium"
-                          color="secondary"
-                          sx={{ mr: 1 }}
-                        />
-                        <Typography variant="h6">Install App</Typography>
-                      </MenuItem> */}
 
                       {pagesMatch.isHomePage && (
                         <>
@@ -478,7 +484,10 @@ const ApplicationBar = () => {
       {/* Modals */}
       <LoginModal />
       <RegisterModal />
-      {/* <InstallAppModal /> */}
+      <InstallAppModal
+        isInstallAppDialogOpen={isInstallAppDialogOpen}
+        setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
+      />
     </>
   );
 };

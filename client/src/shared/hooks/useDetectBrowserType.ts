@@ -22,8 +22,9 @@ export const useDetectBrowserType = () => {
   const hasIndex = (args: string) => userAgent.indexOf(args) !== -1;
 
   // Detects if device is in standalone mode
-  const isInStandaloneMode =
-    "standalone" in window.navigator && window.navigator.standalone;
+  const isInStandaloneMode = Boolean(
+    "standalone" in window.navigator && window.navigator.standalone
+  );
 
   // Detects if device is on iOS
   const isIos = /iphone|ipad|ipod/.test(userAgent.toLowerCase());

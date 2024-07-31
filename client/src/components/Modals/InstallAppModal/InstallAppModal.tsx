@@ -4,22 +4,26 @@ import InstallWebAppOnIos from "./features/InstallWebAppOnIos";
 import { useDetectBrowserType } from "src/shared/hooks/useDetectBrowserType";
 
 import "./InstallAppModal.scss";
-import { useState } from "react";
 
-export const InstallAppModal = () => {
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(true);
+interface InstallAppModalProps {
+  isInstallAppDialogOpen: boolean;
+  setIsInstallAppDialogOpen: (isDialogOpen: boolean) => void;
+}
+
+export const InstallAppModal = (props: InstallAppModalProps) => {
+  const { isInstallAppDialogOpen, setIsInstallAppDialogOpen } = props;
   const { isIos } = useDetectBrowserType();
 
   const handleOnDialogClose = () => {
-    setIsDialogOpen(!isDialogOpen);
+    setIsInstallAppDialogOpen(false);
   };
 
   return (
     <Box className="install-app-popup">
-      <Dialog open={isDialogOpen} onClose={handleOnDialogClose}>
+      <Dialog open={isInstallAppDialogOpen} onClose={handleOnDialogClose}>
         {/* <DialogTitle>Install App</DialogTitle> */}
 
-        <DialogContent sx={{ backgroundColor: "transparent" }}>
+        <DialogContent>
           {isIos ? <InstallWebAppOnIos /> : <InstallWebAppOnAndroid />}
         </DialogContent>
       </Dialog>
