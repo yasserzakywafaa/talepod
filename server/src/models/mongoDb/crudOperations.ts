@@ -51,11 +51,12 @@ export const updateDocument = async (
         { returnDocument: "after" }
       );
 
-      if (result && result.value) {
+      if (result) {
         console.log(
           `✅ Document updated successfully in collection: ${collection}.`
         );
-        return result.value;
+
+        return result;
       }
     }
   } catch (error) {

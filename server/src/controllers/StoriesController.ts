@@ -6,7 +6,6 @@ import {
   Story,
   StoryFilters,
 } from "../models/types";
-import { Collection, WithId } from "mongodb";
 import { DBCollections, database } from "../models/mongoDb";
 import { NextFunction, Request, Response } from "express";
 
@@ -65,6 +64,8 @@ export const getAllStories = async (
       metadata,
       totalPagesCount,
     });
+
+    // bulkUpdateStoriesByField();
 
     const paging: PagingInfo = {
       pageNumber,
@@ -183,18 +184,45 @@ export const getStoryBySlug = async (
 
 // // FOR DEVELOPMENT USE ONLY
 // let globalAllStories;
-// const bulkUpdateStoriesByField = (allStories) => {
+// const bulkUpdateStoriesByField = async (allStories: Story[]) => {
+//   const storiesCollection = database.collection(DBCollections.stories);
+//   const stories = await database
+//     .collection(DBCollections.stories)
+//     .find()
+//     .toArray();
+
+//   let count = 0;
 //   try {
-//     allStories.forEach(async (story) => {
-//       // await updateDocument(story._id.toString(), DBCollections.Stories, {
-//       //   // // slug: replaceSpaceWithDash(story.title.toLowerCase()),
-//       //   // slug: getSlugFromText(story.title),
-//       // });
-//       console.log("ℹ️ Story title:>>>", {
-//         storyTitle: story.title,
-//         storySlug: getSlugFromText(story.title),
-//       });
+//     stories.forEach(async (story, index) => {
+//       // Regular expression to match valid slugs
+//       const validSlugPattern = /-[a-f0-9]{9}$/;
+
+//       if (!validSlugPattern.test(story.slug)) {
+//         // await updateDocument(story._id.toString(), {
+//         //   slug: `${story.slug}-${story._id.toString().slice(-9)}`,
+//         // });
+
+//         // // USE THIS BETTER TO UPDATE ONE COLLECTION AT A TIME
+//         // await storiesCollection.findOneAndUpdate(
+//         //   { _id: story._id },
+//         //   {
+//         //     $set: {
+//         //       slug: `${story.slug}-${story._id.toString().slice(-9)}`,
+//         //     },
+//         //   },
+//         //   { returnDocument: "after" }
+//         // );
+
+//         console.log("ℹ️ Story:>>>", {
+//           slug: story.slug,
+//         });
+
+//         count++;
+//       }
 //     });
+
+//     console.log("ℹ️ All Stories count:>>>", stories.length);
+//     console.log("ℹ️ count:>>>", count);
 //   } catch (error) {
 //     throw new Error("❌ Failed to update story slug", { cause: error });
 //   }

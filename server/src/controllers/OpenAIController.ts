@@ -20,6 +20,7 @@ import OpenAi from "openai";
 import extractStoryParts from "../utils/extractStoryParts";
 import fs from "fs";
 import retry from "../utils/retryFunction";
+import { updateDocument } from "../models/mongoDb/crudOperations";
 import { uploadFileToS3 } from "../models/amazonS3";
 
 const openai = new OpenAi();
@@ -79,7 +80,6 @@ export const createStory = async (
     const storyData: Partial<Story> = {
       ...storyParts,
       createdAt: new Date(),
-      slug: getSlugFromText(storyParts.title),
     };
     const updatedStoryParams: StoryParams = {
       ...storyParams,
@@ -92,6 +92,18 @@ export const createStory = async (
         profileInfo,
         updatedStoryParams
       );
+
+      // Update the story document with the slug (title + id)
+      const storyWithSlug = (await updateDocument(storyId.toString(), {
+        slug: `${getSlugFromText(storyParts.title)}-${storyId
+          .toString()
+          .slice(-9)}`,
+      })) as Story;
+      storyData["slug"] = storyWithSlug.slug;
+
+      console.log("AFTER UPDATE", {
+        storyData: storyData,
+      });
 
       response.json({
         ...storyData,

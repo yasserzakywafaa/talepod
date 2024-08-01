@@ -28,7 +28,7 @@ export const useDetectBrowserType = () => {
 
   // Detects if device is on iOS
   const isIos = /iphone|ipad|ipod/.test(userAgent.toLowerCase());
-  const isMacOs = /Macintosh|Mac OS X/.test(userAgent);
+  const isMacOs = /macintosh|mac os X/.test(userAgent) && !isIos;
   const isWindows = /windows/.test(userAgent);
   const isAndroid = /android/.test(userAgent);
 
