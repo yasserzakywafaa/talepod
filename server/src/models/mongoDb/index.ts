@@ -88,20 +88,31 @@ const createIndexes = async () => {
     for (const collection of collectionsToSearch) {
       const stories = database.collection(collection);
       // Ensure compound indexes for commonly queried combinations
-      await stories.createIndex({ name: 1, createdAt: -1 });
-      await stories.createIndex({ gender: 1, age: 1, createdAt: -1 });
+      await stories.createIndex({ slug: 1, createdAt: -1 });
+      await stories.createIndex({ "profileInfo.name": 1, createdAt: -1 });
+      await stories.createIndex({
+        "profileInfo.language.value": 1,
+        createdAt: -1,
+      });
+      await stories.createIndex({
+        "profileInfo.gender": 1,
+        "profileInfo.age": 1,
+        createdAt: -1,
+      });
 
       // Ensure single-field indexes for individual fields
-      await stories.createIndex({ name: 1 });
-      await stories.createIndex({ createdAt: -1 });
-      await stories.createIndex({ gender: 1 });
-      await stories.createIndex({ age: 1 });
-      await stories.createIndex({ language: 1 });
-      await stories.createIndex({ moral: 1 });
-      await stories.createIndex({ tone: 1 });
-      await stories.createIndex({ environment: 1 });
-      await stories.createIndex({ createdByAdmin: 1 });
+      await stories.createIndex({ _id: 1 });
+      await stories.createIndex({ slug: 1 });
       await stories.createIndex({ audio: 1 });
+      await stories.createIndex({ createdAt: -1 });
+      await stories.createIndex({ "profileInfo.age": 1 });
+      await stories.createIndex({ "profileInfo.name": 1 });
+      await stories.createIndex({ "profileInfo.gender": 1 });
+      await stories.createIndex({ "profileInfo.language.value": 1 });
+      await stories.createIndex({ "storyParams.tone.value": 1 });
+      await stories.createIndex({ "storyParams.moral.value": 1 });
+      await stories.createIndex({ "storyParams.createdByAdmin": 1 });
+      await stories.createIndex({ "storyParams.environment.value": 1 });
     }
 
     console.info(
