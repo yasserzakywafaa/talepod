@@ -16,7 +16,6 @@ export enum SupportedLanguages {
   ru = "ru",
   hi = "hi",
   zh_Hans = "zh-Hans",
-  zh_Hant = "zh-Hant",
 }
 
 export const Languages: Language[] = [
@@ -32,5 +31,4 @@ export const Languages: Language[] = [
   { name: "Russian", value: SupportedLanguages.ru },
   { name: "Hindi", value: SupportedLanguages.hi },
   { name: "Chinese (Simplified)", value: SupportedLanguages.zh_Hans },
-  { name: "Chinese (Traditional)", value: SupportedLanguages.zh_Hant },
 ];

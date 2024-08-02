@@ -101,10 +101,6 @@ export const createStory = async (
       })) as Story;
       storyData["slug"] = storyWithSlug.slug;
 
-      console.log("AFTER UPDATE", {
-        storyData: storyData,
-      });
-
       response.json({
         ...storyData,
         _id: storyId,
@@ -144,7 +140,7 @@ export const createStorySeo = async (
       messages: [
         {
           role: "system",
-          content: "You are s Search Engine Optimization expert.",
+          content: "You are a Search Engine Optimization expert.",
         },
         {
           role: "user",

@@ -51,7 +51,7 @@ export const getAllStories = async (
 
     const aggregatedStories = await database
       .collection(DBCollections.stories_library)
-      .aggregate(pipeline)
+      .aggregate(pipeline, { allowDiskUse: true })
       .toArray();
     const { metadata, results } = aggregatedStories[0] as AggregationResult;
     const totalCount = metadata[0] ? metadata[0].totalStoriesCount : 0;

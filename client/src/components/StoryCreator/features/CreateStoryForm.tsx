@@ -27,6 +27,7 @@ import { Tone, Tones } from "src/shared/mockedData/Tone";
 
 import StorySettings from "./StorySettings";
 // import { getCreateStoryPrompt } from "../utils/getStoryPrompts";
+// import { getStorySeoPrompt } from "../utils/getStoryPrompts";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 import routes from "src/application/routes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
@@ -46,7 +47,11 @@ const CreateStoryForm = () => {
   } = useStoryCreatorContext();
 
   const { manager: OpenaiManager } = useOpenaiContext();
-  const { isCreateStoryFetching, handleCreateStoryRequest } = OpenaiManager;
+  const {
+    isCreateStoryFetching,
+    handleCreateStoryRequest,
+    // handleCreateStorySeoRequest,
+  } = OpenaiManager;
 
   const isCreateButtonDisabled = (): boolean => {
     if (
@@ -161,122 +166,130 @@ const CreateStoryForm = () => {
   };
 
   // const handleCreateStoryLibrary = async () => {
-  //   const parameters = {
-  //     boyNames: [
-  //       "Noah",
-  //       "Oliver",
-  //       "William",
-  //       "James",
-  //       "Henry",
-  //       "Alexander",
-  //       "George",
-  //       "Harry",
-  //       "Jack",
-  //       "Oscar",
-  //     ],
-  //     girlNames: [
-  //       "Olivia",
-  //       "Emma",
-  //       "Ava",
-  //       "Sophia",
-  //       "Amelia",
-  //       "Isabella",
-  //       "Evelyn",
-  //       "Ivy",
-  //       "Lily",
-  //       "Rosie",
-  //     ],
+  //   // Other languages popular names
+  //   const names = {
+  //     // en: { boy: "Liam", girl: "Olivia" },
+  //     // ar: { boy: "Muhammad", girl: "Sara" },
+  //     // es: { boy: "Mateo", girl: "Sofía" },
+  //     // fr: { boy: "Léo", girl: "Jade" },
+  //     // de: { boy: "Noah", girl: "Mia" },
+  //     // pt: { boy: "Miguel", girl: "Maria" },
+  //     // it: { boy: "Leonardo", girl: "Sofia" },
+  //     // ja: { boy: "Haruto", girl: "Yui" },
+  //     // ko: { boy: "Seo-jun", girl: "Seo-yeon" },
+  //     // ru: { boy: "Artyom", girl: "Anna" },
+  //     // hi: { boy: "Aarav", girl: "Aadhya" },
+  //     // "zh-Hans": { boy: "Wei", girl: "Mei" },
   //   };
-
+  //   // // English popular names
+  //   // boyNames: [
+  //   //   "Noah",
+  //   //   "Oliver",
+  //   //   "William",
+  //   //   "James",
+  //   //   "Henry",
+  //   //   "Alexander",
+  //   //   "George",
+  //   //   "Harry",
+  //   //   "Jack",
+  //   //   "Oscar",
+  //   // ],
+  //   // girlNames: [
+  //   //   "Olivia",
+  //   //   "Emma",
+  //   //   "Ava",
+  //   //   "Sophia",
+  //   //   "Amelia",
+  //   //   "Isabella",
+  //   //   "Evelyn",
+  //   //   "Ivy",
+  //   //   "Lily",
+  //   //   "Rosie",
+  //   // ],
+  //   let totalCombinations = 0;
   //   let profileInfo: ProfileInfo | undefined;
   //   let storyParams: StoryParams | undefined;
+  //   const gender = Math.random() < 0.5 ? "Boy" : "Girl";
 
-  //   // const generateAllCombinations = () => {
-  //   // let stories: any = [];
-  //   let totalCombinations = 0;
+  //   console.log(`random:>>> `, { profileInfo, storyParams });
 
   //   // Environments.forEach((environment) => {
-  //   Tones.forEach((tone) => {
-  //     Morals.forEach((moral) => {
-  //       // Randomly decide gender for each combination
-  //       const gender = Math.random() < 0.5 ? "Boy" : "Girl";
-  //       const names =
-  //         gender === "Boy" ? parameters.boyNames : parameters.girlNames;
+  //   //   Tones.forEach((tone) => {
+  //   //     Morals.forEach((moral) => {
+  //   //       Object.keys(names).forEach(async (languageCode: string) => {
+  //   //         const name =
+  //   //           gender === "Boy"
+  //   //             ? names[languageCode as keyof {}]["boy"]
+  //   //             : names[languageCode as keyof {}]["girl"];
 
-  //       names.forEach(async (name) => {
-  //         profileInfo = {
-  //           name,
-  //           gender:
-  //             gender === "Boy" ? ChildGenderEnum.Boy : ChildGenderEnum.Girl,
-  //           age: Math.floor(Math.random() * 18),
-  //           interests: "",
-  //           // language: Languages[Math.floor(Math.random() * Languages.length)],
-  //           language: { name: "English", value: SupportedLanguages.en },
-  //         };
+  //   //         const language = Languages.find(
+  //   //           (lang) => lang.value === languageCode
+  //   //         ) as Language;
 
-  //         storyParams = {
-  //           audioLength: 10,
-  //           minCharacters: 3900,
-  //           maxCharacters: 4000,
-  //           totalCharacters: 4000,
-  //           moral,
-  //           tone,
-  //           environment:
-  //             Environments[Math.floor(Math.random() * Environments.length)],
-  //           createdByAdmin: true,
-  //         };
+  //   //         if (language === undefined) {
+  //   //           console.log(`language:>>> `, { language });
+  //   //         }
 
-  //         if (profileInfo && storyParams) {
-  //           const createStoryPrompt = getCreateStoryPrompt({
-  //             ...getStoryCreatorInitialState(),
-  //             profileInfo,
-  //             storyParams,
-  //           });
+  //   //         profileInfo = {
+  //   //           name,
+  //   //           gender:
+  //   //             gender === "Boy" ? ChildGenderEnum.Boy : ChildGenderEnum.Girl,
+  //   //           age: Math.floor(Math.random() * 18),
+  //   //           interests: "",
+  //   //           language: language,
+  //   //         };
+  //   //         storyParams = {
+  //   //           audioLength: 10,
+  //   //           minCharacters: 3900,
+  //   //           maxCharacters: 4000,
+  //   //           totalCharacters: 4000,
+  //   //           moral,
+  //   //           tone,
+  //   //           environment,
+  //   //           createdByAdmin: true,
+  //   //         };
 
-  //           isCreateStoryFetching(true);
-  //           try {
-  //             const story: Story = await handleCreateStoryRequest(
-  //               createStoryPrompt,
-  //               profileInfo,
-  //               storyParams
-  //             );
+  //   //         if (profileInfo && storyParams) {
+  //   //           const createStoryPrompt = getCreateStoryPrompt({
+  //   //             ...getStoryCreatorInitialState(),
+  //   //             profileInfo,
+  //   //             storyParams,
+  //   //           });
+  //   //           isCreateStoryFetching(true);
+  //   //           try {
+  //   //             const story: Story = await handleCreateStoryRequest(
+  //   //               createStoryPrompt,
+  //   //               profileInfo,
+  //   //               storyParams
+  //   //             );
+  //   //             if (story._id && story.slug) {
+  //   //               // SEO CREATION
+  //   //               const storySEO = await handleCreateStorySeoRequest(
+  //   //                 story._id,
+  //   //                 getStorySeoPrompt(story)
+  //   //               );
+  //   //               console.log(`Story:>>>`, {
+  //   //                 storyId: story._id,
+  //   //                 storyProfileInfo: story.profileInfo,
+  //   //                 storySEO: !!storySEO && !!storySEO.content.length,
+  //   //               });
+  //   //             }
+  //   //           } catch (error) {
+  //   //             console.error("❌ Failed to create a story!", {
+  //   //               error,
+  //   //             });
+  //   //           } finally {
+  //   //             isCreateStoryFetching(false);
+  //   //           }
+  //   //         }
 
-  //             if (story._id && story.slug) {
-  //               console.log(`Story:>>>`, {
-  //                 storyProfileInfo: story.profileInfo,
-  //               });
-  //             }
-  //           } catch (error) {
-  //             console.error("❌ Failed to create a story!", {
-  //               error,
-  //             });
-  //           } finally {
-  //             isCreateStoryFetching(false);
-  //           }
-  //         }
-
-  //         // stories.push({
-  //         //   language: "English",
-  //         //   environment:
-  //         //     Environments[Math.floor(Math.random() * Environments.length)],
-  //         //   name,
-  //         //   gender,
-  //         //   tone,
-  //         //   moral,
-  //         //   createdByAdmin: true,
-  //         // });
-
-  //         totalCombinations++;
-  //       });
-  //     });
-  //   });
+  //   //         totalCombinations++;
+  //   //       });
+  //   //     });
+  //   //   });
   //   // });
 
   //   console.log(`Total number of combinations: ${totalCombinations}`);
-  //   // return stories;
-  //   // };
-
-  //   // generateAllCombinations();
   // };
 
   return (
