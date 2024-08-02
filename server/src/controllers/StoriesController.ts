@@ -33,7 +33,6 @@ export const getAllStories = async (
       },
       // Build the match stage for filters
       ...(hasActiveFilters ? [{ $match: getQuery(filters) }] : []),
-      { $sort: { createdAt: -1 } },
       {
         $facet: {
           metadata: [
@@ -47,6 +46,7 @@ export const getAllStories = async (
           ],
         },
       },
+      { $sort: { createdAt: -1 } },
     ];
 
     const aggregatedStories = await database

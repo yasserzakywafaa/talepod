@@ -79,27 +79,57 @@ const createCollections = async () => {
 };
 
 const createIndexes = async () => {
+  const collectionsToSearch = [
+    DBCollections.stories,
+    DBCollections.stories_library,
+  ];
+
   try {
-    const storiesCollection = database.collection(DBCollections.stories);
-    // Create compound index for these fields
-    await storiesCollection.createIndex({ slug: 1, createdAt: -1 });
+    for (const collection of collectionsToSearch) {
+      const stories = database.collection(collection);
+      // Ensure compound indexes for commonly queried combinations
+      await stories.createIndex({ name: 1, createdAt: -1 });
+      await stories.createIndex({ gender: 1, age: 1, createdAt: -1 });
+
+      // Ensure single-field indexes for individual fields
+      await stories.createIndex({ name: 1 });
+      await stories.createIndex({ createdAt: -1 });
+      await stories.createIndex({ gender: 1 });
+      await stories.createIndex({ age: 1 });
+      await stories.createIndex({ language: 1 });
+      await stories.createIndex({ moral: 1 });
+      await stories.createIndex({ tone: 1 });
+      await stories.createIndex({ environment: 1 });
+      await stories.createIndex({ createdByAdmin: 1 });
+      await stories.createIndex({ audio: 1 });
+    }
+
     console.info(
-      "-- ℹ️  Compound index created on 'slug' and 'createdAt' fields"
+      `-- ℹ️  Indexes created collections:>>>  ${collectionsToSearch.flatMap(
+        (c) => c
+      )}`
     );
 
-    // Text index for name search
-    await storiesCollection.createIndex({ name: "text" });
-    console.info("-- ℹ️  Compound index created on 'name' field");
+    // const storiesCollection = database.collection(DBCollections.stories);
+    // // Create compound index for these fields
+    // await storiesCollection.createIndex({ slug: 1, createdAt: -1 });
+    // console.info(
+    //   "-- ℹ️  Compound index created on 'slug' and 'createdAt' fields"
+    // );
 
-    // Compound index on frequently queried combinations
-    await storiesCollection.createIndex({ gender: 1, language: 1, age: 1 });
-    console.info(
-      "-- ℹ️  Compound index created on 'gender', 'language' and 'age' fields"
-    );
-    await storiesCollection.createIndex({ environment: 1, moral: -1, tone: 1 });
-    console.info(
-      "-- ℹ️  Compound index created on 'environment', 'moral' and 'tone' fields"
-    );
+    // // Text index for name search
+    // await storiesCollection.createIndex({ name: "text" });
+    // console.info("-- ℹ️  Compound index created on 'name' field");
+
+    // // Compound index on frequently queried combinations
+    // await storiesCollection.createIndex({ gender: 1, language: 1, age: 1 });
+    // console.info(
+    //   "-- ℹ️  Compound index created on 'gender', 'language' and 'age' fields"
+    // );
+    // await storiesCollection.createIndex({ environment: 1, moral: -1, tone: 1 });
+    // console.info(
+    //   "-- ℹ️  Compound index created on 'environment', 'moral' and 'tone' fields"
+    // );
   } catch (error) {
     console.error("❌ Error creating index:", error);
   }
