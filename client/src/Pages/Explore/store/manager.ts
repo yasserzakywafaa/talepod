@@ -159,6 +159,23 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
     }
   };
 
+  // // FOR DEVELOPMENT USE ONLY
+  //   useEffect(() => {
+  //     if (stories.length) {
+  //       let count = 0;
+  //       stories.forEach(async (story) => {
+  //         if (!story.seo) {
+  //         // const storySeoPrompt = getStorySeoPrompt(story);
+  //         // await handleCreateStorySeoRequest(story._id, storySeoPrompt);
+  //           console.log("storySlug:>>>", { slug: story.slug });
+  //         }
+  //         count++;
+  //       });
+
+  //       console.log("count:>>>", { count });
+  //     }
+  //   }, [store.state.stories]);
+
   return {
     setUp,
     handleSortStories,

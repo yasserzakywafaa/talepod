@@ -49,7 +49,7 @@ export const useCreateStoryAudio = (store: OpenaiStore): UseTextGeneration => {
             fileName,
             audioFileVoice,
             storyId: story._id,
-            storyText: `${story.mainStory} ${story.poem}`,
+            storyText: `This story is created by TALE-POD  ${story.mainStory} ${story.poem} Thank you for listening to stories created by TALE-POD`,
           },
           {
             headers: {
