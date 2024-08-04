@@ -1,7 +1,8 @@
 import { createTheme } from "@mui/material/styles";
 
 const white = "#FFFFFF";
-const charcoal = "#333333"; // Dark Goldenrod
+const charcoal = "#333333"; // Charcoal
+const darkCharcoal = "#121212"; // Dark Charcoal
 const primaryColor = "#ad932d"; // Dark Goldenrod
 const secondaryColorForDarkTheme = "#00BFFF"; // Deep Sky Blue
 const secondaryColorForLightTheme = "#0080ab"; // Dark Deep Sky Blue
@@ -85,6 +86,15 @@ export const lightTheme = createTheme({
         },
       },
     },
+    MuiDialogContent: {
+      styleOverrides: {
+        root: {
+          border: `1px solid ${primaryColor}`,
+          backgroundColor: "unset",
+          borderRadius: "4px",
+        },
+      },
+    },
   },
 });
 
@@ -112,6 +122,15 @@ export const darkTheme = createTheme({
           "&:visited": {
             color: white,
           },
+        },
+      },
+    },
+    MuiDialogContent: {
+      styleOverrides: {
+        root: {
+          border: `1px solid ${primaryColor}`,
+          backgroundColor: darkCharcoal,
+          borderRadius: "4px",
         },
       },
     },

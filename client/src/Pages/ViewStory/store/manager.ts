@@ -8,7 +8,7 @@ import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/st
 
 export interface ViewStoryManager {
   setUp: (slug: string) => Promise<void>;
-  fetchStoryBySlug: (slug: string) => Promise<Story>;
+  fetchStoryBySlug: (slug: string) => Promise<Story | undefined>;
   createSeoTextForStory: (story: Story, userSeoPrompt: string) => Promise<void>;
 }
 
@@ -24,13 +24,13 @@ export const useViewStoryManager = (
     const story = await fetchStoryBySlug(slug);
     store.handleIsFetching(false);
 
-    if (!story.seo) {
+    if (story && !story.seo) {
       const storySeoPrompt = getStorySeoPrompt(story);
       await createSeoTextForStory(story, storySeoPrompt);
     }
   };
 
-  const fetchStoryBySlug = async (slug: string): Promise<Story> => {
+  const fetchStoryBySlug = async (slug: string): Promise<Story | undefined> => {
     try {
       const response: AxiosResponse<Story, Story> = await axios.get(
         END_POINTS.STORIES.GET_STORY_BY_SLUG(slug)
@@ -40,8 +40,14 @@ export const useViewStoryManager = (
       return response.data;
     } catch (error) {
       store.handleUpdateStory(undefined);
+      // throw new Error(`❌ Failed to get Story by Slug :>>> ${error}`);
+      console.error("❌ Failed to get Story by Slug :>>>", {
+        error,
+      });
+
+      return;
+    } finally {
       store.handleIsFetching(false);
-      throw new Error(`❌ Failed to get Story by Slug :>>> ${error}`);
     }
   };
 

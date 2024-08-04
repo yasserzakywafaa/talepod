@@ -20,6 +20,7 @@ import OpenAi from "openai";
 import extractStoryParts from "../utils/extractStoryParts";
 import fs from "fs";
 import retry from "../utils/retryFunction";
+import { updateDocument } from "../models/mongoDb/crudOperations";
 import { uploadFileToS3 } from "../models/amazonS3";
 
 const openai = new OpenAi();
@@ -40,7 +41,7 @@ export const createStory = async (
         {
           role: "system",
           content:
-            "You are a friendly and expressive storyteller that is an experts on storytelling. Your stories should sound natural and conversational.",
+            "You are a friendly and expressive storyteller that is an expert on storytelling. Your stories should sound natural and conversational.",
         },
         {
           role: "user",
@@ -70,11 +71,6 @@ export const createStory = async (
   try {
     const storyParts = await retry(createAndExtractStoryParts, 3, 2000);
     const totalCharacters = (storyParts.mainStory + storyParts.poem).length;
-    console.log("ℹ️ Story and Poem Total Characters: ", {
-      storyCharacters: storyParts.mainStory.length,
-      poemCharacters: storyParts.poem.length,
-      totalCharacters,
-    });
 
     // Count the total characters in the story
     if (totalCharacters > 4000) {
@@ -84,7 +80,6 @@ export const createStory = async (
     const storyData: Partial<Story> = {
       ...storyParts,
       createdAt: new Date(),
-      slug: getSlugFromText(storyParts.title),
     };
     const updatedStoryParams: StoryParams = {
       ...storyParams,
@@ -97,6 +92,14 @@ export const createStory = async (
         profileInfo,
         updatedStoryParams
       );
+
+      // Update the story document with the slug (title + id)
+      const storyWithSlug = (await updateDocument(storyId.toString(), {
+        slug: `${getSlugFromText(storyParts.title)}-${storyId
+          .toString()
+          .slice(-9)}`,
+      })) as Story;
+      storyData["slug"] = storyWithSlug.slug;
 
       response.json({
         ...storyData,
@@ -137,7 +140,7 @@ export const createStorySeo = async (
       messages: [
         {
           role: "system",
-          content: "You are s Search Engine Optimization expert.",
+          content: "You are a Search Engine Optimization expert.",
         },
         {
           role: "user",

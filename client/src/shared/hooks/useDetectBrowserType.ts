@@ -22,11 +22,15 @@ export const useDetectBrowserType = () => {
   const hasIndex = (args: string) => userAgent.indexOf(args) !== -1;
 
   // Detects if device is in standalone mode
-  const isInStandaloneMode =
-    "standalone" in window.navigator && window.navigator.standalone;
+  const isInStandaloneMode = Boolean(
+    "standalone" in window.navigator && window.navigator.standalone
+  );
 
   // Detects if device is on iOS
   const isIos = /iphone|ipad|ipod/.test(userAgent.toLowerCase());
+  const isMacOs = /macintosh|mac os X/.test(userAgent) && !isIos;
+  const isWindows = /windows/.test(userAgent);
+  const isAndroid = /android/.test(userAgent);
 
   switch (true) {
     case hasIndex(BrowsersEnum.Opera):
@@ -51,5 +55,5 @@ export const useDetectBrowserType = () => {
       break;
   }
 
-  return { BROWSER, isInStandaloneMode, isIos };
+  return { BROWSER, isInStandaloneMode, isAndroid, isIos, isMacOs, isWindows };
 };

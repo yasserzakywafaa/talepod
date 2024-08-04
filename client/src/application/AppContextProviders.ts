@@ -15,8 +15,8 @@ const contextProviders = [
   LoginModalContextProvider,
   RegisterModalContextProvider,
   StoryCreatorContextProvider,
-  ExploreContextProvider,
   OpenaiContextProvider,
+  ExploreContextProvider,
   ViewStoryContextProvider,
   ContactContextProvider,
 

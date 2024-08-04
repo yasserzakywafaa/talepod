@@ -128,7 +128,7 @@ const StoryCard = (props: StoryCard) => {
             )}
           </Box>
 
-          {props.story.createdAt && (
+          {!props.story.storyParams.createdByAdmin && props.story.createdAt && (
             <Chip
               size="small"
               variant="outlined"
@@ -137,6 +137,15 @@ const StoryCard = (props: StoryCard) => {
                 dateStyle: "short",
               })}
               color="secondary"
+            />
+          )}
+
+          {props.story.storyParams.createdByAdmin && (
+            <Chip
+              size="small"
+              variant="outlined"
+              label="Original"
+              color="primary"
             />
           )}
         </Box>

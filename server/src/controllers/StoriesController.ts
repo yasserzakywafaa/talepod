@@ -1,14 +1,14 @@
-import { DBCollections, database } from "../models/mongoDb";
 import {
+  AggregationResult,
   DocumentWithId,
   PageResponse,
   PagingInfo,
+  Story,
   StoryFilters,
-  StoryFiltersEnum,
 } from "../models/types";
+import { DBCollections, database } from "../models/mongoDb";
 import { NextFunction, Request, Response } from "express";
 
-import { Collection } from "mongodb";
 import { getQuery } from "../models/mongoDb/query";
 
 export const getAllStories = async (
@@ -22,60 +22,128 @@ export const getAllStories = async (
       (request.query.filters as string) || "{}"
     );
     const { pageNumber = 1, pageSize = 20 } = filters;
+    const matchStage = hasActiveFilters ? [{ $match: getQuery(filters) }] : [];
+    // Aggregation pipeline
+    const pipeline = [
+      // { $sort: { createdAt: -1 } },
+      {
+        $unionWith: {
+          coll: DBCollections.stories,
+          pipeline: matchStage,
+        },
+      },
+      // Build the match stage for filters
+      ...matchStage,
+      // { $sort: { createdAt: -1 } }, // Returns a memory limit error!!
+      {
+        $facet: {
+          metadata: [
+            { $count: "totalStoriesCount" },
+            { $addFields: { pageNumber, pageSize } },
+          ],
+          // Paginate results
+          results: [
+            { $skip: (pageNumber - 1) * pageSize },
+            { $limit: pageSize },
+            // { $sort: { createdAt: -1 } },
+          ],
+        },
+      },
+    ];
 
-    // Get all stories in collection
-    const allStoriesDocuments = database.collection(DBCollections.Stories);
-    const allStoriesDocumentsCount = await allStoriesDocuments.countDocuments();
-
-    // Get all stories by filters (if any)
-    const totalFilteredStories = allStoriesDocuments
-      .find(getQuery(filters))
-      .sort({ createdAt: -1, [StoryFiltersEnum.language]: -1 });
-    const totalFilteredStoriesCount = (await totalFilteredStories.toArray())
-      .length;
-
-    // Get only the pagination stories by same filter (if any)
-    const totalFilteredStoriesClone = allStoriesDocuments
-      .find(getQuery(filters))
-      .sort({ createdAt: -1, [StoryFiltersEnum.language]: -1 })
-      .clone();
-    const filteredStories = await totalFilteredStoriesClone
-      .skip((Number(pageNumber) - 1) * Number(pageSize))
-      .limit(pageSize)
+    const aggregatedStories = await database
+      .collection(DBCollections.stories_library)
+      .aggregate(pipeline)
       .toArray();
-
-    const totalCount = hasActiveFilters
-      ? totalFilteredStoriesCount
-      : allStoriesDocumentsCount;
+    const { metadata, results } = aggregatedStories[0] as AggregationResult;
+    const totalCount = metadata[0] ? metadata[0].totalStoriesCount : 0;
 
     const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
 
     console.log("ℹ️  Fetched all stories successfully", {
       filters,
       hasActiveFilters,
-      allStoriesDocumentsCount,
-      totalFilteredStoriesCount,
-      filteredStoriesCount: filteredStories.length,
-      totalCount,
+      metadata,
       totalPagesCount,
     });
+
+    // // FOR DEVELOPMENT USE ONLY
+    // const ALL_STORIES = await bulkUpdateStoriesByField();
+    // response.status(200).json({
+    //   results: ALL_STORIES,
+    //   paging: {
+    //     pageNumber: 1,
+    //     pageSize: 1,
+    //     totalCount: ALL_STORIES.length,
+    //     totalPagesCount: 1,
+    //   },
+    // } as any);
 
     const paging: PagingInfo = {
       pageNumber,
       pageSize,
-      totalPagesCount,
       totalCount,
+      totalPagesCount,
     };
 
     response.status(200).json({
-      results: filteredStories as DocumentWithId[],
+      results,
       paging,
     });
+
+    // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // // Get all stories in collection
+    // const allStoriesDocuments = database.collection(DBCollections.stories);
+    // const allStoriesDocumentsCount = await allStoriesDocuments.countDocuments();
+
+    // // Get all stories by filters (if any)
+    // const filteredDocuments = allStoriesDocuments
+    //   .find(getQuery(filters))
+    //   .sort({ createdAt: -1, [StoryFiltersEnum.language]: -1 });
+    // const filteredStoriesCount = (await filteredDocuments.toArray()).length;
+
+    // // Get only the pagination stories by same filter (if any)
+    // const filteredDocumentsClone = allStoriesDocuments
+    //   .find(getQuery(filters))
+    //   .sort({ createdAt: -1, [StoryFiltersEnum.language]: -1 })
+    //   .clone();
+    // const filteredStories = await filteredDocumentsClone
+    //   .skip((Number(pageNumber) - 1) * Number(pageSize))
+    //   .limit(pageSize)
+    //   .toArray();
+
+    // const totalCount = hasActiveFilters
+    //   ? filteredStoriesCount
+    //   : allStoriesDocumentsCount;
+
+    // const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
+
+    // console.log("ℹ️  Fetched all stories successfully", {
+    //   filters,
+    //   hasActiveFilters,
+    //   allStoriesDocumentsCount,
+    //   filteredStoriesCount,
+    //   totalCount,
+    //   totalPagesCount,
+    // });
+
+    // const paging: PagingInfo = {
+    //   pageNumber,
+    //   pageSize,
+    //   totalPagesCount,
+    //   totalCount,
+    // };
+    // response.status(200).json({
+    //   results: filteredStories as DocumentWithId[],
+    //   paging,
+    // });
   } catch (error) {
     console.error("❌ Failed to get all stories!", {
       error,
     });
-    next(error);
+    // next(error);
+    return undefined;
   }
 };
 
@@ -91,17 +159,31 @@ export const getStoryBySlug = async (
   }
 
   try {
-    const stories: Collection = database.collection(DBCollections.Stories);
-    const story = await stories.findOne({ slug: storySlug });
+    // Use MongoDB’s $unionWith aggregation pipeline stage
+    // to perform a union of the two collections and then filter by the slug.
+    const pipeline = [
+      {
+        $unionWith: {
+          coll: DBCollections.stories_library,
+          pipeline: [],
+        },
+      },
+      { $match: { slug: storySlug } },
+      { $limit: 1 },
+    ];
 
-    if (!story || !storySlug) {
-      response.status(404).json({ message: "❌ Story not found" });
-      return;
+    const results = await database
+      .collection(DBCollections.stories)
+      .aggregate(pipeline)
+      .toArray();
+
+    if (results.length > 0) {
+      const story = results[0] as Story;
+      console.log("✅ Get Story by slug:", { storySlug });
+      response.status(200).json(story);
+    } else {
+      response.status(404).json({ message: "❌ Story not found!" });
     }
-
-    console.log("ℹ️  Get Story", { storySlug, storyTitle: story.title });
-
-    response.status(200).json(story);
   } catch (error) {
     console.error("❌ Failed to get Story by slug!", {
       error,
@@ -112,21 +194,59 @@ export const getStoryBySlug = async (
 
 // // FOR DEVELOPMENT USE ONLY
 // let globalAllStories;
-// const bulkUpdateStoriesByField = (allStories) => {
-//   try {
-//     allStories.forEach(async (story) => {
-//       // await updateDocument(story._id.toString(), DBCollections.Stories, {
-//       //   // // slug: replaceSpaceWithDash(story.title.toLowerCase()),
-//       //   // slug: getSlugFromText(story.title),
-//       // });
-//       console.log("ℹ️ Story title:>>>", {
-//         storyTitle: story.title,
-//         storySlug: getSlugFromText(story.title),
-//       });
-//     });
-//   } catch (error) {
-//     throw new Error("❌ Failed to update story slug", { cause: error });
-//   }
+// const bulkUpdateStoriesByField = async () => {
+//   const storiesCollection = database.collection(DBCollections.stories_library);
+//   const stories = await database
+//     .collection(DBCollections.stories_library)
+//     .find({
+//       // $and: [
+//       //   {
+//       //     "profileInfo.language.value": {
+//       //       $in: ["en"],
+//       //     },
+//       //   },
+//       // ],
+//     })
+//     .toArray();
+
+//   // return stories;
+
+//   // let count = 0;
+//   // try {
+//   //   stories.forEach(async (story: Story, index) => {
+//   //     // Regular expression to match valid slugs
+//   //     const validSlugPattern = /-[a-f0-9]{9}$/;
+
+//   //     // if (!validSlugPattern.test(story.slug)) {
+//   //     if (!story.seo) {
+//   //       // await updateDocument(story._id.toString(), {
+//   //       //   slug: `${story.slug}-${story._id.toString().slice(-9)}`,
+//   //       // });
+
+//   //       // // USE THIS BETTER TO UPDATE ONE COLLECTION AT A TIME
+//   //       // await storiesCollection.findOneAndUpdate(
+//   //       //   { _id: story._id },
+//   //       //   {
+//   //       //     $set: {
+//   //       //       slug: `${story.slug}-${story._id.toString().slice(-9)}`,
+//   //       //     },
+//   //       //   },
+//   //       //   { returnDocument: "after" }
+//   //       // );
+
+//   //       console.log("ℹ️ Story:>>>", {
+//   //         storySeo: story.seo,
+//   //       });
+
+//   //       count++;
+//   //     }
+//   //   });
+
+//   //   console.log("ℹ️ All Stories count:>>>", stories.length);
+//   //   console.log("ℹ️ count:>>>", count);
+//   // } catch (error) {
+//   //   throw new Error("❌ Failed to update story slug", { cause: error });
+//   // }
 // };
 
 const StoriesController = {

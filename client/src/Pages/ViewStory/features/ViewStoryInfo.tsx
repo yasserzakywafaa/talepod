@@ -21,17 +21,19 @@ const ViewStoryInfo = (props: ViewStoryInfoParams) => {
   return (
     <Card className="view-story-card-footer-info">
       <CardContent>
-        <Chip
-          variant="outlined"
-          label={renderChipLabel(
-            "Story created on",
-            new Date(story.createdAt).toLocaleString("en-GB", {
-              timeStyle: "short",
-              dateStyle: "short",
-            })
-          )}
-          color="primary"
-        />
+        {!props.story.storyParams.createdByAdmin && (
+          <Chip
+            variant="outlined"
+            label={renderChipLabel(
+              "Story created on",
+              new Date(story.createdAt).toLocaleString("en-GB", {
+                timeStyle: "short",
+                dateStyle: "short",
+              })
+            )}
+            color="primary"
+          />
+        )}
 
         <Box className="view-story-card-footer-info-tags">
           <Box className="view-story-card-footer-info-tags-profile-info">

@@ -2,13 +2,13 @@ import { IosShareOutlined } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import { useEffect } from "react";
 
-const InstallWebAppOnIos: React.FC = () => {
+const InstallWebAppOnMacOs: React.FC = () => {
   useEffect(() => {}, []);
 
   return (
     <>
       <Typography variant="body1" textAlign="center">
-        Install this app on your iPhone or iPad and enjoy the mobile application
+        Install this app on your Mac and enjoy the mobile application
         functionality.
       </Typography>
 
@@ -19,11 +19,11 @@ const InstallWebAppOnIos: React.FC = () => {
         <b> Safari </b> browser, <br />
         simply tap the <IosShareOutlined color="primary" /> icon and then
         <Typography variant="body1" color="primary">
-          "Add to Home Screen"
+          "Add to Dock"
         </Typography>
       </Typography>
     </>
   );
 };
 
-export default InstallWebAppOnIos;
+export default InstallWebAppOnMacOs;

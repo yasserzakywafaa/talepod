@@ -16,6 +16,7 @@ import {
   TextField,
   ToggleButton,
   ToggleButtonGroup,
+  Tooltip,
   Typography,
 } from "@mui/material";
 
@@ -73,6 +74,13 @@ const FiltersPanel: React.FC = (): JSX.Element => {
     checked: boolean
   ) => {
     handleUpdateFilters("audio", checked ? true : undefined);
+  };
+
+  const handleOriginalsCheckboxChange = (
+    event: React.SyntheticEvent<Element, Event>,
+    checked: boolean
+  ) => {
+    handleUpdateFilters("createdByAdmin", checked ? true : undefined);
   };
 
   const handleGenderChange = (
@@ -191,58 +199,59 @@ const FiltersPanel: React.FC = (): JSX.Element => {
             </Select>
           </FormControl>
 
+          <ToggleButtonGroup
+            exclusive
+            value={filters.gender}
+            className="filters-form-item"
+            sx={{ width: "100%" }}
+            aria-labelledby="gender-toggle"
+            onChange={handleGenderChange}
+          >
+            <ToggleButton
+              value={AdultGenderEnum.Male}
+              sx={{
+                color: (theme) => theme.palette.text.primary,
+                borderColor: "divider",
+                width: { xs: "50%" },
+                "&.Mui-selected": {
+                  backgroundColor: (theme) => theme.palette.primary.main,
+                  color: (theme) => theme.palette.text.primary,
+                },
+                "&.Mui-selected:hover": {
+                  backgroundColor: (theme) => theme.palette.primary.main,
+                },
+              }}
+            >
+              {AdultGenderEnum.Male}
+            </ToggleButton>
+
+            <ToggleButton
+              value={AdultGenderEnum.Female}
+              sx={{
+                color: (theme) => theme.palette.text.primary,
+                borderColor: "divider",
+                width: { xs: "50%" },
+                "&.Mui-selected": {
+                  backgroundColor: (theme) => theme.palette.primary.main,
+                  color: (theme) => theme.palette.text.primary,
+                },
+                "&.Mui-selected:hover": {
+                  backgroundColor: (theme) => theme.palette.primary.main,
+                },
+              }}
+            >
+              {AdultGenderEnum.Female}
+            </ToggleButton>
+          </ToggleButtonGroup>
+
           <Box
             width="100%"
             display="flex"
-            alignItems={{ xs: "start", sm: "center" }}
             className="filters-form-item"
-            flexDirection={{ xs: "column", sm: "row" }}
             justifyContent="space-between"
+            alignItems={{ xs: "start", sm: "center" }}
+            flexDirection={{ xs: "column", sm: "row" }}
           >
-            <ToggleButtonGroup
-              exclusive
-              sx={{ mb: { xs: 1 }, width: { xs: "100%", sm: "auto" } }}
-              value={filters.gender}
-              aria-labelledby="gender-toggle"
-              onChange={handleGenderChange}
-            >
-              <ToggleButton
-                value={AdultGenderEnum.Male}
-                sx={{
-                  color: (theme) => theme.palette.text.primary,
-                  borderColor: "divider",
-                  width: { xs: "50%" },
-                  "&.Mui-selected": {
-                    backgroundColor: (theme) => theme.palette.primary.main,
-                    color: (theme) => theme.palette.text.primary,
-                  },
-                  "&.Mui-selected:hover": {
-                    backgroundColor: (theme) => theme.palette.primary.main,
-                  },
-                }}
-              >
-                {AdultGenderEnum.Male}
-              </ToggleButton>
-
-              <ToggleButton
-                value={AdultGenderEnum.Female}
-                sx={{
-                  color: (theme) => theme.palette.text.primary,
-                  borderColor: "divider",
-                  width: { xs: "50%" },
-                  "&.Mui-selected": {
-                    backgroundColor: (theme) => theme.palette.primary.main,
-                    color: (theme) => theme.palette.text.primary,
-                  },
-                  "&.Mui-selected:hover": {
-                    backgroundColor: (theme) => theme.palette.primary.main,
-                  },
-                }}
-              >
-                {AdultGenderEnum.Female}
-              </ToggleButton>
-            </ToggleButtonGroup>
-
             <FormGroup>
               <FormControlLabel
                 name="audio"
@@ -252,6 +261,18 @@ const FiltersPanel: React.FC = (): JSX.Element => {
                 onChange={handleAudioCheckboxChange}
               />
             </FormGroup>
+
+            <Tooltip title="Crafted and Personalized by TalePod team">
+              <FormGroup>
+                <FormControlLabel
+                  name="createdByAdmin"
+                  label="TalePod Originals"
+                  checked={filters.createdByAdmin}
+                  control={<Checkbox />}
+                  onChange={handleOriginalsCheckboxChange}
+                />
+              </FormGroup>
+            </Tooltip>
           </Box>
 
           <FormControl className="filters-form-item">
