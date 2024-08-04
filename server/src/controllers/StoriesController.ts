@@ -22,17 +22,19 @@ export const getAllStories = async (
       (request.query.filters as string) || "{}"
     );
     const { pageNumber = 1, pageSize = 20 } = filters;
-
+    const matchStage = hasActiveFilters ? [{ $match: getQuery(filters) }] : [];
     // Aggregation pipeline
     const pipeline = [
+      // { $sort: { createdAt: -1 } },
       {
         $unionWith: {
           coll: DBCollections.stories,
-          pipeline: [{ $match: getQuery(filters) }],
+          pipeline: matchStage,
         },
       },
       // Build the match stage for filters
-      ...(hasActiveFilters ? [{ $match: getQuery(filters) }] : []),
+      ...matchStage,
+      // { $sort: { createdAt: -1 } }, // Returns a memory limit error!!
       {
         $facet: {
           metadata: [
@@ -43,15 +45,15 @@ export const getAllStories = async (
           results: [
             { $skip: (pageNumber - 1) * pageSize },
             { $limit: pageSize },
+            // { $sort: { createdAt: -1 } },
           ],
         },
       },
-      { $sort: { createdAt: -1 } },
     ];
 
     const aggregatedStories = await database
       .collection(DBCollections.stories_library)
-      .aggregate(pipeline, { allowDiskUse: true })
+      .aggregate(pipeline)
       .toArray();
     const { metadata, results } = aggregatedStories[0] as AggregationResult;
     const totalCount = metadata[0] ? metadata[0].totalStoriesCount : 0;
@@ -177,10 +179,7 @@ export const getStoryBySlug = async (
 
     if (results.length > 0) {
       const story = results[0] as Story;
-      console.log("✅ Get Story by slug:", {
-        storySlug,
-        storyTitle: story.title,
-      });
+      console.log("✅ Get Story by slug:", { storySlug });
       response.status(200).json(story);
     } else {
       response.status(404).json({ message: "❌ Story not found!" });

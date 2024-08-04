@@ -21,7 +21,9 @@ export enum DBNames {
 export enum DBCollections {
   stories = "stories",
   stories_library = "stories_library",
+  stories_library_backup = "stories_library_backup",
   users = "users",
+  users_stories = "users_stories",
 }
 
 const getMongoDbUri = (): string => {
@@ -87,24 +89,12 @@ const createIndexes = async () => {
   try {
     for (const collection of collectionsToSearch) {
       const stories = database.collection(collection);
-      // Ensure compound indexes for commonly queried combinations
-      await stories.createIndex({ slug: 1, createdAt: -1 });
-      await stories.createIndex({ "profileInfo.name": 1, createdAt: -1 });
-      await stories.createIndex({
-        "profileInfo.language.value": 1,
-        createdAt: -1,
-      });
-      await stories.createIndex({
-        "profileInfo.gender": 1,
-        "profileInfo.age": 1,
-        createdAt: -1,
-      });
-
+      // // stories.dropIndexes();
       // Ensure single-field indexes for individual fields
       await stories.createIndex({ _id: 1 });
+      await stories.createIndex({ createdAt: -1 });
       await stories.createIndex({ slug: 1 });
       await stories.createIndex({ audio: 1 });
-      await stories.createIndex({ createdAt: -1 });
       await stories.createIndex({ "profileInfo.age": 1 });
       await stories.createIndex({ "profileInfo.name": 1 });
       await stories.createIndex({ "profileInfo.gender": 1 });
@@ -208,6 +198,35 @@ const saveFileDataToDb = async (
     console.error("❌ Error saving file data to DB", error);
   }
 };
+
+// // FOR DEVELOPMENT USE ONLY
+// const copyDocumentsFromDbCollectionToAnotherDbCollection = async () => {
+//   const sourceDb = dbClient.db(DBNames.TALEPOD_DEV);
+//   const targetDb = dbClient.db(DBNames.TALEPOD_DEV);
+//   const sourceCollection = sourceDb.collection(DBCollections.stories_library);
+//   const targetCollection = targetDb.collection(
+//     DBCollections.stories_library_backup
+//   );
+
+//   let lastId = null;
+//   let totalCopied = 0;
+
+//   while (true) {
+//     const query = lastId ? { _id: { $gt: lastId } } : {}; // Continue from the last processed document
+//     const cursor = sourceCollection.find(query);
+
+//     const batch = await cursor.toArray();
+//     if (batch.length === 0) {
+//       break; // Exit the loop if no more documents to process
+//     }
+
+//     await targetCollection.insertMany(batch);
+//     totalCopied += batch.length;
+
+//     lastId = batch[batch.length - 1]._id; // Keep track of the last processed document
+//     console.log(`Copied ${totalCopied} documents so far...`);
+//   }
+// };
 
 export {
   dbClient,
