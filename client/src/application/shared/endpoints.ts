@@ -37,8 +37,9 @@ const END_POINTS = {
     },
   },
   STORIES: {
-    GET_ALL_STORIES: `${publicApiUrl}/api/v1/stories`,
-    GET_STORY_BY_SLUG: (slug: string) => `${publicApiUrl}/api/v1/story/${slug}`,
+    GET_ALL_STORIES: `${publicApiUrl}/api/v1/bedtime-stories`,
+    GET_STORY_BY_SLUG: (slug: string) =>
+      `${publicApiUrl}/api/v1/bedtime-story/${slug}`,
   },
   CONTACT: {
     SUPPORT: `${publicApiUrl}/api/v1/contact-support`,
