@@ -32,102 +32,120 @@ export default function Hero() {
       <Container
         className="hero-container"
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
           pt: { xs: 2, sm: 4 },
-          pb: { xs: 8, sm: 12 },
+          pb: { xs: 6, sm: 6 },
         }}
       >
-        <Typography
-          variant="h1"
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            alignSelf: "center",
-            textAlign: "center",
-            fontSize: { xs: "2rem", sm: "3.5rem" },
-            color: (theme) => theme.palette.text.primary,
-          }}
-        >
-          Create Custom&nbsp;
-          <Typography
-            component="span"
-            variant="h1"
-            sx={{
-              fontSize: { xs: "2rem", sm: "3.5rem" },
-              color: (theme) =>
-                theme.palette.mode === "light"
-                  ? "secondary.main"
-                  : "primary.light",
-            }}
-          >
-            Bedtime Stories
-          </Typography>
-        </Typography>
-
-        <Typography
-          variant="h2"
-          textAlign="center"
-          color="text.secondary"
-          sx={{
-            my: 3,
-            alignSelf: "center",
-            width: { sm: "100%", md: "80%" },
-            fontSize: { xs: "1.5rem", sm: "2rem" },
-          }}
-        >
-          Craft personalized bedtime stories tailored to your child's dreams and
-          imagination.
-        </Typography>
-
         <Box
           sx={{
-            display: "flex",
-            flexWrap: "wrap",
+            display: { xs: "flex", sm: "flex" },
+            flexDirection: { xs: "column", sm: "row" },
+            justifyContent: { xs: "center", sm: "start" },
             alignItems: "center",
-            justifyContent: "space-around",
           }}
         >
-          <Button
-            size="large"
-            color="primary"
-            LinkComponent="a"
-            variant="contained"
-            href={routes.create}
-            sx={{ my: 2, px: 2 }}
-            endIcon={<AutoFixHighOutlined />}
-            onClick={handleCallToActionClick("create")}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              width: { xs: "100%", sm: "80%" },
+            }}
           >
-            Create for free
-          </Button>
+            <Typography
+              variant="h1"
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", md: "row" },
+                alignSelf: "center",
+                textAlign: "center",
+                fontSize: { xs: "2rem", sm: "3rem" },
+                color: (theme) => theme.palette.text.primary,
+              }}
+            >
+              Create Custom&nbsp;
+              <Typography
+                component="span"
+                variant="h1"
+                sx={{
+                  fontSize: { xs: "2rem", sm: "3rem" },
+                  color: (theme) =>
+                    theme.palette.mode === "light"
+                      ? "secondary.main"
+                      : "primary.light",
+                }}
+              >
+                Bedtime Stories
+              </Typography>
+            </Typography>
 
-          <Button
-            size="large"
-            color="secondary"
-            LinkComponent="a"
-            variant="outlined"
-            href={routes.create}
-            sx={{ my: 2, ml: 1, px: 2 }}
-            endIcon={<SearchOutlined />}
-            onClick={handleCallToActionClick("explore")}
+            <Typography
+              variant="h2"
+              textAlign="center"
+              color="text.secondary"
+              sx={{
+                my: 2,
+                alignSelf: "center",
+                fontSize: { xs: "1.5rem", sm: "2rem" },
+              }}
+            >
+              Craft personalized bedtime stories tailored to your child's dreams
+              and imagination.
+            </Typography>
+
+            <Box
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                alignItems: "center",
+                justifyContent: "space-around",
+              }}
+            >
+              <Button
+                size="medium"
+                color="primary"
+                LinkComponent="a"
+                variant="contained"
+                href={routes.create}
+                sx={{ my: 2, px: 2 }}
+                endIcon={<AutoFixHighOutlined />}
+                onClick={handleCallToActionClick("create")}
+              >
+                Create for free
+              </Button>
+
+              <Button
+                size="medium"
+                color="secondary"
+                LinkComponent="a"
+                variant="outlined"
+                href={routes.create}
+                sx={{ my: 2, ml: 1, px: 2 }}
+                endIcon={<SearchOutlined />}
+                onClick={handleCallToActionClick("explore")}
+              >
+                Bedtime Stories
+              </Button>
+            </Box>
+          </Box>
+
+          <Box
+            sx={{
+              maxWidth: { xs: "300px", sm: "100%" },
+            }}
           >
-            Explore
-          </Button>
-        </Box>
-
-        <Box sx={{ maxWidth: "300px" }}>
-          <picture>
-            <source srcSet={MainCharacter} type="image/webp" />
-            <img
-              width="100%"
-              height="100%"
-              loading="lazy"
-              src={MainCharacter}
-              alt="home-page-image"
-              aria-label="rabbit-sleeping-on-a-pillow"
-            />
-          </picture>
+            <picture>
+              <source srcSet={MainCharacter} type="image/webp" />
+              <img
+                width="100%"
+                height="100%"
+                loading="lazy"
+                src={MainCharacter}
+                alt="home-page-image"
+                aria-label="rabbit-sleeping-on-a-pillow"
+              />
+            </picture>
+          </Box>
         </Box>
       </Container>
     </Box>
