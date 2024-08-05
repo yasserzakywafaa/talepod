@@ -1,7 +1,16 @@
 const version = 1;
 const host = self.location.origin;
 const CACHE_NAME = `talepod-v${version}`;
-const urlsToCache = ["/", "/index.html", "/create", "/explore", "/story/:id"];
+const urlsToCache = [
+  "/",
+  "/index.html",
+  "/create",
+  "/bedtime-stories",
+  "/bedtime-story/:id",
+  "/contact",
+  "/privacy-policy",
+  "/terms-and-conditions",
+];
 
 // Install service worker
 const onInstall = (event) => {

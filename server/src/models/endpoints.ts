@@ -18,8 +18,8 @@ const END_POINTS = {
     },
   },
   STORIES: {
-    GET_ALL_STORIES: "/api/v1/stories",
-    GET_STORY_BY_ID: (storyId: string) => `/api/v1/story/${storyId}`,
+    GET_ALL_STORIES: "/api/v1/bedtime-stories",
+    GET_STORY_BY_ID: (storyId: string) => `/api/v1/bedtime-story/${storyId}`,
   },
   CONTACT: {
     SUPPORT: "/api/v1/contact-support",

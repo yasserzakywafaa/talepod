@@ -1,8 +1,8 @@
 const routes = {
   home: `/`,
   create: `/create`,
-  explore: `/explore`,
-  story: (slug: string) => `/story/${slug}`,
+  explore: `/bedtime-stories`,
+  story: (slug: string) => `/bedtime-story/${slug}`,
   contact: `/contact`,
   privacyPolicy: `/privacy-policy`,
   termsAndConditions: `/terms-and-conditions`,
