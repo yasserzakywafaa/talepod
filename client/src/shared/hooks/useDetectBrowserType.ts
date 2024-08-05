@@ -17,7 +17,7 @@ export const useDetectBrowserType = () => {
     Firefox: false,
     MSIE: false,
   };
-  const userAgent = window.navigator.userAgent;
+  const userAgent = window.navigator.userAgent.toLowerCase();
 
   const hasIndex = (args: string) => userAgent.indexOf(args) !== -1;
 
@@ -27,7 +27,7 @@ export const useDetectBrowserType = () => {
   );
 
   // Detects if device is on iOS
-  const isIos = /iphone|ipad|ipod/.test(userAgent.toLowerCase());
+  const isIos = /iphone|ipad|ipod/.test(userAgent);
   const isMacOs = /macintosh|mac os X/.test(userAgent) && !isIos;
   const isWindows = /windows/.test(userAgent);
   const isAndroid = /android/.test(userAgent);

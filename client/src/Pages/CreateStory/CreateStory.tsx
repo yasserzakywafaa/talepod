@@ -102,7 +102,7 @@ const CreateStoryPage = () => {
               </ListItemIcon>
               <ListItemText
                 primary="Keep It Interactive"
-                secondary="Ask questions and encourage your child to participate in the story to keep them engaged."
+                secondary="Encourage your child to participate in the story to keep them engaged."
               />
             </ListItem>
           </List>
