@@ -14,7 +14,7 @@ import {
 
 import { AndroidRounded } from "@mui/icons-material";
 import { FormEvent } from "react";
-import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
+import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import { useOpenaiContext } from "../../store/Provider";
 
 const OpenAiGPTImageGeneration = () => {

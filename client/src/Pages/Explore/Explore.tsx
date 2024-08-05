@@ -1,18 +1,19 @@
 import "./Explore.scss";
 
-import { FilterAltOutlined, SwapVertOutlined } from "@mui/icons-material";
 import { Badge, Button, Container, Pagination } from "@mui/material";
 
 import Box from "@mui/material/Box";
+import { FilterAltOutlined } from "@mui/icons-material";
 import FiltersPanel from "./features/FiltersPanel/FiltersPanel";
+import { LoaderComponentNameEnum } from "src/components/shared/Loader/LoaderSpinner";
+import NoStoriesFound from "./features/NoStoriesFound";
 import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
+import Share from "src/components/shared/Share";
 import StoryCard from "src/components/shared/StoryCard/StoryCard";
 import { useEffect } from "react";
 import { useExploreContext } from "../Explore/store/Provider";
 import { useNavigate } from "react-router-dom";
-import NoStoriesFound from "./features/NoStoriesFound";
-import Share from "src/components/shared/Share";
 
 const ExplorePage: React.FC = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const ExplorePage: React.FC = () => {
     },
     manager: {
       setUp,
-      handleSortStories,
+      // handleSortStories,
       handleClearFilters,
       handleResetFilters,
       handleGetStoriesByPage,
@@ -38,9 +39,9 @@ const ExplorePage: React.FC = () => {
     handleToggleFiltersPanel(true);
   };
 
-  const handleSortButtonClick = () => {
-    handleSortStories();
-  };
+  // const handleSortButtonClick = () => {
+  //   handleSortStories();
+  // };
 
   const handlePaginationItemClick = async (
     event: React.ChangeEvent<unknown>,
@@ -61,9 +62,10 @@ const ExplorePage: React.FC = () => {
 
   return (
     <Page
-      title="Explore Bedtime Stories | Talepod"
-      className="explore-page"
       isLoading={isFetching}
+      className="explore-page"
+      title="Explore Bedtime Stories | TalePod"
+      loaderComponentName={LoaderComponentNameEnum.BedtimeStories}
     >
       <FiltersPanel />
 
@@ -78,17 +80,17 @@ const ExplorePage: React.FC = () => {
             mb={1}
             display="flex"
             alignItems="center"
+            justifyContent="end"
             mt={{ xs: 0, sm: 2 }}
             className="explore-top-bar"
-            justifyContent={{ xs: "space-between", sm: "end" }}
           >
-            <Button
+            {/* <Button
               variant="text"
               endIcon={<SwapVertOutlined />}
               onClick={handleSortButtonClick}
             >
               Sort
-            </Button>
+            </Button> */}
 
             <Button variant="text" onClick={handleFilterButtonClick}>
               Filters

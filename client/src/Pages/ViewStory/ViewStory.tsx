@@ -15,6 +15,7 @@ import {
 } from "src/components/shared/Notification/Notification";
 
 import Box from "@mui/material/Box";
+import { LoaderComponentNameEnum } from "src/components/shared/Loader/LoaderSpinner";
 import { LyricsOutlined } from "@mui/icons-material";
 import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
@@ -35,9 +36,10 @@ const ViewStoryPage: React.FC = () => {
 
   const {
     store: {
-      state: { isFetching, story },
-      handleIsFetching,
+      state: { isFetching, isCreatingAudio, story },
+      // handleIsFetching,
       handleUpdateStory,
+      handleIsCreatingAudio,
     },
     manager: { setUp },
   } = useViewStoryContext();
@@ -48,7 +50,8 @@ const ViewStoryPage: React.FC = () => {
   const hasDirectionRtl = story && story.profileInfo.language.value === "ar";
 
   const handleOnCreateAudioClick = async () => {
-    handleIsFetching(true);
+    // handleIsFetching(true);
+    handleIsCreatingAudio(true);
     if (story.mainStory) {
       try {
         const audioFile = await handleCreateAudio(story);
@@ -65,7 +68,8 @@ const ViewStoryPage: React.FC = () => {
         });
       }
     }
-    handleIsFetching(false);
+    // handleIsFetching(false);
+    handleIsCreatingAudio(false);
   };
 
   useEffect(() => {
@@ -97,9 +101,15 @@ const ViewStoryPage: React.FC = () => {
 
   return (
     <Page
-      title={`Bedtime story on TalePod | ${story && story.title}`}
+      isLoading={isFetching || isCreatingAudio}
+      // isLoading={!isFetching}
       className="view-story-page"
-      isLoading={isFetching}
+      title={`Bedtime story on TalePod | ${story && story.title}`}
+      loaderComponentName={
+        isCreatingAudio
+          ? LoaderComponentNameEnum.CreateAudio
+          : LoaderComponentNameEnum.BedtimeStory
+      }
     >
       <Container
         className="view-story-container"
@@ -159,10 +169,12 @@ const ViewStoryPage: React.FC = () => {
                   {!story.audioFile && (
                     <>
                       <Typography
-                        variant="h5"
-                        component="h5"
                         gutterBottom
-                        sx={{ color: (theme) => theme.palette.primary.main }}
+                        component="h3"
+                        sx={{
+                          fontSize: "1.25rem",
+                          color: (theme) => theme.palette.primary.main,
+                        }}
                       >
                         Create audio for this story
                       </Typography>

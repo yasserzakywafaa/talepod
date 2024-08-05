@@ -7,6 +7,7 @@ export interface ViewStoryStore {
   state: ViewStoryInitialState;
   handleIsFetching: (isFetching: boolean) => void;
   handleUpdateStory: (stories: Story | undefined) => void;
+  handleIsCreatingAudio: (isCreatingAudio: boolean) => void;
 }
 
 const useViewStoryStore = (): ViewStoryStore => {
@@ -17,6 +18,13 @@ const useViewStoryStore = (): ViewStoryStore => {
     setState((prev) => ({
       ...prev,
       isFetching,
+    }));
+  };
+
+  const handleIsCreatingAudio = (isCreatingAudio: boolean) => {
+    setState((prev) => ({
+      ...prev,
+      isCreatingAudio,
     }));
   };
 
@@ -31,6 +39,7 @@ const useViewStoryStore = (): ViewStoryStore => {
     state,
     handleIsFetching,
     handleUpdateStory,
+    handleIsCreatingAudio,
   };
 };
 

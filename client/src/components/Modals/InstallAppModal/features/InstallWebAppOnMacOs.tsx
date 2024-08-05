@@ -13,7 +13,7 @@ const InstallWebAppOnMacOs: React.FC = () => {
 
       <Typography variant="body1" textAlign="center">
         From
-        <b> Safari </b> browser, <br />
+        <span className="bold"> Safari </span> browser, <br />
         simply tap the <IosShareOutlined color="primary" /> icon and then
         <br />
         <Typography variant="button" color="primary" textTransform="capitalize">

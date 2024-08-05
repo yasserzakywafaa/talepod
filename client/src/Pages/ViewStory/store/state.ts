@@ -7,13 +7,15 @@ import {
 import { Languages } from "src/shared/languages";
 
 export interface ViewStoryInitialState {
-  isFetching: boolean;
   story: Story;
+  isFetching: boolean;
+  isCreatingAudio: boolean;
 }
 
 export const getViewStoryInitialState = (): ViewStoryInitialState => {
   return {
     isFetching: false,
+    isCreatingAudio: false,
     story: {
       _id: "",
       title: "",
