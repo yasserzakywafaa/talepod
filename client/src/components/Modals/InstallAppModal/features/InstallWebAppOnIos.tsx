@@ -1,10 +1,7 @@
 import { IosShareOutlined } from "@mui/icons-material";
 import { Typography } from "@mui/material";
-import { useEffect } from "react";
 
 const InstallWebAppOnIos: React.FC = () => {
-  useEffect(() => {}, []);
-
   return (
     <>
       <Typography variant="body1" textAlign="center">

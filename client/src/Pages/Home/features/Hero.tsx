@@ -5,18 +5,27 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import MainCharacter from "../../../assets/images/sleeping_bunny_with_a_moon.webp";
 import Typography from "@mui/material/Typography";
+import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 
 export default function Hero() {
   const navigate = useNavigate();
 
-  const handleCreateStoryClick = () => {
-    navigate("/create");
-  };
+  const handleCallToActionClick =
+    (name: string) =>
+    (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+      event.preventDefault();
 
-  const handleExploreClick = () => {
-    navigate("/explore");
-  };
+      switch (name) {
+        case "create":
+          navigate(routes.create);
+          break;
+
+        case "explore":
+          navigate(routes.explore);
+          break;
+      }
+    };
 
   return (
     <Box id="hero">
@@ -31,13 +40,26 @@ export default function Hero() {
         }}
       >
         <Box sx={{ maxWidth: "300px" }}>
-          <img
+          {/* <img
             width="100%"
             height="100%"
+            loading="lazy"
             src={MainCharacter}
             alt="home-page-image"
             aria-label="rabbit-sleeping-on-a-pillow"
-          />
+          /> */}
+
+          <picture>
+            <source srcSet={MainCharacter} type="image/webp" />
+            <img
+              width="100%"
+              height="100%"
+              loading="lazy"
+              src={MainCharacter}
+              alt="home-page-image"
+              aria-label="rabbit-sleeping-on-a-pillow"
+            />
+          </picture>
         </Box>
 
         <Typography
@@ -68,9 +90,15 @@ export default function Hero() {
         </Typography>
 
         <Typography
+          variant="h2"
           textAlign="center"
           color="text.secondary"
-          sx={{ alignSelf: "center", width: { sm: "100%", md: "80%" } }}
+          sx={{
+            my: 3,
+            alignSelf: "center",
+            width: { sm: "100%", md: "80%" },
+            fontSize: { xs: "1.5rem", sm: "2rem" },
+          }}
         >
           Craft personalized bedtime stories tailored to your child's dreams and
           imagination.
@@ -88,10 +116,12 @@ export default function Hero() {
           <Button
             size="large"
             color="primary"
+            LinkComponent="a"
             variant="contained"
+            href={routes.create}
             sx={{ my: 2, px: 2 }}
             endIcon={<AutoFixHighOutlined />}
-            onClick={handleCreateStoryClick}
+            onClick={handleCallToActionClick("create")}
           >
             Create Story
           </Button>
@@ -99,10 +129,12 @@ export default function Hero() {
           <Button
             size="large"
             color="secondary"
+            LinkComponent="a"
             variant="contained"
+            href={routes.create}
             sx={{ my: 2, px: 2 }}
             endIcon={<SearchOutlined />}
-            onClick={handleExploreClick}
+            onClick={handleCallToActionClick("explore")}
           >
             Explore
           </Button>

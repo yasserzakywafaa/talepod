@@ -21,9 +21,9 @@ import Drawer from "@mui/material/Drawer";
 // import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 // import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { InstallAppModal } from "src/components/Modals/InstallAppModal/InstallAppModal";
-import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
+// import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
+// import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal";
 import MenuItem from "@mui/material/MenuItem";
-import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal";
 import ToggleColorMode from "src/components/shared/ToggleColorMode";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -198,6 +198,27 @@ const ApplicationBar = () => {
                         Contact Us
                       </Typography>
                     </MenuItem>
+
+                    {!isInStandaloneMode && (
+                      <>
+                        <Divider
+                          sx={{ height: "30px" }}
+                          orientation="vertical"
+                        />
+
+                        <MenuItem onClick={handleOnMenuItemClick("install")}>
+                          <InstallMobileOutlined
+                            fontSize="medium"
+                            color="secondary"
+                            sx={{ mr: 1 }}
+                          />
+
+                          <Typography variant="body1" color="text.primary">
+                            Install App
+                          </Typography>
+                        </MenuItem>
+                      </>
+                    )}
 
                     {pagesMatch.isHomePage && (
                       <>
@@ -482,8 +503,8 @@ const ApplicationBar = () => {
       )}
 
       {/* Modals */}
-      <LoginModal />
-      <RegisterModal />
+      {/* <LoginModal />
+      <RegisterModal /> */}
       <InstallAppModal
         isInstallAppDialogOpen={isInstallAppDialogOpen}
         setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}

@@ -16,9 +16,7 @@ export const InstallAppModal = (props: InstallAppModalProps) => {
   const { isInstallAppDialogOpen, setIsInstallAppDialogOpen } = props;
   const { isAndroid, isIos, isMacOs } = useDetectBrowserType();
 
-  const handleOnDialogClose = () => {
-    setIsInstallAppDialogOpen(false);
-  };
+  const handleOnDialogClose = () => setIsInstallAppDialogOpen(false);
 
   return (
     <Box className="install-app-popup">

@@ -25,11 +25,11 @@ const tiers = [
     title: PriceTiers.Free,
     price: "0",
     description: [
-      "Create up to 5 stories per month",
+      "Create up to 7 bedtime stories",
       "Basic text-to-speech conversion",
       "Access to a limited story library",
       "Standard customer support",
-      "Community forum access",
+      // "Community forum access",
     ],
     buttonText: "Register for free",
     buttonVariant: "outlined",
@@ -39,7 +39,7 @@ const tiers = [
     subheader: "Recommended",
     price: "5",
     description: [
-      "Create up to 20 stories per month",
+      "Create up to 50 bedtime stories per month",
       "High-quality text-to-speech conversion",
       "Access to an extensive story library",
       "Priority customer support",

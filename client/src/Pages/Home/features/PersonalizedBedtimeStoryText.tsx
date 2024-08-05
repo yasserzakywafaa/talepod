@@ -9,6 +9,7 @@ import {
   Box,
   Button,
   Container,
+  Link,
   List,
   ListItem,
   ListItemIcon,
@@ -16,14 +17,27 @@ import {
   Typography,
 } from "@mui/material";
 
+import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 
 const PersonalizedBedtimeStoryText = () => {
   const navigate = useNavigate();
 
-  const handleStartNowClick = () => {
-    navigate("/create");
-  };
+  const handleFooterLinkItemClick =
+    (name: string) =>
+    (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+      event.preventDefault();
+
+      switch (name) {
+        case "create":
+          navigate(routes.create);
+          break;
+
+        case "explore":
+          navigate(routes.explore);
+          break;
+      }
+    };
 
   return (
     <Container
@@ -37,9 +51,12 @@ const PersonalizedBedtimeStoryText = () => {
       <Typography
         mb={4}
         gutterBottom
-        variant="h4"
+        variant="h3"
         color="primary"
         textAlign="center"
+        sx={{
+          fontSize: { xs: "1.5rem", sm: "2rem" },
+        }}
       >
         How to Create a New Personalized Bedtime Story Each Day with TalePod
       </Typography>
@@ -49,21 +66,37 @@ const PersonalizedBedtimeStoryText = () => {
       </Typography>
 
       <Typography variant="body1" paragraph>
-        Personalized bedtime stories can foster a stronger bond between parents
-        and children. They make bedtime more engaging and enjoyable, providing a
-        unique way to spark your child's imagination. TalePod allows you to
-        create custom stories tailored to your child's preferences, making each
-        night a special adventure.
+        <Link
+          sx={{ pr: "5px" }}
+          color="text.secondary"
+          href={routes.termsAndConditions}
+          onClick={handleFooterLinkItemClick("explore")}
+        >
+          Personalized bedtime stories
+        </Link>
+        can foster a stronger bond between parents and children. They make
+        bedtime more engaging and enjoyable, providing a unique way to spark
+        your child's imagination. TalePod allows you to create custom stories
+        tailored to your child's preferences, making each night a special
+        adventure.
       </Typography>
 
       <Typography variant="h5" gutterBottom>
         Introducing TalePod
       </Typography>
       <Typography variant="body1" paragraph>
-        TalePod is a revolutionary app designed to help you create personalized
-        bedtime stories effortlessly. With TalePod, you can craft unique
-        narratives that resonate with your child's interests, ensuring an
-        exciting and immersive bedtime experience.
+        TalePod is a revolutionary app designed to help you
+        <Link
+          sx={{ px: "5px" }}
+          color="text.secondary"
+          href={routes.termsAndConditions}
+          onClick={handleFooterLinkItemClick("create")}
+        >
+          create personalized bedtime stories
+        </Link>
+        effortlessly. With TalePod, you can craft unique narratives that
+        resonate with your child's interests, ensuring an exciting and immersive
+        bedtime experience.
       </Typography>
 
       <Typography variant="h5" gutterBottom>
@@ -115,19 +148,20 @@ const PersonalizedBedtimeStoryText = () => {
         TalePod transforms bedtime into a magical experience by offering
         personalized stories that cater to your child's unique preferences. By
         using TalePod, you can create memorable bedtime moments that nurture
-        your child's imagination and foster a love for storytelling. Download
-        TalePod today and start crafting the perfect bedtime story for your
-        little one.
+        your child's imagination and foster a love for storytelling. Start
+        crafting the perfect bedtime story for your little one.
       </Typography>
 
       <Box width="100%" textAlign="center">
         <Button
           size="large"
           color="primary"
+          LinkComponent="a"
           variant="contained"
           sx={{ my: 2, px: 2 }}
+          href={routes.create}
           endIcon={<AutoFixHighOutlined />}
-          onClick={handleStartNowClick}
+          onClick={handleFooterLinkItemClick("create")}
         >
           Create Story
         </Button>
