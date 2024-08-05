@@ -3,7 +3,7 @@ import {
   AutoFixHighOutlined,
   HomeOutlined,
   InstallMobileOutlined,
-  Menu,
+  MenuOutlined,
   ModeNightOutlined,
   RefreshOutlined,
   SearchOutlined,
@@ -346,7 +346,7 @@ const ApplicationBar = () => {
                     onClick={toggleDrawer(true)}
                     sx={{ minWidth: "30px", p: "4px" }}
                   >
-                    <Menu />
+                    <MenuOutlined fontSize="medium" />
                   </Button>
 
                   <Drawer

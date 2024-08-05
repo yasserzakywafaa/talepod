@@ -1,0 +1,50 @@
+$color-background: #eaecfa;
+$color-text: #00bfff;
+$color-loader: #ad932d;
+
+.splitting-rectangle-loader {
+  top: 50%;
+  font-size: 1.5rem;
+  line-height: 50px;
+  text-align: center;
+  position: absolute;
+  text-transform: capitalize;
+  color: $color-text;
+  letter-spacing: 0.2em;
+
+  &::before,
+  &::after {
+    content: "";
+    display: block;
+    width: 15px;
+    height: 15px;
+    background: $color-loader;
+    position: absolute;
+    animation: load 1.5s infinite alternate ease-in-out;
+  }
+
+  &::before {
+    top: 0;
+  }
+
+  &::after {
+    bottom: 0;
+  }
+}
+
+@keyframes load {
+  0% {
+    left: -10%;
+    height: 30px;
+    width: 15px;
+  }
+  50% {
+    height: 8px;
+    width: 40px;
+  }
+  100% {
+    left: 100%;
+    height: 30px;
+    width: 15px;
+  }
+}

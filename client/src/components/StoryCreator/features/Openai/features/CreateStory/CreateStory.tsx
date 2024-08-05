@@ -2,7 +2,7 @@ import { Box, Stack, TextField } from "@mui/material";
 
 // import { AutoAwesome } from "@mui/icons-material";
 // import { FormEvent } from "react";
-import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
+import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 // import ReactMarkdown from "react-markdown";
 // import TextToSpeechGeneration from "../CreateStoryAudio/CreateStoryAudio";
 import { useOpenaiContext } from "../../store/Provider";

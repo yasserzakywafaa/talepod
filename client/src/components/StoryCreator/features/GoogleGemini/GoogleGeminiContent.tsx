@@ -1,19 +1,9 @@
-import {
-  Box,
-  // Button,
-  // Card,
-  // CardContent,
-  // Chip,
-  // Divider,
-  Stack,
-  TextField,
-  // Typography,
-} from "@mui/material";
-// import { ChangeEvent, FormEvent } from "react";
+import { Box, Stack, TextField } from "@mui/material";
 
 // import { Google } from "@mui/icons-material";
-import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
+import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import { useGoogleGeminiContext } from "./store/Provider";
+// import { ChangeEvent, FormEvent } from "react";
 
 export const GoogleGeminiContent = () => {
   const { store } = useGoogleGeminiContext();

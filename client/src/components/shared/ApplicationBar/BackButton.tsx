@@ -13,7 +13,7 @@ const BackButton = (props: BackButtonProps) => {
       sx={{ color: (theme) => theme.palette.primary.main }}
       onClick={props.onClick}
     >
-      <ArrowBackIosNew />
+      <ArrowBackIosNew fontSize="medium" />
     </IconButton>
   );
 };

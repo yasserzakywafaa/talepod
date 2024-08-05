@@ -17,6 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 
+import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 
@@ -99,6 +100,10 @@ const PersonalizedBedtimeStoryText = () => {
         bedtime experience.
       </Typography>
 
+      <Box sx={{ maxWidth: "300px", margin: "auto" }}>
+        <RandomImage />
+      </Box>
+
       <Typography variant="h5" gutterBottom>
         Benefits of Using TalePod
       </Typography>
@@ -144,6 +149,10 @@ const PersonalizedBedtimeStoryText = () => {
         </ListItem>
       </List>
 
+      <Box sx={{ maxWidth: "300px", margin: "auto" }}>
+        <RandomImage />
+      </Box>
+
       <Typography variant="body1" paragraph>
         TalePod transforms bedtime into a magical experience by offering
         personalized stories that cater to your child's unique preferences. By
@@ -163,7 +172,7 @@ const PersonalizedBedtimeStoryText = () => {
           endIcon={<AutoFixHighOutlined />}
           onClick={handleFooterLinkItemClick("create")}
         >
-          Create Story
+          Get Started for Free
         </Button>
       </Box>
     </Container>

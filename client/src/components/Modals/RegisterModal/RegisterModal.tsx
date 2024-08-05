@@ -4,11 +4,11 @@ import { Close } from "@mui/icons-material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import RegisterForm from "./features/RegisterForm/RegisterForm";
 import SocialRegister from "./features/SocialRegister/SocialRegister";
-import { useRegisterModalContext } from "./store/Provider";
-import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
 import { useApplicationContext } from "src/application/store/Provider";
+import { useRegisterModalContext } from "./store/Provider";
 
 export const RegisterModal = () => {
   const { manager: applicationManager } = useApplicationContext();

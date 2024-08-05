@@ -4,11 +4,11 @@ import { Close } from "@mui/icons-material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import LoginForm from "./features/LoginForm/LoginForm";
 import SocialLogin from "./features/SocialLogin/SocialLogin";
-import { useLoginModalContext } from "./store/Provider";
 import { useApplicationContext } from "src/application/store/Provider";
-import LoaderSpinner from "src/components/shared/Loading/LoaderSpinner";
+import { useLoginModalContext } from "./store/Provider";
 
 export const LoginModal = () => {
   const { manager: applicationManager } = useApplicationContext();
@@ -58,7 +58,7 @@ export const LoginModal = () => {
 
         <DialogContent>
           {state.isFetching && <LoaderSpinner style={{ position: "fixed" }} />}
-          
+
           <Box
             display="flex"
             flexDirection="column"

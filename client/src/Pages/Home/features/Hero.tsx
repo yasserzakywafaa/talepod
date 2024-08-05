@@ -39,29 +39,6 @@ export default function Hero() {
           pb: { xs: 8, sm: 12 },
         }}
       >
-        <Box sx={{ maxWidth: "300px" }}>
-          {/* <img
-            width="100%"
-            height="100%"
-            loading="lazy"
-            src={MainCharacter}
-            alt="home-page-image"
-            aria-label="rabbit-sleeping-on-a-pillow"
-          /> */}
-
-          <picture>
-            <source srcSet={MainCharacter} type="image/webp" />
-            <img
-              width="100%"
-              height="100%"
-              loading="lazy"
-              src={MainCharacter}
-              alt="home-page-image"
-              aria-label="rabbit-sleeping-on-a-pillow"
-            />
-          </picture>
-        </Box>
-
         <Typography
           variant="h1"
           sx={{
@@ -110,7 +87,6 @@ export default function Hero() {
             flexWrap: "wrap",
             alignItems: "center",
             justifyContent: "space-around",
-            width: { xs: "100%", sm: "40%" },
           }}
         >
           <Button
@@ -123,21 +99,35 @@ export default function Hero() {
             endIcon={<AutoFixHighOutlined />}
             onClick={handleCallToActionClick("create")}
           >
-            Create Story
+            Create for free
           </Button>
 
           <Button
             size="large"
             color="secondary"
             LinkComponent="a"
-            variant="contained"
+            variant="outlined"
             href={routes.create}
-            sx={{ my: 2, px: 2 }}
+            sx={{ my: 2, ml: 1, px: 2 }}
             endIcon={<SearchOutlined />}
             onClick={handleCallToActionClick("explore")}
           >
             Explore
           </Button>
+        </Box>
+
+        <Box sx={{ maxWidth: "300px" }}>
+          <picture>
+            <source srcSet={MainCharacter} type="image/webp" />
+            <img
+              width="100%"
+              height="100%"
+              loading="lazy"
+              src={MainCharacter}
+              alt="home-page-image"
+              aria-label="rabbit-sleeping-on-a-pillow"
+            />
+          </picture>
         </Box>
       </Container>
     </Box>

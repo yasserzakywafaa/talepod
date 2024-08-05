@@ -1,12 +1,14 @@
 import "./Page.scss";
 
 import { Container, ContainerTypeMap } from "@mui/material";
+import LoaderSpinner, {
+  LoaderComponentNameEnum,
+} from "../Loader/LoaderSpinner";
 import { darkTheme, lightTheme } from "src/application/shared/themes";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import ApplicationBar from "../ApplicationBar/ApplicationBar";
 import Footer from "../Footer/Footer";
-import LoaderSpinner from "../Loading/LoaderSpinner";
 import { Notification } from "../Notification/Notification";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import ScrollToTopButton from "../BackToTopButton/BackToTopButton";
@@ -19,9 +21,10 @@ export interface PageProps {
   title: string;
   className?: string;
   isLoading?: boolean;
+  swipeToRefresh?: boolean;
   children?: React.ReactNode;
   swipeDownToRefreshThreshold?: number;
-  swipeToRefresh?: boolean;
+  loaderComponentName?: LoaderComponentNameEnum;
   onRefresh?: () => Promise<void>;
   containerProps?: OverridableComponent<ContainerTypeMap<{}, "div">>;
 }
@@ -34,6 +37,7 @@ const Page = (params: PageProps) => {
     className = "",
     containerProps = {},
     swipeToRefresh,
+    loaderComponentName,
     swipeDownToRefreshThreshold,
     onRefresh,
   } = params;
@@ -90,7 +94,9 @@ const Page = (params: PageProps) => {
         className={pageClassNames}
         {...containerProps}
       >
-        {isPageLoading && <LoaderSpinner />}
+        {isPageLoading && (
+          <LoaderSpinner loaderComponentName={loaderComponentName} />
+        )}
 
         {swipeToRefresh && (
           <SwipeToRefresh
@@ -104,7 +110,6 @@ const Page = (params: PageProps) => {
         <ApplicationBar />
 
         <ScrollToTopButton />
-
 
         <>{children}</>
 

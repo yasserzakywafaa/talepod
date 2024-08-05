@@ -15,6 +15,7 @@ import {
 } from "@mui/icons-material";
 
 import Box from "@mui/material/Box";
+import { LoaderComponentNameEnum } from "src/components/shared/Loader/LoaderSpinner";
 import Page from "src/components/shared/Page/Page";
 import StoryCreator from "src/components/StoryCreator/StoryCreator";
 import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.webp";
@@ -44,6 +45,7 @@ const CreateStoryPage = () => {
       isLoading={
         isPageFetching || isCreateStoryFetching || isCreateAudioFetching
       }
+      loaderComponentName={LoaderComponentNameEnum.CreateStory}
     >
       <Container>
         <Box component="div" className="bg-image-character">

@@ -38,6 +38,7 @@ export const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
+          textTransform: "capitalize",
           "&.Mui-disabled": {
             opacity: "0.7",
             cursor: "not-allowed",

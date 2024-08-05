@@ -5,7 +5,7 @@ import { FC, Suspense } from "react";
 
 import AppContent from "./AppContent";
 import AppContextProviders from "./AppContextProviders";
-import LoaderSpinner from "../components/shared/Loading/LoaderSpinner";
+import LoaderSpinner from "../components/shared/Loader/LoaderSpinner";
 
 const App: FC = () => {
   return (
