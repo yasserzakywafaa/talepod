@@ -39,7 +39,6 @@ const Homepage = () => {
         {/* <Divider /> */}
 
         <FAQ />
-        <Divider />
       </Box>
     </Page>
   );

@@ -62,7 +62,7 @@ const ExplorePage: React.FC = () => {
 
   return (
     <Page
-      isLoading={isFetching}
+      isLoading={isFetching && !stories.length}
       className="explore-page"
       title="Explore Bedtime Stories | TalePod"
       loaderComponentName={LoaderComponentNameEnum.BedtimeStories}
@@ -170,7 +170,7 @@ const ExplorePage: React.FC = () => {
         )}
 
         {/* No Stories Found */}
-        {!stories.length && (
+        {!isFetching && !stories.length && (
           <NoStoriesFound
             handleOnCreateClick={handleOnCreateClick}
             handleClearFilters={handleClearFilters}
