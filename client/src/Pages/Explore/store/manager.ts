@@ -50,12 +50,16 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
 
   const handleUpdateUrlByFilters = (): UpdateUrlByFiltersResults => {
     if (!window.location.search.length) {
+      const activeFiltersCount = getActiveFiltersCount(
+        initialFiltersWithPaging
+      );
       // Append empty filters to URL
       replaceUrl(initialFiltersWithPaging);
       const newFilters = {
         parsedFilters: initialFiltersWithPaging,
-        newActiveFiltersCount: 0,
+        newActiveFiltersCount: activeFiltersCount,
       };
+      store.setActiveFiltersCount(activeFiltersCount);
 
       return newFilters;
     }
@@ -70,11 +74,6 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
       store.updateFilters(key, value);
     });
     store.setActiveFiltersCount(getActiveFiltersCount(parsedFilters));
-
-    console.log("ℹ️  handleUpdateUrlByFilters:>>>", {
-      getActiveFiltersCount: getActiveFiltersCount(parsedFilters),
-      activeFiltersCount: store.state.activeFiltersCount,
-    });
 
     const newFilters = {
       parsedFilters,

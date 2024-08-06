@@ -1,6 +1,6 @@
 import "./Page.scss";
 
-import { Container, ContainerTypeMap } from "@mui/material";
+import { Container, ContainerTypeMap, Divider } from "@mui/material";
 import LoaderSpinner, {
   LoaderComponentNameEnum,
 } from "../Loader/LoaderSpinner";
@@ -94,10 +94,6 @@ const Page = (params: PageProps) => {
         className={pageClassNames}
         {...containerProps}
       >
-        {isPageLoading && (
-          <LoaderSpinner loaderComponentName={loaderComponentName} />
-        )}
-
         {swipeToRefresh && (
           <SwipeToRefresh
             threshold={swipeDownToRefreshThreshold}
@@ -113,7 +109,16 @@ const Page = (params: PageProps) => {
 
         <>{children}</>
 
-        <Footer />
+        {isPageLoading && (
+          <LoaderSpinner loaderComponentName={loaderComponentName} />
+        )}
+
+        {!isPageLoading && (
+          <>
+            <Divider sx={{ my: 4 }} />
+            <Footer />
+          </>
+        )}
       </Container>
     </>
   );

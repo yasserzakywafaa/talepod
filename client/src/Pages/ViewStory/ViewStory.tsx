@@ -50,7 +50,6 @@ const ViewStoryPage: React.FC = () => {
   const hasDirectionRtl = story && story.profileInfo.language.value === "ar";
 
   const handleOnCreateAudioClick = async () => {
-    // handleIsFetching(true);
     handleIsCreatingAudio(true);
     if (story.mainStory) {
       try {
@@ -68,7 +67,6 @@ const ViewStoryPage: React.FC = () => {
         });
       }
     }
-    // handleIsFetching(false);
     handleIsCreatingAudio(false);
   };
 
@@ -102,7 +100,7 @@ const ViewStoryPage: React.FC = () => {
   return (
     <Page
       isLoading={isFetching || isCreatingAudio}
-      // isLoading={!isFetching}
+      // isLoading={!isCreatingAudio}
       className="view-story-page"
       title={`Bedtime story on TalePod | ${story && story.title}`}
       loaderComponentName={
