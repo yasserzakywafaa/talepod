@@ -10,6 +10,19 @@ const routes = {
   checkout: `/checkout`,
   unauthorized: `/unauthorized`,
   notfound: `/notfound`,
+  // Landing Pages
+  landingPages: {
+    bedtimeStoriesForKids: "/bedtime-stories-for-kids",
+    bedtimeStoriesForAdults: "/bedtime-stories-for-adults",
+    shortBedtimeStories: "/short-bedtime-stories",
+    christmasBedtimeStories: "/christmas-bedtime-stories",
+    bedtimeStoriesForGirlfriend: "/bedtime-stories-for-girlfriend",
+    bedtimeStoriesForToddlers: "/bedtime-stories-for-toddlers",
+    educationalBedtimeStories: "/educational-bedtime-stories",
+    babyBedtimeStories: "/baby-bedtime-stories",
+    bestBedtimeStories: "/best-bedtime-stories",
+    quickBedtimeStories: "/quick-bedtime-stories",
+  },
 };
 
 export default routes;

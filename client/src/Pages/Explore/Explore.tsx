@@ -104,7 +104,7 @@ const ExplorePage: React.FC = () => {
           </Box>
         )}
 
-        {stories.length && (
+        {stories.length ? (
           <>
             <Box component="div" className="bg-image-character">
               <RandomImage />
@@ -162,14 +162,18 @@ const ExplorePage: React.FC = () => {
               </Box>
             </Box>
           </>
+        ) : (
+          <></>
         )}
 
         {/* No Stories Found */}
-        {!isFetching && !stories.length && (
+        {!isFetching && !stories.length ? (
           <NoStoriesFound
             handleOnCreateClick={handleOnCreateClick}
             handleClearFilters={handleClearFilters}
           />
+        ) : (
+          <></>
         )}
       </Container>
     </Page>
