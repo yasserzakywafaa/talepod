@@ -10,6 +10,6 @@ Disallow: /
 User-agent: *
 Disallow: /private/
 Allow: /
-Allow: /bedtime-stories/
 Allow: /create/
-Allow: /bedtime-stories/id
+Allow: /bedtime-stories/
+Allow: /bedtime-stories/:slug
