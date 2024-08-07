@@ -19,7 +19,7 @@ export const useDetectBrowserType = () => {
   };
   const userAgent = window.navigator.userAgent.toLowerCase();
 
-  const hasIndex = (args: string) => userAgent.indexOf(args) !== -1;
+  const hasIndex = (args: string) => userAgent.indexOf(args.toLowerCase()) !== -1;
 
   // Detects if device is in standalone mode
   const isInStandaloneMode = Boolean(

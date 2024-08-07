@@ -21,14 +21,14 @@
   "scope_extensions": [{ "origin": "*.talepod.com" }],
   "shortcuts": [
     {
-      "name": "Create Story",
+      "name": "Create Bedtime Story",
       "url": "/create",
-      "description": "Create New Custom Story"
+      "description": "Create New Personalized Story"
     },
     {
-      "name": "Explore",
-      "url": "/explore",
-      "description": "Get inspired by other stories"
+      "name": "Bedtime Stories",
+      "url": "/bedtime-stories",
+      "description": "Get inspired by our rich library of magical bedtime stories"
     }
   ],
   "categories": [

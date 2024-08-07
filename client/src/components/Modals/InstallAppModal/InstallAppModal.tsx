@@ -6,6 +6,7 @@ import InstallWebAppOnAndroid from "./features/InstallWebAppOnAndroid";
 import InstallWebAppOnIos from "./features/InstallWebAppOnIos";
 import InstallWebAppOnMacOs from "./features/InstallWebAppOnMacOs";
 import { useDetectBrowserType } from "src/shared/hooks/useDetectBrowserType";
+import InstallWebAppOnWindows from "./features/InstallWebAppOnWindows";
 
 interface InstallAppModalProps {
   isInstallAppDialogOpen: boolean;
@@ -14,7 +15,7 @@ interface InstallAppModalProps {
 
 export const InstallAppModal = (props: InstallAppModalProps) => {
   const { isInstallAppDialogOpen, setIsInstallAppDialogOpen } = props;
-  const { isAndroid, isIos, isMacOs } = useDetectBrowserType();
+  const { isAndroid, isIos, isMacOs, isWindows } = useDetectBrowserType();
 
   const handleOnDialogClose = () => setIsInstallAppDialogOpen(false);
 
@@ -29,6 +30,8 @@ export const InstallAppModal = (props: InstallAppModalProps) => {
           {isIos && <InstallWebAppOnIos />}
 
           {isMacOs && <InstallWebAppOnMacOs />}
+
+          {isWindows && <InstallWebAppOnWindows />}
         </DialogContent>
       </Dialog>
     </Box>
