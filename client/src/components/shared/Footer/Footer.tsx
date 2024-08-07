@@ -173,9 +173,11 @@ const Footer = () => {
             </span>{" "}
             in Switzerland{" "}
             <img
+              width="20px"
+              height="20px"
               src={SwitzerlandFlag}
               alt="Switzerland Flag"
-              style={{ width: "20px", verticalAlign: "middle" }}
+              style={{ verticalAlign: "middle" }}
             />
           </Typography>
 
