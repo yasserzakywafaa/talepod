@@ -9,30 +9,33 @@ import {
   SearchOutlined,
   WbSunnyOutlined,
 } from "@mui/icons-material";
+import {
+  AppBar,
+  Box,
+  Button,
+  Container,
+  Divider,
+  Drawer,
+  MenuItem,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { useMatch, useNavigate } from "react-router-dom";
 
-import AppBar from "@mui/material/AppBar";
 import BackButton from "./BackButton";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import { Divider } from "@mui/material";
-import Drawer from "@mui/material/Drawer";
-// import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
-// import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { InstallAppModal } from "src/components/Modals/InstallAppModal/InstallAppModal";
-// import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
-// import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal";
-import MenuItem from "@mui/material/MenuItem";
 import ToggleColorMode from "src/components/shared/ToggleColorMode";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import routes from "src/application/routes";
 import { scrollToSection } from "src/shared/utils/scrollTo";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useDetectBrowserType } from "src/shared/hooks/useDetectBrowserType";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useState } from "react";
+
+// import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
+// import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
+// import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
+// import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal";
 
 const ApplicationBar = () => {
   const navigate = useNavigate();
@@ -145,7 +148,7 @@ const ApplicationBar = () => {
             >
               {!isTablet && (
                 <>
-                  <Box sx={{ display: { xs: "none", md: "flex" } }}>
+                  <Box role="menu" sx={{ display: { xs: "none", md: "flex" } }}>
                     <MenuItem onClick={handleOnMenuItemClick("home")}>
                       <HomeOutlined
                         fontSize="medium"
@@ -356,6 +359,7 @@ const ApplicationBar = () => {
                     onClose={toggleDrawer(false)}
                   >
                     <Box
+                      role="menu"
                       sx={{
                         p: 1,
                         pt: 2,

@@ -139,7 +139,6 @@ export default function Hero() {
               <img
                 width="100%"
                 height="100%"
-                loading="lazy"
                 src={MainCharacter}
                 alt="home-page-image"
                 aria-label="rabbit-sleeping-on-a-pillow"

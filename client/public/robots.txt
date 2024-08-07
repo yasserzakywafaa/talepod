@@ -12,4 +12,6 @@ Disallow: /private/
 Allow: /
 Allow: /create/
 Allow: /bedtime-stories/
-Allow: /bedtime-stories/:slug
+
+# The following line will ensure that any URL under /bedtime-stories/ will be allowed
+Allow: /bedtime-stories/*
