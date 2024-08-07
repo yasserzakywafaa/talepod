@@ -36,7 +36,7 @@ const getLanguageFromUserLanguage = (): string[] | undefined => {
 
 export const getExploreInitialState = (): ExploreInitialState => {
   return {
-    isFetching: false,
+    isFetching: true,
     stories: [],
     isFiltersPanelOpen: false,
     activeFiltersCount: 0,

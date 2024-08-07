@@ -66,6 +66,7 @@ const ApplicationBar = () => {
     isCheckoutPage: !!useMatch(routes.checkout),
     isPrivacyPolicy: !!useMatch(routes.privacyPolicy),
     isTermsOfService: !!useMatch(routes.termsAndConditions),
+    isLandingPage: !!window.location.pathname.includes("bedtime-stories"),
   };
   const isAppBarVisible = Object.values(pagesMatch).every((p) => p === false);
 

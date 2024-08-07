@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
+import Unicorn from "../../../assets/images/unicorn_with_a_magic_wand_and_a_book.webp";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 
@@ -108,7 +109,12 @@ const PersonalizedBedtimeStoryText = () => {
           </Box>
 
           <Box sx={{ maxWidth: { sm: "50%" }, margin: "auto" }}>
-            <RandomImage />
+            <img
+              src={Unicorn}
+              alt="unicorn with a magic wand and a book"
+              width="100%"
+              height="100%"
+            />
           </Box>
         </CardContent>
       </Card>

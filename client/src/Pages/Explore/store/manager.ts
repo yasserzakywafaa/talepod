@@ -126,6 +126,10 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
     store.setActiveFiltersCount(0);
     store.toggleFiltersPanel(false);
     replaceUrl(initialFiltersWithPaging);
+    // replaceUrl({
+    //   ...initialFiltersWithPaging,
+    //   language: [],
+    // });
     await handleFetchStories(initialFiltersWithPaging, false);
   };
 

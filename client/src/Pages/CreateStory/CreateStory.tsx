@@ -45,6 +45,9 @@ const CreateStoryPage = () => {
       isLoading={
         isPageFetching || isCreateStoryFetching || isCreateAudioFetching
       }
+      // isLoading={
+      //   !isPageFetching || !isCreateStoryFetching || !isCreateAudioFetching
+      // }
       loaderComponentName={LoaderComponentNameEnum.CreateStory}
     >
       <Container>

@@ -11,17 +11,47 @@ import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
   const navigate = useNavigate();
-  const footerProductLinks = [
-    { text: "Bedtime stories for kids", href: routes.explore },
-    { text: "Bedtime stories for adults", href: routes.explore },
-    { text: "Short bedtime stories", href: routes.explore },
-    { text: "Christmas bedtime stories", href: routes.explore },
-    { text: "Bedtime stories for girlfriend", href: routes.explore },
-    { text: "Bedtime stories for toddlers", href: routes.explore },
-    { text: "Educational bedtime stories", href: routes.explore },
-    { text: "Baby bedtime stories", href: routes.explore },
-    { text: "Best bedtime stories", href: routes.explore },
-    { text: "Quick bedtime stories", href: routes.explore },
+  const footerLandingPagesLinks = [
+    {
+      text: "Bedtime stories for kids",
+      href: routes.landingPages.bedtimeStoriesForKids,
+    },
+    {
+      text: "Bedtime stories for adults",
+      href: routes.landingPages.bedtimeStoriesForAdults,
+    },
+    {
+      text: "Short bedtime stories",
+      href: routes.landingPages.shortBedtimeStories,
+    },
+    {
+      text: "Christmas bedtime stories",
+      href: routes.landingPages.christmasBedtimeStories,
+    },
+    {
+      text: "Bedtime stories for girlfriend",
+      href: routes.landingPages.bedtimeStoriesForGirlfriend,
+    },
+    {
+      text: "Bedtime stories for toddlers",
+      href: routes.landingPages.bedtimeStoriesForToddlers,
+    },
+    {
+      text: "Educational bedtime stories",
+      href: routes.landingPages.educationalBedtimeStories,
+    },
+    {
+      text: "Baby bedtime stories",
+      href: routes.landingPages.babyBedtimeStories,
+    },
+    {
+      text: "Best bedtime stories",
+      href: routes.landingPages.bestBedtimeStories,
+    },
+    {
+      text: "Quick bedtime stories",
+      href: routes.landingPages.quickBedtimeStories,
+    },
   ];
 
   const handleFooterLinkItemClick =
@@ -73,8 +103,9 @@ const Footer = () => {
           flexDirection="row"
           width={{ sm: "60%" }}
           justifyContent={{ sm: "flex-end" }}
+          className="footer-landing-pages-links"
         >
-          {footerProductLinks.map((link, index) => (
+          {footerLandingPagesLinks.map((link, index) => (
             <Link
               key={index}
               href={link.href}

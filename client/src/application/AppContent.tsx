@@ -53,6 +53,12 @@ const AppContent = () => {
             element={<ViewStoryPage />}
           />
 
+          {/* Landing Pages */}
+          {Object.values(routes.landingPages).map((route: string) => (
+            <Route index path={route} element={<ExplorePage />} />
+          ))}
+          {/* End of Landing Pages */}
+
           <Route path={routes.privacyPolicy} element={<PrivacyPolicyPage />} />
 
           <Route

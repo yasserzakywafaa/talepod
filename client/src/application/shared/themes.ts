@@ -1,12 +1,12 @@
 import { createTheme } from "@mui/material/styles";
 
-const white = "#FFFFFF";
-const charcoal = "#333333"; // Charcoal
-const darkCharcoal = "#121212"; // Dark Charcoal
-const primaryColor = "#ad932d"; // Dark Goldenrod
-const secondaryColorForDarkTheme = "#00BFFF"; // Deep Sky Blue
-const secondaryColorForLightTheme = "#0080ab"; // Dark Deep Sky Blue
-const darkBackground = "linear-gradient(to top, #000000, #2E3B4E)"; // Night Sky
+export const white = "#FFFFFF";
+export const charcoal = "#333333"; // Charcoal
+export const darkCharcoal = "#121212"; // Dark Charcoal
+export const primaryColor = "#ad932d"; // Dark Goldenrod
+export const secondaryColorForDarkTheme = "#00BFFF"; // Deep Sky Blue
+export const secondaryColorForLightTheme = "#0080ab"; // Dark Deep Sky Blue
+export const darkBackground = "linear-gradient(to top, #000000, #2E3B4E)"; // Night Sky
 
 export const theme = createTheme({
   palette: {

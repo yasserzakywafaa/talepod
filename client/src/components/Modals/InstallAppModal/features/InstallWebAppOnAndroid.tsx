@@ -66,7 +66,7 @@ const InstallWebAppOnAndroid: React.FC = () => {
       alignItems="center"
     >
       <Typography variant="body1" textAlign="center" mb={2}>
-        Install this app on your device and enjoy the mobile application
+        Install this app on your device and enjoy the native application
         functionality
       </Typography>
 

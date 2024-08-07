@@ -113,12 +113,12 @@ const Page = (params: PageProps) => {
           <LoaderSpinner loaderComponentName={loaderComponentName} />
         )}
 
-        {!isPageLoading && (
-          <>
-            <Divider sx={{ my: 4 }} />
-            <Footer />
-          </>
-        )}
+        {/* {!isPageLoading && ( */}
+        {/* // <> */}
+        <Divider sx={{ my: 4 }} />
+        <Footer />
+        {/* </> */}
+        {/* // )} */}
       </Container>
     </>
   );
