@@ -63,17 +63,16 @@ const ExplorePage: React.FC = () => {
   return (
     <Page
       isLoading={isFetching && !stories.length}
+      // isLoading={isFetching}
+      // isLoading={!isFetching}
       className="explore-page"
-      title="Explore Bedtime Stories | TalePod"
+      title="Explore Bedtime Stories on TalePod"
       loaderComponentName={LoaderComponentNameEnum.BedtimeStories}
     >
-      <FiltersPanel />
-
-      <Box component="div" className="bg-image-character">
-        <RandomImage />
-      </Box>
-
       <Container className="explore-container">
+        {/* Modals */}
+        <FiltersPanel />
+
         {/* Filters */}
         {!isFetching && (
           <Box
@@ -105,8 +104,12 @@ const ExplorePage: React.FC = () => {
           </Box>
         )}
 
-        {stories.length !== 0 && (
+        {stories.length && (
           <>
+            <Box component="div" className="bg-image-character">
+              <RandomImage />
+            </Box>
+
             {/* Stories List */}
             <Box
               className="explore-container-snap-area"
@@ -130,26 +133,18 @@ const ExplorePage: React.FC = () => {
                 justifyContent: "center",
                 mt: { xs: 0, sm: 1 },
               }}
+              className="explore-footer"
             >
               {pagingInfo.totalPagesCount && pagingInfo.totalPagesCount > 1 ? (
-                <Box
-                  sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Pagination
-                    size="large"
-                    color="primary"
-                    shape="rounded"
-                    variant="outlined"
-                    page={pagingInfo.pageNumber}
-                    count={pagingInfo.totalPagesCount}
-                    onChange={handlePaginationItemClick}
-                  />
-                </Box>
+                <Pagination
+                  size="medium"
+                  color="primary"
+                  shape="rounded"
+                  variant="outlined"
+                  page={pagingInfo.pageNumber}
+                  count={pagingInfo.totalPagesCount}
+                  onChange={handlePaginationItemClick}
+                />
               ) : (
                 <></>
               )}

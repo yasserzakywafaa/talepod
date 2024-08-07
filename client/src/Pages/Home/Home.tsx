@@ -6,12 +6,10 @@ import FAQ from "./features/FAQ";
 import Hero from "./features/Hero";
 import Page from "src/components/shared/Page/Page";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
-// import Highlights from "./features/Highlights";
-// import Features from "./features/Features";
-// import Pricing from "./features/Pricing";
 import { useApplicationContext } from "src/application/store/Provider";
 
-// import StoryCreator from "src/components/StoryCreator/StoryCreator";
+// import Features from "./features/Features";
+// import Pricing from "./features/Pricing";
 // import Testimonials from "./features/Testimonials";
 
 const Homepage = () => {
@@ -26,19 +24,15 @@ const Homepage = () => {
       <Hero />
 
       <Box sx={{ backgroundColor: "transparent" }}>
+        <PersonalizedBedtimeStoryText />
+        <Divider />
+        <FAQ />
+        {/* <Divider /> */}
         {/* <Features /> */}
         {/* <Divider /> */}
         {/* <Testimonials /> */}
         {/* <Divider /> */}
-        {/* <Highlights /> */}
-        {/* <Divider /> */}
-        <PersonalizedBedtimeStoryText />
-        <Divider />
-
         {/* <Pricing /> */}
-        {/* <Divider /> */}
-
-        <FAQ />
       </Box>
     </Page>
   );

@@ -22,9 +22,7 @@ const RandomImage: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <img src={randomImage} alt={`Random Image`} width="100%" height="100%" />
-    </div>
+    <img src={randomImage} alt={`Random Image`} width="100%" height="100%" />
   );
 };
 

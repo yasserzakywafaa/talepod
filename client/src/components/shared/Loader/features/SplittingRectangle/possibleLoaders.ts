@@ -1,0 +1,30 @@
+export const possibleAudioLoaders = [
+  "Enchanting Audio",
+  "Creating Melody",
+  "Composing Sound",
+  "Generating Tunes",
+  "Harmonizing Notes",
+  "Sculpting Waves",
+  "Crafting Harmony",
+  "Orchestrating Rhythm",
+  "Arranging Symphonies",
+  "Designing Structure",
+  "Building Cadences",
+  "Blending Chords",
+];
+
+export const possibleStoryLoaders = [
+  "Crafting Adventures",
+  "Weaving Tales",
+  "Creating Narratives",
+  "Inventing Stories",
+  "Imagining Journeys",
+  "Composing Fantasies",
+  "Formulating Plots",
+  "Generating Myths",
+  "Building Legends",
+  "Constructing Epics",
+  "Designing Quests",
+  "Writing Chronicles",
+  "Spinning Yarns",
+];
