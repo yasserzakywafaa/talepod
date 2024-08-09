@@ -1,63 +1,77 @@
-import { Box, Divider, IconButton } from "@mui/material";
+import { Avatar, Box, Button, Typography } from "@mui/material";
+import { Close, LockOutlined } from "@mui/icons-material";
 
-import { Close } from "@mui/icons-material";
+// import { Close } from "@mui/icons-material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
-import RegisterForm from "./features/RegisterForm/RegisterForm";
+// import RegisterForm from "./features/RegisterForm/RegisterForm";
 import SocialRegister from "./features/SocialRegister/SocialRegister";
-import { useApplicationContext } from "src/application/store/Provider";
 import { useRegisterModalContext } from "./store/Provider";
 
 export const RegisterModal = () => {
-  const { manager: applicationManager } = useApplicationContext();
   const {
     store: { state, handleIsFetching, handleToggleRegisterModal },
   } = useRegisterModalContext();
 
+  const onCloseModal = (
+    event: {},
+    reason: "backdropClick" | "escapeKeyDown"
+  ) => {
+    if (reason && reason === "backdropClick") return;
+
+    handleCloseModal();
+  };
+
   const handleCloseModal = () => {
     handleIsFetching(false);
     handleToggleRegisterModal();
-    applicationManager.handleIsFetching(false);
   };
 
-  const handleOnFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const formJson = Object.fromEntries((formData as any).entries());
-    console.log("RegisterModal:>>> handleOnFormSubmit:>>>", {
-      formJson,
-    });
-    // handleCloseModal();
-  };
+  // const handleOnFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   const formData = new FormData(event.currentTarget);
+  //   const formJson = Object.fromEntries((formData as any).entries());
+  //   console.log("RegisterModal:>>> handleOnFormSubmit:>>>", {
+  //     formJson,
+  //   });
+  //   // handleCloseModal();
+  // };
 
   return (
     <>
       <Dialog
+        maxWidth="sm"
         scroll="body"
+        fullWidth={true}
         open={state.isVisible}
-        onClose={handleCloseModal}
-        PaperProps={{
-          component: "form",
-          onSubmit: handleOnFormSubmit,
-        }}
+        onClose={onCloseModal}
       >
-        {/* <DialogTitle>Log in</DialogTitle> */}
-        <IconButton
-          aria-label="close"
-          onClick={handleCloseModal}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-          }}
-        >
-          <Close />
-        </IconButton>
+        <DialogContent sx={{ position: "relative" }}>
+          {state.isFetching && <LoaderSpinner position="absolute" />}
 
-        <DialogContent>
-          {state.isFetching && <LoaderSpinner style={{ position: "fixed" }} />}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Avatar
+              sx={{
+                m: 1,
+                bgcolor: "transparent",
+                border: " 1px solid #000",
+                borderColor: "primary.main",
+              }}
+            >
+              <LockOutlined color="primary" />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Create a new account
+            </Typography>
+          </Box>
 
           <Box
             display="flex"
@@ -69,7 +83,7 @@ export const RegisterModal = () => {
             }}
             className="login-form-wrapper"
           >
-            <Box
+            {/* <Box
               display="flex"
               alignItems="center"
               justifyContent="center"
@@ -78,9 +92,9 @@ export const RegisterModal = () => {
               }}
             >
               <RegisterForm />
-            </Box>
+            </Box> */}
 
-            <Divider sx={{ width: "50%" }} />
+            {/* <Divider sx={{ width: "50%" }} /> */}
 
             <Box
               display="flex"
@@ -91,7 +105,7 @@ export const RegisterModal = () => {
               }}
               className="social-login-wrapper"
             >
-              <SocialRegister />
+              <SocialRegister authType="register" />
             </Box>
           </Box>
         </DialogContent>
@@ -100,6 +114,17 @@ export const RegisterModal = () => {
           {/* <Button type="submit" variant="contained">
             Register
           </Button> */}
+          <Button
+            size="small"
+            type="button"
+            color="primary"
+            aria-label="close"
+            variant="contained"
+            startIcon={<Close />}
+            onClick={handleCloseModal}
+          >
+            Close
+          </Button>
         </DialogActions>
       </Dialog>
     </>

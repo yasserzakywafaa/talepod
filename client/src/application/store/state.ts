@@ -4,6 +4,20 @@ import { PaletteMode } from "@mui/material";
 export interface ApplicationInitialState {
   isFetching: boolean;
   themeMode: PaletteMode;
+  auth: Authentication;
+}
+
+export interface Authentication {
+  token: string;
+  isAuthenticated: boolean;
+  user: AuthenticateUser | null;
+}
+
+export interface AuthenticateUser {
+  id: string;
+  email: string;
+  name: string;
+  picture: string;
 }
 
 export const getApplicationInitialState = (): ApplicationInitialState => {
@@ -15,5 +29,10 @@ export const getApplicationInitialState = (): ApplicationInitialState => {
   return {
     isFetching: false,
     themeMode: appThemMode,
+    auth: {
+      token: "",
+      user: null,
+      isAuthenticated: false,
+    },
   };
 };

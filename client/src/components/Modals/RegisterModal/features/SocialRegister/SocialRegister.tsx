@@ -1,9 +1,14 @@
+import { AuthType } from "src/shared/types";
 import GoogleAuth from "src/components/shared/SocialLogins/GoogleAuth/GoogleAuth";
 
-const SocialRegister = (): JSX.Element => {
+interface SocialRegisterProps {
+  authType?: AuthType;
+}
+
+const SocialRegister = (props: SocialRegisterProps): JSX.Element => {
   return (
     <>
-      <GoogleAuth />
+      <GoogleAuth authType={props.authType || "register"} />
     </>
   );
 };

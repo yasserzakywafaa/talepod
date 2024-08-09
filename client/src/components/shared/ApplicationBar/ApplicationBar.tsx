@@ -3,14 +3,17 @@ import {
   AutoFixHighOutlined,
   HomeOutlined,
   InstallMobileOutlined,
+  LockOpenOutlined,
   MenuOutlined,
   ModeNightOutlined,
   RefreshOutlined,
   SearchOutlined,
+  VpnKeyOutlined,
   WbSunnyOutlined,
 } from "@mui/icons-material";
 import {
   AppBar,
+  Avatar,
   Box,
   Button,
   Container,
@@ -24,18 +27,17 @@ import { useMatch, useNavigate } from "react-router-dom";
 
 import BackButton from "./BackButton";
 import { InstallAppModal } from "src/components/Modals/InstallAppModal/InstallAppModal";
+import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
+import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal";
 import ToggleColorMode from "src/components/shared/ToggleColorMode";
 import routes from "src/application/routes";
 import { scrollToSection } from "src/shared/utils/scrollTo";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useDetectBrowserType } from "src/shared/hooks/useDetectBrowserType";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
+import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
+import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useState } from "react";
-
-// import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
-// import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
-// import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
-// import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal";
 
 const ApplicationBar = () => {
   const navigate = useNavigate();
@@ -45,19 +47,19 @@ const ApplicationBar = () => {
     useState<boolean>(false);
   const {
     store: {
-      state: { themeMode },
+      state: { themeMode, auth },
       toggleThemeMode,
     },
   } = useApplicationContext();
   const { isInStandaloneMode } = useDetectBrowserType();
 
-  // const {
-  //   store: { handleToggleLoginModal },
-  // } = useLoginModalContext();
+  const {
+    store: { handleToggleLoginModal },
+  } = useLoginModalContext();
 
-  // const {
-  //   store: { handleToggleRegisterModal },
-  // } = useRegisterModalContext();
+  const {
+    store: { handleToggleRegisterModal },
+  } = useRegisterModalContext();
 
   // Add all the pages the will contain the AppBar
   const pagesMatch = {
@@ -102,10 +104,6 @@ const ApplicationBar = () => {
         scrollToSection(sectionId);
     }
     setIsDrawerOpen(false);
-  };
-
-  const handleOnCreateClick = () => {
-    navigate("/create");
   };
 
   const handleOnBackClick = () => navigate(-1);
@@ -202,28 +200,6 @@ const ApplicationBar = () => {
                         Contact Us
                       </Typography>
                     </MenuItem>
-
-                    {!isInStandaloneMode && (
-                      <>
-                        <Divider
-                          sx={{ height: "30px" }}
-                          orientation="vertical"
-                        />
-
-                        <MenuItem onClick={handleOnMenuItemClick("install")}>
-                          <InstallMobileOutlined
-                            fontSize="medium"
-                            color="secondary"
-                            sx={{ mr: 1 }}
-                          />
-
-                          <Typography variant="body1" color="text.primary">
-                            Install App
-                          </Typography>
-                        </MenuItem>
-                      </>
-                    )}
-
                     {pagesMatch.isHomePage && (
                       <>
                         {/* <MenuItem
@@ -281,29 +257,69 @@ const ApplicationBar = () => {
                       alignItems: "center",
                     }}
                   >
+                    {auth.isAuthenticated ? (
+                      <MenuItem onClick={handleOnMenuItemClick("account")}>
+                        {auth.user?.picture ? (
+                          <Avatar
+                            color="secondary"
+                            alt="User Picture"
+                            src={auth.user?.picture!}
+                            sx={{ mr: 1, width: 24, height: 24 }}
+                          />
+                        ) : (
+                          <Avatar>{auth.user?.name.charAt(0)}</Avatar>
+                        )}
+
+                        <Typography variant="body1" color="text.primary">
+                          {auth.user?.name}
+                        </Typography>
+                      </MenuItem>
+                    ) : (
+                      <>
+                        <MenuItem onClick={handleToggleRegisterModal}>
+                          <LockOpenOutlined
+                            fontSize="medium"
+                            color="secondary"
+                            sx={{ mr: 1 }}
+                          />
+
+                          <Typography variant="body1" color="text.primary">
+                            Register
+                          </Typography>
+                        </MenuItem>
+
+                        <MenuItem onClick={handleToggleLoginModal}>
+                          <VpnKeyOutlined
+                            fontSize="medium"
+                            color="secondary"
+                            sx={{ mr: 1 }}
+                          />
+
+                          <Typography variant="body1" color="text.primary">
+                            Login
+                          </Typography>
+                        </MenuItem>
+                      </>
+                    )}
+
+                    {!isInStandaloneMode && (
+                      <MenuItem onClick={handleOnMenuItemClick("install")}>
+                        <InstallMobileOutlined
+                          fontSize="medium"
+                          color="secondary"
+                          sx={{ mr: 1 }}
+                        />
+
+                        <Typography variant="body1" color="text.primary">
+                          Install App
+                        </Typography>
+                      </MenuItem>
+                    )}
+
                     <ToggleColorMode
                       mode={themeMode}
                       toggleColorMode={toggleThemeMode}
                     />
-                    {/* <Button
-                      color="primary"
-                      variant="text"
-                      size="small"
-                      component="button"
-                      onClick={handleToggleLoginModal}
-                    >
-                      Log in
-                    </Button>
-
-                    <Button
-                      size="small"
-                      color="primary"
-                      variant="contained"
-                      component="button"
-                      onClick={handleToggleRegisterModal}
-                    >
-                      Register
-                    </Button> */}
                   </Box>
                 </>
               )}
@@ -336,7 +352,7 @@ const ApplicationBar = () => {
                         variant="text"
                         sx={{ my: 2, px: 2 }}
                         endIcon={<AutoFixHighOutlined />}
-                        onClick={handleOnCreateClick}
+                        onClick={handleOnMenuItemClick("create")}
                       >
                         Create Story
                       </Button>
@@ -407,6 +423,43 @@ const ApplicationBar = () => {
 
                       <Divider sx={{ width: "80%", margin: "auto" }} />
 
+                      {auth.isAuthenticated ? (
+                        <MenuItem onClick={handleOnMenuItemClick("account")}>
+                          {auth.user?.picture ? (
+                            <Avatar
+                              alt="User Picture"
+                              src={auth.user?.picture!}
+                              sx={{ mr: 1, width: 24, height: 24 }}
+                            />
+                          ) : (
+                            <Avatar>{auth.user?.name.charAt(0)}</Avatar>
+                          )}
+                          <Typography variant="h6">
+                            {auth.user?.name}
+                          </Typography>
+                        </MenuItem>
+                      ) : (
+                        <>
+                          <MenuItem onClick={handleToggleRegisterModal}>
+                            <LockOpenOutlined
+                              fontSize="medium"
+                              color="secondary"
+                              sx={{ mr: 1 }}
+                            />
+                            <Typography variant="h6">Register</Typography>
+                          </MenuItem>
+
+                          <MenuItem onClick={handleToggleLoginModal}>
+                            <VpnKeyOutlined
+                              fontSize="medium"
+                              color="secondary"
+                              sx={{ mr: 1 }}
+                            />
+                            <Typography variant="h6">Log in</Typography>
+                          </MenuItem>
+                        </>
+                      )}
+
                       {!isInStandaloneMode && (
                         <MenuItem onClick={handleOnMenuItemClick("install")}>
                           <InstallMobileOutlined
@@ -472,32 +525,6 @@ const ApplicationBar = () => {
                           </MenuItem> */}
                         </>
                       )}
-
-                      {/* <Divider />
-
-                        <MenuItem>
-                          <Button
-                            color="primary"
-                            variant="contained"
-                            component="button"
-                            onClick={handleToggleRegisterModal}
-                            sx={{ width: "100%" }}
-                          >
-                            Register
-                          </Button>
-                        </MenuItem>
-
-                        <MenuItem>
-                          <Button
-                            color="primary"
-                            variant="outlined"
-                            component="button"
-                            sx={{ width: "100%" }}
-                            onClick={handleToggleLoginModal}
-                          >
-                            Log in
-                          </Button>
-                        </MenuItem> */}
                     </Box>
                   </Drawer>
                 </Box>
@@ -508,8 +535,8 @@ const ApplicationBar = () => {
       )}
 
       {/* Modals */}
-      {/* <LoginModal />
-      <RegisterModal /> */}
+      <LoginModal />
+      <RegisterModal />
       <InstallAppModal
         isInstallAppDialogOpen={isInstallAppDialogOpen}
         setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}

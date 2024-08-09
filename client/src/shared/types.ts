@@ -19,3 +19,5 @@ export interface PagingInfo {
   totalCount?: number;
   totalPagesCount?: number;
 }
+
+export type AuthType = "register" | "login";

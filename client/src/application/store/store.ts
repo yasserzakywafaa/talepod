@@ -8,12 +8,14 @@ export interface ApplicationStore {
   updateState: (newState: ApplicationInitialState) => void;
   handleIsFetching: (handleIsFetching: boolean) => void;
   toggleThemeMode: () => void;
+  updateAuthInfo: () => void;
 }
 
 const useApplicationStore = (): ApplicationStore => {
   const [state, setState] = useState<ApplicationInitialState>(
     getApplicationInitialState()
   );
+  const { IS_AUTHENTICATION, TOKEN, USER } = APP_CONSTANTS.LOCAL_STORAGE;
 
   const updateState = (newState: ApplicationInitialState) => {
     setState(newState);
@@ -56,11 +58,34 @@ const useApplicationStore = (): ApplicationStore => {
     }
   };
 
+  const updateAuthInfo = () => {
+    const storedToken = localStorage.getItem(TOKEN) || "";
+    const storedUser = localStorage.getItem(USER);
+    const storedIsAuthenticated = localStorage.getItem(IS_AUTHENTICATION);
+
+    // console.log("authInfo", {
+    //   token: storedToken,
+    //   user: storedUser ? JSON.parse(storedUser) : null,
+    //   isAuthenticated: storedIsAuthenticated === "true" ? true : false,
+    // });
+
+    setState((prev) => ({
+      ...prev,
+      auth: {
+        ...prev.auth,
+        token: storedToken,
+        isAuthenticated: storedIsAuthenticated === "true" ? true : false,
+        user: storedUser ? JSON.parse(storedUser) : null,
+      },
+    }));
+  };
+
   return {
     state,
     updateState,
     handleIsFetching,
     toggleThemeMode,
+    updateAuthInfo,
   };
 };
 

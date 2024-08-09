@@ -12,7 +12,7 @@ const ToggleColorMode = ({ mode, toggleColorMode }: ToggleColorModeProps) => {
   return (
     <IconButton
       onClick={toggleColorMode}
-      color="primary"
+      color="secondary"
       aria-label="Theme toggle button"
     >
       {mode === "dark" ? (

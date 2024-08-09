@@ -24,6 +24,9 @@ const END_POINTS = {
   CONTACT: {
     SUPPORT: "/api/v1/contact-support",
   },
+  AUTH: {
+    GOOGLE: `/api/v1/auth/google-auth`,
+  },
 };
 
 export default END_POINTS;

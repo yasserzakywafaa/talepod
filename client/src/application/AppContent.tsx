@@ -2,11 +2,13 @@ import "./App.scss";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { darkTheme, lightTheme } from "./shared/themes";
+import { lazy, useEffect } from "react";
 
+import APP_CONSTANTS from "./shared/app_constants";
 import { CssBaseline } from "@mui/material";
 import NotFoundPage from "../Pages/NotFound/NotFound";
 import { ThemeProvider } from "@emotion/react";
-import { lazy } from "react";
+import { getApplicationInitialState } from "./store/state";
 import routes from "./routes";
 import { useApplicationContext } from "./store/Provider";
 
@@ -30,8 +32,17 @@ const UnauthorizedPage = lazy(
 
 const AppContent = () => {
   const {
-    store: { state },
+    store: { state, updateAuthInfo },
+    manager: { handleSetAuthInfo },
   } = useApplicationContext();
+
+  useEffect(() => {
+    if (!localStorage.getItem(APP_CONSTANTS.LOCAL_STORAGE.IS_AUTHENTICATION)) {
+      handleSetAuthInfo(getApplicationInitialState().auth);
+    } else {
+      updateAuthInfo();
+    }
+  }, []);
 
   return (
     <ThemeProvider theme={state.themeMode === "light" ? lightTheme : darkTheme}>
@@ -54,9 +65,11 @@ const AppContent = () => {
           />
 
           {/* Landing Pages */}
-          {Object.values(routes.landingPages).map((route: string) => (
-            <Route index path={route} element={<ExplorePage />} />
-          ))}
+          {Object.values(routes.landingPages).map(
+            (route: string, index: number) => (
+              <Route index key={index} path={route} element={<ExplorePage />} />
+            )
+          )}
           {/* End of Landing Pages */}
 
           <Route path={routes.privacyPolicy} element={<PrivacyPolicyPage />} />
