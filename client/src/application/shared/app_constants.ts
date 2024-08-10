@@ -12,7 +12,7 @@ const APP_CONSTANTS = {
   IS_DEV: process.env.NODE_ENV === "development",
   IS_PROD: process.env.NODE_ENV === "production",
   // Auth
-  GOOGLE_AUTH_CLIENT_ID: process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID,
+  GOOGLE_OAUTH_CLIENT_ID: process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID,
   // Censored Words
   CENSORED_WORDS_FETCH_URLS: {
     EN: "https://raw.githubusercontent.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/master/en",
@@ -28,6 +28,12 @@ const APP_CONSTANTS = {
     HI: "https://raw.githubusercontent.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/master/hi",
     ZH: "https://raw.githubusercontent.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/master/zh",
   },
+  LOCAL_STORAGE: {
+    TOKEN: "token",
+    USER: "user",
+    IS_AUTHENTICATION: "isAuthenticated",
+  },
+  MAX_STORIES_LIMIT: 4,
 };
 
 export default APP_CONSTANTS;

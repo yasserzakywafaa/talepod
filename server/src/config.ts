@@ -52,6 +52,10 @@ const CONFIG = {
   SMTP: process.env.SMTP,
   EMAIL: process.env.EMAIL,
   PASSWORD: process.env.PASSWORD,
+
+  // Auth
+  GOOGLE_OAUTH_CLIENT_ID: process.env.GOOGLE_OAUTH_CLIENT_ID,
+  JWT_SECRET: process.env.JWT_SECRET,
 };
 
 export default CONFIG;

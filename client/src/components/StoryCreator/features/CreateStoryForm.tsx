@@ -2,6 +2,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Alert,
   Box,
   Button,
   FormControl,
@@ -25,12 +26,15 @@ import { Language, Languages } from "../../../shared/languages";
 import { Moral, Morals } from "src/shared/mockedData/Moral";
 import { Tone, Tones } from "src/shared/mockedData/Tone";
 
+import APP_CONSTANTS from "src/application/shared/app_constants";
 import StorySettings from "./StorySettings";
 // import { getCreateStoryPrompt } from "../utils/getStoryPrompts";
 // import { getStorySeoPrompt } from "../utils/getStoryPrompts";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 import routes from "src/application/routes";
+import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
+import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useNavigate } from "react-router-dom";
 import { useOpenaiContext } from "./Openai/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
@@ -46,6 +50,18 @@ const CreateStoryForm = () => {
     manager: { handleUpdateProfileInfo, handleUpdateStoryInfo },
   } = useStoryCreatorContext();
 
+  const {
+    store: {
+      state: {
+        auth: { isAuthenticated, user },
+      },
+    },
+  } = useApplicationContext();
+
+  const {
+    store: { handleToggleLoginModal },
+  } = useLoginModalContext();
+
   const { manager: OpenaiManager } = useOpenaiContext();
   const {
     isCreateStoryFetching,
@@ -53,10 +69,16 @@ const CreateStoryForm = () => {
     // handleCreateStorySeoRequest,
   } = OpenaiManager;
 
+  const hasMaxStoriesLimit =
+    isAuthenticated &&
+    user &&
+    APP_CONSTANTS.MAX_STORIES_LIMIT === user.storyCount;
+
   const isCreateButtonDisabled = (): boolean => {
     if (
       hasCensoredWords(profileInfo.name) ||
-      hasCensoredWords(profileInfo.interests)
+      hasCensoredWords(profileInfo.interests) ||
+      hasMaxStoriesLimit
     ) {
       return true;
     }
@@ -76,6 +98,12 @@ const CreateStoryForm = () => {
   ) => {
     event.preventDefault();
     event.stopPropagation();
+
+    console.log("isAuthenticated:>>>", isAuthenticated);
+    if (!isAuthenticated) {
+      handleToggleLoginModal();
+      return;
+    }
 
     const form = event.currentTarget;
     if (!form.checkValidity() || isFormHasErrors()) {
@@ -453,6 +481,21 @@ const CreateStoryForm = () => {
             </AccordionDetails>
           </Accordion>
         )}
+
+        {isAuthenticated &&
+          user &&
+          !user.isPaidUser &&
+          (!hasMaxStoriesLimit ? (
+            <Alert severity="info">
+              {`${
+                APP_CONSTANTS.MAX_STORIES_LIMIT - user.storyCount
+              } stories left out of ${APP_CONSTANTS.MAX_STORIES_LIMIT}`}
+            </Alert>
+          ) : (
+            <Alert severity="warning">
+              {`You have consumed your maximum credit of ${APP_CONSTANTS.MAX_STORIES_LIMIT} stories`}
+            </Alert>
+          ))}
 
         <Box
           display="flex"

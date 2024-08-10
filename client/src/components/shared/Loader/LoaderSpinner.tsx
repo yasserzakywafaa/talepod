@@ -15,16 +15,20 @@ export enum LoaderComponentNameEnum {
 
 interface LoaderSpinnerProps {
   style?: React.CSSProperties;
+  position?: "absolute" | "fixed";
   loaderComponentName?: string;
 }
 const LoaderSpinner = (props: LoaderSpinnerProps) => {
-  const { style, loaderComponentName } = props;
+  const { style, position, loaderComponentName } = props;
   // const isCreatingAudio =
   //   loaderComponentName === LoaderComponentNameEnum.CreateAudio;
 
   return (
     <div
-      style={style}
+      style={{
+        ...style,
+        position,
+      }}
       className="loader-spinner-wrapper flex justify--center align--center"
     >
       {/* <img

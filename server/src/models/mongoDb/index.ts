@@ -1,4 +1,4 @@
-import { Db, MongoClient, ObjectId } from "mongodb";
+import { Db, MongoClient, ObjectId, WithId } from "mongodb";
 import {
   ProfileInfo,
   Story,
@@ -6,9 +6,15 @@ import {
   StoryParams,
   StorySeo,
 } from "../types/story";
-import { createDocument, updateDocument } from "./crudOperations";
+import {
+  createDocument,
+  readDocument,
+  readDocumentByField,
+  updateDocument,
+} from "./crudOperations";
 
 import CONFIG from "../../config";
+import { User } from "../types";
 
 let dbClient: MongoClient;
 let database: Db;
@@ -23,7 +29,6 @@ export enum DBCollections {
   stories_library = "stories_library",
   stories_library_backup = "stories_library_backup",
   users = "users",
-  users_stories = "users_stories",
 }
 
 const getMongoDbUri = (): string => {
@@ -105,31 +110,24 @@ const createIndexes = async () => {
       await stories.createIndex({ "storyParams.environment.value": 1 });
     }
 
-    console.info(
-      `-- ℹ️  Indexes created collections:>>>  ${collectionsToSearch.flatMap(
-        (c) => c
-      )}`
-    );
+    const users = database.collection(DBCollections.users);
+    await users.createIndex({ _id: 1 });
+    await users.createIndex({ userId: 1 });
+    await users.createIndex({ email: 1 });
+    await users.createIndex({ createdAt: 1 });
+    await users.createIndex({ picture: 1 });
+    await users.createIndex({ "name.givenName": 1 });
+    await users.createIndex({ "name.familyName": 1 });
+    await users.createIndex({ storyCount: 1 });
+    await users.createIndex({ stories: 1 });
+    await users.createIndex({ status: 1 });
+    await users.createIndex({ role: 1 });
+    await users.createIndex({ isPaidUser: 1 });
 
-    // const storiesCollection = database.collection(DBCollections.stories);
-    // // Create compound index for these fields
-    // await storiesCollection.createIndex({ slug: 1, createdAt: -1 });
     // console.info(
-    //   "-- ℹ️  Compound index created on 'slug' and 'createdAt' fields"
-    // );
-
-    // // Text index for name search
-    // await storiesCollection.createIndex({ name: "text" });
-    // console.info("-- ℹ️  Compound index created on 'name' field");
-
-    // // Compound index on frequently queried combinations
-    // await storiesCollection.createIndex({ gender: 1, language: 1, age: 1 });
-    // console.info(
-    //   "-- ℹ️  Compound index created on 'gender', 'language' and 'age' fields"
-    // );
-    // await storiesCollection.createIndex({ environment: 1, moral: -1, tone: 1 });
-    // console.info(
-    //   "-- ℹ️  Compound index created on 'environment', 'moral' and 'tone' fields"
+    //   `-- ℹ️  Indexes created collections:>>>  ${collectionsToSearch.flatMap(
+    //     (c) => c
+    //   )}`
     // );
   } catch (error) {
     console.error("❌ Error creating index:", error);
@@ -140,6 +138,31 @@ const closeDatabase = async () => {
   if (dbClient) {
     await dbClient.close();
     console.info("✅ Database connection closed");
+  }
+};
+
+// // Data Handling
+const getDocumentFromDb = async (docId: any, collectionName: DBCollections) => {
+  try {
+    const document = await readDocument(docId, collectionName);
+
+    return document;
+  } catch (error) {
+    throw new Error("❌ Error saving user data to DB", { cause: error });
+  }
+};
+
+const getDocumentByFieldFromDb = async (
+  field: string,
+  value: string,
+  collectionName: DBCollections
+) => {
+  try {
+    const document = await readDocumentByField(field, value, collectionName);
+
+    return document;
+  } catch (error) {
+    throw new Error("❌ Error saving user data to DB", { cause: error });
   }
 };
 
@@ -199,6 +222,15 @@ const saveFileDataToDb = async (
   }
 };
 
+const saveUserDataToDb = async (userInfo: User): Promise<void> => {
+  try {
+    await createDocument(userInfo, DBCollections.users);
+    console.log("✅ User saved to DB successfully");
+  } catch (error) {
+    throw new Error("❌ Error saving user data to DB", { cause: error });
+  }
+};
+
 // // FOR DEVELOPMENT USE ONLY
 // const copyDocumentsFromDbCollectionToAnotherDbCollection = async () => {
 //   const sourceDb = dbClient.db(DBNames.TALEPOD_DEV);
@@ -233,7 +265,10 @@ export {
   database,
   databaseInit,
   closeDatabase,
+  getDocumentFromDb,
+  getDocumentByFieldFromDb,
   saveStoryToDb,
   saveStorySeoToDb,
   saveFileDataToDb,
+  saveUserDataToDb,
 };

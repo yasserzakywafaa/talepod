@@ -1,4 +1,5 @@
 import CONFIG from "./config";
+import authRoutes from "./routes/authRoutes";
 import bodyParser from "body-parser";
 import contactRoutes from "./routes/contactRoutes";
 import { databaseInit } from "./models/mongoDb";
@@ -42,6 +43,7 @@ expressApp.use(testRoutes);
 expressApp.use(storiesRoutes);
 expressApp.use(openaiRoutes);
 expressApp.use(contactRoutes);
+expressApp.use(authRoutes);
 
 // Initiate MongoDB connection
 databaseInit();

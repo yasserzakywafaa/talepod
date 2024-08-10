@@ -11,6 +11,9 @@ import { NextFunction, Request, Response } from "express";
 
 import { getQuery } from "../models/mongoDb/query";
 
+// import fs from "fs";
+// import path from "path";
+
 export const getAllStories = async (
   request: Request,
   response: Response<PageResponse<DocumentWithId>>,
@@ -69,6 +72,7 @@ export const getAllStories = async (
 
     // // FOR DEVELOPMENT USE ONLY
     // const ALL_STORIES = await bulkUpdateStoriesByField();
+    // await bulkUpdateStoriesByField();
     // response.status(200).json({
     //   results: ALL_STORIES,
     //   paging: {
@@ -198,16 +202,52 @@ export const getStoryBySlug = async (
 //   const storiesCollection = database.collection(DBCollections.stories_library);
 //   const stories = await database
 //     .collection(DBCollections.stories_library)
-//     .find({
-//       // $and: [
-//       //   {
-//       //     "profileInfo.language.value": {
-//       //       $in: ["en"],
-//       //     },
-//       //   },
-//       // ],
-//     })
+//     .find(
+//       {
+//         // $and: [
+//         //   {
+//         //     "profileInfo.language.value": {
+//         //       $in: ["en"],
+//         //     },
+//         //   },
+//         // ],
+//       },
+//       { projection: { slug: 1 } }
+//     )
 //     .toArray();
+
+//   // let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+//   // xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+
+//   // stories.forEach((story: Story) => {
+//   //   xml += `  <url>\n`;
+//   //   xml += `    <loc>https://www.talepod.com/bedtime-story/${story.slug}</loc>\n`;
+//   //   xml += `    <lastmod>${new Date().toLocaleString("en-GB", {
+//   //     dateStyle: "short",
+//   //   })}</lastmod>\n`;
+//   //   xml += `    <changefreq>monthly</changefreq>\n`;
+//   //   xml += `    <priority>1.0</priority>\n`;
+//   //   xml += `  </url>\n`;
+//   // });
+
+//   // xml += `</urlset>`;
+
+//   // // Write the XML to a file
+//   // const sitemapPath = path.join(
+//   //   __dirname,
+//   //   "../../../client/public",
+//   //   "sitemap-stories-library.xml"
+//   // );
+
+//   // console.log("sitemap.xml:>>>", {
+//   //   sitemapPath,
+//   //   storiesLength: stories.length,
+//   // });
+
+//   // fs.writeFileSync(sitemapPath, xml, "utf8");
+//   // console.log(
+//   //   "✅ sitemap-stories-library.xml has been generated successfully!"
+//   // );
 
 //   // return stories;
 

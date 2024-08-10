@@ -1,11 +1,16 @@
-// import { CredentialResponse } from "@react-oauth/google";
+import axios, { AxiosResponse } from "axios";
+
+import { Authentication } from "src/application/store/state";
+import { CredentialResponse } from "@react-oauth/google";
+import END_POINTS from "src/application/shared/endpoints";
 import { GoogleAuthStore } from "./store";
 
 export interface GoogleAuthManager {
   handleIsFetching: (isFetching: boolean) => void;
-  handleOnLoginSuccess: (credentialResponse: any) => void;
-  // handleOnLoginSuccess: (credentialResponse: CredentialResponse) => void;
-  handleOnLoginError: () => void;
+  handleOnGoogleAuthSuccess: (
+    credentialResponse: CredentialResponse
+  ) => Promise<Authentication>;
+  handleOnGoogleAuthError: () => void;
 }
 
 export const useGoogleAuthManager = (
@@ -15,28 +20,62 @@ export const useGoogleAuthManager = (
     store.updateState("isFetching", isFetching);
   };
 
-  // const handleOnLoginSuccess = (credentialResponse: CredentialResponse) => {
-  const handleOnLoginSuccess = (credentialResponse: any) => {
+  const handleOnGoogleAuthSuccess = async (
+    credentialResponse: CredentialResponse
+  ): Promise<Authentication> => {
     store.updateState("tokenResponse", credentialResponse);
-    console.log("Google Login Response :>>>", {
-      credentialResponse,
-    });
+
+    if (credentialResponse.credential) {
+      return await authenticateUser(credentialResponse.credential);
+    }
+
+    return {
+      token: "",
+      user: null,
+      isAuthenticated: false,
+    };
   };
 
-  // const handleOnLoginSuccess = (response: { id: string; password: string }) => {
-  //   // store.updateState("tokenResponse", credentialResponse);
-  //   console.log("Google Login Response :>>>", {
-  //     response,
-  //   });
-  // };
+  const authenticateUser = async (
+    credential: string
+  ): Promise<Authentication> => {
+    try {
+      const response: AxiosResponse<Authentication, any> = await axios.post(
+        END_POINTS.AUTH.GOOGLE,
+        {
+          idToken: credential,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Custom-Header": new Date().toISOString(),
+          },
+        }
+      );
 
-  const handleOnLoginError = () => {
-    console.error("<<<: Google Login failed :>>>");
+      return response.data;
+    } catch (error) {
+      console.error("❌ Failed to authenticate with Google :>>>", {
+        error,
+      });
+    } finally {
+      store.handleIsFetching(false);
+    }
+
+    return {
+      token: "",
+      user: null,
+      isAuthenticated: false,
+    };
+  };
+
+  const handleOnGoogleAuthError = () => {
+    console.error("<<<: Google AUTH failed :>>>");
   };
 
   return {
     handleIsFetching,
-    handleOnLoginSuccess,
-    handleOnLoginError,
+    handleOnGoogleAuthSuccess,
+    handleOnGoogleAuthError,
   };
 };

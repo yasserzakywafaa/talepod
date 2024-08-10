@@ -19,3 +19,10 @@ export interface PagingInfo {
   totalCount?: number;
   totalPagesCount?: number;
 }
+
+export interface UserName {
+  givenName: string;
+  familyName: string;
+}
+
+export type AuthType = "register" | "login";
