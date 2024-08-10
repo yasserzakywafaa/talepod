@@ -11,6 +11,11 @@ export interface Story {
   audioFile?: StoryAudioFile;
   createdAt: Date;
   seo?: StorySeo;
+  author: ObjectId;
+  lastModified?: Date;
+  tags?: string[];
+  coverImageUrl?: string;
+  isFeatured: boolean;
 }
 
 export interface StoryData extends Partial<Story> {

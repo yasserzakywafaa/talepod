@@ -1,14 +1,12 @@
-import { ObjectId } from "mongodb";
-
 export interface User {
-  _id?: ObjectId;
+  _id: string;
   userId: string;
   email: string;
   name: UserName;
   picture: string;
   createdAt: Date;
   lastLogin?: Date;
-  stories?: ObjectId[];
+  stories?: string[];
   storyCount: number;
   status: UserStatus;
   role: UserRole;
@@ -55,21 +53,3 @@ export interface UserPreferences {
   theme: "light" | "dark";
   notifications: boolean;
 }
-
-export const getInitialUserData = (): Omit<User, "_id"> => {
-  return {
-    userId: "",
-    email: "",
-    name: {
-      givenName: "",
-      familyName: "",
-    },
-    picture: "",
-    createdAt: new Date(),
-    stories: [],
-    storyCount: 0,
-    status: UserStatus.active,
-    role: UserRole.user,
-    isPaidUser: false,
-  };
-};

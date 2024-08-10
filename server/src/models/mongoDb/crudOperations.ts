@@ -2,10 +2,11 @@ import { DBCollections, database } from ".";
 import { Story, StoryData } from "../types/story";
 
 import { ObjectId } from "mongodb";
+import { User } from "../types";
 
 // Create a new document
 export const createDocument = async (
-  data: StoryData,
+  data: any,
   collectionName: DBCollections
 ) => {
   const collection = database.collection(collectionName);
@@ -15,14 +16,26 @@ export const createDocument = async (
 };
 
 // Read a document by ID
-export const getDocumentById = async (
-  storyId: string,
+export const readDocument = async (
+  docId: any,
   collectionName: DBCollections
 ) => {
-  const stories = database.collection(collectionName);
-  const story = await stories.findOne({ _id: new ObjectId(storyId) });
+  const documents = database.collection(collectionName);
+  const document = await documents.findOne({ _id: docId });
 
-  return story;
+  return document;
+};
+
+// Read a document by ID
+export const readDocumentByField = async (
+  field: string,
+  value: string,
+  collectionName: DBCollections
+) => {
+  const documents = database.collection(collectionName);
+  const document = await documents.findOne({ [field]: value });
+
+  return document;
 };
 
 // Update a document by ID

@@ -1,5 +1,6 @@
 import APP_CONSTANTS from "../shared/app_constants";
 import { PaletteMode } from "@mui/material";
+import { User } from "src/shared/user";
 
 export interface ApplicationInitialState {
   isFetching: boolean;
@@ -13,12 +14,7 @@ export interface Authentication {
   user: AuthenticateUser | null;
 }
 
-export interface AuthenticateUser {
-  id: string;
-  email: string;
-  name: string;
-  picture: string;
-}
+export type AuthenticateUser = User;
 
 export const getApplicationInitialState = (): ApplicationInitialState => {
   const appThemMode =

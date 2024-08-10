@@ -61,6 +61,10 @@ const ApplicationBar = () => {
     store: { handleToggleRegisterModal },
   } = useRegisterModalContext();
 
+  const userFullName = `${
+    auth.user?.name.givenName
+  } ${auth.user?.name.familyName.charAt(0)}.`;
+
   // Add all the pages the will contain the AppBar
   const pagesMatch = {
     isHomePage: !!useMatch(routes.home),
@@ -252,9 +256,9 @@ const ApplicationBar = () => {
 
                   <Box
                     sx={{
-                      display: { xs: "none", md: "flex" },
                       gap: 0.5,
                       alignItems: "center",
+                      display: { xs: "none", md: "flex" },
                     }}
                   >
                     {auth.isAuthenticated ? (
@@ -267,11 +271,23 @@ const ApplicationBar = () => {
                             sx={{ mr: 1, width: 24, height: 24 }}
                           />
                         ) : (
-                          <Avatar>{auth.user?.name.charAt(0)}</Avatar>
+                          <Avatar>
+                            {auth.user?.name.givenName.charAt(0)}
+                            {auth.user?.name.familyName.charAt(0)}
+                          </Avatar>
                         )}
 
-                        <Typography variant="body1" color="text.primary">
-                          {auth.user?.name}
+                        <Typography
+                          variant="body1"
+                          color="text.primary"
+                          sx={{
+                            maxWidth: "100px",
+                            overflowX: "hidden",
+                            whiteSpace: "nowrap",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          {userFullName}
                         </Typography>
                       </MenuItem>
                     ) : (
@@ -339,7 +355,7 @@ const ApplicationBar = () => {
                     <BackButton onClick={handleOnBackClick} />
                   )}
 
-                  {(pagesMatch.isExplorePage || pagesMatch.isViewStoryPage) && (
+                  {!pagesMatch.isHomePage && !pagesMatch.isCreatePage && (
                     <Box
                       width="100%"
                       margin="auto"
@@ -432,10 +448,22 @@ const ApplicationBar = () => {
                               sx={{ mr: 1, width: 24, height: 24 }}
                             />
                           ) : (
-                            <Avatar>{auth.user?.name.charAt(0)}</Avatar>
+                            <Avatar>
+                              {auth.user?.name.givenName.charAt(0)}
+                              {auth.user?.name.familyName.charAt(0)}
+                            </Avatar>
                           )}
-                          <Typography variant="h6">
-                            {auth.user?.name}
+                          <Typography
+                            variant="body1"
+                            color="text.primary"
+                            sx={{
+                              maxWidth: "100px",
+                              overflowX: "hidden",
+                              whiteSpace: "nowrap",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                            {userFullName}
                           </Typography>
                         </MenuItem>
                       ) : (

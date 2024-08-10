@@ -33,6 +33,7 @@ const APP_CONSTANTS = {
     USER: "user",
     IS_AUTHENTICATION: "isAuthenticated",
   },
+  MAX_STORIES_LIMIT: 4,
 };
 
 export default APP_CONSTANTS;

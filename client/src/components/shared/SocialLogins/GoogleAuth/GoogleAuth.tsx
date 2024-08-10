@@ -1,6 +1,7 @@
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 
 import { AuthType } from "src/shared/types";
+import { Notify } from "../../Notification/Notification";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useGoogleAuthContext } from "./store/Provider";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
@@ -33,6 +34,12 @@ const GoogleAuth = (props: GoogleAuthProps) => {
     handleSetAuthInfo(authInfo);
     toggleIsFetching(false);
     toggleIsModalVisible();
+    Notify({
+      type: "success",
+      content: isRegister
+        ? "Registered Successfully!"
+        : `Hey ${authInfo.user?.name.givenName}, welcome back!`,
+    });
   };
 
   const onErrorCallback = () => {

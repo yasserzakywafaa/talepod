@@ -53,10 +53,6 @@ export const useGoogleAuthManager = (
         }
       );
 
-      console.log("authenticateUser:>>>", {
-        response,
-      });
-
       return response.data;
     } catch (error) {
       console.error("❌ Failed to authenticate with Google :>>>", {

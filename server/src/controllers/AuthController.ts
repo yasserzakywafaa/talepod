@@ -1,8 +1,16 @@
+import {
+  DBCollections,
+  getDocumentByFieldFromDb,
+  saveUserDataToDb,
+} from "../models/mongoDb";
 import { NextFunction, Request, Response } from "express";
+import { User, getInitialUserData } from "../models/types";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 import CONFIG from "../config";
 import axios from "axios";
-import jwt from "jsonwebtoken";
+
+// import { getDocumentById } from "../models/mongoDb/crudOperations";
 
 export const authByGoogle = async (
   request: Request,
@@ -10,7 +18,6 @@ export const authByGoogle = async (
   next: NextFunction
 ) => {
   const { idToken } = request.body;
-
   if (!idToken) {
     response.status(400).json({ message: "❌ 'idToken' is required!" });
     return;
@@ -21,35 +28,58 @@ export const authByGoogle = async (
     const verifyResponse = await axios.get(
       `https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`
     );
-
-    if (verifyResponse.data.aud !== CONFIG.GOOGLE_OAUTH_CLIENT_ID) {
+    const verifyResponseData: JwtPayload = verifyResponse.data;
+    if (verifyResponseData.aud !== CONFIG.GOOGLE_OAUTH_CLIENT_ID) {
       response.status(401).json({ message: "❌ Unauthorized!" });
       return;
     }
 
-    const { sub, email, name, picture } = verifyResponse.data;
+    const {
+      sub: userId,
+      email,
+      given_name: givenName,
+      family_name: familyName,
+      picture,
+    } = verifyResponseData;
+    let userInfo: User = {
+      ...getInitialUserData(),
+      userId,
+      email,
+      picture,
+      name: { givenName, familyName },
+    };
 
-    // Here, you would typically check if the user exists in your database
-    // If not, create a new user record
-    // For simplicity, we'll just generate a JWT for the session
+    try {
+      // Check if the user exists
+      const userDocument = await getDocumentByFieldFromDb(
+        "userId",
+        userId,
+        DBCollections.users
+      );
+      if (!userDocument) {
+        // If user doesn't exist, create a new user record
+        userInfo = {
+          ...getInitialUserData(),
+          userId,
+          email,
+          name: { givenName, familyName },
+          picture,
+        };
+        await saveUserDataToDb(userInfo);
+      }
+    } catch (error) {
+      console.error("❌ Failed to save new user to DB!", {
+        error,
+      });
+    }
 
-    const userPayload = { id: sub, email, name, picture };
-
-    const token = jwt.sign(userPayload, CONFIG.JWT_SECRET!, {
+    // Generate a JWT for the session
+    const token = jwt.sign(userInfo, CONFIG.JWT_SECRET!, {
       expiresIn: "1h",
     });
+    console.log("ℹ️  authByGoogle", { userInfo });
 
-    console.log("ℹ️  authByGoogle", {
-      response: {
-        userPayload,
-        token,
-      },
-    });
-
-    response.status(200).json({
-      token,
-      user: userPayload,
-    });
+    response.status(200).json({ token, user: userInfo });
   } catch (error) {
     console.error("❌ Failed to authenticate with Google!", {
       error,
