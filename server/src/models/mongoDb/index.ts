@@ -180,7 +180,6 @@ const saveStoryToDb = async (
     const storyId: ObjectId = await createDocument(
       storyData,
       DBCollections.stories
-      // DBCollections.stories_library
     );
     console.log("✅ Story saved to DB successfully");
 
@@ -195,7 +194,7 @@ const saveStorySeoToDb = async (
   storySeo: StorySeo
 ): Promise<void> => {
   try {
-    await updateDocument(storyId, { seo: storySeo });
+    await updateDocument(storyId, { seo: storySeo }, DBCollections.stories);
     console.log("✅ Story SEO saved to DB successfully");
   } catch (error) {
     throw new Error("❌ Error saving story SEO to DB", { cause: error });
@@ -214,7 +213,7 @@ const saveFileDataToDb = async (
       createdAt: new Date(),
     };
 
-    await updateDocument(storyId, { audioFile });
+    await updateDocument(storyId, { audioFile }, DBCollections.stories);
 
     console.log("✅ File saved to DB successfully");
   } catch (error) {
@@ -222,9 +221,9 @@ const saveFileDataToDb = async (
   }
 };
 
-const saveUserDataToDb = async (userInfo: User): Promise<void> => {
+const saveUserDataToDb = async (user: User): Promise<void> => {
   try {
-    await createDocument(userInfo, DBCollections.users);
+    await createDocument(user, DBCollections.users);
     console.log("✅ User saved to DB successfully");
   } catch (error) {
     throw new Error("❌ Error saving user data to DB", { cause: error });

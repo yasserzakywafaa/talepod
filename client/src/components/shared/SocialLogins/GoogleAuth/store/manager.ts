@@ -9,7 +9,7 @@ export interface GoogleAuthManager {
   handleIsFetching: (isFetching: boolean) => void;
   handleOnGoogleAuthSuccess: (
     credentialResponse: CredentialResponse
-  ) => Promise<Authentication>;
+  ) => Promise<Authentication | undefined>;
   handleOnGoogleAuthError: () => void;
 }
 
@@ -22,23 +22,22 @@ export const useGoogleAuthManager = (
 
   const handleOnGoogleAuthSuccess = async (
     credentialResponse: CredentialResponse
-  ): Promise<Authentication> => {
+  ): Promise<Authentication | undefined> => {
+    if (!credentialResponse.credential) return;
+
     store.updateState("tokenResponse", credentialResponse);
-
-    if (credentialResponse.credential) {
+    try {
       return await authenticateUser(credentialResponse.credential);
+    } catch (error: any) {
+      throw new Error(
+        `❌ Could not authenticate with Google! | ${error.message}`
+      );
     }
-
-    return {
-      token: "",
-      user: null,
-      isAuthenticated: false,
-    };
   };
 
   const authenticateUser = async (
     credential: string
-  ): Promise<Authentication> => {
+  ): Promise<Authentication | undefined> => {
     try {
       const response: AxiosResponse<Authentication, any> = await axios.post(
         END_POINTS.AUTH.GOOGLE,
@@ -62,11 +61,12 @@ export const useGoogleAuthManager = (
       store.handleIsFetching(false);
     }
 
-    return {
-      token: "",
-      user: null,
-      isAuthenticated: false,
-    };
+    return;
+    // return {
+    //   token: "",
+    //   user: null,
+    //   isAuthenticated: false,
+    // };
   };
 
   const handleOnGoogleAuthError = () => {

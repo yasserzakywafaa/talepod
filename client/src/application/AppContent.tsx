@@ -5,18 +5,19 @@ import { darkTheme, lightTheme } from "./shared/themes";
 import { lazy, useEffect } from "react";
 
 import APP_CONSTANTS from "./shared/app_constants";
+// import APP_CONSTANTS from "./shared/app_constants";
 import { CssBaseline } from "@mui/material";
 import NotFoundPage from "../Pages/NotFound/NotFound";
 import { ThemeProvider } from "@emotion/react";
 import { getApplicationInitialState } from "./store/state";
+import { getLocalStorageAuthItems } from "src/shared/utils/localstorage";
 import routes from "./routes";
 import { useApplicationContext } from "./store/Provider";
-
-// import "./shared/components/TinyMCE";
 
 const HomePage = lazy(() => import("../Pages/Home/Home"));
 const CreateStoryPage = lazy(() => import("../Pages/CreateStory/CreateStory"));
 const ExplorePage = lazy(() => import("../Pages/Explore/Explore"));
+const MyStoriesPage = lazy(() => import("../Pages/MyStories/MyStories"));
 const ContactPage = lazy(() => import("../Pages/Contact/Contact"));
 const ViewStoryPage = lazy(() => import("../Pages/ViewStory/ViewStory"));
 const CheckoutPage = lazy(() => import("../Pages/Checkout/CheckoutPage"));
@@ -32,16 +33,33 @@ const UnauthorizedPage = lazy(
 
 const AppContent = () => {
   const {
-    store: { state, updateAuthInfo },
-    manager: { handleSetAuthInfo },
+    store: { state },
+    manager: { handleSetAuthInfo, handleFetchUserInfo },
   } = useApplicationContext();
 
-  useEffect(() => {
-    if (!localStorage.getItem(APP_CONSTANTS.LOCAL_STORAGE.IS_AUTHENTICATION)) {
+  const handleUpdates = async () => {
+    const storedAuthInfo = getLocalStorageAuthItems();
+
+    if (!storedAuthInfo.isAuthenticated) {
+      // User is not logged in, set initial auth state
       handleSetAuthInfo(getApplicationInitialState().auth);
+
+      return;
     } else {
-      updateAuthInfo();
+      // // User is already logged in, update auth state
+      const userId = storedAuthInfo.user?.userId;
+      if (userId) {
+        const fetchedUser = await handleFetchUserInfo(userId);
+        localStorage.setItem(
+          APP_CONSTANTS.LOCAL_STORAGE.USER,
+          JSON.stringify(fetchedUser)
+        );
+      }
     }
+  };
+
+  useEffect(() => {
+    handleUpdates();
   }, []);
 
   return (
@@ -55,6 +73,24 @@ const AppContent = () => {
           <Route index path={routes.create} element={<CreateStoryPage />} />
 
           <Route index path={routes.explore} element={<ExplorePage />} />
+
+          {state.auth.isAuthenticated && !!state.auth.user ? (
+            <>
+              <Route
+                index
+                path={routes.myStories(":userId")}
+                element={<MyStoriesPage />}
+              />
+
+              <Route
+                index
+                path={routes.myStory(":userId", ":slug")}
+                element={<ViewStoryPage />}
+              />
+            </>
+          ) : (
+            <Route path={routes.unauthorized} element={<UnauthorizedPage />} />
+          )}
 
           <Route index path={routes.contact} element={<ContactPage />} />
 

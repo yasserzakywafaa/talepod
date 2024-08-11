@@ -46,6 +46,7 @@ const END_POINTS = {
   },
   AUTH: {
     GOOGLE: `${publicApiUrl}/api/v1/auth/google-auth`,
+    USER_INFO: `${publicApiUrl}/api/v1/auth/user-info`,
   },
 };
 

@@ -12,9 +12,7 @@ const extractStoryParts = (story: string): StoryParts => {
       poem: parts[3].replace(/[{}]/g, "").trim(),
     };
   } else {
-    throw new Error(
-      "❌ The story does not contain the correct number of parts"
-    );
+    throw new Error("❌ The story does not contain the correct structure!");
   }
 };
 

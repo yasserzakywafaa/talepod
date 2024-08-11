@@ -188,53 +188,46 @@
     </script>
 
     <!-- Google tag (gtag.js) -->
-    <script
+    <!-- <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-CCQF7Y9X9H"
     ></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
+      if (window.location.hostname !== "localhost") {
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
 
-      gtag("config", "G-CCQF7Y9X9H");
+        gtag("config", "G-CCQF7Y9X9H");
+      }
+    </script> -->
+
+    <!-- Google-tag (gtag.js) -->
+    <script>
+      // Only load Google Analytics if running on production
+      if (window.location.hostname === "talepod.com") {
+        // Create a script element
+        var gaScript = document.createElement("script");
+        gaScript.src =
+          "https://www.googletagmanager.com/gtag/js?id=G-CCQF7Y9X9H";
+        gaScript.async = true;
+        document.head.appendChild(gaScript);
+
+        // Initialize Google Analytics
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
+        gtag("config", "G-CCQF7Y9X9H");
+      }
     </script>
   </head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-
-    <!-- 
-      ONLY for development purposes/
-      Live Reload was causing issues while extracting ZIP file.
-      Disable it by starting the app with:
-      REACT_APP_DISABLE_LIVE_RELOAD=true <start_command>
-    -->
-    <script type="text/javascript">
-      // console.log("<<<: index.html NODE_ENV :>>>", "%NODE_ENV%");
-      if (
-        "%NODE_ENV%".trim() === "development" &&
-        "%REACT_APP_DISABLE_LIVE_RELOAD%".trim() === "true"
-      ) {
-        console.log(
-          "<<<: index.html REACT_APP_DISABLE_LIVE_RELOAD :>>>",
-          "%REACT_APP_DISABLE_LIVE_RELOAD%"
-        );
-        const WS = window.WebSocket;
-        function DevWebSocket(s) {
-          if (s === "ws://localhost:4000/ws") {
-            console.log("<<<: Live Reload Has Been Disabled :>>>");
-            return {};
-          } else {
-            // Pass through other usage of sockets
-            return new WS(s);
-          }
-        }
-        window.WebSocket = DevWebSocket;
-      }
-    </script>
   </body>
 </html>

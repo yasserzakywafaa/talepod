@@ -12,6 +12,8 @@ import axios, { AxiosResponse } from "axios";
 
 import END_POINTS from "src/application/shared/endpoints";
 import { OpenaiStore } from "../../store/store";
+import { User } from "src/shared/user";
+import { useApplicationContext } from "src/application/store/Provider";
 
 export interface UseTextGeneration {
   isCreateStoryFetching: (isFetching: boolean) => void;
@@ -28,6 +30,12 @@ export interface UseTextGeneration {
 }
 
 export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
+  const {
+    store: {
+      state: { auth },
+    },
+  } = useApplicationContext();
+
   const isCreateStoryFetching = (isFetching: boolean) => {
     store.updateState("createStory", {
       ...store.state.createStory,
@@ -47,14 +55,17 @@ export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
     profileInfo: ProfileInfo,
     storyParams: StoryParams
   ): Promise<Story> => {
+    const PAYLOAD = {
+      storyPrompt,
+      profileInfo,
+      storyParams,
+      userInfo: auth.user as User,
+    };
+
     try {
       const response: AxiosResponse<Story, Story> = await axios.post(
         END_POINTS.OPENAI.GENERATE.STORY,
-        {
-          storyPrompt,
-          profileInfo,
-          storyParams,
-        },
+        PAYLOAD,
         {
           headers: {
             "Content-Type": "application/json",
@@ -79,16 +90,16 @@ export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         Notify({
-          content: error.response.statusText,
+          content: error.response.data.message,
           type: ToastTypes.Error,
         });
       } else {
         Notify({
-          content: `Oops! Something went wrong.\n${error}`,
+          content: `Oops, something went wrong!`,
           type: ToastTypes.Error,
         });
       }
-      throw new Error(`❌  Failed to create a story!  ${error}`);
+      throw new Error(`${error}`);
     }
   };
 

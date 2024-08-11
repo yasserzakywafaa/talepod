@@ -9,7 +9,6 @@ export interface ApplicationInitialState {
 }
 
 export interface Authentication {
-  token: string;
   isAuthenticated: boolean;
   user: AuthenticateUser | null;
 }
@@ -26,7 +25,6 @@ export const getApplicationInitialState = (): ApplicationInitialState => {
     isFetching: false,
     themeMode: appThemMode,
     auth: {
-      token: "",
       user: null,
       isAuthenticated: false,
     },

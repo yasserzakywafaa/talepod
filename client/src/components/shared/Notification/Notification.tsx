@@ -12,7 +12,7 @@ import {
 interface NotificationProps extends ToastContainerProps {}
 
 interface NotificationToast {
-  content: any;
+  content: string;
   type?: TypeOptions;
   options?: ToastOptions;
 }
@@ -34,6 +34,7 @@ export const Notification = (props: NotificationProps) => {
       limit={props.limit}
       style={props.style}
       onClick={props.onClick}
+      stacked={props.stacked}
       className={props.className}
       bodyStyle={props.bodyStyle}
       draggable={props.draggable}
@@ -44,7 +45,7 @@ export const Notification = (props: NotificationProps) => {
       containerId={props.containerId}
       pauseOnHover={props.pauseOnHover}
       closeOnClick={props.closeOnClick}
-      autoClose={props.autoClose || 5000}
+      autoClose={props.autoClose || 3000}
       bodyClassName={props.bodyClassName}
       progressStyle={props.progressStyle}
       toastClassName={props.toastClassName}

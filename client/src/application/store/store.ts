@@ -1,4 +1,8 @@
-import { ApplicationInitialState, getApplicationInitialState } from "./state";
+import {
+  ApplicationInitialState,
+  Authentication,
+  getApplicationInitialState,
+} from "./state";
 
 import APP_CONSTANTS from "../shared/app_constants";
 import { useState } from "react";
@@ -8,14 +12,13 @@ export interface ApplicationStore {
   updateState: (newState: ApplicationInitialState) => void;
   handleIsFetching: (handleIsFetching: boolean) => void;
   toggleThemeMode: () => void;
-  updateAuthInfo: () => void;
+  updateAuthInfo: (authInfo?: Authentication) => void;
 }
 
 const useApplicationStore = (): ApplicationStore => {
   const [state, setState] = useState<ApplicationInitialState>(
     getApplicationInitialState()
   );
-  const { IS_AUTHENTICATION, TOKEN, USER } = APP_CONSTANTS.LOCAL_STORAGE;
 
   const updateState = (newState: ApplicationInitialState) => {
     setState(newState);
@@ -58,26 +61,44 @@ const useApplicationStore = (): ApplicationStore => {
     }
   };
 
-  const updateAuthInfo = () => {
-    const storedToken = localStorage.getItem(TOKEN) || "";
-    const storedUser = localStorage.getItem(USER);
-    const storedIsAuthenticated = localStorage.getItem(IS_AUTHENTICATION);
+  const updateAuthInfo = (authInfo?: Authentication) => {
+    if (authInfo) {
+      console.log("updateAuthInfo:>>> authInfo", {
+        authInfo,
+      });
 
-    // console.log("authInfo", {
-    //   token: storedToken,
-    //   user: storedUser ? JSON.parse(storedUser) : null,
-    //   isAuthenticated: storedIsAuthenticated === "true" ? true : false,
-    // });
+      setState((prev) => ({
+        ...prev,
+        auth: {
+          isAuthenticated: authInfo.isAuthenticated,
+          user: authInfo.user,
+        },
+      }));
+    } else {
+      const {
+        IS_AUTHENTICATED: IS_AUTHENTICATION,
+        TOKEN,
+        USER,
+      } = APP_CONSTANTS.LOCAL_STORAGE;
+      const storedToken = localStorage.getItem(TOKEN) || "";
+      const storedUser = localStorage.getItem(USER);
+      const storedIsAuthenticated = localStorage.getItem(IS_AUTHENTICATION);
 
-    setState((prev) => ({
-      ...prev,
-      auth: {
-        ...prev.auth,
+      console.log("updateAuthInfo:>>> NO!!authInfo", {
         token: storedToken,
-        isAuthenticated: storedIsAuthenticated === "true" ? true : false,
         user: storedUser ? JSON.parse(storedUser) : null,
-      },
-    }));
+        isAuthenticated: storedIsAuthenticated === "true" ? true : false,
+      });
+
+      setState((prev) => ({
+        ...prev,
+        auth: {
+          token: storedToken,
+          isAuthenticated: storedIsAuthenticated === "true" ? true : false,
+          user: storedUser ? JSON.parse(storedUser) : null,
+        },
+      }));
+    }
   };
 
   return {
