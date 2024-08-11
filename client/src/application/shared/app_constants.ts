@@ -31,7 +31,7 @@ const APP_CONSTANTS = {
   LOCAL_STORAGE: {
     TOKEN: "token",
     USER: "user",
-    IS_AUTHENTICATION: "isAuthenticated",
+    IS_AUTHENTICATED: "isAuthenticated",
   },
   MAX_STORIES_LIMIT: 4,
 };

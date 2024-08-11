@@ -1,20 +1,12 @@
-/**
-* My Stories Page
-*/
-.my-stories-page {
-  .my-stories-image {
-    // width: 25%;
-  }
-  .my-stories-card-wrapper {
-    border-radius: 5px;
-    padding: 1rem 2rem;
-  }
-}
-
-@media screen and (max-width: 820px) {
-  .my-stories-page {
-    .my-stories-image {
-      // width: 50%;
-    }
-  }
+.explore-container {
+  min-height: 100%;
+  //   .explore-container-snap-area {
+  //       height: 100vh;
+  //       overflow-y: auto;
+  //       scroll-snap-type: y mandatory;
+  //     .story-card {
+  //       scroll-snap-align: start;
+  //     //   scroll-snap-stop: always;
+  //     }
+  //   }
 }

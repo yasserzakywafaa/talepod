@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { Avatar, Box, Divider, ListItemIcon, Typography } from "@mui/material";
 import { LogoutOutlined, WebStoriesOutlined } from "@mui/icons-material";
+import { useMatch, useNavigate } from "react-router-dom";
 
 import { Authentication } from "src/application/store/state";
 // import Button from "@mui/material/Button";
@@ -9,7 +10,6 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { Notify } from "../Notification/Notification";
 import routes from "src/application/routes";
-import { useNavigate } from "react-router-dom";
 
 interface UserAccountMenuButtonProps {
   auth: Authentication;
@@ -21,6 +21,10 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
   const { auth, handleLogOut } = props;
   const [element, setElement] = React.useState<null | HTMLElement>(null);
   const isOpen = Boolean(element);
+
+  const isUserPrivatePages =
+    !!useMatch(routes.myStories(":userId")) ||
+    !!useMatch(routes.myStory(":userId", ":slug"));
 
   const userFullName = `${
     auth.user?.name.givenName
@@ -39,14 +43,14 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
   const onLogoutClick = () => {
     handleLogOut({
       isAuthenticated: false,
-      token: "",
       user: null,
     });
-
     Notify({
       type: "info",
       content: "Logged out",
     });
+
+    if (isUserPrivatePages) navigate(routes.home);
   };
 
   return (

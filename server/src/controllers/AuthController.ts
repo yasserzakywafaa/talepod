@@ -1,6 +1,7 @@
 import {
   DBCollections,
   getDocumentByFieldFromDb,
+  getDocumentFromDb,
   saveUserDataToDb,
 } from "../models/mongoDb";
 import { NextFunction, Request, Response } from "express";
@@ -9,8 +10,6 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 
 import CONFIG from "../config";
 import axios from "axios";
-
-// import { getDocumentById } from "../models/mongoDb/crudOperations";
 
 export const authByGoogle = async (
   request: Request,
@@ -41,7 +40,7 @@ export const authByGoogle = async (
       family_name: familyName,
       picture,
     } = verifyResponseData;
-    let userInfo: User = {
+    let user: User = {
       ...getInitialUserData(),
       userId,
       email,
@@ -58,28 +57,24 @@ export const authByGoogle = async (
       );
       if (!userDocument) {
         // If user doesn't exist, create a new user record
-        userInfo = {
-          ...getInitialUserData(),
-          userId,
-          email,
-          name: { givenName, familyName },
-          picture,
-        };
-        await saveUserDataToDb(userInfo);
+        await saveUserDataToDb(user);
+      } else {
+        user = userDocument as User;
       }
     } catch (error) {
-      console.error("❌ Failed to save new user to DB!", {
-        error,
-      });
+      console.error("❌ Failed to save new user to DB!", { error });
     }
 
     // Generate a JWT for the session
-    const token = jwt.sign(userInfo, CONFIG.JWT_SECRET!, {
+    const token = jwt.sign(user, CONFIG.JWT_SECRET!, {
       expiresIn: "1h",
     });
-    console.log("ℹ️  authByGoogle", { userInfo });
+    console.log("ℹ️  authByGoogle", {
+      userName: `${user.name.givenName} ${user.name.familyName}`,
+      userEmail: user.email,
+    });
 
-    response.status(200).json({ token, user: userInfo });
+    response.status(200).json({ token, user });
   } catch (error) {
     console.error("❌ Failed to authenticate with Google!", {
       error,
@@ -88,8 +83,39 @@ export const authByGoogle = async (
   }
 };
 
+export const getUserInfo = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  const userId = request.query.userId as string;
+  if (!userId) {
+    response.status(400).json({ message: "❌ 'userId' is required!" });
+    return;
+  }
+
+  try {
+    const userDocument = (await getDocumentByFieldFromDb(
+      "userId",
+      userId,
+      DBCollections.users
+    )) as User;
+    console.log("ℹ️  getUserInfo", {
+      userEmail: userDocument.email,
+      userName: userDocument.name.givenName,
+    });
+
+    response.status(200).json(userDocument);
+  } catch (error) {
+    response
+      .status(500)
+      .json({ message: "❌ Failed to get user information!" });
+  }
+};
+
 const AuthController = {
   authByGoogle,
+  getUserInfo,
 };
 
 export default AuthController;

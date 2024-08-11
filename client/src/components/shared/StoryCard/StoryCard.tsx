@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 
 interface StoryCard {
   story: Story;
+  page?: string;
   image?: string;
   loading?: boolean;
   style?: CSSProperties;
@@ -40,7 +41,13 @@ const StoryCard = (props: StoryCard) => {
   const hasDirectionRtl = props.story.profileInfo.language.value === "ar";
 
   const handleOnCardClick = () => {
-    navigate(routes.story(props.story.slug), { replace: false });
+    if (props.page && props.page === "my-stories" && props.story.author) {
+      navigate(routes.myStory(props.story.author, props.story.slug), {
+        replace: false,
+      });
+    } else {
+      navigate(routes.story(props.story.slug), { replace: false });
+    }
   };
 
   return (

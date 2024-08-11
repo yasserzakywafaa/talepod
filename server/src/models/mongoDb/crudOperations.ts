@@ -1,8 +1,6 @@
 import { DBCollections, database } from ".";
-import { Story, StoryData } from "../types/story";
 
 import { ObjectId } from "mongodb";
-import { User } from "../types";
 
 // Create a new document
 export const createDocument = async (
@@ -39,39 +37,21 @@ export const readDocumentByField = async (
 };
 
 // Update a document by ID
-export const updateDocument = async (
-  storyId: string,
-  fieldsToUpdate: Partial<Story>
+export const updateDocument = async <T>(
+  docId: string,
+  fieldsToUpdate: Partial<T>,
+  collectionName: DBCollections
 ) => {
-  const collectionsToSearch = [
-    DBCollections.stories,
-    DBCollections.stories_library,
-  ];
-  let result = null;
-
-  console.log("ℹ️  updateDocument:>>>", {
-    storyId,
-    fieldsToUpdate,
-  });
-
   try {
-    for (const collection of collectionsToSearch) {
-      const stories = database.collection(collection);
+    const documents = database.collection(collectionName);
+    const results = await documents.findOneAndUpdate(
+      { _id: new ObjectId(docId) },
+      { $set: fieldsToUpdate },
+      { returnDocument: "after" }
+    );
+    console.log(`✅ Document updated in collection: ${collectionName}.`);
 
-      result = await stories.findOneAndUpdate(
-        { _id: new ObjectId(storyId) },
-        { $set: fieldsToUpdate },
-        { returnDocument: "after" }
-      );
-
-      if (result) {
-        console.log(
-          `✅ Document updated successfully in collection: ${collection}.`
-        );
-
-        return result;
-      }
-    }
+    return results;
   } catch (error) {
     console.error(`❌ Error updating document:`, error);
     throw new Error("❌ Failed to update document!", { cause: error });

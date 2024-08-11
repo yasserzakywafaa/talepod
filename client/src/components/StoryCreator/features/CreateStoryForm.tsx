@@ -28,6 +28,7 @@ import { Tone, Tones } from "src/shared/mockedData/Tone";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import StorySettings from "./StorySettings";
+import { UserStatus } from "src/shared/user";
 // import { getCreateStoryPrompt } from "../utils/getStoryPrompts";
 // import { getStorySeoPrompt } from "../utils/getStoryPrompts";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
@@ -56,6 +57,7 @@ const CreateStoryForm = () => {
         auth: { isAuthenticated, user },
       },
     },
+    manager: { handleFetchUserInfo },
   } = useApplicationContext();
 
   const {
@@ -69,6 +71,7 @@ const CreateStoryForm = () => {
     // handleCreateStorySeoRequest,
   } = OpenaiManager;
 
+  const isUserActive = user && user.status === UserStatus.active;
   const hasMaxStoriesLimit =
     isAuthenticated &&
     user &&
@@ -76,9 +79,10 @@ const CreateStoryForm = () => {
 
   const isCreateButtonDisabled = (): boolean => {
     if (
+      hasMaxStoriesLimit ||
+      (isAuthenticated && !isUserActive) ||
       hasCensoredWords(profileInfo.name) ||
-      hasCensoredWords(profileInfo.interests) ||
-      hasMaxStoriesLimit
+      hasCensoredWords(profileInfo.interests)
     ) {
       return true;
     }
@@ -99,7 +103,6 @@ const CreateStoryForm = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    console.log("isAuthenticated:>>>", isAuthenticated);
     if (!isAuthenticated) {
       handleToggleLoginModal();
       return;
@@ -122,9 +125,15 @@ const CreateStoryForm = () => {
           storyParams
         );
 
-        if (story._id && story.slug) {
-          navigate(routes.story(story.slug), { replace: false });
-          window.localStorage.setItem("newStoryCreated", "true");
+        if (user) {
+          await handleFetchUserInfo(user.userId);
+
+          if (story._id && story.slug) {
+            navigate(routes.myStory(user.userId, story.slug), {
+              replace: false,
+            });
+            window.localStorage.setItem("newStoryCreated", "true");
+          }
         }
       } catch (error) {
         console.error("❌ Failed to create a story!", {
@@ -482,20 +491,38 @@ const CreateStoryForm = () => {
           </Accordion>
         )}
 
-        {isAuthenticated &&
-          user &&
-          !user.isPaidUser &&
-          (!hasMaxStoriesLimit ? (
-            <Alert severity="info">
-              {`${
-                APP_CONSTANTS.MAX_STORIES_LIMIT - user.storyCount
-              } stories left out of ${APP_CONSTANTS.MAX_STORIES_LIMIT}`}
+        {/* Alerts */}
+        <Box
+          sx={{
+            gap: 1,
+            marginY: 2,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {isAuthenticated &&
+            user &&
+            !user.isPaidUser &&
+            (!hasMaxStoriesLimit ? (
+              <Alert severity="info">
+                {`${
+                  APP_CONSTANTS.MAX_STORIES_LIMIT - user.storyCount
+                } stories left out of ${APP_CONSTANTS.MAX_STORIES_LIMIT}`}
+              </Alert>
+            ) : (
+              <Alert severity="warning">
+                {`You have consumed your maximum credit of ${APP_CONSTANTS.MAX_STORIES_LIMIT} stories`}
+              </Alert>
+            ))}
+
+          {isAuthenticated && !isUserActive && (
+            <Alert severity="error">
+              {"Your account is not active and not allowed to create stories!"}
             </Alert>
-          ) : (
-            <Alert severity="warning">
-              {`You have consumed your maximum credit of ${APP_CONSTANTS.MAX_STORIES_LIMIT} stories`}
-            </Alert>
-          ))}
+          )}
+        </Box>
 
         <Box
           display="flex"

@@ -12,7 +12,7 @@ import {
 interface NotificationProps extends ToastContainerProps {}
 
 interface NotificationToast {
-  content: any;
+  content: string;
   type?: TypeOptions;
   options?: ToastOptions;
 }
@@ -34,6 +34,7 @@ export const Notification = (props: NotificationProps) => {
       limit={props.limit}
       style={props.style}
       onClick={props.onClick}
+      stacked={props.stacked}
       className={props.className}
       bodyStyle={props.bodyStyle}
       draggable={props.draggable}
