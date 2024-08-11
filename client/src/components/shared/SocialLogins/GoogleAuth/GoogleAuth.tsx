@@ -29,17 +29,26 @@ const GoogleAuth = (props: GoogleAuthProps) => {
   const handleCloseCallback = () => toggleIsFetching(false);
 
   const onSuccessCallback = async (credentialResponse: CredentialResponse) => {
-    // toggleIsFetching(false);
     const authInfo = await handleOnGoogleAuthSuccess(credentialResponse);
-    handleSetAuthInfo(authInfo);
-    toggleIsFetching(false);
+
+    if (authInfo) {
+      handleSetAuthInfo(authInfo);
+      Notify({
+        type: "success",
+        content: isRegister
+          ? "Registered Successfully!"
+          : `Hey ${authInfo.user?.name.givenName}, welcome back!`,
+      });
+    } else {
+      Notify({
+        type: "error",
+        content: isRegister ? "Failed to register!" : `Failed to login!`,
+      });
+    }
+
     toggleIsModalVisible();
-    Notify({
-      type: "success",
-      content: isRegister
-        ? "Registered Successfully!"
-        : `Hey ${authInfo.user?.name.givenName}, welcome back!`,
-    });
+    toggleIsFetching(false);
+    toggleIsFetching(false);
   };
 
   const onErrorCallback = () => {
