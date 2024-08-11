@@ -13,7 +13,6 @@ import {
 } from "@mui/icons-material";
 import {
   AppBar,
-  Avatar,
   Box,
   Button,
   Container,
@@ -30,6 +29,7 @@ import { InstallAppModal } from "src/components/Modals/InstallAppModal/InstallAp
 import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
 import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal";
 import ToggleColorMode from "src/components/shared/ToggleColorMode";
+import UserAccountMenuButton from "./UserAccountButton";
 import routes from "src/application/routes";
 import { scrollToSection } from "src/shared/utils/scrollTo";
 import { useApplicationContext } from "src/application/store/Provider";
@@ -50,6 +50,7 @@ const ApplicationBar = () => {
       state: { themeMode, auth },
       toggleThemeMode,
     },
+    manager: { handleSetAuthInfo },
   } = useApplicationContext();
   const { isInStandaloneMode } = useDetectBrowserType();
 
@@ -61,10 +62,6 @@ const ApplicationBar = () => {
     store: { handleToggleRegisterModal },
   } = useRegisterModalContext();
 
-  const userFullName = `${
-    auth.user?.name.givenName
-  } ${auth.user?.name.familyName.charAt(0)}.`;
-
   // Add all the pages the will contain the AppBar
   const pagesMatch = {
     isHomePage: !!useMatch(routes.home),
@@ -72,6 +69,7 @@ const ApplicationBar = () => {
     isExplorePage: !!useMatch(routes.explore),
     isContactPage: !!useMatch(routes.contact),
     isViewStoryPage: !!useMatch(routes.story(":id")),
+    isMyStoriesPage: !!useMatch(routes.myStories(":userId")),
     isCheckoutPage: !!useMatch(routes.checkout),
     isPrivacyPolicy: !!useMatch(routes.privacyPolicy),
     isTermsOfService: !!useMatch(routes.termsAndConditions),
@@ -102,7 +100,7 @@ const ApplicationBar = () => {
         break;
       case "install":
         setIsInstallAppDialogOpen(true);
-        break;
+        return;
 
       default:
         scrollToSection(sectionId);
@@ -204,54 +202,6 @@ const ApplicationBar = () => {
                         Contact Us
                       </Typography>
                     </MenuItem>
-                    {pagesMatch.isHomePage && (
-                      <>
-                        {/* <MenuItem
-                          onClick={handleOnMenuItemClick("features")}
-                          sx={{ py: "6px", px: "12px" }}
-                        >
-                          <Typography variant="body2" color="text.primary">
-                            Features
-                          </Typography>
-                        </MenuItem> */}
-
-                        {/* <MenuItem
-                          onClick={handleOnMenuItemClick("testimonials")}
-                          sx={{ py: "6px", px: "12px" }}
-                        >
-                          <Typography variant="body2" color="text.primary">
-                            Testimonials
-                          </Typography>
-                        </MenuItem> */}
-
-                        {/* <MenuItem
-                          onClick={handleOnMenuItemClick("highlights")}
-                          sx={{ py: "6px", px: "12px" }}
-                        >
-                          <Typography variant="body2" color="text.primary">
-                            Highlights
-                          </Typography>
-                        </MenuItem> */}
-
-                        {/* <MenuItem
-                          onClick={handleOnMenuItemClick("pricing")}
-                          sx={{ py: "6px", px: "12px" }}
-                        >
-                          <Typography variant="body2" color="text.primary">
-                            Pricing
-                          </Typography>
-                        </MenuItem> */}
-
-                        {/* <MenuItem
-                          onClick={handleOnMenuItemClick("faq")}
-                          sx={{ py: "6px", px: "12px" }}
-                        >
-                          <Typography variant="body2" color="text.primary">
-                            FAQ
-                          </Typography>
-                        </MenuItem>  */}
-                      </>
-                    )}
                   </Box>
 
                   <Box
@@ -262,34 +212,10 @@ const ApplicationBar = () => {
                     }}
                   >
                     {auth.isAuthenticated ? (
-                      <MenuItem onClick={handleOnMenuItemClick("account")}>
-                        {auth.user?.picture ? (
-                          <Avatar
-                            color="secondary"
-                            alt="User Picture"
-                            src={auth.user?.picture!}
-                            sx={{ mr: 1, width: 24, height: 24 }}
-                          />
-                        ) : (
-                          <Avatar>
-                            {auth.user?.name.givenName.charAt(0)}
-                            {auth.user?.name.familyName.charAt(0)}
-                          </Avatar>
-                        )}
-
-                        <Typography
-                          variant="body1"
-                          color="text.primary"
-                          sx={{
-                            maxWidth: "100px",
-                            overflowX: "hidden",
-                            whiteSpace: "nowrap",
-                            textOverflow: "ellipsis",
-                          }}
-                        >
-                          {userFullName}
-                        </Typography>
-                      </MenuItem>
+                      <UserAccountMenuButton
+                        auth={auth}
+                        handleLogOut={handleSetAuthInfo}
+                      />
                     ) : (
                       <>
                         <MenuItem onClick={handleToggleRegisterModal}>
@@ -440,32 +366,14 @@ const ApplicationBar = () => {
                       <Divider sx={{ width: "80%", margin: "auto" }} />
 
                       {auth.isAuthenticated ? (
-                        <MenuItem onClick={handleOnMenuItemClick("account")}>
-                          {auth.user?.picture ? (
-                            <Avatar
-                              alt="User Picture"
-                              src={auth.user?.picture!}
-                              sx={{ mr: 1, width: 24, height: 24 }}
+                        <>
+                          <MenuItem>
+                            <UserAccountMenuButton
+                              auth={auth}
+                              handleLogOut={handleSetAuthInfo}
                             />
-                          ) : (
-                            <Avatar>
-                              {auth.user?.name.givenName.charAt(0)}
-                              {auth.user?.name.familyName.charAt(0)}
-                            </Avatar>
-                          )}
-                          <Typography
-                            variant="body1"
-                            color="text.primary"
-                            sx={{
-                              maxWidth: "100px",
-                              overflowX: "hidden",
-                              whiteSpace: "nowrap",
-                              textOverflow: "ellipsis",
-                            }}
-                          >
-                            {userFullName}
-                          </Typography>
-                        </MenuItem>
+                          </MenuItem>
+                        </>
                       ) : (
                         <>
                           <MenuItem onClick={handleToggleRegisterModal}>
@@ -525,34 +433,6 @@ const ApplicationBar = () => {
                         />
                         <Typography variant="h6">Refresh App</Typography>
                       </MenuItem>
-
-                      {pagesMatch.isHomePage && (
-                        <>
-                          {/* <MenuItem onClick={handleOnMenuItemClick("features")}>
-                            Features
-                          </MenuItem> */}
-
-                          {/* <MenuItem
-                              onClick={handleOnMenuItemClick("testimonials")}
-                            >
-                              Testimonials
-                            </MenuItem>
-
-                            <MenuItem
-                              onClick={handleOnMenuItemClick("highlights")}
-                            >
-                              Highlights
-                            </MenuItem> */}
-
-                          {/* <MenuItem onClick={handleOnMenuItemClick("pricing")}>
-                            Pricing
-                          </MenuItem> */}
-
-                          {/* <MenuItem onClick={handleOnMenuItemClick("faq")}>
-                            FAQ
-                          </MenuItem> */}
-                        </>
-                      )}
                     </Box>
                   </Drawer>
                 </Box>

@@ -1,0 +1,20 @@
+/**
+* My Stories Page
+*/
+.my-stories-page {
+  .my-stories-image {
+    // width: 25%;
+  }
+  .my-stories-card-wrapper {
+    border-radius: 5px;
+    padding: 1rem 2rem;
+  }
+}
+
+@media screen and (max-width: 820px) {
+  .my-stories-page {
+    .my-stories-image {
+      // width: 50%;
+    }
+  }
+}

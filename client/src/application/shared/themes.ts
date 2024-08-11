@@ -145,5 +145,13 @@ export const darkTheme = createTheme({
         },
       },
     },
+    MuiMenu: {
+      styleOverrides: {
+        list: {
+          color: white,
+          backgroundColor: darkCharcoal,
+        },
+      },
+    },
   },
 });

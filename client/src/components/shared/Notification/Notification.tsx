@@ -44,7 +44,7 @@ export const Notification = (props: NotificationProps) => {
       containerId={props.containerId}
       pauseOnHover={props.pauseOnHover}
       closeOnClick={props.closeOnClick}
-      autoClose={props.autoClose || 5000}
+      autoClose={props.autoClose || 3000}
       bodyClassName={props.bodyClassName}
       progressStyle={props.progressStyle}
       toastClassName={props.toastClassName}

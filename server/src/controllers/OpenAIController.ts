@@ -6,6 +6,7 @@ import {
   StoryParams,
   StoryParts,
   StorySeo,
+  User,
 } from "src/models/types";
 import { getSlugFromText, replaceSpaceWithDash } from "../utils/stringUtils";
 import {
@@ -33,6 +34,9 @@ export const createStory = async (
   const { storyPrompt } = request.body;
   const profileInfo = request.body.profileInfo as ProfileInfo;
   const storyParams = request.body.storyParams as StoryParams;
+  const userInfo = request.body.userInfo as User;
+
+  console.log("userInfo:>>>", userInfo);
 
   const createStoryRequest = async (): Promise<string> => {
     // OpenAI Text Generation API Call

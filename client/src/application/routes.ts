@@ -3,6 +3,7 @@ const routes = {
   create: `/create`,
   explore: `/bedtime-stories`,
   story: (slug: string) => `/bedtime-story/${slug}`,
+  myStories: (userId: string) => `/my-bedtime-stories/${userId}`,
   contact: `/contact`,
   privacyPolicy: `/privacy-policy`,
   termsAndConditions: `/terms-and-conditions`,

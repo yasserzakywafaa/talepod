@@ -17,6 +17,7 @@ import { useApplicationContext } from "./store/Provider";
 const HomePage = lazy(() => import("../Pages/Home/Home"));
 const CreateStoryPage = lazy(() => import("../Pages/CreateStory/CreateStory"));
 const ExplorePage = lazy(() => import("../Pages/Explore/Explore"));
+const MyStoriesPage = lazy(() => import("../Pages/MyStories/MyStories"));
 const ContactPage = lazy(() => import("../Pages/Contact/Contact"));
 const ViewStoryPage = lazy(() => import("../Pages/ViewStory/ViewStory"));
 const CheckoutPage = lazy(() => import("../Pages/Checkout/CheckoutPage"));
@@ -55,6 +56,16 @@ const AppContent = () => {
           <Route index path={routes.create} element={<CreateStoryPage />} />
 
           <Route index path={routes.explore} element={<ExplorePage />} />
+
+          {state.auth.isAuthenticated &&
+            !!state.auth.token &&
+            !!state.auth.user && (
+              <Route
+                index
+                path={routes.myStories(":userId")}
+                element={<MyStoriesPage />}
+              />
+            )}
 
           <Route index path={routes.contact} element={<ContactPage />} />
 
