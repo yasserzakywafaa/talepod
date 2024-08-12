@@ -24,13 +24,10 @@ import { AutoAwesomeOutlined, ExpandMoreOutlined } from "@mui/icons-material";
 import { Environment, Environments } from "src/shared/mockedData/Environments";
 import { Language, Languages } from "../../../shared/languages";
 import { Moral, Morals } from "src/shared/mockedData/Moral";
+import { SubscriptionPlanEnum, UserRole, UserStatus } from "src/shared/user";
 import { Tone, Tones } from "src/shared/mockedData/Tone";
 
-import APP_CONSTANTS from "src/application/shared/app_constants";
 import StorySettings from "./StorySettings";
-import { UserStatus } from "src/shared/user";
-// import { getCreateStoryPrompt } from "../utils/getStoryPrompts";
-// import { getStorySeoPrompt } from "../utils/getStoryPrompts";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
@@ -75,7 +72,8 @@ const CreateStoryForm = () => {
   const hasMaxStoriesLimit =
     isAuthenticated &&
     user &&
-    APP_CONSTANTS.MAX_STORIES_LIMIT === user.storyCount;
+    user.role !== UserRole.admin &&
+    user.subscription.maxStoriesAllowed === user.storyCount;
 
   const isCreateButtonDisabled = (): boolean => {
     if (
@@ -200,6 +198,58 @@ const CreateStoryForm = () => {
     expanded: boolean
   ) => {
     storyCreatorStore.toggleStorySettings(expanded);
+  };
+
+  const renderCounterAlerts = () => {
+    const isFreeSubs =
+      user &&
+      !user.isPaidUser &&
+      user.subscription.subscriptionPlanType === SubscriptionPlanEnum.free;
+    const isProSubs =
+      user &&
+      user.isPaidUser &&
+      user.subscription.subscriptionPlanType === SubscriptionPlanEnum.pro;
+    const isAdvancedSubs =
+      user &&
+      user.isPaidUser &&
+      user.subscription.subscriptionPlanType === SubscriptionPlanEnum.advanced;
+
+    if (!isAuthenticated) return <></>;
+
+    if (!isUserActive) {
+      return (
+        <Alert severity="error">
+          {"Your account is not active and not allowed to create stories!"}
+        </Alert>
+      );
+    }
+
+    if (user && user.role === UserRole.admin) {
+      return (
+        <Alert severity="info">
+          {`You can create ♾️ number of stories 😎`}
+        </Alert>
+      );
+    }
+
+    if (!hasMaxStoriesLimit) {
+      if (isFreeSubs || isProSubs || isAdvancedSubs) {
+        return (
+          <Alert severity="info">
+            {`You have ${
+              user.subscription.maxStoriesAllowed - user.storyCount
+            } stories left out of ${user.subscription.maxStoriesAllowed}`}
+          </Alert>
+        );
+      }
+      return <></>;
+    } else {
+      return (
+        <Alert severity="warning">
+          {`You have consumed your maximum credit of ${user.subscription.maxStoriesAllowed} stories`}
+        </Alert>
+      );
+    }
   };
 
   // const handleCreateStoryLibrary = async () => {
@@ -502,32 +552,13 @@ const CreateStoryForm = () => {
             alignItems: "center",
           }}
         >
-          {isAuthenticated &&
-            user &&
-            !user.isPaidUser &&
-            (!hasMaxStoriesLimit ? (
-              <Alert severity="info">
-                {`${
-                  APP_CONSTANTS.MAX_STORIES_LIMIT - user.storyCount
-                } stories left out of ${APP_CONSTANTS.MAX_STORIES_LIMIT}`}
-              </Alert>
-            ) : (
-              <Alert severity="warning">
-                {`You have consumed your maximum credit of ${APP_CONSTANTS.MAX_STORIES_LIMIT} stories`}
-              </Alert>
-            ))}
-
-          {isAuthenticated && !isUserActive && (
-            <Alert severity="error">
-              {"Your account is not active and not allowed to create stories!"}
-            </Alert>
-          )}
+          {renderCounterAlerts()}
         </Box>
 
         <Box
           display="flex"
           marginX={2}
-          marginY={2}
+          marginY={1}
           width="100%"
           component="div"
           alignItems="center"

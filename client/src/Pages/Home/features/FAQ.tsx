@@ -67,7 +67,7 @@ export default function FAQ() {
           onChange={handleChange("panel1")}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreOutlined />}
+            expandIcon={<ExpandMoreOutlined color="primary" />}
             aria-controls="panel1d-content"
             id="panel1d-header"
           >
@@ -98,7 +98,7 @@ export default function FAQ() {
           onChange={handleChange("panel2")}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreOutlined />}
+            expandIcon={<ExpandMoreOutlined color="primary" />}
             aria-controls="panel2d-content"
             id="panel2d-header"
           >
@@ -133,7 +133,7 @@ export default function FAQ() {
           onChange={handleChange("panel4")}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreOutlined />}
+            expandIcon={<ExpandMoreOutlined color="primary" />}
             aria-controls="panel4d-content"
             id="panel4d-header"
           >
@@ -165,7 +165,7 @@ export default function FAQ() {
           onChange={handleChange("panel5")}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreOutlined />}
+            expandIcon={<ExpandMoreOutlined color="primary" />}
             aria-controls="panel5d-content"
             id="panel5d-header"
           >
@@ -190,7 +190,7 @@ export default function FAQ() {
           onChange={handleChange("panel6")}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreOutlined />}
+            expandIcon={<ExpandMoreOutlined color="primary" />}
             aria-controls="panel6d-content"
             id="panel6d-header"
           >
@@ -216,7 +216,7 @@ export default function FAQ() {
           onChange={handleChange("panel3")}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreOutlined />}
+            expandIcon={<ExpandMoreOutlined color="primary" />}
             aria-controls="panel3d-content"
             id="panel3d-header"
           >

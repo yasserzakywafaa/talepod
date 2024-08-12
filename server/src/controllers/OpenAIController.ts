@@ -14,6 +14,7 @@ import {
   StoryParts,
   StorySeo,
   User,
+  UserRole,
   UserStatus,
 } from "../models/types";
 import { getSlugFromText, replaceSpaceWithDash } from "../utils/stringUtils";
@@ -80,98 +81,99 @@ export const createStory = async (
   };
 
   if (
-    user.status === UserStatus.active &&
-    user.storyCount < CONFIG.MAX_STORIES_LIMIT + 1
+    user.role !== UserRole.admin &&
+    user.storyCount >= user.subscription.maxStoriesAllowed
   ) {
-    let storyId: ObjectId | undefined;
+    response.status(403).json({
+      message: `You have consumed your maximum credit of ${user.subscription.maxStoriesAllowed} stories`,
+    });
+  }
+  if (user.status !== UserStatus.active) {
+    response.status(403).json({
+      message: "Your account is not active and not allowed to create stories!",
+    });
+  }
+
+  let storyId: ObjectId | undefined;
+  try {
+    const storyParts = await retry(createAndExtractStoryParts, 3, 2000);
+    const totalCharacters = (storyParts.mainStory + storyParts.poem).length;
+
+    // Count the total characters in the story
+    if (totalCharacters > 4000) {
+      throw new Error(
+        "❌ The story exceeds the maximum number of characters [4,000]!"
+      );
+    }
+    const storyData: Partial<Story> = {
+      ...storyParts,
+      author: user._id,
+      createdAt: new Date(),
+    };
+    const updatedStoryParams: StoryParams = {
+      ...storyParams,
+      totalCharacters,
+    };
+
+    // Save story to
     try {
-      const storyParts = await retry(createAndExtractStoryParts, 3, 2000);
-      const totalCharacters = (storyParts.mainStory + storyParts.poem).length;
+      // Save story to MongoDB Atlas
+      storyId = await saveStoryToDb(storyData, profileInfo, updatedStoryParams);
 
-      // Count the total characters in the story
-      if (totalCharacters > 4000) {
-        throw new Error(
-          "❌ The story exceeds the maximum number of characters [4,000]!"
-        );
-      }
-      const storyData: Partial<Story> = {
-        ...storyParts,
-        author: user._id,
+      // Update the story document with the slug (title + id)
+      const storyWithSlug = (await updateDocument<Story>(
+        storyId.toString(),
+        {
+          slug: `${getSlugFromText(storyParts.title)}-${storyId
+            .toString()
+            .slice(-9)}`,
+        },
+        DBCollections.stories
+      )) as Story;
+      storyData["slug"] = storyWithSlug.slug;
+
+      response.json({
+        ...storyData,
+        _id: storyId,
+        profileInfo,
+        storyParams,
         createdAt: new Date(),
-      };
-      const updatedStoryParams: StoryParams = {
-        ...storyParams,
-        totalCharacters,
-      };
+      });
+    } catch (error) {
+      throw new Error("❌ Failed to save the created story to Db", {
+        cause: error,
+      });
+    }
 
-      // Save story to
+    // Update User with story
+    if (storyId) {
       try {
-        // Save story to MongoDB Atlas
-        storyId = await saveStoryToDb(
-          storyData,
-          profileInfo,
-          updatedStoryParams
-        );
-
-        // Update the story document with the slug (title + id)
-        const storyWithSlug = (await updateDocument<Story>(
-          storyId.toString(),
+        const updatedUser = (await updateDocument<User>(
+          user._id.toString(),
           {
-            slug: `${getSlugFromText(storyParts.title)}-${storyId
-              .toString()
-              .slice(-9)}`,
+            storyCount: user.storyCount + 1,
+            stories: [...user.stories, storyId.toString()],
           },
-          DBCollections.stories
-        )) as Story;
-        storyData["slug"] = storyWithSlug.slug;
+          DBCollections.users
+        )) as User;
 
-        response.json({
-          ...storyData,
-          _id: storyId,
-          profileInfo,
-          storyParams,
-          createdAt: new Date(),
+        console.log(`✅ User updated with new storyId:>>>`, {
+          userStories: updatedUser.stories,
         });
       } catch (error) {
-        throw new Error("❌ Failed to save the created story to Db", {
+        throw new Error("❌ Failed to the user info to Db", {
           cause: error,
         });
       }
-
-      // Update User with story
-      if (storyId) {
-        try {
-          const updatedUser = (await updateDocument<User>(
-            user._id.toString(),
-            {
-              storyCount: user.storyCount + 1,
-              stories: [...user.stories, storyId],
-            },
-            DBCollections.users
-          )) as User;
-
-          console.log(`✅ User updated with new storyId:>>>`, {
-            userStories: updatedUser.stories,
-          });
-        } catch (error) {
-          throw new Error("❌ Failed to the user info to Db", {
-            cause: error,
-          });
-        }
-      }
-
-      console.log("✅ Story Created Successfully", {
-        request: request.path,
-        storySlug: storyData.slug,
-        MODEL_NAME: CONFIG.OPENAI_MODEL_NAME,
-      });
-    } catch (error) {
-      next(`❌ Failed to create a story! ${error}`);
     }
-  } else {
-    response.status(403).json({
-      message: "User is not active and not allowed to create stories!",
+
+    console.log("✅ Story Created Successfully", {
+      request: request.path,
+      storySlug: storyData.slug,
+      MODEL_NAME: CONFIG.OPENAI_MODEL_NAME,
     });
+  } catch (error) {
+    next(`❌ Failed to create a story! ${error}`);
   }
 };
 

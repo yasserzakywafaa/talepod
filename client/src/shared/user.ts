@@ -5,16 +5,15 @@ export interface User {
   name: UserName;
   picture: string;
   createdAt: Date;
-  lastLogin?: Date;
-  stories?: string[];
+  lastLogin: Date;
+  stories: string[];
   storyCount: number;
   status: UserStatus;
   role: UserRole;
   isPaidUser: boolean;
-  subscription?: UserSubscription;
+  subscription: UserSubscription;
   location?: string;
   timezone?: string;
-  languagePreference?: string;
 }
 
 export interface UserName {
@@ -37,10 +36,17 @@ export enum UserRole {
 }
 
 export interface UserSubscription {
-  subscriptionPlan?: string;
-  subscriptionExpiry?: Date;
+  subscriptionPlanType: SubscriptionPlanEnum;
+  subscriptionExpiry: Date;
   paymentHistory?: UserPaymentHistory[];
-  preferences?: UserPreferences;
+  preferences: UserPreferences;
+  maxStoriesAllowed: number;
+}
+
+export enum SubscriptionPlanEnum {
+  free = "free",
+  pro = "pro",
+  advanced = "advanced",
 }
 
 export interface UserPaymentHistory {
@@ -52,4 +58,5 @@ export interface UserPaymentHistory {
 export interface UserPreferences {
   theme: "light" | "dark";
   notifications: boolean;
+  languagePreference?: string;
 }

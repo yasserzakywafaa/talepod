@@ -1,7 +1,11 @@
 import * as React from "react";
 
 import { Avatar, Box, Divider, ListItemIcon, Typography } from "@mui/material";
-import { LogoutOutlined, WebStoriesOutlined } from "@mui/icons-material";
+import {
+  KeyboardArrowDownOutlined,
+  LogoutOutlined,
+  WebStoriesOutlined,
+} from "@mui/icons-material";
 import { useMatch, useNavigate } from "react-router-dom";
 
 import { Authentication } from "src/application/store/state";
@@ -22,13 +26,15 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
   const [element, setElement] = React.useState<null | HTMLElement>(null);
   const isOpen = Boolean(element);
 
+  if (!auth.user) return;
+
   const isUserPrivatePages =
     !!useMatch(routes.myStories(":userId")) ||
     !!useMatch(routes.myStory(":userId", ":slug"));
 
   const userFullName = `${
-    auth.user?.name.givenName
-  } ${auth.user?.name.familyName.charAt(0)}.`;
+    auth.user.name.givenName
+  } ${auth.user.name.familyName.charAt(0)}.`;
 
   const handleMenuButtonClick = (event: React.MouseEvent<HTMLElement>) => {
     setElement(event.currentTarget);
@@ -68,16 +74,16 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
         }}
         onClick={handleMenuButtonClick}
       >
-        {auth.user?.picture ? (
+        {auth.user.picture ? (
           <Avatar
             alt="User Picture"
-            src={auth.user?.picture!}
+            src={auth.user.picture}
             sx={{ mr: 1, width: 20, height: 20 }}
           />
         ) : (
           <Avatar>
-            {auth.user?.name.givenName.charAt(0)}
-            {auth.user?.name.familyName.charAt(0)}
+            {auth.user.name.givenName.charAt(0)}
+            {auth.user.name.familyName.charAt(0)}
           </Avatar>
         )}
         <Typography
@@ -93,6 +99,8 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
         >
           {userFullName}
         </Typography>
+
+        <KeyboardArrowDownOutlined color="secondary" sx={{ ml: "8px" }} />
       </Box>
 
       <Menu
