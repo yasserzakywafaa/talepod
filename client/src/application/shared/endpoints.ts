@@ -40,6 +40,7 @@ const END_POINTS = {
     GET_ALL_STORIES: `${publicApiUrl}/api/v1/bedtime-stories`,
     GET_STORY_BY_SLUG: (slug: string) =>
       `${publicApiUrl}/api/v1/bedtime-story/${slug}`,
+    GET_ALL_USER_STORIES: `${publicApiUrl}/api/v1/user-bedtime-stories`,
   },
   CONTACT: {
     SUPPORT: `${publicApiUrl}/api/v1/contact-support`,

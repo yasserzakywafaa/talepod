@@ -1,6 +1,7 @@
 import {
   DBCollections,
   getDocumentByFieldFromDb,
+  getDocumentFromDb,
   saveFileDataToDb,
   saveStorySeoToDb,
   saveStoryToDb,
@@ -40,9 +41,8 @@ export const createStory = async (
   const profileInfo = request.body.profileInfo as ProfileInfo;
   const storyParams = request.body.storyParams as StoryParams;
   const userInfo = request.body.userInfo as User;
-  const user = (await getDocumentByFieldFromDb(
-    "userId",
-    userInfo.userId,
+  const user = (await getDocumentFromDb(
+    new ObjectId(userInfo._id),
     DBCollections.users
   )) as User;
 

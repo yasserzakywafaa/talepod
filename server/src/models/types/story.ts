@@ -113,4 +113,5 @@ export enum StoryFiltersEnum {
   environment = "storyParams.environment.value",
   createdByAdmin = "storyParams.createdByAdmin",
   audio = "audioFile.url",
+  author = "author",
 }

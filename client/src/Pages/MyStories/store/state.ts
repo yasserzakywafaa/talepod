@@ -1,6 +1,5 @@
 import { PagingInfo } from "src/shared/types";
 import { Story } from "src/components/StoryCreator/store/state";
-import { SupportedLanguages } from "src/shared/languages";
 
 export interface MyStoriesInitialState {
   isFetching: boolean;
@@ -23,17 +22,6 @@ export interface MyStoriesStoryFilters {
   audio: boolean | undefined;
 }
 
-const getLanguageFromUserLanguage = (): string[] | undefined => {
-  const userLanguage = navigator.language || navigator.languages[0];
-  const supportedLanguages = Object.values(SupportedLanguages);
-
-  const matchedLanguage = supportedLanguages.find((lang) =>
-    userLanguage.startsWith(lang)
-  ) as string;
-
-  return matchedLanguage ? [matchedLanguage] : undefined;
-};
-
 export const getMyStoriesInitialState = (): MyStoriesInitialState => {
   return {
     isFetching: true,
@@ -44,7 +32,7 @@ export const getMyStoriesInitialState = (): MyStoriesInitialState => {
       name: "",
       gender: "",
       age: [],
-      language: getLanguageFromUserLanguage() || [],
+      language: [],
       moral: [],
       tone: [],
       environment: [],

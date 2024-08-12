@@ -20,6 +20,7 @@ const END_POINTS = {
   STORIES: {
     GET_ALL_STORIES: "/api/v1/bedtime-stories",
     GET_STORY_BY_ID: (storyId: string) => `/api/v1/bedtime-story/${storyId}`,
+    GET_ALL_USER_STORIES: "/api/v1/user-bedtime-stories",
   },
   CONTACT: {
     SUPPORT: "/api/v1/contact-support",

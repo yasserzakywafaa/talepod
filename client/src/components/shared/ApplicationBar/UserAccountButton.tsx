@@ -28,9 +28,8 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
 
   if (!auth.user) return;
 
-  const isUserPrivatePages =
-    !!useMatch(routes.myStories(":userId")) ||
-    !!useMatch(routes.myStory(":userId", ":slug"));
+  const isUserPrivatePages = !!useMatch(routes.myStories(":userId"));
+  // !!useMatch(routes.myStory(":userId", ":slug"));
 
   const userFullName = `${
     auth.user.name.givenName

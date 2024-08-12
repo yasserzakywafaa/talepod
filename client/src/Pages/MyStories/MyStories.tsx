@@ -9,7 +9,7 @@ import MyStoriesFiltersPanel from "./features/MyStoriesFiltersPanel/MyStoriesFil
 import NoStoriesFound from "./features/NoStoriesFound";
 import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
-import Share from "src/components/shared/Share";
+// import Share from "src/components/shared/Share";
 import StoryCard from "src/components/shared/StoryCard/StoryCard";
 import { useEffect } from "react";
 import { useMyStoriesContext } from "../MyStories/store/Provider";
@@ -136,7 +136,7 @@ const MyStoriesPage: React.FC = () => {
                 <></>
               )}
 
-              <Box
+              {/* <Box
                 sx={{
                   width: "100%",
                   display: "flex",
@@ -146,7 +146,7 @@ const MyStoriesPage: React.FC = () => {
                 }}
               >
                 <Share />
-              </Box>
+              </Box> */}
             </Box>
           </>
         ) : (

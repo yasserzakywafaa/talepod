@@ -1,5 +1,9 @@
 import { ApiRequestParams, ApiResponseWithPaging } from "src/shared/types";
 import { MyStoriesStoryFilters, getMyStoriesInitialState } from "./state";
+import {
+  Notify,
+  ToastTypes,
+} from "src/components/shared/Notification/Notification";
 import axios, { AxiosResponse } from "axios";
 import { parseQueryString, replaceUrl } from "src/shared/utils/url";
 
@@ -7,6 +11,7 @@ import END_POINTS from "src/application/shared/endpoints";
 import { MyStoriesStore } from "./store";
 import { Story } from "src/components/StoryCreator/store/state";
 import { scrollToTop } from "src/shared/utils/scrollTo";
+import { useApplicationContext } from "src/application/store/Provider";
 import { useFiltersPanel } from "../features/MyStoriesFiltersPanel/useMyStoriesFiltersPanel";
 
 export interface MyStoriesManager {
@@ -42,6 +47,12 @@ export const useMyStoriesManager = (
   };
   const { activeFiltersCount, getActiveFiltersCount } =
     useFiltersPanel(filters);
+
+  const {
+    store: {
+      state: { auth },
+    },
+  } = useApplicationContext();
 
   const setUp = async () => {
     store.isMyStoriesFetching(true);
@@ -149,16 +160,27 @@ export const useMyStoriesManager = (
 
     try {
       const response: AxiosResponse<ApiResponseWithPaging<Story[]>> =
-        await axios.get(END_POINTS.STORIES.GET_ALL_STORIES, {
+        await axios.get(END_POINTS.STORIES.GET_ALL_USER_STORIES, {
           params: {
             filters: JSON.stringify(updatedFilters),
             hasActiveFilters,
+            userId: auth.user && auth.user._id,
           } as ApiRequestParams,
         });
       store.updatePagingInfo(response.data.paging);
       store.updateStories(response.data.results);
     } catch (error) {
-      throw new Error(`❌ Failed to fetch Stories :>>> ${error}`);
+      if (axios.isAxiosError(error) && error.response) {
+        Notify({
+          content: error.response.data.message,
+          type: ToastTypes.Error,
+        });
+      } else {
+        Notify({
+          content: `Oops, something went wrong!`,
+          type: ToastTypes.Error,
+        });
+      }
     } finally {
       store.isMyStoriesFetching(false);
     }

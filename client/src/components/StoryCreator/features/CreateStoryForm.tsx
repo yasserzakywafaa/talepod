@@ -127,7 +127,7 @@ const CreateStoryForm = () => {
           await handleFetchUserInfo(user.userId);
 
           if (story._id && story.slug) {
-            navigate(routes.myStory(user.userId, story.slug), {
+            navigate(routes.myStory(user._id, story.slug), {
               replace: false,
             });
             window.localStorage.setItem("newStoryCreated", "true");

@@ -3,6 +3,10 @@ export interface PageResponse<TResult> {
   paging: PagingInfo;
 }
 
+export interface PageErrorResponse<TResult> {
+  message: TResult;
+}
+
 export interface PagingInfo {
   pageNumber?: number;
   pageSize?: number;
