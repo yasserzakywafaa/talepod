@@ -212,10 +212,12 @@ const ApplicationBar = () => {
                     }}
                   >
                     {auth.isAuthenticated ? (
-                      <UserAccountMenuButton
-                        auth={auth}
-                        handleLogOut={handleSetAuthInfo}
-                      />
+                      <MenuItem>
+                        <UserAccountMenuButton
+                          auth={auth}
+                          handleLogOut={handleSetAuthInfo}
+                        />
+                      </MenuItem>
                     ) : (
                       <>
                         <MenuItem onClick={handleToggleRegisterModal}>

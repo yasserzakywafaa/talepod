@@ -105,6 +105,20 @@ export const lightTheme = createTheme({
         },
       },
     },
+    MuiMenu: {
+      styleOverrides: {
+        paper: {
+          border: `1px solid ${secondaryColorForLightTheme}`,
+        },
+      },
+    },
+    MuiAlert: {
+      styleOverrides: {
+        standardInfo: {
+          border: `1px solid ${secondaryColorForLightTheme}`,
+        },
+      },
+    },
   },
 });
 
@@ -147,9 +161,19 @@ export const darkTheme = createTheme({
     },
     MuiMenu: {
       styleOverrides: {
+        paper: {
+          border: `1px solid ${secondaryColorForDarkTheme}`,
+        },
         list: {
           color: white,
           backgroundColor: darkCharcoal,
+        },
+      },
+    },
+    MuiAlert: {
+      styleOverrides: {
+        standardInfo: {
+          border: `1px solid ${secondaryColorForDarkTheme}`,
         },
       },
     },

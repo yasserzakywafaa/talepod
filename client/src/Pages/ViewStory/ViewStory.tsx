@@ -24,6 +24,7 @@ import Share from "../../components/shared/Share";
 import StoryNotFound from "./features/StoryNotFound";
 import ViewStoryInfo from "./features/ViewStoryInfo";
 import ViewStorySEO from "./features/ViewStorySEO";
+import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useEffect } from "react";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
@@ -31,7 +32,7 @@ import { useParams } from "react-router-dom";
 import { useViewStoryContext } from "./store/Provider";
 
 const ViewStoryPage: React.FC = () => {
-  const { slug } = useParams<{ slug: string }>();
+  const { userId, slug } = useParams<{ userId: string; slug: string }>();
   const { isDesktop } = useDeviceSize();
 
   const {
@@ -47,7 +48,19 @@ const ViewStoryPage: React.FC = () => {
     manager: { handleCreateAudio },
   } = useOpenaiContext();
 
+  const {
+    store: {
+      state: { auth },
+    },
+  } = useApplicationContext();
+
   const hasDirectionRtl = story && story.profileInfo.language.value === "ar";
+
+  const isReadOnlyMode = () => {
+    if (auth.user && auth.user._id !== userId) {
+      return true;
+    } else return false;
+  };
 
   const handleOnCreateAudioClick = async () => {
     handleIsCreatingAudio(true);
@@ -129,6 +142,12 @@ const ViewStoryPage: React.FC = () => {
                 <RandomImage />
               </Box>
               <CardContent className="view-story-card-content">
+                {/* {isReadOnlyMode() && (
+                  <Alert severity="info" sx={{ mt: 1, mb: 2 }}>
+                    {"Shared by: Yasser"}
+                  </Alert>
+                )} */}
+
                 <Typography
                   gutterBottom
                   variant="h4"
@@ -160,11 +179,11 @@ const ViewStoryPage: React.FC = () => {
                     textAlign: "center",
                     mt: 1,
                     mb: 2,
-                    py: 1,
+                    py: !isReadOnlyMode() ? 1 : 0,
                     px: 1,
                   }}
                 >
-                  {!story.audioFile && (
+                  {!isReadOnlyMode() && !story.audioFile && (
                     <>
                       <Typography
                         gutterBottom
@@ -207,7 +226,7 @@ const ViewStoryPage: React.FC = () => {
                       />
 
                       <Chip
-                        sx={{ mt: 1 }}
+                        sx={{ mt: 2, mb: 1 }}
                         variant="outlined"
                         label={
                           <span color="textSecondary">
@@ -227,7 +246,6 @@ const ViewStoryPage: React.FC = () => {
                     </Box>
                   )}
                 </Card>
-
                 {isDesktop ? (
                   <Typography
                     gutterBottom

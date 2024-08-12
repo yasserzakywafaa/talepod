@@ -50,10 +50,10 @@ const PersonalizedBedtimeStoryText = () => {
         color="primary"
         textAlign="center"
         sx={{
-          fontSize: { xs: "1.5rem", sm: "2rem" },
+          fontSize: { xs: "1.75rem", sm: "2rem" },
         }}
       >
-        How to Create a New Personalized Bedtime Story Each Day with TalePod
+        How to Create a New Personalized Bedtime Story
       </Typography>
 
       <Card sx={{ mb: "2rem" }}>
@@ -205,7 +205,16 @@ const PersonalizedBedtimeStoryText = () => {
         </Link>{" "}
         that nurture your child's imagination and foster a love for
         storytelling. Start crafting the perfect bedtime story for your little
-        one.
+        one. For more information, please read our{" "}
+        <Link
+          sx={{ pr: "5px" }}
+          color="text.secondary"
+          href={routes.privacyPolicy}
+          onClick={handleFooterLinkItemClick(routes.privacyPolicy)}
+        >
+          Privacy Policy
+        </Link>
+        .
       </Typography>
 
       <Box width="100%" textAlign="center">

@@ -16,12 +16,12 @@ import { useNavigate } from "react-router-dom";
 const TermsAndConditions = () => {
   const navigate = useNavigate();
 
-  const handleLinkClick = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  ) => {
-    event.preventDefault();
-    navigate(routes.contact);
-  };
+  const handleLinkClick =
+    (route: string) =>
+    (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+      event.preventDefault();
+      navigate(route);
+    };
 
   return (
     <Page
@@ -39,11 +39,11 @@ const TermsAndConditions = () => {
         </Typography>
         <Typography variant="subtitle1" gutterBottom color="primary">
           Last updated:{" "}
-          <b>
+          <span className="bold">
             {new Date("01/07/2024").toLocaleDateString("en-GB", {
               dateStyle: "short",
             })}
-          </b>
+          </span>
         </Typography>
         <Typography paragraph>
           Please read these terms and conditions carefully before using Our
@@ -147,17 +147,19 @@ const TermsAndConditions = () => {
             and Conditions then You may not access the Service.
           </Typography>
           <Typography paragraph>
-            You represent that you are over the age of 18. The Company does not
-            permit those under 18 to use the Service.
-          </Typography>
-          <Typography paragraph>
             Your access to and use of the Service is also conditioned on Your
-            acceptance of and compliance with the Privacy Policy of the Company.
-            Our Privacy Policy describes Our policies and procedures on the
-            collection, use and disclosure of Your personal information when You
-            use the Application or the Website and tells You about Your privacy
-            rights and how the law protects You. Please read Our Privacy Policy
-            carefully before using Our Service.
+            acceptance of and compliance with the{" "}
+            <Link
+              href={routes.privacyPolicy}
+              onClick={handleLinkClick(routes.privacyPolicy)}
+            >
+              Privacy Policy
+            </Link>{" "}
+            of the Company. Our Privacy Policy describes Our policies and
+            procedures on the collection, use and disclosure of Your personal
+            information when You use the Application or the Website and tells
+            You about Your privacy rights and how the law protects You. Please
+            read Our Privacy Policy carefully before using Our Service.
           </Typography>
         </Box>
 
@@ -296,8 +298,14 @@ const TermsAndConditions = () => {
           </Typography>
           <Typography paragraph>
             If You have any concern or dispute about the Service, You agree to
-            first try to resolve the dispute informally by contacting the
-            Company.
+            first try to resolve the dispute informally by{" "}
+            <Link
+              href={routes.contact}
+              onClick={handleLinkClick(routes.contact)}
+            >
+              contacting the Company
+            </Link>
+            .
           </Typography>
         </Box>
 
@@ -397,8 +405,8 @@ const TermsAndConditions = () => {
                 primary="By visiting this page on our website: "
                 secondary={
                   <Link
-                    href={`${window.location.origin}/contact`}
-                    onClick={handleLinkClick}
+                    href={routes.contact}
+                    onClick={handleLinkClick(routes.contact)}
                   >
                     {`${window.location.origin}/contact`}
                   </Link>

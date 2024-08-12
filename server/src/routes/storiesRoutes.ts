@@ -15,4 +15,9 @@ storiesRouter.get(
   StoriesController.getStoryBySlug
 );
 
+storiesRouter.get(
+  END_POINTS.STORIES.GET_ALL_USER_STORIES,
+  StoriesController.getAllUserStories
+);
+
 export default storiesRouter;

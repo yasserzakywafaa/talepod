@@ -1,18 +1,20 @@
 import {
   AggregationResult,
   DocumentWithId,
+  PageErrorResponse,
   PageResponse,
   PagingInfo,
   Story,
   StoryFilters,
+  User,
+  UserRole,
+  UserStatus,
 } from "../models/types";
-import { DBCollections, database } from "../models/mongoDb";
+import { DBCollections, database, getDocumentFromDb } from "../models/mongoDb";
 import { NextFunction, Request, Response } from "express";
 
+import { ObjectId } from "mongodb";
 import { getQuery } from "../models/mongoDb/query";
-
-// import fs from "fs";
-// import path from "path";
 
 export const getAllStories = async (
   request: Request,
@@ -196,6 +198,94 @@ export const getStoryBySlug = async (
   }
 };
 
+export const getAllUserStories = async (
+  request: Request,
+  response: Response<PageResponse<DocumentWithId> | PageErrorResponse<unknown>>,
+  next: NextFunction
+) => {
+  const userId = request.query.userId as string;
+  const user = (await getDocumentFromDb(
+    new ObjectId(userId),
+    DBCollections.users
+  )) as User;
+  const hasActiveFilters: boolean = request.query.hasActiveFilters === "true";
+  const filters: StoryFilters = JSON.parse(
+    (request.query.filters as string) || "{}"
+  );
+  const { pageNumber = 1, pageSize = 20 } = filters;
+
+  if (user.status !== UserStatus.active) {
+    response.status(403).json({
+      message: `Your account is ${user.status} and not allowed to view stories previously created!`,
+    });
+  }
+
+  try {
+    // Get all stories in collection
+    const allStoriesDocuments = database.collection(DBCollections.stories);
+
+    // Get all stories for this specific user (if any)
+    const allUserStoriesDocuments = allStoriesDocuments
+      .find({ $and: [{ author: { $eq: new ObjectId(userId) } }] })
+      .sort({ createdAt: -1 });
+    const allUserStoriesDocumentsCount = (
+      await allUserStoriesDocuments.toArray()
+    ).length;
+
+    // Get all stories by filters (if any)
+    const filteredUserDocuments = allStoriesDocuments
+      .find(getQuery(filters, userId))
+      .sort({ createdAt: -1 });
+    const filteredUserStoriesCount = (await filteredUserDocuments.toArray())
+      .length;
+
+    // Get only the pagination stories by same filter (if any)
+    const filteredDocumentsClone = allStoriesDocuments
+      .find(getQuery(filters, userId))
+      .sort({ createdAt: -1 })
+      .clone();
+    const filteredStories = await filteredDocumentsClone
+      .skip((Number(pageNumber) - 1) * Number(pageSize))
+      .limit(pageSize)
+      .toArray();
+
+    const totalCount = hasActiveFilters
+      ? filteredUserStoriesCount
+      : filteredStories.length;
+
+    const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
+
+    console.log("ℹ️  Fetched all User stories successfully", {
+      userId,
+      filters,
+      hasActiveFilters,
+      allUserStoriesDocumentsCount,
+      filteredUserStoriesCount,
+      totalCount,
+      totalPagesCount,
+    });
+
+    const paging: PagingInfo = {
+      pageNumber,
+      pageSize,
+      totalPagesCount,
+      totalCount,
+    };
+    response.status(200).json({
+      results: filteredStories as DocumentWithId[],
+      paging,
+    });
+  } catch (error) {
+    console.error("❌ Failed to get all stories!", {
+      error,
+    });
+    // return undefined;
+    response.status(403).json({
+      message: error,
+    });
+  }
+};
+
 // // FOR DEVELOPMENT USE ONLY
 // let globalAllStories;
 // const bulkUpdateStoriesByField = async () => {
@@ -292,6 +382,7 @@ export const getStoryBySlug = async (
 const StoriesController = {
   getAllStories,
   getStoryBySlug,
+  getAllUserStories,
 };
 
 export default StoriesController;

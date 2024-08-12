@@ -7,16 +7,15 @@ export interface User {
   name: UserName;
   picture: string;
   createdAt: Date;
-  lastLogin?: Date;
-  stories?: ObjectId[];
+  lastLogin: Date;
+  stories: string[];
   storyCount: number;
   status: UserStatus;
   role: UserRole;
   isPaidUser: boolean;
-  subscription?: UserSubscription;
+  subscription: UserSubscription;
   location?: string;
   timezone?: string;
-  languagePreference?: string;
 }
 
 export interface UserName {
@@ -39,10 +38,17 @@ export enum UserRole {
 }
 
 export interface UserSubscription {
-  subscriptionPlan?: string;
-  subscriptionExpiry?: Date;
+  subscriptionPlanType: SubscriptionPlanEnum;
+  subscriptionExpiry: Date;
   paymentHistory?: UserPaymentHistory[];
-  preferences?: UserPreferences;
+  preferences: UserPreferences;
+  maxStoriesAllowed: number;
+}
+
+export enum SubscriptionPlanEnum {
+  free = "free",
+  pro = "pro",
+  advanced = "advanced",
 }
 
 export interface UserPaymentHistory {
@@ -54,9 +60,14 @@ export interface UserPaymentHistory {
 export interface UserPreferences {
   theme: "light" | "dark";
   notifications: boolean;
+  languagePreference?: string;
 }
 
 export const getInitialUserData = (): Omit<User, "_id"> => {
+  const initialExpiryDate = new Date(
+    new Date().setFullYear(new Date().getFullYear() + 1)
+  );
+
   return {
     userId: "",
     email: "",
@@ -66,10 +77,22 @@ export const getInitialUserData = (): Omit<User, "_id"> => {
     },
     picture: "",
     createdAt: new Date(),
+    lastLogin: new Date(),
     stories: [],
     storyCount: 0,
     status: UserStatus.active,
     role: UserRole.user,
     isPaidUser: false,
+    subscription: {
+      subscriptionPlanType: SubscriptionPlanEnum.free,
+      subscriptionExpiry: initialExpiryDate,
+      paymentHistory: [],
+      preferences: {
+        theme: "dark",
+        notifications: false,
+        languagePreference: "en",
+      },
+      maxStoriesAllowed: 4,
+    },
   };
 };

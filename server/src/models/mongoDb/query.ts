@@ -4,10 +4,9 @@ import {
   StoryFilters,
   StoryFiltersEnum,
 } from "../types/story";
+import { Filter, FilterOperations, ObjectId } from "mongodb";
 
-import { Filter } from "mongodb";
-
-type QueryCondition = Partial<Record<StoryFiltersEnum, Filter<any>>>;
+type QueryCondition = Partial<Record<StoryFiltersEnum, FilterOperations<any>>>;
 
 type FilterResult =
   | {
@@ -15,8 +14,20 @@ type FilterResult =
     }
   | {};
 
-export const getQuery = (filters: StoryFilters): Filter<FilterResult | []> => {
+export const getQuery = (
+  filters: StoryFilters,
+  userId?: string
+): Filter<FilterResult | []> => {
   const queryConditions: QueryCondition[] = [];
+
+  if (userId && userId.length) {
+    queryConditions.push({
+      [StoryFiltersEnum.author]: {
+        $exists: true,
+        $eq: new ObjectId(userId),
+      },
+    });
+  }
 
   if (filters.name && filters.name.length) {
     queryConditions.push({

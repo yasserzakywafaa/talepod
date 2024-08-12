@@ -18,12 +18,12 @@ import { useNavigate } from "react-router-dom";
 const PrivacyPolicyPage = () => {
   const navigate = useNavigate();
 
-  const handleLinkClick = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  ) => {
-    event.preventDefault();
-    navigate(routes.home);
-  };
+  const handleLinkClick =
+    (route: string) =>
+    (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+      event.preventDefault();
+      navigate(route);
+    };
 
   return (
     <Page
@@ -40,21 +40,21 @@ const PrivacyPolicyPage = () => {
         </Typography>
         <Typography variant="subtitle1" color="primary" gutterBottom>
           Last updated:{" "}
-          <b>
+          <span className="bold">
             {new Date("01/07/2024").toLocaleDateString("en-GB", {
               dateStyle: "short",
             })}
-          </b>
+          </span>
         </Typography>
         <Typography paragraph>
           This Privacy Policy describes Our policies and procedures on the
-          collection, use, and disclosure of Your information when You use the
-          Service and tells You about Your privacy rights and how the law
-          protects You.
+          collection, use, and disclosure of your information when you use the
+          Service and tells you about your privacy rights and how the law
+          protects you.
         </Typography>
         <Typography paragraph>
-          We use Your Personal data to provide and improve the Service. By using
-          the Service, You agree to the collection and use of information in
+          We use your Personal data to provide and improve the Service. By using
+          the Service, you agree to the collection and use of information in
           accordance with this Privacy Policy.
         </Typography>
 
@@ -80,7 +80,7 @@ const PrivacyPolicyPage = () => {
             <ListItem>
               <ListItemText
                 primary="Account"
-                secondary="A unique account created for You to access our Service or parts of our Service."
+                secondary="A unique account created for you to access Our Service or parts of Our Service."
               />
             </ListItem>
             <ListItem>
@@ -95,7 +95,7 @@ const PrivacyPolicyPage = () => {
             <ListItem>
               <ListItemText
                 primary="Cookies"
-                secondary="Small files placed on Your computer or device by a website, containing the details of Your browsing history on that website."
+                secondary="Small files placed on your computer or device by a website, containing the details of your browsing history on that website."
               />
             </ListItem>
             <ListItem>
@@ -116,7 +116,7 @@ const PrivacyPolicyPage = () => {
             <ListItem>
               <ListItemText
                 primary="Service"
-                secondary="Refers to the Website."
+                secondary="Refers to the web application."
               />
             </ListItem>
             <ListItem>
@@ -136,8 +136,8 @@ const PrivacyPolicyPage = () => {
                 primary="Website"
                 secondary={
                   <Link
-                    href="https://www.talepod.com"
-                    onClick={handleLinkClick}
+                    href={routes.home}
+                    onClick={handleLinkClick(routes.home)}
                   >
                     {window.location.origin}
                   </Link>
@@ -155,7 +155,7 @@ const PrivacyPolicyPage = () => {
 
         <Box my={4}>
           <Typography variant="h5" color="primary" gutterBottom>
-            Collecting and Using Your Personal Data
+            Collecting and Using your Personal Data
           </Typography>
 
           <Typography variant="h6" color="secondary">
@@ -163,9 +163,9 @@ const PrivacyPolicyPage = () => {
           </Typography>
           <Typography variant="subtitle1">Personal Data</Typography>
           <Typography paragraph>
-            While using Our Service, We may ask You to provide Us with certain
+            While using Our Service, We may ask you to provide Us with certain
             personally identifiable information that can be used to contact or
-            identify You. Personally identifiable information may include, but
+            identify you. Personally identifiable information may include, but
             is not limited to:
           </Typography>
           <List>
@@ -182,23 +182,23 @@ const PrivacyPolicyPage = () => {
             Usage Data is collected automatically when using the Service.
           </Typography>
           <Typography paragraph>
-            Usage Data may include information such as Your Device's Internet
+            Usage Data may include information such as your Device's Internet
             Protocol address (e.g. IP address), browser type, browser version,
-            the pages of our Service that You visit, the time and date of Your
+            the pages of Our Service that you visit, the time and date of your
             visit, the time spent on those pages, unique device identifiers and
             other diagnostic data.
           </Typography>
           <Typography paragraph>
-            When You access the Service by or through a mobile device, We may
+            When you access the Service by or through a mobile device, We may
             collect certain information automatically, including, but not
-            limited to, the type of mobile device You use, Your mobile device
-            unique ID, the IP address of Your mobile device, Your mobile
-            operating system, the type of mobile Internet browser You use,
+            limited to, the type of mobile device you use, your mobile device
+            unique ID, the IP address of your mobile device, your mobile
+            operating system, the type of mobile Internet browser you use,
             unique device identifiers and other diagnostic data.
           </Typography>
           <Typography paragraph>
-            We may also collect information that Your browser sends whenever You
-            visit our Service or when You access the Service by or through a
+            We may also collect information that your browser sends whenever you
+            visit Our Service or when you access the Service by or through a
             mobile device.
           </Typography>
 
@@ -216,20 +216,20 @@ const PrivacyPolicyPage = () => {
             <ListItem>
               <ListItemText
                 primary="Cookies or Browser Cookies"
-                secondary="A cookie is a small file placed on Your Device. You can instruct Your browser to refuse all Cookies or to indicate when a Cookie is being sent."
+                secondary="A cookie is a small file placed on your Device. you can instruct your browser to refuse all Cookies or to indicate when a Cookie is being sent."
               />
             </ListItem>
             <ListItem>
               <ListItemText
                 primary="Web Beacons"
-                secondary="Certain sections of our Service and our emails may contain small electronic files known as web beacons."
+                secondary="Certain sections of Our Service and Our emails may contain small electronic files known as web beacons."
               />
             </ListItem>
           </List>
           <Typography paragraph>
             Cookies can be "Persistent" or "Session" Cookies. Persistent Cookies
-            remain on Your personal computer or mobile device when You go
-            offline, while Session Cookies are deleted as soon as You close Your
+            remain on your personal computer or mobile device when you go
+            offline, while Session Cookies are deleted as soon as you close your
             web browser.
           </Typography>
         </Box>
