@@ -55,7 +55,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
       content: "Logged out",
     });
 
-    if (isUserPrivatePages) navigate(routes.home);
+    if (isUserPrivatePages) navigate(routes.unauthorized);
   };
 
   return (

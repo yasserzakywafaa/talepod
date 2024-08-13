@@ -11,6 +11,7 @@ export interface ApplicationStore {
   state: ApplicationInitialState;
   updateState: (newState: ApplicationInitialState) => void;
   handleIsFetching: (handleIsFetching: boolean) => void;
+  handleIsFetchingUserInfo: (isFetchingUserInfo: boolean) => void;
   toggleThemeMode: () => void;
   updateAuthInfo: (authInfo?: Authentication) => void;
 }
@@ -28,6 +29,13 @@ const useApplicationStore = (): ApplicationStore => {
     setState((prev) => ({
       ...prev,
       isFetching,
+    }));
+  };
+
+  const handleIsFetchingUserInfo = (isFetchingUserInfo: boolean) => {
+    setState((prev) => ({
+      ...prev,
+      isFetchingUserInfo,
     }));
   };
 
@@ -63,9 +71,9 @@ const useApplicationStore = (): ApplicationStore => {
 
   const updateAuthInfo = (authInfo?: Authentication) => {
     if (authInfo) {
-      console.log("updateAuthInfo:>>> authInfo", {
-        authInfo,
-      });
+      // console.log("updateAuthInfo:>>> NO!!authInfo", {
+      //   authInfo,
+      // });
 
       setState((prev) => ({
         ...prev,
@@ -83,12 +91,11 @@ const useApplicationStore = (): ApplicationStore => {
       const storedToken = localStorage.getItem(TOKEN) || "";
       const storedUser = localStorage.getItem(USER);
       const storedIsAuthenticated = localStorage.getItem(IS_AUTHENTICATION);
-
-      console.log("updateAuthInfo:>>> NO!!authInfo", {
-        token: storedToken,
-        user: storedUser ? JSON.parse(storedUser) : null,
-        isAuthenticated: storedIsAuthenticated === "true" ? true : false,
-      });
+      // console.log("updateAuthInfo:>>> authInfo", {
+      //   token: storedToken,
+      //   user: storedUser ? JSON.parse(storedUser) : null,
+      //   isAuthenticated: storedIsAuthenticated === "true" ? true : false,
+      // });
 
       setState((prev) => ({
         ...prev,
@@ -105,6 +112,7 @@ const useApplicationStore = (): ApplicationStore => {
     state,
     updateState,
     handleIsFetching,
+    handleIsFetchingUserInfo,
     toggleThemeMode,
     updateAuthInfo,
   };

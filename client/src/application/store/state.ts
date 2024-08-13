@@ -4,6 +4,7 @@ import { User } from "src/shared/user";
 
 export interface ApplicationInitialState {
   isFetching: boolean;
+  isFetchingUserInfo: boolean;
   themeMode: PaletteMode;
   auth: Authentication;
 }
@@ -23,6 +24,7 @@ export const getApplicationInitialState = (): ApplicationInitialState => {
 
   return {
     isFetching: false,
+    isFetchingUserInfo: true,
     themeMode: appThemMode,
     auth: {
       user: null,

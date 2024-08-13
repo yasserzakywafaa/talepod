@@ -33,7 +33,7 @@ interface UpdateUrlByFiltersResults {
 export const useExploreManager = (store: ExploreStore): ExploreManager => {
   const { stories, filters, pagingInfo } = store.state;
   const { filters: initialFilters, pagingInfo: initialPagingInfo } =
-    getExploreInitialState();
+    getExploreInitialState(true);
   const initialFiltersWithPaging: ExploreStoryFilters = {
     ...initialFilters,
     ...initialPagingInfo,
