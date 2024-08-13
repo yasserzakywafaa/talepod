@@ -218,7 +218,7 @@ const CreateStoryForm = () => {
 
     if (!isUserActive) {
       return (
-        <Alert severity="error">
+        <Alert severity="error" variant="outlined">
           {"Your account is not active and not allowed to create stories!"}
         </Alert>
       );
@@ -226,7 +226,7 @@ const CreateStoryForm = () => {
 
     if (user && user.role === UserRole.admin) {
       return (
-        <Alert severity="info">
+        <Alert severity="info" variant="outlined">
           {`You can create ♾️ number of stories 😎`}
         </Alert>
       );
@@ -235,7 +235,7 @@ const CreateStoryForm = () => {
     if (!hasMaxStoriesLimit) {
       if (isFreeSubs || isProSubs || isAdvancedSubs) {
         return (
-          <Alert severity="info">
+          <Alert severity="info" variant="outlined">
             {`You have ${
               user.subscription.maxStoriesAllowed - user.storyCount
             } stories left out of ${user.subscription.maxStoriesAllowed}`}
@@ -245,7 +245,7 @@ const CreateStoryForm = () => {
       return <></>;
     } else {
       return (
-        <Alert severity="warning">
+        <Alert severity="warning" variant="outlined">
           {`You have consumed your maximum credit of ${user.subscription.maxStoriesAllowed} stories`}
         </Alert>
       );

@@ -48,9 +48,15 @@ const AppContent = () => {
       // return;
     } else {
       // User is already logged in, update auth state
-      const userId = storedAuthInfo.user?.userId;
+      const userId = storedAuthInfo.user?._id;
       if (userId) {
         const fetchedUser = await handleFetchUserInfo(userId);
+
+        handleSetAuthInfo({
+          isAuthenticated: true,
+          user: fetchedUser,
+        });
+
         localStorage.setItem(
           APP_CONSTANTS.LOCAL_STORAGE.USER,
           JSON.stringify(fetchedUser)
@@ -58,7 +64,6 @@ const AppContent = () => {
       }
     }
     handleIsFetchingUserInfo(false);
-    console.log("state.isFetchingUserInfo:>>>", state.isFetchingUserInfo);
   };
 
   useEffect(() => {

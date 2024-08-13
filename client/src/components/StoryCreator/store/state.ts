@@ -71,7 +71,7 @@ export interface Story {
   storyParams: StoryParams;
   createdAt: Date;
   seo?: StorySeo;
-  author?: string;
+  author: string;
   lastModified?: Date;
   tags?: string[];
   coverImageUrl?: string;

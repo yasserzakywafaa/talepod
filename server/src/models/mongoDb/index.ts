@@ -221,10 +221,11 @@ const saveFileDataToDb = async (
   }
 };
 
-const saveUserDataToDb = async (user: User): Promise<void> => {
+const saveUserDataToDb = async (user: User): Promise<ObjectId | undefined> => {
   try {
-    await createDocument(user, DBCollections.users);
+    const newUserId = await createDocument(user, DBCollections.users);
     console.log("✅ User saved to DB successfully");
+    return newUserId;
   } catch (error) {
     throw new Error("❌ Error saving user data to DB", { cause: error });
   }

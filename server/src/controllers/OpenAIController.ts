@@ -1,6 +1,5 @@
 import {
   DBCollections,
-  getDocumentByFieldFromDb,
   getDocumentFromDb,
   saveFileDataToDb,
   saveStorySeoToDb,

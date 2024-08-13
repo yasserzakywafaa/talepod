@@ -1,6 +1,7 @@
 import { ViewStoryInitialState, getViewStoryInitialState } from "./state";
 
 import { Story } from "src/components/StoryCreator/store/state";
+import { User } from "src/shared/user";
 import { useState } from "react";
 
 export interface ViewStoryStore {
@@ -8,6 +9,7 @@ export interface ViewStoryStore {
   handleIsFetching: (isFetching: boolean) => void;
   handleUpdateStory: (stories: Story | undefined) => void;
   handleIsCreatingAudio: (isCreatingAudio: boolean) => void;
+  handleUpdateStoryAuthor: (storyAuthor: User | undefined) => void;
 }
 
 const useViewStoryStore = (): ViewStoryStore => {
@@ -35,11 +37,19 @@ const useViewStoryStore = (): ViewStoryStore => {
     }));
   };
 
+  const handleUpdateStoryAuthor = (storyAuthor: User | undefined) => {
+    setState((prev) => ({
+      ...prev,
+      storyAuthor,
+    }));
+  };
+
   return {
     state,
     handleIsFetching,
     handleUpdateStory,
     handleIsCreatingAudio,
+    handleUpdateStoryAuthor,
   };
 };
 

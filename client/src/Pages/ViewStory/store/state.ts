@@ -5,17 +5,20 @@ import {
 } from "src/components/StoryCreator/store/state";
 
 import { Languages } from "src/shared/languages";
+import { User } from "src/shared/user";
 
 export interface ViewStoryInitialState {
   story: Story;
   isFetching: boolean;
   isCreatingAudio: boolean;
+  storyAuthor: User | undefined;
 }
 
 export const getViewStoryInitialState = (): ViewStoryInitialState => {
   return {
     isFetching: false,
     isCreatingAudio: false,
+    storyAuthor: undefined,
     story: {
       _id: "",
       title: "",
@@ -23,6 +26,7 @@ export const getViewStoryInitialState = (): ViewStoryInitialState => {
       summary: "",
       mainStory: "",
       poem: "",
+      author: "",
       createdAt: new Date(),
       audioFile: {
         url: "",

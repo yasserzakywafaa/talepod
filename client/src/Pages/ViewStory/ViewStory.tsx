@@ -22,8 +22,10 @@ import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import ReactMarkdown from "react-markdown";
 import Share from "../../components/shared/Share";
 import StoryNotFound from "./features/StoryNotFound";
+import ViewStoryAuthorInfo from "./features/ViewStoryAuthorInfo";
 import ViewStoryInfo from "./features/ViewStoryInfo";
 import ViewStorySEO from "./features/ViewStorySEO";
+import { getAxiosError } from "src/shared/utils/getAxiosError";
 import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useEffect } from "react";
@@ -37,10 +39,11 @@ const ViewStoryPage: React.FC = () => {
 
   const {
     store: {
-      state: { isFetching, isCreatingAudio, story },
+      state: { isFetching, isCreatingAudio, story, storyAuthor },
       // handleIsFetching,
       handleUpdateStory,
       handleIsCreatingAudio,
+      handleUpdateStoryAuthor,
     },
     manager: { setUp },
   } = useViewStoryContext();
@@ -52,6 +55,7 @@ const ViewStoryPage: React.FC = () => {
     store: {
       state: { auth },
     },
+    manager: { handleFetchUserInfo },
   } = useApplicationContext();
 
   const hasDirectionRtl = story && story.profileInfo.language.value === "ar";
@@ -83,9 +87,42 @@ const ViewStoryPage: React.FC = () => {
     handleIsCreatingAudio(false);
   };
 
+  const handleFetchStoryAuthorInfo = async () => {
+    console.log("story.author:>>>", story.author);
+
+    // try {
+    //   const response: AxiosResponse<User, User> = await axios.get(
+    //     END_POINTS.AUTH.USER_INFO,
+    //     {
+    //       params: {
+    //         _id: story.author,
+    //         // _id: userId,
+    //       },
+    //     }
+    //   );
+
+    //   return response.data;
+    // } catch (error) {
+    //   getAxiosError(error);
+    //   throw new Error(`❌  Failed to get User Information!  ${error}`);
+    // }
+
+    try {
+      const fetchedStoryAuthorInfo = await handleFetchUserInfo(story.author);
+      console.log("fetchedStoryAuthorInfo:>>>", fetchedStoryAuthorInfo);
+      handleUpdateStoryAuthor(fetchedStoryAuthorInfo);
+    } catch (error) {
+      getAxiosError(error);
+    }
+  };
+
   useEffect(() => {
     if (slug) setUp(slug);
   }, [slug]);
+
+  useEffect(() => {
+    if (auth.user) handleUpdateStoryAuthor(auth.user);
+  }, [auth]);
 
   useEffect(() => {
     if (story && story._id) {
@@ -107,6 +144,8 @@ const ViewStoryPage: React.FC = () => {
         });
         window.localStorage.removeItem("newStoryCreated");
       }
+
+      if (story.author && isReadOnlyMode()) handleFetchStoryAuthorInfo();
     }
   }, [story]);
 
@@ -275,6 +314,14 @@ const ViewStoryPage: React.FC = () => {
                 >
                   {story.poem}
                 </pre>
+
+                {storyAuthor && (
+                  <ViewStoryAuthorInfo
+                    story={story}
+                    storyAuthor={storyAuthor}
+                    handleUpdateStoryAuthor={handleUpdateStoryAuthor}
+                  />
+                )}
 
                 <ViewStoryInfo story={story} />
 

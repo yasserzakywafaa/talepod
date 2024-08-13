@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from "axios";
 import END_POINTS from "src/application/shared/endpoints";
 import { Story } from "src/components/StoryCreator/store/state";
 import { ViewStoryStore } from "./store";
-import { getStorySeoPrompt } from "src/components/StoryCreator/utils/getStoryPrompts";
+import { getAxiosError } from "src/shared/utils/getAxiosError";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
 
 export interface ViewStoryManager {
@@ -21,12 +21,17 @@ export const useViewStoryManager = (
 
   const setUp = async (slug: string) => {
     store.handleIsFetching(true);
-    const story = await fetchStoryBySlug(slug);
-    store.handleIsFetching(false);
-
-    if (story && !story.seo) {
-      const storySeoPrompt = getStorySeoPrompt(story);
-      await createSeoTextForStory(story, storySeoPrompt);
+    try {
+      await fetchStoryBySlug(slug);
+      // const story = await fetchStoryBySlug(slug);
+      // if (story && !story.seo) {
+      // const storySeoPrompt = getStorySeoPrompt(story);
+      // await createSeoTextForStory(story, storySeoPrompt);
+      // }
+    } catch (error) {
+      getAxiosError(error);
+    } finally {
+      store.handleIsFetching(false);
     }
   };
 
