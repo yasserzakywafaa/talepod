@@ -1,16 +1,20 @@
 import "./Unauthorized.scss";
 
-import { Box, Button, Typography } from "@mui/material";
+import { Alert, Box, Button, Typography } from "@mui/material";
+import { LockOpenOutlined, VpnKeyOutlined } from "@mui/icons-material";
 
 import BunnySurprised from "../../assets/images/unauthorized_401/surprised_bunny.webp";
-import { HomeOutlined } from "@mui/icons-material";
 import Page from "src/components/shared/Page/Page";
-import routes from "src/application/routes";
-import { useNavigate } from "react-router-dom";
+import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
+import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 
 const Unauthorized = () => {
-  const navigate = useNavigate();
-  const handleOnClick = () => navigate(routes.home);
+  const {
+    store: { handleToggleLoginModal },
+  } = useLoginModalContext();
+  const {
+    store: { handleToggleRegisterModal },
+  } = useRegisterModalContext();
 
   return (
     <Page title="Unauthorized | TalePod" className="unauthorized-page">
@@ -34,20 +38,36 @@ const Unauthorized = () => {
           className="unauthorized-card-wrapper"
         >
           <Typography variant="h4">Unauthorized</Typography>
-          <Typography variant="h5" textAlign="center">
-            Please contact your administrator
-          </Typography>
 
-          <Button
-            sx={{ marginY: "2rem" }}
-            size="large"
-            type="button"
-            variant="contained"
-            endIcon={<HomeOutlined />}
-            onClick={handleOnClick}
-          >
-            Go back home
-          </Button>
+          <Alert severity="error" component="h5">
+            Please Login to your account or create an account to enjoy private
+            magical bedtime stories.
+          </Alert>
+
+          <Box display="flex">
+            <Button
+              size="small"
+              type="button"
+              variant="contained"
+              sx={{ margin: "0.5rem" }}
+              startIcon={<LockOpenOutlined />}
+              onClick={handleToggleRegisterModal}
+            >
+              Create Free Account
+            </Button>
+
+            <Button
+              size="small"
+              type="button"
+              color="secondary"
+              variant="outlined"
+              sx={{ margin: "0.5rem" }}
+              startIcon={<VpnKeyOutlined />}
+              onClick={handleToggleLoginModal}
+            >
+              Login to your account
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Page>

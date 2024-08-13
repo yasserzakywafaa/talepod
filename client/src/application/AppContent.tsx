@@ -1,12 +1,13 @@
 import "./App.scss";
 
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { darkTheme, lightTheme } from "./shared/themes";
 import { lazy, useEffect } from "react";
 
 import APP_CONSTANTS from "./shared/app_constants";
 // import APP_CONSTANTS from "./shared/app_constants";
 import { CssBaseline } from "@mui/material";
+import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import NotFoundPage from "../Pages/NotFound/NotFound";
 import { ThemeProvider } from "@emotion/react";
 import { getApplicationInitialState } from "./store/state";
@@ -33,7 +34,7 @@ const UnauthorizedPage = lazy(
 
 const AppContent = () => {
   const {
-    store: { state },
+    store: { state, handleIsFetchingUserInfo },
     manager: { handleSetAuthInfo, handleFetchUserInfo },
   } = useApplicationContext();
 
@@ -44,9 +45,9 @@ const AppContent = () => {
       // User is not logged in, set initial auth state
       handleSetAuthInfo(getApplicationInitialState().auth);
 
-      return;
+      // return;
     } else {
-      // // User is already logged in, update auth state
+      // User is already logged in, update auth state
       const userId = storedAuthInfo.user?.userId;
       if (userId) {
         const fetchedUser = await handleFetchUserInfo(userId);
@@ -56,6 +57,8 @@ const AppContent = () => {
         );
       }
     }
+    handleIsFetchingUserInfo(false);
+    console.log("state.isFetchingUserInfo:>>>", state.isFetchingUserInfo);
   };
 
   useEffect(() => {
@@ -66,63 +69,64 @@ const AppContent = () => {
     <ThemeProvider theme={state.themeMode === "light" ? lightTheme : darkTheme}>
       <CssBaseline />
 
-      <BrowserRouter>
-        <Routes>
-          <Route index path={routes.home} element={<HomePage />} />
+      {state.isFetchingUserInfo && <LoaderSpinner />}
 
-          <Route index path={routes.create} element={<CreateStoryPage />} />
+      {!state.isFetchingUserInfo && (
+        <BrowserRouter>
+          <Routes>
+            <Route index path={routes.home} element={<HomePage />} />
 
-          <Route index path={routes.explore} element={<ExplorePage />} />
+            <Route path={routes.create} element={<CreateStoryPage />} />
 
-          {state.auth.isAuthenticated && !!state.auth.user ? (
-            <>
-              <Route
-                index
-                path={routes.myStories(":userId")}
-                element={<MyStoriesPage />}
-              />
+            <Route path={routes.explore} element={<ExplorePage />} />
 
-              <Route
-                index
-                path={routes.myStory(":userId", ":slug")}
-                element={<ViewStoryPage />}
-              />
-            </>
-          ) : (
+            {state.auth.isAuthenticated && !!state.auth.user ? (
+              <>
+                <Route
+                  path={routes.myStories(":userId")}
+                  element={<MyStoriesPage />}
+                />
+
+                <Route
+                  path={routes.myStory(":userId", ":slug")}
+                  element={<ViewStoryPage />}
+                />
+              </>
+            ) : (
+              <Route path="*" element={<Navigate to={routes.unauthorized} />} />
+            )}
+
+            <Route path={routes.contact} element={<ContactPage />} />
+
+            <Route path={routes.story(":slug")} element={<ViewStoryPage />} />
+
+            {/* Landing Pages */}
+            {Object.values(routes.landingPages).map(
+              (route: string, index: number) => (
+                <Route key={index} path={route} element={<ExplorePage />} />
+              )
+            )}
+            {/* End of Landing Pages */}
+
+            <Route
+              path={routes.privacyPolicy}
+              element={<PrivacyPolicyPage />}
+            />
+
+            <Route
+              path={routes.termsAndConditions}
+              element={<TermsAndConditionsPage />}
+            />
+
+            <Route path={routes.checkout} element={<CheckoutPage />} />
+
             <Route path={routes.unauthorized} element={<UnauthorizedPage />} />
-          )}
 
-          <Route index path={routes.contact} element={<ContactPage />} />
-
-          <Route
-            index
-            path={routes.story(":slug")}
-            element={<ViewStoryPage />}
-          />
-
-          {/* Landing Pages */}
-          {Object.values(routes.landingPages).map(
-            (route: string, index: number) => (
-              <Route index key={index} path={route} element={<ExplorePage />} />
-            )
-          )}
-          {/* End of Landing Pages */}
-
-          <Route path={routes.privacyPolicy} element={<PrivacyPolicyPage />} />
-
-          <Route
-            path={routes.termsAndConditions}
-            element={<TermsAndConditionsPage />}
-          />
-
-          <Route path={routes.checkout} element={<CheckoutPage />} />
-
-          <Route path={routes.unauthorized} element={<UnauthorizedPage />} />
-
-          {/* Fallback route for 404 errors */}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </BrowserRouter>
+            {/* Fallback route for 404 errors */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </BrowserRouter>
+      )}
     </ThemeProvider>
   );
 };

@@ -71,6 +71,7 @@ const ApplicationBar = () => {
     isViewStoryPage: !!useMatch(routes.story(":id")),
     isMyStoriesPage: !!useMatch(routes.myStories(":userId")),
     isCheckoutPage: !!useMatch(routes.checkout),
+    isUnauthorized: !!useMatch(routes.unauthorized),
     isPrivacyPolicy: !!useMatch(routes.privacyPolicy),
     isTermsOfService: !!useMatch(routes.termsAndConditions),
     isLandingPage: !!window.location.pathname.includes("bedtime-stories"),
@@ -212,12 +213,10 @@ const ApplicationBar = () => {
                     }}
                   >
                     {auth.isAuthenticated ? (
-                      <MenuItem>
-                        <UserAccountMenuButton
-                          auth={auth}
-                          handleLogOut={handleSetAuthInfo}
-                        />
-                      </MenuItem>
+                      <UserAccountMenuButton
+                        auth={auth}
+                        handleLogOut={handleSetAuthInfo}
+                      />
                     ) : (
                       <>
                         <MenuItem onClick={handleToggleRegisterModal}>
@@ -368,14 +367,12 @@ const ApplicationBar = () => {
                       <Divider sx={{ width: "80%", margin: "auto" }} />
 
                       {auth.isAuthenticated ? (
-                        <>
-                          <MenuItem>
-                            <UserAccountMenuButton
-                              auth={auth}
-                              handleLogOut={handleSetAuthInfo}
-                            />
-                          </MenuItem>
-                        </>
+                        <MenuItem>
+                          <UserAccountMenuButton
+                            auth={auth}
+                            handleLogOut={handleSetAuthInfo}
+                          />
+                        </MenuItem>
                       ) : (
                         <>
                           <MenuItem onClick={handleToggleRegisterModal}>

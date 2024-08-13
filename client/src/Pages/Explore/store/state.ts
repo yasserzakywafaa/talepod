@@ -34,7 +34,9 @@ const getLanguageFromUserLanguage = (): string[] | undefined => {
   return matchedLanguage ? [matchedLanguage] : undefined;
 };
 
-export const getExploreInitialState = (): ExploreInitialState => {
+export const getExploreInitialState = (
+  hasDefaultLanguage?: boolean
+): ExploreInitialState => {
   return {
     isFetching: true,
     stories: [],
@@ -44,7 +46,7 @@ export const getExploreInitialState = (): ExploreInitialState => {
       name: "",
       gender: "",
       age: [],
-      language: getLanguageFromUserLanguage() || [],
+      language: (hasDefaultLanguage && getLanguageFromUserLanguage()) || [],
       moral: [],
       tone: [],
       environment: [],

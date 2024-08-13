@@ -9,10 +9,11 @@ import { useRegisterModalContext } from "src/components/Modals/RegisterModal/sto
 
 interface GoogleAuthProps {
   authType: AuthType;
+  onSuccessCallbackFn?: () => void;
 }
 
 const GoogleAuth = (props: GoogleAuthProps) => {
-  const { authType } = props;
+  const { authType, onSuccessCallbackFn } = props;
   const isRegister = authType === "register";
 
   const {
@@ -49,6 +50,7 @@ const GoogleAuth = (props: GoogleAuthProps) => {
     toggleIsModalVisible();
     toggleIsFetching(false);
     toggleIsFetching(false);
+    onSuccessCallbackFn?.();
   };
 
   const onErrorCallback = () => {
