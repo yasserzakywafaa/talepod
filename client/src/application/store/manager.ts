@@ -5,6 +5,7 @@ import { ApplicationStore } from "./store";
 import { Authentication } from "./state";
 import END_POINTS from "../shared/endpoints";
 import { User } from "src/shared/user";
+import { getAxiosError } from "src/shared/utils/getAxiosError";
 
 export interface ApplicationManager {
   handleIsFetching: (isFetching: boolean) => void;
@@ -28,23 +29,23 @@ export const useApplicationManager = (
   };
 
   const handleFetchUserInfo = async (userId: string): Promise<User> => {
+    // store.handleIsFetchingUserInfo(true);
     try {
       const response: AxiosResponse<User, User> = await axios.get(
         END_POINTS.AUTH.USER_INFO,
         {
           params: {
-            userId,
+            _id: userId,
           },
         }
       );
-      handleSetAuthInfo({
-        isAuthenticated: true,
-        user: response.data,
-      });
 
       return response.data;
     } catch (error) {
-      throw new Error(`❌  Failed to create story SEO!  ${error}`);
+      getAxiosError(error);
+      throw new Error(`❌  Failed to get User Information!  ${error}`);
+    } finally {
+      // store.handleIsFetchingUserInfo(false);
     }
   };
 

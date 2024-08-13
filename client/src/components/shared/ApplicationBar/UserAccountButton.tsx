@@ -80,7 +80,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
             sx={{ mr: 1, width: 20, height: 20 }}
           />
         ) : (
-          <Avatar>
+          <Avatar sx={{ mr: 1, width: 20, height: 20 }}>
             {auth.user.name.givenName.charAt(0)}
             {auth.user.name.familyName.charAt(0)}
           </Avatar>

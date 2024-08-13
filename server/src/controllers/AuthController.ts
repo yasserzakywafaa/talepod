@@ -9,6 +9,7 @@ import { User, getInitialUserData } from "../models/types";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 import CONFIG from "../config";
+import { ObjectId } from "mongodb";
 import axios from "axios";
 
 export const authByGoogle = async (
@@ -57,7 +58,11 @@ export const authByGoogle = async (
       );
       if (!userDocument) {
         // If user doesn't exist, create a new user record
-        await saveUserDataToDb(user);
+        const newUserId = await saveUserDataToDb(user);
+        user = {
+          ...user,
+          _id: newUserId,
+        };
       } else {
         user = userDocument as User;
       }
@@ -72,6 +77,7 @@ export const authByGoogle = async (
     console.log("ℹ️  authByGoogle", {
       userName: `${user.name.givenName} ${user.name.familyName}`,
       userEmail: user.email,
+      user,
     });
 
     response.status(200).json({ token, user });
@@ -88,19 +94,19 @@ export const getUserInfo = async (
   response: Response,
   next: NextFunction
 ) => {
-  const userId = request.query.userId as string;
-  if (!userId) {
+  const user_id = request.query._id as string;
+  if (!user_id) {
     response.status(400).json({ message: "❌ 'userId' is required!" });
     return;
   }
 
   try {
-    const userDocument = (await getDocumentByFieldFromDb(
-      "userId",
-      userId,
+    const userDocument = (await getDocumentFromDb(
+      new ObjectId(user_id),
       DBCollections.users
     )) as User;
     console.log("ℹ️  getUserInfo", {
+      user_id,
       userEmail: userDocument.email,
       userName: userDocument.name.givenName,
     });
