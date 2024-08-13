@@ -227,7 +227,7 @@ const CreateStoryForm = () => {
     if (user && user.role === UserRole.admin) {
       return (
         <Alert severity="info" variant="outlined">
-          {`You can create ♾️ number of stories 😎`}
+          {`As an admin, you can create ♾️ number of stories 😎`}
         </Alert>
       );
     }

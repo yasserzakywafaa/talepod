@@ -61,7 +61,11 @@ const ViewStoryPage: React.FC = () => {
   const hasDirectionRtl = story && story.profileInfo.language.value === "ar";
 
   const isReadOnlyMode = () => {
-    if (auth.user && auth.user._id !== userId) {
+    if (
+      auth.user &&
+      auth.user._id !== userId &&
+      !story.storyParams.createdByAdmin
+    ) {
       return true;
     } else return false;
   };
@@ -88,28 +92,8 @@ const ViewStoryPage: React.FC = () => {
   };
 
   const handleFetchStoryAuthorInfo = async () => {
-    console.log("story.author:>>>", story.author);
-
-    // try {
-    //   const response: AxiosResponse<User, User> = await axios.get(
-    //     END_POINTS.AUTH.USER_INFO,
-    //     {
-    //       params: {
-    //         _id: story.author,
-    //         // _id: userId,
-    //       },
-    //     }
-    //   );
-
-    //   return response.data;
-    // } catch (error) {
-    //   getAxiosError(error);
-    //   throw new Error(`❌  Failed to get User Information!  ${error}`);
-    // }
-
     try {
       const fetchedStoryAuthorInfo = await handleFetchUserInfo(story.author);
-      console.log("fetchedStoryAuthorInfo:>>>", fetchedStoryAuthorInfo);
       handleUpdateStoryAuthor(fetchedStoryAuthorInfo);
     } catch (error) {
       getAxiosError(error);
@@ -121,7 +105,10 @@ const ViewStoryPage: React.FC = () => {
   }, [slug]);
 
   useEffect(() => {
-    if (auth.user) handleUpdateStoryAuthor(auth.user);
+    // If Current User is the author of this story, get User Info
+    if (!story.storyParams.createdByAdmin && auth.user) {
+      handleUpdateStoryAuthor(auth.user);
+    }
   }, [auth]);
 
   useEffect(() => {
@@ -145,7 +132,14 @@ const ViewStoryPage: React.FC = () => {
         window.localStorage.removeItem("newStoryCreated");
       }
 
-      if (story.author && isReadOnlyMode()) handleFetchStoryAuthorInfo();
+      // If Current User is NOT the author of this story, get author Info
+      if (
+        story.author &&
+        isReadOnlyMode() &&
+        !story.storyParams.createdByAdmin
+      ) {
+        handleFetchStoryAuthorInfo();
+      }
     }
   }, [story]);
 
@@ -315,7 +309,7 @@ const ViewStoryPage: React.FC = () => {
                   {story.poem}
                 </pre>
 
-                {storyAuthor && (
+                {!story.storyParams.createdByAdmin && storyAuthor && (
                   <ViewStoryAuthorInfo
                     story={story}
                     storyAuthor={storyAuthor}
