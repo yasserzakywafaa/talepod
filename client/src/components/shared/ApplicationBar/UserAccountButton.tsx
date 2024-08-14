@@ -42,7 +42,8 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
   const handleCloseMenu = () => setElement(null);
 
   const onMyStoriesClick = () => {
-    auth.user && navigate(routes.myStories(auth.user.userId));
+    console.log(auth.user);
+    auth.user && navigate(routes.myStories(auth.user._id));
   };
 
   const onLogoutClick = () => {

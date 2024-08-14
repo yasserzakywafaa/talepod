@@ -124,7 +124,7 @@ const CreateStoryForm = () => {
         );
 
         if (user) {
-          await handleFetchUserInfo(user.userId);
+          await handleFetchUserInfo(user._id);
 
           if (story._id && story.slug) {
             navigate(routes.myStory(user._id, story.slug), {
