@@ -134,7 +134,7 @@ const ViewStoryPage: React.FC = () => {
 
       // If Current User is NOT the author of this story, get author Info
       if (
-        story.author &&
+        !!story.author &&
         isReadOnlyMode() &&
         !story.storyParams.createdByAdmin
       ) {
@@ -309,13 +309,15 @@ const ViewStoryPage: React.FC = () => {
                   {story.poem}
                 </pre>
 
-                {!story.storyParams.createdByAdmin && storyAuthor && (
-                  <ViewStoryAuthorInfo
-                    story={story}
-                    storyAuthor={storyAuthor}
-                    handleUpdateStoryAuthor={handleUpdateStoryAuthor}
-                  />
-                )}
+                {story.author &&
+                  !story.storyParams.createdByAdmin &&
+                  storyAuthor && (
+                    <ViewStoryAuthorInfo
+                      story={story}
+                      storyAuthor={storyAuthor}
+                      handleUpdateStoryAuthor={handleUpdateStoryAuthor}
+                    />
+                  )}
 
                 <ViewStoryInfo story={story} />
 
