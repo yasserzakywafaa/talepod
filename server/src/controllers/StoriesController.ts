@@ -286,6 +286,144 @@ export const getAllUserStories = async (
   }
 };
 
+export const getOriginalStories = async (
+  request: Request,
+  response: Response<PageResponse<DocumentWithId> | PageErrorResponse<unknown>>,
+  next: NextFunction
+) => {
+  const hasActiveFilters: boolean = request.query.hasActiveFilters === "true";
+  const filters: StoryFilters = JSON.parse(
+    (request.query.filters as string) || "{}"
+  );
+  const { pageNumber = 1, pageSize = 20 } = filters;
+
+  try {
+    // Get all stories in collection
+    const allStoriesDocuments = database.collection(
+      DBCollections.stories_library
+    );
+    const allOriginalStoriesDocumentsCount = (
+      await allStoriesDocuments.find().toArray()
+    ).length;
+
+    // Get all original stories by filters
+    const filteredDocuments = allStoriesDocuments.find(getQuery(filters));
+    // .limit(pageSize);
+    const filteredOriginalStoriesCount = (await filteredDocuments.toArray())
+      .length;
+
+    // Get only the pagination stories by same filter (if any)
+    const filteredDocumentsClone = allStoriesDocuments
+      .find(getQuery(filters))
+      .clone();
+    const filteredStories = await filteredDocumentsClone
+      .skip((Number(pageNumber) - 1) * Number(pageSize))
+      .limit(pageSize)
+      .toArray();
+
+    const totalCount = hasActiveFilters
+      ? filteredOriginalStoriesCount
+      : allOriginalStoriesDocumentsCount;
+
+    const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
+
+    console.log("ℹ️  Fetched all Original stories successfully", {
+      filters,
+      hasActiveFilters,
+      allOriginalStoriesDocumentsCount,
+      filteredOriginalStoriesCount,
+      totalCount,
+      totalPagesCount,
+    });
+
+    const paging: PagingInfo = {
+      pageNumber,
+      pageSize,
+      totalPagesCount,
+      totalCount,
+    };
+    response.status(200).json({
+      results: filteredStories as DocumentWithId[],
+      paging,
+    });
+  } catch (error) {
+    console.error("❌ Failed to get Original stories!", {
+      error,
+    });
+    response.status(403).json({
+      message: error,
+    });
+  }
+};
+
+export const getAllUsersStories = async (
+  request: Request,
+  response: Response<PageResponse<DocumentWithId> | PageErrorResponse<unknown>>,
+  next: NextFunction
+) => {
+  const hasActiveFilters: boolean = request.query.hasActiveFilters === "true";
+  const filters: StoryFilters = JSON.parse(
+    (request.query.filters as string) || "{}"
+  );
+  const { pageNumber = 1, pageSize = 20 } = filters;
+
+  try {
+    // Get all stories in collection
+    const allStoriesDocuments = database.collection(DBCollections.stories);
+    const allOriginalStoriesDocumentsCount = (
+      await allStoriesDocuments.find().toArray()
+    ).length;
+
+    // Get all original stories by filters
+    const filteredDocuments = allStoriesDocuments.find(getQuery(filters));
+    // .limit(pageSize);
+    const filteredOriginalStoriesCount = (await filteredDocuments.toArray())
+      .length;
+
+    // Get only the pagination stories by same filter (if any)
+    const filteredDocumentsClone = allStoriesDocuments
+      .find(getQuery(filters))
+      .clone();
+    const filteredStories = await filteredDocumentsClone
+      .skip((Number(pageNumber) - 1) * Number(pageSize))
+      .limit(pageSize)
+      .toArray();
+
+    const totalCount = hasActiveFilters
+      ? filteredOriginalStoriesCount
+      : allOriginalStoriesDocumentsCount;
+
+    const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
+
+    console.log("ℹ️  Fetched all Users stories successfully", {
+      filters,
+      hasActiveFilters,
+      allOriginalStoriesDocumentsCount,
+      filteredOriginalStoriesCount,
+      totalCount,
+      totalPagesCount,
+    });
+
+    const paging: PagingInfo = {
+      pageNumber,
+      pageSize,
+      totalPagesCount,
+      totalCount,
+    };
+    response.status(200).json({
+      results: filteredStories as DocumentWithId[],
+      paging,
+    });
+  } catch (error) {
+    console.error("❌ Failed to get Original stories!", {
+      error,
+    });
+    response.status(403).json({
+      message: error,
+    });
+  }
+};
+
 // // FOR DEVELOPMENT USE ONLY
 // let globalAllStories;
 // const bulkUpdateStoriesByField = async () => {
@@ -383,6 +521,8 @@ const StoriesController = {
   getAllStories,
   getStoryBySlug,
   getAllUserStories,
+  getOriginalStories,
+  getAllUsersStories,
 };
 
 export default StoriesController;

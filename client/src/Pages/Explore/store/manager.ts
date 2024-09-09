@@ -33,7 +33,7 @@ interface UpdateUrlByFiltersResults {
 export const useExploreManager = (store: ExploreStore): ExploreManager => {
   const { stories, filters, pagingInfo } = store.state;
   const { filters: initialFilters, pagingInfo: initialPagingInfo } =
-    getExploreInitialState(true);
+    getExploreInitialState(false);
   const initialFiltersWithPaging: ExploreStoryFilters = {
     ...initialFilters,
     ...initialPagingInfo,
@@ -147,7 +147,8 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
 
     try {
       const response: AxiosResponse<ApiResponseWithPaging<Story[]>> =
-        await axios.get(END_POINTS.STORIES.GET_ALL_STORIES, {
+        // await axios.get(END_POINTS.STORIES.GET_ALL_STORIES, {
+        await axios.get(END_POINTS.STORIES.GET_ORIGINAL_STORIES, {
           params: {
             filters: JSON.stringify(updatedFilters),
             hasActiveFilters,

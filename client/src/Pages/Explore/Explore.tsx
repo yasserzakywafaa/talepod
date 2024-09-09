@@ -62,7 +62,7 @@ const ExplorePage: React.FC = () => {
 
   return (
     <Page
-      isLoading={isFetching && !stories.length}
+      isLoading={isFetching || !stories.length}
       // isLoading={isFetching}
       // isLoading={!isFetching}
       className="explore-page"

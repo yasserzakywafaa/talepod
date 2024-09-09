@@ -16,7 +16,6 @@ import {
   TextField,
   ToggleButton,
   ToggleButtonGroup,
-  Tooltip,
   Typography,
 } from "@mui/material";
 
@@ -76,12 +75,12 @@ const FiltersPanel: React.FC = (): JSX.Element => {
     handleUpdateFilters("audio", checked ? true : undefined);
   };
 
-  const handleOriginalsCheckboxChange = (
-    event: React.SyntheticEvent<Element, Event>,
-    checked: boolean
-  ) => {
-    handleUpdateFilters("createdByAdmin", checked ? true : undefined);
-  };
+  // const handleOriginalsCheckboxChange = (
+  //   event: React.SyntheticEvent<Element, Event>,
+  //   checked: boolean
+  // ) => {
+  //   handleUpdateFilters("createdByAdmin", checked ? true : undefined);
+  // };
 
   const handleGenderChange = (
     event: React.MouseEvent<HTMLElement>,
@@ -262,7 +261,7 @@ const FiltersPanel: React.FC = (): JSX.Element => {
               />
             </FormGroup>
 
-            <Tooltip title="Crafted and Personalized by TalePod team">
+            {/* <Tooltip title="Crafted and Personalized by TalePod team">
               <FormGroup>
                 <FormControlLabel
                   name="createdByAdmin"
@@ -272,7 +271,7 @@ const FiltersPanel: React.FC = (): JSX.Element => {
                   onChange={handleOriginalsCheckboxChange}
                 />
               </FormGroup>
-            </Tooltip>
+            </Tooltip> */}
           </Box>
 
           <FormControl className="filters-form-item">
