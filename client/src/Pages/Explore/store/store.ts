@@ -1,6 +1,7 @@
 import {
   ExploreInitialState,
   ExploreStoryFilters,
+  StoriesToDisplay,
   getExploreInitialState,
 } from "./state";
 
@@ -13,6 +14,7 @@ export interface ExploreStore {
   isExploreFetching: (isFetching: boolean) => void;
   toggleFiltersPanel: (isFetching: boolean) => void;
   sortStories: () => void;
+  setStoriesToDisplay: (storiesToDisplay: StoriesToDisplay | undefined) => void;
   updateStories: (stories: Story[]) => void;
   updatePageNumber: (pageNumber: number) => void;
   updatePagingInfo: (pagingInfo: PagingInfo) => void;
@@ -48,6 +50,15 @@ const useExploreStore = (): ExploreStore => {
     setState((prev) => ({
       ...prev,
       stories: stories.reverse(),
+    }));
+  };
+
+  const setStoriesToDisplay = (
+    storiesToDisplay: StoriesToDisplay | undefined
+  ) => {
+    setState((prev) => ({
+      ...prev,
+      storiesToDisplay,
     }));
   };
 
@@ -116,6 +127,7 @@ const useExploreStore = (): ExploreStore => {
     isExploreFetching,
     updateStories,
     sortStories,
+    setStoriesToDisplay,
     updatePageNumber,
     updatePagingInfo,
     toggleFiltersPanel,

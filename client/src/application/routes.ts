@@ -2,6 +2,7 @@ const routes = {
   home: `/`,
   create: `/create`,
   explore: `/bedtime-stories`,
+  usersStories: `/users-bedtime-stories`,
   story: (slug: string) => `/bedtime-story/${slug}`,
   myStories: (userId: string) => `/my-bedtime-stories/${userId}`,
   myStory: (userId: string, slug: string) =>

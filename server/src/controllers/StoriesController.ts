@@ -415,7 +415,7 @@ export const getAllUsersStories = async (
       paging,
     });
   } catch (error) {
-    console.error("❌ Failed to get Original stories!", {
+    console.error("❌ Failed to get Users stories!", {
       error,
     });
     response.status(403).json({

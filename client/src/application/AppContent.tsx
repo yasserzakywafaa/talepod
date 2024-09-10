@@ -12,12 +12,16 @@ import NotFoundPage from "../Pages/NotFound/NotFound";
 import { ThemeProvider } from "@emotion/react";
 import { getApplicationInitialState } from "./store/state";
 import { getLocalStorageAuthItems } from "src/shared/utils/localstorage";
+import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import routes from "./routes";
 import { useApplicationContext } from "./store/Provider";
 
 const HomePage = lazy(() => import("../Pages/Home/Home"));
 const CreateStoryPage = lazy(() => import("../Pages/CreateStory/CreateStory"));
 const ExplorePage = lazy(() => import("../Pages/Explore/Explore"));
+const UsersStoriesPage = lazy(
+  () => import("../Pages/UsersStories/UsersStories")
+);
 const MyStoriesPage = lazy(() => import("../Pages/MyStories/MyStories"));
 const ContactPage = lazy(() => import("../Pages/Contact/Contact"));
 const ViewStoryPage = lazy(() => import("../Pages/ViewStory/ViewStory"));
@@ -96,6 +100,13 @@ const AppContent = () => {
                   path={routes.myStory(":userId", ":slug")}
                   element={<ViewStoryPage />}
                 />
+
+                {hasAdminRights(state.auth.user) && (
+                  <Route
+                    path={routes.usersStories}
+                    element={<UsersStoriesPage />}
+                  />
+                )}
               </>
             ) : (
               <Route path="*" element={<Navigate to={routes.unauthorized} />} />

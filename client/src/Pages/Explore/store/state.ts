@@ -9,7 +9,10 @@ export interface ExploreInitialState {
   isFiltersPanelOpen: boolean;
   activeFiltersCount: number;
   pagingInfo: PagingInfo;
+  storiesToDisplay?: StoriesToDisplay;
 }
+
+export type StoriesToDisplay = "originals" | "users";
 
 export interface ExploreStoryFilters {
   name: string | undefined;
@@ -40,6 +43,7 @@ export const getExploreInitialState = (
   return {
     isFetching: true,
     stories: [],
+    storiesToDisplay: undefined,
     isFiltersPanelOpen: false,
     activeFiltersCount: 0,
     filters: {

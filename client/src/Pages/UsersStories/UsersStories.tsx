@@ -1,16 +1,14 @@
-import "./Explore.scss";
-
-import { ExploreContent } from "./ExploreContent";
+import { ExploreContent } from "../Explore/ExploreContent";
 import { useEffect } from "react";
 import { useExploreContext } from "../Explore/store/Provider";
 
-const ExplorePage = (): JSX.Element => {
+const UsersStories = (): JSX.Element => {
   const {
     manager: { setUp, handleResetFilters },
   } = useExploreContext();
 
   useEffect(() => {
-    setUp("originals");
+    setUp("users");
 
     return () => {
       handleResetFilters();
@@ -20,4 +18,4 @@ const ExplorePage = (): JSX.Element => {
   return <ExploreContent />;
 };
 
-export default ExplorePage;
+export default UsersStories;
