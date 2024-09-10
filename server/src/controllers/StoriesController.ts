@@ -448,7 +448,7 @@ export const getAllUsersStories = async (
     const matchStage = hasActiveFilters ? [{ $match: getQuery(filters) }] : [];
     // Aggregation pipeline
     const pipeline = [
-      // { $sort: { createdAt: -1 } },
+      { $sort: { createdAt: -1 } },
       // {
       //   $unionWith: {
       //     coll: DBCollections.stories,
