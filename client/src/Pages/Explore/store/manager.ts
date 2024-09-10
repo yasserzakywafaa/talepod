@@ -170,8 +170,6 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
 
     try {
       const response: AxiosResponse<ApiResponseWithPaging<Story[]>> =
-        // await axios.get(END_POINTS.STORIES.GET_ALL_STORIES, {
-        // await axios.get(END_POINTS.STORIES.GET_ORIGINAL_STORIES, {
         await axios.get(ENDPOINT, {
           params: {
             filters: JSON.stringify(updatedFilters),

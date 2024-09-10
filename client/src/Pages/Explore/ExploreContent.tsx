@@ -1,11 +1,12 @@
 import { Badge, Box, Button, Container, Pagination } from "@mui/material";
-import { FilterAltOutlined, Share } from "@mui/icons-material";
 
+import { FilterAltOutlined } from "@mui/icons-material";
 import FiltersPanel from "./features/FiltersPanel/FiltersPanel";
 import { LoaderComponentNameEnum } from "src/components/shared/Loader/LoaderSpinner";
 import NoStoriesFound from "./features/NoStoriesFound";
 import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
+import Share from "src/components/shared/Share";
 import StoryCard from "src/components/shared/StoryCard/StoryCard";
 import { useExploreContext } from "./store/Provider";
 import { useNavigate } from "react-router-dom";
@@ -50,7 +51,7 @@ export const ExploreContent = (props: ExplorePageContentProps): JSX.Element => {
 
   return (
     <Page
-      isLoading={isFetching || !stories.length}
+      isLoading={isFetching || (isFetching && !stories.length)}
       // isLoading={isFetching}
       // isLoading={!isFetching}
       className="explore-page"
