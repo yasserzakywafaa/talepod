@@ -1,5 +1,9 @@
 import { ApiRequestParams, ApiResponseWithPaging } from "src/shared/types";
-import { ExploreStoryFilters, getExploreInitialState } from "./state";
+import {
+  ExploreStoryFilters,
+  StoriesToDisplay,
+  getExploreInitialState,
+} from "./state";
 import axios, { AxiosResponse } from "axios";
 import { parseQueryString, replaceUrl } from "src/shared/utils/url";
 
@@ -10,12 +14,12 @@ import { scrollToTop } from "src/shared/utils/scrollTo";
 import { useFiltersPanel } from "../features/FiltersPanel/useFiltersPanel";
 
 export interface ExploreManager {
-  setUp: () => Promise<void>;
   handleSortStories: () => void;
   handleClearFilters: () => void;
   handleResetFilters: () => void;
   handleFilterStories: () => void;
   handleUpdateUrlByFilters: () => void;
+  setUp: (storiesToDisplay: StoriesToDisplay) => Promise<void>;
   handleGetStoriesByPage: (pageNumber: number) => Promise<void>;
   handleFetchStories: (filters?: ExploreStoryFilters) => Promise<void>;
   handleToggleFiltersPanel: (isOpen: boolean) => void;
@@ -31,9 +35,9 @@ interface UpdateUrlByFiltersResults {
 }
 
 export const useExploreManager = (store: ExploreStore): ExploreManager => {
-  const { stories, filters, pagingInfo } = store.state;
+  const { stories, filters, pagingInfo, storiesToDisplay } = store.state;
   const { filters: initialFilters, pagingInfo: initialPagingInfo } =
-    getExploreInitialState(true);
+    getExploreInitialState(false);
   const initialFiltersWithPaging: ExploreStoryFilters = {
     ...initialFilters,
     ...initialPagingInfo,
@@ -41,10 +45,15 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
   const { activeFiltersCount, getActiveFiltersCount } =
     useFiltersPanel(filters);
 
-  const setUp = async () => {
+  const setUp = async (storiesToDisplay: StoriesToDisplay) => {
+    store.setStoriesToDisplay(storiesToDisplay);
     store.isExploreFetching(true);
     const { parsedFilters, newActiveFiltersCount } = handleUpdateUrlByFilters();
-    await handleFetchStories(parsedFilters, !!newActiveFiltersCount);
+    await handleFetchStories(
+      parsedFilters,
+      !!newActiveFiltersCount,
+      storiesToDisplay
+    );
     store.isExploreFetching(false);
   };
 
@@ -106,7 +115,11 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
       ...filters,
       ...initialPagingInfo,
     };
-    await handleFetchStories(updatedFiltersWithPaging, !!activeFiltersCount);
+    await handleFetchStories(
+      updatedFiltersWithPaging,
+      !!activeFiltersCount,
+      storiesToDisplay
+    );
   };
 
   const handleGetStoriesByPage = async (pageNumber: number) => {
@@ -117,7 +130,11 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
       pageSize: pagingInfo.pageSize,
     };
     replaceUrl(updatedFilters);
-    await handleFetchStories(updatedFilters, !!activeFiltersCount);
+    await handleFetchStories(
+      updatedFilters,
+      !!activeFiltersCount,
+      storiesToDisplay
+    );
     scrollToTop();
   };
 
@@ -130,7 +147,7 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
     //   ...initialFiltersWithPaging,
     //   language: [],
     // });
-    await handleFetchStories(initialFiltersWithPaging, false);
+    await handleFetchStories(initialFiltersWithPaging, false, storiesToDisplay);
   };
 
   const handleResetFilters = () => {
@@ -140,14 +157,20 @@ export const useExploreManager = (store: ExploreStore): ExploreManager => {
 
   const handleFetchStories = async (
     newFilters: ExploreStoryFilters,
-    hasActiveFilters?: boolean
+    hasActiveFilters?: boolean,
+    storiesToDisplay?: StoriesToDisplay
   ): Promise<void> => {
     const updatedFilters = newFilters ?? filters;
     store.isExploreFetching(true);
 
+    const ENDPOINT =
+      storiesToDisplay && storiesToDisplay === "users"
+        ? END_POINTS.STORIES.GET_USERS_STORIES
+        : END_POINTS.STORIES.GET_ORIGINAL_STORIES;
+
     try {
       const response: AxiosResponse<ApiResponseWithPaging<Story[]>> =
-        await axios.get(END_POINTS.STORIES.GET_ALL_STORIES, {
+        await axios.get(ENDPOINT, {
           params: {
             filters: JSON.stringify(updatedFilters),
             hasActiveFilters,
