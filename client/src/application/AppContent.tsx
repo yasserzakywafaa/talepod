@@ -36,6 +36,38 @@ const UnauthorizedPage = lazy(
   () => import("../Pages/Unauthorized/Unauthorized")
 );
 
+// Landing Pages
+const BedtimeStoriesForKids = lazy(
+  () => import("../Pages/LandingPages/BedtimeStoriesForKids")
+);
+const BedtimeStoriesForAdults = lazy(
+  () => import("../Pages/LandingPages/BedtimeStoriesForAdults")
+);
+const ShortBedtimeStories = lazy(
+  () => import("../Pages/LandingPages/ShortBedtimeStories")
+);
+const ChristmasBedtimeStories = lazy(
+  () => import("../Pages/LandingPages/ChristmasBedtimeStories")
+);
+const BedtimeStoriesForGirlfriend = lazy(
+  () => import("../Pages/LandingPages/BedtimeStoriesForGirlfriend")
+);
+const BedtimeStoriesForToddlers = lazy(
+  () => import("../Pages/LandingPages/BedtimeStoriesForToddlers")
+);
+const EducationalBedtimeStories = lazy(
+  () => import("../Pages/LandingPages/EducationalBedtimeStories")
+);
+const BabyBedtimeStories = lazy(
+  () => import("../Pages/LandingPages/BabyBedtimeStories")
+);
+const BestBedtimeStories = lazy(
+  () => import("../Pages/LandingPages/BestBedtimeStories")
+);
+const QuickBedtimeStories = lazy(
+  () => import("../Pages/LandingPages/QuickBedtimeStories")
+);
+
 const AppContent = () => {
   const {
     store: { state, handleIsFetchingUserInfo },
@@ -84,9 +116,7 @@ const AppContent = () => {
         <BrowserRouter>
           <Routes>
             <Route index path={routes.home} element={<HomePage />} />
-
             <Route path={routes.create} element={<CreateStoryPage />} />
-
             <Route path={routes.explore} element={<ExplorePage />} />
 
             {state.auth.isAuthenticated && !!state.auth.user ? (
@@ -113,30 +143,60 @@ const AppContent = () => {
             )}
 
             <Route path={routes.contact} element={<ContactPage />} />
-
             <Route path={routes.story(":slug")} element={<ViewStoryPage />} />
-
-            {/* Landing Pages */}
-            {Object.values(routes.landingPages).map(
-              (route: string, index: number) => (
-                <Route key={index} path={route} element={<ExplorePage />} />
-              )
-            )}
-            {/* End of Landing Pages */}
-
             <Route
               path={routes.privacyPolicy}
               element={<PrivacyPolicyPage />}
             />
-
             <Route
               path={routes.termsAndConditions}
               element={<TermsAndConditionsPage />}
             />
-
             <Route path={routes.checkout} element={<CheckoutPage />} />
-
             <Route path={routes.unauthorized} element={<UnauthorizedPage />} />
+
+            {/* Landing Pages */}
+            <Route
+              path={routes.landingPages.bedtimeStoriesForKids}
+              element={<BedtimeStoriesForKids />}
+            />
+            <Route
+              path={routes.landingPages.bedtimeStoriesForAdults}
+              element={<BedtimeStoriesForAdults />}
+            />
+            <Route
+              path={routes.landingPages.shortBedtimeStories}
+              element={<ShortBedtimeStories />}
+            />
+            <Route
+              path={routes.landingPages.christmasBedtimeStories}
+              element={<ChristmasBedtimeStories />}
+            />
+            <Route
+              path={routes.landingPages.bedtimeStoriesForGirlfriend}
+              element={<BedtimeStoriesForGirlfriend />}
+            />
+            <Route
+              path={routes.landingPages.bedtimeStoriesForToddlers}
+              element={<BedtimeStoriesForToddlers />}
+            />
+            <Route
+              path={routes.landingPages.educationalBedtimeStories}
+              element={<EducationalBedtimeStories />}
+            />
+            <Route
+              path={routes.landingPages.babyBedtimeStories}
+              element={<BabyBedtimeStories />}
+            />
+            <Route
+              path={routes.landingPages.bestBedtimeStories}
+              element={<BestBedtimeStories />}
+            />
+            <Route
+              path={routes.landingPages.quickBedtimeStories}
+              element={<QuickBedtimeStories />}
+            />
+            {/* End of Landing Pages */}
 
             {/* Fallback route for 404 errors */}
             <Route path="*" element={<NotFoundPage />} />

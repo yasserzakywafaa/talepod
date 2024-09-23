@@ -1,30 +1,28 @@
 import {
-  AutoFixHighOutlined,
-  ChildCareOutlined,
-  DevicesOutlined,
-  EmojiObjectsOutlined,
-  LocalLibraryOutlined,
-} from "@mui/icons-material";
-import {
   Box,
   Button,
   Card,
   CardContent,
   Container,
   Link,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   Typography,
 } from "@mui/material";
 
-import RandomImage from "src/components/shared/RandomImage/RandomImage";
-import Unicorn from "../../../assets/images/unicorn_with_a_magic_wand_and_a_book.webp";
+import { AutoFixHighOutlined } from "@mui/icons-material";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 
-const PersonalizedBedtimeStoryText = () => {
+interface LandingPagePersonalizedBedtimeStoryText {
+  introducingTalePod: string;
+  whyPersonalizeBedtimeStories: string;
+  personalizeImage: string;
+  benefitsList: JSX.Element;
+  benefitsImage: JSX.Element;
+}
+
+const PersonalizedBedtimeStoryText = (
+  props: LandingPagePersonalizedBedtimeStoryText
+) => {
   const navigate = useNavigate();
 
   const handleFooterLinkItemClick =
@@ -82,11 +80,7 @@ const PersonalizedBedtimeStoryText = () => {
               >
                 Personalized bedtime stories
               </Link>
-              can foster a stronger bond between parents and children. They make
-              bedtime more engaging and enjoyable, providing a unique way to
-              spark your child's imagination. TalePod allows you to create
-              custom stories tailored to your child's preferences, making each
-              night a special adventure.
+              {props.whyPersonalizeBedtimeStories}
             </Typography>
 
             <Typography variant="h5" gutterBottom>
@@ -102,15 +96,13 @@ const PersonalizedBedtimeStoryText = () => {
               >
                 create personalized bedtime stories
               </Link>
-              effortlessly. With TalePod, you can craft unique narratives that
-              resonate with your child's interests, ensuring an exciting and
-              immersive bedtime experience.
+              effortlessly. {props.introducingTalePod}
             </Typography>
           </Box>
 
           <Box sx={{ maxWidth: { sm: "50%" }, margin: "auto" }}>
             <img
-              src={Unicorn}
+              src={props.personalizeImage}
               alt="unicorn with a magic wand and a book"
               width="100%"
               height="100%"
@@ -135,51 +127,11 @@ const PersonalizedBedtimeStoryText = () => {
             <Typography variant="h5" gutterBottom>
               Benefits of Using TalePod
             </Typography>
-            <List>
-              <ListItem>
-                <ListItemIcon>
-                  <ChildCareOutlined fontSize="large" color="secondary" />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Tailored to Your Child's Interests"
-                  secondary="With TalePod, you can customize stories based on your child's favorite characters, themes, and settings, making each story relevant and captivating."
-                />
-              </ListItem>
-
-              <ListItem>
-                <ListItemIcon>
-                  <EmojiObjectsOutlined fontSize="large" color="secondary" />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Encourages Creativity"
-                  secondary="TalePod inspires creativity in both parents and children, encouraging them to imagine and explore new worlds together."
-                />
-              </ListItem>
-
-              <ListItem>
-                <ListItemIcon>
-                  <DevicesOutlined fontSize="large" color="secondary" />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Easy to Use"
-                  secondary="TalePod's user-friendly interface makes it simple to create and customize stories, even for those who are not tech-savvy."
-                />
-              </ListItem>
-
-              <ListItem>
-                <ListItemIcon>
-                  <LocalLibraryOutlined fontSize="large" color="secondary" />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Promotes Literacy"
-                  secondary="Personalized stories can enhance your child's vocabulary and comprehension skills, promoting a love for reading from an early age."
-                />
-              </ListItem>
-            </List>
+            {props.benefitsList}
           </Box>
 
           <Box sx={{ maxWidth: { sm: "50%" }, margin: "auto" }}>
-            <RandomImage />
+            {props.benefitsImage}
           </Box>
         </CardContent>
       </Card>
