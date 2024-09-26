@@ -7,6 +7,7 @@ import {
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
 import Box from "@mui/material/Box";
+import Dinosaur from "../../assets/images/landing_pages/dinosaur.webp";
 import Divider from "@mui/material/Divider";
 import FAQ from "./features/FAQ";
 import Hero from "./features/Hero";
@@ -74,6 +75,7 @@ const BestBedtimeStories = () => {
       isLoading={isFetching}
     >
       <Hero
+        heroImage={Dinosaur}
         pageTitleWhite="Best Bedtime Stories"
         pageTitleColored="with TalePod"
         pageHeader="Explore a selection of the most popular bedtime stories tailored to your preferences."

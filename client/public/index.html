@@ -207,7 +207,10 @@
     <!-- Google-tag (gtag.js) -->
     <script>
       // Only load Google Analytics if running on production
-      if (window.location.hostname === "talepod.com") {
+      if (
+        window.location.hostname === "talepod.com" ||
+        window.location.hostname === "www.talepod.com"
+      ) {
         // Create a script element
         var gaScript = document.createElement("script");
         gaScript.src =

@@ -8,6 +8,7 @@ import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
+import DreamyKitten from "../../assets/images/landing_pages/dreamy_kitten.webp";
 import FAQ from "./features/FAQ";
 import Hero from "./features/Hero";
 import Page from "src/components/shared/Page/Page";
@@ -74,6 +75,7 @@ const BedtimeStoriesForGirlfriend = () => {
       isLoading={isFetching}
     >
       <Hero
+        heroImage={DreamyKitten}
         pageTitleWhite="Heartfelt Bedtime Stories"
         pageTitleColored="for Your Girlfriend"
         pageHeader="Create romantic and personalized stories to share with your loved one."

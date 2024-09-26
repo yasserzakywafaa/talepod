@@ -7,6 +7,7 @@ import {
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
 import Box from "@mui/material/Box";
+import CuteKuala from "../../assets/images/landing_pages/cute_kuala.webp";
 import Divider from "@mui/material/Divider";
 import FAQ from "./features/FAQ";
 import Hero from "./features/Hero";
@@ -74,6 +75,7 @@ const BedtimeStoriesForToddlers = () => {
       isLoading={isFetching}
     >
       <Hero
+        heroImage={CuteKuala}
         pageTitleWhite="Fun and Engaging"
         pageTitleColored="Bedtime Stories for Toddlers"
         pageHeader="Create short, fun stories that are perfect for your little one."

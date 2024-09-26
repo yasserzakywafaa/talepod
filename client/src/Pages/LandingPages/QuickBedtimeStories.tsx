@@ -13,6 +13,7 @@ import Hero from "./features/Hero";
 import Page from "src/components/shared/Page/Page";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
+import SpeedySquirrel from "../../assets/images/landing_pages/speedy_squirrel.webp";
 import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.webp";
 import { useApplicationContext } from "src/application/store/Provider";
 
@@ -74,6 +75,7 @@ const QuickBedtimeStories = () => {
       isLoading={isFetching}
     >
       <Hero
+        heroImage={SpeedySquirrel}
         pageTitleWhite="Quick Bedtime Stories"
         pageTitleColored="for Fast Bedtime Routines"
         pageHeader="Short and sweet stories for when time is of the essence."

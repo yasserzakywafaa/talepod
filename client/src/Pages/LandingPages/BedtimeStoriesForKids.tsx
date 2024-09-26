@@ -12,6 +12,7 @@ import FAQ from "./features/FAQ";
 import Hero from "./features/Hero";
 import Page from "src/components/shared/Page/Page";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
+import PlayfulBunny from "../../assets/images/landing_pages/playful_bunny.webp";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.webp";
 import { useApplicationContext } from "src/application/store/Provider";
@@ -70,6 +71,7 @@ const BedtimeStoriesForKids = () => {
   return (
     <Page title="TALEPOD" className="home-page" isLoading={isFetching}>
       <Hero
+        heroImage={PlayfulBunny}
         pageTitleWhite="Create Magical"
         pageTitleColored="Bedtime Stories for Kids"
         pageHeader="Craft personalized bedtime stories tailored to your child's dreams and imagination."

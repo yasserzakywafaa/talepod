@@ -9,6 +9,7 @@ import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import FAQ from "./features/FAQ";
+import FestiveReindeer from "../../assets/images/landing_pages/festive_reindeer.webp";
 import Hero from "./features/Hero";
 import Page from "src/components/shared/Page/Page";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
@@ -74,6 +75,7 @@ const ChristmasBedtimeStories = () => {
       isLoading={isFetching}
     >
       <Hero
+        heroImage={FestiveReindeer}
         pageTitleWhite="Magical Christmas"
         pageTitleColored="Bedtime Stories"
         pageHeader="Celebrate the holiday season with heartwarming personalized stories."

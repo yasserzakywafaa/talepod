@@ -10,6 +10,7 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import FAQ from "./features/FAQ";
 import Hero from "./features/Hero";
+import LionCub from "../../assets/images/landing_pages/lion_cub.webp";
 import Page from "src/components/shared/Page/Page";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
@@ -74,6 +75,7 @@ const BedtimeStoriesForAdults = () => {
       isLoading={isFetching}
     >
       <Hero
+        heroImage={LionCub}
         pageTitleWhite="Create Relaxing"
         pageTitleColored="Bedtime Stories for Adults"
         pageHeader="Enjoy peaceful and personalized stories to wind down after a long day."
