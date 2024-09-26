@@ -10,6 +10,7 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import FAQ from "./features/FAQ";
 import Hero from "./features/Hero";
+import MonkeyHoldingBanana from "../../assets/images/landing_pages/monkey_holding_banana.webp";
 import Page from "src/components/shared/Page/Page";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
@@ -74,6 +75,7 @@ const EducationalBedtimeStories = () => {
       isLoading={isFetching}
     >
       <Hero
+        heroImage={MonkeyHoldingBanana}
         pageTitleWhite="Gentle Bedtime Stories"
         pageTitleColored="for Babies"
         pageHeader="Soft, soothing stories designed to lull your baby to sleep."

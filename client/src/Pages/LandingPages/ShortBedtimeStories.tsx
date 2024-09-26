@@ -7,6 +7,7 @@ import {
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
 import Box from "@mui/material/Box";
+import ChickBird from "../../assets/images/landing_pages/chick_bird.webp";
 import Divider from "@mui/material/Divider";
 import FAQ from "./features/FAQ";
 import Hero from "./features/Hero";
@@ -74,6 +75,7 @@ const ShortBedtimeStories = () => {
       isLoading={isFetching}
     >
       <Hero
+        heroImage={ChickBird}
         pageTitleWhite="Quick Bedtime Stories"
         pageTitleColored="for Busy Nights"
         pageHeader="Enjoy short, engaging stories that are perfect for a quick bedtime routine."

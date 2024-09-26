@@ -14,6 +14,7 @@ import Page from "src/components/shared/Page/Page";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.webp";
+import WiseOwl from "../../assets/images/landing_pages/wise_owl.webp";
 import { useApplicationContext } from "src/application/store/Provider";
 
 const EducationalBedtimeStories = () => {
@@ -74,6 +75,7 @@ const EducationalBedtimeStories = () => {
       isLoading={isFetching}
     >
       <Hero
+        heroImage={WiseOwl}
         pageTitleWhite="Educational Bedtime Stories"
         pageTitleColored="for Curious Minds"
         pageHeader="Teach and inspire your child with personalized educational stories."

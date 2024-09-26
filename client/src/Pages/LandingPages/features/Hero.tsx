@@ -3,12 +3,12 @@ import { AutoFixHighOutlined, SearchOutlined } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import MainCharacter from "../../../assets/images/sleeping_bunny_with_a_moon.webp";
 import Typography from "@mui/material/Typography";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 
 interface HeroProps {
+  heroImage: string;
   pageTitleWhite: string;
   pageTitleColored: string;
   pageHeader: string;
@@ -140,11 +140,11 @@ const Hero = (props: HeroProps) => {
             }}
           >
             <picture>
-              <source srcSet={MainCharacter} type="image/webp" />
+              <source srcSet={props.heroImage} type="image/webp" />
               <img
                 width="100%"
                 height="100%"
-                src={MainCharacter}
+                src={props.heroImage}
                 alt="home-page-image"
                 aria-label="rabbit-sleeping-on-a-pillow"
               />
