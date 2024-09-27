@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import AddressForm from "./features/AddressForm";
+import StripeGatewayWrapper from "./features/StripeGatewayWrapper";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -19,6 +19,7 @@ import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import Typography from "@mui/material/Typography";
 import { useCheckout } from "./useCheckout";
+import { useCheckoutContext } from "./store/Provider";
 
 // import { useApplicationContext } from "src/application/store/Provider";
 
@@ -27,7 +28,7 @@ const steps = ["Shipping address", "Payment details", "Review your order"];
 const getStepContent = (step: number) => {
   switch (step) {
     case 0:
-      return <AddressForm />;
+      return <StripeGatewayWrapper />;
     case 1:
       return <PaymentForm />;
     case 2:
@@ -39,6 +40,8 @@ const getStepContent = (step: number) => {
 
 const Checkout = () => {
   const { state, handleUpdateState } = useCheckout();
+
+  const {manager: {setUp}} = useCheckoutContext()
 
   const handleNext = () => {
     handleUpdateState({
@@ -54,9 +57,15 @@ const Checkout = () => {
     });
   };
 
+  React.useEffect(() => {
+    setUp();
+
+  }, []);
+
   return (
     <>
       <Grid container sx={{ height: { xs: "100%", sm: "100dvh" } }}>
+        {/* Desktop */}
         <Grid
           item
           xs={12}
@@ -102,6 +111,8 @@ const Checkout = () => {
             <Info totalPrice={state.activeStep >= 2 ? "$144.97" : "$134.98"} />
           </Box>
         </Grid>
+
+        {/* Mobile */}
         <Grid
           item
           sm={12}
@@ -177,6 +188,7 @@ const Checkout = () => {
               </Stepper>
             </Box>
           </Box>
+
           <Card
             sx={{
               display: { xs: "flex", md: "none" },
@@ -205,6 +217,7 @@ const Checkout = () => {
               />
             </CardContent>
           </Card>
+
           <Box
             sx={{
               display: "flex",

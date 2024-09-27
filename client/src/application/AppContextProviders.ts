@@ -11,6 +11,7 @@ import { StoryCreatorContextProvider } from "src/components/StoryCreator/store/P
 import { ViewStoryContextProvider } from "src/Pages/ViewStory/store/Provider";
 import combineProviders from "./shared/combineProviders";
 import { PricingModalContextProvider } from "src/components/Modals/PricingModal/store/Provider";
+import { CheckoutContextProvider } from "src/components/Checkout/store/Provider";
 
 const contextProviders = [
   ApplicationContextProvider,
@@ -23,6 +24,7 @@ const contextProviders = [
   MyStoriesContextProvider,
   ViewStoryContextProvider,
   ContactContextProvider,
+  CheckoutContextProvider,
 
   // Authentication
   AppWithGoogleAuthContextProvider,

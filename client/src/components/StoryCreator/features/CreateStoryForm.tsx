@@ -614,8 +614,9 @@ const CreateStoryForm = () => {
           {isAuthenticated && isUserActive && hasMaxStoriesLimit ? (
             <Button
               type="button"
-              title="subscribe-button"
+              color="secondary"
               variant="contained"
+              title="subscribe-button"
               endIcon={<LoyaltyOutlined />}
               onClick={handleTogglePricingModal}
             >

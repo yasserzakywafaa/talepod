@@ -51,6 +51,10 @@ const END_POINTS = {
     GOOGLE: `${publicApiUrl}/api/v1/auth/google-auth`,
     USER_INFO: `${publicApiUrl}/api/v1/auth/user-info`,
   },
+  PAYMENTS: {
+    CONFIG: `${publicApiUrl}/api/v1/payments/config`,
+    CREATE_PAYMENT_INTENT: `${publicApiUrl}/api/v1/payments/create-payment-intent`,
+  },
 };
 
 export default END_POINTS;
