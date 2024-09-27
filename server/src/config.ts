@@ -53,6 +53,14 @@ const CONFIG = {
   EMAIL: process.env.EMAIL,
   PASSWORD: process.env.PASSWORD,
 
+  // Stripe [TEST]
+  STRIPE_TEST_PUB_KEY: process.env.STRIPE_TEST_PUB_KEY,
+  STRIPE_TEST_SECRET_KEY: process.env.STRIPE_TEST_SECRET_KEY,
+
+  // Stripe [LIVE]
+  STRIPE_LIVE_PUB_KEY: process.env.STRIPE_LIVE_PUB_KEY,
+  STRIPE_LIVE_SECRET_KEY: process.env.STRIPE_LIVE_SECRET_KEY,
+
   // Auth
   GOOGLE_OAUTH_CLIENT_ID: process.env.GOOGLE_OAUTH_CLIENT_ID,
   JWT_SECRET: process.env.JWT_SECRET,
