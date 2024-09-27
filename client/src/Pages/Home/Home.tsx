@@ -9,7 +9,7 @@ import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryTex
 import { useApplicationContext } from "src/application/store/Provider";
 
 // import Features from "./features/Features";
-// import Pricing from "./features/Pricing";
+// import Pricing from "src/components/shared/Pricing";
 // import Testimonials from "./features/Testimonials";
 
 const Homepage = () => {

@@ -40,12 +40,15 @@ import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useState } from "react";
+import { PricingModal } from "src/components/Modals/PricingModal/PricingModal";
 
 const ApplicationBar = () => {
   const navigate = useNavigate();
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isInstallAppDialogOpen, setIsInstallAppDialogOpen] =
+    useState<boolean>(false);
+  const [isPricingDialogOpen, setIsPricingDialogOpen] =
     useState<boolean>(false);
   const {
     store: {
@@ -488,6 +491,10 @@ const ApplicationBar = () => {
       <InstallAppModal
         isInstallAppDialogOpen={isInstallAppDialogOpen}
         setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
+      />
+      <PricingModal
+        isPricingDialogOpen={isPricingDialogOpen}
+        setIsPricingDialogOpen={setIsPricingDialogOpen}
       />
     </>
   );

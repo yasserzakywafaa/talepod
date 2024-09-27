@@ -20,7 +20,11 @@ import {
   ProfileInfo,
   Story,
 } from "../store/state";
-import { AutoAwesomeOutlined, ExpandMoreOutlined } from "@mui/icons-material";
+import {
+  AutoAwesomeOutlined,
+  ExpandMoreOutlined,
+  LoyaltyOutlined,
+} from "@mui/icons-material";
 import { Environment, Environments } from "src/shared/mockedData/Environments";
 import { Language, Languages } from "../../../shared/languages";
 import { Moral, Morals } from "src/shared/mockedData/Moral";
@@ -40,6 +44,7 @@ import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Pro
 import { useNavigate } from "react-router-dom";
 import { useOpenaiContext } from "./Openai/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
+import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 
 const CreateStoryForm = () => {
   const navigate = useNavigate();
@@ -65,6 +70,10 @@ const CreateStoryForm = () => {
   const {
     store: { handleToggleLoginModal },
   } = useLoginModalContext();
+
+  const {
+    store: { handleTogglePricingModal },
+  } = usePricingModalContext();
 
   const { manager: OpenaiManager } = useOpenaiContext();
   const {
@@ -602,24 +611,27 @@ const CreateStoryForm = () => {
           justifyContent="center"
           className="story-creator-form-wrapper-button"
         >
-          <Button
-            type="submit"
-            title="submit-button"
-            variant="contained"
-            disabled={isCreateButtonDisabled()}
-            endIcon={<AutoAwesomeOutlined />}
-          >
-            Create
-          </Button>
-
-          {/* <Button
-            type="button"
-            variant="outlined"
-            endIcon={<AutoAwesomeOutlined />}
-            onClick={handleCreateStoryLibrary}
-          >
-            Create Story Library
-          </Button> */}
+          {isAuthenticated && isUserActive && hasMaxStoriesLimit ? (
+            <Button
+              type="button"
+              title="subscribe-button"
+              variant="contained"
+              endIcon={<LoyaltyOutlined />}
+              onClick={handleTogglePricingModal}
+            >
+              Subscribe
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              title="submit-button"
+              variant="contained"
+              disabled={isCreateButtonDisabled()}
+              endIcon={<AutoAwesomeOutlined />}
+            >
+              Create
+            </Button>
+          )}
         </Box>
       </Box>
     </Box>

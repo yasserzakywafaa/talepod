@@ -20,7 +20,16 @@ export enum PriceTiers {
   Advanced = "Advanced",
 }
 
-const tiers = [
+export interface Tier {
+  title: PriceTiers;
+  subheader?: string;
+  price: string;
+  description: string[];
+  buttonText: string;
+  buttonVariant: string;
+}
+
+const tiers: Tier[] = [
   {
     title: PriceTiers.Free,
     price: "0",
@@ -49,21 +58,21 @@ const tiers = [
     buttonText: "Start now",
     buttonVariant: "contained",
   },
-  {
-    title: PriceTiers.Advanced,
-    subheader: "Coming Soon",
-    price: "",
-    description: [
-      "Unlimited story generation",
-      "Access to exclusive story content",
-      "Offline access to stories",
-      "Personalized story recommendations",
-      "Premium text-to-speech voices",
-      "Custom voice options for TTS",
-    ],
-    buttonText: "Start now",
-    buttonVariant: "outlined",
-  },
+  // {
+  //   title: PriceTiers.Advanced,
+  //   subheader: "Coming Soon",
+  //   price: "",
+  //   description: [
+  //     "Unlimited story generation",
+  //     "Access to exclusive story content",
+  //     "Offline access to stories",
+  //     "Personalized story recommendations",
+  //     "Premium text-to-speech voices",
+  //     "Custom voice options for TTS",
+  //   ],
+  //   buttonText: "Start now",
+  //   buttonVariant: "outlined",
+  // },
 ];
 
 const Pricing = () => {
@@ -76,8 +85,8 @@ const Pricing = () => {
     <Container
       id="pricing"
       sx={{
-        pt: { xs: 4, sm: 12 },
-        pb: { xs: 8, sm: 16 },
+        pt: { xs: 2, sm: 4 },
+        pb: { xs: 2, sm: 4 },
         position: "relative",
         display: "flex",
         flexDirection: "column",
@@ -94,28 +103,23 @@ const Pricing = () => {
         <Typography component="h2" variant="h4" color="text.primary">
           Pricing
         </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Quickly build an effective pricing table for your potential customers
-          with this layout. <br />
-          It&apos;s built with default Material UI components with little
-          customization.
-        </Typography>
       </Box>
       <Grid container spacing={3} alignItems="center" justifyContent="center">
         {tiers.map((tier) => (
           <Grid
+            xs={12}
+            md={4}
+            sm={tier.title === PriceTiers.Advanced ? 12 : 6}
             item
             key={tier.title}
-            xs={12}
-            sm={tier.title === PriceTiers.Advanced ? 12 : 6}
-            md={4}
           >
             <Card
               sx={{
                 p: 2,
+                minHeight: { xs: "", sm: "600px" },
                 display: "flex",
                 flexDirection: "column",
-                gap: 4,
+                justifyContent: "space-between",
                 border:
                   tier.title === PriceTiers.Professional
                     ? "1px solid"
@@ -123,10 +127,6 @@ const Pricing = () => {
                 borderColor:
                   tier.title === PriceTiers.Professional
                     ? "primary.main"
-                    : undefined,
-                background:
-                  tier.title === PriceTiers.Professional
-                    ? "linear-gradient(#033363, #021F3B)"
                     : undefined,
               }}
             >
@@ -137,14 +137,12 @@ const Pricing = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    color:
-                      tier.title === PriceTiers.Professional ? "grey.100" : "",
                   }}
                 >
                   <Typography component="h3" variant="h6">
                     {tier.title}
                   </Typography>
-                  {tier.title !== PriceTiers.Free && (
+                  {tier.subheader && tier.title !== PriceTiers.Free && (
                     <Chip
                       icon={<AutoAwesomeIcon />}
                       label={tier.subheader}
@@ -153,6 +151,7 @@ const Pricing = () => {
                         background: (theme) =>
                           theme.palette.mode === "light" ? "" : "none",
                         backgroundColor: "primary.contrastText",
+                        marginLeft: 1,
                         "& .MuiChip-label": {
                           color: "primary.dark",
                         },
@@ -167,10 +166,6 @@ const Pricing = () => {
                   sx={{
                     display: "flex",
                     alignItems: "baseline",
-                    color:
-                      tier.title === PriceTiers.Professional
-                        ? "grey.50"
-                        : undefined,
                   }}
                 >
                   {tier.price && (
@@ -210,16 +205,7 @@ const Pricing = () => {
                             : "primary.main",
                       }}
                     />
-                    <Typography
-                      component="text"
-                      variant="subtitle2"
-                      sx={{
-                        color:
-                          tier.title === PriceTiers.Professional
-                            ? "grey.200"
-                            : undefined,
-                      }}
-                    >
+                    <Typography component="span" variant="subtitle2">
                       {line}
                     </Typography>
                   </Box>

@@ -10,11 +10,13 @@ import { RegisterModalContextProvider } from "src/components/Modals/RegisterModa
 import { StoryCreatorContextProvider } from "src/components/StoryCreator/store/Provider";
 import { ViewStoryContextProvider } from "src/Pages/ViewStory/store/Provider";
 import combineProviders from "./shared/combineProviders";
+import { PricingModalContextProvider } from "src/components/Modals/PricingModal/store/Provider";
 
 const contextProviders = [
   ApplicationContextProvider,
   LoginModalContextProvider,
   RegisterModalContextProvider,
+  PricingModalContextProvider,
   StoryCreatorContextProvider,
   OpenaiContextProvider,
   ExploreContextProvider,
