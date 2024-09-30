@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import StripeGatewayWrapper from "./features/StripeGatewayWrapper";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -11,28 +10,29 @@ import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import Grid from "@mui/material/Grid";
 import Info from "./features/Info";
 import InfoMobile from "./features/InfoMobile";
-import PaymentForm from "./features/PaymentForm";
+// import PaymentForm from "./features/PaymentForm";
 import Review from "./features/Review";
 import Stack from "@mui/material/Stack";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
+import StripeGatewayWrapper from "./features/StripeWrapper/StripeWrapper";
 import Typography from "@mui/material/Typography";
 import { useCheckout } from "./useCheckout";
 import { useCheckoutContext } from "./store/Provider";
+import { useEffect } from "react";
 
-// import { useApplicationContext } from "src/application/store/Provider";
-
-const steps = ["Shipping address", "Payment details", "Review your order"];
+const steps = ["Payment details", "Review your order"];
 
 const getStepContent = (step: number) => {
   switch (step) {
     case 0:
       return <StripeGatewayWrapper />;
     case 1:
-      return <PaymentForm />;
-    case 2:
+      // return <PaymentForm />;
       return <Review />;
+    // case 2:
+    //   return <Review />;
     default:
       throw new Error("Unknown step");
   }
@@ -41,7 +41,9 @@ const getStepContent = (step: number) => {
 const Checkout = () => {
   const { state, handleUpdateState } = useCheckout();
 
-  const {manager: {setUp}} = useCheckoutContext()
+  const {
+    manager: { setUp },
+  } = useCheckoutContext();
 
   const handleNext = () => {
     handleUpdateState({
@@ -57,14 +59,14 @@ const Checkout = () => {
     });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     setUp();
-
   }, []);
 
   return (
     <>
-      <Grid container sx={{ height: { xs: "100%", sm: "100dvh" } }}>
+      {/* <Grid container sx={{ height: { xs: "100%", sm: "100dvh" } }}> */}
+      <Grid container>
         {/* Desktop */}
         <Grid
           item
@@ -276,6 +278,7 @@ const Checkout = () => {
             ) : (
               <React.Fragment>
                 {getStepContent(state.activeStep)}
+
                 <Box
                   sx={{
                     display: "flex",
@@ -324,7 +327,7 @@ const Checkout = () => {
                     }}
                   >
                     {state.activeStep === steps.length - 1
-                      ? "Place order"
+                      ? "Subscribe"
                       : "Next"}
                   </Button>
                 </Box>

@@ -9,9 +9,12 @@ import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
+import { SubscriptionPlanEnum } from "src/shared/user";
 import Typography from "@mui/material/Typography";
 import routes from "src/application/routes";
+import { useApplicationContext } from "src/application/store/Provider";
 import { useNavigate } from "react-router-dom";
+import { usePricingModalContext } from "../Modals/PricingModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 
 export enum PriceTiers {
@@ -27,59 +30,89 @@ export interface Tier {
   description: string[];
   buttonText: string;
   buttonVariant: string;
+  buttonDisabled?: boolean;
+  buttonAction?: () => void;
 }
-
-const tiers: Tier[] = [
-  {
-    title: PriceTiers.Free,
-    price: "0",
-    description: [
-      "Create up to 7 bedtime stories",
-      "Basic text-to-speech conversion",
-      "Access to a limited story library",
-      "Standard customer support",
-      // "Community forum access",
-    ],
-    buttonText: "Register for free",
-    buttonVariant: "outlined",
-  },
-  {
-    title: PriceTiers.Professional,
-    subheader: "Recommended",
-    price: "5",
-    description: [
-      "Create up to 50 bedtime stories per month",
-      "High-quality text-to-speech conversion",
-      "Access to an extensive story library",
-      "Priority customer support",
-      "Offline access to stories",
-      "Customizable story parameters",
-    ],
-    buttonText: "Start now",
-    buttonVariant: "contained",
-  },
-  // {
-  //   title: PriceTiers.Advanced,
-  //   subheader: "Coming Soon",
-  //   price: "",
-  //   description: [
-  //     "Unlimited story generation",
-  //     "Access to exclusive story content",
-  //     "Offline access to stories",
-  //     "Personalized story recommendations",
-  //     "Premium text-to-speech voices",
-  //     "Custom voice options for TTS",
-  //   ],
-  //   buttonText: "Start now",
-  //   buttonVariant: "outlined",
-  // },
-];
 
 const Pricing = () => {
   const navigate = useNavigate();
   const {
+    store: {
+      state: {
+        auth: { user, isAuthenticated },
+      },
+    },
+  } = useApplicationContext();
+  const {
+    store: { handleTogglePricingModal },
+  } = usePricingModalContext();
+  const {
     store: { handleToggleRegisterModal },
   } = useRegisterModalContext();
+
+  const currentUserPackage = {
+    isFree:
+      user?.subscription.subscriptionPlanType === SubscriptionPlanEnum.free,
+    isPro: user?.subscription.subscriptionPlanType === SubscriptionPlanEnum.pro,
+  };
+
+  const tiers: Tier[] = [
+    {
+      title: PriceTiers.Free,
+      price: "0",
+      description: [
+        "Standard customer support",
+        "Create up to 7 bedtime stories",
+        "Basic text-to-speech conversion",
+        "Access to a limited story library",
+      ],
+      buttonText: currentUserPackage.isFree ? "Current Package" : "",
+      buttonVariant: "text",
+      buttonDisabled: true,
+      buttonAction: () => true,
+    },
+    {
+      title: PriceTiers.Professional,
+      // subheader: "Recommended",
+      price: "5",
+      description: [
+        "Priority customer support",
+        "Customizable story parameters",
+        "High-quality text-to-speech conversion",
+        "Create up to 50 bedtime stories per month",
+        // "Offline access to stories",
+        // "Access to an extensive story library",
+      ],
+      buttonText: "Upgrade",
+      buttonVariant: "contained",
+      buttonAction: () => {
+        if (!isAuthenticated) {
+          handleToggleRegisterModal();
+          return;
+        }
+
+        if (isAuthenticated && !currentUserPackage.isPro) {
+          handleTogglePricingModal();
+          return navigate(routes.checkout);
+        }
+      },
+    },
+    // {
+    //   title: PriceTiers.Advanced,
+    //   subheader: "Coming Soon",
+    //   price: "",
+    //   description: [
+    //     "Unlimited story generation",
+    //     "Access to exclusive story content",
+    //     "Offline access to stories",
+    //     "Personalized story recommendations",
+    //     "Premium text-to-speech voices",
+    //     "Custom voice options for TTS",
+    //   ],
+    //   buttonText: "Upgrade",
+    //   buttonVariant: "outlined",
+    // },
+  ];
 
   return (
     <Container
@@ -116,7 +149,7 @@ const Pricing = () => {
             <Card
               sx={{
                 p: 2,
-                minHeight: { xs: "", sm: "600px" },
+                minHeight: { xs: "", sm: "500px" },
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
@@ -213,18 +246,19 @@ const Pricing = () => {
               </CardContent>
 
               <CardActions>
-                <Button
-                  fullWidth
-                  component="button"
-                  variant={tier.buttonVariant as "outlined" | "contained"}
-                  onClick={() =>
-                    tier.title === PriceTiers.Free
-                      ? handleToggleRegisterModal()
-                      : navigate(routes.checkout)
-                  }
-                >
-                  {tier.buttonText}
-                </Button>
+                {tier.buttonAction && (
+                  <Button
+                    fullWidth
+                    component="button"
+                    disabled={tier.buttonDisabled}
+                    variant={
+                      tier.buttonVariant as "text" | "outlined" | "contained"
+                    }
+                    onClick={tier.buttonAction}
+                  >
+                    {tier.buttonText}
+                  </Button>
+                )}
               </CardActions>
             </Card>
           </Grid>
