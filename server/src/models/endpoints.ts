@@ -4,11 +4,6 @@ const END_POINTS = {
     ROUTE_TWO: "/api/v1/test-route-two",
     HELLO: "/api/v1/hello",
   },
-  GOOGLE_GEMINI: {
-    CREATE: {
-      STORY: "/api/v1/gemini/create/story",
-    },
-  },
   OPENAI: {
     CREATE: {
       STORY: "/api/v1/openai/create/story",

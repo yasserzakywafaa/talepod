@@ -72,10 +72,10 @@ export const testRoutTwo = async (
   }
 };
 
-const GoogleGeminiController = {
+const TestController = {
   testHello,
   testRoutOne,
   testRoutTwo,
 };
 
-export default GoogleGeminiController;
+export default TestController;

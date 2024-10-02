@@ -23,11 +23,6 @@ const END_POINTS = {
     ROUTE_ONE: `${publicApiUrl}/api/v1/test-route-one`,
     ROUTE_TWO: `${publicApiUrl}/api/v1/test-route-two`,
   },
-  GOOGLE_GEMINI: {
-    CREATE: {
-      STORY: `${publicApiUrl}/api/v1/gemini/create/story`,
-    },
-  },
   OPENAI: {
     GENERATE: {
       STORY: `${publicApiUrl}/api/v1/openai/create/story`,
