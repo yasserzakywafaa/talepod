@@ -45,7 +45,7 @@ export interface UserSubscription {
 
 export enum SubscriptionPlanEnum {
   free = "free",
-  pro = "pro",
+  premium = "premium",
   advanced = "advanced",
 }
 

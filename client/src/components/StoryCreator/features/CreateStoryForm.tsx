@@ -222,7 +222,7 @@ const CreateStoryForm = () => {
     const isProSubs =
       user &&
       user.isPaidUser &&
-      user.subscription.subscriptionPlanType === SubscriptionPlanEnum.pro;
+      user.subscription.subscriptionPlanType === SubscriptionPlanEnum.premium;
     const isAdvancedSubs =
       user &&
       user.isPaidUser &&

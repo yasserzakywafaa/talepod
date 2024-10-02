@@ -11,20 +11,14 @@ import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import { SubscriptionPlanEnum } from "src/shared/user";
 import Typography from "@mui/material/Typography";
-import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
-import { useNavigate } from "react-router-dom";
 import { usePricingModalContext } from "../Modals/PricingModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
+import { usePaymentContext } from "./Payment/store/Provider";
+import PaymentWrapper from "./Payment/Payment";
 
-export enum PriceTiers {
-  Free = "Free",
-  Professional = "Professional",
-  Advanced = "Advanced",
-}
-
-export interface Tier {
-  title: PriceTiers;
+export interface SubscriptionPlan {
+  title: SubscriptionPlanEnum;
   subheader?: string;
   price: string;
   description: string[];
@@ -34,14 +28,14 @@ export interface Tier {
   buttonAction?: () => void;
 }
 
-const Pricing = () => {
-  const navigate = useNavigate();
+export const Pricing = () => {
   const {
     store: {
       state: {
         auth: { user, isAuthenticated },
       },
     },
+    manager: { handleIsFetching },
   } = useApplicationContext();
   const {
     store: { handleTogglePricingModal },
@@ -50,15 +44,51 @@ const Pricing = () => {
     store: { handleToggleRegisterModal },
   } = useRegisterModalContext();
 
+  if (!user) return;
+
   const currentUserPackage = {
     isFree:
-      user?.subscription.subscriptionPlanType === SubscriptionPlanEnum.free,
-    isPro: user?.subscription.subscriptionPlanType === SubscriptionPlanEnum.pro,
+      user.subscription.subscriptionPlanType === SubscriptionPlanEnum.free,
+    isPremium:
+      user.subscription.subscriptionPlanType === SubscriptionPlanEnum.premium,
   };
 
-  const tiers: Tier[] = [
+  const {
+    manager: { handleCreateCheckoutSession },
+  } = usePaymentContext();
+
+  const handleOnSubscribeClick = async (
+    subscriptionPlan: SubscriptionPlanEnum
+  ) => {
+    switch (subscriptionPlan) {
+      case SubscriptionPlanEnum.free:
+        return;
+
+      case SubscriptionPlanEnum.premium:
+        if (!isAuthenticated) {
+          handleToggleRegisterModal();
+          return;
+        }
+
+        try {
+          handleIsFetching(true);
+          await handleCreateCheckoutSession(SubscriptionPlanEnum.premium, user);
+        } catch (error) {
+          console.error("Error:>>", error);
+        } finally {
+          handleIsFetching(false);
+          handleTogglePricingModal();
+        }
+        return;
+
+      default:
+        return;
+    }
+  };
+
+  const plans: SubscriptionPlan[] = [
     {
-      title: PriceTiers.Free,
+      title: SubscriptionPlanEnum.free,
       price: "0",
       description: [
         "Standard customer support",
@@ -69,10 +99,10 @@ const Pricing = () => {
       buttonText: currentUserPackage.isFree ? "Current Package" : "",
       buttonVariant: "text",
       buttonDisabled: true,
-      buttonAction: () => true,
+      buttonAction: () => handleOnSubscribeClick(SubscriptionPlanEnum.free),
     },
     {
-      title: PriceTiers.Professional,
+      title: SubscriptionPlanEnum.premium,
       // subheader: "Recommended",
       price: "5",
       description: [
@@ -85,20 +115,10 @@ const Pricing = () => {
       ],
       buttonText: "Upgrade",
       buttonVariant: "contained",
-      buttonAction: () => {
-        if (!isAuthenticated) {
-          handleToggleRegisterModal();
-          return;
-        }
-
-        if (isAuthenticated && !currentUserPackage.isPro) {
-          handleTogglePricingModal();
-          return navigate(routes.checkout);
-        }
-      },
+      buttonAction: () => handleOnSubscribeClick(SubscriptionPlanEnum.premium),
     },
     // {
-    //   title: PriceTiers.Advanced,
+    //   title: SubscriptionPlanEnum.Advanced,
     //   subheader: "Coming Soon",
     //   price: "",
     //   description: [
@@ -115,157 +135,160 @@ const Pricing = () => {
   ];
 
   return (
-    <Container
-      id="pricing"
-      sx={{
-        pt: { xs: 2, sm: 4 },
-        pb: { xs: 2, sm: 4 },
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: { xs: 3, sm: 6 },
-      }}
-    >
-      <Box
+    <>
+      <PaymentWrapper />
+
+      <Container
+        id="pricing"
         sx={{
-          width: { sm: "100%", md: "60%" },
-          textAlign: { sm: "left", md: "center" },
+          pt: { xs: 2, sm: 4 },
+          pb: { xs: 2, sm: 4 },
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: { xs: 3, sm: 6 },
         }}
       >
-        <Typography component="h2" variant="h4" color="text.primary">
-          Pricing
-        </Typography>
-      </Box>
-      <Grid container spacing={3} alignItems="center" justifyContent="center">
-        {tiers.map((tier) => (
-          <Grid
-            xs={12}
-            md={4}
-            sm={tier.title === PriceTiers.Advanced ? 12 : 6}
-            item
-            key={tier.title}
-          >
-            <Card
-              sx={{
-                p: 2,
-                minHeight: { xs: "", sm: "500px" },
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                border:
-                  tier.title === PriceTiers.Professional
-                    ? "1px solid"
-                    : undefined,
-                borderColor:
-                  tier.title === PriceTiers.Professional
-                    ? "primary.main"
-                    : undefined,
-              }}
+        <Box
+          sx={{
+            width: { sm: "100%", md: "60%" },
+            textAlign: { sm: "left", md: "center" },
+          }}
+        >
+          <Typography component="h2" variant="h4" color="text.primary">
+            Pricing
+          </Typography>
+        </Box>
+        <Grid container spacing={3} alignItems="center" justifyContent="center">
+          {plans.map((plans) => (
+            <Grid
+              xs={12}
+              md={4}
+              sm={plans.title === SubscriptionPlanEnum.advanced ? 12 : 6}
+              item
+              key={plans.title}
             >
-              <CardContent>
-                <Box
-                  sx={{
-                    mb: 1,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography component="h3" variant="h6">
-                    {tier.title}
-                  </Typography>
-                  {tier.subheader && tier.title !== PriceTiers.Free && (
-                    <Chip
-                      icon={<AutoAwesomeIcon />}
-                      label={tier.subheader}
-                      size="small"
-                      sx={{
-                        background: (theme) =>
-                          theme.palette.mode === "light" ? "" : "none",
-                        backgroundColor: "primary.contrastText",
-                        marginLeft: 1,
-                        "& .MuiChip-label": {
-                          color: "primary.dark",
-                        },
-                        "& .MuiChip-icon": {
-                          color: "primary.dark",
-                        },
-                      }}
-                    />
-                  )}
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "baseline",
-                  }}
-                >
-                  {tier.price && (
-                    <>
-                      <Typography component="h3" variant="h2">
-                        ${tier.price}
-                      </Typography>
-                      <Typography component="h3" variant="h6">
-                        &nbsp; per month
-                      </Typography>
-                    </>
-                  )}
-                </Box>
-                <Divider
-                  sx={{
-                    my: 2,
-                    opacity: 0.2,
-                    borderColor: "grey.500",
-                  }}
-                />
-                {tier.description.map((line) => (
+              <Card
+                sx={{
+                  p: 2,
+                  minHeight: { xs: "", sm: "500px" },
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  border:
+                    plans.title === SubscriptionPlanEnum.premium
+                      ? "1px solid"
+                      : undefined,
+                  borderColor:
+                    plans.title === SubscriptionPlanEnum.premium
+                      ? "primary.main"
+                      : undefined,
+                }}
+              >
+                <CardContent>
                   <Box
-                    key={line}
                     sx={{
-                      py: 1,
+                      mb: 1,
                       display: "flex",
-                      gap: 1.5,
+                      justifyContent: "space-between",
                       alignItems: "center",
                     }}
                   >
-                    <CheckCircleRoundedIcon
-                      sx={{
-                        width: 20,
-                        color:
-                          tier.title === PriceTiers.Professional
-                            ? "primary.light"
-                            : "primary.main",
-                      }}
-                    />
-                    <Typography component="span" variant="subtitle2">
-                      {line}
+                    <Typography component="h3" variant="h6">
+                      {plans.title}
                     </Typography>
+                    {plans.subheader &&
+                      plans.title !== SubscriptionPlanEnum.free && (
+                        <Chip
+                          icon={<AutoAwesomeIcon />}
+                          label={plans.subheader}
+                          size="small"
+                          sx={{
+                            background: (theme) =>
+                              theme.palette.mode === "light" ? "" : "none",
+                            backgroundColor: "primary.contrastText",
+                            marginLeft: 1,
+                            "& .MuiChip-label": {
+                              color: "primary.dark",
+                            },
+                            "& .MuiChip-icon": {
+                              color: "primary.dark",
+                            },
+                          }}
+                        />
+                      )}
                   </Box>
-                ))}
-              </CardContent>
-
-              <CardActions>
-                {tier.buttonAction && (
-                  <Button
-                    fullWidth
-                    component="button"
-                    disabled={tier.buttonDisabled}
-                    variant={
-                      tier.buttonVariant as "text" | "outlined" | "contained"
-                    }
-                    onClick={tier.buttonAction}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "baseline",
+                    }}
                   >
-                    {tier.buttonText}
-                  </Button>
-                )}
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    </Container>
+                    {plans.price && (
+                      <>
+                        <Typography component="h3" variant="h2">
+                          ${plans.price}
+                        </Typography>
+                        <Typography component="h3" variant="h6">
+                          &nbsp; per month
+                        </Typography>
+                      </>
+                    )}
+                  </Box>
+                  <Divider
+                    sx={{
+                      my: 2,
+                      opacity: 0.2,
+                      borderColor: "grey.500",
+                    }}
+                  />
+                  {plans.description.map((line) => (
+                    <Box
+                      key={line}
+                      sx={{
+                        py: 1,
+                        display: "flex",
+                        gap: 1.5,
+                        alignItems: "center",
+                      }}
+                    >
+                      <CheckCircleRoundedIcon
+                        sx={{
+                          width: 20,
+                          color:
+                            plans.title === SubscriptionPlanEnum.premium
+                              ? "primary.light"
+                              : "primary.main",
+                        }}
+                      />
+                      <Typography component="span" variant="subtitle2">
+                        {line}
+                      </Typography>
+                    </Box>
+                  ))}
+                </CardContent>
+
+                <CardActions>
+                  {plans.buttonAction && (
+                    <Button
+                      fullWidth
+                      component="button"
+                      disabled={plans.buttonDisabled}
+                      variant={
+                        plans.buttonVariant as "text" | "outlined" | "contained"
+                      }
+                      onClick={plans.buttonAction}
+                    >
+                      {plans.buttonText}
+                    </Button>
+                  )}
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+    </>
   );
 };
-
-export default Pricing;

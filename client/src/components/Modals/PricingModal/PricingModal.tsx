@@ -5,7 +5,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import { usePricingModalContext } from "./store/Provider";
-import Pricing from "src/components/shared/Pricing";
+import { Pricing } from "src/components/shared/Pricing";
 
 interface PricingModalProps {
   isPricingDialogOpen: boolean;

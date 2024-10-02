@@ -12,6 +12,7 @@ import { ViewStoryContextProvider } from "src/Pages/ViewStory/store/Provider";
 import combineProviders from "./shared/combineProviders";
 import { PricingModalContextProvider } from "src/components/Modals/PricingModal/store/Provider";
 import { CheckoutContextProvider } from "src/components/Checkout/store/Provider";
+import { PaymentContextProvider } from "src/components/shared/Payment/store/Provider";
 
 const contextProviders = [
   ApplicationContextProvider,
@@ -25,6 +26,7 @@ const contextProviders = [
   ViewStoryContextProvider,
   ContactContextProvider,
   CheckoutContextProvider,
+  PaymentContextProvider,
 
   // Authentication
   AppWithGoogleAuthContextProvider,
