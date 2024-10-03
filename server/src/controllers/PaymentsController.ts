@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import Stripe from "stripe";
+
 import CONFIG from "./../config";
+import Stripe from "stripe";
 
 const secretKey = CONFIG.IS_DEV
   ? CONFIG.STRIPE_TEST_SECRET_KEY
@@ -23,42 +24,6 @@ export const config = async (
     response.status(200).json({ publishableKey: CONFIG.STRIPE_TEST_PUB_KEY });
   } catch (error) {
     console.error("❌ Failed to get Stripe Publishable Key!", {
-      error,
-    });
-    next(error);
-  }
-};
-
-export const createPaymentIntent = async (
-  request: Request,
-  response: Response,
-  next: NextFunction
-) => {
-  const { product } = request.body;
-  if (!product) {
-    response.status(400).json({ message: "❌ 'product' is required!" });
-    return;
-  }
-
-  try {
-    // Create a PaymentIntent with the order amount and currency
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: 10,
-      currency: "eur",
-      automatic_payment_methods: { enabled: true },
-    });
-
-    console.log("ℹ️  createPaymentIntnet:>>>", {
-      product,
-      paymentIntent,
-    });
-
-    response.status(200).json({
-      // response.send({
-      client_secret: paymentIntent.client_secret,
-    });
-  } catch (error) {
-    console.error("❌ Failed to create Stripe Payment Intent!", {
       error,
     });
     next(error);
@@ -146,11 +111,38 @@ export const checkoutSessionWebhook = async (
   return response.send();
 };
 
+export const getCheckoutSessionData = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  const sessionId = request.query.sessionId as string;
+  if (!sessionId) {
+    response.status(400).json({ message: "❌ 'sessionId' is required!" });
+    return;
+  }
+
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    console.log("ℹ️  getSessionData:>>>", {
+      sessionId: session.id,
+      status: session.status,
+    });
+
+    response.status(200).json(session);
+  } catch (error) {
+    console.error("❌ Failed to get the Session data!", {
+      error,
+    });
+    next(error);
+  }
+};
+
 const PaymentsController = {
   config,
-  createPaymentIntent,
   createCheckoutSession,
   checkoutSessionWebhook,
+  getCheckoutSessionData,
 };
 
 export default PaymentsController;

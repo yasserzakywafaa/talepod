@@ -26,6 +26,9 @@ const MyStoriesPage = lazy(() => import("../Pages/MyStories/MyStories"));
 const ContactPage = lazy(() => import("../Pages/Contact/Contact"));
 const ViewStoryPage = lazy(() => import("../Pages/ViewStory/ViewStory"));
 const CheckoutPage = lazy(() => import("../Pages/Checkout/CheckoutPage"));
+const PaymentSuccessPage = lazy(
+  () => import("../Pages/PaymentSuccess/PaymentSuccess")
+);
 const PrivacyPolicyPage = lazy(
   () => import("../Pages/PrivacyPolicy/PrivacyPolicy")
 );
@@ -137,6 +140,11 @@ const AppContent = () => {
                     element={<UsersStoriesPage />}
                   />
                 )}
+
+                <Route
+                  path={routes.paymentSuccess(":sessionId")}
+                  element={<PaymentSuccessPage />}
+                />
               </>
             ) : (
               <Route path="*" element={<Navigate to={routes.unauthorized} />} />

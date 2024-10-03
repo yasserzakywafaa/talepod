@@ -9,13 +9,13 @@ import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
+import PaymentWrapper from "./Payment/Payment";
 import { SubscriptionPlanEnum } from "src/shared/user";
 import Typography from "@mui/material/Typography";
 import { useApplicationContext } from "src/application/store/Provider";
+import { usePaymentContext } from "./Payment/store/Provider";
 import { usePricingModalContext } from "../Modals/PricingModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
-import { usePaymentContext } from "./Payment/store/Provider";
-import PaymentWrapper from "./Payment/Payment";
 
 export interface SubscriptionPlan {
   title: SubscriptionPlanEnum;
@@ -92,7 +92,7 @@ export const Pricing = () => {
       price: "0",
       description: [
         "Standard customer support",
-        "Create up to 7 bedtime stories",
+        "Create up to 4 bedtime stories",
         "Basic text-to-speech conversion",
         "Access to a limited story library",
       ],

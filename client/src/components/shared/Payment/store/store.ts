@@ -1,12 +1,11 @@
-import { Stripe } from "@stripe/stripe-js";
 import { PaymentInitialState, getPaymentInitialState } from "./state";
 
+import { Stripe } from "@stripe/stripe-js";
 import { useState } from "react";
 
 export interface PaymentStore {
   state: PaymentInitialState;
   setClientSecret: (clientSecret: string) => void;
-  setIsFetching: (handleIsFetching: boolean) => void;
   setPublishableKey: (publishableKey: string) => void;
   setStripePromise: (stripePromise: Stripe | null) => void;
 }
@@ -14,13 +13,6 @@ export interface PaymentStore {
 const usePaymentStore = (): PaymentStore => {
   const initialState = getPaymentInitialState();
   const [state, setState] = useState<PaymentInitialState>(initialState);
-
-  const setIsFetching = (isFetching: boolean) => {
-    setState((prev) => ({
-      ...prev,
-      isFetching,
-    }));
-  };
 
   const setPublishableKey = (publishableKey: string) => {
     setState((prev) => ({
@@ -36,7 +28,6 @@ const usePaymentStore = (): PaymentStore => {
     }));
   };
 
-  
   const setStripePromise = (stripePromise: Stripe | null) => {
     setState((prev) => ({
       ...prev,
@@ -46,7 +37,6 @@ const usePaymentStore = (): PaymentStore => {
 
   return {
     state,
-    setIsFetching,
     setClientSecret,
     setStripePromise,
     setPublishableKey,

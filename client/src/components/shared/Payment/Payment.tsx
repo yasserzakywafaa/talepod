@@ -1,14 +1,10 @@
 import { Appearance, StripeElementsOptions } from "@stripe/stripe-js";
 
 import { Elements } from "@stripe/react-stripe-js";
-import { usePaymentContext } from "./store/Provider";
 import { useEffect } from "react";
+import { usePaymentContext } from "./store/Provider";
 
-export interface PaymentProps {
-  children?: JSX.Element;
-}
-
-const PaymentWrapper = (props: PaymentProps) => {
+const PaymentWrapper: React.FC = () => {
   const {
     store: {
       state: { stripePromise },

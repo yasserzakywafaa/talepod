@@ -1,7 +1,7 @@
 {
   "name": "@yasserzakywafaa/talepod",
   "version": "1.0.0",
-  "description": "{PROJECT_DESCRIPTION}",
+  "description": "A PWA to create custom bedtime stories, powered by AI",
   "private": true,
   "author": "Yasser Zaky",
   "homepage": "/",
@@ -28,7 +28,6 @@
     "@react-oauth/google": "^0.12.1",
     "@stripe/react-stripe-js": "^2.8.0",
     "@stripe/stripe-js": "^4.5.0",
-    "@tinymce/tinymce-react": "5.0.1",
     "@types/pouchdb": "6.4.0",
     "@types/react": "18.2.25",
     "@types/react-dom": "18.2.25",

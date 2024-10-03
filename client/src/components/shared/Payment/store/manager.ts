@@ -1,20 +1,19 @@
+import { SubscriptionPlanEnum, User } from "src/shared/user";
 import axios, { AxiosResponse } from "axios";
 
-import { PaymentStore } from "./store";
 import END_POINTS from "src/application/shared/endpoints";
+import { PaymentStore } from "./store";
 import { getAxiosError } from "src/shared/utils/getAxiosError";
-import { loadStripe, PaymentIntent } from "@stripe/stripe-js";
-import { SubscriptionPlanEnum, User } from "src/shared/user";
+import { loadStripe } from "@stripe/stripe-js";
+import routes from "src/application/routes";
 
 export interface PaymentManager {
   setUp: () => void;
   handleGetPublishableKey: () => void;
-  handleCreatePaymentIntent: () => void;
   handleCreateCheckoutSession: (
     plan: SubscriptionPlanEnum,
     user: User | null
   ) => Promise<void>;
-  handleIsFetching: (isFetching: boolean) => void;
 }
 
 export const usePaymentManager = (store: PaymentStore): PaymentManager => {
@@ -22,12 +21,8 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
     handleGetPublishableKey();
   };
 
-  const handleIsFetching = (isFetching: boolean) => {
-    store.setIsFetching(isFetching);
-  };
-
   const handleGetPublishableKey = async (): Promise<any> => {
-    store.setIsFetching(true);
+    // store.setIsFetching(true);
     try {
       const response: AxiosResponse<
         { publishableKey: string },
@@ -53,43 +48,7 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
       getAxiosError(error);
       throw new Error(`❌  Failed to get Stripe Publishable Key!  ${error}`);
     } finally {
-      store.setIsFetching(false);
-    }
-  };
-
-  const handleCreatePaymentIntent = async (): Promise<any> => {
-    store.setIsFetching(true);
-    try {
-      const response: AxiosResponse<PaymentIntent, PaymentIntent> =
-        await axios.post(
-          END_POINTS.PAYMENTS.CREATE_PAYMENT_INTENT,
-          {
-            product: { id: "talepod-premium", amount: 1 },
-          }
-          //   {
-          //     //   headers: {
-          //     //     "Content-Type": "application/json",
-          //     //     "X-Custom-Header": new Date().toISOString(),
-          //     //   },
-          //     // headers: {
-          //     //   "Content-Security-Policy": "unsafe-inline",
-          //     //   // "script-src 'self' 'unsafe-eval' https://js.stripe.com; frame-src 'self' https://js.stripe.com; connect-src 'self' https://api.stripe.com",
-          //     // },
-          //   }
-        );
-
-      store.setClientSecret(response.data.client_secret || "");
-
-      console.log("ℹ️  createPaymentIntnet:>>>", {
-        client_secret: response.data.client_secret,
-      });
-
-      return response.data;
-    } catch (error) {
-      getAxiosError(error);
-      throw new Error(`❌  Failed to get User Information!  ${error}`);
-    } finally {
-      store.setIsFetching(false);
+      // store.setIsFetching(false);
     }
   };
 
@@ -107,8 +66,11 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
           metadata: {
             subscriptionPlan,
             userId: user._id,
-            success_url: `${window.location.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${window.location.origin}/create`,
+            // success_url: `${window.location.origin}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `${window.location.origin}${routes.paymentSuccess(
+              "{CHECKOUT_SESSION_ID}"
+            )}`,
+            cancel_url: `${window.location.origin}${routes.create}`,
           },
           headers: {
             "Content-Type": "application/json",
@@ -135,9 +97,7 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
 
   return {
     setUp,
-    handleIsFetching,
     handleGetPublishableKey,
-    handleCreatePaymentIntent,
     handleCreateCheckoutSession,
   };
 };

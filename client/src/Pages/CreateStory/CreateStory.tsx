@@ -21,6 +21,7 @@ import StoryCreator from "src/components/StoryCreator/StoryCreator";
 import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.webp";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
+import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 
 const CreateStoryPage = () => {
   const {
@@ -28,6 +29,12 @@ const CreateStoryPage = () => {
       state: { isFetching: isPageFetching },
     },
   } = useApplicationContext();
+
+  const {
+    store: {
+      state: { isVisible: isPricingModalVisible },
+    },
+  } = usePricingModalContext();
 
   const {
     store: {
@@ -48,7 +55,9 @@ const CreateStoryPage = () => {
       // isLoading={
       //   !isPageFetching || !isCreateStoryFetching || !isCreateAudioFetching
       // }
-      loaderComponentName={LoaderComponentNameEnum.CreateStory}
+      loaderComponentName={
+        !isPricingModalVisible ? LoaderComponentNameEnum.CreateStory : undefined
+      }
     >
       <Container>
         <Box component="div" className="bg-image-character">

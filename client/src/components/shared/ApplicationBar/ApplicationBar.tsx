@@ -28,6 +28,7 @@ import { useMatch, useNavigate } from "react-router-dom";
 import BackButton from "./BackButton";
 import { InstallAppModal } from "src/components/Modals/InstallAppModal/InstallAppModal";
 import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
+import { PricingModal } from "src/components/Modals/PricingModal/PricingModal";
 import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal";
 import ToggleColorMode from "src/components/shared/ToggleColorMode";
 import UserAccountMenuButton from "./UserAccountButton";
@@ -40,7 +41,6 @@ import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useState } from "react";
-import { PricingModal } from "src/components/Modals/PricingModal/PricingModal";
 
 const ApplicationBar = () => {
   const navigate = useNavigate();
@@ -81,7 +81,8 @@ const ApplicationBar = () => {
     isTermsOfService: !!useMatch(routes.termsAndConditions),
     isLandingPage: !!window.location.pathname.includes("bedtime-stories"),
   };
-  const isAppBarVisible = Object.values(pagesMatch).every((p) => p === false);
+  // const isAppBarVisible = Object.values(pagesMatch).every((p) => p === false);
+  const isAppBarVisible = true;
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setIsDrawerOpen(newOpen);
@@ -121,7 +122,7 @@ const ApplicationBar = () => {
 
   return (
     <>
-      {!isAppBarVisible && (
+      {isAppBarVisible && (
         <AppBar
           position="fixed"
           sx={{

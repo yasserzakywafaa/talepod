@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import AddressForm from "./features/AddressForm";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -10,29 +11,28 @@ import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import Grid from "@mui/material/Grid";
 import Info from "./features/Info";
 import InfoMobile from "./features/InfoMobile";
+import PaymentForm from "./features/PaymentForm";
 // import PaymentForm from "./features/PaymentForm";
 import Review from "./features/Review";
 import Stack from "@mui/material/Stack";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
-import StripeGatewayWrapper from "./features/StripeWrapper/StripeWrapper";
 import Typography from "@mui/material/Typography";
 import { useCheckout } from "./useCheckout";
 import { useCheckoutContext } from "./store/Provider";
 import { useEffect } from "react";
 
-const steps = ["Payment details", "Review your order"];
+const steps = ["Shipping address", "Payment details", "Review your order"];
 
 const getStepContent = (step: number) => {
   switch (step) {
     case 0:
-      return <StripeGatewayWrapper />;
+      return <AddressForm />;
     case 1:
-      // return <PaymentForm />;
+      return <PaymentForm />;
+    case 2:
       return <Review />;
-    // case 2:
-    //   return <Review />;
     default:
       throw new Error("Unknown step");
   }
@@ -65,8 +65,7 @@ const Checkout = () => {
 
   return (
     <>
-      {/* <Grid container sx={{ height: { xs: "100%", sm: "100dvh" } }}> */}
-      <Grid container>
+      <Grid container sx={{ height: { xs: "100%", sm: "100dvh" } }}>
         {/* Desktop */}
         <Grid
           item

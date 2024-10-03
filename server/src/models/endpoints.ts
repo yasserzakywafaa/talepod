@@ -28,9 +28,9 @@ const END_POINTS = {
   },
   PAYMENTS: {
     CONFIG: `/api/v1/payments/config`,
-    CREATE_PAYMENT_INTENT: `/api/v1/payments/create-payment-intent`,
     CREATE_CHECKOUT_SESSION: `/api/v1/payments/create-checkout-session`,
     CHECKOUT_SESSION_WEBHOOK: `/api/v1/payments/checkout-session-webhook`,
+    GET_CHECKOUT_SESSION_DATA: `/api/v1/payments/checkout-session-data`,
   },
 };
 
