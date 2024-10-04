@@ -1,16 +1,17 @@
 import "./PaymentSuccess.scss";
 
-import { AutoFixHighOutlined, CheckCircleOutlined } from "@mui/icons-material";
+import { AutoFixHighOutlined } from "@mui/icons-material";
 import { Box, Button, Container, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 
 import Confetti from "src/assets/images/confetti.gif";
 import Page from "src/components/shared/Page/Page";
-import RandomImage from "src/components/shared/RandomImage/RandomImage";
+import BunnyMoney from "src/assets/images/bunny_holding_money_bag.webp";
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 import { usePaymentSuccessContext } from "./store/Provider";
+import { getCurrencySymbol } from "src/shared/utils/getCurrencySymbol";
 
 const PaymentSuccessPage = () => {
   const navigate = useNavigate();
@@ -32,7 +33,9 @@ const PaymentSuccessPage = () => {
 
   const handleOnCreateClick = () => navigate(routes.create);
 
-  const totalAmount = `${(amount_total / 100).toFixed(2)} ${currency}`;
+  const totalAmount = `${getCurrencySymbol(currency)}${(
+    amount_total / 100
+  ).toFixed(2)}`;
 
   useEffect(() => {
     handleGetPaymentSuccessData(sessionId);
@@ -68,11 +71,7 @@ const PaymentSuccessPage = () => {
           justifyContent="center"
           alignItems="center"
         >
-          <RandomImage
-            style={{
-              width: "300px",
-            }}
-          />
+          <img src={BunnyMoney} width="100%" />
 
           <Box
             display="flex"
@@ -80,11 +79,11 @@ const PaymentSuccessPage = () => {
             alignItems="center"
             marginY={1}
           >
-            <Typography variant="h4" component="h1" color="primary">
+            <Typography variant="h4" component="h2" color="#2e7d32">
               Payment Successful
             </Typography>
 
-            <CheckCircleOutlined color="success" sx={{ fontSize: "4rem" }} />
+            {/* <CheckCircleOutlined color="success" sx={{ fontSize: "4rem" }} /> */}
           </Box>
         </Box>
 

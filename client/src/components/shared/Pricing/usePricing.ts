@@ -5,6 +5,7 @@ import { SubscriptionPlanProps } from "./Pricing";
 import { useApplicationContext } from "src/application/store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
+import { getCurrencySymbol } from "src/shared/utils/getCurrencySymbol";
 
 export const usePricing = () => {
   const {
@@ -91,16 +92,7 @@ export const usePricing = () => {
       (price) => price.id === getMonthlyPlan(plan)?.default_price
     )?.currency;
 
-    switch (currency) {
-      case "eur":
-        return "€";
-      case "usd":
-        return "$";
-      case "CHF":
-        return "₣";
-      default:
-        return "€";
-    }
+    return getCurrencySymbol(currency);
   };
 
   const handleOnSubscribeClick = async (
