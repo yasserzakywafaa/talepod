@@ -8,6 +8,12 @@ const paymentsRouter = Router();
 // Define API routes
 paymentsRouter.get(END_POINTS.PAYMENTS.CONFIG, PaymentsController.config);
 
+
+paymentsRouter.get(
+  END_POINTS.PAYMENTS.GET_PRICES_LIST,
+  PaymentsController.getPricesList
+);
+
 paymentsRouter.get(
   END_POINTS.PAYMENTS.GET_PRODUCTS_LIST_WITH_PRICES,
   PaymentsController.getProductsListWithPrices

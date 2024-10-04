@@ -1,11 +1,12 @@
 import { Stripe } from "@stripe/stripe-js";
-import { Product } from "src/shared/payment";
+import { Price, Product } from "src/shared/payment";
 
 export interface PaymentInitialState {
   publishableKey: string;
   clientSecret: string;
   stripePromise: Stripe | null;
   products: Product[];
+  prices: Price[];
 }
 
 export const getPaymentInitialState = (): PaymentInitialState => {
@@ -14,5 +15,6 @@ export const getPaymentInitialState = (): PaymentInitialState => {
     clientSecret: "",
     stripePromise: null,
     products: [],
+    prices: [],
   };
 };

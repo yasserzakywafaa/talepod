@@ -30,6 +30,25 @@ export const config = async (
   }
 };
 
+export const getPricesList = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  try {
+    const pricesList = await stripe.prices.list({
+      active: true,
+    });
+
+    response.status(200).json(pricesList.data);
+  } catch (error) {
+    console.error("❌ Failed to get Stripe Prices list!", {
+      error,
+    });
+    next(error);
+  }
+};
+
 export const getProductsListWithPrices = async (
   request: Request,
   response: Response,
@@ -179,6 +198,7 @@ export const getCheckoutSessionData = async (
 
 const PaymentsController = {
   config,
+  getPricesList,
   getProductsListWithPrices,
   createCheckoutSession,
   checkoutSessionWebhook,

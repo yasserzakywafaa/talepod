@@ -9,18 +9,17 @@ import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
-import PaymentWrapper from "./Payment/Payment";
+import PaymentWrapper from "../Payment/Payment";
 import { SubscriptionPlanEnum } from "src/shared/user";
 import Typography from "@mui/material/Typography";
-import { useApplicationContext } from "src/application/store/Provider";
-import { usePaymentContext } from "./Payment/store/Provider";
-import { usePricingModalContext } from "../Modals/PricingModal/store/Provider";
-import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 
-export interface SubscriptionPlan {
+import { usePricing } from "./usePricing";
+import { Product } from "src/shared/payment";
+
+export interface SubscriptionPlanProps {
   title: SubscriptionPlanEnum;
   subheader?: string;
-  price: number;
+  product?: Product;
   description: string[];
   buttonText: string;
   buttonVariant: string;
@@ -29,126 +28,7 @@ export interface SubscriptionPlan {
 }
 
 export const Pricing = () => {
-  const {
-    store: {
-      state: {
-        auth: { user, isAuthenticated },
-      },
-    },
-    manager: { handleIsFetching },
-  } = useApplicationContext();
-  const {
-    store: { handleTogglePricingModal },
-  } = usePricingModalContext();
-  const {
-    store: { handleToggleRegisterModal },
-  } = useRegisterModalContext();
-
-  if (!user) return;
-
-  const currentUserPackage = {
-    isFree:
-      user.subscription.subscriptionPlanType === SubscriptionPlanEnum.free,
-    isPremium:
-      user.subscription.subscriptionPlanType === SubscriptionPlanEnum.premium,
-  };
-
-  const {
-    store: {
-      state: { products },
-    },
-    manager: { handleCreateCheckoutSession },
-  } = usePaymentContext();
-
-  const handleOnSubscribeClick = async (
-    subscriptionPlan: SubscriptionPlanEnum
-  ) => {
-    switch (subscriptionPlan) {
-      case SubscriptionPlanEnum.free:
-        return;
-
-      case SubscriptionPlanEnum.premium:
-        if (!isAuthenticated) {
-          handleToggleRegisterModal();
-          return;
-        }
-
-        try {
-          handleIsFetching(true);
-          const premiumPriceId = products.find((prod) =>
-            prod.name.toLocaleLowerCase().includes(SubscriptionPlanEnum.premium)
-          )?.default_price;
-
-          if (!premiumPriceId) throw new Error();
-
-          await handleCreateCheckoutSession(
-            `${premiumPriceId}`,
-            SubscriptionPlanEnum.premium,
-            user
-          );
-        } catch (error) {
-          console.error("Error:>>", error);
-        } finally {
-          handleIsFetching(false);
-          handleTogglePricingModal();
-        }
-        return;
-
-      default:
-        return;
-    }
-  };
-
-  const plans: SubscriptionPlan[] = [
-    {
-      title: SubscriptionPlanEnum.free,
-      price: 0,
-      description: [
-        "Standard customer support",
-        "Create up to 4 bedtime stories",
-        "Basic text-to-speech conversion",
-        "Access to a limited story library",
-      ],
-      buttonText: currentUserPackage.isFree ? "Current Package" : "",
-      buttonVariant: "text",
-      buttonDisabled: true,
-      buttonAction: () => handleOnSubscribeClick(SubscriptionPlanEnum.free),
-    },
-    {
-      title: SubscriptionPlanEnum.premium,
-      // subheader: "Recommended",
-      price:
-        products.find((prod) =>
-          prod.name.toLocaleLowerCase().includes(SubscriptionPlanEnum.premium)
-        )?.prices[0].unit_amount || 5,
-      description: [
-        "Priority customer support",
-        "Customizable story parameters",
-        "High-quality text-to-speech conversion",
-        "Create up to 50 bedtime stories per month",
-        // "Offline access to stories",
-        // "Access to an extensive story library",
-      ],
-      buttonText: "Upgrade",
-      buttonVariant: "contained",
-      buttonAction: () => handleOnSubscribeClick(SubscriptionPlanEnum.premium),
-    },
-    // {
-    //   title: SubscriptionPlanEnum.Advanced,
-    //   subheader: "Coming Soon",
-    //   price: "",
-    //   description: [
-    //     "Unlimited story generation",
-    //     "Access to exclusive story content",
-    //     "Offline access to stories",
-    //     "Personalized story recommendations",
-    //     "Premium text-to-speech voices",
-    //     "Custom voice options for TTS",
-    //   ],
-    //   buttonText: "Upgrade",
-    //   buttonVariant: "outlined",
-    // },
-  ];
+  const { plans, getPrice, getCurrency } = usePricing();
 
   return (
     <>
@@ -177,13 +57,13 @@ export const Pricing = () => {
           </Typography>
         </Box>
         <Grid container spacing={3} alignItems="center" justifyContent="center">
-          {plans.map((plans) => (
+          {plans.map((plan) => (
             <Grid
               xs={12}
               md={4}
-              sm={plans.title === SubscriptionPlanEnum.advanced ? 12 : 6}
+              sm={plan.title === SubscriptionPlanEnum.advanced ? 12 : 6}
               item
-              key={plans.title}
+              key={plan.title}
             >
               <Card
                 sx={{
@@ -193,11 +73,11 @@ export const Pricing = () => {
                   flexDirection: "column",
                   justifyContent: "space-between",
                   border:
-                    plans.title === SubscriptionPlanEnum.premium
+                    plan.title === SubscriptionPlanEnum.premium
                       ? "1px solid"
                       : undefined,
                   borderColor:
-                    plans.title === SubscriptionPlanEnum.premium
+                    plan.title === SubscriptionPlanEnum.premium
                       ? "primary.main"
                       : undefined,
                 }}
@@ -212,13 +92,13 @@ export const Pricing = () => {
                     }}
                   >
                     <Typography component="h3" variant="h6">
-                      {plans.title}
+                      {plan.title}
                     </Typography>
-                    {plans.subheader &&
-                      plans.title !== SubscriptionPlanEnum.free && (
+                    {plan.subheader &&
+                      plan.title !== SubscriptionPlanEnum.free && (
                         <Chip
                           icon={<AutoAwesomeIcon />}
-                          label={plans.subheader}
+                          label={plan.subheader}
                           size="small"
                           sx={{
                             background: (theme) =>
@@ -241,13 +121,20 @@ export const Pricing = () => {
                       alignItems: "baseline",
                     }}
                   >
-                    {plans.price && (
+                    {plan.product ? (
                       <>
                         <Typography component="h3" variant="h2">
-                          ${plans.price}
+                          {getCurrency(plan.title)}
+                          {getPrice(plan.product).monthly}
                         </Typography>
                         <Typography component="h3" variant="h6">
                           &nbsp; per month
+                        </Typography>
+                      </>
+                    ) : (
+                      <>
+                        <Typography component="h3" variant="h2">
+                          {getCurrency(SubscriptionPlanEnum.premium)}0
                         </Typography>
                       </>
                     )}
@@ -259,7 +146,7 @@ export const Pricing = () => {
                       borderColor: "grey.500",
                     }}
                   />
-                  {plans.description.map((line) => (
+                  {plan.description.map((line) => (
                     <Box
                       key={line}
                       sx={{
@@ -273,7 +160,7 @@ export const Pricing = () => {
                         sx={{
                           width: 20,
                           color:
-                            plans.title === SubscriptionPlanEnum.premium
+                            plan.title === SubscriptionPlanEnum.premium
                               ? "primary.light"
                               : "primary.main",
                         }}
@@ -286,17 +173,17 @@ export const Pricing = () => {
                 </CardContent>
 
                 <CardActions>
-                  {plans.buttonAction && (
+                  {plan.buttonAction && (
                     <Button
                       fullWidth
                       component="button"
-                      disabled={plans.buttonDisabled}
+                      disabled={plan.buttonDisabled}
                       variant={
-                        plans.buttonVariant as "text" | "outlined" | "contained"
+                        plan.buttonVariant as "text" | "outlined" | "contained"
                       }
-                      onClick={plans.buttonAction}
+                      onClick={plan.buttonAction}
                     >
-                      {plans.buttonText}
+                      {plan.buttonText}
                     </Button>
                   )}
                 </CardActions>

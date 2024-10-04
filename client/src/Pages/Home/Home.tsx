@@ -6,7 +6,7 @@ import FAQ from "./features/FAQ";
 import Hero from "./features/Hero";
 import Page from "src/components/shared/Page/Page";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
-import { Pricing } from "src/components/shared/Pricing";
+import { Pricing } from "src/components/shared/Pricing/Pricing";
 import { useApplicationContext } from "src/application/store/Provider";
 
 // import Features from "./features/Features";

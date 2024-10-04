@@ -3,7 +3,7 @@ import { Close } from "@mui/icons-material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import { Pricing } from "src/components/shared/Pricing";
+import { Pricing } from "src/components/shared/Pricing/Pricing";
 import { usePricingModalContext } from "./store/Provider";
 
 interface PricingModalProps {

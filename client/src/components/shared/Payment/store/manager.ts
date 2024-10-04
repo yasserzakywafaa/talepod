@@ -6,11 +6,12 @@ import { PaymentStore } from "./store";
 import { getAxiosError } from "src/shared/utils/getAxiosError";
 import { loadStripe } from "@stripe/stripe-js";
 import routes from "src/application/routes";
-import { Product } from "src/shared/payment";
+import { Price, Product } from "src/shared/payment";
 
 export interface PaymentManager {
   setUp: () => void;
   handleGetPublishableKey: () => void;
+  handleGetPricesList: () => void;
   handleGetProductsListWithPrices: () => void;
   handleCreateCheckoutSession: (
     priceId: string,
@@ -22,6 +23,7 @@ export interface PaymentManager {
 export const usePaymentManager = (store: PaymentStore): PaymentManager => {
   const setUp = async () => {
     handleGetPublishableKey();
+    handleGetPricesList();
     handleGetProductsListWithPrices();
   };
 
@@ -53,6 +55,27 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
     }
   };
 
+  const handleGetPricesList = async (): Promise<any> => {
+    try {
+      const response: AxiosResponse<Price[], Price[]> = await axios.get(
+        END_POINTS.PAYMENTS.GET_PRICES_LIST,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Custom-Header": new Date().toISOString(),
+          },
+        }
+      );
+
+      store.setPrices(response.data);
+
+      return response.data;
+    } catch (error) {
+      getAxiosError(error);
+      throw new Error(`❌  Failed to get Stripe Publishable Key!  ${error}`);
+    }
+  };
+
   const handleGetProductsListWithPrices = async (): Promise<Product[]> => {
     try {
       const response: AxiosResponse<any> = await axios.get(
@@ -66,10 +89,6 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
       );
 
       store.setProducts(response.data);
-
-      console.log("ℹ️  handleGetProductsListWithPrices:>>>", {
-        products: response.data,
-      });
 
       return response.data;
     } catch (error) {
@@ -128,6 +147,7 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
   return {
     setUp,
     handleGetPublishableKey,
+    handleGetPricesList,
     handleGetProductsListWithPrices,
     handleCreateCheckoutSession,
   };
