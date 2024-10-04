@@ -6,11 +6,14 @@ import { PaymentStore } from "./store";
 import { getAxiosError } from "src/shared/utils/getAxiosError";
 import { loadStripe } from "@stripe/stripe-js";
 import routes from "src/application/routes";
+import { Product } from "src/shared/payment";
 
 export interface PaymentManager {
   setUp: () => void;
   handleGetPublishableKey: () => void;
+  handleGetProductsListWithPrices: () => void;
   handleCreateCheckoutSession: (
+    priceId: string,
     plan: SubscriptionPlanEnum,
     user: User | null
   ) => Promise<void>;
@@ -19,10 +22,10 @@ export interface PaymentManager {
 export const usePaymentManager = (store: PaymentStore): PaymentManager => {
   const setUp = async () => {
     handleGetPublishableKey();
+    handleGetProductsListWithPrices();
   };
 
   const handleGetPublishableKey = async (): Promise<any> => {
-    // store.setIsFetching(true);
     try {
       const response: AxiosResponse<
         { publishableKey: string },
@@ -47,12 +50,38 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
     } catch (error) {
       getAxiosError(error);
       throw new Error(`❌  Failed to get Stripe Publishable Key!  ${error}`);
-    } finally {
-      // store.setIsFetching(false);
+    }
+  };
+
+  const handleGetProductsListWithPrices = async (): Promise<Product[]> => {
+    try {
+      const response: AxiosResponse<any> = await axios.get(
+        END_POINTS.PAYMENTS.GET_PRODUCTS_LIST_WITH_PRICES,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Custom-Header": new Date().toISOString(),
+          },
+        }
+      );
+
+      store.setProducts(response.data);
+
+      console.log("ℹ️  handleGetProductsListWithPrices:>>>", {
+        products: response.data,
+      });
+
+      return response.data;
+    } catch (error) {
+      getAxiosError(error);
+      throw new Error(
+        `❌  Failed to get Stripe Product with Prices!  ${error}`
+      );
     }
   };
 
   const handleCreateCheckoutSession = async (
+    priceId: string,
     subscriptionPlan: SubscriptionPlanEnum,
     user: User | null
   ): Promise<any> => {
@@ -64,6 +93,7 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
         END_POINTS.PAYMENTS.CREATE_CHECKOUT_SESSION,
         {
           metadata: {
+            priceId,
             subscriptionPlan,
             userId: user._id,
             // success_url: `${window.location.origin}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
@@ -98,6 +128,7 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
   return {
     setUp,
     handleGetPublishableKey,
+    handleGetProductsListWithPrices,
     handleCreateCheckoutSession,
   };
 };

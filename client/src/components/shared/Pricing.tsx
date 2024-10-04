@@ -54,6 +54,9 @@ export const Pricing = () => {
   };
 
   const {
+    store: {
+      state: { products },
+    },
     manager: { handleCreateCheckoutSession },
   } = usePaymentContext();
 
@@ -72,7 +75,17 @@ export const Pricing = () => {
 
         try {
           handleIsFetching(true);
-          await handleCreateCheckoutSession(SubscriptionPlanEnum.premium, user);
+          const premiumPriceId = products.find((prod) =>
+            prod.name.toLocaleLowerCase().includes(SubscriptionPlanEnum.premium)
+          )?.default_price;
+
+          if (!premiumPriceId) throw new Error();
+
+          await handleCreateCheckoutSession(
+            `${premiumPriceId}`,
+            SubscriptionPlanEnum.premium,
+            user
+          );
         } catch (error) {
           console.error("Error:>>", error);
         } finally {

@@ -28,6 +28,7 @@ const END_POINTS = {
   },
   PAYMENTS: {
     CONFIG: `/api/v1/payments/config`,
+    GET_PRODUCTS_LIST_WITH_PRICES: `/api/v1/payments/products-list-with-prices`,
     CREATE_CHECKOUT_SESSION: `/api/v1/payments/create-checkout-session`,
     CHECKOUT_SESSION_WEBHOOK: `/api/v1/payments/checkout-session-webhook`,
     GET_CHECKOUT_SESSION_DATA: `/api/v1/payments/checkout-session-data`,

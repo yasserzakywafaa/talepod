@@ -30,15 +30,54 @@ export const config = async (
   }
 };
 
+export const getProductsListWithPrices = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  try {
+    // Get all active Products List
+    const products = await stripe.products.list({
+      active: true,
+    });
+
+    // Get Prices list for each Product
+    let prices: Stripe.Price[] = [];
+    for (let item = 0; item < products.data.length; item++) {
+      const product: Stripe.Product = products.data[item];
+
+      const pricesList = await stripe.prices.list({
+        product: product.id,
+        active: true,
+      });
+
+      prices = [...prices, ...pricesList.data];
+    }
+
+    // Merge Products list with prices
+    const productsWithPrices = products.data.map((product) => {
+      return {
+        ...product,
+        prices: prices.filter((price) => price.product === product.id),
+      };
+    });
+
+    response.status(200).json(productsWithPrices);
+  } catch (error) {
+    console.error("❌ Failed to get Stripe Product with Prices!", {
+      error,
+    });
+    next(error);
+  }
+};
+
 export const createCheckoutSession = async (
   request: Request,
   response: Response,
   next: NextFunction
 ) => {
-  const { subscriptionPlan, userId, success_url, cancel_url } =
+  const { priceId, subscriptionPlan, userId, success_url, cancel_url } =
     request.body.metadata;
-
-  const priceIdFromStripe = "price_1Q3eR2Iq8Ejb2pY9Cl8OLDfD";
 
   try {
     // Create a new Stripe Checkout Session
@@ -46,7 +85,7 @@ export const createCheckoutSession = async (
       payment_method_types: ["card"],
       line_items: [
         {
-          price: priceIdFromStripe,
+          price: priceId,
           adjustable_quantity: {
             enabled: false,
           },
@@ -140,6 +179,7 @@ export const getCheckoutSessionData = async (
 
 const PaymentsController = {
   config,
+  getProductsListWithPrices,
   createCheckoutSession,
   checkoutSessionWebhook,
   getCheckoutSessionData,
