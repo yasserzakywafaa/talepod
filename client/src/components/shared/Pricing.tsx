@@ -20,7 +20,7 @@ import { useRegisterModalContext } from "src/components/Modals/RegisterModal/sto
 export interface SubscriptionPlan {
   title: SubscriptionPlanEnum;
   subheader?: string;
-  price: string;
+  price: number;
   description: string[];
   buttonText: string;
   buttonVariant: string;
@@ -102,7 +102,7 @@ export const Pricing = () => {
   const plans: SubscriptionPlan[] = [
     {
       title: SubscriptionPlanEnum.free,
-      price: "0",
+      price: 0,
       description: [
         "Standard customer support",
         "Create up to 4 bedtime stories",
@@ -117,7 +117,10 @@ export const Pricing = () => {
     {
       title: SubscriptionPlanEnum.premium,
       // subheader: "Recommended",
-      price: "5",
+      price:
+        products.find((prod) =>
+          prod.name.toLocaleLowerCase().includes(SubscriptionPlanEnum.premium)
+        )?.prices[0].unit_amount || 5,
       description: [
         "Priority customer support",
         "Customizable story parameters",
