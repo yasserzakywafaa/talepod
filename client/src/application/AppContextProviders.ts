@@ -14,6 +14,7 @@ import { RegisterModalContextProvider } from "src/components/Modals/RegisterModa
 import { StoryCreatorContextProvider } from "src/components/StoryCreator/store/Provider";
 import { ViewStoryContextProvider } from "src/Pages/ViewStory/store/Provider";
 import combineProviders from "./shared/combineProviders";
+import { MyProfileContextProvider } from "src/Pages/MyProfile/store/Provider";
 
 const contextProviders = [
   ApplicationContextProvider,
@@ -24,6 +25,7 @@ const contextProviders = [
   OpenaiContextProvider,
   ExploreContextProvider,
   MyStoriesContextProvider,
+  MyProfileContextProvider,
   ViewStoryContextProvider,
   ContactContextProvider,
   CheckoutContextProvider,

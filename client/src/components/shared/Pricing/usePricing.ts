@@ -31,8 +31,6 @@ export const usePricing = () => {
     store: { handleToggleRegisterModal },
   } = useRegisterModalContext();
 
-  //   if (!user) return;
-
   const mapProductToMonthlyPlan = (plan: SubscriptionPlanEnum) => {
     const currentPlan = products.find((product) => {
       if (
@@ -196,5 +194,3 @@ export const usePricing = () => {
     getYearlyPlan,
   };
 };
-
-// export default usePricing;

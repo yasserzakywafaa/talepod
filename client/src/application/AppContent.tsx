@@ -23,6 +23,7 @@ const UsersStoriesPage = lazy(
   () => import("../Pages/UsersStories/UsersStories")
 );
 const MyStoriesPage = lazy(() => import("../Pages/MyStories/MyStories"));
+const MyProfilePage = lazy(() => import("../Pages/MyProfile/MyProfile"));
 const ContactPage = lazy(() => import("../Pages/Contact/Contact"));
 const ViewStoryPage = lazy(() => import("../Pages/ViewStory/ViewStory"));
 const CheckoutPage = lazy(() => import("../Pages/Checkout/CheckoutPage"));
@@ -127,6 +128,11 @@ const AppContent = () => {
                 <Route
                   path={routes.myStories(":userId")}
                   element={<MyStoriesPage />}
+                />
+
+                <Route
+                  path={routes.myProfile(":userId")}
+                  element={<MyProfilePage />}
                 />
 
                 <Route

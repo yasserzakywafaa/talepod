@@ -6,6 +6,7 @@ const routes = {
   story: (slug: string) => `/bedtime-story/${slug}`,
   paymentSuccess: (sessionId: string) => `/payment-success/${sessionId}`,
   myStories: (userId: string) => `/my-bedtime-stories/${userId}`,
+  myProfile: (userId: string) => `/my-profile/${userId}`,
   myStory: (userId: string, slug: string) =>
     `/my-bedtime-stories/${userId}/${slug}`,
   contact: `/contact`,

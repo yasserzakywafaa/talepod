@@ -1,6 +1,6 @@
 import "./PaymentSuccess.scss";
 
-import { AutoFixHighOutlined } from "@mui/icons-material";
+import { AutoFixHighOutlined, PersonOutlined } from "@mui/icons-material";
 import { Box, Button, Container, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -32,6 +32,8 @@ const PaymentSuccessPage = () => {
   if (!sessionId) return;
 
   const handleOnCreateClick = () => navigate(routes.create);
+  const handleOnMyProfileClick = () =>
+    auth.user && navigate(routes.myProfile(auth.user._id));
 
   const totalAmount = `${getCurrencySymbol(currency)}${(
     amount_total / 100
@@ -102,7 +104,7 @@ const PaymentSuccessPage = () => {
           </Typography>
 
           <Button
-            sx={{ marginY: "2rem" }}
+            sx={{ marginY: "1rem" }}
             size="large"
             type="button"
             variant="contained"
@@ -110,6 +112,18 @@ const PaymentSuccessPage = () => {
             onClick={handleOnCreateClick}
           >
             Create more stories
+          </Button>
+
+          <Button
+            sx={{ marginY: "1rem" }}
+            size="large"
+            type="button"
+            color="secondary"
+            variant="outlined"
+            endIcon={<PersonOutlined />}
+            onClick={handleOnMyProfileClick}
+          >
+            My Profile
           </Button>
         </Box>
       </Container>
