@@ -38,8 +38,9 @@ export enum UserRole {
 }
 
 export interface UserSubscription {
-  subscriptionPlanType: SubscriptionPlanEnum;
-  subscriptionExpiry: Date;
+  type: SubscriptionPlanEnum;
+  startDate: Date;
+  endDate: Date;
   paymentHistory?: UserPaymentHistory[];
   preferences: UserPreferences;
   maxStoriesAllowed: number;
@@ -84,8 +85,9 @@ export const getInitialUserData = (): Omit<User, "_id"> => {
     role: UserRole.user,
     isPaidUser: false,
     subscription: {
-      subscriptionPlanType: SubscriptionPlanEnum.free,
-      subscriptionExpiry: initialExpiryDate,
+      type: SubscriptionPlanEnum.free,
+      startDate: undefined,
+      endDate: undefined,
       paymentHistory: [],
       preferences: {
         theme: "dark",

@@ -36,8 +36,9 @@ export enum UserRole {
 }
 
 export interface UserSubscription {
-  subscriptionPlanType: SubscriptionPlanEnum;
-  subscriptionExpiry: Date;
+  type: SubscriptionPlanEnum;
+  startDate: Date;
+  endDate: Date;
   paymentHistory?: UserPaymentHistory[];
   preferences: UserPreferences;
   maxStoriesAllowed: number;

@@ -43,8 +43,8 @@ import { useEffect } from "react";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useNavigate } from "react-router-dom";
 import { useOpenaiContext } from "./Openai/store/Provider";
-import { useStoryCreatorContext } from "../store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
+import { useStoryCreatorContext } from "../store/Provider";
 
 const CreateStoryForm = () => {
   const navigate = useNavigate();
@@ -218,15 +218,15 @@ const CreateStoryForm = () => {
     const isFreeSubs =
       user &&
       !user.isPaidUser &&
-      user.subscription.subscriptionPlanType === SubscriptionPlanEnum.free;
+      user.subscription.type === SubscriptionPlanEnum.free;
     const isProSubs =
       user &&
       user.isPaidUser &&
-      user.subscription.subscriptionPlanType === SubscriptionPlanEnum.premium;
+      user.subscription.type === SubscriptionPlanEnum.premium;
     const isAdvancedSubs =
       user &&
       user.isPaidUser &&
-      user.subscription.subscriptionPlanType === SubscriptionPlanEnum.advanced;
+      user.subscription.type === SubscriptionPlanEnum.advanced;
 
     if (!isAuthenticated) return <></>;
 

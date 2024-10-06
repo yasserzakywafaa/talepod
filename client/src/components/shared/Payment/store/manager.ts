@@ -1,3 +1,4 @@
+import { Price, Product } from "src/shared/payment";
 import { SubscriptionPlanEnum, User } from "src/shared/user";
 import axios, { AxiosResponse } from "axios";
 
@@ -6,7 +7,7 @@ import { PaymentStore } from "./store";
 import { getAxiosError } from "src/shared/utils/getAxiosError";
 import { loadStripe } from "@stripe/stripe-js";
 import routes from "src/application/routes";
-import { Price, Product } from "src/shared/payment";
+import { useApplicationContext } from "src/application/store/Provider";
 
 export interface PaymentManager {
   setUp: () => void;
@@ -21,6 +22,9 @@ export interface PaymentManager {
 }
 
 export const usePaymentManager = (store: PaymentStore): PaymentManager => {
+  const {
+    manager: { handleIsFetching },
+  } = useApplicationContext();
   const setUp = async () => {
     handleGetPublishableKey();
     handleGetPricesList();
@@ -43,10 +47,6 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
 
       const stripePromise = await loadStripe(response.data.publishableKey);
       store.setStripePromise(stripePromise);
-
-      console.log("ℹ️  handleGetPublishableKey:>>>", {
-        publishableKey: response.data.publishableKey,
-      });
 
       return response.data;
     } catch (error) {
@@ -119,7 +119,7 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
             success_url: `${window.location.origin}${routes.paymentSuccess(
               "{CHECKOUT_SESSION_ID}"
             )}`,
-            cancel_url: `${window.location.origin}${routes.create}`,
+            cancel_url: `${window.location.href}`,
           },
           headers: {
             "Content-Type": "application/json",
@@ -136,11 +136,15 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
 
       const { error } = await stripe.redirectToCheckout({ sessionId });
 
+      handleIsFetching(false);
+
       if (error) {
         console.error("Error redirecting to Stripe:", error);
       }
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      handleIsFetching(false);
     }
   };
 

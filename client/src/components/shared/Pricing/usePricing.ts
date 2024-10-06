@@ -1,11 +1,11 @@
 import { Product } from "src/shared/payment";
 import { SubscriptionPlanEnum } from "src/shared/user";
-import { usePaymentContext } from "../Payment/store/Provider";
 import { SubscriptionPlanProps } from "./Pricing";
+import { getCurrencySymbol } from "src/shared/utils/getCurrencySymbol";
 import { useApplicationContext } from "src/application/store/Provider";
+import { usePaymentContext } from "../Payment/store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
-import { getCurrencySymbol } from "src/shared/utils/getCurrencySymbol";
 
 export const usePricing = () => {
   const {
@@ -96,29 +96,30 @@ export const usePricing = () => {
   const handleOnSubscribeClick = async (
     subscriptionPlan: SubscriptionPlanEnum
   ) => {
+    if (!isAuthenticated) {
+      handleToggleRegisterModal();
+      return;
+    }
+
     switch (subscriptionPlan) {
       case SubscriptionPlanEnum.free:
         return;
 
       case SubscriptionPlanEnum.premium:
-        if (!isAuthenticated) {
-          handleToggleRegisterModal();
-          return;
-        }
-
         try {
           handleIsFetching(true);
-          const premiumPriceId = products.find((prod) =>
+          const defaultPriceId = products.find((prod) =>
             prod.name.toLocaleLowerCase().includes(SubscriptionPlanEnum.premium)
           )?.default_price;
 
-          if (!premiumPriceId) throw new Error();
+          if (!defaultPriceId) throw new Error();
 
           await handleCreateCheckoutSession(
-            `${premiumPriceId}`,
+            `${defaultPriceId}`,
             SubscriptionPlanEnum.premium,
             user
           );
+          handleIsFetching(false);
         } catch (error) {
           console.error("Error:>>", error);
         } finally {
@@ -133,10 +134,8 @@ export const usePricing = () => {
   };
 
   const currentUserPackage = {
-    isFree:
-      user?.subscription.subscriptionPlanType === SubscriptionPlanEnum.free,
-    isPremium:
-      user?.subscription.subscriptionPlanType === SubscriptionPlanEnum.premium,
+    isFree: user?.subscription.type === SubscriptionPlanEnum.free,
+    isPremium: user?.subscription.type === SubscriptionPlanEnum.premium,
   };
 
   const plans: SubscriptionPlanProps[] = [
@@ -149,7 +148,7 @@ export const usePricing = () => {
         "Basic text-to-speech conversion",
         "Access to a limited story library",
       ],
-      buttonText: currentUserPackage.isFree ? "Current Package" : "",
+      buttonText: currentUserPackage.isFree ? "Current Package" : "Default",
       buttonVariant: "text",
       buttonDisabled: true,
       buttonAction: () => handleOnSubscribeClick(SubscriptionPlanEnum.free),
@@ -164,7 +163,7 @@ export const usePricing = () => {
         "High-quality text-to-speech conversion",
         "Create up to 50 bedtime stories per month",
       ],
-      buttonText: "Upgrade",
+      buttonText: isAuthenticated ? "Upgrade" : "Register & Subscribe",
       buttonVariant: "contained",
       buttonAction: () => handleOnSubscribeClick(SubscriptionPlanEnum.premium),
     },

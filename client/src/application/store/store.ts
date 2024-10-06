@@ -11,6 +11,7 @@ export interface ApplicationStore {
   state: ApplicationInitialState;
   updateState: (newState: ApplicationInitialState) => void;
   handleIsFetching: (handleIsFetching: boolean) => void;
+  setPreviousUrl: (previousUrl: string) => void;
   handleIsFetchingUserInfo: (isFetchingUserInfo: boolean) => void;
   toggleThemeMode: () => void;
   updateAuthInfo: (authInfo?: Authentication) => void;
@@ -29,6 +30,13 @@ const useApplicationStore = (): ApplicationStore => {
     setState((prev) => ({
       ...prev,
       isFetching,
+    }));
+  };
+
+  const setPreviousUrl = (previousUrl: string) => {
+    setState((prev) => ({
+      ...prev,
+      previousUrl,
     }));
   };
 
@@ -112,6 +120,7 @@ const useApplicationStore = (): ApplicationStore => {
     state,
     updateState,
     handleIsFetching,
+    setPreviousUrl,
     handleIsFetchingUserInfo,
     toggleThemeMode,
     updateAuthInfo,

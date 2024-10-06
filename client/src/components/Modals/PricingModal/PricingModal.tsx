@@ -6,12 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import { Pricing } from "src/components/shared/Pricing/Pricing";
 import { usePricingModalContext } from "./store/Provider";
 
-interface PricingModalProps {
-  isPricingDialogOpen: boolean;
-  setIsPricingDialogOpen: (isDialogOpen: boolean) => void;
-}
-
-export const PricingModal = (props: PricingModalProps) => {
+export const PricingModal = () => {
   const {
     store: { state, handleTogglePricingModal },
   } = usePricingModalContext();

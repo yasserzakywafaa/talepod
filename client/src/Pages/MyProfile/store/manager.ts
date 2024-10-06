@@ -1,17 +1,17 @@
 import { MyProfileStore } from "./store";
 
 export interface MyProfileManager {
-  handleUpdateMyProfileForm: (key: string, value: string) => void;
+  handleIsFetching: (isFetching: boolean) => void;
 }
 
 export const useMyProfileManager = (
   store: MyProfileStore
 ): MyProfileManager => {
-  const handleUpdateMyProfileForm = (key: string, value: string): void => {
-    store.updateMyProfileForm(key, value);
+  const handleIsFetching = (isFetching: boolean): void => {
+    store.setIsFetching(isFetching);
   };
 
   return {
-    handleUpdateMyProfileForm,
+    handleIsFetching,
   };
 };

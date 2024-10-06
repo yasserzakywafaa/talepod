@@ -7,12 +7,12 @@ import {
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
 import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
 import FAQ from "./features/FAQ";
 import Hero from "./features/Hero";
 import LionCub from "../../assets/images/landing_pages/lion_cub.webp";
 import Page from "src/components/shared/Page/Page";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
+import { Pricing } from "src/components/shared/Pricing/Pricing";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.webp";
 import { useApplicationContext } from "src/application/store/Provider";
@@ -70,7 +70,7 @@ const BedtimeStoriesForAdults = () => {
 
   return (
     <Page
-      title="TALEPOD"
+      title="Bedtime Stories for Adults | TALEPOD"
       className="bedtime-stories-for-adults-page"
       isLoading={isFetching}
     >
@@ -89,8 +89,8 @@ const BedtimeStoriesForAdults = () => {
           benefitsList={benefitsList}
           benefitsImage={<RandomImage />}
         />
-        <Divider />
         <FAQ />
+        <Pricing />
       </Box>
     </Page>
   );

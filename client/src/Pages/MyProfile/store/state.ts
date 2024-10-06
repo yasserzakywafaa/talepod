@@ -1,23 +1,13 @@
-export interface MyProfileInitialState {
+import { User } from "src/shared/user";
+
+export interface MyProfileState {
   isFetching: boolean;
-  MyProfileForm: MyProfileFormState;
+  user: User | undefined;
 }
 
-export interface MyProfileFormState {
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-}
-
-export const getMyProfileInitialState = (): MyProfileInitialState => {
+export const getMyProfileInitialState = (): MyProfileState => {
   return {
     isFetching: false,
-    MyProfileForm: {
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
-    },
+    user: undefined,
   };
 };

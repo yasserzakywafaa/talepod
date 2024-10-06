@@ -10,11 +10,10 @@ import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import PaymentWrapper from "../Payment/Payment";
+import { Product } from "src/shared/payment";
 import { SubscriptionPlanEnum } from "src/shared/user";
 import Typography from "@mui/material/Typography";
-
 import { usePricing } from "./usePricing";
-import { Product } from "src/shared/payment";
 
 export interface SubscriptionPlanProps {
   title: SubscriptionPlanEnum;
@@ -150,9 +149,9 @@ export const Pricing = () => {
                     <Box
                       key={line}
                       sx={{
-                        py: 1,
-                        display: "flex",
                         gap: 1.5,
+                        paddingY: 1,
+                        display: "flex",
                         alignItems: "center",
                       }}
                     >

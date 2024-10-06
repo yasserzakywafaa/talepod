@@ -34,10 +34,6 @@ export const useCheckoutManager = (store: CheckoutStore): CheckoutManager => {
 
       store.setPublishableKey(response.data.publishableKey);
 
-      console.log("ℹ️  handleGetPublishableKey:>>>", {
-        publishableKey: response.data.publishableKey,
-      });
-
       return response.data;
     } catch (error) {
       getAxiosError(error);

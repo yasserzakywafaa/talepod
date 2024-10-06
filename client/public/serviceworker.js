@@ -6,10 +6,24 @@ const urlsToCache = [
   "/index.html",
   "/create",
   "/bedtime-stories",
-  "/bedtime-story/:id",
   "/contact",
   "/privacy-policy",
   "/terms-and-conditions",
+  // Profile Pages
+  "/bedtime-story/:id",
+  "/my-bedtime-stories/:userId",
+  "/my-profile/:userId",
+  // Landing pages
+  "/bedtime-stories-for-kids",
+  "/bedtime-stories-for-adults",
+  "/short-bedtime-stories",
+  "/christmas-bedtime-stories",
+  "/bedtime-stories-for-girlfriend",
+  "/bedtime-stories-for-toddlers",
+  "/educational-bedtime-stories",
+  "/baby-bedtime-stories",
+  "/best-bedtime-stories",
+  "/quick-bedtime-stories",
 ];
 
 // Install service worker

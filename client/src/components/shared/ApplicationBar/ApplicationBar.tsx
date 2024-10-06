@@ -26,6 +26,7 @@ import {
 import { useMatch, useNavigate } from "react-router-dom";
 
 import BackButton from "./BackButton";
+import { CancelSubscriptionModal } from "src/components/Modals/CancelSubscriptionModal/CancelSubscriptionModal";
 import { InstallAppModal } from "src/components/Modals/InstallAppModal/InstallAppModal";
 import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
 import { PricingModal } from "src/components/Modals/PricingModal/PricingModal";
@@ -43,13 +44,13 @@ import { useRegisterModalContext } from "src/components/Modals/RegisterModal/sto
 import { useState } from "react";
 
 const ApplicationBar = () => {
-  const navigate = useNavigate();
-  const { isDesktop, isTablet, isMobile } = useDeviceSize();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isInstallAppDialogOpen, setIsInstallAppDialogOpen] =
     useState<boolean>(false);
-  const [isPricingDialogOpen, setIsPricingDialogOpen] =
-    useState<boolean>(false);
+
+  const navigate = useNavigate();
+  const { isDesktop, isTablet, isMobile } = useDeviceSize();
+
   const {
     store: {
       state: { themeMode, auth },
@@ -130,6 +131,7 @@ const ApplicationBar = () => {
             bgcolor: "transparent",
             backgroundImage: "none",
             mt: 2,
+            // zIndex: 1500,
           }}
         >
           <Container maxWidth="lg">
@@ -493,10 +495,8 @@ const ApplicationBar = () => {
         isInstallAppDialogOpen={isInstallAppDialogOpen}
         setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
       />
-      <PricingModal
-        isPricingDialogOpen={isPricingDialogOpen}
-        setIsPricingDialogOpen={setIsPricingDialogOpen}
-      />
+      <PricingModal />
+      <CancelSubscriptionModal />
     </>
   );
 };

@@ -1,11 +1,12 @@
 import * as React from "react";
 
-import { Avatar, Box, Divider, ListItemIcon, Typography } from "@mui/material";
 import {
+  AccountCircleOutlined,
   KeyboardArrowDownOutlined,
   LogoutOutlined,
   WebStoriesOutlined,
 } from "@mui/icons-material";
+import { Avatar, Box, Divider, ListItemIcon, Typography } from "@mui/material";
 import { useMatch, useNavigate } from "react-router-dom";
 
 import { Authentication } from "src/application/store/state";
@@ -28,8 +29,9 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
 
   if (!auth.user) return;
 
-  const isUserPrivatePages = !!useMatch(routes.myStories(":userId"));
-  // !!useMatch(routes.myStory(":userId", ":slug"));
+  const isUserPrivatePages =
+    !!useMatch(routes.myStories(":userId")) ||
+    !!useMatch(routes.myProfile(":userId"));
 
   const userFullName = `${
     auth.user.name.givenName
@@ -41,11 +43,15 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
 
   const handleCloseMenu = () => setElement(null);
 
-  const onMyStoriesClick = () => {
+  const handleOnMyStoriesClick = () => {
     auth.user && navigate(routes.myStories(auth.user._id));
   };
 
-  const onLogoutClick = () => {
+  const handleOnMyProfileClick = () => {
+    auth.user && navigate(routes.myProfile(auth.user._id));
+  };
+
+  const handleOnLogoutClick = () => {
     handleLogOut({
       isAuthenticated: false,
       user: null,
@@ -112,7 +118,14 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
         }}
         onClose={handleCloseMenu}
       >
-        <MenuItem onClick={onMyStoriesClick}>
+        <MenuItem onClick={handleOnMyProfileClick}>
+          <ListItemIcon>
+            <AccountCircleOutlined fontSize="small" color="secondary" />
+          </ListItemIcon>
+          My Profile
+        </MenuItem>
+
+        <MenuItem onClick={handleOnMyStoriesClick}>
           <ListItemIcon>
             <WebStoriesOutlined fontSize="small" color="secondary" />
           </ListItemIcon>
@@ -121,7 +134,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
 
         <Divider />
 
-        <MenuItem onClick={onLogoutClick}>
+        <MenuItem onClick={handleOnLogoutClick}>
           <ListItemIcon>
             <LogoutOutlined fontSize="small" color="secondary" />
           </ListItemIcon>

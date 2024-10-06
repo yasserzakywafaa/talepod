@@ -16,6 +16,7 @@ import ScrollToTopButton from "../BackToTopButton/BackToTopButton";
 import SwipeToRefresh from "./features/SwipeToRefresh/SwipeToRefresh";
 import classNames from "classnames";
 import { useApplicationContext } from "src/application/store/Provider";
+import { useLocation } from "react-router-dom";
 
 export interface PageProps {
   title: string;
@@ -46,8 +47,10 @@ const Page = (params: PageProps) => {
   const {
     store: {
       state: { isFetching, themeMode },
+      setPreviousUrl,
     },
   } = useApplicationContext();
+  const location = useLocation();
 
   const isPageLoading = isLoading || isFetching;
 
@@ -79,6 +82,12 @@ const Page = (params: PageProps) => {
     if (isPageLoading) htmlNode.style.overflow = "hidden";
     else htmlNode.removeAttribute("style");
   }, [isPageLoading]);
+
+  useEffect(() => {
+    return () => {
+      setPreviousUrl(location.pathname);
+    };
+  }, []);
 
   return (
     <>

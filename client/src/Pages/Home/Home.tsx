@@ -25,13 +25,9 @@ const Homepage = () => {
 
       <Box sx={{ backgroundColor: "transparent" }}>
         <PersonalizedBedtimeStoryText />
-        {/* <Divider /> */}
         <FAQ />
-        {/* <Divider /> */}
         {/* <Features /> */}
-        {/* <Divider /> */}
         {/* <Testimonials /> */}
-        {/* <Divider /> */}
         <Pricing />
       </Box>
     </Page>
