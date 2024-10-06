@@ -5,16 +5,29 @@ import { LockOpenOutlined, VpnKeyOutlined } from "@mui/icons-material";
 
 import BunnySurprised from "../../assets/images/unauthorized_401/surprised_bunny.webp";
 import Page from "src/components/shared/Page/Page";
+import { useApplicationContext } from "src/application/store/Provider";
+import { useEffect } from "react";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 
 const Unauthorized = () => {
+  const {
+    store: {
+      state: { auth },
+    },
+  } = useApplicationContext();
   const {
     store: { handleToggleLoginModal },
   } = useLoginModalContext();
   const {
     store: { handleToggleRegisterModal },
   } = useRegisterModalContext();
+
+  useEffect(() => {
+    if (auth.isAuthenticated) {
+      window.history.back();
+    }
+  }, [auth.isAuthenticated]);
 
   return (
     <Page title="Unauthorized | TalePod" className="unauthorized-page">
