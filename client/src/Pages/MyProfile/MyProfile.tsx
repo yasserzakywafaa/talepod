@@ -177,10 +177,8 @@ const MyProfilePage = () => {
                   <span className="bold">{user.subscription.type}</span>
                 </Grid>
 
-                {!(
-                  user.isPaidUser &&
-                  user.subscription.type !== SubscriptionPlanEnum.free
-                ) ? (
+                {user.isPaidUser &&
+                user.subscription.type !== SubscriptionPlanEnum.free ? (
                   <>
                     <Grid item xs={6} md={4}>
                       <Typography
