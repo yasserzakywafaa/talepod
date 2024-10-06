@@ -12,6 +12,7 @@ export interface User {
   role: UserRole;
   isPaidUser: boolean;
   subscription: UserSubscription;
+  preferences: UserPreferences;
   location?: string;
   timezone?: string;
 }
@@ -36,11 +37,11 @@ export enum UserRole {
 }
 
 export interface UserSubscription {
+  id: string | undefined;
   type: SubscriptionPlanEnum;
   startDate: Date;
   endDate: Date;
   paymentHistory?: UserPaymentHistory[];
-  preferences: UserPreferences;
   maxStoriesAllowed: number;
 }
 

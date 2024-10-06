@@ -4,14 +4,14 @@ import { AutoFixHighOutlined, PersonOutlined } from "@mui/icons-material";
 import { Box, Button, Container, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 
+import BunnyMoney from "src/assets/images/bunny_holding_money_bag.webp";
 import Confetti from "src/assets/images/confetti.gif";
 import Page from "src/components/shared/Page/Page";
-import BunnyMoney from "src/assets/images/bunny_holding_money_bag.webp";
+import { getCurrencySymbol } from "src/shared/utils/getCurrencySymbol";
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 import { usePaymentSuccessContext } from "./store/Provider";
-import { getCurrencySymbol } from "src/shared/utils/getCurrencySymbol";
 
 const PaymentSuccessPage = () => {
   const navigate = useNavigate();
@@ -43,6 +43,10 @@ const PaymentSuccessPage = () => {
     handleGetPaymentSuccessData(sessionId);
   }, []);
 
+  // useEffect(() => {
+  //   // handleUpdateUserInfoAfterPayment(sessionId);
+  // }, [paymentSessionData]);
+
   if (!auth.user || status !== "complete" || payment_status !== "paid")
     return <></>;
 
@@ -73,7 +77,11 @@ const PaymentSuccessPage = () => {
           justifyContent="center"
           alignItems="center"
         >
-          <img src={BunnyMoney} width="100%" />
+          <img
+            src={BunnyMoney}
+            width="100%"
+            className="payment-success-character-image"
+          />
 
           <Box
             display="flex"
@@ -84,8 +92,6 @@ const PaymentSuccessPage = () => {
             <Typography variant="h4" component="h2" color="#2e7d32">
               Payment Successful
             </Typography>
-
-            {/* <CheckCircleOutlined color="success" sx={{ fontSize: "4rem" }} /> */}
           </Box>
         </Box>
 
@@ -103,28 +109,36 @@ const PaymentSuccessPage = () => {
             successfully!
           </Typography>
 
-          <Button
-            sx={{ marginY: "1rem" }}
-            size="large"
-            type="button"
-            variant="contained"
-            endIcon={<AutoFixHighOutlined />}
-            onClick={handleOnCreateClick}
+          <Box
+            marginY={1}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            flexDirection={{ xs: "column", sm: "row" }}
           >
-            Create more stories
-          </Button>
+            <Button
+              sx={{ margin: "0.5rem" }}
+              size="large"
+              type="button"
+              variant="contained"
+              endIcon={<AutoFixHighOutlined />}
+              onClick={handleOnCreateClick}
+            >
+              Create more stories
+            </Button>
 
-          <Button
-            sx={{ marginY: "1rem" }}
-            size="large"
-            type="button"
-            color="secondary"
-            variant="outlined"
-            endIcon={<PersonOutlined />}
-            onClick={handleOnMyProfileClick}
-          >
-            My Profile
-          </Button>
+            <Button
+              sx={{ margin: "0.5rem" }}
+              size="large"
+              type="button"
+              color="secondary"
+              variant="outlined"
+              endIcon={<PersonOutlined />}
+              onClick={handleOnMyProfileClick}
+            >
+              My Profile
+            </Button>
+          </Box>
         </Box>
       </Container>
     </Page>

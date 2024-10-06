@@ -3,6 +3,7 @@ import {
   getDocumentByFieldFromDb,
   getDocumentFromDb,
   saveUserDataToDb,
+  updateUserInDb,
 } from "../models/mongoDb";
 import { NextFunction, Request, Response } from "express";
 import { User, getInitialUserData } from "../models/types";
@@ -119,9 +120,35 @@ export const getUserInfo = async (
   }
 };
 
+export const updateUserInfo = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  const { userId, userInfoToUpdate } = request.body;
+
+  if (!userId) {
+    response.status(400).json({ message: "❌ 'userId' is required!" });
+    return;
+  }
+
+  try {
+    const userDocument = (await updateUserInDb(userId, {
+      ...userInfoToUpdate,
+    })) as User;
+
+    response.status(200).json(userDocument);
+  } catch (error) {
+    response
+      .status(500)
+      .json({ message: "❌ Failed to update user information!" });
+  }
+};
+
 const AuthController = {
   authByGoogle,
   getUserInfo,
+  updateUserInfo,
 };
 
 export default AuthController;

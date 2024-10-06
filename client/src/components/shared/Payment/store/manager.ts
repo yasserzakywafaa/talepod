@@ -16,6 +16,7 @@ export interface PaymentManager {
   handleGetProductsListWithPrices: () => void;
   handleCreateCheckoutSession: (
     priceId: string,
+    priceObject: Price,
     plan: SubscriptionPlanEnum,
     user: User | null
   ) => Promise<void>;
@@ -25,6 +26,7 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
   const {
     manager: { handleIsFetching },
   } = useApplicationContext();
+
   const setUp = async () => {
     handleGetPublishableKey();
     handleGetPricesList();
@@ -101,6 +103,7 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
 
   const handleCreateCheckoutSession = async (
     priceId: string,
+    priceObject: Price,
     subscriptionPlan: SubscriptionPlanEnum,
     user: User | null
   ): Promise<any> => {
@@ -113,9 +116,9 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
         {
           metadata: {
             priceId,
+            priceObject,
             subscriptionPlan,
             userId: user._id,
-            // success_url: `${window.location.origin}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
             success_url: `${window.location.origin}${routes.paymentSuccess(
               "{CHECKOUT_SESSION_ID}"
             )}`,

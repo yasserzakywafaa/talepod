@@ -1,7 +1,10 @@
+import * as DBUtils from "../models/mongoDb/index";
+
 import { NextFunction, Request, Response } from "express";
 
 import CONFIG from "./../config";
 import Stripe from "stripe";
+import { User } from "../models/types";
 
 const secretKey = CONFIG.IS_DEV
   ? CONFIG.STRIPE_TEST_SECRET_KEY
@@ -125,7 +128,6 @@ export const createCheckoutSession = async (
       },
     });
 
-    // Return the session ID to the client
     response.json({ sessionId: session.id });
   } catch (error) {
     console.error("Stripe error: ", error);
@@ -186,6 +188,53 @@ export const getCheckoutSessionData = async (
       sessionId: session.id,
       status: session.status,
     });
+
+    // // After checkout PAYMENT SUCCESS
+    // if (session.status === "complete" && session.subscription) {
+    //   const price = priceObject as Stripe.Price;
+    //   const getEndDate = (): Date => {
+    //     switch (price.recurring.interval) {
+    //       case "month":
+    //         return new Date(new Date().setMonth(new Date().getMonth() + 1));
+
+    //       case "year":
+    //         return new Date(
+    //           new Date().setFullYear(new Date().getFullYear() + 1)
+    //         );
+
+    //       default:
+    //         // After 10 years
+    //         return new Date(
+    //           new Date().setFullYear(new Date().getFullYear() + 10)
+    //         );
+    //     }
+    //   };
+
+    //   const updatedUserData: Partial<User> = {
+    //     isPaidUser: true,
+    //     subscription: {
+    //       id: `${session.subscription}`,
+    //       type: subscriptionPlan,
+    //       startDate: new Date(),
+    //       endDate: getEndDate(),
+    //       maxStoriesAllowed: 50,
+    //       paymentHistory: [
+    //         {
+    //           transactionId: `${session.subscription}`,
+    //           amount: price.unit_amount / 100,
+    //           date: new Date(),
+    //         },
+    //       ],
+    //     },
+    //   };
+
+    //   const updatedUser = await DBUtils.updateUserInDb(userId, updatedUserData);
+
+    //   console.log("updatedUser:>>>", updatedUser);
+
+    //   // Return the session ID to the client
+    //   response.json({ sessionId: session.id, updatedUser });
+    // }
 
     response.status(200).json(session);
   } catch (error) {

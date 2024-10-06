@@ -111,11 +111,15 @@ export const usePricing = () => {
           const defaultPriceId = products.find((prod) =>
             prod.name.toLocaleLowerCase().includes(SubscriptionPlanEnum.premium)
           )?.default_price;
+          const currentPriceObject = prices.find(
+            (price) => price.id === defaultPriceId
+          );
 
-          if (!defaultPriceId) throw new Error();
+          if (!defaultPriceId || !currentPriceObject) throw new Error();
 
           await handleCreateCheckoutSession(
             `${defaultPriceId}`,
+            currentPriceObject,
             SubscriptionPlanEnum.premium,
             user
           );

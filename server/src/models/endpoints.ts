@@ -25,6 +25,7 @@ const END_POINTS = {
   AUTH: {
     GOOGLE: `/api/v1/auth/google-auth`,
     USER_INFO: `/api/v1/auth/user-info`,
+    UPDATE_USER_INFO: `/api/v1/auth/update-user-info`,
   },
   PAYMENTS: {
     CONFIG: `/api/v1/payments/config`,

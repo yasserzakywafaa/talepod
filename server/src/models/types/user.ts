@@ -14,6 +14,7 @@ export interface User {
   role: UserRole;
   isPaidUser: boolean;
   subscription: UserSubscription;
+  preferences?: UserPreferences;
   location?: string;
   timezone?: string;
 }
@@ -38,11 +39,11 @@ export enum UserRole {
 }
 
 export interface UserSubscription {
+  id: string | undefined;
   type: SubscriptionPlanEnum;
   startDate: Date;
   endDate: Date;
   paymentHistory?: UserPaymentHistory[];
-  preferences: UserPreferences;
   maxStoriesAllowed: number;
 }
 
@@ -84,16 +85,17 @@ export const getInitialUserData = (): Omit<User, "_id"> => {
     status: UserStatus.active,
     role: UserRole.user,
     isPaidUser: false,
+    preferences: {
+      theme: "dark",
+      notifications: false,
+      languagePreference: "en",
+    },
     subscription: {
+      id: undefined,
       type: SubscriptionPlanEnum.free,
       startDate: undefined,
       endDate: undefined,
       paymentHistory: [],
-      preferences: {
-        theme: "dark",
-        notifications: false,
-        languagePreference: "en",
-      },
       maxStoriesAllowed: 4,
     },
   };

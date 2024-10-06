@@ -34,6 +34,7 @@ const MyProfilePage = () => {
     store: {
       state: { isFetching },
     },
+    manager: { handleUpdateUserInfo },
   } = useMyProfileContext();
 
   const {
@@ -44,7 +45,17 @@ const MyProfilePage = () => {
     store: { handleToggleCancelSubscriptionModal },
   } = useCancelSubscriptionModalContext();
 
-  const handleOnDarkModeSwitchChange = () => toggleThemeMode();
+  if (!user) return;
+
+  const handleOnDarkModeSwitchChange = async () => {
+    await handleUpdateUserInfo({
+      preferences: {
+        ...user.preferences,
+        theme: themeMode === "dark" ? "light" : "dark",
+      },
+    });
+    toggleThemeMode();
+  };
 
   const handleOnCancelSubscriptionClick = () => {
     handleToggleCancelSubscriptionModal();
