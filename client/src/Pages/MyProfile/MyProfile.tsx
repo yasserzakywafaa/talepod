@@ -1,7 +1,9 @@
 import "./MyProfile.scss";
 
 import {
+  Alert,
   Avatar,
+  Badge,
   Box,
   Button,
   Card,
@@ -14,8 +16,10 @@ import {
 import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import { SubscriptionPlanEnum } from "src/shared/user";
+import { Verified } from "@mui/icons-material";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useCancelSubscriptionModalContext } from "src/components/Modals/CancelSubscriptionModal/store/Provider";
+import { useEffect } from "react";
 import { useMyProfileContext } from "./store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 
@@ -29,23 +33,23 @@ const MyProfilePage = () => {
       toggleThemeMode,
     },
   } = useApplicationContext();
-
   const {
     store: {
-      state: { isFetching },
+      state: { isFetching, subscription },
     },
-    manager: { handleUpdateUserInfo },
+    manager: { handleGetSubscriptionDetails, handleUpdateUserInfo },
   } = useMyProfileContext();
-
   const {
     store: { handleTogglePricingModal },
   } = usePricingModalContext();
-
   const {
     store: { handleToggleCancelSubscriptionModal },
   } = useCancelSubscriptionModalContext();
 
   if (!user) return;
+
+  const isCancelledButStillActive =
+    subscription && subscription.cancel_at_period_end;
 
   const handleOnDarkModeSwitchChange = async () => {
     await handleUpdateUserInfo({
@@ -64,6 +68,10 @@ const MyProfilePage = () => {
   const handleOnSubscribeClick = () => handleTogglePricingModal();
 
   if (!isAuthenticated || !user) return <></>;
+
+  useEffect(() => {
+    handleGetSubscriptionDetails();
+  }, [user]);
 
   return (
     <Page
@@ -97,13 +105,22 @@ const MyProfilePage = () => {
           alignItems="center"
           width="fit-content"
         >
-          <Avatar
-            alt={user.name.givenName}
-            src={user.picture}
-            sx={{ width: 100, height: 100, marginRight: 2 }}
-          />
+          <Badge
+            overlap="circular"
+            badgeContent={
+              !user.isPaidUser && (
+                <Verified color="primary" sx={{ fontSize: 32 }} />
+              )
+            }
+          >
+            <Avatar
+              src={user.picture}
+              alt={user.name.givenName}
+              sx={{ width: 100, height: 100 }}
+            />
+          </Badge>
 
-          <Typography variant="h5" component="h5">
+          <Typography variant="h5" component="h5" marginLeft={2}>
             Welcome back, {user?.name.givenName}!
           </Typography>
         </Box>
@@ -240,12 +257,27 @@ const MyProfilePage = () => {
                       color="primary"
                       variant="contained"
                       sx={{ marginTop: 1 }}
+                      // disabled={!!isCancelledButStillActive}
                       onClick={handleOnSubscribeClick}
                     >
                       Upgrade
                     </Button>
                   </Grid>
                 )}
+
+                {isCancelledButStillActive &&
+                  subscription.current_period_end && (
+                    <Grid item xs={12} md={12}>
+                      <Alert severity="info" variant="outlined">
+                        Enjoy the subscription benefits until{" "}
+                        <span className="bold">
+                          {new Date(
+                            subscription.current_period_end * 1000
+                          ).toLocaleDateString()}
+                        </span>
+                      </Alert>
+                    </Grid>
+                  )}
               </Grid>
             </Card>
           </Grid>

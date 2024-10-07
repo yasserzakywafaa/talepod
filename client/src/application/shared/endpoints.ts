@@ -54,6 +54,8 @@ const END_POINTS = {
     CREATE_CHECKOUT_SESSION: `${publicApiUrl}/api/v1/payments/create-checkout-session`,
     CHECKOUT_SESSION_WEBHOOK: `${publicApiUrl}/api/v1/payments/checkout-session-webhook`,
     GET_CHECKOUT_SESSION_DATA: `${publicApiUrl}/api/v1/payments/checkout-session-data`,
+    GET_SUBSCRIPTION_DETAILS: `${publicApiUrl}/api/v1/auth/get-subscription-details`,
+    CANCEL_SUBSCRIPTION: `${publicApiUrl}/api/v1/payments/cancel-subscription`,
   },
 };
 

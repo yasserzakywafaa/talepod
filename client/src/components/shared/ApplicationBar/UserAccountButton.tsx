@@ -4,13 +4,20 @@ import {
   AccountCircleOutlined,
   KeyboardArrowDownOutlined,
   LogoutOutlined,
+  Verified,
   WebStoriesOutlined,
 } from "@mui/icons-material";
-import { Avatar, Box, Divider, ListItemIcon, Typography } from "@mui/material";
+import {
+  Avatar,
+  Badge,
+  Box,
+  Divider,
+  ListItemIcon,
+  Typography,
+} from "@mui/material";
 import { useMatch, useNavigate } from "react-router-dom";
 
 import { Authentication } from "src/application/store/state";
-// import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { Notify } from "../Notification/Notification";
@@ -79,18 +86,23 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
         }}
         onClick={handleMenuButtonClick}
       >
-        {auth.user.picture ? (
-          <Avatar
-            alt="User Picture"
-            src={auth.user.picture}
-            sx={{ mr: 1, width: 20, height: 20 }}
-          />
-        ) : (
-          <Avatar sx={{ mr: 1, width: 20, height: 20 }}>
-            {auth.user.name.givenName.charAt(0)}
-            {auth.user.name.familyName.charAt(0)}
-          </Avatar>
-        )}
+        <Badge
+          badgeContent={auth.user.isPaidUser && <Verified color="primary" />}
+        >
+          {auth.user.picture ? (
+            <Avatar
+              alt="User Picture"
+              src={auth.user.picture}
+              sx={{ mr: 1, width: 20, height: 20 }}
+            />
+          ) : (
+            <Avatar sx={{ mr: 1, width: 20, height: 20 }}>
+              {auth.user.name.givenName.charAt(0)}
+              {auth.user.name.familyName.charAt(0)}
+            </Avatar>
+          )}
+        </Badge>
+
         <Typography
           variant="body1"
           color="text.primary"

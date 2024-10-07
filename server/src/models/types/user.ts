@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import Stripe from "stripe";
 
 export interface User {
   _id?: ObjectId;
@@ -13,7 +14,7 @@ export interface User {
   status: UserStatus;
   role: UserRole;
   isPaidUser: boolean;
-  subscription: UserSubscription;
+  subscription?: UserSubscription;
   preferences?: UserPreferences;
   location?: string;
   timezone?: string;
@@ -45,6 +46,8 @@ export interface UserSubscription {
   endDate: Date;
   paymentHistory?: UserPaymentHistory[];
   maxStoriesAllowed: number;
+  plan: Stripe.Plan;
+  price: Stripe.Price;
 }
 
 export enum SubscriptionPlanEnum {
@@ -90,13 +93,6 @@ export const getInitialUserData = (): Omit<User, "_id"> => {
       notifications: false,
       languagePreference: "en",
     },
-    subscription: {
-      id: undefined,
-      type: SubscriptionPlanEnum.free,
-      startDate: undefined,
-      endDate: undefined,
-      paymentHistory: [],
-      maxStoriesAllowed: 4,
-    },
+    subscription: undefined,
   };
 };

@@ -209,6 +209,8 @@ export const getCheckoutSessionData = async (
               date: new Date(),
             },
           ],
+          plan: subscriptionItem.plan,
+          price: subscriptionItem.price,
         },
       };
 
@@ -230,6 +232,81 @@ export const getCheckoutSessionData = async (
   }
 };
 
+export const getSubscriptionDetails = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  const subscriptionId = request.query.subscriptionId as string;
+  if (!subscriptionId) {
+    response.status(400).json({ message: "❌ 'subscriptionId' is required!" });
+    return;
+  }
+
+  try {
+    const subscription: Stripe.Subscription =
+      await stripe.subscriptions.retrieve(subscriptionId);
+
+    console.log("getSubscriptionDetails:>>> subscription:>>>", subscription);
+
+    response.status(200).json(subscription);
+  } catch (error) {
+    response
+      .status(500)
+      .json({ message: "❌ Failed to get user information!" });
+  }
+};
+
+export const cancelSubscription = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  const { subscriptionId, userId } = request.body;
+
+  console.log("ℹ️ cancelSubscription:>>> request.body>>>", {
+    subscriptionId,
+    userId,
+  });
+
+  try {
+    const cancelSubscription = await stripe.subscriptions.update(
+      subscriptionId,
+      {
+        cancel_at_period_end: true,
+      }
+    );
+
+    // Update User Data
+    const updatedUserData: Partial<User> = {
+      isPaidUser: false,
+      subscription: {
+        id: cancelSubscription.id,
+        type: SubscriptionPlanEnum.free,
+        startDate: new Date(),
+        endDate: new Date(),
+        maxStoriesAllowed: 4,
+        plan: cancelSubscription.items.data[0].plan,
+        price: cancelSubscription.items.data[0].price,
+      },
+    };
+    const updatedUser = await DBUtils.updateUserInDb(userId, updatedUserData);
+
+    console.log("ℹ️ cancelSubscription", {
+      cancelSubscription,
+      updatedUserData,
+    });
+
+    response.json({ cancelSubscription, updatedUser });
+    // response.json({ cancelSubscription });
+  } catch (error) {
+    console.error("❌ Failed to Cancel Subscription!", {
+      error,
+    });
+    response.status(500).json({ error: "❌ Failed to Cancel Subscription!" });
+  }
+};
+
 const PaymentsController = {
   config,
   getPricesList,
@@ -237,6 +314,8 @@ const PaymentsController = {
   createCheckoutSession,
   checkoutSessionWebhook,
   getCheckoutSessionData,
+  getSubscriptionDetails,
+  cancelSubscription,
 };
 
 export default PaymentsController;

@@ -10,6 +10,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useCancelSubscriptionModalContext } from "./store/Provider";
+import { useMyProfileContext } from "src/Pages/MyProfile/store/Provider";
 import { usePricing } from "src/components/shared/Pricing/usePricing";
 
 export const CancelSubscriptionModal = () => {
@@ -21,6 +22,10 @@ export const CancelSubscriptionModal = () => {
       state: { auth },
     },
   } = useApplicationContext();
+
+  const {
+    manager: { handleCancelSubscription },
+  } = useMyProfileContext();
   const { plans } = usePricing();
 
   const currentPlan = plans.find(
@@ -33,10 +38,11 @@ export const CancelSubscriptionModal = () => {
   ) => {
     if (reason && reason === "backdropClick") return;
 
-    handleCloseModal();
+    handleToggleCancelSubscriptionModal();
   };
 
-  const handleCloseModal = () => {
+  const handleOnCancelSubscriptionClick = async () => {
+    await handleCancelSubscription();
     handleToggleCancelSubscriptionModal();
   };
 
@@ -86,7 +92,7 @@ export const CancelSubscriptionModal = () => {
             aria-label="close"
             variant="contained"
             startIcon={<SentimentVerySatisfiedOutlined />}
-            onClick={handleCloseModal}
+            onClick={handleToggleCancelSubscriptionModal}
           >
             Keep Plan
           </Button>
@@ -97,7 +103,7 @@ export const CancelSubscriptionModal = () => {
             aria-label="close"
             variant="text"
             startIcon={<SentimentVeryDissatisfiedOutlined />}
-            onClick={handleCloseModal}
+            onClick={handleOnCancelSubscriptionClick}
           >
             Cancel Subscription
           </Button>

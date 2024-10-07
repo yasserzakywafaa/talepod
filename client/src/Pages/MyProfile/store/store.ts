@@ -1,10 +1,12 @@
 import { MyProfileState, getMyProfileInitialState } from "./state";
 
+import { UserSubscription } from "src/shared/user";
 import { useState } from "react";
 
 export interface MyProfileStore {
   state: MyProfileState;
   setIsFetching: (isFetching: boolean) => void;
+  setSubscriptionDetails: (subscription: UserSubscription) => void;
 }
 
 const useMyProfileStore = (): MyProfileStore => {
@@ -18,9 +20,17 @@ const useMyProfileStore = (): MyProfileStore => {
     }));
   };
 
+  const setSubscriptionDetails = (subscription: UserSubscription) => {
+    setState((prev) => ({
+      ...prev,
+      subscription,
+    }));
+  };
+
   return {
     state,
     setIsFetching,
+    setSubscriptionDetails,
   };
 };
 

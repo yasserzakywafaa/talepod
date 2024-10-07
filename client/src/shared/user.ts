@@ -39,7 +39,7 @@ export enum UserRole {
 }
 
 export interface UserSubscription {
-  subscription: string | undefined;
+  id: string | undefined;
   type: SubscriptionPlanEnum;
   startDate: Date;
   endDate: Date;
@@ -47,6 +47,21 @@ export interface UserSubscription {
   maxStoriesAllowed: number;
   plan: Plan;
   price: Price;
+  cancel_at: number | null;
+  cancel_at_period_end: boolean;
+  canceled_at: number | null;
+  cancellation_details: CancellationDetails;
+  current_period_end: number;
+  current_period_start: number;
+}
+
+export interface CancellationDetails {
+  comment: string | null;
+  reason:
+    | "cancellation_requested"
+    | "payment_disputed"
+    | "payment_failed"
+    | null;
 }
 
 export enum SubscriptionPlanEnum {
