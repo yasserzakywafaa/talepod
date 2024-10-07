@@ -27,7 +27,14 @@ const PaymentSuccessPage = () => {
     },
     manager: { handleGetPaymentSuccessData },
   } = usePaymentSuccessContext();
-  const { status, payment_status, amount_total, currency } = paymentSessionData;
+  const {
+    status,
+    payment_status,
+    amount_total,
+    currency,
+    subscription,
+    updatedUser,
+  } = paymentSessionData;
 
   if (!sessionId) return;
 
@@ -43,12 +50,13 @@ const PaymentSuccessPage = () => {
     handleGetPaymentSuccessData(sessionId);
   }, []);
 
-  // useEffect(() => {
-  //   // handleUpdateUserInfoAfterPayment(sessionId);
-  // }, [paymentSessionData]);
-
   if (!auth.user || status !== "complete" || payment_status !== "paid")
     return <></>;
+
+  console.log("ℹ️  paymentSessionData:>>>", {
+    paymentSessionData,
+    date: updatedUser?.subscription.endDate,
+  });
 
   return (
     <Page
@@ -103,10 +111,35 @@ const PaymentSuccessPage = () => {
           flexDirection="column"
           justifyContent="center"
         >
-          <Typography variant="h5" textAlign="center">
+          <Typography marginY={1} variant="h5" textAlign="center">
             Hooray, {auth.user.name.givenName}! 🎉 <br />
-            Your payment process of <b>{totalAmount}</b> has been completed
-            successfully!
+            Your payment process of <span className="bold">
+              {totalAmount}
+            </span>{" "}
+            has been completed successfully!
+          </Typography>
+
+          <Typography
+            marginY={1}
+            variant="h6"
+            color="primary"
+            className="bold"
+            textAlign="center"
+          >
+            {subscription?.plan.nickname}
+          </Typography>
+
+          <Typography marginY={1} variant="h6" textAlign="center">
+            Your subscription will end on{" "}
+            <b>
+              {new Date(updatedUser?.subscription.endDate || "").toLocaleString(
+                "en-GB",
+                {
+                  dateStyle: "short",
+                }
+              )}
+            </b>
+            .
           </Typography>
 
           <Box
@@ -120,23 +153,23 @@ const PaymentSuccessPage = () => {
               sx={{ margin: "0.5rem" }}
               size="large"
               type="button"
-              variant="contained"
-              endIcon={<AutoFixHighOutlined />}
-              onClick={handleOnCreateClick}
+              color="secondary"
+              variant="outlined"
+              endIcon={<PersonOutlined />}
+              onClick={handleOnMyProfileClick}
             >
-              Create more stories
+              Go to Profile
             </Button>
 
             <Button
               sx={{ margin: "0.5rem" }}
               size="large"
               type="button"
-              color="secondary"
-              variant="outlined"
-              endIcon={<PersonOutlined />}
-              onClick={handleOnMyProfileClick}
+              variant="contained"
+              endIcon={<AutoFixHighOutlined />}
+              onClick={handleOnCreateClick}
             >
-              My Profile
+              Create Premium Stories
             </Button>
           </Box>
         </Box>

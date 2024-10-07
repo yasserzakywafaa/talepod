@@ -65,7 +65,9 @@ const CONFIG = {
   JWT_SECRET: process.env.JWT_SECRET,
 
   // App Constants
-  MAX_STORIES_LIMIT: 4,
+  MAX_STORIES_LIMIT_FREE: 4,
+  MAX_STORIES_LIMIT_PREMIUM: 50,
+  MAX_STORIES_LIMIT_ADVANCED: 999,
 };
 
 export default CONFIG;

@@ -162,9 +162,9 @@ const MyProfilePage = () => {
                       checked={themeMode === "dark"}
                       onChange={handleOnDarkModeSwitchChange}
                     />
-                    {/* {user.subscription.preferences.theme} */}
                     <span className="bold">
                       {themeMode.toLocaleUpperCase()}
+                      {/* {user.preferences.theme} */}
                     </span>
                   </Typography>
                 </Grid>

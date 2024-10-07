@@ -1,3 +1,5 @@
+import { Plan, Price } from "./payment";
+
 export interface User {
   _id: string;
   userId: string;
@@ -37,12 +39,14 @@ export enum UserRole {
 }
 
 export interface UserSubscription {
-  id: string | undefined;
+  subscription: string | undefined;
   type: SubscriptionPlanEnum;
   startDate: Date;
   endDate: Date;
   paymentHistory?: UserPaymentHistory[];
   maxStoriesAllowed: number;
+  plan: Plan;
+  price: Price;
 }
 
 export enum SubscriptionPlanEnum {

@@ -1,10 +1,12 @@
 import * as DBUtils from "../models/mongoDb/index";
 
 import { NextFunction, Request, Response } from "express";
+import { SubscriptionPlanEnum, User } from "../models/types";
 
 import CONFIG from "./../config";
 import Stripe from "stripe";
-import { User } from "../models/types";
+import { WithId } from "mongodb";
+import { getEndDateByInterval } from "../utils/dateUtils";
 
 const secretKey = CONFIG.IS_DEV
   ? CONFIG.STRIPE_TEST_SECRET_KEY
@@ -177,6 +179,7 @@ export const getCheckoutSessionData = async (
   next: NextFunction
 ) => {
   const sessionId = request.query.sessionId as string;
+
   if (!sessionId) {
     response.status(400).json({ message: "❌ 'sessionId' is required!" });
     return;
@@ -184,59 +187,41 @@ export const getCheckoutSessionData = async (
 
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
-    console.log("ℹ️  getSessionData:>>>", {
-      sessionId: session.id,
-      status: session.status,
-    });
 
-    // // After checkout PAYMENT SUCCESS
-    // if (session.status === "complete" && session.subscription) {
-    //   const price = priceObject as Stripe.Price;
-    //   const getEndDate = (): Date => {
-    //     switch (price.recurring.interval) {
-    //       case "month":
-    //         return new Date(new Date().setMonth(new Date().getMonth() + 1));
+    if (!session.subscription) return;
+    const subscriptionItem: Stripe.SubscriptionItem = (
+      await stripe.subscriptions.retrieve(session.subscription as string)
+    ).items.data[0];
 
-    //       case "year":
-    //         return new Date(
-    //           new Date().setFullYear(new Date().getFullYear() + 1)
-    //         );
+    if (session.status === "complete" && session.payment_status === "paid") {
+      const updatedUserData: Partial<User> = {
+        isPaidUser: true,
+        subscription: {
+          id: `${session.subscription}`,
+          type: session.metadata.subscriptionPlan as SubscriptionPlanEnum,
+          startDate: new Date(),
+          endDate: getEndDateByInterval(subscriptionItem.plan.interval),
+          maxStoriesAllowed: 50,
+          paymentHistory: [
+            {
+              transactionId: `${session.subscription}`,
+              amount: session.amount_total / 100,
+              date: new Date(),
+            },
+          ],
+        },
+      };
 
-    //       default:
-    //         // After 10 years
-    //         return new Date(
-    //           new Date().setFullYear(new Date().getFullYear() + 10)
-    //         );
-    //     }
-    //   };
+      if (session.client_reference_id !== session.metadata.userId) return;
+      const updatedUser = await DBUtils.updateUserInDb(
+        session.client_reference_id,
+        updatedUserData
+      );
 
-    //   const updatedUserData: Partial<User> = {
-    //     isPaidUser: true,
-    //     subscription: {
-    //       id: `${session.subscription}`,
-    //       type: subscriptionPlan,
-    //       startDate: new Date(),
-    //       endDate: getEndDate(),
-    //       maxStoriesAllowed: 50,
-    //       paymentHistory: [
-    //         {
-    //           transactionId: `${session.subscription}`,
-    //           amount: price.unit_amount / 100,
-    //           date: new Date(),
-    //         },
-    //       ],
-    //     },
-    //   };
-
-    //   const updatedUser = await DBUtils.updateUserInDb(userId, updatedUserData);
-
-    //   console.log("updatedUser:>>>", updatedUser);
-
-    //   // Return the session ID to the client
-    //   response.json({ sessionId: session.id, updatedUser });
-    // }
-
-    response.status(200).json(session);
+      response.json({ session, subscriptionItem, updatedUser });
+    } else {
+      response.status(200).json({ session, subscriptionItem });
+    }
   } catch (error) {
     console.error("❌ Failed to get the Session data!", {
       error,

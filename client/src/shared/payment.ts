@@ -24,6 +24,18 @@ export interface Product {
   url: string | null;
 }
 
+export interface Plan {
+  active: boolean;
+  amount: number | null; // The unit amount in cents
+  currency: string;
+  interval: "day" | "month" | "week" | "year";
+  livemode: boolean;
+  metadata: { [name: string]: string };
+  nickname: string | null;
+  product: string;
+  trial_period_days: number | null;
+}
+
 export interface Price {
   id: string;
   object: "price";
