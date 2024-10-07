@@ -108,7 +108,7 @@ const MyProfilePage = () => {
           <Badge
             overlap="circular"
             badgeContent={
-              !user.isPaidUser && (
+              user.isPaidUser && (
                 <Verified color="primary" sx={{ fontSize: 32 }} />
               )
             }

@@ -87,13 +87,17 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
         onClick={handleMenuButtonClick}
       >
         <Badge
-          badgeContent={auth.user.isPaidUser && <Verified color="primary" />}
+          badgeContent={
+            auth.user.isPaidUser && (
+              <Verified color="primary" sx={{ fontSize: 14 }} />
+            )
+          }
         >
           {auth.user.picture ? (
             <Avatar
               alt="User Picture"
               src={auth.user.picture}
-              sx={{ mr: 1, width: 20, height: 20 }}
+              sx={{ width: 20, height: 20 }}
             />
           ) : (
             <Avatar sx={{ mr: 1, width: 20, height: 20 }}>
@@ -113,6 +117,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
             textOverflow: "ellipsis",
             fontSize: { xs: "1.25rem", sm: "1rem" },
           }}
+          marginLeft={1}
         >
           {userFullName}
         </Typography>
