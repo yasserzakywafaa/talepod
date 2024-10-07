@@ -247,8 +247,6 @@ export const getSubscriptionDetails = async (
     const subscription: Stripe.Subscription =
       await stripe.subscriptions.retrieve(subscriptionId);
 
-    console.log("getSubscriptionDetails:>>> subscription:>>>", subscription);
-
     response.status(200).json(subscription);
   } catch (error) {
     response
