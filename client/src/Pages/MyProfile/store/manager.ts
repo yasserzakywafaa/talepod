@@ -90,8 +90,6 @@ export const useMyProfileManager = (
     } catch (error) {
       console.error("Error:", error);
     } finally {
-      handleIsFetching(false);
-
       if (auth.user) {
         const fetchedUser = await handleFetchUserInfo(auth.user._id);
         handleSetAuthInfo({
@@ -105,9 +103,11 @@ export const useMyProfileManager = (
       }
 
       Notify({
-        type: "default",
-        content: "It is not a goodbye 🙁",
+        type: "success",
+        content: "Subscription is canceled &#128148;",
       });
+
+      handleIsFetching(false);
     }
   };
 

@@ -2,8 +2,6 @@ import "./MyProfile.scss";
 
 import {
   Alert,
-  Avatar,
-  Badge,
   Box,
   Button,
   Card,
@@ -12,11 +10,12 @@ import {
   Switch,
   Typography,
 } from "@mui/material";
+import { AutoAwesomeOutlined, HeartBrokenOutlined } from "@mui/icons-material";
 
 import Page from "src/components/shared/Page/Page";
+import ProfileAvatar from "src/components/shared/ProfileAvatar";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import { SubscriptionPlanEnum } from "src/shared/user";
-import { Verified } from "@mui/icons-material";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useCancelSubscriptionModalContext } from "src/components/Modals/CancelSubscriptionModal/store/Provider";
 import { useEffect } from "react";
@@ -27,6 +26,7 @@ const MyProfilePage = () => {
   const {
     store: {
       state: {
+        auth,
         auth: { isAuthenticated, user },
         themeMode,
       },
@@ -105,20 +105,11 @@ const MyProfilePage = () => {
           alignItems="center"
           width="fit-content"
         >
-          <Badge
-            overlap="circular"
-            badgeContent={
-              user.isPaidUser && (
-                <Verified color="primary" sx={{ fontSize: 32 }} />
-              )
-            }
-          >
-            <Avatar
-              src={user.picture}
-              alt={user.name.givenName}
-              sx={{ width: 100, height: 100 }}
-            />
-          </Badge>
+          <ProfileAvatar
+            auth={auth}
+            verifiedBadgeSize={32}
+            avatarSize={{ width: 100, height: 100 }}
+          />
 
           <Typography variant="h5" component="h5" marginLeft={2}>
             Welcome back, {user?.name.givenName}!
@@ -238,7 +229,26 @@ const MyProfilePage = () => {
                       </span>
                     </Grid>
 
-                    <Grid item xs={6} md={12}>
+                    <Grid item xs={12} sm={6} md={8}>
+                      <Alert
+                        severity="info"
+                        variant="outlined"
+                        sx={{ width: "fit-content" }}
+                        icon={<AutoAwesomeOutlined />}
+                      >
+                        You have{" "}
+                        <span className="bold">
+                          {user.subscription.maxStoriesAllowed -
+                            user.storyCount}
+                        </span>{" "}
+                        stories left out of{" "}
+                        <span className="bold">
+                          {user.subscription.maxStoriesAllowed}
+                        </span>
+                      </Alert>
+                    </Grid>
+
+                    <Grid item xs={12} sm={3} md={4}>
                       <Button
                         fullWidth
                         color="error"
@@ -268,8 +278,13 @@ const MyProfilePage = () => {
                 {isCancelledButStillActive &&
                   subscription.current_period_end && (
                     <Grid item xs={12} md={12}>
-                      <Alert severity="info" variant="outlined">
-                        Enjoy the subscription benefits until{" "}
+                      <Alert
+                        severity="info"
+                        variant="outlined"
+                        icon={<HeartBrokenOutlined />}
+                      >
+                        It is sad to see you go. Enjoy the subscription benefits
+                        until{" "}
                         <span className="bold">
                           {new Date(
                             subscription.current_period_end * 1000

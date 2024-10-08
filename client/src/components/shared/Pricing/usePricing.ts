@@ -2,12 +2,15 @@ import { Product } from "src/shared/payment";
 import { SubscriptionPlanEnum } from "src/shared/user";
 import { SubscriptionPlanProps } from "./Pricing";
 import { getCurrencySymbol } from "src/shared/utils/getCurrencySymbol";
+import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
+import { useNavigate } from "react-router-dom";
 import { usePaymentContext } from "../Payment/store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 
 export const usePricing = () => {
+  const navigate = useNavigate();
   const {
     store: {
       state: {
@@ -25,7 +28,10 @@ export const usePricing = () => {
   } = usePaymentContext();
 
   const {
-    store: { handleTogglePricingModal },
+    store: {
+      state: { isVisible: isPricingModalVisible },
+      handleTogglePricingModal,
+    },
   } = usePricingModalContext();
   const {
     store: { handleToggleRegisterModal },
@@ -103,6 +109,7 @@ export const usePricing = () => {
 
     switch (subscriptionPlan) {
       case SubscriptionPlanEnum.free:
+        navigate(routes.create);
         return;
 
       case SubscriptionPlanEnum.premium:
@@ -128,9 +135,38 @@ export const usePricing = () => {
           console.error("Error:>>", error);
         } finally {
           handleIsFetching(false);
-          handleTogglePricingModal();
+          isPricingModalVisible && handleTogglePricingModal();
         }
         return;
+
+      // case SubscriptionPlanEnum.advanced:
+      //   try {
+      //     handleIsFetching(true);
+      //     const defaultPriceId = products.find((prod) =>
+      //       prod.name
+      //         .toLocaleLowerCase()
+      //         .includes(SubscriptionPlanEnum.advanced)
+      //     )?.default_price;
+      //     const currentPriceObject = prices.find(
+      //       (price) => price.id === defaultPriceId
+      //     );
+
+      //     if (!defaultPriceId || !currentPriceObject) throw new Error();
+
+      //     await handleCreateCheckoutSession(
+      //       `${defaultPriceId}`,
+      //       currentPriceObject,
+      //       SubscriptionPlanEnum.advanced,
+      //       user
+      //     );
+      //     handleIsFetching(false);
+      //   } catch (error) {
+      //     console.error("Error:>>", error);
+      //   } finally {
+      //     handleIsFetching(false);
+      //     isPricingModalVisible && handleTogglePricingModal();
+      //   }
+      //   return;
 
       default:
         return;
@@ -140,6 +176,30 @@ export const usePricing = () => {
   const currentUserPackage = {
     isFree: user?.subscription.type === SubscriptionPlanEnum.free,
     isPremium: user?.subscription.type === SubscriptionPlanEnum.premium,
+    isAdvanced: user?.subscription.type === SubscriptionPlanEnum.advanced,
+  };
+
+  const getButtonText = (plan: SubscriptionPlanEnum) => {
+    switch (plan) {
+      case SubscriptionPlanEnum.free:
+        if (!isAuthenticated) return "Create Stories";
+        if (currentUserPackage.isFree) return "Create Stories";
+        else return "";
+
+      case SubscriptionPlanEnum.premium:
+        if (!isAuthenticated) return "Register & Subscribe";
+        if (!currentUserPackage.isPremium) return "Upgrade";
+        else return "Current Plan";
+
+      // case SubscriptionPlanEnum.advanced:
+      //   if (!isAuthenticated) return "Register & Subscribe";
+      //   if (currentUserPackage.isFree || currentUserPackage.isPremium)
+      //     return "Upgrade";
+      //   else return "Current Plan";
+
+      default:
+        return "Upgrade";
+    }
   };
 
   const plans: SubscriptionPlanProps[] = [
@@ -152,9 +212,9 @@ export const usePricing = () => {
         "Basic text-to-speech conversion",
         "Access to a limited story library",
       ],
-      buttonText: currentUserPackage.isFree ? "Current Package" : "Default",
-      buttonVariant: "text",
-      buttonDisabled: true,
+      buttonDisabled: false,
+      buttonText: getButtonText(SubscriptionPlanEnum.free),
+      buttonVariant: isAuthenticated ? "outlined" : "contained",
       buttonAction: () => handleOnSubscribeClick(SubscriptionPlanEnum.free),
     },
     {
@@ -167,15 +227,14 @@ export const usePricing = () => {
         "High-quality text-to-speech conversion",
         "Create up to 50 bedtime stories per month",
       ],
-      buttonText: isAuthenticated ? "Upgrade" : "Register & Subscribe",
-      buttonVariant: "contained",
+      buttonDisabled: currentUserPackage.isPremium,
+      buttonText: getButtonText(SubscriptionPlanEnum.premium),
+      buttonVariant: currentUserPackage.isFree ? "contained" : "outlined",
       buttonAction: () => handleOnSubscribeClick(SubscriptionPlanEnum.premium),
     },
     // {
-    //   title: SubscriptionPlanEnum.Advanced,
+    //   title: SubscriptionPlanEnum.advanced,
     //   subheader: "Coming Soon",
-    //   price: planPrices.premium ? planPrices.premium / 100 : 10,
-    // currency: "",
     //   description: [
     //     "Unlimited story generation",
     //     "Access to exclusive story content",
@@ -184,8 +243,10 @@ export const usePricing = () => {
     //     "Premium text-to-speech voices",
     //     "Custom voice options for TTS",
     //   ],
-    //   buttonText: "Upgrade",
-    //   buttonVariant: "outlined",
+    //   buttonDisabled: currentUserPackage.isAdvanced,
+    //   buttonText: getButtonText(SubscriptionPlanEnum.advanced),
+    //   buttonVariant: currentUserPackage.isPremium ? "contained" : "outlined",
+    //   buttonAction: () => handleOnSubscribeClick(SubscriptionPlanEnum.advanced),
     // },
   ];
 

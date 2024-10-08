@@ -172,11 +172,11 @@ export const Pricing = () => {
                 </CardContent>
 
                 <CardActions>
-                  {plan.buttonAction && (
+                  {plan.buttonAction && plan.buttonText && (
                     <Button
                       fullWidth
                       component="button"
-                      disabled={plan.buttonDisabled}
+                      disabled={!!plan.buttonDisabled}
                       variant={
                         plan.buttonVariant as "text" | "outlined" | "contained"
                       }

@@ -4,23 +4,16 @@ import {
   AccountCircleOutlined,
   KeyboardArrowDownOutlined,
   LogoutOutlined,
-  Verified,
   WebStoriesOutlined,
 } from "@mui/icons-material";
-import {
-  Avatar,
-  Badge,
-  Box,
-  Divider,
-  ListItemIcon,
-  Typography,
-} from "@mui/material";
+import { Box, Divider, ListItemIcon, Typography } from "@mui/material";
 import { useMatch, useNavigate } from "react-router-dom";
 
 import { Authentication } from "src/application/store/state";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { Notify } from "../Notification/Notification";
+import ProfileAvatar from "../ProfileAvatar";
 import routes from "src/application/routes";
 
 interface UserAccountMenuButtonProps {
@@ -86,26 +79,11 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
         }}
         onClick={handleMenuButtonClick}
       >
-        <Badge
-          badgeContent={
-            auth.user.isPaidUser && (
-              <Verified color="primary" sx={{ fontSize: 14 }} />
-            )
-          }
-        >
-          {auth.user.picture ? (
-            <Avatar
-              alt="User Picture"
-              src={auth.user.picture}
-              sx={{ width: 20, height: 20 }}
-            />
-          ) : (
-            <Avatar sx={{ mr: 1, width: 20, height: 20 }}>
-              {auth.user.name.givenName.charAt(0)}
-              {auth.user.name.familyName.charAt(0)}
-            </Avatar>
-          )}
-        </Badge>
+        <ProfileAvatar
+          auth={auth}
+          avatarSize={{ width: 20, height: 20 }}
+          verifiedBadgeSize={14}
+        />
 
         <Typography
           variant="body1"
