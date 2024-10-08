@@ -118,14 +118,17 @@ export const usePricing = () => {
       case SubscriptionPlanEnum.Premium:
         try {
           handleIsFetching(true);
-          const defaultPriceId = products.find((prod) =>
-            prod.name.toLocaleLowerCase().includes(SubscriptionPlanEnum.Premium)
-          )?.default_price;
+          const defaultPriceId = products.find((prod) => {
+            const prodName = prod.name.toLocaleLowerCase();
+            const planName = SubscriptionPlanEnum.Premium.toLocaleLowerCase();
+
+            return prodName.includes(planName);
+          })?.default_price;
           const currentPriceObject = prices.find(
             (price) => price.id === defaultPriceId
           );
 
-          if (!defaultPriceId || !currentPriceObject) throw new Error();
+          if (!defaultPriceId || !currentPriceObject) return;
 
           await handleCreateCheckoutSession(
             `${defaultPriceId}`,
@@ -145,21 +148,21 @@ export const usePricing = () => {
       // case SubscriptionPlanEnum.Advanced:
       //   try {
       //     handleIsFetching(true);
-      //     const defaultPriceId = products.find((prod) =>
-      //       prod.name
-      //         .toLocaleLowerCase()
-      //         .includes(SubscriptionPlanEnum.advanced)
-      //     )?.default_price;
+      //     const defaultPriceId = products.find((prod) => {
+      //       const prodName = prod.name.toLocaleLowerCase();
+      //       const planName = SubscriptionPlanEnum.Premium.toLocaleLowerCase();
+      //       return prodName.includes(planName);
+      //     })?.default_price;
       //     const currentPriceObject = prices.find(
       //       (price) => price.id === defaultPriceId
       //     );
 
-      //     if (!defaultPriceId || !currentPriceObject) throw new Error();
+      //     if (!defaultPriceId || !currentPriceObject) return;
 
       //     await handleCreateCheckoutSession(
       //       `${defaultPriceId}`,
       //       currentPriceObject,
-      //       SubscriptionPlanEnum.advanced,
+      //       SubscriptionPlanEnum.Advanced,
       //       user
       //     );
       //     handleIsFetching(false);
