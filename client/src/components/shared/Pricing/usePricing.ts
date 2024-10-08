@@ -38,9 +38,12 @@ export const usePricing = () => {
   } = useRegisterModalContext();
 
   const mapProductToMonthlyPlan = (plan: SubscriptionPlanEnum) => {
+    const planName = plan.toLocaleLowerCase();
+
     const currentPlan = products.find((product) => {
+      const productName = product.name.toLocaleLowerCase();
       if (
-        product.name.toLocaleLowerCase().includes(plan) &&
+        productName.includes(planName) &&
         product.prices.find((price) => price.recurring?.interval === "month")
       ) {
         return product;
@@ -108,15 +111,15 @@ export const usePricing = () => {
     }
 
     switch (subscriptionPlan) {
-      case SubscriptionPlanEnum.free:
+      case SubscriptionPlanEnum.Free:
         navigate(routes.create);
         return;
 
-      case SubscriptionPlanEnum.premium:
+      case SubscriptionPlanEnum.Premium:
         try {
           handleIsFetching(true);
           const defaultPriceId = products.find((prod) =>
-            prod.name.toLocaleLowerCase().includes(SubscriptionPlanEnum.premium)
+            prod.name.toLocaleLowerCase().includes(SubscriptionPlanEnum.Premium)
           )?.default_price;
           const currentPriceObject = prices.find(
             (price) => price.id === defaultPriceId
@@ -127,7 +130,7 @@ export const usePricing = () => {
           await handleCreateCheckoutSession(
             `${defaultPriceId}`,
             currentPriceObject,
-            SubscriptionPlanEnum.premium,
+            SubscriptionPlanEnum.Premium,
             user
           );
           handleIsFetching(false);
@@ -139,7 +142,7 @@ export const usePricing = () => {
         }
         return;
 
-      // case SubscriptionPlanEnum.advanced:
+      // case SubscriptionPlanEnum.Advanced:
       //   try {
       //     handleIsFetching(true);
       //     const defaultPriceId = products.find((prod) =>
@@ -174,19 +177,19 @@ export const usePricing = () => {
   };
 
   const currentUserPackage = {
-    isFree: user?.subscription.type === SubscriptionPlanEnum.free,
-    isPremium: user?.subscription.type === SubscriptionPlanEnum.premium,
-    isAdvanced: user?.subscription.type === SubscriptionPlanEnum.advanced,
+    isFree: user?.subscription.type === SubscriptionPlanEnum.Free,
+    isPremium: user?.subscription.type === SubscriptionPlanEnum.Premium,
+    isAdvanced: user?.subscription.type === SubscriptionPlanEnum.Advanced,
   };
 
   const getButtonText = (plan: SubscriptionPlanEnum) => {
     switch (plan) {
-      case SubscriptionPlanEnum.free:
+      case SubscriptionPlanEnum.Free:
         if (!isAuthenticated) return "Create Stories";
         if (currentUserPackage.isFree) return "Create Stories";
         else return "";
 
-      case SubscriptionPlanEnum.premium:
+      case SubscriptionPlanEnum.Premium:
         if (!isAuthenticated) return "Register & Subscribe";
         if (!currentUserPackage.isPremium) return "Upgrade";
         else return "Current Plan";
@@ -204,7 +207,7 @@ export const usePricing = () => {
 
   const plans: SubscriptionPlanProps[] = [
     {
-      title: SubscriptionPlanEnum.free,
+      title: SubscriptionPlanEnum.Free,
       product: undefined,
       description: [
         "Standard customer support",
@@ -213,14 +216,14 @@ export const usePricing = () => {
         "Access to a limited story library",
       ],
       buttonDisabled: false,
-      buttonText: getButtonText(SubscriptionPlanEnum.free),
+      buttonText: getButtonText(SubscriptionPlanEnum.Free),
       buttonVariant: isAuthenticated ? "outlined" : "contained",
-      buttonAction: () => handleOnSubscribeClick(SubscriptionPlanEnum.free),
+      buttonAction: () => handleOnSubscribeClick(SubscriptionPlanEnum.Free),
     },
     {
-      title: SubscriptionPlanEnum.premium,
+      title: SubscriptionPlanEnum.Premium,
       // subheader: "Recommended",
-      product: getMonthlyPlan(SubscriptionPlanEnum.premium),
+      product: getMonthlyPlan(SubscriptionPlanEnum.Premium),
       description: [
         "Priority customer support",
         "Customizable story parameters",
@@ -228,9 +231,9 @@ export const usePricing = () => {
         "Create up to 50 bedtime stories per month",
       ],
       buttonDisabled: currentUserPackage.isPremium,
-      buttonText: getButtonText(SubscriptionPlanEnum.premium),
+      buttonText: getButtonText(SubscriptionPlanEnum.Premium),
       buttonVariant: currentUserPackage.isFree ? "contained" : "outlined",
-      buttonAction: () => handleOnSubscribeClick(SubscriptionPlanEnum.premium),
+      buttonAction: () => handleOnSubscribeClick(SubscriptionPlanEnum.Premium),
     },
     // {
     //   title: SubscriptionPlanEnum.advanced,

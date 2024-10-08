@@ -50,7 +50,7 @@ export const getPaymentSuccessInitialState = (): PaymentSuccessInitialState => {
       invoice: "",
       livemode: false,
       locale: null,
-      metadata: { subscriptionPlan: SubscriptionPlanEnum.premium, userId: "" },
+      metadata: { subscriptionPlan: SubscriptionPlanEnum.Premium, userId: "" },
       mode: "payment",
       payment_method_types: [], // ["card"]
       payment_status: "unpaid",

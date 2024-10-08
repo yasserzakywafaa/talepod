@@ -25,8 +25,11 @@ export const config = async (
   response: Response,
   next: NextFunction
 ) => {
+  const publishableKey = CONFIG.IS_DEV
+    ? CONFIG.STRIPE_TEST_PUB_KEY
+    : CONFIG.STRIPE_LIVE_PUB_KEY;
   try {
-    response.status(200).json({ publishableKey: CONFIG.STRIPE_TEST_PUB_KEY });
+    response.status(200).json({ publishableKey });
   } catch (error) {
     console.error("❌ Failed to get Stripe Publishable Key!", {
       error,
