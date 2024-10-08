@@ -51,9 +51,9 @@ export interface UserSubscription {
 }
 
 export enum SubscriptionPlanEnum {
-  free = "free",
-  premium = "premium",
-  advanced = "advanced",
+  Free = "Free",
+  Premium = "Premium",
+  Advanced = "Advanced",
 }
 
 export interface UserPaymentHistory {
@@ -69,10 +69,6 @@ export interface UserPreferences {
 }
 
 export const getInitialUserData = (): Omit<User, "_id"> => {
-  const initialExpiryDate = new Date(
-    new Date().setFullYear(new Date().getFullYear() + 1)
-  );
-
   return {
     userId: "",
     email: "",
@@ -93,6 +89,14 @@ export const getInitialUserData = (): Omit<User, "_id"> => {
       notifications: false,
       languagePreference: "en",
     },
-    subscription: undefined,
+    subscription: {
+      id: "",
+      type: SubscriptionPlanEnum.Free,
+      startDate: new Date(),
+      maxStoriesAllowed: 4,
+      endDate: undefined,
+      plan: undefined,
+      price: undefined,
+    },
   };
 };

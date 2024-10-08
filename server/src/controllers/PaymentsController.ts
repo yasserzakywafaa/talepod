@@ -283,7 +283,7 @@ export const cancelSubscription = async (
       isPaidUser: false,
       subscription: {
         id: cancelSubscription.id,
-        type: SubscriptionPlanEnum.free,
+        type: SubscriptionPlanEnum.Free,
         startDate: new Date(),
         endDate: new Date(),
         maxStoriesAllowed: 4,
