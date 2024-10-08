@@ -65,9 +65,9 @@ export interface CancellationDetails {
 }
 
 export enum SubscriptionPlanEnum {
-  free = "free",
-  premium = "premium",
-  advanced = "advanced",
+  Free = "Free",
+  Premium = "Premium",
+  Advanced = "Advanced",
 }
 
 export interface UserPaymentHistory {

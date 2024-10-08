@@ -218,15 +218,15 @@ const CreateStoryForm = () => {
     const isFreeSubs =
       user &&
       !user.isPaidUser &&
-      user.subscription.type === SubscriptionPlanEnum.free;
+      user.subscription.type === SubscriptionPlanEnum.Free;
     const isProSubs =
       user &&
       user.isPaidUser &&
-      user.subscription.type === SubscriptionPlanEnum.premium;
+      user.subscription.type === SubscriptionPlanEnum.Premium;
     const isAdvancedSubs =
       user &&
       user.isPaidUser &&
-      user.subscription.type === SubscriptionPlanEnum.advanced;
+      user.subscription.type === SubscriptionPlanEnum.Advanced;
 
     if (!isAuthenticated) return <></>;
 

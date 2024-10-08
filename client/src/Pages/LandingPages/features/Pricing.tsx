@@ -9,15 +9,15 @@ import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
+import { SubscriptionPlanEnum } from "src/shared/user";
 import Typography from "@mui/material/Typography";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
-import { SubscriptionPlanEnum } from "src/shared/user";
 
 const subscriptionPlans = [
   {
-    title: SubscriptionPlanEnum.free,
+    title: SubscriptionPlanEnum.Free,
     price: "0",
     description: [
       "Create up to 7 bedtime stories",
@@ -30,7 +30,7 @@ const subscriptionPlans = [
     buttonVariant: "outlined",
   },
   {
-    title: SubscriptionPlanEnum.premium,
+    title: SubscriptionPlanEnum.Premium,
     subheader: "Recommended",
     price: "5",
     description: [
@@ -45,7 +45,7 @@ const subscriptionPlans = [
     buttonVariant: "contained",
   },
   {
-    title: SubscriptionPlanEnum.advanced,
+    title: SubscriptionPlanEnum.Advanced,
     subheader: "Coming Soon",
     price: "",
     description: [
@@ -102,7 +102,7 @@ const Pricing = () => {
             item
             key={plan.title}
             xs={12}
-            sm={plan.title === SubscriptionPlanEnum.advanced ? 12 : 6}
+            sm={plan.title === SubscriptionPlanEnum.Advanced ? 12 : 6}
             md={4}
           >
             <Card
@@ -112,15 +112,15 @@ const Pricing = () => {
                 flexDirection: "column",
                 gap: 4,
                 border:
-                  plan.title === SubscriptionPlanEnum.premium
+                  plan.title === SubscriptionPlanEnum.Premium
                     ? "1px solid"
                     : undefined,
                 borderColor:
-                  plan.title === SubscriptionPlanEnum.premium
+                  plan.title === SubscriptionPlanEnum.Premium
                     ? "primary.main"
                     : undefined,
                 background:
-                  plan.title === SubscriptionPlanEnum.premium
+                  plan.title === SubscriptionPlanEnum.Premium
                     ? "linear-gradient(#033363, #021F3B)"
                     : undefined,
               }}
@@ -133,7 +133,7 @@ const Pricing = () => {
                     justifyContent: "space-between",
                     alignItems: "center",
                     color:
-                      plan.title === SubscriptionPlanEnum.premium
+                      plan.title === SubscriptionPlanEnum.Premium
                         ? "grey.100"
                         : "",
                   }}
@@ -141,7 +141,7 @@ const Pricing = () => {
                   <Typography component="h3" variant="h6">
                     {plan.title}
                   </Typography>
-                  {plan.title !== SubscriptionPlanEnum.free && (
+                  {plan.title !== SubscriptionPlanEnum.Free && (
                     <Chip
                       icon={<AutoAwesomeIcon />}
                       label={plan.subheader}
@@ -165,7 +165,7 @@ const Pricing = () => {
                     display: "flex",
                     alignItems: "baseline",
                     color:
-                      plan.title === SubscriptionPlanEnum.premium
+                      plan.title === SubscriptionPlanEnum.Premium
                         ? "grey.50"
                         : undefined,
                   }}
@@ -202,7 +202,7 @@ const Pricing = () => {
                       sx={{
                         width: 20,
                         color:
-                          plan.title === SubscriptionPlanEnum.premium
+                          plan.title === SubscriptionPlanEnum.Premium
                             ? "primary.light"
                             : "primary.main",
                       }}
@@ -212,7 +212,7 @@ const Pricing = () => {
                       variant="subtitle2"
                       sx={{
                         color:
-                          plan.title === SubscriptionPlanEnum.premium
+                          plan.title === SubscriptionPlanEnum.Premium
                             ? "grey.200"
                             : undefined,
                       }}
@@ -229,7 +229,7 @@ const Pricing = () => {
                   component="button"
                   variant={plan.buttonVariant as "outlined" | "contained"}
                   onClick={() =>
-                    plan.title === SubscriptionPlanEnum.free
+                    plan.title === SubscriptionPlanEnum.Free
                       ? handleToggleRegisterModal()
                       : navigate(routes.checkout)
                   }

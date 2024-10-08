@@ -60,7 +60,7 @@ export const Pricing = () => {
             <Grid
               xs={12}
               md={4}
-              sm={plan.title === SubscriptionPlanEnum.advanced ? 12 : 6}
+              sm={plan.title === SubscriptionPlanEnum.Advanced ? 12 : 6}
               item
               key={plan.title}
             >
@@ -72,11 +72,11 @@ export const Pricing = () => {
                   flexDirection: "column",
                   justifyContent: "space-between",
                   border:
-                    plan.title === SubscriptionPlanEnum.premium
+                    plan.title === SubscriptionPlanEnum.Premium
                       ? "1px solid"
                       : undefined,
                   borderColor:
-                    plan.title === SubscriptionPlanEnum.premium
+                    plan.title === SubscriptionPlanEnum.Premium
                       ? "primary.main"
                       : undefined,
                 }}
@@ -94,7 +94,7 @@ export const Pricing = () => {
                       {plan.title}
                     </Typography>
                     {plan.subheader &&
-                      plan.title !== SubscriptionPlanEnum.free && (
+                      plan.title !== SubscriptionPlanEnum.Free && (
                         <Chip
                           icon={<AutoAwesomeIcon />}
                           label={plan.subheader}
@@ -133,7 +133,7 @@ export const Pricing = () => {
                     ) : (
                       <>
                         <Typography component="h3" variant="h2">
-                          {getCurrency(SubscriptionPlanEnum.premium)}0
+                          {getCurrency(SubscriptionPlanEnum.Premium)}0
                         </Typography>
                       </>
                     )}
@@ -159,7 +159,7 @@ export const Pricing = () => {
                         sx={{
                           width: 20,
                           color:
-                            plan.title === SubscriptionPlanEnum.premium
+                            plan.title === SubscriptionPlanEnum.Premium
                               ? "primary.light"
                               : "primary.main",
                         }}

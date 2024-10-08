@@ -70,7 +70,9 @@ const MyProfilePage = () => {
   if (!isAuthenticated || !user) return <></>;
 
   useEffect(() => {
-    handleGetSubscriptionDetails();
+    if (user.subscription && user.subscription.id) {
+      handleGetSubscriptionDetails();
+    }
   }, [user]);
 
   return (
@@ -197,7 +199,7 @@ const MyProfilePage = () => {
                 </Grid>
 
                 {user.isPaidUser &&
-                user.subscription.type !== SubscriptionPlanEnum.free ? (
+                user.subscription.type !== SubscriptionPlanEnum.Free ? (
                   <>
                     <Grid item xs={6} md={4}>
                       <Typography

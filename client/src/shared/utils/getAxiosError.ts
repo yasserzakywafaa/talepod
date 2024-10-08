@@ -13,7 +13,7 @@ export const getAxiosError = (error: unknown) => {
     });
   } else {
     Notify({
-      content: `Failed to get User Information!`,
+      content: `An error happened!`,
       type: ToastTypes.Error,
     });
   }
