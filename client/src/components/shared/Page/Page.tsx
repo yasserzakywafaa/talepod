@@ -1,5 +1,6 @@
 import "./Page.scss";
 
+import { CSSProperties, useEffect } from "react";
 import { Container, ContainerTypeMap, Divider } from "@mui/material";
 import LoaderSpinner, {
   LoaderComponentNameEnum,
@@ -15,16 +16,17 @@ import ScrollToTopButton from "../BackToTopButton/BackToTopButton";
 import SwipeToRefresh from "./features/SwipeToRefresh/SwipeToRefresh";
 import classNames from "classnames";
 import { useApplicationContext } from "src/application/store/Provider";
-import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 export interface PageProps {
   title: string;
   className?: string;
   isLoading?: boolean;
+  style?: CSSProperties;
   swipeToRefresh?: boolean;
   children?: React.ReactNode;
   swipeDownToRefreshThreshold?: number;
-  loaderComponentName?: LoaderComponentNameEnum;
+  loaderComponentName?: LoaderComponentNameEnum | undefined;
   onRefresh?: () => Promise<void>;
   containerProps?: OverridableComponent<ContainerTypeMap<{}, "div">>;
 }
@@ -32,6 +34,7 @@ export interface PageProps {
 const Page = (params: PageProps) => {
   const {
     title,
+    style,
     children,
     isLoading,
     className = "",
@@ -44,8 +47,10 @@ const Page = (params: PageProps) => {
   const {
     store: {
       state: { isFetching, themeMode },
+      setPreviousUrl,
     },
   } = useApplicationContext();
+  const location = useLocation();
 
   const isPageLoading = isLoading || isFetching;
 
@@ -78,6 +83,12 @@ const Page = (params: PageProps) => {
     else htmlNode.removeAttribute("style");
   }, [isPageLoading]);
 
+  useEffect(() => {
+    return () => {
+      setPreviousUrl(location.pathname);
+    };
+  }, []);
+
   return (
     <>
       <div
@@ -91,6 +102,7 @@ const Page = (params: PageProps) => {
       />
       <Container
         // maxWidth={false}
+        style={style}
         className={pageClassNames}
         {...containerProps}
       >

@@ -13,16 +13,11 @@ import Typography from "@mui/material/Typography";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
+import { SubscriptionPlanEnum } from "src/shared/user";
 
-export enum PriceTiers {
-  Free = "Free",
-  Professional = "Professional",
-  Advanced = "Advanced",
-}
-
-const tiers = [
+const subscriptionPlans = [
   {
-    title: PriceTiers.Free,
+    title: SubscriptionPlanEnum.free,
     price: "0",
     description: [
       "Create up to 7 bedtime stories",
@@ -35,7 +30,7 @@ const tiers = [
     buttonVariant: "outlined",
   },
   {
-    title: PriceTiers.Professional,
+    title: SubscriptionPlanEnum.premium,
     subheader: "Recommended",
     price: "5",
     description: [
@@ -50,7 +45,7 @@ const tiers = [
     buttonVariant: "contained",
   },
   {
-    title: PriceTiers.Advanced,
+    title: SubscriptionPlanEnum.advanced,
     subheader: "Coming Soon",
     price: "",
     description: [
@@ -102,12 +97,12 @@ const Pricing = () => {
         </Typography>
       </Box>
       <Grid container spacing={3} alignItems="center" justifyContent="center">
-        {tiers.map((tier) => (
+        {subscriptionPlans.map((plan) => (
           <Grid
             item
-            key={tier.title}
+            key={plan.title}
             xs={12}
-            sm={tier.title === PriceTiers.Advanced ? 12 : 6}
+            sm={plan.title === SubscriptionPlanEnum.advanced ? 12 : 6}
             md={4}
           >
             <Card
@@ -117,15 +112,15 @@ const Pricing = () => {
                 flexDirection: "column",
                 gap: 4,
                 border:
-                  tier.title === PriceTiers.Professional
+                  plan.title === SubscriptionPlanEnum.premium
                     ? "1px solid"
                     : undefined,
                 borderColor:
-                  tier.title === PriceTiers.Professional
+                  plan.title === SubscriptionPlanEnum.premium
                     ? "primary.main"
                     : undefined,
                 background:
-                  tier.title === PriceTiers.Professional
+                  plan.title === SubscriptionPlanEnum.premium
                     ? "linear-gradient(#033363, #021F3B)"
                     : undefined,
               }}
@@ -138,16 +133,18 @@ const Pricing = () => {
                     justifyContent: "space-between",
                     alignItems: "center",
                     color:
-                      tier.title === PriceTiers.Professional ? "grey.100" : "",
+                      plan.title === SubscriptionPlanEnum.premium
+                        ? "grey.100"
+                        : "",
                   }}
                 >
                   <Typography component="h3" variant="h6">
-                    {tier.title}
+                    {plan.title}
                   </Typography>
-                  {tier.title !== PriceTiers.Free && (
+                  {plan.title !== SubscriptionPlanEnum.free && (
                     <Chip
                       icon={<AutoAwesomeIcon />}
-                      label={tier.subheader}
+                      label={plan.subheader}
                       size="small"
                       sx={{
                         background: (theme) =>
@@ -168,15 +165,15 @@ const Pricing = () => {
                     display: "flex",
                     alignItems: "baseline",
                     color:
-                      tier.title === PriceTiers.Professional
+                      plan.title === SubscriptionPlanEnum.premium
                         ? "grey.50"
                         : undefined,
                   }}
                 >
-                  {tier.price && (
+                  {plan.price && (
                     <>
                       <Typography component="h3" variant="h2">
-                        ${tier.price}
+                        ${plan.price}
                       </Typography>
                       <Typography component="h3" variant="h6">
                         &nbsp; per month
@@ -191,7 +188,7 @@ const Pricing = () => {
                     borderColor: "grey.500",
                   }}
                 />
-                {tier.description.map((line) => (
+                {plan.description.map((line) => (
                   <Box
                     key={line}
                     sx={{
@@ -205,7 +202,7 @@ const Pricing = () => {
                       sx={{
                         width: 20,
                         color:
-                          tier.title === PriceTiers.Professional
+                          plan.title === SubscriptionPlanEnum.premium
                             ? "primary.light"
                             : "primary.main",
                       }}
@@ -215,7 +212,7 @@ const Pricing = () => {
                       variant="subtitle2"
                       sx={{
                         color:
-                          tier.title === PriceTiers.Professional
+                          plan.title === SubscriptionPlanEnum.premium
                             ? "grey.200"
                             : undefined,
                       }}
@@ -230,14 +227,14 @@ const Pricing = () => {
                 <Button
                   fullWidth
                   component="button"
-                  variant={tier.buttonVariant as "outlined" | "contained"}
+                  variant={plan.buttonVariant as "outlined" | "contained"}
                   onClick={() =>
-                    tier.title === PriceTiers.Free
+                    plan.title === SubscriptionPlanEnum.free
                       ? handleToggleRegisterModal()
                       : navigate(routes.checkout)
                   }
                 >
-                  {tier.buttonText}
+                  {plan.buttonText}
                 </Button>
               </CardActions>
             </Card>

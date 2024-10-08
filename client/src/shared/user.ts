@@ -1,3 +1,5 @@
+import { Plan, Price } from "./payment";
+
 export interface User {
   _id: string;
   userId: string;
@@ -12,6 +14,7 @@ export interface User {
   role: UserRole;
   isPaidUser: boolean;
   subscription: UserSubscription;
+  preferences: UserPreferences;
   location?: string;
   timezone?: string;
 }
@@ -36,16 +39,34 @@ export enum UserRole {
 }
 
 export interface UserSubscription {
-  subscriptionPlanType: SubscriptionPlanEnum;
-  subscriptionExpiry: Date;
+  id: string | undefined;
+  type: SubscriptionPlanEnum;
+  startDate: Date;
+  endDate: Date;
   paymentHistory?: UserPaymentHistory[];
-  preferences: UserPreferences;
   maxStoriesAllowed: number;
+  plan: Plan;
+  price: Price;
+  cancel_at: number | null;
+  cancel_at_period_end: boolean;
+  canceled_at: number | null;
+  cancellation_details: CancellationDetails;
+  current_period_end: number;
+  current_period_start: number;
+}
+
+export interface CancellationDetails {
+  comment: string | null;
+  reason:
+    | "cancellation_requested"
+    | "payment_disputed"
+    | "payment_failed"
+    | null;
 }
 
 export enum SubscriptionPlanEnum {
   free = "free",
-  pro = "pro",
+  premium = "premium",
   advanced = "advanced",
 }
 

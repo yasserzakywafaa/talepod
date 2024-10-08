@@ -12,6 +12,7 @@ import Grid from "@mui/material/Grid";
 import Info from "./features/Info";
 import InfoMobile from "./features/InfoMobile";
 import PaymentForm from "./features/PaymentForm";
+// import PaymentForm from "./features/PaymentForm";
 import Review from "./features/Review";
 import Stack from "@mui/material/Stack";
 import Step from "@mui/material/Step";
@@ -19,8 +20,8 @@ import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import Typography from "@mui/material/Typography";
 import { useCheckout } from "./useCheckout";
-
-// import { useApplicationContext } from "src/application/store/Provider";
+import { useCheckoutContext } from "./store/Provider";
+import { useEffect } from "react";
 
 const steps = ["Shipping address", "Payment details", "Review your order"];
 
@@ -40,6 +41,10 @@ const getStepContent = (step: number) => {
 const Checkout = () => {
   const { state, handleUpdateState } = useCheckout();
 
+  const {
+    manager: { setUp },
+  } = useCheckoutContext();
+
   const handleNext = () => {
     handleUpdateState({
       ...state,
@@ -54,9 +59,14 @@ const Checkout = () => {
     });
   };
 
+  useEffect(() => {
+    setUp();
+  }, []);
+
   return (
     <>
       <Grid container sx={{ height: { xs: "100%", sm: "100dvh" } }}>
+        {/* Desktop */}
         <Grid
           item
           xs={12}
@@ -102,6 +112,8 @@ const Checkout = () => {
             <Info totalPrice={state.activeStep >= 2 ? "$144.97" : "$134.98"} />
           </Box>
         </Grid>
+
+        {/* Mobile */}
         <Grid
           item
           sm={12}
@@ -177,6 +189,7 @@ const Checkout = () => {
               </Stepper>
             </Box>
           </Box>
+
           <Card
             sx={{
               display: { xs: "flex", md: "none" },
@@ -205,6 +218,7 @@ const Checkout = () => {
               />
             </CardContent>
           </Card>
+
           <Box
             sx={{
               display: "flex",
@@ -263,6 +277,7 @@ const Checkout = () => {
             ) : (
               <React.Fragment>
                 {getStepContent(state.activeStep)}
+
                 <Box
                   sx={{
                     display: "flex",
@@ -311,7 +326,7 @@ const Checkout = () => {
                     }}
                   >
                     {state.activeStep === steps.length - 1
-                      ? "Place order"
+                      ? "Subscribe"
                       : "Next"}
                   </Button>
                 </Box>

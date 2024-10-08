@@ -1,18 +1,19 @@
 import * as React from "react";
 
-import { Avatar, Box, Divider, ListItemIcon, Typography } from "@mui/material";
 import {
+  AccountCircleOutlined,
   KeyboardArrowDownOutlined,
   LogoutOutlined,
   WebStoriesOutlined,
 } from "@mui/icons-material";
+import { Box, Divider, ListItemIcon, Typography } from "@mui/material";
 import { useMatch, useNavigate } from "react-router-dom";
 
 import { Authentication } from "src/application/store/state";
-// import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { Notify } from "../Notification/Notification";
+import ProfileAvatar from "../ProfileAvatar";
 import routes from "src/application/routes";
 
 interface UserAccountMenuButtonProps {
@@ -28,8 +29,9 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
 
   if (!auth.user) return;
 
-  const isUserPrivatePages = !!useMatch(routes.myStories(":userId"));
-  // !!useMatch(routes.myStory(":userId", ":slug"));
+  const isUserPrivatePages =
+    !!useMatch(routes.myStories(":userId")) ||
+    !!useMatch(routes.myProfile(":userId"));
 
   const userFullName = `${
     auth.user.name.givenName
@@ -41,11 +43,15 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
 
   const handleCloseMenu = () => setElement(null);
 
-  const onMyStoriesClick = () => {
+  const handleOnMyStoriesClick = () => {
     auth.user && navigate(routes.myStories(auth.user._id));
   };
 
-  const onLogoutClick = () => {
+  const handleOnMyProfileClick = () => {
+    auth.user && navigate(routes.myProfile(auth.user._id));
+  };
+
+  const handleOnLogoutClick = () => {
     handleLogOut({
       isAuthenticated: false,
       user: null,
@@ -73,18 +79,12 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
         }}
         onClick={handleMenuButtonClick}
       >
-        {auth.user.picture ? (
-          <Avatar
-            alt="User Picture"
-            src={auth.user.picture}
-            sx={{ mr: 1, width: 20, height: 20 }}
-          />
-        ) : (
-          <Avatar sx={{ mr: 1, width: 20, height: 20 }}>
-            {auth.user.name.givenName.charAt(0)}
-            {auth.user.name.familyName.charAt(0)}
-          </Avatar>
-        )}
+        <ProfileAvatar
+          auth={auth}
+          avatarSize={{ width: 20, height: 20 }}
+          verifiedBadgeSize={14}
+        />
+
         <Typography
           variant="body1"
           color="text.primary"
@@ -95,6 +95,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
             textOverflow: "ellipsis",
             fontSize: { xs: "1.25rem", sm: "1rem" },
           }}
+          marginLeft={1}
         >
           {userFullName}
         </Typography>
@@ -112,7 +113,14 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
         }}
         onClose={handleCloseMenu}
       >
-        <MenuItem onClick={onMyStoriesClick}>
+        <MenuItem onClick={handleOnMyProfileClick}>
+          <ListItemIcon>
+            <AccountCircleOutlined fontSize="small" color="secondary" />
+          </ListItemIcon>
+          My Profile
+        </MenuItem>
+
+        <MenuItem onClick={handleOnMyStoriesClick}>
           <ListItemIcon>
             <WebStoriesOutlined fontSize="small" color="secondary" />
           </ListItemIcon>
@@ -121,7 +129,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
 
         <Divider />
 
-        <MenuItem onClick={onLogoutClick}>
+        <MenuItem onClick={handleOnLogoutClick}>
           <ListItemIcon>
             <LogoutOutlined fontSize="small" color="secondary" />
           </ListItemIcon>

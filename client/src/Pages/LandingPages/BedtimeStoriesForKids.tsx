@@ -7,12 +7,12 @@ import {
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
 import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
 import FAQ from "./features/FAQ";
 import Hero from "./features/Hero";
 import Page from "src/components/shared/Page/Page";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
 import PlayfulBunny from "../../assets/images/landing_pages/playful_bunny.webp";
+import { Pricing } from "src/components/shared/Pricing/Pricing";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.webp";
 import { useApplicationContext } from "src/application/store/Provider";
@@ -69,7 +69,11 @@ const BedtimeStoriesForKids = () => {
   );
 
   return (
-    <Page title="TALEPOD" className="home-page" isLoading={isFetching}>
+    <Page
+      title="Bedtime Stories for Kids | TALEPOD"
+      className="home-page"
+      isLoading={isFetching}
+    >
       <Hero
         heroImage={PlayfulBunny}
         pageTitleWhite="Create Magical"
@@ -91,8 +95,8 @@ const BedtimeStoriesForKids = () => {
           benefitsList={benefitsList}
           benefitsImage={<RandomImage />}
         />
-        <Divider />
         <FAQ />
+        <Pricing />
       </Box>
     </Page>
   );

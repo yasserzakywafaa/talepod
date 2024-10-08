@@ -23,9 +23,13 @@ const UsersStoriesPage = lazy(
   () => import("../Pages/UsersStories/UsersStories")
 );
 const MyStoriesPage = lazy(() => import("../Pages/MyStories/MyStories"));
+const MyProfilePage = lazy(() => import("../Pages/MyProfile/MyProfile"));
 const ContactPage = lazy(() => import("../Pages/Contact/Contact"));
 const ViewStoryPage = lazy(() => import("../Pages/ViewStory/ViewStory"));
 const CheckoutPage = lazy(() => import("../Pages/Checkout/CheckoutPage"));
+const PaymentSuccessPage = lazy(
+  () => import("../Pages/PaymentSuccess/PaymentSuccess")
+);
 const PrivacyPolicyPage = lazy(
   () => import("../Pages/PrivacyPolicy/PrivacyPolicy")
 );
@@ -127,6 +131,11 @@ const AppContent = () => {
                 />
 
                 <Route
+                  path={routes.myProfile(":userId")}
+                  element={<MyProfilePage />}
+                />
+
+                <Route
                   path={routes.myStory(":userId", ":slug")}
                   element={<ViewStoryPage />}
                 />
@@ -137,6 +146,11 @@ const AppContent = () => {
                     element={<UsersStoriesPage />}
                   />
                 )}
+
+                <Route
+                  path={routes.paymentSuccess(":sessionId")}
+                  element={<PaymentSuccessPage />}
+                />
               </>
             ) : (
               <Route path="*" element={<Navigate to={routes.unauthorized} />} />

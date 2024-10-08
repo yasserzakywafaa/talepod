@@ -2,17 +2,21 @@ const APP_CONSTANTS = {
   DESIGN: {
     LOCAL_STORAGE_APP_THEME: "appTheme",
   },
+
   // Variables
   DEV_CLIENT_PORT: process.env.REACT_APP_PORT,
   DEV_SERVER_PORT: process.env.REACT_APP_SERVER_PORT,
   DEV_API_URL: process.env.REACT_APP_DEV_API_URL,
   PROD_API_URL: process.env.REACT_APP_PROD_API_URL,
+
   // Environment
   IS_DEV_LOCAL_SERVER: process.env.REACT_APP_IS_DEV_LOCAL_SERVER === "true",
   IS_DEV: process.env.NODE_ENV === "development",
   IS_PROD: process.env.NODE_ENV === "production",
+
   // Auth
   GOOGLE_OAUTH_CLIENT_ID: process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID,
+
   // Censored Words
   CENSORED_WORDS_FETCH_URLS: {
     EN: "https://raw.githubusercontent.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/master/en",
@@ -33,7 +37,9 @@ const APP_CONSTANTS = {
     USER: "user",
     IS_AUTHENTICATED: "isAuthenticated",
   },
-  MAX_STORIES_LIMIT: 4,
+  MAX_STORIES_LIMIT_FREE: 4,
+  MAX_STORIES_LIMIT_PREMIUM: 50,
+  MAX_STORIES_LIMIT_ADVANCED: 999,
 };
 
 export default APP_CONSTANTS;

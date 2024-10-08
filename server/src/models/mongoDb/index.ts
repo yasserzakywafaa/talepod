@@ -1,4 +1,4 @@
-import { Db, MongoClient, ObjectId, WithId } from "mongodb";
+import { Db, Document, MongoClient, ObjectId, WithId } from "mongodb";
 import {
   ProfileInfo,
   Story,
@@ -231,6 +231,27 @@ const saveUserDataToDb = async (user: User): Promise<ObjectId | undefined> => {
   }
 };
 
+const updateUserInDb = async (
+  userId: string,
+  updatedUserData: Partial<User>
+): Promise<WithId<Document> | undefined> => {
+  try {
+    const updatedUser = await updateDocument(
+      userId,
+      updatedUserData,
+      DBCollections.users
+    );
+
+    if (!updatedUser) throw new Error("User not found or update failed");
+
+    console.log("✅ User updated in DB successfully!");
+
+    return updatedUser;
+  } catch (error) {
+    throw new Error("❌ Error updating user data in DB", { cause: error });
+  }
+};
+
 // // FOR DEVELOPMENT USE ONLY
 // const copyDocumentsFromDbCollectionToAnotherDbCollection = async () => {
 //   const sourceDb = dbClient.db(DBNames.TALEPOD_DEV);
@@ -271,4 +292,5 @@ export {
   saveStorySeoToDb,
   saveFileDataToDb,
   saveUserDataToDb,
+  updateUserInDb,
 };

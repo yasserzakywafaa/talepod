@@ -9,6 +9,7 @@ import openaiRoutes from "./routes/openaiRoutes";
 import path from "path";
 import storiesRoutes from "./routes/storiesRoutes";
 import testRoutes from "./routes/testRoutes";
+import paymentsRoutes from "./routes/paymentsRoutes";
 
 const expressApp = express();
 const buildPath = path.join(__dirname, "../client/");
@@ -44,6 +45,7 @@ expressApp.use(storiesRoutes);
 expressApp.use(openaiRoutes);
 expressApp.use(contactRoutes);
 expressApp.use(authRoutes);
+expressApp.use(paymentsRoutes);
 
 // Initiate MongoDB connection
 databaseInit();

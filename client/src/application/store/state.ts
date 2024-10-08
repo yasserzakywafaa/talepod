@@ -7,6 +7,7 @@ export interface ApplicationInitialState {
   isFetchingUserInfo: boolean;
   themeMode: PaletteMode;
   auth: Authentication;
+  previousUrl: string;
 }
 
 export interface Authentication {
@@ -26,6 +27,7 @@ export const getApplicationInitialState = (): ApplicationInitialState => {
     isFetching: false,
     isFetchingUserInfo: true,
     themeMode: appThemMode,
+    previousUrl: "",
     auth: {
       user: null,
       isAuthenticated: false,

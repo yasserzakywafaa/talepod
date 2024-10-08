@@ -23,11 +23,6 @@ const END_POINTS = {
     ROUTE_ONE: `${publicApiUrl}/api/v1/test-route-one`,
     ROUTE_TWO: `${publicApiUrl}/api/v1/test-route-two`,
   },
-  GOOGLE_GEMINI: {
-    CREATE: {
-      STORY: `${publicApiUrl}/api/v1/gemini/create/story`,
-    },
-  },
   OPENAI: {
     GENERATE: {
       STORY: `${publicApiUrl}/api/v1/openai/create/story`,
@@ -50,6 +45,17 @@ const END_POINTS = {
   AUTH: {
     GOOGLE: `${publicApiUrl}/api/v1/auth/google-auth`,
     USER_INFO: `${publicApiUrl}/api/v1/auth/user-info`,
+    UPDATE_USER_INFO: `${publicApiUrl}/api/v1/auth/update-user-info`,
+  },
+  PAYMENTS: {
+    CONFIG: `${publicApiUrl}/api/v1/payments/config`,
+    GET_PRICES_LIST: `${publicApiUrl}/api/v1/payments/prices-list`,
+    GET_PRODUCTS_LIST_WITH_PRICES: `${publicApiUrl}/api/v1/payments/products-list-with-prices`,
+    CREATE_CHECKOUT_SESSION: `${publicApiUrl}/api/v1/payments/create-checkout-session`,
+    CHECKOUT_SESSION_WEBHOOK: `${publicApiUrl}/api/v1/payments/checkout-session-webhook`,
+    GET_CHECKOUT_SESSION_DATA: `${publicApiUrl}/api/v1/payments/checkout-session-data`,
+    GET_SUBSCRIPTION_DETAILS: `${publicApiUrl}/api/v1/auth/get-subscription-details`,
+    CANCEL_SUBSCRIPTION: `${publicApiUrl}/api/v1/payments/cancel-subscription`,
   },
 };
 

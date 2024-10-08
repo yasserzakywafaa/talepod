@@ -20,7 +20,11 @@ import {
   ProfileInfo,
   Story,
 } from "../store/state";
-import { AutoAwesomeOutlined, ExpandMoreOutlined } from "@mui/icons-material";
+import {
+  AutoAwesomeOutlined,
+  ExpandMoreOutlined,
+  LoyaltyOutlined,
+} from "@mui/icons-material";
 import { Environment, Environments } from "src/shared/mockedData/Environments";
 import { Language, Languages } from "../../../shared/languages";
 import { Moral, Morals } from "src/shared/mockedData/Moral";
@@ -39,6 +43,7 @@ import { useEffect } from "react";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useNavigate } from "react-router-dom";
 import { useOpenaiContext } from "./Openai/store/Provider";
+import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
 
 const CreateStoryForm = () => {
@@ -65,6 +70,10 @@ const CreateStoryForm = () => {
   const {
     store: { handleToggleLoginModal },
   } = useLoginModalContext();
+
+  const {
+    store: { handleTogglePricingModal },
+  } = usePricingModalContext();
 
   const { manager: OpenaiManager } = useOpenaiContext();
   const {
@@ -209,15 +218,15 @@ const CreateStoryForm = () => {
     const isFreeSubs =
       user &&
       !user.isPaidUser &&
-      user.subscription.subscriptionPlanType === SubscriptionPlanEnum.free;
+      user.subscription.type === SubscriptionPlanEnum.free;
     const isProSubs =
       user &&
       user.isPaidUser &&
-      user.subscription.subscriptionPlanType === SubscriptionPlanEnum.pro;
+      user.subscription.type === SubscriptionPlanEnum.premium;
     const isAdvancedSubs =
       user &&
       user.isPaidUser &&
-      user.subscription.subscriptionPlanType === SubscriptionPlanEnum.advanced;
+      user.subscription.type === SubscriptionPlanEnum.advanced;
 
     if (!isAuthenticated) return <></>;
 
@@ -602,24 +611,28 @@ const CreateStoryForm = () => {
           justifyContent="center"
           className="story-creator-form-wrapper-button"
         >
-          <Button
-            type="submit"
-            title="submit-button"
-            variant="contained"
-            disabled={isCreateButtonDisabled()}
-            endIcon={<AutoAwesomeOutlined />}
-          >
-            Create
-          </Button>
-
-          {/* <Button
-            type="button"
-            variant="outlined"
-            endIcon={<AutoAwesomeOutlined />}
-            onClick={handleCreateStoryLibrary}
-          >
-            Create Story Library
-          </Button> */}
+          {isAuthenticated && isUserActive && hasMaxStoriesLimit ? (
+            <Button
+              type="button"
+              color="secondary"
+              variant="contained"
+              title="subscribe-button"
+              endIcon={<LoyaltyOutlined />}
+              onClick={handleTogglePricingModal}
+            >
+              Subscribe
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              title="submit-button"
+              variant="contained"
+              disabled={isCreateButtonDisabled()}
+              endIcon={<AutoAwesomeOutlined />}
+            >
+              Create
+            </Button>
+          )}
         </Box>
       </Box>
     </Box>

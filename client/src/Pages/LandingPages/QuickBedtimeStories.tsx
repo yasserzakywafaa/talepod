@@ -7,11 +7,11 @@ import {
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
 import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
 import FAQ from "./features/FAQ";
 import Hero from "./features/Hero";
 import Page from "src/components/shared/Page/Page";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
+import { Pricing } from "src/components/shared/Pricing/Pricing";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import SpeedySquirrel from "../../assets/images/landing_pages/speedy_squirrel.webp";
 import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.webp";
@@ -70,7 +70,7 @@ const QuickBedtimeStories = () => {
 
   return (
     <Page
-      title="TALEPOD"
+      title="Quick Bedtime Stories | TALEPOD"
       className="best-bedtime-stories-page"
       isLoading={isFetching}
     >
@@ -84,13 +84,13 @@ const QuickBedtimeStories = () => {
       <Box sx={{ backgroundColor: "transparent" }}>
         <PersonalizedBedtimeStoryText
           whyPersonalizeBedtimeStories="offer a solution for nights when you need a short yet engaging narrative."
-          introducingTalePod="TalePod provides a variety of quick stories that are perfect for wrapping up the day when you’re in a hurry."
+          introducingTalePod="TalePod provides a variety of quick stories that are perfect for wrapping up the day when you're in a hurry."
           personalizeImage={Unicorn}
           benefitsList={benefitsList}
           benefitsImage={<RandomImage />}
         />
-        <Divider />
         <FAQ />
+        <Pricing />
       </Box>
     </Page>
   );

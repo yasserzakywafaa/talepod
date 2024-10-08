@@ -12,7 +12,7 @@ import {
 interface NotificationProps extends ToastContainerProps {}
 
 interface NotificationToast {
-  content: string;
+  content: string | React.ReactNode;
   type?: TypeOptions;
   options?: ToastOptions;
 }
@@ -43,7 +43,6 @@ export const Notification = (props: NotificationProps) => {
       newestOnTop={props.newestOnTop}
       closeButton={props.closeButton}
       containerId={props.containerId}
-      pauseOnHover={props.pauseOnHover}
       closeOnClick={props.closeOnClick}
       autoClose={props.autoClose || 3000}
       bodyClassName={props.bodyClassName}
@@ -51,6 +50,7 @@ export const Notification = (props: NotificationProps) => {
       toastClassName={props.toastClassName}
       hideProgressBar={props.hideProgressBar}
       position={props.position || "top-right"}
+      pauseOnHover={props.pauseOnHover || true}
       pauseOnFocusLoss={props.pauseOnFocusLoss}
       draggablePercent={props.draggablePercent}
       progressClassName={props.progressClassName}
@@ -61,16 +61,22 @@ export const Notification = (props: NotificationProps) => {
 };
 
 export const Notify = (props: NotificationToast) => {
+  const renderContent = (): React.ReactNode => {
+    return (
+      <span dangerouslySetInnerHTML={{ __html: props.content as string }} />
+    );
+  };
+
   switch (props.type) {
     case ToastTypes.Info:
-      return toast.info(props.content, props.options);
+      return toast.info(renderContent(), props.options);
     case ToastTypes.Error:
-      return toast.error(props.content, props.options);
+      return toast.error(renderContent(), props.options);
     case ToastTypes.Success:
-      return toast.success(props.content, props.options);
+      return toast.success(renderContent(), props.options);
     case ToastTypes.Warning:
-      return toast.warning(props.content, props.options);
+      return toast.warning(renderContent(), props.options);
     default:
-      return toast(props.content, props.options);
+      return toast(renderContent(), props.options);
   }
 };
