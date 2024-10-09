@@ -167,7 +167,7 @@ export const webhook = async (
         webhookSecret
       );
 
-      console.log("ℹ️ checkoutSessionWebhook:>>> event:>>>", {
+      console.log("ℹ️ webhook:>>> event:>>>", {
         event,
       });
     } else {
@@ -185,16 +185,58 @@ export const webhook = async (
       .send(`❌  Failed to verify Webhook signature! ${error}`);
   }
 
+  const session = event.data.object;
+  console.log("webhook:>>> Metadata:", session.metadata);
+
   // Handle the event
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object;
-
-    // Fulfill the order: Fetch the metadata from session, including userId
-    console.log("checkoutSessionWebhook:>>> Payment succeeded!", session);
-    console.log("checkoutSessionWebhook:>>> Metadata:", session.metadata);
-
-    // You can now use session.metadata.userId to update the user's subscription status in your DB
+  switch (event.type) {
+    case "checkout.session.async_payment_failed":
+      console.log("❌ webhook:>>> !", session);
+      break;
+    case "checkout.session.async_payment_succeeded":
+      console.log("✅  webhook:>>> !", session);
+      break;
+    case "checkout.session.completed":
+      console.log("✅ webhook:>>> Payment succeeded!", session);
+      break;
+    case "checkout.session.expired":
+      console.log("❌ webhook:>>> !", session);
+      break;
+    case "customer.subscription.created":
+      console.log("✅ webhook:>>> !", session);
+      break;
+    case "customer.subscription.deleted":
+      console.log("✅  webhook:>>> !", session);
+      break;
+    case "customer.subscription.paused":
+      console.log("✅  webhook:>>> !", session);
+      break;
+    case "customer.subscription.resumed":
+      console.log("✅  webhook:>>> !", session);
+      break;
+    case "customer.subscription.trial_will_end":
+      console.log("ℹ️ webhook:>>> trial_will_end!", session);
+      break;
+    case "customer.subscription.updated":
+      console.log("❌ webhook:>>> Customer subscription updated!", session);
+      break;
+    case "invoice.payment_action_required":
+      console.log("ℹ️ webhook:>>> !", session);
+      break;
+    case "invoice.payment_failed":
+      console.log("❌ webhook:>>> Invoice Payment failed!", session);
+      break;
+    case "invoice.payment_succeeded":
+      console.log("✅ webhook:>>> Invoice Payment succeeded!", session);
+      break;
+    case "payment_method.automatically_updated":
+      console.log("✅ webhook:>>> !", session);
+      break;
+    case "payment_method.updated":
+      console.log("✅ webhook:>>> !", session);
+      break;
   }
+  // You can now use session.metadata.userId to update the user's subscription status in your DB
 
   // Return a 200 response to acknowledge receipt of the event
   return response.send();
