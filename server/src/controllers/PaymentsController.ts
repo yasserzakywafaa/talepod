@@ -154,20 +154,10 @@ export const webhook = async (
 
   try {
     if (CONFIG.IS_DEV) {
-      const payload = {
-        id: "evt_test_webhook",
-        object: "event",
-      };
-
-      const payloadString = JSON.stringify(payload, null, 2);
+      const payloadString = JSON.stringify(request.body, null, 2);
       const header = stripe.webhooks.generateTestHeaderString({
         payload: payloadString,
         secret: CONFIG.STRIPE_TEST_WEBHOOK_SECRET,
-      });
-
-      console.log("ℹ️ checkoutSessionWebhook:>>> evt_test_webhook:>>>", {
-        payloadString,
-        header,
       });
 
       // Verify the Stripe webhook signature
@@ -176,6 +166,10 @@ export const webhook = async (
         header,
         webhookSecret
       );
+
+      console.log("ℹ️ checkoutSessionWebhook:>>> event:>>>", {
+        event,
+      });
     } else {
       // Verify the Stripe webhook signature
       event = stripe.webhooks.constructEvent(
