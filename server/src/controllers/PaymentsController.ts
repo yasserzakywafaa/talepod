@@ -1,12 +1,10 @@
-import * as DBUtils from "../models/mongoDb/index";
-
 import { NextFunction, Request, Response } from "express";
 import { SubscriptionPlanEnum, User } from "../models/types";
 
 import CONFIG from "./../config";
 import Stripe from "stripe";
-import { WithId } from "mongodb";
 import { getEndDateByInterval } from "../utils/dateUtils";
+import { updateUserInDb } from "../models/mongoDb/index";
 
 const secretKey = CONFIG.IS_DEV
   ? CONFIG.STRIPE_TEST_SECRET_KEY
@@ -256,6 +254,35 @@ export const handleWebhookEvents = (event: Stripe.Event): Promise<void> => {
   return undefined;
 };
 
+export const handleUpdateUserOnWebhook = async (
+  userId: string,
+  event: Stripe.Event
+): Promise<void> => {
+  const userInfoToUpdate: Partial<User> = {
+    isPaidUser: true,
+    // subscription: {
+    //   id: `${event.}`,
+    //   type: session.metadata.subscriptionPlan as SubscriptionPlanEnum,
+    //   startDate: new Date(),
+    //   endDate: getEndDateByInterval(subscriptionItem.plan.interval),
+    //   maxStoriesAllowed: 50,
+    //   paymentHistory: [
+    //     {
+    //       transactionId: `${session.subscription}`,
+    //       amount: session.amount_total / 100,
+    //       date: new Date(),
+    //     },
+    //   ],
+    //   plan: subscriptionItem.plan,
+    //   price: subscriptionItem.price,
+    // },
+  };
+
+  // await updateUserInDb(userId, {
+  //   ...userInfoToUpdate,
+  // });
+};
+
 export const getCheckoutSessionData = async (
   request: Request,
   response: Response,
@@ -298,7 +325,7 @@ export const getCheckoutSessionData = async (
       };
 
       if (session.client_reference_id !== session.metadata.userId) return;
-      const updatedUser = await DBUtils.updateUserInDb(
+      const updatedUser = await updateUserInDb(
         session.client_reference_id,
         updatedUserData
       );
@@ -371,7 +398,7 @@ export const cancelSubscription = async (
         price: cancelSubscription.items.data[0].price,
       },
     };
-    const updatedUser = await DBUtils.updateUserInDb(userId, updatedUserData);
+    const updatedUser = await updateUserInDb(userId, updatedUserData);
 
     console.log("ℹ️ cancelSubscription", {
       cancelSubscription,
