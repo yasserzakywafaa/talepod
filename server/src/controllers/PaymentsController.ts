@@ -147,22 +147,20 @@ export const webhook = async (
   response: Response,
   next: NextFunction
 ) => {
-  const signature = request.headers["stripe-signature"];
-  console.log("ℹ️ checkoutSessionWebhook:>>>", { request });
-
   let event;
+  const signature = request.headers["stripe-signature"];
 
   try {
     if (CONFIG.IS_DEV) {
-      const payloadString = JSON.stringify(request.body, null, 2);
+      // const payloadString = JSON.stringify(request.body, null, 2);
       const header = stripe.webhooks.generateTestHeaderString({
-        payload: payloadString,
+        payload: request.body,
         secret: CONFIG.STRIPE_TEST_WEBHOOK_SECRET,
       });
 
       // Verify the Stripe webhook signature
       event = stripe.webhooks.constructEvent(
-        payloadString,
+        request.body,
         header,
         webhookSecret
       );
@@ -189,57 +187,73 @@ export const webhook = async (
   console.log("webhook:>>> Metadata:", session.metadata);
 
   // Handle the event
-  switch (event.type) {
+  await handleWebhookEvents(event);
+
+  return response.send();
+};
+
+export const handleWebhookEvents = (event: Stripe.Event): Promise<void> => {
+  const { type, data } = event;
+
+  switch (type) {
+    // Checkout
     case "checkout.session.async_payment_failed":
-      console.log("❌ webhook:>>> !", session);
+      console.log(
+        "❌ webhook:>>> checkout.session.async_payment_failed!",
+        data
+      );
       break;
     case "checkout.session.async_payment_succeeded":
-      console.log("✅  webhook:>>> !", session);
+      console.log(
+        "✅  webhook:>>> checkout.session.async_payment_succeeded!",
+        data
+      );
       break;
     case "checkout.session.completed":
-      console.log("✅ webhook:>>> Payment succeeded!", session);
+      console.log("✅ webhook:>>> Payment succeeded!", data);
       break;
     case "checkout.session.expired":
-      console.log("❌ webhook:>>> !", session);
+      console.log("❌ webhook:>>> checkout.session.expired!", data);
       break;
+    // Customer
     case "customer.subscription.created":
-      console.log("✅ webhook:>>> !", session);
+      console.log("✅ webhook:>>> customer.subscription.created!", data);
       break;
     case "customer.subscription.deleted":
-      console.log("✅  webhook:>>> !", session);
+      console.log("✅  webhook:>>> customer.subscription.deleted!", data);
       break;
     case "customer.subscription.paused":
-      console.log("✅  webhook:>>> !", session);
+      console.log("✅  webhook:>>> customer.subscription.paused!", data);
       break;
     case "customer.subscription.resumed":
-      console.log("✅  webhook:>>> !", session);
+      console.log("✅  webhook:>>> customer.subscription.resumed!", data);
       break;
     case "customer.subscription.trial_will_end":
-      console.log("ℹ️ webhook:>>> trial_will_end!", session);
+      console.log("ℹ️ webhook:>>> customer.subscription.trial_will_end!", data);
       break;
     case "customer.subscription.updated":
-      console.log("❌ webhook:>>> Customer subscription updated!", session);
+      console.log("❌ webhook:>>> customer.subscription.updated!", data);
       break;
+    // Invoice
     case "invoice.payment_action_required":
-      console.log("ℹ️ webhook:>>> !", session);
+      console.log("ℹ️ webhook:>>> payment_action_required!", data);
       break;
     case "invoice.payment_failed":
-      console.log("❌ webhook:>>> Invoice Payment failed!", session);
+      console.log("❌ webhook:>>> Invoice Payment failed!", data);
       break;
     case "invoice.payment_succeeded":
-      console.log("✅ webhook:>>> Invoice Payment succeeded!", session);
+      console.log("✅ webhook:>>> Invoice Payment succeeded!", data);
       break;
+    // Payment
     case "payment_method.automatically_updated":
-      console.log("✅ webhook:>>> !", session);
+      console.log("✅ webhook:>>> payment_method.automatically_updated!", data);
       break;
     case "payment_method.updated":
-      console.log("✅ webhook:>>> !", session);
+      console.log("✅ webhook:>>> payment_method.updated!", data);
       break;
   }
-  // You can now use session.metadata.userId to update the user's subscription status in your DB
 
-  // Return a 200 response to acknowledge receipt of the event
-  return response.send();
+  return undefined;
 };
 
 export const getCheckoutSessionData = async (
@@ -383,6 +397,7 @@ const PaymentsController = {
   getCheckoutSessionData,
   getSubscriptionDetails,
   cancelSubscription,
+  handleWebhookEvents,
 };
 
 export default PaymentsController;
