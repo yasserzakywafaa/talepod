@@ -146,47 +146,17 @@ export const webhook = async (
   next: NextFunction
 ): Promise<void> => {
   let event: Stripe.Event;
-  const signature = request.headers["stripe-signature"];
-
-  console.log("ℹ️ webhook:>>>", {
-    request,
-    signature,
-    webhookSecret,
-  });
-
   try {
-    // if (CONFIG.IS_DEV) {
-    //   const payloadString = JSON.stringify(request.body, null, 2);
-    //   const header = stripe.webhooks.generateTestHeaderString({
-    //     payload: payloadString,
-    //     secret: CONFIG.STRIPE_TEST_WEBHOOK_SECRET,
-    //   });
-
-    //   // Verify the Stripe webhook signature
-    //   event = stripe.webhooks.constructEvent(
-    //     payloadString,
-    //     header,
-    //     webhookSecret
-    //   );
-
-    //   console.log("ℹ️ webhook:>>> event:>>>", {
-    //     event,
-    //   });
-    // } else {
-
-    // const payloadString = JSON.stringify(request.body, null, 2);
     event = stripe.webhooks.constructEvent(
       request.body,
-      signature,
+      request.headers["stripe-signature"],
       webhookSecret
     );
     console.log("ℹ️ webhook:>>>", { event });
 
-    // Handle all possible events
     await handleWebhookEvents(event);
 
     response.json({ received: true });
-    //   }
   } catch (error) {
     console.error(`❌  Failed to verify Webhook signature!`, error);
     response
@@ -249,13 +219,14 @@ export const handleWebhookEvents = async (
         updatedUserData,
       });
 
-      // if (session.client_reference_id !== session.metadata.userId) return;
-      // await updateUserInDb(session.client_reference_id, updatedUserData);
+      if (session.client_reference_id !== session.metadata.userId) return;
+      await updateUserInDb(session.client_reference_id, updatedUserData);
 
       break;
     case "checkout.session.expired":
       console.log("❌ webhook:>>> checkout.session.expired!", data);
       break;
+
     // Customer Subscription
     case "customer.subscription.created":
       console.log("✅ webhook:>>> customer.subscription.created!", data);
@@ -270,14 +241,15 @@ export const handleWebhookEvents = async (
       console.log("✅  webhook:>>> customer.subscription.resumed!", data);
       break;
     case "customer.subscription.trial_will_end":
-      console.log("ℹ️ webhook:>>> customer.subscription.trial_will_end!", data);
+      console.log("⚠️ webhook:>>> customer.subscription.trial_will_end!", data);
       break;
     case "customer.subscription.updated":
-      console.log("❌ webhook:>>> customer.subscription.updated!", data);
+      console.log("✅  webhook:>>> customer.subscription.updated!", data);
       break;
+
     // Invoice
     case "invoice.payment_action_required":
-      console.log("ℹ️ webhook:>>> payment_action_required!", data);
+      console.log("⚠️ webhook:>>> payment_action_required!", data);
       break;
     case "invoice.payment_failed":
       console.log("❌ webhook:>>> Invoice Payment failed!", data);
@@ -285,6 +257,7 @@ export const handleWebhookEvents = async (
     case "invoice.payment_succeeded":
       console.log("✅ webhook:>>> Invoice Payment succeeded!", data);
       break;
+
     // Payment Method
     case "payment_method.automatically_updated":
       console.log("✅ webhook:>>> payment_method.automatically_updated!", data);
