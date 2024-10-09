@@ -148,11 +148,7 @@ export const webhook = async (
   next: NextFunction
 ) => {
   const signature = request.headers["stripe-signature"];
-
-  console.log("ℹ️ checkoutSessionWebhook:>>>", {
-    headers: request.headers,
-    signature,
-  });
+  console.log("ℹ️ checkoutSessionWebhook:>>>", { request });
 
   let event;
 
