@@ -149,32 +149,33 @@ export const webhook = async (
   const signature = request.headers["stripe-signature"];
 
   try {
-    if (CONFIG.IS_DEV) {
-      const payloadString = JSON.stringify(request.body, null, 2);
-      const header = stripe.webhooks.generateTestHeaderString({
-        payload: payloadString,
-        secret: CONFIG.STRIPE_TEST_WEBHOOK_SECRET,
-      });
+    // if (CONFIG.IS_DEV) {
+    //   const payloadString = JSON.stringify(request.body, null, 2);
+    //   const header = stripe.webhooks.generateTestHeaderString({
+    //     payload: payloadString,
+    //     secret: CONFIG.STRIPE_TEST_WEBHOOK_SECRET,
+    //   });
 
-      // Verify the Stripe webhook signature
-      event = stripe.webhooks.constructEvent(
-        payloadString,
-        header,
-        webhookSecret
-      );
+    //   // Verify the Stripe webhook signature
+    //   event = stripe.webhooks.constructEvent(
+    //     payloadString,
+    //     header,
+    //     webhookSecret
+    //   );
 
-      console.log("ℹ️ webhook:>>> event:>>>", {
-        event,
-      });
-    } else {
-      const payloadString = JSON.stringify(request.body, null, 2);
-      // Verify the Stripe webhook signature
-      event = stripe.webhooks.constructEvent(
-        payloadString,
-        signature,
-        webhookSecret
-      );
-    }
+    //   console.log("ℹ️ webhook:>>> event:>>>", {
+    //     event,
+    //   });
+    // } else {
+    const payloadString = JSON.stringify(request.body, null, 2);
+    // Verify the Stripe webhook signature
+    event = stripe.webhooks.constructEvent(
+      payloadString,
+      signature,
+      webhookSecret
+    );
+    console.log("ℹ️ webhook:>>> event:>>>", { event });
+    //   }
   } catch (error) {
     console.error(`❌  Failed to verify Webhook signature!`, error);
     return response
@@ -191,11 +192,13 @@ export const webhook = async (
   return response.send();
 };
 
-export const handleWebhookEvents = (event: Stripe.Event): Promise<void> => {
+export const handleWebhookEvents = async (
+  event: Stripe.Event
+): Promise<void> => {
   const { type, data } = event;
 
   switch (type) {
-    // Checkout
+    // Checkout Session
     case "checkout.session.async_payment_failed":
       console.log(
         "❌ webhook:>>> checkout.session.async_payment_failed!",
@@ -210,11 +213,47 @@ export const handleWebhookEvents = (event: Stripe.Event): Promise<void> => {
       break;
     case "checkout.session.completed":
       console.log("✅ webhook:>>> Payment succeeded!", data);
+
+      const session = await stripe.checkout.sessions.retrieve(data.object.id);
+
+      if (!session.subscription) return;
+      const subscriptionItem: Stripe.SubscriptionItem = (
+        await stripe.subscriptions.retrieve(session.subscription as string)
+      ).items.data[0];
+
+      const updatedUserData: Partial<User> = {
+        isPaidUser: true,
+        subscription: {
+          id: `${session.subscription}`,
+          type: session.metadata.subscriptionPlan as SubscriptionPlanEnum,
+          startDate: new Date(),
+          endDate: getEndDateByInterval(subscriptionItem.plan.interval),
+          maxStoriesAllowed: 50,
+          paymentHistory: [
+            {
+              transactionId: `${session.subscription}`,
+              amount: session.amount_total / 100,
+              date: new Date(),
+            },
+          ],
+          plan: subscriptionItem.plan,
+          price: subscriptionItem.price,
+        },
+      };
+
+      console.log("✅ subscriptionItem, updatedUserData:>>>>", {
+        subscriptionItem,
+        updatedUserData,
+      });
+
+      // if (session.client_reference_id !== session.metadata.userId) return;
+      // await updateUserInDb(session.client_reference_id, updatedUserData);
+
       break;
     case "checkout.session.expired":
       console.log("❌ webhook:>>> checkout.session.expired!", data);
       break;
-    // Customer
+    // Customer Subscription
     case "customer.subscription.created":
       console.log("✅ webhook:>>> customer.subscription.created!", data);
       break;
@@ -243,7 +282,7 @@ export const handleWebhookEvents = (event: Stripe.Event): Promise<void> => {
     case "invoice.payment_succeeded":
       console.log("✅ webhook:>>> Invoice Payment succeeded!", data);
       break;
-    // Payment
+    // Payment Method
     case "payment_method.automatically_updated":
       console.log("✅ webhook:>>> payment_method.automatically_updated!", data);
       break;
