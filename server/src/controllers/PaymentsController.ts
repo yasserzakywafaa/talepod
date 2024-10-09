@@ -142,23 +142,57 @@ export const createCheckoutSession = async (
   }
 };
 
-export const checkoutSessionWebhook = async (
+export const webhook = async (
   request: Request,
   response: Response,
   next: NextFunction
 ) => {
-  const sig = request.headers["stripe-signature"];
+  const signature = request.headers["stripe-signature"];
 
-  console.log("ℹ️ checkoutSessionWebhook");
+  console.log("ℹ️ checkoutSessionWebhook:>>>", {
+    headers: request.headers,
+    signature,
+  });
 
   let event;
 
   try {
-    // Verify the Stripe webhook signature
-    event = stripe.webhooks.constructEvent(request.body, sig, webhookSecret);
-  } catch (err) {
-    console.error(`⚠️  Webhook signature verification failed.`, err);
-    return response.sendStatus(400);
+    if (CONFIG.IS_DEV) {
+      const payload = {
+        id: "evt_test_webhook",
+        object: "event",
+      };
+
+      const payloadString = JSON.stringify(payload, null, 2);
+      const header = stripe.webhooks.generateTestHeaderString({
+        payload: payloadString,
+        secret: CONFIG.STRIPE_TEST_WEBHOOK_SECRET,
+      });
+
+      console.log("ℹ️ checkoutSessionWebhook:>>> evt_test_webhook:>>>", {
+        payloadString,
+        header,
+      });
+
+      // Verify the Stripe webhook signature
+      event = stripe.webhooks.constructEvent(
+        payloadString,
+        header,
+        webhookSecret
+      );
+    } else {
+      // Verify the Stripe webhook signature
+      event = stripe.webhooks.constructEvent(
+        request.body,
+        signature,
+        webhookSecret
+      );
+    }
+  } catch (error) {
+    console.error(`❌  Failed to verify Webhook signature!`, error);
+    return response
+      .status(400)
+      .send(`❌  Failed to verify Webhook signature! ${error}`);
   }
 
   // Handle the event
@@ -310,10 +344,10 @@ export const cancelSubscription = async (
 
 const PaymentsController = {
   config,
+  webhook,
   getPricesList,
   getProductsListWithPrices,
   createCheckoutSession,
-  checkoutSessionWebhook,
   getCheckoutSessionData,
   getSubscriptionDetails,
   cancelSubscription,

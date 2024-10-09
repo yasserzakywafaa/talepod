@@ -24,9 +24,9 @@ paymentsRouter.post(
 );
 
 paymentsRouter.post(
-  END_POINTS.PAYMENTS.CHECKOUT_SESSION_WEBHOOK,
+  END_POINTS.PAYMENTS.WEBHOOK,
   express.raw({ type: "application/json" }),
-  PaymentsController.checkoutSessionWebhook
+  PaymentsController.webhook
 );
 
 paymentsRouter.get(
