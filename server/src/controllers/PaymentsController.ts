@@ -149,7 +149,7 @@ export const webhook = async (
   const signature = request.headers["stripe-signature"];
 
   console.log("ℹ️ webhook:>>>", {
-    body: request.body,
+    request,
     signature,
     webhookSecret,
   });
@@ -181,6 +181,11 @@ export const webhook = async (
       webhookSecret
     );
     console.log("ℹ️ webhook:>>>", { event });
+
+    // Handle all possible events
+    await handleWebhookEvents(event);
+
+    response.json({ received: true });
     //   }
   } catch (error) {
     console.error(`❌  Failed to verify Webhook signature!`, error);
@@ -188,11 +193,6 @@ export const webhook = async (
       .status(400)
       .send(`❌  Failed to verify Webhook signature! ${error}`);
   }
-
-  // Handle all possible events
-  await handleWebhookEvents(event);
-
-  response.json({ received: true });
 };
 
 export const handleWebhookEvents = async (
