@@ -159,7 +159,9 @@ const MyProfilePage = () => {
                     Date joined
                   </Typography>
                   <span className="bold">
-                    {new Date(user.createdAt).toLocaleDateString()}
+                    {new Date(user.createdAt).toLocaleString("en-GB", {
+                      dateStyle: "short",
+                    })}
                   </span>
                 </Grid>
 
@@ -210,9 +212,12 @@ const MyProfilePage = () => {
                         Start Date
                       </Typography>
                       <span className="bold">
-                        {new Date(
-                          user.subscription.startDate
-                        ).toLocaleDateString()}
+                        {new Date(user.subscription.startDate).toLocaleString(
+                          "en-GB",
+                          {
+                            dateStyle: "short",
+                          }
+                        )}
                       </span>
                     </Grid>
 
@@ -225,9 +230,12 @@ const MyProfilePage = () => {
                         End Date
                       </Typography>
                       <span className="bold">
-                        {new Date(
-                          user.subscription.endDate
-                        ).toLocaleDateString()}
+                        {new Date(user.subscription.endDate).toLocaleString(
+                          "en-GB",
+                          {
+                            dateStyle: "short",
+                          }
+                        )}
                       </span>
                     </Grid>
 
@@ -290,7 +298,9 @@ const MyProfilePage = () => {
                         <span className="bold">
                           {new Date(
                             subscription.current_period_end * 1000
-                          ).toLocaleDateString()}
+                          ).toLocaleString("en-GB", {
+                            dateStyle: "short",
+                          })}
                         </span>
                       </Alert>
                     </Grid>

@@ -22,7 +22,7 @@ export const config = async (
   request: Request,
   response: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   const publishableKey = CONFIG.IS_DEV
     ? CONFIG.STRIPE_TEST_PUB_KEY
     : CONFIG.STRIPE_LIVE_PUB_KEY;
@@ -40,7 +40,7 @@ export const getPricesList = async (
   request: Request,
   response: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   try {
     const pricesList = await stripe.prices.list({
       active: true,
@@ -59,7 +59,7 @@ export const getProductsListWithPrices = async (
   request: Request,
   response: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   try {
     // Get all active Products List
     const products = await stripe.products.list({
@@ -100,7 +100,7 @@ export const createCheckoutSession = async (
   request: Request,
   response: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   const { priceId, subscriptionPlan, userId, success_url, cancel_url } =
     request.body.metadata;
 
@@ -144,9 +144,15 @@ export const webhook = async (
   request: Request,
   response: Response,
   next: NextFunction
-) => {
-  let event;
+): Promise<void> => {
+  let event: Stripe.Event;
   const signature = request.headers["stripe-signature"];
+
+  console.log("ℹ️ webhook:>>>", {
+    body: request.body,
+    signature,
+    webhookSecret,
+  });
 
   try {
     // if (CONFIG.IS_DEV) {
@@ -167,29 +173,26 @@ export const webhook = async (
     //     event,
     //   });
     // } else {
-    const payloadString = JSON.stringify(request.body, null, 2);
-    // Verify the Stripe webhook signature
+
+    // const payloadString = JSON.stringify(request.body, null, 2);
     event = stripe.webhooks.constructEvent(
-      payloadString,
+      request.body,
       signature,
       webhookSecret
     );
-    console.log("ℹ️ webhook:>>> event:>>>", { event });
+    console.log("ℹ️ webhook:>>>", { event });
     //   }
   } catch (error) {
     console.error(`❌  Failed to verify Webhook signature!`, error);
-    return response
+    response
       .status(400)
       .send(`❌  Failed to verify Webhook signature! ${error}`);
   }
 
-  const session = event.data.object;
-  console.log("webhook:>>> Metadata:", session.metadata);
-
-  // Handle the event
+  // Handle all possible events
   await handleWebhookEvents(event);
 
-  return response.send();
+  response.json({ received: true });
 };
 
 export const handleWebhookEvents = async (
@@ -327,7 +330,7 @@ export const getCheckoutSessionData = async (
   request: Request,
   response: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   const sessionId = request.query.sessionId as string;
 
   if (!sessionId) {
@@ -386,7 +389,7 @@ export const getSubscriptionDetails = async (
   request: Request,
   response: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   const subscriptionId = request.query.subscriptionId as string;
   if (!subscriptionId) {
     response.status(400).json({ message: "❌ 'subscriptionId' is required!" });
@@ -409,7 +412,7 @@ export const cancelSubscription = async (
   request: Request,
   response: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   const { subscriptionId, userId } = request.body;
 
   console.log("ℹ️ cancelSubscription:>>> request.body>>>", {
