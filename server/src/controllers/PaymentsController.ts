@@ -150,15 +150,15 @@ export const webhook = async (
 
   try {
     if (CONFIG.IS_DEV) {
-      // const payloadString = JSON.stringify(request.body, null, 2);
+      const payloadString = JSON.stringify(request.body, null, 2);
       const header = stripe.webhooks.generateTestHeaderString({
-        payload: request.body,
+        payload: payloadString,
         secret: CONFIG.STRIPE_TEST_WEBHOOK_SECRET,
       });
 
       // Verify the Stripe webhook signature
       event = stripe.webhooks.constructEvent(
-        request.body,
+        payloadString,
         header,
         webhookSecret
       );
@@ -167,9 +167,10 @@ export const webhook = async (
         event,
       });
     } else {
+      const payloadString = JSON.stringify(request.body, null, 2);
       // Verify the Stripe webhook signature
       event = stripe.webhooks.constructEvent(
-        request.body,
+        payloadString,
         signature,
         webhookSecret
       );
