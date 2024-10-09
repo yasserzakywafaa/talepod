@@ -140,8 +140,10 @@ export const createCheckoutSession = async (
   }
 };
 
+interface RequestWithRawBody extends Request {rawBody: Buffer;}
+
 export const webhook = async (
-  request: Request,
+  request: RequestWithRawBody,
   response: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -176,7 +178,7 @@ export const webhook = async (
 
     // const payloadString = JSON.stringify(request.body, null, 2);
     event = stripe.webhooks.constructEvent(
-      request.body,
+      request.rawBody,
       signature,
       webhookSecret
     );
