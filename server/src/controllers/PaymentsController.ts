@@ -325,6 +325,8 @@ export const handleUpdateUserSubscription = async (
     },
   };
 
+  console.log({ userInfoToUpdate });
+
   await updateUserInDb(session.metadata.userId, {
     ...userInfoToUpdate,
   });
