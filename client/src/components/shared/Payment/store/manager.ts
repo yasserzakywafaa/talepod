@@ -119,7 +119,7 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
             priceObject,
             subscriptionPlan,
             userId: user._id,
-            success_url: `${window.location.origin}${routes.paymentSuccess(
+            success_url: `${window.location.origin}${routes.paymentStatus(
               "{CHECKOUT_SESSION_ID}"
             )}`,
             cancel_url: `${window.location.href}`,

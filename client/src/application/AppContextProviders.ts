@@ -9,7 +9,7 @@ import { MyProfileContextProvider } from "src/Pages/MyProfile/store/Provider";
 import { MyStoriesContextProvider } from "src/Pages/MyStories/store/Provider";
 import { OpenaiContextProvider } from "src/components/StoryCreator/features/Openai/store/Provider";
 import { PaymentContextProvider } from "src/components/shared/Payment/store/Provider";
-import { PaymentSuccessContextProvider } from "src/Pages/PaymentSuccess/store/Provider";
+import { PaymentStatusContextProvider } from "src/Pages/PaymentStatus/store/Provider";
 import { PricingModalContextProvider } from "src/components/Modals/PricingModal/store/Provider";
 import React from "react";
 import { RegisterModalContextProvider } from "src/components/Modals/RegisterModal/store/Provider";
@@ -29,7 +29,7 @@ const contextProviders = [
   ContactContextProvider,
   CheckoutContextProvider,
   PaymentContextProvider,
-  PaymentSuccessContextProvider,
+  PaymentStatusContextProvider,
 
   // Modals
   LoginModalContextProvider,

@@ -1,10 +1,14 @@
+import {
+  DBCollections,
+  getDocumentFromDb,
+  updateUserInDb,
+} from "../models/mongoDb/index";
 import { NextFunction, Request, Response } from "express";
 import { SubscriptionPlanEnum, User } from "../models/types";
 
 import CONFIG from "./../config";
+import { ObjectId } from "mongodb";
 import Stripe from "stripe";
-import { getEndDateByInterval } from "../utils/dateUtils";
-import { updateUserInDb } from "../models/mongoDb/index";
 
 const secretKey = CONFIG.IS_DEV
   ? CONFIG.STRIPE_TEST_SECRET_KEY
@@ -156,7 +160,7 @@ export const webhook = async (
 
     await handleWebhookEvents(event);
 
-    response.json({ received: true });
+    response.json({ event, received: true });
   } catch (error) {
     console.error(`❌  Failed to verify Webhook signature!`, error);
     response
@@ -169,134 +173,161 @@ export const handleWebhookEvents = async (
   event: Stripe.Event
 ): Promise<void> => {
   const { type, data } = event;
+  let session: Stripe.Checkout.Session;
+  let subscription: Stripe.Subscription;
+  let invoice: Stripe.Invoice;
+  let paymentMethod: Stripe.PaymentMethod;
 
   switch (type) {
     // Checkout Session
     case "checkout.session.async_payment_failed":
+      session = data.object;
       console.log(
         "❌ webhook:>>> checkout.session.async_payment_failed!",
-        data
+        session
       );
-      break;
+      return;
     case "checkout.session.async_payment_succeeded":
+      session = data.object;
       console.log(
         "✅  webhook:>>> checkout.session.async_payment_succeeded!",
-        data
+        session
       );
-      break;
+      return;
     case "checkout.session.completed":
-      console.log("✅ webhook:>>> Payment succeeded!", data);
-
-      const session = await stripe.checkout.sessions.retrieve(data.object.id);
-
-      if (!session.subscription) return;
-      const subscriptionItem: Stripe.SubscriptionItem = (
-        await stripe.subscriptions.retrieve(session.subscription as string)
-      ).items.data[0];
-
-      const updatedUserData: Partial<User> = {
-        isPaidUser: true,
-        subscription: {
-          id: `${session.subscription}`,
-          type: session.metadata.subscriptionPlan as SubscriptionPlanEnum,
-          startDate: new Date(),
-          endDate: getEndDateByInterval(subscriptionItem.plan.interval),
-          maxStoriesAllowed: 50,
-          paymentHistory: [
-            {
-              transactionId: `${session.subscription}`,
-              amount: session.amount_total / 100,
-              date: new Date(),
-            },
-          ],
-          plan: subscriptionItem.plan,
-          price: subscriptionItem.price,
-        },
-      };
-
-      console.log("✅ subscriptionItem, updatedUserData:>>>>", {
-        subscriptionItem,
-        updatedUserData,
-      });
-
-      if (session.client_reference_id !== session.metadata.userId) return;
-      await updateUserInDb(session.client_reference_id, updatedUserData);
-
-      break;
+      session = data.object;
+      console.log("✅ webhook:>>> Payment succeeded!", session);
+      return;
     case "checkout.session.expired":
       console.log("❌ webhook:>>> checkout.session.expired!", data);
-      break;
+      return;
 
     // Customer Subscription
     case "customer.subscription.created":
-      console.log("✅ webhook:>>> customer.subscription.created!", data);
-      break;
+      subscription = data.object;
+      console.log(
+        "✅ webhook:>>> customer.subscription.created!",
+        subscription
+      );
+      return;
     case "customer.subscription.deleted":
-      console.log("✅  webhook:>>> customer.subscription.deleted!", data);
-      break;
+      subscription = data.object;
+      console.log(
+        "✅  webhook:>>> customer.subscription.deleted!",
+        subscription
+      );
+      return;
     case "customer.subscription.paused":
-      console.log("✅  webhook:>>> customer.subscription.paused!", data);
-      break;
+      subscription = data.object;
+      console.log(
+        "✅  webhook:>>> customer.subscription.paused!",
+        subscription
+      );
+      return;
     case "customer.subscription.resumed":
-      console.log("✅  webhook:>>> customer.subscription.resumed!", data);
-      break;
+      subscription = data.object;
+      console.log(
+        "✅  webhook:>>> customer.subscription.resumed!",
+        subscription
+      );
+      return;
     case "customer.subscription.trial_will_end":
-      console.log("⚠️ webhook:>>> customer.subscription.trial_will_end!", data);
-      break;
+      subscription = data.object;
+      console.log(
+        "⚠️ webhook:>>> customer.subscription.trial_will_end!",
+        subscription
+      );
+      return;
     case "customer.subscription.updated":
-      console.log("✅  webhook:>>> customer.subscription.updated!", data);
-      break;
+      subscription = data.object;
+      console.log(
+        "✅  webhook:>>> customer.subscription.updated!",
+        subscription
+      );
+      return;
 
     // Invoice
     case "invoice.payment_action_required":
-      console.log("⚠️ webhook:>>> payment_action_required!", data);
-      break;
+      invoice = data.object;
+      console.log("⚠️ webhook:>>> payment_action_required!", invoice);
+      return;
     case "invoice.payment_failed":
-      console.log("❌ webhook:>>> Invoice Payment failed!", data);
-      break;
+      invoice = data.object;
+      console.log("❌ webhook:>>> Invoice Payment failed!", invoice);
+      return;
     case "invoice.payment_succeeded":
-      console.log("✅ webhook:>>> Invoice Payment succeeded!", data);
-      break;
+      invoice = data.object;
+      console.log("✅ webhook:>>> Invoice Payment succeeded!", invoice);
+      await handleUpdateUserSubscription(
+        invoice.subscription as string,
+        new Date(data.object.period_start * 1000),
+        new Date(data.object.period_start * 1000)
+      );
+      return;
 
     // Payment Method
     case "payment_method.automatically_updated":
-      console.log("✅ webhook:>>> payment_method.automatically_updated!", data);
-      break;
+      paymentMethod = data.object;
+      console.log(
+        "✅ webhook:>>> payment_method.automatically_updated!",
+        paymentMethod
+      );
+      return;
     case "payment_method.updated":
-      console.log("✅ webhook:>>> payment_method.updated!", data);
-      break;
+      paymentMethod = data.object;
+      console.log("✅ webhook:>>> payment_method.updated!", paymentMethod);
+      return;
   }
 
   return undefined;
 };
 
-export const handleUpdateUserOnWebhook = async (
-  userId: string,
-  event: Stripe.Event
+export const handleUpdateUserSubscription = async (
+  subscriptionId: string,
+  startDate: Date,
+  endDate: Date
 ): Promise<void> => {
+  const session = await stripe.checkout.sessions.retrieve(subscriptionId);
+  if (!session.subscription) return;
+
+  const subscriptionItem: Stripe.SubscriptionItem = (
+    await stripe.subscriptions.retrieve(session.subscription as string)
+  ).items.data[0];
+
+  const user = (await getDocumentFromDb(
+    new ObjectId(session.metadata.userId),
+    DBCollections.users
+  )) as User;
+
   const userInfoToUpdate: Partial<User> = {
     isPaidUser: true,
-    // subscription: {
-    //   id: `${event.}`,
-    //   type: session.metadata.subscriptionPlan as SubscriptionPlanEnum,
-    //   startDate: new Date(),
-    //   endDate: getEndDateByInterval(subscriptionItem.plan.interval),
-    //   maxStoriesAllowed: 50,
-    //   paymentHistory: [
-    //     {
-    //       transactionId: `${session.subscription}`,
-    //       amount: session.amount_total / 100,
-    //       date: new Date(),
-    //     },
-    //   ],
-    //   plan: subscriptionItem.plan,
-    //   price: subscriptionItem.price,
-    // },
+    subscription: {
+      id: subscriptionId,
+      type: session.metadata.subscriptionPlan as SubscriptionPlanEnum,
+      startDate: startDate,
+      endDate: endDate,
+      maxStoriesAllowed:
+        CONFIG[
+          `MAX_STORIES_LIMIT_${session.metadata.subscriptionPlan.toUpperCase()}`
+        ],
+      paymentHistory: [
+        ...user.subscription.paymentHistory,
+        {
+          transactionId: `${session.subscription}`,
+          amount: session.amount_total,
+          currency: session.currency,
+          date: new Date(),
+        },
+      ],
+      paymentStatus: "unpaid",
+      plan: subscriptionItem.plan,
+      price: subscriptionItem.price,
+    },
   };
 
-  // await updateUserInDb(userId, {
-  //   ...userInfoToUpdate,
-  // });
+  await updateUserInDb(session.metadata.userId, {
+    ...userInfoToUpdate,
+  });
 };
 
 export const getCheckoutSessionData = async (
@@ -313,43 +344,49 @@ export const getCheckoutSessionData = async (
 
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
-
     if (!session.subscription) return;
+
     const subscriptionItem: Stripe.SubscriptionItem = (
       await stripe.subscriptions.retrieve(session.subscription as string)
     ).items.data[0];
 
-    if (session.status === "complete" && session.payment_status === "paid") {
-      const updatedUserData: Partial<User> = {
-        isPaidUser: true,
-        subscription: {
-          id: `${session.subscription}`,
-          type: session.metadata.subscriptionPlan as SubscriptionPlanEnum,
-          startDate: new Date(),
-          endDate: getEndDateByInterval(subscriptionItem.plan.interval),
-          maxStoriesAllowed: 50,
-          paymentHistory: [
-            {
-              transactionId: `${session.subscription}`,
-              amount: session.amount_total / 100,
-              date: new Date(),
-            },
-          ],
-          plan: subscriptionItem.plan,
-          price: subscriptionItem.price,
-        },
-      };
+    // if (session.status === "complete" && session.payment_status === "paid") {
+    //   // // The User information is updated in the webhooks "invoice.payment_succeeded" to make sure
+    //   // // that the payment actually went through before even notifying the user.
 
-      if (session.client_reference_id !== session.metadata.userId) return;
-      const updatedUser = await updateUserInDb(
-        session.client_reference_id,
-        updatedUserData
-      );
+    //   // const updatedUserData: Partial<User> = {
+    //   //   isPaidUser: true,
+    //   //   subscription: {
+    //   //     id: `${session.subscription}`,
+    //   //     type: session.metadata.subscriptionPlan as SubscriptionPlanEnum,
+    //   //     startDate: new Date(),
+    //   //     endDate: getEndDateByInterval(subscriptionItem.plan.interval),
+    //   //     maxStoriesAllowed: 50,
+    //   //     paymentHistory: [
+    //   //       {
+    //   //         transactionId: `${session.subscription}`,
+    //   //         amount: session.amount_total / 100,
+    //   //         date: new Date(),
+    //   //       },
+    //   //     ],
+    //   //     plan: subscriptionItem.plan,
+    //   //     price: subscriptionItem.price,
+    //   //   },
+    //   // };
+    //   // if (session.client_reference_id !== session.metadata.userId) return;
 
-      response.json({ session, subscriptionItem, updatedUser });
-    } else {
-      response.status(200).json({ session, subscriptionItem });
-    }
+    //   // const updatedUser = await updateUserInDb(
+    //   //   session.client_reference_id,
+    //   //   updatedUserData
+    //   // );
+
+    //   // response.json({ session, subscriptionItem, updatedUser });
+    //   response.status(200).json({ session, subscriptionItem });
+    // } else {
+    //   response.status(200).json({ session, subscriptionItem });
+    // }
+
+    response.status(200).json({ session, subscriptionItem });
   } catch (error) {
     console.error("❌ Failed to get the Session data!", {
       error,
@@ -410,6 +447,7 @@ export const cancelSubscription = async (
         startDate: new Date(),
         endDate: new Date(),
         maxStoriesAllowed: 4,
+        paymentStatus: "unpaid",
         plan: cancelSubscription.items.data[0].plan,
         price: cancelSubscription.items.data[0].price,
       },

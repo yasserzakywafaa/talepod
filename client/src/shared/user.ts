@@ -43,7 +43,7 @@ export interface UserSubscription {
   type: SubscriptionPlanEnum;
   startDate: Date;
   endDate: Date;
-  paymentHistory?: UserPaymentHistory[];
+  paymentHistory: UserPaymentHistory[];
   maxStoriesAllowed: number;
   plan: Plan;
   price: Price;
@@ -72,6 +72,7 @@ export enum SubscriptionPlanEnum {
 
 export interface UserPaymentHistory {
   transactionId: string;
+  currency: string;
   amount: number;
   date: Date;
 }
