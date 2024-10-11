@@ -365,6 +365,7 @@ export const getCheckoutSessionData = async (
   next: NextFunction
 ): Promise<void> => {
   const sessionId = request.query.sessionId as string;
+  const userId = request.query.userId as string;
 
   if (!sessionId) {
     response.status(400).json({ message: "❌ 'sessionId' is required!" });
@@ -373,13 +374,12 @@ export const getCheckoutSessionData = async (
 
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
-    if (!session.subscription) return;
-
     const subscriptionItem: Stripe.SubscriptionItem = (
       await stripe.subscriptions.retrieve(session.subscription as string)
     ).items.data[0];
+    const user = await getUserDataById(userId);
 
-    response.status(200).json({ session, subscriptionItem });
+    response.status(200).json({ session, subscriptionItem, user });
   } catch (error) {
     console.error("❌ Failed to get the Session data!", {
       error,

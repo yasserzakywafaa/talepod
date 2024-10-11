@@ -15,6 +15,9 @@ export const usePaymentStatusManager = (
   store: PaymentStatusStore
 ): PaymentStatusManager => {
   const {
+    store: {
+      state: { auth },
+    },
     manager: { handleSetAuthInfo },
   } = useApplicationContext();
 
@@ -30,6 +33,7 @@ export const usePaymentStatusManager = (
       > = await axios.get(END_POINTS.PAYMENTS.GET_CHECKOUT_SESSION_DATA, {
         params: {
           sessionId,
+          userId: auth.user?._id,
         },
       });
       const status = response.data.session.status;
@@ -45,11 +49,11 @@ export const usePaymentStatusManager = (
 
         handleSetAuthInfo({
           isAuthenticated: true,
-          user: response.data.updatedUser,
+          user: response.data.user,
         });
         localStorage.setItem(
           APP_CONSTANTS.LOCAL_STORAGE.USER,
-          JSON.stringify(response.data.updatedUser)
+          JSON.stringify(response.data.user)
         );
       }
     } catch (error) {

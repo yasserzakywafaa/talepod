@@ -32,7 +32,7 @@ export interface SessionData {
 export interface PaymentStatusDataResponse {
   session: SessionData;
   subscriptionItem: UserSubscription;
-  updatedUser: User;
+  user: User;
 }
 
 export const getPaymentStatusInitialState = (): PaymentStatusInitialState => {
