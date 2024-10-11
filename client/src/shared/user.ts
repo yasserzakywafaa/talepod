@@ -14,6 +14,7 @@ export interface User {
   role: UserRole;
   isPaidUser: boolean;
   subscription: UserSubscription;
+  stripeCustomerId?: string;
   preferences: UserPreferences;
   location?: string;
   timezone?: string;
@@ -43,7 +44,7 @@ export interface UserSubscription {
   type: SubscriptionPlanEnum;
   startDate: Date;
   endDate: Date;
-  paymentHistory: UserPaymentHistory[];
+  paymentHistory?: UserPaymentHistory[];
   maxStoriesAllowed: number;
   plan: Plan;
   price: Price;

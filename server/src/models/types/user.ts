@@ -15,6 +15,7 @@ export interface User {
   role: UserRole;
   isPaidUser: boolean;
   subscription?: UserSubscription;
+  stripeCustomerId?: string;
   preferences?: UserPreferences;
   location?: string;
   timezone?: string;

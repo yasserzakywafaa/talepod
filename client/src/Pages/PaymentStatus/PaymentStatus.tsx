@@ -34,11 +34,22 @@ const PaymentStatusPage = () => {
     manager: { handleGetPaymentStatusData },
   } = usePaymentStatusContext();
 
-  if (!sessionId || !auth.user) return;
+  if (!sessionId || !auth.user) {
+    console.log("❌ PaymentStatusPage:>>>", {
+      sessionId,
+      user: auth.user,
+    });
+    alert("Not sessionId or User");
+
+    return;
+  }
 
   const getTotalAmount = (): string => {
     if (auth.user) {
       const paymentHistory = auth.user.subscription.paymentHistory;
+      console.log("paymentHistory:>>>", { paymentHistory, user: auth.user });
+
+      if (!paymentHistory) return "0";
 
       return `${getCurrencySymbol(
         paymentHistory[0].currency

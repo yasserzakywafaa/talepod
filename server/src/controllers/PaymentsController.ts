@@ -1,14 +1,10 @@
-import {
-  DBCollections,
-  getDocumentFromDb,
-  updateUserInDb,
-} from "../models/mongoDb/index";
 import { NextFunction, Request, Response } from "express";
 import { SubscriptionPlanEnum, User } from "../models/types";
 
 import CONFIG from "./../config";
-import { ObjectId } from "mongodb";
 import Stripe from "stripe";
+import { getUserDataById } from "../utils/fetchData";
+import { updateUserInDb } from "../models/mongoDb/index";
 
 const secretKey = CONFIG.IS_DEV
   ? CONFIG.STRIPE_TEST_SECRET_KEY
@@ -108,6 +104,9 @@ export const createCheckoutSession = async (
   const { priceId, subscriptionPlan, userId, success_url, cancel_url } =
     request.body.metadata;
 
+  const user = await getUserDataById(userId);
+  console.log("ℹ️  createCheckoutSession:>>> User", { user });
+
   try {
     // Create a new Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
@@ -133,7 +132,11 @@ export const createCheckoutSession = async (
         userId,
         subscriptionPlan,
       },
+      customer: user.stripeCustomerId ?? undefined,
+      customer_creation: "if_required",
     });
+
+    console.log("ℹ️  createCheckoutSession:>>> session", { session });
 
     response.json({ sessionId: session.id });
   } catch (error) {
@@ -294,11 +297,7 @@ export const handleUpdateUserSubscription = async (
     await stripe.subscriptions.retrieve(session.subscription as string)
   ).items.data[0];
 
-  const user = (await getDocumentFromDb(
-    new ObjectId(session.metadata.userId),
-    DBCollections.users
-  )) as User;
-
+  const user = await getUserDataById(session.metadata.userId);
   const userInfoToUpdate: Partial<User> = {
     isPaidUser: true,
     subscription: {
@@ -313,7 +312,7 @@ export const handleUpdateUserSubscription = async (
       paymentHistory: [
         ...user.subscription.paymentHistory,
         {
-          transactionId: `${session.subscription}`,
+          transactionId: `${session.invoice}`,
           amount: session.amount_total,
           currency: session.currency,
           date: new Date(),
@@ -323,9 +322,10 @@ export const handleUpdateUserSubscription = async (
       plan: subscriptionItem.plan,
       price: subscriptionItem.price,
     },
+    stripeCustomerId: session.customer as string,
   };
 
-  console.log({ userInfoToUpdate });
+  console.log("handleUpdateUserSubscription:>>>", { user, userInfoToUpdate });
 
   await updateUserInDb(session.metadata.userId, {
     ...userInfoToUpdate,
