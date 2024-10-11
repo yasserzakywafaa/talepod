@@ -133,7 +133,6 @@ export const createCheckoutSession = async (
         subscriptionPlan,
       },
       customer: user.stripeCustomerId ?? undefined,
-      customer_creation: "if_required",
     });
 
     console.log("ℹ️  createCheckoutSession:>>> session", { session });
