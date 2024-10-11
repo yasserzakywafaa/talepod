@@ -39,22 +39,18 @@ const PaymentStatusPage = () => {
       sessionId,
       user: auth.user,
     });
-    alert("Not sessionId or User");
+    alert("❌ 'sessionId' or 'User' is required!");
 
     return;
   }
 
   const getTotalAmount = (): string => {
-    if (auth.user) {
-      const paymentHistory = auth.user.subscription.paymentHistory;
-      console.log("paymentHistory:>>>", { paymentHistory, user: auth.user });
+    console.log("getTotalAmount:>>>", { sessionData, user: auth.user });
+    if (!sessionData) return "0";
 
-      if (!paymentHistory) return "0";
-
-      return `${getCurrencySymbol(
-        paymentHistory[0].currency
-      )}${paymentHistory[0].amount.toFixed(2)}`;
-    } else return "";
+    return `${getCurrencySymbol(
+      sessionData.currency
+    )}${sessionData.amount_total.toFixed(2)}`;
   };
 
   const handleOnCreateClick = () => navigate(routes.create);

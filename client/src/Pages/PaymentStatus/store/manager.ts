@@ -1,45 +1,19 @@
 import axios, { AxiosResponse } from "axios";
 
-// import APP_CONSTANTS from "src/application/shared/app_constants";
 import END_POINTS from "src/application/shared/endpoints";
 import { PaymentStatusDataResponse } from "./state";
 import { PaymentStatusStore } from "./store";
-import { useApplicationContext } from "src/application/store/Provider";
 
 export interface PaymentStatusManager {
   setUp: () => void;
-  handleCheckPaymentStatus: () => void;
   handleGetPaymentStatusData: (sessionId: string) => Promise<void>;
 }
 
 export const usePaymentStatusManager = (
   store: PaymentStatusStore
 ): PaymentStatusManager => {
-  const {
-    store: {
-      // state: { auth },
-    },
-    // manager: { handleSetAuthInfo },
-  } = useApplicationContext();
-
   const setUp = async () => {
     await handleGetPaymentStatusData(store.state.sessionData.id);
-  };
-
-  const handleCheckPaymentStatus = async () => {
-    // let intervalId: NodeJS.Timeout;
-    // try {
-    //   if (auth.user) {
-    //     const user = await handleFetchUserInfo(auth.user._id);
-    //     const isPaySuccess = user.subscription.st
-    //     if (isPaySuccess) {
-    //       store.setShowPaymentSuccess(true);
-    //       clearInterval(intervalId);
-    //     }
-    //   }
-    // } catch (error) {
-    //   console.error("Error checking payment status:", error);
-    // }
   };
 
   const handleGetPaymentStatusData = async (sessionId: string) => {
@@ -81,7 +55,6 @@ export const usePaymentStatusManager = (
 
   return {
     setUp,
-    handleCheckPaymentStatus,
     handleGetPaymentStatusData,
   };
 };
