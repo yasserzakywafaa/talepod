@@ -1,8 +1,10 @@
 import axios, { AxiosResponse } from "axios";
 
+import APP_CONSTANTS from "src/application/shared/app_constants";
 import END_POINTS from "src/application/shared/endpoints";
 import { PaymentStatusDataResponse } from "./state";
 import { PaymentStatusStore } from "./store";
+import { useApplicationContext } from "src/application/store/Provider";
 
 export interface PaymentStatusManager {
   setUp: () => void;
@@ -12,6 +14,10 @@ export interface PaymentStatusManager {
 export const usePaymentStatusManager = (
   store: PaymentStatusStore
 ): PaymentStatusManager => {
+  const {
+    manager: { handleSetAuthInfo },
+  } = useApplicationContext();
+
   const setUp = async () => {
     await handleGetPaymentStatusData(store.state.sessionData.id);
   };
@@ -31,12 +37,21 @@ export const usePaymentStatusManager = (
 
       if (status === "complete" && paymentStatus === "paid") {
         store.setShowPaymentSuccess(true);
-      }
 
-      store.updatePaymentData({
-        ...response.data.session,
-        subscription: response.data.subscriptionItem,
-      });
+        store.updatePaymentData({
+          ...response.data.session,
+          subscription: response.data.subscriptionItem,
+        });
+
+        handleSetAuthInfo({
+          isAuthenticated: true,
+          user: response.data.updatedUser,
+        });
+        localStorage.setItem(
+          APP_CONSTANTS.LOCAL_STORAGE.USER,
+          JSON.stringify(response.data.updatedUser)
+        );
+      }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         // Notify({

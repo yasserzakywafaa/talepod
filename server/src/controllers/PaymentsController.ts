@@ -288,57 +288,68 @@ export const handleWebhookEvents = async (
 export const handleUpdateUserSubscription = async (
   invoice: Stripe.Invoice
 ): Promise<void> => {
+  console.error(
+    `ℹ️ handleUpdateUserSubscription:>>> invoice.subscription:>>>`,
+    invoice.subscription
+  );
+
   const subscriptionId = invoice.subscription;
   if (!subscriptionId) {
     console.error(`❌  'subscriptionId' is required!`);
     return;
   }
 
-  const session = await stripe.checkout.sessions.retrieve(
-    subscriptionId as string
-  );
-  const subscriptionItem: Stripe.SubscriptionItem = (
-    await stripe.subscriptions.retrieve(session.subscription as string)
-  ).items.data[0];
+  try {
+    const session = await stripe.checkout.sessions.retrieve(
+      subscriptionId as string
+    );
 
-  const user = await getUserDataById(session.metadata.userId);
-  const userInfoToUpdate: Partial<User> = {
-    isPaidUser: true,
-    subscription: {
-      id: subscriptionId as string,
-      type: session.metadata.subscriptionPlan as SubscriptionPlanEnum,
-      startDate: new Date(invoice.period_start * 1000),
-      endDate: new Date(invoice.period_end * 1000),
-      maxStoriesAllowed:
-        CONFIG[
-          `MAX_STORIES_LIMIT_${session.metadata.subscriptionPlan.toUpperCase()}`
+    const subscriptionItem: Stripe.SubscriptionItem = (
+      await stripe.subscriptions.retrieve(session.subscription as string)
+    ).items.data[0];
+
+    const user = await getUserDataById(session.metadata.userId);
+    const userInfoToUpdate: Partial<User> = {
+      isPaidUser: true,
+      subscription: {
+        id: subscriptionId as string,
+        type: session.metadata.subscriptionPlan as SubscriptionPlanEnum,
+        startDate: new Date(invoice.period_start * 1000),
+        endDate: new Date(invoice.period_end * 1000),
+        maxStoriesAllowed:
+          CONFIG[
+            `MAX_STORIES_LIMIT_${session.metadata.subscriptionPlan.toUpperCase()}`
+          ],
+        paymentHistory: [
+          ...user.subscription.paymentHistory,
+          {
+            transactionId: `${invoice.id}`,
+            amount: invoice.total,
+            currency: invoice.currency,
+            date: new Date(),
+          },
         ],
-      paymentHistory: [
-        ...user.subscription.paymentHistory,
-        {
-          transactionId: `${invoice.id}`,
-          amount: invoice.total,
-          currency: invoice.currency,
-          date: new Date(),
-        },
-      ],
-      paymentStatus: "unpaid",
-      plan: subscriptionItem.plan,
-      price: subscriptionItem.price,
-    },
-    stripeCustomerId: invoice.customer as string,
-  };
+        paymentStatus: "unpaid",
+        plan: subscriptionItem.plan,
+        price: subscriptionItem.price,
+      },
+      stripeCustomerId: invoice.customer as string,
+    };
 
-  console.log("handleUpdateUserSubscription:>>>", {
-    user,
-    userInfoToUpdate,
-    session,
-    invoice,
-  });
+    console.log("handleUpdateUserSubscription:>>>", {
+      user,
+      userInfoToUpdate,
+      session,
+      invoice,
+    });
 
-  await updateUserInDb(session.metadata.userId, {
-    ...userInfoToUpdate,
-  });
+    await updateUserInDb(session.metadata.userId, {
+      ...userInfoToUpdate,
+    });
+  } catch (error) {
+    console.error(`❌  Failed to get session data!`, { error });
+    return;
+  }
 };
 
 export const getCheckoutSessionData = async (

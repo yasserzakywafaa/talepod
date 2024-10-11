@@ -48,9 +48,9 @@ const PaymentStatusPage = () => {
     console.log("getTotalAmount:>>>", { sessionData, user: auth.user });
     if (!sessionData) return "0";
 
-    return `${getCurrencySymbol(
-      sessionData.currency
-    )}${sessionData.amount_total.toFixed(2)}`;
+    return `${getCurrencySymbol(sessionData.currency)}${
+      sessionData.amount_total / 100
+    }`;
   };
 
   const handleOnCreateClick = () => navigate(routes.create);
