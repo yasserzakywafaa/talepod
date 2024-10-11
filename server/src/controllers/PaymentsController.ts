@@ -336,7 +336,7 @@ export const handleUpdateUserSubscription = async (
             date: new Date(),
           },
         ],
-        paymentStatus: "unpaid",
+        paymentStatus: "paid",
         plan: subscriptionItem.plan,
         price: subscriptionItem.price,
       },
