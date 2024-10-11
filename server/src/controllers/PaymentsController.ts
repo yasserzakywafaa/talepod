@@ -329,7 +329,6 @@ export const handleUpdateUserSubscription = async (
             `MAX_STORIES_LIMIT_${subscription.metadata.subscriptionPlan.toUpperCase()}`
           ],
         paymentHistory: [
-          ...user.subscription.paymentHistory,
           {
             transactionId: `${invoice.id}`,
             amount: invoice.total,
@@ -355,7 +354,7 @@ export const handleUpdateUserSubscription = async (
       ...userInfoToUpdate,
     });
   } catch (error) {
-    console.error(`❌  Failed to get session data!`, { error });
+    console.error(`❌  Failed to get subscription data!`, { error });
     return;
   }
 };
