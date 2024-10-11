@@ -131,6 +131,7 @@ export const createCheckoutSession = async (
       metadata: {
         userId,
         subscriptionPlan,
+        checkoutSessionId: "{CHECKOUT_SESSION_ID}",
       },
       customer: user.stripeCustomerId ?? undefined,
     });
@@ -288,11 +289,6 @@ export const handleWebhookEvents = async (
 export const handleUpdateUserSubscription = async (
   invoice: Stripe.Invoice
 ): Promise<void> => {
-  console.error(
-    `ℹ️ handleUpdateUserSubscription:>>> invoice.subscription:>>>`,
-    invoice.subscription
-  );
-
   const subscriptionId = invoice.subscription;
   if (!subscriptionId) {
     console.error(`❌  'subscriptionId' is required!`);
@@ -300,13 +296,21 @@ export const handleUpdateUserSubscription = async (
   }
 
   try {
+    const subscription = await stripe.subscriptions.retrieve(
+      subscriptionId as string
+    );
+    const subscriptionItem: Stripe.SubscriptionItem = (
+      await stripe.subscriptions.retrieve(subscriptionId as string)
+    ).items.data[0];
+
+    console.error(
+      `ℹ️ handleUpdateUserSubscription:>>> invoice.subscription:>>>`,
+      { subscriptionId, subscription, subscriptionItem }
+    );
+
     const session = await stripe.checkout.sessions.retrieve(
       subscriptionId as string
     );
-
-    const subscriptionItem: Stripe.SubscriptionItem = (
-      await stripe.subscriptions.retrieve(session.subscription as string)
-    ).items.data[0];
 
     const user = await getUserDataById(session.metadata.userId);
     const userInfoToUpdate: Partial<User> = {
