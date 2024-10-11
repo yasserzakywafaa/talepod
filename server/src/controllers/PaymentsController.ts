@@ -134,6 +134,14 @@ export const createCheckoutSession = async (
         checkoutSessionId: "{CHECKOUT_SESSION_ID}",
       },
       customer: user.stripeCustomerId ?? undefined,
+      subscription_data: {
+        // Passed to "metadata" for the "subscriptions.retrieve()"" method
+        metadata: {
+          userId,
+          subscriptionPlan,
+          checkoutSessionId: "{CHECKOUT_SESSION_ID}",
+        },
+      },
     });
 
     console.log("ℹ️  createCheckoutSession:>>> session", { session });
@@ -308,21 +316,17 @@ export const handleUpdateUserSubscription = async (
       { subscriptionId, subscription, subscriptionItem }
     );
 
-    const session = await stripe.checkout.sessions.retrieve(
-      subscriptionId as string
-    );
-
-    const user = await getUserDataById(session.metadata.userId);
+    const user = await getUserDataById(subscription.metadata.userId);
     const userInfoToUpdate: Partial<User> = {
       isPaidUser: true,
       subscription: {
         id: subscriptionId as string,
-        type: session.metadata.subscriptionPlan as SubscriptionPlanEnum,
+        type: subscription.metadata.subscriptionPlan as SubscriptionPlanEnum,
         startDate: new Date(invoice.period_start * 1000),
         endDate: new Date(invoice.period_end * 1000),
         maxStoriesAllowed:
           CONFIG[
-            `MAX_STORIES_LIMIT_${session.metadata.subscriptionPlan.toUpperCase()}`
+            `MAX_STORIES_LIMIT_${subscription.metadata.subscriptionPlan.toUpperCase()}`
           ],
         paymentHistory: [
           ...user.subscription.paymentHistory,
@@ -343,11 +347,11 @@ export const handleUpdateUserSubscription = async (
     console.log("handleUpdateUserSubscription:>>>", {
       user,
       userInfoToUpdate,
-      session,
+      // session,
       invoice,
     });
 
-    await updateUserInDb(session.metadata.userId, {
+    await updateUserInDb(subscription.metadata.userId, {
       ...userInfoToUpdate,
     });
   } catch (error) {
