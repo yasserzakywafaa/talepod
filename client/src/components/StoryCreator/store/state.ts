@@ -37,7 +37,6 @@ export const Genders = [
 export type ProfileInfo = {
   name: string;
   gender: ChildGenderEnum | AdultGenderEnum;
-  // gender: AgeGroupEnum;
   age: number;
   interests: string;
   language: Language;
@@ -96,19 +95,71 @@ export type AudioFileVoice =
   | "onyx"
   | "nova"
   | "shimmer";
+export type AudioFileUserVoice =
+  | "Narrator"
+  | "Heroic Voice"
+  | "Fairy Tale"
+  | "Deep Focus"
+  | "Starry Night"
+  | "Sparkle";
 
-export type CreateAudioProps = CreateStoryProps;
+export type AudioUserVoice = {
+  name: AudioFileVoice;
+  value: AudioFileUserVoice;
+  gender: AdultGenderEnum;
+  isFree: boolean;
+};
+
+export interface CreateAudioProps extends CreateStoryProps {
+  audioFileVoice: AudioUserVoice;
+}
+
+export const userAudioVoiceNames: AudioUserVoice[] = [
+  {
+    name: "alloy",
+    value: "Narrator",
+    gender: AdultGenderEnum.Male,
+    isFree: false,
+  },
+  {
+    name: "echo",
+    value: "Heroic Voice",
+    gender: AdultGenderEnum.Male,
+    isFree: true,
+  },
+  {
+    name: "onyx",
+    value: "Deep Focus",
+    gender: AdultGenderEnum.Male,
+    isFree: false,
+  },
+  {
+    name: "fable",
+    value: "Fairy Tale",
+    gender: AdultGenderEnum.Female,
+    isFree: false,
+  },
+  {
+    name: "nova",
+    value: "Starry Night",
+    gender: AdultGenderEnum.Female,
+    isFree: true,
+  },
+  {
+    name: "shimmer",
+    value: "Sparkle",
+    gender: AdultGenderEnum.Female,
+    isFree: false,
+  },
+];
 
 export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
-  // const ageGroupArray = Object.values(AgeGroupEnum);
-
   return {
     isFetching: false,
     isStorySettingsExpanded: false,
     profileInfo: {
       name: "",
       gender: Genders[Math.floor(Math.random() * Genders.length)],
-      // gender: ageGroupArray[Math.floor(Math.random() * ageGroupArray.length)],
       age: Math.floor(Math.random() * 50),
       interests: "",
       language: Languages[Math.floor(Math.random() * Languages.length)],
@@ -132,6 +183,7 @@ export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
       isFetching: false,
       createStoryPrompt: "",
       story: undefined,
+      audioFileVoice: userAudioVoiceNames[4],
     },
   };
 };

@@ -27,8 +27,8 @@ const MyProfilePage = lazy(() => import("../Pages/MyProfile/MyProfile"));
 const ContactPage = lazy(() => import("../Pages/Contact/Contact"));
 const ViewStoryPage = lazy(() => import("../Pages/ViewStory/ViewStory"));
 const CheckoutPage = lazy(() => import("../Pages/Checkout/CheckoutPage"));
-const PaymentSuccessPage = lazy(
-  () => import("../Pages/PaymentSuccess/PaymentSuccess")
+const PaymentStatusPage = lazy(
+  () => import("../Pages/PaymentStatus/PaymentStatus")
 );
 const PrivacyPolicyPage = lazy(
   () => import("../Pages/PrivacyPolicy/PrivacyPolicy")
@@ -148,8 +148,8 @@ const AppContent = () => {
                 )}
 
                 <Route
-                  path={routes.paymentSuccess(":sessionId")}
-                  element={<PaymentSuccessPage />}
+                  path={routes.paymentStatus(":sessionId")}
+                  element={<PaymentStatusPage />}
                 />
               </>
             ) : (

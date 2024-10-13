@@ -10,6 +10,7 @@ import path from "path";
 import storiesRoutes from "./routes/storiesRoutes";
 import testRoutes from "./routes/testRoutes";
 import paymentsRoutes from "./routes/paymentsRoutes";
+import paymentWebhooksRouter from "./routes/paymentsWebhooksRoutes";
 
 const expressApp = express();
 const buildPath = path.join(__dirname, "../client/");
@@ -33,6 +34,10 @@ const PORT = getPort();
 
 // CORS configuration
 handleCorsConfig(expressApp);
+
+// Place here because Stripe gateway need the request raw body
+// which is manipulated but the "express.json()" middleware
+expressApp.use(paymentWebhooksRouter);
 
 // Middleware
 expressApp.use(express.json());

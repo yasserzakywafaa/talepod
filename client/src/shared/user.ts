@@ -14,6 +14,7 @@ export interface User {
   role: UserRole;
   isPaidUser: boolean;
   subscription: UserSubscription;
+  stripeCustomerId?: string;
   preferences: UserPreferences;
   location?: string;
   timezone?: string;
@@ -72,6 +73,7 @@ export enum SubscriptionPlanEnum {
 
 export interface UserPaymentHistory {
   transactionId: string;
+  currency: string;
   amount: number;
   date: Date;
 }

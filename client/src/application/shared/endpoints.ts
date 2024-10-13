@@ -49,10 +49,10 @@ const END_POINTS = {
   },
   PAYMENTS: {
     CONFIG: `${publicApiUrl}/api/v1/payments/config`,
+    WEBHOOK: `${publicApiUrl}/api/v1/payments/webhook`,
     GET_PRICES_LIST: `${publicApiUrl}/api/v1/payments/prices-list`,
     GET_PRODUCTS_LIST_WITH_PRICES: `${publicApiUrl}/api/v1/payments/products-list-with-prices`,
     CREATE_CHECKOUT_SESSION: `${publicApiUrl}/api/v1/payments/create-checkout-session`,
-    CHECKOUT_SESSION_WEBHOOK: `${publicApiUrl}/api/v1/payments/checkout-session-webhook`,
     GET_CHECKOUT_SESSION_DATA: `${publicApiUrl}/api/v1/payments/checkout-session-data`,
     GET_SUBSCRIPTION_DETAILS: `${publicApiUrl}/api/v1/auth/get-subscription-details`,
     CANCEL_SUBSCRIPTION: `${publicApiUrl}/api/v1/payments/cancel-subscription`,

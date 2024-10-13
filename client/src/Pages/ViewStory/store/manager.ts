@@ -20,7 +20,7 @@ export const useViewStoryManager = (
   } = useOpenaiContext();
 
   const setUp = async (slug: string) => {
-    store.handleIsFetching(true);
+    store.setIsFetching(true);
     try {
       await fetchStoryBySlug(slug);
       // const story = await fetchStoryBySlug(slug);
@@ -31,7 +31,7 @@ export const useViewStoryManager = (
     } catch (error) {
       getAxiosError(error);
     } finally {
-      store.handleIsFetching(false);
+      store.setIsFetching(false);
     }
   };
 
@@ -40,11 +40,11 @@ export const useViewStoryManager = (
       const response: AxiosResponse<Story, Story> = await axios.get(
         END_POINTS.STORIES.GET_STORY_BY_SLUG(slug)
       );
-      store.handleUpdateStory(response.data);
+      store.updateStory(response.data);
 
       return response.data;
     } catch (error) {
-      store.handleUpdateStory(undefined);
+      store.updateStory(undefined);
       // throw new Error(`❌ Failed to get Story by Slug :>>> ${error}`);
       console.error("❌ Failed to get Story by Slug :>>>", {
         error,
@@ -52,7 +52,7 @@ export const useViewStoryManager = (
 
       return;
     } finally {
-      store.handleIsFetching(false);
+      store.setIsFetching(false);
     }
   };
 
@@ -66,9 +66,9 @@ export const useViewStoryManager = (
         ...story,
         seo: storySEO,
       };
-      store.handleUpdateStory(updatedStory);
+      store.updateStory(updatedStory);
     } catch (error) {
-      store.handleIsFetching(false);
+      store.setIsFetching(false);
       throw new Error(`❌ Failed to fetch Story SEO :>>> ${error}`);
     }
   };

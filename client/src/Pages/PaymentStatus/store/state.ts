@@ -1,12 +1,14 @@
 import { Mode, PaymentStatus, SessionStatus } from "src/shared/payment";
 import { SubscriptionPlanEnum, User, UserSubscription } from "src/shared/user";
 
-export interface PaymentSuccessInitialState {
+export interface PaymentStatusInitialState {
   isFetching: boolean;
-  paymentSessionData: PaymentSessionData;
+  user?: User;
+  sessionData: SessionData;
+  showPaymentSuccess: boolean;
 }
 
-export interface PaymentSessionData {
+export interface SessionData {
   id: string;
   userId: string;
   amount_total: number;
@@ -25,19 +27,20 @@ export interface PaymentSessionData {
   payment_status: PaymentStatus;
   status: SessionStatus;
   subscription?: UserSubscription;
-  updatedUser?: User;
 }
 
-export interface PaymentSuccessDataResponse {
-  session: PaymentSessionData;
+export interface PaymentStatusDataResponse {
+  session: SessionData;
   subscriptionItem: UserSubscription;
-  updatedUser: User;
+  user: User;
 }
 
-export const getPaymentSuccessInitialState = (): PaymentSuccessInitialState => {
+export const getPaymentStatusInitialState = (): PaymentStatusInitialState => {
   return {
     isFetching: false,
-    paymentSessionData: {
+    user: undefined,
+    showPaymentSuccess: false,
+    sessionData: {
       id: "",
       userId: "",
       amount_total: 0,
@@ -56,7 +59,6 @@ export const getPaymentSuccessInitialState = (): PaymentSuccessInitialState => {
       payment_status: "unpaid",
       status: "open",
       subscription: undefined,
-      updatedUser: undefined,
     },
   };
 };

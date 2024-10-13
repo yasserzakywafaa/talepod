@@ -1,12 +1,8 @@
 import {
-  AudioFileVoice,
-  Story,
-  StoryAudioFile,
-} from "src/components/StoryCreator/store/state";
-import {
   Notify,
   ToastTypes,
 } from "src/components/shared/Notification/Notification";
+import { Story, StoryAudioFile } from "src/components/StoryCreator/store/state";
 import axios, { AxiosResponse } from "axios";
 import {
   getRandomString,
@@ -15,6 +11,7 @@ import {
 
 import END_POINTS from "src/application/shared/endpoints";
 import { OpenaiStore } from "../../store/store";
+import { useApplicationContext } from "src/application/store/Provider";
 
 export interface UseTextGeneration {
   isCreateAudioFetching: (isFetching: boolean) => void;
@@ -22,6 +19,12 @@ export interface UseTextGeneration {
 }
 
 export const useCreateStoryAudio = (store: OpenaiStore): UseTextGeneration => {
+  const {
+    store: {
+      state: { auth },
+    },
+  } = useApplicationContext();
+
   const isCreateAudioFetching = (isFetching: boolean) => {
     store.updateState("createAudio", {
       ...store.state.createStory,
@@ -40,16 +43,22 @@ export const useCreateStoryAudio = (store: OpenaiStore): UseTextGeneration => {
         story.title
       ).toLowerCase()}_${name}_${getRandomString()}`;
 
-      const audioFileVoice: AudioFileVoice = "nova";
+      const getStoryText = () => {
+        if (auth.user && auth.user.isPaidUser) {
+          return `${story.mainStory} ${story.poem}`;
+        } else {
+          return `This story is created by TALE-POD    ${story.mainStory} ${story.poem}   Thank you for listening to stories created by TALE-POD`;
+        }
+      };
 
       const response: AxiosResponse<StoryAudioFile, StoryAudioFile> =
         await axios.post(
           END_POINTS.OPENAI.GENERATE.STORY_AUDIO,
           {
             fileName,
-            audioFileVoice,
             storyId: story._id,
-            storyText: `This story is created by TALE-POD  ${story.mainStory} ${story.poem} Thank you for listening to stories created by TALE-POD`,
+            audioFileVoice: store.state.createAudio.audioFileVoice.name,
+            storyText: getStoryText(),
           },
           {
             headers: {

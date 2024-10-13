@@ -14,9 +14,8 @@ const ContactForm = () => {
     handleUpdateContactForm(name, value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Form values:", state);
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
     handleSubmitContactForm(state.contactForm);
   };
 

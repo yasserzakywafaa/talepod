@@ -1,12 +1,10 @@
-import * as DBUtils from "../models/mongoDb/index";
-
 import { NextFunction, Request, Response } from "express";
 import { SubscriptionPlanEnum, User } from "../models/types";
 
 import CONFIG from "./../config";
 import Stripe from "stripe";
-import { WithId } from "mongodb";
-import { getEndDateByInterval } from "../utils/dateUtils";
+import { getUserDataById } from "../utils/fetchData";
+import { updateUserInDb } from "../models/mongoDb/index";
 
 const secretKey = CONFIG.IS_DEV
   ? CONFIG.STRIPE_TEST_SECRET_KEY
@@ -24,7 +22,7 @@ export const config = async (
   request: Request,
   response: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   const publishableKey = CONFIG.IS_DEV
     ? CONFIG.STRIPE_TEST_PUB_KEY
     : CONFIG.STRIPE_LIVE_PUB_KEY;
@@ -42,7 +40,7 @@ export const getPricesList = async (
   request: Request,
   response: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   try {
     const pricesList = await stripe.prices.list({
       active: true,
@@ -61,7 +59,7 @@ export const getProductsListWithPrices = async (
   request: Request,
   response: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   try {
     // Get all active Products List
     const products = await stripe.products.list({
@@ -102,9 +100,10 @@ export const createCheckoutSession = async (
   request: Request,
   response: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   const { priceId, subscriptionPlan, userId, success_url, cancel_url } =
     request.body.metadata;
+  const user = await getUserDataById(userId);
 
   try {
     // Create a new Stripe Checkout Session
@@ -131,102 +130,252 @@ export const createCheckoutSession = async (
         userId,
         subscriptionPlan,
       },
+      customer: user.stripeCustomerId ?? undefined,
+      subscription_data: {
+        metadata: {
+          userId,
+          subscriptionPlan,
+        },
+      },
+      expand: ["subscription"],
     });
+
+    console.log("ℹ️  createCheckoutSession:>>>", { user, session });
 
     response.json({ sessionId: session.id });
   } catch (error) {
-    console.error("Stripe error: ", error);
+    console.error(`❌  Failed to Create Checkout Session!`, { error });
     const errorAny = error as any;
 
     response.status(500).json({ error: errorAny.message as any });
   }
 };
 
-export const checkoutSessionWebhook = async (
+export const webhook = async (
   request: Request,
   response: Response,
   next: NextFunction
-) => {
-  const sig = request.headers["stripe-signature"];
+): Promise<void> => {
+  let event: Stripe.Event;
+  try {
+    event = stripe.webhooks.constructEvent(
+      request.body,
+      request.headers["stripe-signature"],
+      webhookSecret
+    );
+    await handleWebhookEvents(event);
 
-  console.log("ℹ️ checkoutSessionWebhook");
+    response.json({ event, received: true });
+  } catch (error) {
+    console.error(`❌  Failed to verify Webhook signature!`, error);
+    response
+      .status(400)
+      .send(`❌  Failed to verify Webhook signature! ${error}`);
+  }
+};
 
-  let event;
+export const handleWebhookEvents = async (
+  event: Stripe.Event
+): Promise<void> => {
+  const { type, data } = event;
+  let session: Stripe.Checkout.Session;
+  let subscription: Stripe.Subscription;
+  let invoice: Stripe.Invoice;
+  let paymentMethod: Stripe.PaymentMethod;
+
+  switch (type) {
+    // Checkout Session
+    case "checkout.session.async_payment_failed":
+      session = data.object;
+      console.log(
+        "❌ webhook:>>> checkout.session.async_payment_failed!",
+        session
+      );
+      return;
+    case "checkout.session.async_payment_succeeded":
+      session = data.object;
+      console.log(
+        "✅  webhook:>>> checkout.session.async_payment_succeeded!",
+        session
+      );
+      return;
+    case "checkout.session.completed":
+      session = data.object;
+      console.log("✅ webhook:>>>checkout.session.completed!", session);
+      return;
+    case "checkout.session.expired":
+      session = data.object;
+      console.log("⚠️ webhook:>>> checkout.session.expired!", session);
+      return;
+
+    // Customer Subscription
+    case "customer.subscription.created":
+      subscription = data.object;
+      console.log(
+        "✅ webhook:>>> customer.subscription.created!",
+        subscription
+      );
+      return;
+    case "customer.subscription.deleted":
+      subscription = data.object;
+      console.log(
+        "✅  webhook:>>> customer.subscription.deleted!",
+        subscription
+      );
+      return;
+    case "customer.subscription.paused":
+      subscription = data.object;
+      console.log(
+        "⏸️  webhook:>>> customer.subscription.paused!",
+        subscription
+      );
+      return;
+    case "customer.subscription.resumed":
+      subscription = data.object;
+      console.log(
+        "✅  webhook:>>> customer.subscription.resumed!",
+        subscription
+      );
+      return;
+    case "customer.subscription.trial_will_end":
+      subscription = data.object;
+      console.log(
+        "⚠️ webhook:>>> customer.subscription.trial_will_end!",
+        subscription
+      );
+      return;
+    case "customer.subscription.updated":
+      subscription = data.object;
+      console.log(
+        "✅  webhook:>>> customer.subscription.updated!",
+        subscription
+      );
+      return;
+
+    // Invoice
+    case "invoice.payment_action_required":
+      invoice = data.object;
+      console.log("⚠️ webhook:>>> payment_action_required!", invoice);
+      return;
+    case "invoice.payment_failed":
+      invoice = data.object;
+      console.log("❌ webhook:>>> invoice.payment_failed!", invoice);
+      return;
+    case "invoice.payment_succeeded":
+      invoice = data.object;
+      console.log("✅ webhook:>>> invoice.payment_succeeded!", invoice);
+      if (invoice.paid) {
+        try {
+          await handleUpdateUserSubscription(invoice);
+        } catch (error) {
+          console.error(`❌  Failed to update user subscription!`, error);
+        }
+      }
+
+      return;
+
+    // Payment Method
+    case "payment_method.automatically_updated":
+      paymentMethod = data.object;
+      console.log(
+        "✅ webhook:>>> payment_method.automatically_updated!",
+        paymentMethod
+      );
+      return;
+    case "payment_method.updated":
+      paymentMethod = data.object;
+      console.log("✅ webhook:>>> payment_method.updated!", paymentMethod);
+      return;
+  }
+
+  return undefined;
+};
+
+export const handleUpdateUserSubscription = async (
+  invoice: Stripe.Invoice
+): Promise<void> => {
+  const subscriptionId = invoice.subscription;
+  if (!subscriptionId) {
+    console.error(`❌  'subscriptionId' is required!`);
+    return;
+  }
 
   try {
-    // Verify the Stripe webhook signature
-    event = stripe.webhooks.constructEvent(request.body, sig, webhookSecret);
-  } catch (err) {
-    console.error(`⚠️  Webhook signature verification failed.`, err);
-    return response.sendStatus(400);
+    const subscription = await stripe.subscriptions.retrieve(
+      subscriptionId as string
+    );
+    const subscriptionItem = subscription.items.data[0];
+
+    console.log(`ℹ️ handleUpdateUserSubscription:>>> 1️⃣`, {
+      invoice,
+      subscriptionId,
+      subscription,
+      subscriptionItem,
+    });
+
+    const user = await getUserDataById(subscription.metadata.userId);
+    const userInfoToUpdate: Partial<User> = {
+      isPaidUser: true,
+      subscription: {
+        id: subscriptionId as string,
+        type: subscription.metadata.subscriptionPlan as SubscriptionPlanEnum,
+        startDate: new Date(subscription.current_period_start * 1000),
+        endDate: new Date(subscription.current_period_end * 1000),
+        maxStoriesAllowed:
+          CONFIG[
+            `MAX_STORIES_LIMIT_${subscription.metadata.subscriptionPlan.toUpperCase()}`
+          ],
+        paymentHistory: [
+          {
+            transactionId: `${invoice.id}`,
+            amount: invoice.total,
+            currency: invoice.currency,
+            date: new Date(),
+          },
+        ],
+        paymentStatus: "paid",
+        plan: subscriptionItem.plan,
+        price: subscriptionItem.price,
+      },
+      stripeCustomerId: invoice.customer as string,
+    };
+
+    console.log("handleUpdateUserSubscription:>>> 2️⃣", {
+      user,
+      userInfoToUpdate,
+      paymentHistory: userInfoToUpdate.subscription.paymentHistory[0],
+    });
+
+    await updateUserInDb(subscription.metadata.userId, {
+      ...userInfoToUpdate,
+    });
+  } catch (error) {
+    console.error(`❌  Failed to get subscription data!`, { error });
+    return;
   }
-
-  // Handle the event
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object;
-
-    // Fulfill the order: Fetch the metadata from session, including userId
-    console.log("checkoutSessionWebhook:>>> Payment succeeded!", session);
-    console.log("checkoutSessionWebhook:>>> Metadata:", session.metadata);
-
-    // You can now use session.metadata.userId to update the user's subscription status in your DB
-  }
-
-  // Return a 200 response to acknowledge receipt of the event
-  return response.send();
 };
 
 export const getCheckoutSessionData = async (
   request: Request,
   response: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   const sessionId = request.query.sessionId as string;
-
+  const userId = request.query.userId as string;
   if (!sessionId) {
     response.status(400).json({ message: "❌ 'sessionId' is required!" });
     return;
   }
 
   try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const user = await getUserDataById(userId);
+    const session = await stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ["invoice", "subscription"],
+    });
+    const subscription = session.subscription as Stripe.Subscription;
+    const subscriptionItem = subscription.items.data[0];
 
-    if (!session.subscription) return;
-    const subscriptionItem: Stripe.SubscriptionItem = (
-      await stripe.subscriptions.retrieve(session.subscription as string)
-    ).items.data[0];
-
-    if (session.status === "complete" && session.payment_status === "paid") {
-      const updatedUserData: Partial<User> = {
-        isPaidUser: true,
-        subscription: {
-          id: `${session.subscription}`,
-          type: session.metadata.subscriptionPlan as SubscriptionPlanEnum,
-          startDate: new Date(),
-          endDate: getEndDateByInterval(subscriptionItem.plan.interval),
-          maxStoriesAllowed: 50,
-          paymentHistory: [
-            {
-              transactionId: `${session.subscription}`,
-              amount: session.amount_total / 100,
-              date: new Date(),
-            },
-          ],
-          plan: subscriptionItem.plan,
-          price: subscriptionItem.price,
-        },
-      };
-
-      if (session.client_reference_id !== session.metadata.userId) return;
-      const updatedUser = await DBUtils.updateUserInDb(
-        session.client_reference_id,
-        updatedUserData
-      );
-
-      response.json({ session, subscriptionItem, updatedUser });
-    } else {
-      response.status(200).json({ session, subscriptionItem });
-    }
+    response.status(200).json({ session, subscriptionItem, user });
   } catch (error) {
     console.error("❌ Failed to get the Session data!", {
       error,
@@ -239,7 +388,7 @@ export const getSubscriptionDetails = async (
   request: Request,
   response: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   const subscriptionId = request.query.subscriptionId as string;
   if (!subscriptionId) {
     response.status(400).json({ message: "❌ 'subscriptionId' is required!" });
@@ -262,7 +411,7 @@ export const cancelSubscription = async (
   request: Request,
   response: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   const { subscriptionId, userId } = request.body;
 
   console.log("ℹ️ cancelSubscription:>>> request.body>>>", {
@@ -287,11 +436,12 @@ export const cancelSubscription = async (
         startDate: new Date(),
         endDate: new Date(),
         maxStoriesAllowed: 4,
+        paymentStatus: "unpaid",
         plan: cancelSubscription.items.data[0].plan,
         price: cancelSubscription.items.data[0].price,
       },
     };
-    const updatedUser = await DBUtils.updateUserInDb(userId, updatedUserData);
+    const updatedUser = await updateUserInDb(userId, updatedUserData);
 
     console.log("ℹ️ cancelSubscription", {
       cancelSubscription,
@@ -310,13 +460,14 @@ export const cancelSubscription = async (
 
 const PaymentsController = {
   config,
+  webhook,
   getPricesList,
   getProductsListWithPrices,
   createCheckoutSession,
-  checkoutSessionWebhook,
   getCheckoutSessionData,
   getSubscriptionDetails,
   cancelSubscription,
+  handleWebhookEvents,
 };
 
 export default PaymentsController;

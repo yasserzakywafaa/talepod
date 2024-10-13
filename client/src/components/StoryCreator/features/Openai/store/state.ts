@@ -3,6 +3,7 @@ import {
   CreateStoryProps,
   ProfileInfo,
   getStoryCreatorInitialState,
+  userAudioVoiceNames,
 } from "src/components/StoryCreator/store/state";
 
 export interface OpenaiInitialState {
@@ -23,7 +24,6 @@ export interface Image {
   statusCode: number;
   content: string | string[];
 }
-
 export const getOpenaiInitialState = (): OpenaiInitialState => {
   const { profileInfo: childInfo } = getStoryCreatorInitialState();
   return {
@@ -37,6 +37,7 @@ export const getOpenaiInitialState = (): OpenaiInitialState => {
       isFetching: false,
       createStoryPrompt: "",
       story: undefined,
+      audioFileVoice: userAudioVoiceNames[4],
     },
     createImage: {
       isFetching: false,
