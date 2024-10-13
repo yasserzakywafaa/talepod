@@ -306,10 +306,6 @@ export const handleUpdateUserSubscription = async (
     );
     const subscriptionItem = subscription.items.data[0];
 
-    // const subscriptionItem: Stripe.SubscriptionItem = (
-    //   await stripe.subscriptions.retrieve(subscriptionId as string)
-    // ).items.data[0];
-
     console.log(`ℹ️ handleUpdateUserSubscription:>>> 1️⃣`, {
       invoice,
       subscriptionId,
@@ -323,8 +319,8 @@ export const handleUpdateUserSubscription = async (
       subscription: {
         id: subscriptionId as string,
         type: subscription.metadata.subscriptionPlan as SubscriptionPlanEnum,
-        startDate: new Date(invoice.period_start * 1000),
-        endDate: new Date(invoice.period_end * 1000),
+        startDate: new Date(subscription.current_period_start * 1000),
+        endDate: new Date(subscription.current_period_end * 1000),
         maxStoriesAllowed:
           CONFIG[
             `MAX_STORIES_LIMIT_${subscription.metadata.subscriptionPlan.toUpperCase()}`
@@ -347,6 +343,7 @@ export const handleUpdateUserSubscription = async (
     console.log("handleUpdateUserSubscription:>>> 2️⃣", {
       user,
       userInfoToUpdate,
+      paymentHistory: userInfoToUpdate.subscription.paymentHistory[0],
     });
 
     await updateUserInDb(subscription.metadata.userId, {
