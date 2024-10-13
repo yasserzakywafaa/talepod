@@ -1,12 +1,10 @@
 import { Avatar, Box, Button, Typography } from "@mui/material";
 import { Close, LockOutlined } from "@mui/icons-material";
 
-// import { Close } from "@mui/icons-material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
-// import RegisterForm from "./features/RegisterForm/RegisterForm";
 import SocialRegister from "./features/SocialRegister/SocialRegister";
 import { useRegisterModalContext } from "./store/Provider";
 
@@ -28,16 +26,6 @@ export const RegisterModal = () => {
     handleIsFetching(false);
     handleToggleRegisterModal();
   };
-
-  // const handleOnFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   const formData = new FormData(event.currentTarget);
-  //   const formJson = Object.fromEntries((formData as any).entries());
-  //   console.log("RegisterModal:>>> handleOnFormSubmit:>>>", {
-  //     formJson,
-  //   });
-  //   // handleCloseModal();
-  // };
 
   return (
     <>
@@ -83,19 +71,6 @@ export const RegisterModal = () => {
             }}
             className="login-form-wrapper"
           >
-            {/* <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              sx={{
-                marginY: 4,
-              }}
-            >
-              <RegisterForm />
-            </Box> */}
-
-            {/* <Divider sx={{ width: "50%" }} /> */}
-
             <Box
               display="flex"
               alignItems="center"
@@ -111,9 +86,6 @@ export const RegisterModal = () => {
         </DialogContent>
 
         <DialogActions>
-          {/* <Button type="submit" variant="contained">
-            Register
-          </Button> */}
           <Button
             size="small"
             type="button"

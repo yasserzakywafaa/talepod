@@ -103,9 +103,7 @@ export const createCheckoutSession = async (
 ): Promise<void> => {
   const { priceId, subscriptionPlan, userId, success_url, cancel_url } =
     request.body.metadata;
-
   const user = await getUserDataById(userId);
-  console.log("ℹ️  createCheckoutSession:>>> User", { user });
 
   try {
     // Create a new Stripe Checkout Session
@@ -131,24 +129,22 @@ export const createCheckoutSession = async (
       metadata: {
         userId,
         subscriptionPlan,
-        checkoutSessionId: "{CHECKOUT_SESSION_ID}",
       },
       customer: user.stripeCustomerId ?? undefined,
       subscription_data: {
-        // Passed to "metadata" for the "subscriptions.retrieve()"" method
         metadata: {
           userId,
           subscriptionPlan,
-          checkoutSessionId: "{CHECKOUT_SESSION_ID}",
         },
       },
+      expand: ["subscription"],
     });
 
-    console.log("ℹ️  createCheckoutSession:>>> session", { session });
+    console.log("ℹ️  createCheckoutSession:>>>", { user, session });
 
     response.json({ sessionId: session.id });
   } catch (error) {
-    console.error("Stripe error: ", error);
+    console.error(`❌  Failed to Create Checkout Session!`, { error });
     const errorAny = error as any;
 
     response.status(500).json({ error: errorAny.message as any });
@@ -208,7 +204,8 @@ export const handleWebhookEvents = async (
       console.log("✅ webhook:>>>checkout.session.completed!", session);
       return;
     case "checkout.session.expired":
-      console.log("❌ webhook:>>> checkout.session.expired!", data);
+      session = data.object;
+      console.log("⚠️ webhook:>>> checkout.session.expired!", session);
       return;
 
     // Customer Subscription
@@ -229,7 +226,7 @@ export const handleWebhookEvents = async (
     case "customer.subscription.paused":
       subscription = data.object;
       console.log(
-        "✅  webhook:>>> customer.subscription.paused!",
+        "⏸️  webhook:>>> customer.subscription.paused!",
         subscription
       );
       return;
@@ -262,11 +259,11 @@ export const handleWebhookEvents = async (
       return;
     case "invoice.payment_failed":
       invoice = data.object;
-      console.log("❌ webhook:>>> Invoice Payment failed!", invoice);
+      console.log("❌ webhook:>>> invoice.payment_failed!", invoice);
       return;
     case "invoice.payment_succeeded":
       invoice = data.object;
-      console.log("✅ webhook:>>> Invoice Payment succeeded!", invoice);
+      console.log("✅ webhook:>>> invoice.payment_succeeded!", invoice);
       if (invoice.paid) {
         try {
           await handleUpdateUserSubscription(invoice);
@@ -307,14 +304,18 @@ export const handleUpdateUserSubscription = async (
     const subscription = await stripe.subscriptions.retrieve(
       subscriptionId as string
     );
-    const subscriptionItem: Stripe.SubscriptionItem = (
-      await stripe.subscriptions.retrieve(subscriptionId as string)
-    ).items.data[0];
+    const subscriptionItem = subscription.items.data[0];
 
-    console.error(
-      `ℹ️ handleUpdateUserSubscription:>>> invoice.subscription:>>>`,
-      { subscriptionId, subscription, subscriptionItem }
-    );
+    // const subscriptionItem: Stripe.SubscriptionItem = (
+    //   await stripe.subscriptions.retrieve(subscriptionId as string)
+    // ).items.data[0];
+
+    console.log(`ℹ️ handleUpdateUserSubscription:>>> 1️⃣`, {
+      invoice,
+      subscriptionId,
+      subscription,
+      subscriptionItem,
+    });
 
     const user = await getUserDataById(subscription.metadata.userId);
     const userInfoToUpdate: Partial<User> = {
@@ -343,11 +344,9 @@ export const handleUpdateUserSubscription = async (
       stripeCustomerId: invoice.customer as string,
     };
 
-    console.log("handleUpdateUserSubscription:>>>", {
+    console.log("handleUpdateUserSubscription:>>> 2️⃣", {
       user,
       userInfoToUpdate,
-      // session,
-      invoice,
     });
 
     await updateUserInDb(subscription.metadata.userId, {
@@ -366,18 +365,18 @@ export const getCheckoutSessionData = async (
 ): Promise<void> => {
   const sessionId = request.query.sessionId as string;
   const userId = request.query.userId as string;
-
   if (!sessionId) {
     response.status(400).json({ message: "❌ 'sessionId' is required!" });
     return;
   }
 
   try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-    const subscriptionItem: Stripe.SubscriptionItem = (
-      await stripe.subscriptions.retrieve(session.subscription as string)
-    ).items.data[0];
     const user = await getUserDataById(userId);
+    const session = await stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ["invoice", "subscription"],
+    });
+    const subscription = session.subscription as Stripe.Subscription;
+    const subscriptionItem = subscription.items.data[0];
 
     response.status(200).json({ session, subscriptionItem, user });
   } catch (error) {

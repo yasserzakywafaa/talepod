@@ -35,7 +35,7 @@ const PaymentStatusPage = () => {
   } = usePaymentStatusContext();
 
   if (!sessionId || !auth.user) {
-    console.log("❌ PaymentStatusPage:>>>", {
+    console.log("❌ PaymentStatusPage:>>> 'sessionId' or 'User' is required!", {
       sessionId,
       user: auth.user,
     });
@@ -45,7 +45,6 @@ const PaymentStatusPage = () => {
   }
 
   const getTotalAmount = (): string => {
-    console.log("getTotalAmount:>>>", { sessionData, user: auth.user });
     if (!sessionData) return "0";
 
     return `${getCurrencySymbol(sessionData.currency)}${

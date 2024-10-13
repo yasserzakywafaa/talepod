@@ -129,11 +129,6 @@ export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
         };
 
         console.log("✅ updatedStory", { updatedStory });
-
-        // store.updateState("createStory", {
-        //   ...store.state.createStory,
-        //   story: updatedStory,
-        // });
       }
 
       return response.data;

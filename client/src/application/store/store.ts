@@ -79,10 +79,6 @@ const useApplicationStore = (): ApplicationStore => {
 
   const updateAuthInfo = (authInfo?: Authentication) => {
     if (authInfo) {
-      // console.log("updateAuthInfo:>>> NO!!authInfo", {
-      //   authInfo,
-      // });
-
       setState((prev) => ({
         ...prev,
         auth: {
@@ -99,11 +95,6 @@ const useApplicationStore = (): ApplicationStore => {
       const storedToken = localStorage.getItem(TOKEN) || "";
       const storedUser = localStorage.getItem(USER);
       const storedIsAuthenticated = localStorage.getItem(IS_AUTHENTICATION);
-      // console.log("updateAuthInfo:>>> authInfo", {
-      //   token: storedToken,
-      //   user: storedUser ? JSON.parse(storedUser) : null,
-      //   isAuthenticated: storedIsAuthenticated === "true" ? true : false,
-      // });
 
       setState((prev) => ({
         ...prev,

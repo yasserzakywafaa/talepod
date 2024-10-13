@@ -5,7 +5,6 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
-// import LoginForm from "./features/LoginForm/LoginForm";
 import SocialLogin from "./features/SocialLogin/SocialLogin";
 import { useLoginModalContext } from "./store/Provider";
 
@@ -27,16 +26,6 @@ export const LoginModal = () => {
     handleIsFetching(false);
     handleToggleLoginModal();
   };
-
-  // const handleOnFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   const formData = new FormData(event.currentTarget);
-  //   const formJson = Object.fromEntries((formData as any).entries());
-  //   console.log("LoginModal:>>> handleOnFormSubmit:>>>", {
-  //     formJson,
-  //   });
-  //   // handleCloseModal();
-  // };
 
   return (
     <>
@@ -82,19 +71,6 @@ export const LoginModal = () => {
             }}
             className="login-form-wrapper"
           >
-            {/* <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              sx={{
-                marginY: 4,
-              }}
-            >
-              <LoginForm />
-            </Box>
-
-            <Divider sx={{ width: "50%" }} /> */}
-
             <Box
               display="flex"
               alignItems="center"
@@ -110,9 +86,6 @@ export const LoginModal = () => {
         </DialogContent>
 
         <DialogActions>
-          {/* <Button type="submit" variant="contained">
-            Log in
-          </Button> */}
           <Button
             size="small"
             type="button"

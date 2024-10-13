@@ -119,6 +119,15 @@ export const lightTheme = createTheme({
         },
       },
     },
+    MuiListSubheader: {
+      styleOverrides: {
+        root: {
+          color: secondaryColorForLightTheme,
+          textDecoration: "underline",
+          textDecorationColor: primaryColor,
+        },
+      },
+    },
   },
 });
 
@@ -174,6 +183,15 @@ export const darkTheme = createTheme({
       styleOverrides: {
         standardInfo: {
           border: `1px solid ${secondaryColorForDarkTheme}`,
+        },
+      },
+    },
+    MuiListSubheader: {
+      styleOverrides: {
+        root: {
+          color: secondaryColorForDarkTheme,
+          textDecoration: "underline",
+          textDecorationColor: primaryColor,
         },
       },
     },

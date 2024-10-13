@@ -30,7 +30,6 @@ export const getAllStories = async (
     const matchStage = hasActiveFilters ? [{ $match: getQuery(filters) }] : [];
     // Aggregation pipeline
     const pipeline = [
-      // { $sort: { createdAt: -1 } },
       {
         $unionWith: {
           coll: DBCollections.stories,
@@ -39,7 +38,6 @@ export const getAllStories = async (
       },
       // Build the match stage for filters
       ...matchStage,
-      // { $sort: { createdAt: -1 } }, // Returns a memory limit error!!
       {
         $facet: {
           metadata: [

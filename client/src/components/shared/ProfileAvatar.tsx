@@ -1,8 +1,7 @@
 import { Avatar, Badge } from "@mui/material";
 
 import { Authentication } from "src/application/store/state";
-import { VerifiedTwoTone } from "@mui/icons-material";
-import { secondaryColorForDarkTheme } from "src/application/shared/themes";
+import { VerifiedBadge } from "./VerifiedBadge";
 
 export interface ProfileAvatarProps {
   auth: Authentication;
@@ -19,23 +18,7 @@ const ProfileAvatar = (props: ProfileAvatarProps) => {
     <Badge
       overlap="circular"
       badgeContent={
-        auth.user.isPaidUser && (
-          <VerifiedTwoTone
-            sx={{
-              "& path:nth-of-type(1)": {
-                color: secondaryColorForDarkTheme,
-                fill: secondaryColorForDarkTheme,
-                opacity: 1,
-              },
-              "& path:nth-of-type(2)": {
-                color: secondaryColorForDarkTheme,
-                fill: secondaryColorForDarkTheme,
-                opacity: 1,
-              },
-              fontSize: verifiedBadgeSize,
-            }}
-          />
-        )
+        auth.user.isPaidUser && <VerifiedBadge fontSize={verifiedBadgeSize} />
       }
     >
       {auth.user.picture ? (

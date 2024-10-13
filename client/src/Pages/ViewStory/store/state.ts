@@ -1,7 +1,9 @@
 import {
   AdultGenderEnum,
+  AudioUserVoice as AudioFileUserVoice,
   ChildGenderEnum,
   Story,
+  userAudioVoiceNames,
 } from "src/components/StoryCreator/store/state";
 
 import { Languages } from "src/shared/languages";
@@ -12,6 +14,7 @@ export interface ViewStoryInitialState {
   isFetching: boolean;
   isCreatingAudio: boolean;
   storyAuthor: User | undefined;
+  audioFileVoice: AudioFileUserVoice;
 }
 
 export const getViewStoryInitialState = (): ViewStoryInitialState => {
@@ -60,5 +63,6 @@ export const getViewStoryInitialState = (): ViewStoryInitialState => {
       },
       isFeatured: false,
     },
+    audioFileVoice: userAudioVoiceNames[4],
   };
 };

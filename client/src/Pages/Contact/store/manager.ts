@@ -19,8 +19,6 @@ export const useContactManager = (store: ContactStore): ContactManager => {
   };
 
   const handleSubmitContactForm = async (formState: ContactFormState) => {
-    console.log("ℹ️ Contact Form Submit:", { formState });
-
     store.handleIsFetching(true);
 
     try {
