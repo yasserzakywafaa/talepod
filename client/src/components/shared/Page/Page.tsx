@@ -60,6 +60,7 @@ const Page = (params: PageProps) => {
   });
 
   useEffect(() => {
+    // Update page color
     localStorage.setItem(
       APP_CONSTANTS.DESIGN.LOCAL_STORAGE_APP_THEME,
       themeMode
@@ -70,6 +71,10 @@ const Page = (params: PageProps) => {
         "content",
         themeMode === "dark" ? "#2E3B4E" : "#F5F5F5"
       );
+
+    return () => {
+      setPreviousUrl(location.pathname);
+    };
   }, []);
 
   useEffect(() => {
@@ -82,12 +87,6 @@ const Page = (params: PageProps) => {
     if (isPageLoading) htmlNode.style.overflow = "hidden";
     else htmlNode.removeAttribute("style");
   }, [isPageLoading]);
-
-  useEffect(() => {
-    return () => {
-      setPreviousUrl(location.pathname);
-    };
-  }, []);
 
   return (
     <>
