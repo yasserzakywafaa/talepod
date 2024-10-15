@@ -2,6 +2,7 @@ import "./ViewStory.scss";
 
 import {
   AdultGenderEnum,
+  Story,
   userAudioVoiceNames,
 } from "src/components/StoryCreator/store/state";
 import {
@@ -143,6 +144,31 @@ const ViewStoryPage: React.FC = () => {
     }
   };
 
+  const handleUpdateMetaTags = (story: Story) => {
+    // Update page meta tags
+    const metaTag = document
+      .getElementsByTagName("meta")
+      .namedItem("description");
+    metaTag?.setAttribute(
+      "content",
+      `Discover more bedtime stories for children and families on TalePod | ${story.summary}`
+    );
+
+    // Update Open Graph meta tags
+    const ogTitleMetaTag = document.getElementById("og-title");
+    const ogDescriptionMetaTag = document.getElementById("og-description");
+    ogTitleMetaTag?.setAttribute("content", story.title);
+    ogDescriptionMetaTag?.setAttribute("content", story.summary);
+
+    // Update Open Graph Twitter meta tags
+    const twitterTitleMetaTag = document.getElementById("twitter-title");
+    const twitterDescriptionMetaTag = document.getElementById(
+      "twitter-description"
+    );
+    twitterTitleMetaTag?.setAttribute("content", story.title);
+    twitterDescriptionMetaTag?.setAttribute("content", story.summary);
+  };
+
   useEffect(() => {
     if (slug) setUp(slug);
   }, [slug]);
@@ -156,14 +182,7 @@ const ViewStoryPage: React.FC = () => {
 
   useEffect(() => {
     if (story && story._id) {
-      const metaTag = document
-        .getElementsByTagName("meta")
-        .namedItem("description");
-
-      metaTag?.setAttribute(
-        "content",
-        `Discover more bedtime stories for children and families on TalePod | ${story.summary}`
-      );
+      handleUpdateMetaTags(story);
 
       const newStoryCreated =
         window.localStorage.getItem("newStoryCreated") === "true";
@@ -191,7 +210,7 @@ const ViewStoryPage: React.FC = () => {
       isLoading={isFetching || isCreatingAudio}
       // isLoading={!isCreatingAudio}
       className="view-story-page"
-      title={`Bedtime story on TalePod | ${story && story.title}`}
+      title={`${story && story.title} | Bedtime story on TalePod`}
       loaderComponentName={
         isCreatingAudio
           ? LoaderComponentNameEnum.CreateAudio
