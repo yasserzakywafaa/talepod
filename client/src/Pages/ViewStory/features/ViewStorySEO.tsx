@@ -1,6 +1,8 @@
-import { Card, CardContent } from "@mui/material";
+// import { Card, CardContent } from "@mui/material";
 
+import { Divider } from "@mui/material";
 import { Story } from "src/components/StoryCreator/store/state";
+import ViewStoryStaticSEO from "./ViewStoryStaticSEO";
 
 interface ViewStorySeoParams {
   story: Story;
@@ -13,14 +15,18 @@ const ViewStorySEO = (props: ViewStorySeoParams): JSX.Element => {
   if (!story.seo) return <></>;
 
   return story.seo ? (
-    <Card className="view-story-seo-card" sx={{ mt: 2 }}>
-      <CardContent
+    <div className="view-story-seo-card">
+      <div
         className={`view-story-seo-card-content ${
           hasDirectionRtl ? "direction-rtl" : ""
         }`}
         dangerouslySetInnerHTML={{ __html: story.seo?.content }}
       />
-    </Card>
+
+      <Divider variant="middle" sx={{ margin: 4 }} />
+
+      <ViewStoryStaticSEO />
+    </div>
   ) : (
     <></>
   );
