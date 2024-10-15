@@ -20,7 +20,11 @@ const Homepage = () => {
   } = useApplicationContext();
 
   return (
-    <Page title="TALEPOD" className="home-page" isLoading={isFetching}>
+    <Page
+      title="TalePod - The Ultimate Bedtime Stories Creator"
+      className="home-page"
+      isLoading={isFetching}
+    >
       <Hero />
 
       <Box sx={{ backgroundColor: "transparent" }}>

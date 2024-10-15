@@ -70,7 +70,7 @@ const BedtimeStoriesForAdults = () => {
 
   return (
     <Page
-      title="Bedtime Stories for Adults | TALEPOD"
+      title="Bedtime Stories for Adults | TalePod"
       className="bedtime-stories-for-adults-page"
       isLoading={isFetching}
     >

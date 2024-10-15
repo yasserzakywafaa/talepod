@@ -1,6 +1,6 @@
 {
-  "name": "TALEPOD",
-  "short_name": "TALEPOD",
+  "name": "TalePod",
+  "short_name": "TalePod",
   "description": "Create Custom Bedtime Stories",
   "scope": "/",
   "start_url": "/",
