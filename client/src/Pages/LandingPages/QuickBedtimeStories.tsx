@@ -70,7 +70,7 @@ const QuickBedtimeStories = () => {
 
   return (
     <Page
-      title="Quick Bedtime Stories | TALEPOD"
+      title="Quick Bedtime Stories | TalePod"
       className="best-bedtime-stories-page"
       isLoading={isFetching}
     >
