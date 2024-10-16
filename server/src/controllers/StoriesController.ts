@@ -70,19 +70,6 @@ export const getAllStories = async (
       totalPagesCount,
     });
 
-    // // FOR DEVELOPMENT USE ONLY
-    // const ALL_STORIES = await bulkUpdateStoriesByField();
-    // await bulkUpdateStoriesByField();
-    // response.status(200).json({
-    //   results: ALL_STORIES,
-    //   paging: {
-    //     pageNumber: 1,
-    //     pageSize: 1,
-    //     totalCount: ALL_STORIES.length,
-    //     totalPagesCount: 1,
-    //   },
-    // } as any);
-
     const paging: PagingInfo = {
       pageNumber,
       pageSize,
@@ -341,6 +328,10 @@ export const getOriginalStories = async (
       totalPagesCount,
     });
 
+    // // FOR DEVELOPMENT USE ONLY
+    // const ALL_STORIES = await bulkUpdateStoriesByField();
+    // await bulkUpdateStoriesByField();
+
     const paging: PagingInfo = {
       pageNumber,
       pageSize,
@@ -580,86 +571,45 @@ export const getAllUsersStories = async (
 //     .collection(DBCollections.stories_library)
 //     .find(
 //       {
-//         // $and: [
-//         //   {
-//         //     "profileInfo.language.value": {
-//         //       $in: ["en"],
+//         //   $and: [
+//         //     {
+//         //       "profileInfo.language.value": {
+//         //         $in: ["en"],
+//         //       },
 //         //     },
-//         //   },
-//         // ],
-//       },
-//       { projection: { slug: 1 } }
+//         //   ],
+//       }
+//       // { projection: { title: 1 } }
 //     )
 //     .toArray();
 
-//   // let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-//   // xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+//   console.log("ℹ️ bulkUpdateStoriesByField:>>>", {
+//     storiesCount: stories.length,
+//   });
 
-//   // stories.forEach((story: Story) => {
-//   //   xml += `  <url>\n`;
-//   //   xml += `    <loc>https://www.talepod.com/bedtime-story/${story.slug}</loc>\n`;
-//   //   xml += `    <lastmod>${new Date().toLocaleString("en-GB", {
-//   //     dateStyle: "short",
-//   //   })}</lastmod>\n`;
-//   //   xml += `    <changefreq>monthly</changefreq>\n`;
-//   //   xml += `    <priority>1.0</priority>\n`;
-//   //   xml += `  </url>\n`;
-//   // });
-
-//   // xml += `</urlset>`;
-
-//   // // Write the XML to a file
-//   // const sitemapPath = path.join(
-//   //   __dirname,
-//   //   "../../../client/public",
-//   //   "sitemap-stories-library.xml"
-//   // );
-
-//   // console.log("sitemap.xml:>>>", {
-//   //   sitemapPath,
-//   //   storiesLength: stories.length,
-//   // });
-
-//   // fs.writeFileSync(sitemapPath, xml, "utf8");
-//   // console.log(
-//   //   "✅ sitemap-stories-library.xml has been generated successfully!"
-//   // );
-
-//   // return stories;
-
-//   // let count = 0;
 //   // try {
 //   //   stories.forEach(async (story: Story, index) => {
-//   //     // Regular expression to match valid slugs
-//   //     const validSlugPattern = /-[a-f0-9]{9}$/;
+//   //     // console.log("ℹ️ Story:>>> BEFORE", {
+//   //     //   title: story.title,
+//   //     // });
 
-//   //     // if (!validSlugPattern.test(story.slug)) {
-//   //     if (!story.seo) {
-//   //       // await updateDocument(story._id.toString(), {
-//   //       //   slug: `${story.slug}-${story._id.toString().slice(-9)}`,
-//   //       // });
-
-//   //       // // USE THIS BETTER TO UPDATE ONE COLLECTION AT A TIME
-//   //       // await storiesCollection.findOneAndUpdate(
-//   //       //   { _id: story._id },
-//   //       //   {
-//   //       //     $set: {
-//   //       //       slug: `${story.slug}-${story._id.toString().slice(-9)}`,
-//   //       //     },
-//   //       //   },
-//   //       //   { returnDocument: "after" }
-//   //       // );
-
-//   //       console.log("ℹ️ Story:>>>", {
-//   //         storySeo: story.seo,
-//   //       });
-
-//   //       count++;
-//   //     }
+//   //     // // // USE THIS BETTER TO UPDATE ONE COLLECTION AT A TIME
+//   //     // const newStoryDocument = await storiesCollection.findOneAndUpdate(
+//   //     //   { _id: story._id },
+//   //     //   {
+//   //     //     $set: {
+//   //     //       title: `${story.title}`,
+//   //     //     },
+//   //     //   },
+//   //     //   { returnDocument: "after" }
+//   //     // );
+//   //     // console.log("ℹ️ newStoryDocument:>>> After", {
+//   //     //   originalTitle: story.title,
+//   //     //   newBackupTitle: newStoryDocument.title,
+//   //     // });
 //   //   });
 
 //   //   console.log("ℹ️ All Stories count:>>>", stories.length);
-//   //   console.log("ℹ️ count:>>>", count);
 //   // } catch (error) {
 //   //   throw new Error("❌ Failed to update story slug", { cause: error });
 //   // }

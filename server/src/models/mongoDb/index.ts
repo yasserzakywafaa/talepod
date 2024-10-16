@@ -57,6 +57,8 @@ const databaseInit = async () => {
 
   try {
     await dbClient.connect();
+    // // FOR DEVELOPMENT USE ONLY
+    // await copyDocumentsFromDatabaseToAnotherDatabase();
     const dbName = getDatabaseName();
     database = dbClient.db(dbName);
 
@@ -252,32 +254,39 @@ const updateUserInDb = async (
   }
 };
 
-// // FOR DEVELOPMENT USE ONLY
-// const copyDocumentsFromDbCollectionToAnotherDbCollection = async () => {
-//   const sourceDb = dbClient.db(DBNames.TALEPOD_DEV);
-//   const targetDb = dbClient.db(DBNames.TALEPOD_DEV);
-//   const sourceCollection = sourceDb.collection(DBCollections.stories_library);
-//   const targetCollection = targetDb.collection(
-//     DBCollections.stories_library_backup
-//   );
+// // // FOR DEVELOPMENT USE ONLY
+// const copyDocumentsFromDatabaseToAnotherDatabase = async () => {
+//   // Access the Dev and Prod databases
+//   const devDb = dbClient.db(DBNames.TALEPOD_DEV);
+//   const prodDb = dbClient.db(DBNames.TALEPOD_PROD);
 
-//   let lastId = null;
-//   let totalCopied = 0;
+//   // Collection names to copy
+//   const collectionsToCopy = [
+//     DBCollections.stories_library,
+//     DBCollections.stories_library_backup,
+//   ];
 
-//   while (true) {
-//     const query = lastId ? { _id: { $gt: lastId } } : {}; // Continue from the last processed document
-//     const cursor = sourceCollection.find(query);
+//   for (const collectionName of collectionsToCopy) {
+//     // Fetch all documents from the Dev collection
+//     const devCollection = devDb.collection(collectionName);
+//     const devDocuments = await devCollection.find().toArray();
 
-//     const batch = await cursor.toArray();
-//     if (batch.length === 0) {
-//       break; // Exit the loop if no more documents to process
+//     if (devDocuments.length > 0) {
+//       // Insert documents into the Prod collection
+//       const prodCollection = prodDb.collection(collectionName);
+
+//       // Remove existing documents in the prod collection (to avoid duplicates)
+//       await prodCollection.deleteMany({});
+
+//       // Insert the documents from dev to prod
+//       await prodCollection.insertMany(devDocuments);
+
+//       console.log(
+//         `Successfully copied ${devDocuments.length} documents from ${collectionName} in Dev to Prod`
+//       );
+//     } else {
+//       console.log(`No documents found in ${collectionName} in Dev`);
 //     }
-
-//     await targetCollection.insertMany(batch);
-//     totalCopied += batch.length;
-
-//     lastId = batch[batch.length - 1]._id; // Keep track of the last processed document
-//     console.log(`Copied ${totalCopied} documents so far...`);
 //   }
 // };
 
