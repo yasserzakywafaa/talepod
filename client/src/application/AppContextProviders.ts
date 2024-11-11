@@ -1,5 +1,7 @@
 import { AppWithGoogleAuthContextProvider } from "src/components/shared/SocialLogins/GoogleAuth/store/Provider";
 import { ApplicationContextProvider } from "./store/Provider";
+import { BlogContextProvider } from "src/Pages/Blog/store/Provider";
+import { BlogsContextProvider } from "src/Pages/Blogs/store/Provider";
 import { CancelSubscriptionModalContextProvider } from "src/components/Modals/CancelSubscriptionModal/store/Provider";
 import { CheckoutContextProvider } from "src/components/Checkout/store/Provider";
 import { ContactContextProvider } from "src/Pages/Contact/store/Provider";
@@ -27,6 +29,8 @@ const contextProviders = [
   MyProfileContextProvider,
   ViewStoryContextProvider,
   ContactContextProvider,
+  BlogsContextProvider,
+  BlogContextProvider,
   CheckoutContextProvider,
   PaymentContextProvider,
   PaymentStatusContextProvider,
