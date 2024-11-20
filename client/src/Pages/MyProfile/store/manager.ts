@@ -82,7 +82,7 @@ export const useMyProfileManager = (
       await axios.post(END_POINTS.PAYMENTS.CANCEL_SUBSCRIPTION, {
         userId: auth.user?._id,
         subscriptionId: auth.user?.subscription.id,
-        userStoryCount: auth.user?.storyCount,
+        userStoryCount: auth.user?.stories.length,
         headers: {
           "Content-Type": "application/json",
           "X-Custom-Header": new Date().toISOString(),
