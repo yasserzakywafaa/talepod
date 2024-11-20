@@ -98,12 +98,6 @@ export const createStory = async (
   try {
     const storyParts = await retry(createAndExtractStoryParts, 3, 2000);
     const totalCharacters = (storyParts.mainStory + storyParts.poem).length;
-    const isStoryPremium =
-      user.isPaidUser && user.subscription.type !== SubscriptionPlanEnum.Free;
-
-    debugger;
-
-    console.log("isStoryPremium:>>>", isStoryPremium);
 
     // Count the total characters in the story
     if (totalCharacters > 4000) {
@@ -115,14 +109,14 @@ export const createStory = async (
       ...storyParts,
       author: user._id,
       createdAt: new Date(),
-      isPremium: isStoryPremium,
+      isPremium:
+        user.isPaidUser && user.subscription.type !== SubscriptionPlanEnum.Free,
     };
     const updatedStoryParams: StoryParams = {
       ...storyParams,
       totalCharacters,
     };
 
-    // Save story to
     try {
       // Save story to MongoDB Atlas
       storyId = await saveStoryToDb(storyData, profileInfo, updatedStoryParams);
@@ -165,6 +159,7 @@ export const createStory = async (
         )) as User;
 
         console.log(`✅ User updated with new storyId:>>>`, {
+          storyId,
           userStories: updatedUser.stories,
         });
       } catch (error) {

@@ -7,6 +7,7 @@ import {
 } from "src/components/StoryCreator/store/state";
 import {
   Box,
+  Button,
   Card,
   CardActions,
   CardContent,
@@ -23,6 +24,8 @@ import { CSSProperties } from "react";
 import routes from "src/application/routes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useNavigate } from "react-router-dom";
+import { VerifiedBadge } from "../VerifiedBadge";
+import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 
 interface StoryCard {
   story: Story;
@@ -30,6 +33,7 @@ interface StoryCard {
   image?: string;
   loading?: boolean;
   style?: CSSProperties;
+  isStoryLocked?: boolean;
   classNames?: string | string[];
 }
 
@@ -39,6 +43,10 @@ const StoryCard = (props: StoryCard) => {
   const { audioFile } = props.story;
   const profileInfo = props.story.profileInfo || {};
   const hasDirectionRtl = props.story.profileInfo.language.value === "ar";
+
+  const {
+    store: { handleTogglePricingModal },
+  } = usePricingModalContext();
 
   const handleOnCardClick = () => {
     if (props.page && props.page === "my-stories" && props.story.author) {
@@ -50,21 +58,45 @@ const StoryCard = (props: StoryCard) => {
     }
   };
 
+  const handleOnUpgradeClick = () => handleTogglePricingModal();
+
   return (
     <Card
       className="story-card"
       sx={{
         mb: 2,
-        cursor: "pointer",
-        bgcolor: "transparent",
         ":hover": {
           boxShadow: (theme) => `2px 2px 3px ${theme.palette.primary.main}`,
           transform: "scale(1.01)",
           transition: "200ms",
         },
       }}
-      onClick={handleOnCardClick}
+      onClick={props.isStoryLocked ? undefined : handleOnCardClick}
     >
+      {props.isStoryLocked && (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          className="story-card-locked-overlay"
+        >
+          <Box className="story-card-locked-overlay-verified-icon">
+            <VerifiedBadge fontSize={20} />
+          </Box>
+
+          <Button
+            size="small"
+            type="button"
+            color="primary"
+            aria-label="upgrade"
+            variant="contained"
+            onClick={handleOnUpgradeClick}
+          >
+            Upgrade
+          </Button>
+        </Box>
+      )}
+
       <CardContent className="story-card-content">
         <Typography
           gutterBottom

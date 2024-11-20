@@ -316,6 +316,7 @@ export const handleUpdateUserSubscription = async (
     const user = await getUserDataById(subscription.metadata.userId);
     const userInfoToUpdate: Partial<User> = {
       isPaidUser: true,
+      storyCount: 0,
       subscription: {
         id: subscriptionId as string,
         type: subscription.metadata.subscriptionPlan as SubscriptionPlanEnum,
@@ -412,11 +413,12 @@ export const cancelSubscription = async (
   response: Response,
   next: NextFunction
 ): Promise<void> => {
-  const { subscriptionId, userId } = request.body;
+  const { subscriptionId, userId, userStoryCount } = request.body;
 
   console.log("ℹ️ cancelSubscription:>>> request.body>>>", {
     subscriptionId,
     userId,
+    userStoryCount
   });
 
   try {
@@ -430,15 +432,16 @@ export const cancelSubscription = async (
     // Update User Data
     const updatedUserData: Partial<User> = {
       isPaidUser: false,
+      storyCount: userStoryCount,
       subscription: {
         id: cancelSubscription.id,
         type: SubscriptionPlanEnum.Free,
         startDate: new Date(),
         endDate: new Date(),
-        maxStoriesAllowed: 4,
         paymentStatus: "unpaid",
         plan: cancelSubscription.items.data[0].plan,
         price: cancelSubscription.items.data[0].price,
+        maxStoriesAllowed: CONFIG.MAX_STORIES_LIMIT_FREE,
       },
     };
     const updatedUser = await updateUserInDb(userId, updatedUserData);
