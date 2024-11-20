@@ -13,6 +13,7 @@ import {
   StoryParams,
   StoryParts,
   StorySeo,
+  SubscriptionPlanEnum,
   User,
   UserRole,
   UserStatus,
@@ -97,6 +98,12 @@ export const createStory = async (
   try {
     const storyParts = await retry(createAndExtractStoryParts, 3, 2000);
     const totalCharacters = (storyParts.mainStory + storyParts.poem).length;
+    const isStoryPremium =
+      user.isPaidUser && user.subscription.type !== SubscriptionPlanEnum.Free;
+
+    debugger;
+
+    console.log("isStoryPremium:>>>", isStoryPremium);
 
     // Count the total characters in the story
     if (totalCharacters > 4000) {
@@ -108,6 +115,7 @@ export const createStory = async (
       ...storyParts,
       author: user._id,
       createdAt: new Date(),
+      isPremium: isStoryPremium,
     };
     const updatedStoryParams: StoryParams = {
       ...storyParams,

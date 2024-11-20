@@ -8,6 +8,7 @@ export interface Story {
   summary: string;
   mainStory: string;
   poem: string;
+  isPremium: boolean | undefined;
   audioFile?: StoryAudioFile;
   createdAt: Date;
   seo?: StorySeo;

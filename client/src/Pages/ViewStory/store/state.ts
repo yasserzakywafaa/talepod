@@ -29,6 +29,7 @@ export const getViewStoryInitialState = (): ViewStoryInitialState => {
       summary: "",
       mainStory: "",
       poem: "",
+      isPremium: false,
       author: "",
       createdAt: new Date(),
       audioFile: {

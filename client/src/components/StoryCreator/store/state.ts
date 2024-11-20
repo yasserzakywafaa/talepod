@@ -65,6 +65,7 @@ export interface Story {
   summary: string;
   mainStory: string;
   poem: string;
+  isPremium: boolean | undefined;
   audioFile?: StoryAudioFile;
   profileInfo: ProfileInfo;
   storyParams: StoryParams;
