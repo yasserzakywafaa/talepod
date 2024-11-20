@@ -87,7 +87,7 @@ const CreateStoryForm = () => {
     isAuthenticated &&
     user &&
     user.role !== UserRole.admin &&
-    user.subscription.maxStoriesAllowed === user.storyCount;
+    user.storyCount >= user.subscription.maxStoriesAllowed;
 
   const isCreateButtonDisabled = (): boolean => {
     if (

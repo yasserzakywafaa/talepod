@@ -170,7 +170,10 @@ export const getStoryBySlug = async (
 
     if (results.length > 0) {
       const story = results[0] as Story;
-      console.log("✅ Get Story by slug:", { storySlug });
+      console.log("✅ Get Story by slug:", {
+        storySlug,
+        isPremium: story.isPremium,
+      });
       response.status(200).json(story);
     } else {
       response.status(404).json({ message: "❌ Story not found!" });

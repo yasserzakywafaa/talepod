@@ -23,6 +23,10 @@ const UsersStoriesPage = lazy(
   () => import("../Pages/UsersStories/UsersStories")
 );
 const MyStoriesPage = lazy(() => import("../Pages/MyStories/MyStories"));
+
+const BlogsPage = lazy(() => import("../Pages/Blogs/Blogs"));
+const BlogPage = lazy(() => import("../Pages/Blog/Blog"));
+
 const MyProfilePage = lazy(() => import("../Pages/MyProfile/MyProfile"));
 const ContactPage = lazy(() => import("../Pages/Contact/Contact"));
 const ViewStoryPage = lazy(() => import("../Pages/ViewStory/ViewStory"));
@@ -139,6 +143,9 @@ const AppContent = () => {
                   path={routes.myStory(":userId", ":slug")}
                   element={<ViewStoryPage />}
                 />
+
+                <Route path={routes.blogs} element={<BlogsPage />} />
+                <Route path={routes.blog(":slug")} element={<BlogPage />} />
 
                 {hasAdminRights(state.auth.user) && (
                   <Route

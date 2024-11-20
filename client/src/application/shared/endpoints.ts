@@ -29,6 +29,7 @@ const END_POINTS = {
       STORY_SEO: `${publicApiUrl}/api/v1/story-seo`,
       STORY_AUDIO: `${publicApiUrl}/api/v1/openai/create/story-audio`,
       IMAGES: `${publicApiUrl}/api/v1/openai/create/images`,
+      BLOG: `${publicApiUrl}/api/v1/openai/create/blog`,
     },
   },
   STORIES: {
@@ -56,6 +57,10 @@ const END_POINTS = {
     GET_CHECKOUT_SESSION_DATA: `${publicApiUrl}/api/v1/payments/checkout-session-data`,
     GET_SUBSCRIPTION_DETAILS: `${publicApiUrl}/api/v1/auth/get-subscription-details`,
     CANCEL_SUBSCRIPTION: `${publicApiUrl}/api/v1/payments/cancel-subscription`,
+  },
+  BLOGS: {
+    GET_ALL_BLOGS: `${publicApiUrl}/api/v1/blogs/blogs-list`,
+    GET_BLOG_BY_SLUG: (slug: string) => `${publicApiUrl}/api/v1/blogs/${slug}`,
   },
 };
 

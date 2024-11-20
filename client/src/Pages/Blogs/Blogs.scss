@@ -1,0 +1,20 @@
+/**
+* Blogs Page
+*/
+.blogs-page {
+  .blogs-image {
+    // width: 25%;
+  }
+  .blogs-card-wrapper {
+    border-radius: 5px;
+    padding: 1rem 2rem;
+  }
+}
+
+@media screen and (max-width: 820px) {
+  .blogs-page {
+    .blogs-image {
+      // width: 50%;
+    }
+  }
+}

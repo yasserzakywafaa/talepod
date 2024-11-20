@@ -67,6 +67,12 @@ const MyProfilePage = () => {
 
   const handleOnSubscribeClick = () => handleTogglePricingModal();
 
+  const storiesCounterLeft =
+    user.subscription.maxStoriesAllowed - user.storyCount;
+
+  const hasMaxStoriesLimit =
+    user.storyCount >= user.subscription.maxStoriesAllowed;
+
   if (!isAuthenticated || !user) return <></>;
 
   useEffect(() => {
@@ -239,7 +245,7 @@ const MyProfilePage = () => {
                       </span>
                     </Grid>
 
-                    <Grid item xs={12} sm={6} md={8}>
+                    {/* <Grid item xs={12} sm={6} md={8}>
                       <Alert
                         severity="info"
                         variant="outlined"
@@ -247,16 +253,13 @@ const MyProfilePage = () => {
                         icon={<AutoAwesomeOutlined />}
                       >
                         You have{" "}
-                        <span className="bold">
-                          {user.subscription.maxStoriesAllowed -
-                            user.storyCount}
-                        </span>{" "}
+                        <span className="bold">{storiesCounterLeft}</span>{" "}
                         stories left out of{" "}
                         <span className="bold">
                           {user.subscription.maxStoriesAllowed}
                         </span>
                       </Alert>
-                    </Grid>
+                    </Grid> */}
 
                     <Grid item xs={12} sm={3} md={4}>
                       <Button
@@ -282,6 +285,35 @@ const MyProfilePage = () => {
                     >
                       Upgrade
                     </Button>
+                  </Grid>
+                )}
+
+                {hasMaxStoriesLimit ? (
+                  <Grid item xs={12} md={12}>
+                    <Alert
+                      severity="warning"
+                      variant="outlined"
+                      sx={{ width: "fit-content" }}
+                      icon={<AutoAwesomeOutlined />}
+                    >
+                      {`You have consumed your maximum credit of ${user.subscription.maxStoriesAllowed} stories`}
+                    </Alert>
+                  </Grid>
+                ) : (
+                  <Grid item xs={12} sm={6} md={8}>
+                    <Alert
+                      severity="info"
+                      variant="outlined"
+                      sx={{ width: "fit-content" }}
+                      icon={<AutoAwesomeOutlined />}
+                    >
+                      You have{" "}
+                      <span className="bold">{storiesCounterLeft}</span> stories
+                      left out of{" "}
+                      <span className="bold">
+                        {user.subscription.maxStoriesAllowed}
+                      </span>
+                    </Alert>
                   </Grid>
                 )}
 

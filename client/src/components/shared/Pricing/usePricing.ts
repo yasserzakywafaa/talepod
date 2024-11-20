@@ -232,6 +232,7 @@ export const usePricing = () => {
         "Customizable story parameters",
         "High-quality text-to-speech conversion",
         "Create up to 50 bedtime stories per month",
+        "Access your Premium created stories",
       ],
       buttonDisabled: currentUserPackage.isPremium,
       buttonText: getButtonText(SubscriptionPlanEnum.Premium),

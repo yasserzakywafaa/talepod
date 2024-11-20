@@ -13,6 +13,7 @@ import {
   StoryParams,
   StoryParts,
   StorySeo,
+  SubscriptionPlanEnum,
   User,
   UserRole,
   UserStatus,
@@ -108,13 +109,14 @@ export const createStory = async (
       ...storyParts,
       author: user._id,
       createdAt: new Date(),
+      isPremium:
+        user.isPaidUser && user.subscription.type !== SubscriptionPlanEnum.Free,
     };
     const updatedStoryParams: StoryParams = {
       ...storyParams,
       totalCharacters,
     };
 
-    // Save story to
     try {
       // Save story to MongoDB Atlas
       storyId = await saveStoryToDb(storyData, profileInfo, updatedStoryParams);
@@ -157,6 +159,7 @@ export const createStory = async (
         )) as User;
 
         console.log(`✅ User updated with new storyId:>>>`, {
+          storyId,
           userStories: updatedUser.stories,
         });
       } catch (error) {

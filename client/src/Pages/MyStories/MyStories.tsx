@@ -9,11 +9,11 @@ import MyStoriesFiltersPanel from "./features/MyStoriesFiltersPanel/MyStoriesFil
 import NoStoriesFound from "./features/NoStoriesFound";
 import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
-// import Share from "src/components/shared/Share";
 import StoryCard from "src/components/shared/StoryCard/StoryCard";
 import { useEffect } from "react";
 import { useMyStoriesContext } from "../MyStories/store/Provider";
 import { useNavigate } from "react-router-dom";
+import { useApplicationContext } from "src/application/store/Provider";
 
 const MyStoriesPage: React.FC = () => {
   const navigate = useNavigate();
@@ -29,6 +29,14 @@ const MyStoriesPage: React.FC = () => {
       handleToggleFiltersPanel,
     },
   } = useMyStoriesContext();
+
+  const {
+    store: {
+      state: {
+        auth: { user },
+      },
+    },
+  } = useApplicationContext();
 
   const handleOnCreateClick = () => {
     navigate("/create");
@@ -107,8 +115,15 @@ const MyStoriesPage: React.FC = () => {
               }}
             >
               {stories.map((story, index) => {
+                const isStoryLocked = !user?.isPaidUser && story.isPremium;
+
                 return (
-                  <StoryCard key={index} story={story} page="my-stories" />
+                  <StoryCard
+                    key={index}
+                    story={story}
+                    page="my-stories"
+                    isStoryLocked={isStoryLocked}
+                  />
                 );
               })}
             </Box>
@@ -135,18 +150,6 @@ const MyStoriesPage: React.FC = () => {
               ) : (
                 <></>
               )}
-
-              {/* <Box
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  mt: { xs: 1, sm: 1 },
-                }}
-              >
-                <Share />
-              </Box> */}
             </Box>
           </>
         ) : (
