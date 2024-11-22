@@ -139,11 +139,6 @@ const AppContent = () => {
                   element={<MyProfilePage />}
                 />
 
-                <Route
-                  path={routes.myStory(":userId", ":slug")}
-                  element={<ViewStoryPage />}
-                />
-
                 <Route path={routes.blogs} element={<BlogsPage />} />
                 <Route path={routes.blog(":slug")} element={<BlogPage />} />
 
@@ -162,6 +157,11 @@ const AppContent = () => {
             ) : (
               <Route path="*" element={<Navigate to={routes.unauthorized} />} />
             )}
+
+            <Route
+              path={routes.myStory(":userId", ":slug")}
+              element={<ViewStoryPage />}
+            />
 
             <Route path={routes.contact} element={<ContactPage />} />
             <Route path={routes.story(":slug")} element={<ViewStoryPage />} />

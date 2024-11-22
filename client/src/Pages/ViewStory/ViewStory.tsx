@@ -91,11 +91,7 @@ const ViewStoryPage: React.FC = () => {
   );
 
   const isReadOnlyMode = () => {
-    if (
-      auth.user &&
-      auth.user._id !== userId &&
-      !story.storyParams.createdByAdmin
-    ) {
+    if (auth.user?._id !== userId && !story.storyParams.createdByAdmin) {
       return true;
     } else return false;
   };
@@ -238,12 +234,6 @@ const ViewStoryPage: React.FC = () => {
                 <RandomImage />
               </Box>
               <CardContent className="view-story-card-content">
-                {/* {isReadOnlyMode() && (
-                  <Alert severity="info" sx={{ mt: 1, mb: 2 }}>
-                    {"Shared by: Yasser"}
-                  </Alert>
-                )} */}
-
                 <Typography
                   gutterBottom
                   variant="h4"
@@ -450,15 +440,13 @@ const ViewStoryPage: React.FC = () => {
                   {story.poem}
                 </pre>
 
-                {story.author &&
-                  !story.storyParams.createdByAdmin &&
-                  storyAuthor && (
-                    <ViewStoryAuthorInfo
-                      story={story}
-                      storyAuthor={storyAuthor}
-                      handleUpdateStoryAuthor={updateStoryAuthor}
-                    />
-                  )}
+                {story.author && (
+                  <ViewStoryAuthorInfo
+                    story={story}
+                    storyAuthor={storyAuthor}
+                    handleUpdateStoryAuthor={updateStoryAuthor}
+                  />
+                )}
 
                 <ViewStoryInfo story={story} />
 
