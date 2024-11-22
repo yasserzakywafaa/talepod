@@ -91,9 +91,15 @@ const ViewStoryPage: React.FC = () => {
   );
 
   const isReadOnlyMode = () => {
+    if (!userId && auth.user?._id === story.author) return false;
+
+    if (!userId && !story.storyParams.createdByAdmin) return true;
+
     if (auth.user?._id !== userId && !story.storyParams.createdByAdmin) {
       return true;
-    } else return false;
+    } 
+    
+    return false;
   };
 
   const handleOnCreateAudioClick = async () => {
@@ -191,12 +197,8 @@ const ViewStoryPage: React.FC = () => {
         window.localStorage.removeItem("newStoryCreated");
       }
 
-      // If Current User is NOT the author of this story, get author Info
-      if (
-        !!story.author &&
-        isReadOnlyMode() &&
-        !story.storyParams.createdByAdmin
-      ) {
+      // Get story author Info
+      if (!!story.author && !story.storyParams.createdByAdmin) {
         handleFetchStoryAuthorInfo();
       }
     }
