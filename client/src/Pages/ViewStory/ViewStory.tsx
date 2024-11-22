@@ -31,7 +31,7 @@ import { LyricsOutlined } from "@mui/icons-material";
 import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import ReactMarkdown from "react-markdown";
-import Share from "../../components/shared/Share";
+import Share from "../../components/shared/Share/Share";
 import StoryNotFound from "./features/StoryNotFound";
 import { VerifiedBadge } from "src/components/shared/VerifiedBadge";
 import ViewStoryAuthorInfo from "./features/ViewStoryAuthorInfo";
@@ -44,6 +44,7 @@ import { useEffect } from "react";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
 import { useParams } from "react-router-dom";
 import { useViewStoryContext } from "./store/Provider";
+import { ShareFloating } from "src/components/shared/Share/ShareFloating";
 
 const ViewStoryPage: React.FC = () => {
   const { userId, slug } = useParams<{ userId: string; slug: string }>();
@@ -416,6 +417,9 @@ const ViewStoryPage: React.FC = () => {
                     </Box>
                   )}
                 </Card>
+
+                <ShareFloating />
+
                 {isDesktop ? (
                   <Typography
                     gutterBottom
