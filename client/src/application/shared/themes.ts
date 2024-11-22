@@ -62,6 +62,13 @@ export const theme = createTheme({
         },
       },
     },
+    MuiSpeedDialAction: {
+      styleOverrides: {
+        fab: {
+          border: `1px solid ${primaryColor}`,
+        },
+      },
+    },
   },
 });
 

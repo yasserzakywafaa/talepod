@@ -6,7 +6,7 @@ import { LoaderComponentNameEnum } from "src/components/shared/Loader/LoaderSpin
 import NoStoriesFound from "./features/NoStoriesFound";
 import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
-import Share from "src/components/shared/Share";
+import Share from "src/components/shared/Share/Share";
 import StoryCard from "src/components/shared/StoryCard/StoryCard";
 import { useExploreContext } from "./store/Provider";
 import { useNavigate } from "react-router-dom";

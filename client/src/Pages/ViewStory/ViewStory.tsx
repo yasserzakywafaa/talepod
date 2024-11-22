@@ -31,7 +31,7 @@ import { LyricsOutlined } from "@mui/icons-material";
 import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import ReactMarkdown from "react-markdown";
-import Share from "../../components/shared/Share";
+import Share from "../../components/shared/Share/Share";
 import StoryNotFound from "./features/StoryNotFound";
 import { VerifiedBadge } from "src/components/shared/VerifiedBadge";
 import ViewStoryAuthorInfo from "./features/ViewStoryAuthorInfo";
@@ -44,6 +44,7 @@ import { useEffect } from "react";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
 import { useParams } from "react-router-dom";
 import { useViewStoryContext } from "./store/Provider";
+import { ShareFloating } from "src/components/shared/Share/ShareFloating";
 
 const ViewStoryPage: React.FC = () => {
   const { userId, slug } = useParams<{ userId: string; slug: string }>();
@@ -90,11 +91,7 @@ const ViewStoryPage: React.FC = () => {
   );
 
   const isReadOnlyMode = () => {
-    if (
-      auth.user &&
-      auth.user._id !== userId &&
-      !story.storyParams.createdByAdmin
-    ) {
+    if (auth.user?._id !== userId && !story.storyParams.createdByAdmin) {
       return true;
     } else return false;
   };
@@ -237,12 +234,6 @@ const ViewStoryPage: React.FC = () => {
                 <RandomImage />
               </Box>
               <CardContent className="view-story-card-content">
-                {/* {isReadOnlyMode() && (
-                  <Alert severity="info" sx={{ mt: 1, mb: 2 }}>
-                    {"Shared by: Yasser"}
-                  </Alert>
-                )} */}
-
                 <Typography
                   gutterBottom
                   variant="h4"
@@ -416,6 +407,9 @@ const ViewStoryPage: React.FC = () => {
                     </Box>
                   )}
                 </Card>
+
+                <ShareFloating />
+
                 {isDesktop ? (
                   <Typography
                     gutterBottom
@@ -446,15 +440,13 @@ const ViewStoryPage: React.FC = () => {
                   {story.poem}
                 </pre>
 
-                {story.author &&
-                  !story.storyParams.createdByAdmin &&
-                  storyAuthor && (
-                    <ViewStoryAuthorInfo
-                      story={story}
-                      storyAuthor={storyAuthor}
-                      handleUpdateStoryAuthor={updateStoryAuthor}
-                    />
-                  )}
+                {story.author && (
+                  <ViewStoryAuthorInfo
+                    story={story}
+                    storyAuthor={storyAuthor}
+                    handleUpdateStoryAuthor={updateStoryAuthor}
+                  />
+                )}
 
                 <ViewStoryInfo story={story} />
 
