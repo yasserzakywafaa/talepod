@@ -54,7 +54,7 @@ const CONFIG = {
   GOOGLE_ANALYTICS_MEASUREMENT_ID: process.env.GOOGLE_ANALYTICS_MEASUREMENT_ID,
   GOOGLE_ANALYTICS_API_SECRET: process.env.GOOGLE_ANALYTICS_API_SECRET,
   GOOGLE_ANALYTICS_TRACKING_URL: (MEASUREMENT_ID: string, API_SECRET: string) =>
-    `https://www.google-analytics.com/mp/collect?measurement_id=<${MEASUREMENT_ID}>&api_secret=<${API_SECRET}>`,
+    `https://www.google-analytics.com/mp/collect?measurement_id=${MEASUREMENT_ID}&api_secret=${API_SECRET}`,
 
   // Stripe [TEST]
   STRIPE_TEST_PUB_KEY: process.env.STRIPE_TEST_PUB_KEY,
