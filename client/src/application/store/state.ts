@@ -8,6 +8,11 @@ export interface ApplicationInitialState {
   themeMode: PaletteMode;
   auth: Authentication;
   previousUrl: string;
+  trackingInfo: TrackingInfo;
+}
+
+export interface TrackingInfo {
+  clientId: string;
 }
 
 export interface Authentication {
@@ -31,6 +36,9 @@ export const getApplicationInitialState = (): ApplicationInitialState => {
     auth: {
       user: null,
       isAuthenticated: false,
+    },
+    trackingInfo: {
+      clientId: "",
     },
   };
 };

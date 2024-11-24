@@ -24,6 +24,9 @@ export interface PaymentManager {
 
 export const usePaymentManager = (store: PaymentStore): PaymentManager => {
   const {
+    store: {
+      state: { trackingInfo },
+    },
     manager: { handleIsFetching },
   } = useApplicationContext();
 
@@ -123,6 +126,7 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
               "{CHECKOUT_SESSION_ID}"
             )}`,
             cancel_url: `${window.location.href}`,
+            googleAnalyticsClientId: trackingInfo.clientId,
           },
           headers: {
             "Content-Type": "application/json",
