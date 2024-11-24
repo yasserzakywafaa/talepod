@@ -11,6 +11,7 @@ import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import NotFoundPage from "../Pages/NotFound/NotFound";
 import { ThemeProvider } from "@emotion/react";
 import { getApplicationInitialState } from "./store/state";
+import { getClientIdFromGoogleAnalyticsCookie } from "src/shared/utils/cookies";
 import { getLocalStorageAuthItems } from "src/shared/utils/localstorage";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import routes from "./routes";
@@ -78,7 +79,7 @@ const QuickBedtimeStories = lazy(
 
 const AppContent = () => {
   const {
-    store: { state, handleIsFetchingUserInfo },
+    store: { state, handleIsFetchingUserInfo, setTrackingInfo },
     manager: { handleSetAuthInfo, handleFetchUserInfo },
   } = useApplicationContext();
 
@@ -108,11 +109,22 @@ const AppContent = () => {
       }
     }
     handleIsFetchingUserInfo(false);
+
+    const gaClientId = getClientIdFromGoogleAnalyticsCookie();
+    if (gaClientId) {
+      setTrackingInfo({
+        clientId: gaClientId,
+      });
+    }
   };
 
   useEffect(() => {
     handleUpdates();
   }, []);
+
+  useEffect(() => {
+    console.log("AppContent.tsx:>>> Client ID:", state.trackingInfo.clientId);
+  }, [state.trackingInfo]);
 
   return (
     <ThemeProvider theme={state.themeMode === "light" ? lightTheme : darkTheme}>

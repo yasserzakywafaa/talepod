@@ -1,6 +1,7 @@
 import {
   ApplicationInitialState,
   Authentication,
+  TrackingInfo,
   getApplicationInitialState,
 } from "./state";
 
@@ -12,6 +13,7 @@ export interface ApplicationStore {
   updateState: (newState: ApplicationInitialState) => void;
   handleIsFetching: (handleIsFetching: boolean) => void;
   setPreviousUrl: (previousUrl: string) => void;
+  setTrackingInfo: (trackingInfo: TrackingInfo) => void;
   handleIsFetchingUserInfo: (isFetchingUserInfo: boolean) => void;
   toggleThemeMode: () => void;
   updateAuthInfo: (authInfo?: Authentication) => void;
@@ -37,6 +39,13 @@ const useApplicationStore = (): ApplicationStore => {
     setState((prev) => ({
       ...prev,
       previousUrl,
+    }));
+  };
+
+  const setTrackingInfo = (trackingInfo: TrackingInfo) => {
+    setState((prev) => ({
+      ...prev,
+      trackingInfo,
     }));
   };
 
@@ -112,6 +121,7 @@ const useApplicationStore = (): ApplicationStore => {
     updateState,
     handleIsFetching,
     setPreviousUrl,
+    setTrackingInfo,
     handleIsFetchingUserInfo,
     toggleThemeMode,
     updateAuthInfo,

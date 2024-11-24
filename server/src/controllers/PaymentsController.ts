@@ -3,6 +3,7 @@ import { SubscriptionPlanEnum, User } from "../models/types";
 
 import CONFIG from "./../config";
 import Stripe from "stripe";
+import axios from "axios";
 import { getUserDataById } from "../utils/fetchData";
 import { updateUserInDb } from "../models/mongoDb/index";
 
@@ -265,10 +266,19 @@ export const handleWebhookEvents = async (
       invoice = data.object;
       console.log("✅ webhook:>>> invoice.payment_succeeded!", invoice);
       if (invoice.paid) {
+        // try {
+        //   await handleUpdateUserSubscription(invoice);
+        // } catch (error) {
+        //   console.error(`❌  Failed to update user subscription!`, error);
+        // }
+
         try {
-          await handleUpdateUserSubscription(invoice);
+          await handleSendSubscriptionToGoogleAnalytics(invoice);
         } catch (error) {
-          console.error(`❌  Failed to update user subscription!`, error);
+          console.error(
+            `❌  Failed to send subscription to Google Analytics!`,
+            error
+          );
         }
       }
 
@@ -351,7 +361,64 @@ export const handleUpdateUserSubscription = async (
       ...userInfoToUpdate,
     });
   } catch (error) {
-    console.error(`❌  Failed to get subscription data!`, { error });
+    console.error(`❌  Failed to update User Subscription!`, { error });
+    return;
+  }
+};
+
+export const handleSendSubscriptionToGoogleAnalytics = async (
+  invoice: Stripe.Invoice
+): Promise<void> => {
+  const subscriptionId = invoice.subscription;
+  if (!subscriptionId) {
+    console.error(`❌  'subscriptionId' is required!`);
+    return;
+  }
+  try {
+    const payload = {
+      // client_id: invoice.subscription_details.metadata.googleAnalyticsClientId,
+      client_id: "999999999.999999999", // Dummy client ID for past transaction
+      events: [
+        {
+          name: "purchase",
+          params: {
+            transaction_id: subscriptionId,
+            value: invoice.total,
+            currency: invoice.currency,
+            affiliation: "Stripe", // Optional: Source of the transaction
+            items: [
+              {
+                item_name:
+                  invoice.subscription_details.metadata.subscriptionPlan, // Plan name
+                item_id: subscriptionId,
+                price: invoice.total,
+                quantity: 1,
+                item_category: "Subscription", // Optional: Category of the product
+              },
+            ],
+            // Google Analytics requires the timestamp in milliseconds
+            // Convert from Seconds (Stripe invoice timestamp) to Milliseconds
+            event_timestamp: invoice.created * 1000,
+          },
+        },
+      ],
+    };
+    const POST_URL = CONFIG.GOOGLE_ANALYTICS_TRACKING_URL(
+      CONFIG.GOOGLE_ANALYTICS_MEASUREMENT_ID,
+      CONFIG.GOOGLE_ANALYTICS_API_SECRET
+    );
+
+    console.log(
+      "✅ handleSendSubscriptionToGoogleAnalytics:>>>",
+      POST_URL,
+      payload
+    );
+
+    await axios.post(POST_URL, payload);
+  } catch (error) {
+    console.error(`❌  Failed to send subscription to Google Analytics!`, {
+      error,
+    });
     return;
   }
 };
@@ -418,7 +485,7 @@ export const cancelSubscription = async (
   console.log("ℹ️ cancelSubscription:>>> request.body>>>", {
     subscriptionId,
     userId,
-    userStoryCount
+    userStoryCount,
   });
 
   try {
