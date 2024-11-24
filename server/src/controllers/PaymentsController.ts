@@ -378,10 +378,15 @@ export const handleSendSubscriptionToGoogleAnalytics = async (
     const payload = {
       // client_id: invoice.subscription_details.metadata.googleAnalyticsClientId,
       client_id: "999999999.999999999", // Dummy client ID for past transaction
+
+      // Google Analytics requires the timestamp in milliseconds
+      // Convert from Seconds (Stripe invoice timestamp) to Milliseconds
+      timestamp_micros: invoice.created * 1000, // 1731876299000
       events: [
         {
           name: "purchase",
           params: {
+            debug_mode: true, // Enables DebugView in GA4
             transaction_id: subscriptionId,
             value: invoice.total,
             currency: invoice.currency,
@@ -396,9 +401,7 @@ export const handleSendSubscriptionToGoogleAnalytics = async (
                 item_category: "Subscription", // Optional: Category of the product
               },
             ],
-            // Google Analytics requires the timestamp in milliseconds
-            // Convert from Seconds (Stripe invoice timestamp) to Milliseconds
-            event_timestamp: invoice.created * 1000,
+            // event_timestamp: invoice.created * 1000,
           },
         },
       ],
@@ -415,6 +418,9 @@ export const handleSendSubscriptionToGoogleAnalytics = async (
     );
 
     await axios.post(POST_URL, payload);
+
+    const response = await axios.post(POST_URL, payload);
+    console.log("ℹ️ GA4 Response:>>>", response.data);
   } catch (error) {
     console.error(`❌  Failed to send subscription to Google Analytics!`, {
       error,
