@@ -266,11 +266,11 @@ export const handleWebhookEvents = async (
       invoice = data.object;
       console.log("✅ webhook:>>> invoice.payment_succeeded!", invoice);
       if (invoice.paid) {
-        // try {
-        //   await handleUpdateUserSubscription(invoice);
-        // } catch (error) {
-        //   console.error(`❌  Failed to update user subscription!`, error);
-        // }
+        try {
+          await handleUpdateUserSubscription(invoice);
+        } catch (error) {
+          console.error(`❌  Failed to update user subscription!`, error);
+        }
 
         try {
           await handleSendSubscriptionToGoogleAnalytics(invoice);
@@ -376,12 +376,11 @@ export const handleSendSubscriptionToGoogleAnalytics = async (
   }
   try {
     const payload = {
-      // client_id: invoice.subscription_details.metadata.googleAnalyticsClientId,
-      client_id: "999999999.999999999", // Dummy client ID for past transaction
-
       // Google Analytics requires the timestamp in milliseconds
       // Convert from Seconds (Stripe invoice timestamp) to Milliseconds
-      timestamp_micros: invoice.created * 1000, // 1731876299000
+      timestamp_micros: invoice.created * 1000,
+      client_id: invoice.subscription_details.metadata.googleAnalyticsClientId,
+      // client_id: "1234567890.987654321", // Dummy client ID for past transaction
       events: [
         {
           name: "purchase",
@@ -401,7 +400,6 @@ export const handleSendSubscriptionToGoogleAnalytics = async (
                 item_category: "Subscription", // Optional: Category of the product
               },
             ],
-            // event_timestamp: invoice.created * 1000,
           },
         },
       ],
@@ -420,7 +418,10 @@ export const handleSendSubscriptionToGoogleAnalytics = async (
     await axios.post(POST_URL, payload);
 
     const response = await axios.post(POST_URL, payload);
-    console.log("ℹ️ GA4 Response:>>>", response.data);
+    console.log("ℹ️ GA4 Response:>>>", {
+      response: response,
+      responseData: response.data,
+    });
   } catch (error) {
     console.error(`❌  Failed to send subscription to Google Analytics!`, {
       error,
