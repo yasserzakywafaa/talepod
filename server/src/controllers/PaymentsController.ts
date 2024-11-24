@@ -266,11 +266,11 @@ export const handleWebhookEvents = async (
       invoice = data.object;
       console.log("✅ webhook:>>> invoice.payment_succeeded!", invoice);
       if (invoice.paid) {
-        try {
-          await handleUpdateUserSubscription(invoice);
-        } catch (error) {
-          console.error(`❌  Failed to update user subscription!`, error);
-        }
+        // try {
+        //   await handleUpdateUserSubscription(invoice);
+        // } catch (error) {
+        //   console.error(`❌  Failed to update user subscription!`, error);
+        // }
 
         try {
           await handleSendSubscriptionToGoogleAnalytics(invoice);
@@ -382,7 +382,7 @@ export const handleSendSubscriptionToGoogleAnalytics = async (
         {
           name: "purchase",
           params: {
-            subscriptionId,
+            transaction_id: subscriptionId,
             value: invoice.total,
             currency: invoice.currency,
             affiliation: "Stripe", // Optional: Source of the transaction
@@ -396,6 +396,9 @@ export const handleSendSubscriptionToGoogleAnalytics = async (
                 item_category: "Subscription", // Optional: Category of the product
               },
             ],
+            // Google Analytics requires the timestamp in milliseconds
+            // Convert from Seconds (Stripe invoice timestamp) to Milliseconds
+            event_timestamp: invoice.created * 1000,
           },
         },
       ],
