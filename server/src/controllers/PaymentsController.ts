@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { SubscriptionPlanEnum, User } from "../models/types";
 
 import CONFIG from "./../config";
+import { GoogleAnalyticsPayload } from "src/models/types/googleAnalystics";
 import Stripe from "stripe";
 import axios from "axios";
 import { getUserDataById } from "../utils/fetchData";
@@ -102,8 +103,14 @@ export const createCheckoutSession = async (
   response: Response,
   next: NextFunction
 ): Promise<void> => {
-  const { priceId, subscriptionPlan, userId, success_url, cancel_url } =
-    request.body.metadata;
+  const {
+    priceId,
+    subscriptionPlan,
+    userId,
+    success_url,
+    cancel_url,
+    googleAnalyticsClientId,
+  } = request.body.metadata;
   const user = await getUserDataById(userId);
 
   try {
@@ -130,16 +137,57 @@ export const createCheckoutSession = async (
       metadata: {
         userId,
         subscriptionPlan,
+        googleAnalyticsClientId,
       },
       customer: user.stripeCustomerId ?? undefined,
       subscription_data: {
         metadata: {
           userId,
           subscriptionPlan,
+          googleAnalyticsClientId,
         },
       },
       expand: ["subscription"],
     });
+
+    try {
+      // Send current session to Google Analytics
+      const timeStamp = session.created * 1000;
+      const totalAmount = session.amount_total / 100;
+      const payload: GoogleAnalyticsPayload = {
+        timestamp_micros: timeStamp,
+        client_id: googleAnalyticsClientId || "1234567890.987654321",
+        non_personalized_ads: true,
+        events: [
+          {
+            name: "begin_checkout",
+            params: {
+              debug_mode: true,
+              value: totalAmount,
+              affiliation: undefined,
+              transaction_id: undefined,
+              currency: session.currency,
+              event_timestamp: timeStamp,
+              items: [
+                {
+                  item_name: subscriptionPlan, // Plan name
+                  item_id: priceId,
+                  price: totalAmount,
+                  quantity: 1,
+                  item_category: "Subscription", // Optional: Category of the product
+                },
+              ],
+            },
+          },
+        ],
+      };
+      await sendToGoogleAnalytics(payload);
+    } catch (error) {
+      console.error(
+        `❌  Failed to send session data to Google Analytics!`,
+        error
+      );
+    }
 
     console.log("ℹ️  createCheckoutSession:>>>", { user, session });
 
@@ -369,61 +417,62 @@ export const handleUpdateUserSubscription = async (
 export const handleSendSubscriptionToGoogleAnalytics = async (
   invoice: Stripe.Invoice
 ): Promise<void> => {
-  const subscriptionId = invoice.subscription;
+  const subscriptionId = invoice.subscription as string;
+  const totalAmount = invoice.total / 100;
   if (!subscriptionId) {
     console.error(`❌  'subscriptionId' is required!`);
     return;
   }
-  try {
-    const payload = {
-      // Google Analytics requires the timestamp in milliseconds
-      // Convert from Seconds (Stripe invoice timestamp) to Milliseconds
-      timestamp_micros: invoice.created * 1000,
-      client_id: invoice.subscription_details.metadata.googleAnalyticsClientId,
-      // client_id: "1234567890.987654321", // Dummy client ID for past transaction
-      events: [
-        {
-          name: "purchase",
-          params: {
-            debug_mode: true, // Enables DebugView in GA4
-            transaction_id: subscriptionId,
-            value: invoice.total,
-            currency: invoice.currency,
-            affiliation: "Stripe", // Optional: Source of the transaction
-            items: [
-              {
-                item_name:
-                  invoice.subscription_details.metadata.subscriptionPlan, // Plan name
-                item_id: subscriptionId,
-                price: invoice.total,
-                quantity: 1,
-                item_category: "Subscription", // Optional: Category of the product
-              },
-            ],
-          },
+  const payload: GoogleAnalyticsPayload = {
+    timestamp_micros: invoice.created * 1000,
+    client_id:
+      invoice.subscription_details.metadata.googleAnalyticsClientId ||
+      "1234567890.987654321",
+    non_personalized_ads: true,
+    events: [
+      {
+        name: "purchase",
+        params: {
+          debug_mode: true,
+          value: totalAmount,
+          affiliation: "Stripe",
+          currency: invoice.currency,
+          transaction_id: subscriptionId,
+          event_timestamp: invoice.created * 1000,
+          items: [
+            {
+              item_name: invoice.subscription_details.metadata.subscriptionPlan, // Plan name
+              item_id: subscriptionId,
+              price: totalAmount,
+              quantity: 1,
+              item_category: "Subscription", // Optional: Category of the product
+            },
+          ],
         },
-      ],
-    };
-    const POST_URL = CONFIG.GOOGLE_ANALYTICS_TRACKING_URL(
-      CONFIG.GOOGLE_ANALYTICS_MEASUREMENT_ID,
-      CONFIG.GOOGLE_ANALYTICS_API_SECRET
-    );
+      },
+    ],
+  };
+  await sendToGoogleAnalytics(payload);
+};
 
-    console.log(
-      "✅ handleSendSubscriptionToGoogleAnalytics:>>>",
-      POST_URL,
-      payload
-    );
+export const sendToGoogleAnalytics = async (
+  payload: GoogleAnalyticsPayload
+): Promise<void> => {
+  const POST_URL = CONFIG.GOOGLE_ANALYTICS_TRACKING_URL(
+    CONFIG.GOOGLE_ANALYTICS_MEASUREMENT_ID,
+    CONFIG.GOOGLE_ANALYTICS_API_SECRET
+  );
 
-    await axios.post(POST_URL, payload);
+  console.log("✅ sendToGoogleAnalytics:>>>", POST_URL, payload);
 
+  try {
     const response = await axios.post(POST_URL, payload);
     console.log("ℹ️ GA4 Response:>>>", {
       response: response,
       responseData: response.data,
     });
   } catch (error) {
-    console.error(`❌  Failed to send subscription to Google Analytics!`, {
+    console.error(`❌  Failed to send subscription data to Google Analytics!`, {
       error,
     });
     return;
