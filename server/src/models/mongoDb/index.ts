@@ -1,3 +1,4 @@
+import { Blog, BlogData, BlogParams, User } from "../types";
 import { Db, Document, MongoClient, ObjectId, WithId } from "mongodb";
 import {
   ProfileInfo,
@@ -14,7 +15,6 @@ import {
 } from "./crudOperations";
 
 import CONFIG from "../../config";
-import { User } from "../types";
 
 let dbClient: MongoClient;
 let database: Db;
@@ -29,6 +29,7 @@ export enum DBCollections {
   stories_library = "stories_library",
   stories_library_backup = "stories_library_backup",
   users = "users",
+  blogs = "blogs",
 }
 
 const getMongoDbUri = (): string => {
@@ -251,6 +252,29 @@ const updateUserInDb = async (
     return updatedUser;
   } catch (error) {
     throw new Error("❌ Error updating user data in DB", { cause: error });
+  }
+};
+
+const saveBlogToDb = async (
+  blog: Partial<Blog>,
+  // profileInfo: ProfileInfo,
+  blogParams: BlogParams
+): Promise<ObjectId | undefined> => {
+  try {
+    const blogData: BlogData = {
+      ...blog,
+      // profileInfo,
+      blogParams,
+    };
+    const blogId: ObjectId = await createDocument(
+      blogData,
+      DBCollections.blogs
+    );
+    console.log("✅ Blog saved to DB successfully");
+
+    return blogId;
+  } catch (error) {
+    throw new Error("❌ Error saving blog data to DB", { cause: error });
   }
 };
 

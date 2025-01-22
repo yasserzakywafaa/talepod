@@ -1,6 +1,7 @@
 import { CallToAction } from "./blogParams/CallToAction";
 import { ContentStructure } from "./blogParams/ContentStructure";
 import { Frequency } from "./blogParams/Frequency";
+import { Language } from "..";
 import { ObjectId } from "mongodb";
 import { PagingInfo } from "../api";
 import { SubscriptionPlanEnum } from "../user";
@@ -64,21 +65,6 @@ export interface BlogParts {
   callToAction: string;
 }
 
-export enum ChildGenderEnum {
-  Boy = "Boy",
-  Girl = "Girl",
-}
-
-export enum AdultGenderEnum {
-  Male = "Male",
-  Female = "Female",
-}
-
-export interface Language {
-  name: string;
-  value: string;
-}
-
 export interface BlogParams {
   topicKeywords: string[];
   language: Language;
@@ -95,35 +81,6 @@ export interface BlogParams {
   createdByAdmin?: boolean;
 }
 
-export type Tone = BasicParam;
-export type Moral = BasicParam;
-export type Environment = BasicParam;
-
-export interface BasicParam {
-  name: string;
-  value: string;
-  description?: string;
-  customValue?: string;
-}
-
-export interface ContactFormState {
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-}
-
-export interface BlogFilters extends PagingInfo {
-  topicKeywords: string | undefined;
-  hyperlinks: string | undefined;
-  language: string[];
-  blogType: BlogTypeEnum | undefined;
-}
-
-export enum BlogFiltersEnum {
-  topicKeywords = "blogParams.topicKeywords",
-  hyperlinks = "blogParams.hyperlinks",
-  language = "blogParams.language.value",
-  blogType = "blogType",
-  author = "author",
+export interface BlogData extends Partial<Blog> {
+  blogParams: BlogParams;
 }
