@@ -141,28 +141,6 @@ export const Keywords: Keywords = {
       keywordDifficulty: 20,
     },
   ],
-  zhHant: [
-    {
-      keyword: "睡前故事",
-      keywordVolume: 9000,
-      keywordDifficulty: 28,
-    },
-    {
-      keyword: "兒童睡前故事",
-      keywordVolume: 7000,
-      keywordDifficulty: 26,
-    },
-    {
-      keyword: "成人睡前故事",
-      keywordVolume: 4500,
-      keywordDifficulty: 22,
-    },
-    {
-      keyword: "簡短睡前故事",
-      keywordVolume: 3500,
-      keywordDifficulty: 18,
-    },
-  ],
   ja: [
     {
       keyword: "おやすみ前の物語",
@@ -293,28 +271,6 @@ export const Keywords: Keywords = {
       keyword: "छोटी सोने की कहानियाँ",
       keywordVolume: 4500,
       keywordDifficulty: 25,
-    },
-  ],
-  bn: [
-    {
-      keyword: "শিশুদের জন্য ঘুমানোর গল্প",
-      keywordVolume: 5000,
-      keywordDifficulty: 33,
-    },
-    {
-      keyword: "ঘুমানোর গল্প",
-      keywordVolume: 4000,
-      keywordDifficulty: 30,
-    },
-    {
-      keyword: "প্রাপ্তবয়স্কদের জন্য ঘুমানোর গল্প",
-      keywordVolume: 3000,
-      keywordDifficulty: 25,
-    },
-    {
-      keyword: "সংক্ষিপ্ত ঘুমানোর গল্প",
-      keywordVolume: 2000,
-      keywordDifficulty: 20,
     },
   ],
 };

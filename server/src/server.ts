@@ -5,12 +5,13 @@ import contactRoutes from "./routes/contactRoutes";
 import { databaseInit } from "./models/mongoDb";
 import express from "express";
 import handleCorsConfig from "./cors-config";
+import { handleCreateBlogBulk } from "./services/create/blog";
 import openaiRoutes from "./routes/openaiRoutes";
 import path from "path";
+import paymentWebhooksRouter from "./routes/paymentsWebhooksRoutes";
+import paymentsRoutes from "./routes/paymentsRoutes";
 import storiesRoutes from "./routes/storiesRoutes";
 import testRoutes from "./routes/testRoutes";
-import paymentsRoutes from "./routes/paymentsRoutes";
-import paymentWebhooksRouter from "./routes/paymentsWebhooksRoutes";
 
 const expressApp = express();
 const buildPath = path.join(__dirname, "../client/");
@@ -22,8 +23,6 @@ const getPort = (): string => {
   switch (true) {
     case CONFIG.IS_DEV:
       return CONFIG.DEV_PORT;
-    case CONFIG.IS_STAG:
-      return CONFIG.STAG_PORT;
     case CONFIG.IS_PROD:
       return CONFIG.PROD_PORT;
     default:
@@ -52,33 +51,25 @@ expressApp.use(contactRoutes);
 expressApp.use(authRoutes);
 expressApp.use(paymentsRoutes);
 
-// Initiate MongoDB connection
-databaseInit();
+const startServer = async () => {
+  try {
+    // Await MongoDB database connection initialization
+    await databaseInit();
 
-if (CONFIG.SERVE_STATIC_CONTENT === "true") {
-  // // Load API routes dynamically
-  // loadRoutes(expressApp);
+    // // TEST
+    // await handleCreateBlogBulk();
 
-  // Serve Frontend Bundled Application
-  expressApp.use(express.static(buildPath));
-
-  expressApp.get("*", (req, res) => {
-    console.log("🎯 Route path :>>>", {
-      SERVE_STATIC_CONTENT: CONFIG.SERVE_STATIC_CONTENT,
-      buildPath,
-      path: req.path,
-      sendFile: path.join(buildPath, "index.html"),
+    expressApp.listen(PORT, (): void => {
+      console.log("🎯 Server running on:>>>", {
+        PORT,
+        ENVIRONMENT: CONFIG.NODE_ENV,
+      });
     });
+  } catch (error) {
+    console.error("❌  Server startup error:", error);
+  }
+};
 
-    res.sendFile(path.join(buildPath, "index.html"));
-  });
-}
-
-expressApp.listen(PORT, (): void => {
-  console.log("🎯 Server running on:>>>", {
-    PORT,
-    ENVIRONMENT: CONFIG.NODE_ENV,
-  });
-});
+startServer(); // Call the async function to start the server
 
 module.exports = expressApp;
