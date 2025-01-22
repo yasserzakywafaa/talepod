@@ -256,18 +256,12 @@ const updateUserInDb = async (
 };
 
 const saveBlogToDb = async (
-  blog: Partial<Blog>,
-  // profileInfo: ProfileInfo,
-  blogParams: BlogParams
+  blog: Partial<Blog>
 ): Promise<ObjectId | undefined> => {
   try {
-    const blogData: BlogData = {
-      ...blog,
-      // profileInfo,
-      blogParams,
-    };
     const blogId: ObjectId = await createDocument(
-      blogData,
+      // blogData,
+      blog,
       DBCollections.blogs
     );
     console.log("✅ Blog saved to DB successfully");
@@ -326,4 +320,5 @@ export {
   saveFileDataToDb,
   saveUserDataToDb,
   updateUserInDb,
+  saveBlogToDb,
 };

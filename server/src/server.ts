@@ -1,5 +1,6 @@
 import CONFIG from "./config";
 import authRoutes from "./routes/authRoutes";
+import blogsRoutes from "./routes/blogsRoutes";
 import bodyParser from "body-parser";
 import contactRoutes from "./routes/contactRoutes";
 import { databaseInit } from "./models/mongoDb";
@@ -50,6 +51,7 @@ expressApp.use(openaiRoutes);
 expressApp.use(contactRoutes);
 expressApp.use(authRoutes);
 expressApp.use(paymentsRoutes);
+expressApp.use(blogsRoutes);
 
 const startServer = async () => {
   try {
@@ -57,7 +59,7 @@ const startServer = async () => {
     await databaseInit();
 
     // // TEST
-    await handleCreateBlogBulk();
+    // await handleCreateBlogBulk();
 
     expressApp.listen(PORT, (): void => {
       console.log("🎯 Server running on:>>>", {
