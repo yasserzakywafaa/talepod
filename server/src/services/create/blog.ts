@@ -22,31 +22,30 @@ export const handleCreateBlogRequest = async (
 ): Promise<string | null> => {
   try {
     // OpenAI Text Generation API Call
-    // const createRequest = await openai.chat.completions.create({
-    const createRequest = await axios.post(
-      "http://192.168.1.3:1234/v1/chat/completions",
-      {
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are a expressive blog writer and SEO expert that is also an expert on blog creation. \
+    const createRequest = await openai.chat.completions.create({
+      // const createRequest = await axios.post(
+      //   "http://192.168.1.3:1234/v1/chat/completions",
+      //   {
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a expressive blog writer and SEO expert that is also an expert on blog creation. \
               Your blogs should sound natural and conversational.",
-          },
-          {
-            role: "user",
-            content: blogPrompt,
-          },
-        ],
-        model: CONFIG.OPENAI_MODEL_NAME ?? "gpt-4o",
-        n: 1,
-        max_tokens: 1000,
-        temperature: 0.4,
-      }
-    );
+        },
+        {
+          role: "user",
+          content: blogPrompt,
+        },
+      ],
+      model: CONFIG.OPENAI_MODEL_NAME ?? "gpt-4o",
+      n: 1,
+      max_tokens: 1000,
+      temperature: 0.4,
+    });
 
-    // return createRequest.choices[0].message.content;
-    return createRequest.data.choices[0].message.content;
+    return createRequest.choices[0].message.content;
+    // return createRequest.data.choices[0].message.content;
   } catch (error) {
     throw new Error("❌  Create a blog request failed!");
   }

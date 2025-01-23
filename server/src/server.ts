@@ -59,7 +59,7 @@ const startServer = async () => {
     await databaseInit();
 
     // // // TEST
-    // // await handleCreateBlogBulk();
+    await handleCreateBlogBulk();
 
     expressApp.listen(PORT, (): void => {
       console.log("🎯 Server running on:>>>", {
