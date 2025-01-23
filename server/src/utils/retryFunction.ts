@@ -8,7 +8,7 @@ const retry = async <T>(
       return await callbackFn();
     } catch (error) {
       if (index === numberOfRetries - 1) {
-        throw error; // rethrow the last error after all retries fail
+        throw new Error(`${error}`); // rethrow the last error after all retries fail
       }
       console.error(`❌ Attempt ${index + 1} failed!`, [error]);
       await new Promise((res) => setTimeout(res, delay));

@@ -1,64 +1,28 @@
-import {
-  Blog,
-  BlogParams,
-  BlogParts,
-  BlogTypeEnum,
-} from "../../models/types/blog/blog";
-import {
-  DBCollections,
-  getDocumentByFieldFromDb,
-  getDocumentFromDb,
-  saveBlogToDb,
-} from "../../models/mongoDb";
-import { Languages, SupportedLanguages } from "../../utils/languages";
+import { Blog, BlogParts, BlogTypeEnum } from "../../models/types/blog/blog";
+import { DBCollections, saveBlogToDb } from "../../models/mongoDb";
 
 import CONFIG from "../../config";
 import { ObjectId } from "mongodb";
 import OpenAi from "openai";
+import { SupportedLanguages } from "../../utils/languages";
 import axios from "axios";
 import extractBlogParts from "../../utils/extractBlogParts";
 import { getCreateBlogPrompt } from "./getCreateBlogPrompt";
 import { getSlugFromText } from "../../utils/stringUtils";
+import { handleGetAllBlogs } from "../fetch/blog";
+import { handleUpdateGitLabSitemap } from "../gitlab";
 import { popularStories } from "../../shared/mockedData/PopularStories";
 import retry from "../../utils/retryFunction";
 import { updateDocument } from "../../models/mongoDb/crudOperations";
 
 const openai = new OpenAi();
 
-// export const handleCreateBlogRequest = async (
-//   blogPrompt: string
-// ): Promise<string | null> => {
-//   try {
-//     // OpenAI Text Generation API Call
-//     const createRequest = await openai.chat.completions.create({
-//       messages: [
-//         {
-//           role: "system",
-//           content:
-//             "You are a friendly and expressive blog writer that is an expert on blog creation. \
-//           Your blogs should sound natural and conversational.",
-//         },
-//         {
-//           role: "user",
-//           content: blogPrompt,
-//         },
-//       ],
-//       model: CONFIG.OPENAI_MODEL_NAME ?? "gpt-4o",
-//       n: 1,
-//       max_tokens: 1000,
-//       temperature: 0.4,
-//     });
-
-//     return createRequest.choices[0].message.content;
-//   } catch (error) {
-//     throw new Error("❌  Create a blog request failed!");
-//   }
-// };
-
 export const handleCreateBlogRequest = async (
   blogPrompt: string
 ): Promise<string | null> => {
   try {
+    // OpenAI Text Generation API Call
+    // const createRequest = await openai.chat.completions.create({
     const createRequest = await axios.post(
       "http://192.168.1.3:1234/v1/chat/completions",
       {
@@ -66,20 +30,23 @@ export const handleCreateBlogRequest = async (
           {
             role: "system",
             content:
-              "You are a friendly and expressive blog writer that is an expert on blog creation. \
-          Your blogs should sound natural and conversational.",
+              "You are a expressive blog writer and SEO expert that is also an expert on blog creation. \
+              Your blogs should sound natural and conversational.",
           },
           {
             role: "user",
             content: blogPrompt,
           },
         ],
+        model: CONFIG.OPENAI_MODEL_NAME ?? "gpt-4o",
+        n: 1,
+        max_tokens: 1000,
+        temperature: 0.4,
       }
     );
 
-    return createRequest.data.choices[0].message.content
-      .replace(/<think>[\s\S]*?<\/think>/g, "")
-      .trim();
+    // return createRequest.choices[0].message.content;
+    return createRequest.data.choices[0].message.content;
   } catch (error) {
     throw new Error("❌  Create a blog request failed!");
   }
@@ -88,7 +55,7 @@ export const handleCreateBlogRequest = async (
 export const handleCreateBlog = async (
   blogPrompt: string
   // blogParams: BlogParams
-) => {
+): Promise<Partial<Blog>> => {
   console.log("🛠️  handleCreateBlog()  🛠️");
 
   const createAndExtractBlogParts = async (): Promise<BlogParts> => {
@@ -174,7 +141,6 @@ export const handleCreateBlog = async (
     return {
       ...blogData,
       _id: blogId,
-      // blogParams,
       createdAt: new Date(),
     };
   } catch (error) {
@@ -209,19 +175,48 @@ export const handleCreateBlogBulk = async (blogPrompt?: string) => {
   let blogsCount = 0;
   let createBlogPrompt = blogPrompt;
 
-  // const fetchedBlogs = (await handleGetAllBlogs(false, "{}")).results;
-  // const randomBlogDocument =
-  //   fetchedBlogs[Math.floor(Math.random() * fetchedBlogs.length)];
+  const fetchedBlogs = (
+    await handleGetAllBlogs({
+      pageNumber: 1,
+      pageSize: 99,
+    })
+  ).results;
+  const randomBlogDocument = fetchedBlogs[
+    Math.floor(Math.random() * fetchedBlogs.length)
+  ] as unknown as Blog;
+
+  const storiesInEnglish = popularStories.filter(
+    (story) => story.language === SupportedLanguages.en
+  );
+
+  console.log("📋 Random Blog:>>>", {
+    title: randomBlogDocument.title,
+    url: CONFIG.IS_DEV
+      ? `dev.talepod.com/blog/${randomBlogDocument.slug}`
+      : `www.talepod.com/blog/${randomBlogDocument.slug}`,
+  });
 
   createBlogPrompt = getCreateBlogPrompt(
-    "The Ugly Duckling",
+    storiesInEnglish[0].stories[
+      Math.floor(Math.random() * storiesInEnglish[0].stories.length)
+    ],
     SupportedLanguages.en,
     {
-      title: "TEST LINKED BLOG TITLE",
-      url: "www.google.com",
+      title: randomBlogDocument.title,
+      url: CONFIG.IS_DEV
+        ? `dev.talepod.com/blog/${randomBlogDocument.slug}`
+        : `www.talepod.com/blog/${randomBlogDocument.slug}`,
     }
   );
-  await handleCreateBlog(createBlogPrompt);
+  const blog = await handleCreateBlog(createBlogPrompt);
+  console.log("📋 Blog:>>>", { slug: blog });
+
+  if (blog.slug) {
+    handleUpdateGitLabSitemap({
+      newUrl: `www.talepod.com/blog/${blog.slug}`,
+      siteMapFileName: "sitemap-blogs.xml",
+    });
+  }
 
   // for (const popularStory of popularStories) {
   //   for (const language of Languages) {
@@ -259,5 +254,5 @@ export const handleCreateBlogBulk = async (blogPrompt?: string) => {
   //   }
   // }
 
-  console.log("🧮  Blogs Count:>>>", blogsCount);
+  // console.log("🧮  Blogs Count:>>>", blogsCount);
 };

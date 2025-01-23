@@ -7,9 +7,9 @@
   cursor: pointer;
   // height: 140px;
   min-width: 350px;
-  max-width: 500px;
-  margin-left: 1rem;
-  margin-right: 1rem;
+  max-width: calc(50% - 1rem);
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
   position: relative;
   background-color: transparent;
   .blog-card-content {

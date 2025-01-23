@@ -5,13 +5,11 @@ dotenv.config();
 
 const CONFIG = {
   DEV_PORT: process.env.DEV_PORT,
-  STAG_PORT: process.env.STAG_PORT,
   PROD_PORT: process.env.PROD_PORT,
 
   // Environment
   NODE_ENV: process.env.NODE_ENV,
   IS_DEV: process.env.NODE_ENV === "development",
-  IS_STAG: process.env.NODE_ENV === "staging",
   IS_PROD: process.env.NODE_ENV === "production",
 
   // Public URLs
@@ -37,6 +35,9 @@ const CONFIG = {
 
   // Database
   MONGODB_URI: process.env.MONGODB_URI,
+
+  GITLAB_PROJECT_ID: process.env.GITLAB_PROJECT_ID,
+  GITLAB_ACCESS_TOKEN: process.env.GITLAB_ACCESS_TOKEN,
 
   // Hosting
   HOST_AWS_S3_BUCKET_NAME_DEV: process.env.HOST_AWS_S3_BUCKET_NAME_DEV,

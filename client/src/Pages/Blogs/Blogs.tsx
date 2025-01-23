@@ -48,7 +48,7 @@ const BlogsPage = () => {
               sx={{
                 display: "flex",
                 flexWrap: "wrap",
-                justifyContent: "center",
+                justifyContent: "space-between",
                 pt: { xs: 0, sm: 2 },
                 pb: { xs: 2, sm: 2 },
               }}
