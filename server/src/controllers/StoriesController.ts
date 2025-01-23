@@ -59,7 +59,7 @@ export const getAllStories = async (
       .aggregate(pipeline)
       .toArray();
     const { metadata, results } = aggregatedStories[0] as AggregationResult;
-    const totalCount = metadata[0] ? metadata[0].totalStoriesCount : 0;
+    const totalCount = metadata[0] ? metadata[0].totalDocumentsCount : 0;
 
     const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
 
@@ -320,7 +320,7 @@ export const getOriginalStories = async (
       .aggregate(pipeline)
       .toArray();
     const { metadata, results } = aggregatedStories[0] as AggregationResult;
-    const totalCount = metadata[0] ? metadata[0].totalStoriesCount : 0;
+    const totalCount = metadata[0] ? metadata[0].totalDocumentsCount : 0;
 
     const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
 
@@ -471,7 +471,7 @@ export const getAllUsersStories = async (
       .aggregate(pipeline)
       .toArray();
     const { metadata, results } = aggregatedStories[0] as AggregationResult;
-    const totalCount = metadata[0] ? metadata[0].totalStoriesCount : 0;
+    const totalCount = metadata[0] ? metadata[0].totalDocumentsCount : 0;
 
     const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
 

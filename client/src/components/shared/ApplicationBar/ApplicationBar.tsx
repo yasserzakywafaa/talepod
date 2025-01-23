@@ -1,5 +1,6 @@
 import {
   AlternateEmailOutlined,
+  ArticleOutlined,
   AutoFixHighOutlined,
   HomeOutlined,
   InstallMobileOutlined,
@@ -103,6 +104,9 @@ const ApplicationBar = () => {
       case "contact":
         navigate(routes.contact);
         break;
+      case "blogs":
+        navigate(routes.blogs);
+        break;
       case "refresh":
         window.location.reload();
         break;
@@ -198,6 +202,20 @@ const ApplicationBar = () => {
                       />
                       <Typography variant="body1" color="text.primary">
                         Create Story
+                      </Typography>
+                    </MenuItem>
+
+                    <MenuItem
+                      sx={{ py: "6px", px: "12px" }}
+                      onClick={handleOnMenuItemClick("blogs")}
+                    >
+                      <ArticleOutlined
+                        fontSize="medium"
+                        color="primary"
+                        sx={{ mr: 1 }}
+                      />
+                      <Typography variant="body1" color="text.primary">
+                        Blogs
                       </Typography>
                     </MenuItem>
 
@@ -382,6 +400,15 @@ const ApplicationBar = () => {
                           sx={{ mr: 1 }}
                         />
                         <Typography variant="h6">Create Story</Typography>
+                      </MenuItem>
+
+                      <MenuItem onClick={handleOnMenuItemClick("blogs")}>
+                        <ArticleOutlined
+                          fontSize="medium"
+                          color="primary"
+                          sx={{ mr: 1 }}
+                        />
+                        <Typography variant="h6">Blogs</Typography>
                       </MenuItem>
 
                       <MenuItem onClick={handleOnMenuItemClick("contact")}>

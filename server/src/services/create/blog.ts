@@ -15,6 +15,7 @@ import { Languages, SupportedLanguages } from "../../utils/languages";
 import CONFIG from "../../config";
 import { ObjectId } from "mongodb";
 import OpenAi from "openai";
+import axios from "axios";
 import extractBlogParts from "../../utils/extractBlogParts";
 import { getCreateBlogPrompt } from "./getCreateBlogPrompt";
 import { getSlugFromText } from "../../utils/stringUtils";
@@ -24,31 +25,61 @@ import { updateDocument } from "../../models/mongoDb/crudOperations";
 
 const openai = new OpenAi();
 
+// export const handleCreateBlogRequest = async (
+//   blogPrompt: string
+// ): Promise<string | null> => {
+//   try {
+//     // OpenAI Text Generation API Call
+//     const createRequest = await openai.chat.completions.create({
+//       messages: [
+//         {
+//           role: "system",
+//           content:
+//             "You are a friendly and expressive blog writer that is an expert on blog creation. \
+//           Your blogs should sound natural and conversational.",
+//         },
+//         {
+//           role: "user",
+//           content: blogPrompt,
+//         },
+//       ],
+//       model: CONFIG.OPENAI_MODEL_NAME ?? "gpt-4o",
+//       n: 1,
+//       max_tokens: 1000,
+//       temperature: 0.4,
+//     });
+
+//     return createRequest.choices[0].message.content;
+//   } catch (error) {
+//     throw new Error("❌  Create a blog request failed!");
+//   }
+// };
+
 export const handleCreateBlogRequest = async (
   blogPrompt: string
 ): Promise<string | null> => {
   try {
-    // OpenAI Text Generation API Call
-    const createRequest = await openai.chat.completions.create({
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are a friendly and expressive blog writer that is an expert on blog creation. \
+    const createRequest = await axios.post(
+      "http://192.168.1.3:1234/v1/chat/completions",
+      {
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a friendly and expressive blog writer that is an expert on blog creation. \
           Your blogs should sound natural and conversational.",
-        },
-        {
-          role: "user",
-          content: blogPrompt,
-        },
-      ],
-      model: CONFIG.OPENAI_MODEL_NAME ?? "gpt-4o",
-      n: 1,
-      max_tokens: 1000,
-      temperature: 0.4,
-    });
+          },
+          {
+            role: "user",
+            content: blogPrompt,
+          },
+        ],
+      }
+    );
 
-    return createRequest.choices[0].message.content;
+    return createRequest.data.choices[0].message.content
+      .replace(/<think>[\s\S]*?<\/think>/g, "")
+      .trim();
   } catch (error) {
     throw new Error("❌  Create a blog request failed!");
   }
@@ -62,6 +93,8 @@ export const handleCreateBlog = async (
 
   const createAndExtractBlogParts = async (): Promise<BlogParts> => {
     const openaiResponse = await handleCreateBlogRequest(blogPrompt);
+
+    console.log("createAndExtractBlogParts:>>>", { openaiResponse });
 
     if (openaiResponse?.length) {
       // Extract the parts from the blog

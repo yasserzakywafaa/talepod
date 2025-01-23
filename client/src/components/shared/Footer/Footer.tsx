@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { Divider } from "@mui/material";
 import Link from "@mui/material/Link";
+import PortugalFlag from "src/assets/images/portugal_flag.png";
 import SwitzerlandFlag from "src/assets/images/switzerland_flag.png";
 import Typography from "@mui/material/Typography";
 import routes from "src/application/routes";
@@ -163,19 +164,18 @@ const Footer = () => {
           alignContent="center"
         >
           <Typography variant="body2" color="textSecondary" align="center">
-            Made with{" "}
-            <span role="img" aria-label="love">
-              ❤️
-            </span>{" "}
-            and{" "}
-            <span role="img" aria-label="love">
-              ☕
-            </span>{" "}
-            in Switzerland{" "}
+            Made in Switzerland and Portugal{" "}
             <img
               width="20px"
               height="20px"
               src={SwitzerlandFlag}
+              alt="Switzerland Flag"
+              style={{ verticalAlign: "middle" }}
+            />{" "}
+            <img
+              width="20px"
+              height="20px"
+              src={PortugalFlag}
               alt="Switzerland Flag"
               style={{ verticalAlign: "middle" }}
             />

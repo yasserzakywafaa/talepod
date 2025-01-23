@@ -1,3 +1,5 @@
+import { SupportedLanguages } from "src/shared/languages";
+
 export interface BlogInitialState {
   blog: Blog;
   isFetching: boolean;
@@ -19,6 +21,7 @@ export interface Blog {
   conclusion: string;
   callToAction: string;
   blogType: BlogTypeEnum;
+  language: SupportedLanguages;
   // isFree: boolean | undefined;
   // isBasic: boolean | undefined;
   // isEssential: boolean | undefined;
@@ -40,7 +43,6 @@ export enum BlogTypeEnum {
   PUBLIC = "Public",
 }
 
-//
 export interface BlogParts {
   title: string;
   introduction: string;
@@ -60,6 +62,7 @@ export const getBlogInitialState = (): BlogInitialState => {
       mainBlog: "",
       conclusion: "",
       callToAction: "",
+      language: SupportedLanguages.en,
       blogType: BlogTypeEnum.PUBLIC,
       createdAt: new Date(),
     },

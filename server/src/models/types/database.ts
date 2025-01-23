@@ -3,7 +3,7 @@ import { WithId } from "mongodb";
 export type DocumentWithId = WithId<Document>;
 
 export interface Metadata {
-  totalStoriesCount: number;
+  totalDocumentsCount: number;
   pageNumber: number;
   pageSize: number;
 }

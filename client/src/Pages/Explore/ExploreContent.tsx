@@ -52,8 +52,6 @@ export const ExploreContent = (props: ExplorePageContentProps): JSX.Element => {
   return (
     <Page
       isLoading={isFetching || (isFetching && !stories.length)}
-      // isLoading={isFetching}
-      // isLoading={!isFetching}
       className="explore-page"
       title="Explore Bedtime Stories on TalePod"
       loaderComponentName={LoaderComponentNameEnum.BedtimeStories}
