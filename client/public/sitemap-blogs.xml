@@ -51,4 +51,14 @@
     <loc>TEST_URL_TO_ADD_TO_SITEMAP</loc>
     <lastmod>2025-01-24T09:46:37.477Z</lastmod>
   </url>
+
+  <url>
+    <loc>www.talepod.com/blog/unleashing-imagination-where-the-wild-things-are-by-maurice-sendak-a-bedtime-favorite-f1ea23e6b</loc>
+    <lastmod>2025-01-24T09:52:59.173Z</lastmod>
+  </url>
+
+  <url>
+    <loc>22TEST_URL_TO_ADD_TO_SITEMAP22</loc>
+    <lastmod>2025-01-24T09:52:59.173Z</lastmod>
+  </url>
 </urlset>
