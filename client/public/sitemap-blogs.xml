@@ -41,4 +41,14 @@
     <loc>TEST_URL_TO_ADD_TO_SITEMAP</loc>
     <lastmod>2025-01-24T09:45:25.080Z</lastmod>
   </url>
+
+  <url>
+    <loc>www.talepod.com/blog/the-enchanting-world-of-the-very-hungry-caterpillar-by-eric-carle-a-perfect-bedtime-story-e13e43a9e</loc>
+    <lastmod>2025-01-24T09:46:37.477Z</lastmod>
+  </url>
+
+  <url>
+    <loc>TEST_URL_TO_ADD_TO_SITEMAP</loc>
+    <lastmod>2025-01-24T09:46:37.477Z</lastmod>
+  </url>
 </urlset>
