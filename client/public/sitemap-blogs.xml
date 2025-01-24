@@ -31,4 +31,14 @@
     <loc>[object Object]</loc>
     <lastmod>2025-01-24T09:42:32.531Z</lastmod>
   </url>
+
+  <url>
+    <loc>[object Object]</loc>
+    <lastmod>2025-01-24T09:45:25.080Z</lastmod>
+  </url>
+
+  <url>
+    <loc>TEST_URL_TO_ADD_TO_SITEMAP</loc>
+    <lastmod>2025-01-24T09:45:25.080Z</lastmod>
+  </url>
 </urlset>
