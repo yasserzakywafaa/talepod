@@ -165,7 +165,7 @@ const getDocumentByFieldFromDb = async (
 
     return document;
   } catch (error) {
-    throw new Error("❌ Error saving user data to DB", { cause: error });
+    throw new Error("❌ Failed to get document to DB", { cause: error });
   }
 };
 
@@ -280,10 +280,7 @@ const saveBlogToDb = async (
 //   const prodDb = dbClient.db(DBNames.TALEPOD_PROD);
 
 //   // Collection names to copy
-//   const collectionsToCopy = [
-//     DBCollections.stories_library,
-//     DBCollections.stories_library_backup,
-//   ];
+//   const collectionsToCopy = [DBCollections.blogs];
 
 //   for (const collectionName of collectionsToCopy) {
 //     // Fetch all documents from the Dev collection

@@ -5,6 +5,7 @@ import { Language } from "..";
 import { ObjectId } from "mongodb";
 import { PagingInfo } from "../api";
 import { SubscriptionPlanEnum } from "../user";
+import { SupportedLanguages } from "src/utils/languages";
 import { TargetAudience } from "./blogParams/TargetAudience";
 import { Time } from "./blogParams/Time";
 import { ToneStyle } from "./blogParams/Tone";
@@ -43,7 +44,7 @@ export enum BlogTypeEnum {
 }
 
 export interface BlogData extends Partial<Blog> {
-  blogParams: BlogParams;
+  language: SupportedLanguages;
 }
 
 export interface BlogSeo {
@@ -79,8 +80,4 @@ export interface BlogParams {
   frequency: Frequency;
   time: Time;
   createdByAdmin?: boolean;
-}
-
-export interface BlogData extends Partial<Blog> {
-  blogParams: BlogParams;
 }

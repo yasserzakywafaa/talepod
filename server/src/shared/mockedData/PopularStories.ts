@@ -1,14 +1,10 @@
+import { BaseDataParams } from "src/models/types";
 import { SupportedLanguages } from "../../utils/languages";
 
-export type PopularStories = {
-  language: SupportedLanguages;
-  stories: string[];
-};
-
-export const popularStories: PopularStories[] = [
+export const popularStories: BaseDataParams[] = [
   {
     language: SupportedLanguages.en,
-    stories: [
+    data: [
       "Goldilocks and the Three Bears",
       "The Ugly Duckling",
       "The Gruffalo by Julia Donaldson",
@@ -23,7 +19,7 @@ export const popularStories: PopularStories[] = [
   },
   {
     language: SupportedLanguages.ar,
-    stories: [
+    data: [
       "علاء الدين والمصباح السحري (Aladdin and the Magic Lamp)",
       "سندباد البحري (Sindbad the Sailor)",
       "الأميرة شهرزاد (Princess Scheherazade)",
@@ -38,7 +34,7 @@ export const popularStories: PopularStories[] = [
   },
   {
     language: SupportedLanguages.es,
-    stories: [
+    data: [
       "Los Tres Cerditos (The Three Little Pigs)",
       "La Caperucita Roja (Little Red Riding Hood)",
       "El Patito Feo (The Ugly Duckling)",
@@ -53,7 +49,7 @@ export const popularStories: PopularStories[] = [
   },
   {
     language: SupportedLanguages.fr,
-    stories: [
+    data: [
       "Le Petit Chaperon Rouge (Little Red Riding Hood)",
       "La Belle et la Bête (Beauty and the Beast)",
       "Le Petit Prince by Antoine de Saint-Exupéry",
@@ -68,7 +64,7 @@ export const popularStories: PopularStories[] = [
   },
   {
     language: SupportedLanguages.de,
-    stories: [
+    data: [
       "Die Bremer Stadtmusikanten (The Bremen Town Musicians)",
       "Rotkäppchen (Little Red Riding Hood)",
       "Der Froschkönig (The Frog King)",
@@ -83,7 +79,7 @@ export const popularStories: PopularStories[] = [
   },
   {
     language: SupportedLanguages.pt,
-    stories: [
+    data: [
       "Os Três Porquinhos (The Three Little Pigs)",
       "Chapeuzinho Vermelho (Little Red Riding Hood)",
       "O Patinho Feio (The Ugly Duckling)",
@@ -98,7 +94,7 @@ export const popularStories: PopularStories[] = [
   },
   {
     language: SupportedLanguages.it,
-    stories: [
+    data: [
       "Pinocchio by Carlo Collodi",
       "La Bella Addormentata (Sleeping Beauty)",
       "Cappuccetto Rosso (Little Red Riding Hood)",
@@ -113,7 +109,7 @@ export const popularStories: PopularStories[] = [
   },
   {
     language: SupportedLanguages.ja,
-    stories: [
+    data: [
       "桃太郎 (Momotaro, The Peach Boy)",
       "かぐや姫 (The Tale of the Bamboo Cutter)",
       "浦島太郎 (Urashima Taro)",
@@ -128,7 +124,7 @@ export const popularStories: PopularStories[] = [
   },
   {
     language: SupportedLanguages.ko,
-    stories: [
+    data: [
       "흥부와 놀부 (Heungbu and Nolbu)",
       "해와 달이 된 오누이 (The Brother and Sister Who Became the Sun and the Moon)",
       "금도끼와 은도끼 (The Golden Axe and the Silver Axe)",
@@ -143,7 +139,7 @@ export const popularStories: PopularStories[] = [
   },
   {
     language: SupportedLanguages.ru,
-    stories: [
+    data: [
       "Колобок (The Little Round Bun)",
       "Репка (The Turnip)",
       "Иван Царевич и Серый Волк (Ivan Tsarevich and the Grey Wolf)",
@@ -158,7 +154,7 @@ export const popularStories: PopularStories[] = [
   },
   {
     language: SupportedLanguages.hi,
-    stories: [
+    data: [
       "पंचतंत्र की कहानियां (Panchatantra Stories)",
       "अकबर और बीरबल (Akbar and Birbal Tales)",
       "सिंह और चूहा (The Lion and the Mouse)",
@@ -173,7 +169,7 @@ export const popularStories: PopularStories[] = [
   },
   {
     language: SupportedLanguages.zh_Hans,
-    stories: [
+    data: [
       "孟姜女的故事 (The Story of Meng Jiangnu)",
       "嫦娥奔月 (Chang’e Flies to the Moon)",
       "十二生肖的传说 (The Legend of the Chinese Zodiac)",

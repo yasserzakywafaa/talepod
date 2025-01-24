@@ -6,7 +6,7 @@
 
   cursor: pointer;
   // height: 140px;
-  min-width: 350px;
+  min-width: calc(50% - 1rem);
   max-width: calc(50% - 1rem);
   margin-left: 0.5rem;
   margin-right: 0.5rem;

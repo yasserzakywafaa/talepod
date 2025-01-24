@@ -1,21 +1,22 @@
 import CONFIG from "./config";
 import authRoutes from "./routes/authRoutes";
+import { blogTopics } from "./shared/mockedData/BlogTopics";
 import blogsRoutes from "./routes/blogsRoutes";
 import bodyParser from "body-parser";
 import contactRoutes from "./routes/contactRoutes";
 import { databaseInit } from "./models/mongoDb";
 import express from "express";
 import handleCorsConfig from "./cors-config";
-import { handleCreateBlogBulk } from "./services/create/blog";
+import { handleCreateBulkBlogs } from "./services/create/blog";
 import openaiRoutes from "./routes/openaiRoutes";
 import path from "path";
 import paymentWebhooksRouter from "./routes/paymentsWebhooksRoutes";
 import paymentsRoutes from "./routes/paymentsRoutes";
+import { popularStories } from "./shared/mockedData/PopularStories";
 import storiesRoutes from "./routes/storiesRoutes";
 import testRoutes from "./routes/testRoutes";
 
 const expressApp = express();
-const buildPath = path.join(__dirname, "../client/");
 
 const getPort = (): string => {
   // If process.env.PORT is set, use it.
@@ -58,15 +59,16 @@ const startServer = async () => {
     // Await MongoDB database connection initialization
     await databaseInit();
 
-    // // // TEST
-    await handleCreateBlogBulk();
-
     expressApp.listen(PORT, (): void => {
       console.log("🎯 Server running on:>>>", {
         PORT,
         ENVIRONMENT: CONFIG.NODE_ENV,
       });
     });
+
+    // Create Bulk Blogs for SEO purposes
+    // // await handleCreateBulkBlogs([...blogTopics, ...popularStories]);
+    // await handleCreateBulkBlogs(popularStories);
   } catch (error) {
     console.error("❌  Server Error!", error);
   }

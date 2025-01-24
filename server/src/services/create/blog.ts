@@ -1,17 +1,19 @@
-import { Blog, BlogParts, BlogTypeEnum } from "../../models/types/blog/blog";
-import { DBCollections, saveBlogToDb } from "../../models/mongoDb";
+import { BaseDataParams, Blog, BlogData, BlogParts } from "../../models/types";
+import {
+  DBCollections,
+  getDocumentByFieldFromDb,
+  saveBlogToDb,
+} from "../../models/mongoDb";
+import { Languages, SupportedLanguages } from "../../utils/languages";
 
 import CONFIG from "../../config";
 import { ObjectId } from "mongodb";
 import OpenAi from "openai";
-import { SupportedLanguages } from "../../utils/languages";
 import axios from "axios";
 import extractBlogParts from "../../utils/extractBlogParts";
 import { getCreateBlogPrompt } from "./getCreateBlogPrompt";
 import { getSlugFromText } from "../../utils/stringUtils";
-import { handleGetAllBlogs } from "../fetch/blog";
 import { handleUpdateGitLabSitemap } from "../gitlab";
-import { popularStories } from "../../shared/mockedData/PopularStories";
 import retry from "../../utils/retryFunction";
 import { updateDocument } from "../../models/mongoDb/crudOperations";
 
@@ -25,8 +27,8 @@ export const handleCreateBlogRequest = async (
     // OpenAI Text Generation API Call
     const createRequest = await openai.chat.completions.create({
       // const createRequest = await axios.post(
-      //   "http://192.168.1.3:1234/v1/chat/completions",
-      //   {
+      // "http://192.168.1.3:1234/v1/chat/completions",
+      // {
       messages: [
         {
           role: "system",
@@ -53,38 +55,43 @@ export const handleCreateBlogRequest = async (
 };
 
 export const handleCreateBlog = async (
-  blogPrompt: string
-  // blogParams: BlogParams
+  blogPrompt: string,
+  language: SupportedLanguages
 ): Promise<Partial<Blog>> => {
   console.log("🛠️  Creating Blog  🛠️");
 
   const createAndExtractBlogParts = async (): Promise<BlogParts> => {
-    const openaiResponse = await handleCreateBlogRequest(blogPrompt);
-    if (openaiResponse?.length) {
-      // Extract the parts from the blog
-      return extractBlogParts(openaiResponse);
-    } else {
-      throw new Error("❌ Failed to create a blog!");
+    try {
+      const response = await handleCreateBlogRequest(blogPrompt);
+      const blogParts = extractBlogParts(response);
+
+      return blogParts;
+    } catch (error) {
+      throw new Error(`${error}`);
     }
   };
 
   let blogId: ObjectId;
   let blogParts: BlogParts;
   try {
-    blogParts = await retry(createAndExtractBlogParts, 3, 2000);
+    try {
+      blogParts = await retry(createAndExtractBlogParts, 3, 2000);
+    } catch (error) {
+      throw new Error(`${error}`);
+    }
 
-    const blogData: Partial<Blog> = {
+    if (!blogParts) return undefined;
+
+    const blogData: BlogData = {
       ...blogParts,
+      language,
       createdAt: new Date(),
-      blogType: BlogTypeEnum.PUBLIC,
     };
 
     try {
       // Save blog to MongoDB Atlas
-      // blogId = (await saveBlogToDb(blogData, updatedBlogParams)) as any;
       blogId = (await saveBlogToDb(blogData)) as any;
-
-      if (!blogId) return {};
+      if (!blogId) return undefined;
 
       // Update the blog document with the slug (title + id)
       const blogWithSlug = (await updateDocument<Blog>(
@@ -92,7 +99,7 @@ export const handleCreateBlog = async (
         {
           slug: `${getSlugFromText(blogParts.title)}-${blogId
             .toString()
-            .slice(-9)}`,
+            .slice(-6)}`,
         },
         DBCollections.blogs
       )) as Blog;
@@ -105,7 +112,6 @@ export const handleCreateBlog = async (
 
     console.log("✅ Blog Created Successfully", {
       blogSlug: blogData.slug,
-      MODEL_NAME: CONFIG.OPENAI_MODEL_NAME,
     });
 
     return {
@@ -120,108 +126,68 @@ export const handleCreateBlog = async (
   }
 };
 
-// export const handleCreateBlogBulk = async () => {
-//   let blogsCount = 0;
-
-//   for (const blogTopic of blogTopics) {
-//     for (const language of Languages) {
-//       if (blogTopic.language === language.value) {
-//         console.log("⌛︎  Current Language:>>>", language.value);
-//         for (const topic of blogTopic.topics) {
-//           console.log("⌛︎  Current Topic:>>>", topic);
-
-//           await handleCreateBlog();
-
-//           blogsCount += 1;
-//         }
-//       }
-//     }
-//   }
-
-//   console.log("🧮  Blogs Count:>>>", blogsCount);
-// };
-
-export const handleCreateBlogBulk = async (blogPrompt?: string) => {
-  let blogsCount = 0;
+export const handleCreateBulkBlogs = async (
+  dataToCreateArray: BaseDataParams[],
+  blogPrompt?: string
+) => {
+  let newBlog: Partial<Blog>;
   let createBlogPrompt = blogPrompt;
   const blogsUrlsToIncludeInSitemap = [];
 
-  const fetchedBlogs = (
-    await handleGetAllBlogs({
-      pageNumber: 1,
-      pageSize: 99,
-    })
-  ).results;
-  const randomBlogDocument = fetchedBlogs[
-    Math.floor(Math.random() * fetchedBlogs.length)
-  ] as unknown as Blog;
+  for (const dataToCreate of dataToCreateArray) {
+    for (const language of Languages) {
+      if (dataToCreate.language === language.value) {
+        console.log("⌛︎  Current Language:>>>", language.value);
 
-  const storiesInEnglish = popularStories.filter(
-    (story) => story.language === SupportedLanguages.en
-  );
+        for (const data of dataToCreate.data) {
+          console.log("⌛︎  Current Data:>>>", data);
 
-  // console.log("📋 Random Blog:>>>", {
-  //   title: randomBlogDocument.title,
-  //   url: CONFIG.IS_DEV
-  //     ? `dev.talepod.com/blog/${randomBlogDocument.slug}`
-  //     : `www.talepod.com/blog/${randomBlogDocument.slug}`,
-  // });
+          const linkedBlog = await getDocumentByFieldFromDb(
+            "language",
+            language.value,
+            DBCollections.blogs
+          );
+          if (linkedBlog && linkedBlog._id) {
+            console.log("📋  Linked Blog:>>>", linkedBlog.title);
 
-  createBlogPrompt = getCreateBlogPrompt(
-    storiesInEnglish[0].stories[
-      Math.floor(Math.random() * storiesInEnglish[0].stories.length)
-    ],
-    SupportedLanguages.en,
-    {
-      title: randomBlogDocument.title,
-      url: `www.talepod.com/blog/${randomBlogDocument.slug}`,
+            createBlogPrompt = getCreateBlogPrompt(data, language.value, {
+              title: linkedBlog.title,
+              url: `${
+                CONFIG.IS_DEV ? "dev.talepod.com" : "www.talepod.com"
+              }/blog/${linkedBlog.slug}`,
+            });
+          } else {
+            createBlogPrompt = getCreateBlogPrompt(data, language.value);
+          }
+
+          try {
+            newBlog = await handleCreateBlog(createBlogPrompt, language.value);
+            if (newBlog && newBlog.slug) {
+              blogsUrlsToIncludeInSitemap.push(
+                `${
+                  CONFIG.IS_DEV ? "dev.talepod.com" : "www.talepod.com"
+                }/blog/${newBlog.slug}`
+              );
+
+              console.log("🧮  Blogs Count:>>>", {
+                count: blogsUrlsToIncludeInSitemap.length,
+                blogsUrlsToIncludeInSitemap,
+              });
+            }
+          } catch (error) {
+            console.error("❌  handleCreateBlog error", error);
+            continue;
+          }
+        }
+      }
     }
-  );
-  const blog = await handleCreateBlog(createBlogPrompt);
-  if (blog.slug) {
-    blogsUrlsToIncludeInSitemap.push(`www.talepod.com/blog/${blog.slug}`);
+  }
 
+  // Add new created blogs URLs to sitemap-blogs.xml file
+  if (blogsUrlsToIncludeInSitemap.length) {
     await handleUpdateGitLabSitemap({
       newUrls: blogsUrlsToIncludeInSitemap,
       siteMapFileName: "sitemap-blogs.xml",
     });
   }
-
-  // for (const popularStory of popularStories) {
-  //   for (const language of Languages) {
-  //     if (popularStory.language === language.value) {
-  //       console.log("⌛︎  Current Language:>>>", language.value);
-
-  //       for (const story of popularStory.stories) {
-  //         console.log("⌛︎  Current Story:>>>", story);
-
-  //         const linkedBlog: Blog = (await getDocumentByFieldFromDb(
-  //           "language",
-  //           language.value,
-  //           DBCollections.blogs
-  //         )) as Blog;
-  //         if (linkedBlog) {
-  //           console.log("⌛︎  Linked Blog:>>>", {
-  //             title: linkedBlog.title,
-  //             url: `www.talepod.com/blog/${linkedBlog.slug}`,
-  //           });
-
-  //           createBlogPrompt = getCreateBlogPrompt(story, language.value, {
-  //             title: linkedBlog.title,
-  //             url: `www.talepod.com/blog/${linkedBlog.slug}`,
-  //           });
-  //         } else {
-  //           createBlogPrompt = getCreateBlogPrompt(story, language.value);
-  //         }
-
-  //         // // await handleCreateBlog(blogPrompt, blogParams);
-  //         await handleCreateBlog(createBlogPrompt);
-
-  //         blogsCount += 1;
-  //       }
-  //     }
-  //   }
-  // }
-
-  // console.log("🧮  Blogs Count:>>>", blogsCount);
 };
