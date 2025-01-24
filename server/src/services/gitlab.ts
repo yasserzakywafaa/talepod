@@ -59,7 +59,7 @@ export const handleUpdateGitLabSitemap = async (
     const updateUrl = CONFIG.GITLAB.UPDATE_URL(projectId);
     const commitData = {
       branch: targetBranch,
-      commit_message: `Add ${newUrls.length} new URLs to "${siteMapFileName}" file.`,
+      commit_message: `Add ${newUrls.length} new URL(s) to "${siteMapFileName}" file.`,
       actions: [
         {
           action: "update",

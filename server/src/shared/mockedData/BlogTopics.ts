@@ -1,14 +1,10 @@
+import { BaseDataParams } from "src/models/types";
 import { SupportedLanguages } from "../../utils/languages";
 
-export type BlogTopic = {
-  language: SupportedLanguages;
-  topics: string[];
-};
-
-export const blogTopics: BlogTopic[] = [
+export const blogTopics: BaseDataParams[] = [
   {
     language: SupportedLanguages.en,
-    topics: [
+    data: [
       "Top 10 Benefits of Reading Bedtime Stories for Kids",
       "Why Personalized Bedtime Stories Boost Creativity in Children",
       "The History and Evolution of Bedtime Stories Around the World",
@@ -38,7 +34,7 @@ export const blogTopics: BlogTopic[] = [
   },
   {
     language: SupportedLanguages.ar,
-    topics: [
+    data: [
       "أهم 10 فوائد لقراءة قصص ما قبل النوم للأطفال",
       "لماذا تعزز القصص المخصصة قبل النوم الإبداع عند الأطفال",
       "تاريخ وتطور قصص ما قبل النوم حول العالم",
@@ -68,7 +64,7 @@ export const blogTopics: BlogTopic[] = [
   },
   {
     language: SupportedLanguages.es,
-    topics: [
+    data: [
       "Los 10 principales beneficios de leer cuentos antes de dormir para niños",
       "Por qué los cuentos personalizados antes de dormir estimulan la creatividad en los niños",
       "La historia y evolución de los cuentos antes de dormir en todo el mundo",
@@ -98,7 +94,7 @@ export const blogTopics: BlogTopic[] = [
   },
   {
     language: SupportedLanguages.fr,
-    topics: [
+    data: [
       "Top 10 des avantages de lire des histoires du soir aux enfants",
       "Pourquoi les histoires personnalisées du soir stimulent la créativité des enfants",
       "L'histoire et l'évolution des histoires du soir à travers le monde",
@@ -128,7 +124,7 @@ export const blogTopics: BlogTopic[] = [
   },
   {
     language: SupportedLanguages.de,
-    topics: [
+    data: [
       "Die 10 wichtigsten Vorteile des Vorlesens von Gutenachtgeschichten für Kinder",
       "Warum personalisierte Gutenachtgeschichten die Kreativität von Kindern fördern",
       "Die Geschichte und Entwicklung von Gutenachtgeschichten weltweit",
@@ -158,7 +154,7 @@ export const blogTopics: BlogTopic[] = [
   },
   {
     language: SupportedLanguages.pt,
-    topics: [
+    data: [
       "Top 10 benefícios de ler histórias antes de dormir para crianças",
       "Por que histórias personalizadas antes de dormir aumentam a criatividade nas crianças",
       "A história e evolução das histórias antes de dormir ao redor do mundo",
@@ -188,7 +184,7 @@ export const blogTopics: BlogTopic[] = [
   },
   {
     language: SupportedLanguages.it,
-    topics: [
+    data: [
       "I 10 principali vantaggi di leggere storie della buonanotte ai bambini",
       "Perché le storie personalizzate della buonanotte stimolano la creatività nei bambini",
       "La storia e l'evoluzione delle storie della buonanotte nel mondo",
@@ -218,7 +214,7 @@ export const blogTopics: BlogTopic[] = [
   },
   {
     language: SupportedLanguages.ja,
-    topics: [
+    data: [
       "子供に寝る前の物語を読む10のメリット",
       "パーソナライズされた寝る前の物語が子供の創造性を高める理由",
       "世界中の寝る前の物語の歴史と進化",
@@ -248,7 +244,7 @@ export const blogTopics: BlogTopic[] = [
   },
   {
     language: SupportedLanguages.ko,
-    topics: [
+    data: [
       "아이들에게 잠자리 독서의 10가지 장점",
       "맞춤형 잠자리 이야기가 아이들의 창의성을 키우는 이유",
       "전 세계 잠자리 이야기의 역사와 진화",
@@ -278,7 +274,7 @@ export const blogTopics: BlogTopic[] = [
   },
   {
     language: SupportedLanguages.ru,
-    topics: [
+    data: [
       "Топ-10 преимуществ чтения сказок на ночь для детей",
       "Почему персонализированные сказки на ночь развивают креативность у детей",
       "История и эволюция сказок на ночь по всему миру",
@@ -308,7 +304,7 @@ export const blogTopics: BlogTopic[] = [
   },
   {
     language: SupportedLanguages.hi,
-    topics: [
+    data: [
       "बच्चों को सोने से पहले कहानियाँ पढ़ने के 10 प्रमुख लाभ",
       "व्यक्तिगत सोने से पहले की कहानियाँ बच्चों की रचनात्मकता को कैसे बढ़ावा देती हैं",
       "दुनिया भर में सोने से पहले की कहानियों का इतिहास और विकास",
@@ -338,7 +334,7 @@ export const blogTopics: BlogTopic[] = [
   },
   {
     language: SupportedLanguages.zh_Hans,
-    topics: [
+    data: [
       "为孩子阅读睡前故事的十大好处",
       "为什么个性化睡前故事能提升孩子的创造力",
       "全球睡前故事的历史与演变",
