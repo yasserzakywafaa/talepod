@@ -2,6 +2,8 @@ import { BlogParts } from "../models/types";
 
 // Function to extract the parts of the blog
 const extractBlogParts = (blog: string): BlogParts => {
+  console.log("🛠️  Extracting Blog Parts 🛠️");
+
   const parts = blog.match(/{([^}]*)}/g);
 
   if (parts && parts.length === 5) {

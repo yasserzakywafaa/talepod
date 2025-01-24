@@ -61,16 +61,19 @@ export const handleAddUrlToSitemapLocally = (props: AddUrlToSiteMapParams) => {
 
 export const handleAddUrlToSitemap = async (
   fileContent: string,
-  newUrl: string
-) => {
-  const newEntry = `
+  newUrls: string[]
+): Promise<string> => {
+  const updatedUrlsContent = newUrls.map((url) => {
+    return `
   <url>
-    <loc>${newUrl}</loc>
+    <loc>${url}</loc>
     <lastmod>${new Date().toISOString()}</lastmod>
   </url>`;
+  });
+
   const updatedContent = fileContent.replace(
     "</urlset>",
-    `${newEntry}\n</urlset>`
+    `${updatedUrlsContent.join("\n")}\n</urlset>`
   );
 
   return updatedContent;

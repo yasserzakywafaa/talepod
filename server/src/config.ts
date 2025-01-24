@@ -26,6 +26,16 @@ const CONFIG = {
   SERVER_TEXT_TO_SPEECH_PATH: "assets/audio",
   SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH: path.resolve("./assets/audio"),
 
+  // GitLab
+  GITLAB: {
+    FILE_URL: (projectId: string, filePath: string, branch: string) =>
+      `https://gitlab.com/api/v4/projects/${projectId}/repository/files/${encodeURIComponent(
+        filePath
+      )}/raw?ref=${branch}`,
+    UPDATE_URL: (projectId: string) =>
+      `https://gitlab.com/api/v4/projects/${projectId}/repository/commits`,
+  },
+
   // APIs keys for AI
   // Openai
   OPENAI_MODEL_NAME: process.env.OPENAI_MODEL_NAME,

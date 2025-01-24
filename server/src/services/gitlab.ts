@@ -9,7 +9,7 @@ interface GitLabFileUpdate {
 }
 
 export interface AddUrlToSiteMapParams {
-  newUrl: string;
+  newUrls: string[];
   siteMapFileName: string;
 }
 
@@ -21,71 +21,75 @@ export enum BranchesEnum {
 export const handleUpdateGitLabSitemap = async (
   props: AddUrlToSiteMapParams
 ) => {
-  const { siteMapFileName, newUrl } = props;
-  const GITLAB_TOKEN = CONFIG.GITLAB_ACCESS_TOKEN;
-  const PROJECT_ID = CONFIG.GITLAB_PROJECT_ID;
-  const FILE_PATH = `public/${siteMapFileName}` || "public/sitemap.xml";
-  const BRANCH = BranchesEnum.develop;
+  const { siteMapFileName, newUrls } = props;
+  const gitLabToken = CONFIG.GITLAB_ACCESS_TOKEN;
+  const projectId = CONFIG.GITLAB_PROJECT_ID;
+  const filePath =
+    `client/public/${siteMapFileName}` || "client/public/sitemap.xml";
+  const targetBranch = BranchesEnum.develop;
 
   try {
+    let currentContent = "";
     // 1. Get current file content
-    const fileUrl = `https://gitlab.com/api/v4/projects/${PROJECT_ID}/repository/files/${encodeURIComponent(
-      FILE_PATH
-    )}/raw?ref=${BRANCH}`;
+    const fileUrl = CONFIG.GITLAB.FILE_URL(projectId, filePath, targetBranch);
     const response = await axios.get(fileUrl, {
-      headers: { "PRIVATE-TOKEN": GITLAB_TOKEN },
+      headers: { "PRIVATE-TOKEN": gitLabToken },
     });
 
-    let currentContent = "";
-    if (response.data.ok) {
-      currentContent = await response.data.text();
+    if (response.status === 200) {
+      currentContent = await response.data;
     } else if (response.status === 404) {
       currentContent = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </urlset>`;
     } else {
-      throw new Error(`❌ HTTP error! status: ${response.status}`);
+      throw new Error(
+        `❌ Failed to read "${siteMapFileName}" file! ${response.status}`
+      );
     }
 
     // 2. Check for duplicates
-    if (currentContent.includes(newUrl)) {
+    if (currentContent.includes(newUrls.join(","))) {
       console.log("🛑 URL already exists in sitemap!");
       return;
     }
-    const updatedContent = await handleAddUrlToSitemap(currentContent, newUrl);
+    const updatedContent = await handleAddUrlToSitemap(currentContent, newUrls);
 
     // 4. Push update to GitLab
-    const updateUrl = `https://gitlab.com/api/v4/projects/${PROJECT_ID}/repository/commits`;
-    const body: GitLabFileUpdate = {
-      branch: BRANCH,
-      commit_message: `Add ${newUrl} to ${siteMapFileName} file.`,
-      content: Buffer.from(updatedContent).toString("base64"),
+    const updateUrl = CONFIG.GITLAB.UPDATE_URL(projectId);
+    const commitData = {
+      branch: targetBranch,
+      commit_message: `Add ${newUrls.length} new URLs to "${siteMapFileName}" file.`,
+      actions: [
+        {
+          action: "update",
+          file_path: filePath,
+          content: Buffer.from(updatedContent).toString("base64"),
+          encoding: "base64",
+        },
+      ],
     };
 
-    const commitResponse = await axios.post(updateUrl, {
-      headers: {
-        "PRIVATE-TOKEN": GITLAB_TOKEN,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...body,
-        actions: [
-          {
-            action: "update",
-            file_path: FILE_PATH,
-            content: body.content,
-            encoding: "base64",
-          },
-        ],
-      }),
+    console.log("🛠️  Updating GitLab Sitemap 🛠️ ", {
+      branch: targetBranch,
+      commit_message: commitData.commit_message,
     });
 
-    if (!commitResponse.data.ok) {
-      throw new Error(`❌ Commit failed: ${await commitResponse.data.text()}`);
+    try {
+      await axios.post(updateUrl, commitData, {
+        headers: {
+          "PRIVATE-TOKEN": gitLabToken,
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error) {
+      throw new Error(`❌ Failed to commit! ${error}`);
     }
 
-    console.log("✅ Successfully updated sitemap in GitLab repository");
+    console.log(
+      `✅ Successfully updated "${siteMapFileName}" in GitLab repository`
+    );
   } catch (error) {
-    throw new Error(`❌ Error updating sitemap ${error}`);
+    throw new Error(`❌ Failed to update "${siteMapFileName}"! ${error}`);
   }
 };

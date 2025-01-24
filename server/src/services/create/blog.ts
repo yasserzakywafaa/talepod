@@ -21,6 +21,7 @@ export const handleCreateBlogRequest = async (
   blogPrompt: string
 ): Promise<string | null> => {
   try {
+    console.log("🛠️  Sending Request to AI to create a Blog  🛠️");
     // OpenAI Text Generation API Call
     const createRequest = await openai.chat.completions.create({
       // const createRequest = await axios.post(
@@ -55,13 +56,10 @@ export const handleCreateBlog = async (
   blogPrompt: string
   // blogParams: BlogParams
 ): Promise<Partial<Blog>> => {
-  console.log("🛠️  handleCreateBlog()  🛠️");
+  console.log("🛠️  Creating Blog  🛠️");
 
   const createAndExtractBlogParts = async (): Promise<BlogParts> => {
     const openaiResponse = await handleCreateBlogRequest(blogPrompt);
-
-    console.log("createAndExtractBlogParts:>>>", { openaiResponse });
-
     if (openaiResponse?.length) {
       // Extract the parts from the blog
       return extractBlogParts(openaiResponse);
@@ -75,38 +73,11 @@ export const handleCreateBlog = async (
   try {
     blogParts = await retry(createAndExtractBlogParts, 3, 2000);
 
-    // Count the total characters in the blog
-    const totalCharacters: number = Object.values(blogParts).reduce(
-      (sum, blogPart) => {
-        if (typeof blogPart === "string") {
-          return sum + blogPart.length;
-        }
-        return sum;
-      },
-      0
-    );
-
-    // if (totalCharacters > blogMaxLength) {
-    //   blogParts = await retry(createAndExtractBlogParts, 3, 2000);
-
-    //   console.error(
-    //     `❌ The blog exceeds the maximum number of characters [${blogMaxLength}]!`
-    //   );
-    // }
     const blogData: Partial<Blog> = {
       ...blogParts,
-      // author: user._id,
       createdAt: new Date(),
-      // isFree: isFreeUser,
-      // isBasic: isBasicUser,
-      // isEssential: isEssentialUser,
-      // isPremium: isPremiumUser,
       blogType: BlogTypeEnum.PUBLIC,
     };
-    // const updatedBlogParams: BlogParams = {
-    //   ...blogParams,
-    //   totalCharacters,
-    // };
 
     try {
       // Save blog to MongoDB Atlas
@@ -173,6 +144,7 @@ export const handleCreateBlog = async (
 export const handleCreateBlogBulk = async (blogPrompt?: string) => {
   let blogsCount = 0;
   let createBlogPrompt = blogPrompt;
+  const blogsUrlsToIncludeInSitemap = [];
 
   const fetchedBlogs = (
     await handleGetAllBlogs({
@@ -188,12 +160,12 @@ export const handleCreateBlogBulk = async (blogPrompt?: string) => {
     (story) => story.language === SupportedLanguages.en
   );
 
-  console.log("📋 Random Blog:>>>", {
-    title: randomBlogDocument.title,
-    url: CONFIG.IS_DEV
-      ? `dev.talepod.com/blog/${randomBlogDocument.slug}`
-      : `www.talepod.com/blog/${randomBlogDocument.slug}`,
-  });
+  // console.log("📋 Random Blog:>>>", {
+  //   title: randomBlogDocument.title,
+  //   url: CONFIG.IS_DEV
+  //     ? `dev.talepod.com/blog/${randomBlogDocument.slug}`
+  //     : `www.talepod.com/blog/${randomBlogDocument.slug}`,
+  // });
 
   createBlogPrompt = getCreateBlogPrompt(
     storiesInEnglish[0].stories[
@@ -202,17 +174,15 @@ export const handleCreateBlogBulk = async (blogPrompt?: string) => {
     SupportedLanguages.en,
     {
       title: randomBlogDocument.title,
-      url: CONFIG.IS_DEV
-        ? `dev.talepod.com/blog/${randomBlogDocument.slug}`
-        : `www.talepod.com/blog/${randomBlogDocument.slug}`,
+      url: `www.talepod.com/blog/${randomBlogDocument.slug}`,
     }
   );
   const blog = await handleCreateBlog(createBlogPrompt);
-  console.log("📋 Blog:>>>", { slug: blog });
-
   if (blog.slug) {
-    handleUpdateGitLabSitemap({
-      newUrl: `www.talepod.com/blog/${blog.slug}`,
+    blogsUrlsToIncludeInSitemap.push(`www.talepod.com/blog/${blog.slug}`);
+
+    await handleUpdateGitLabSitemap({
+      newUrls: blogsUrlsToIncludeInSitemap,
       siteMapFileName: "sitemap-blogs.xml",
     });
   }

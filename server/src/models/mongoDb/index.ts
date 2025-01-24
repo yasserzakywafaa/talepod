@@ -259,6 +259,7 @@ const saveBlogToDb = async (
   blog: Partial<Blog>
 ): Promise<ObjectId | undefined> => {
   try {
+    console.log("🧮 Saving Blog to Database 🧮");
     const blogId: ObjectId = await createDocument(
       // blogData,
       blog,

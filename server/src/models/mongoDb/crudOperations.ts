@@ -42,6 +42,7 @@ export const updateDocument = async <T>(
   fieldsToUpdate: Partial<T>,
   collectionName: DBCollections
 ) => {
+  console.log("🧮 Updating Document in Database 🧮");
   try {
     const documents = database.collection(collectionName);
     const results = await documents.findOneAndUpdate(
