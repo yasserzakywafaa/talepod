@@ -13,11 +13,13 @@ import axios from "axios";
 import extractBlogParts from "../../utils/extractBlogParts";
 import { getCreateBlogPrompt } from "./getCreateBlogPrompt";
 import { getSlugFromText } from "../../utils/stringUtils";
+import { handleSubmitSitemapToGoogle } from "../googleapis";
 import { handleUpdateGitLabSitemap } from "../gitlab";
 import retry from "../../utils/retryFunction";
 import { updateDocument } from "../../models/mongoDb/crudOperations";
 
 const openai = new OpenAi();
+const siteMapFileName = "sitemap-blogs.xml";
 
 export const handleCreateBlogRequest = async (
   blogPrompt: string
@@ -187,7 +189,14 @@ export const handleCreateBulkBlogs = async (
   if (blogsUrlsToIncludeInSitemap.length) {
     await handleUpdateGitLabSitemap({
       newUrls: blogsUrlsToIncludeInSitemap,
-      siteMapFileName: "sitemap-blogs.xml",
+      siteMapFileName,
     });
+
+    // // Submit the update sitemap-blogs.xml file to Google
+    // if (!CONFIG.IS_DEV && CONFIG.IS_PROD) {
+    //   setTimeout(async () => {
+    //     await handleSubmitSitemapToGoogle(siteMapFileName);
+    //   }, 300000); // 5 minutes
+    // }
   }
 };

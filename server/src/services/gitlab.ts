@@ -26,7 +26,9 @@ export const handleUpdateGitLabSitemap = async (
   const projectId = CONFIG.GITLAB_PROJECT_ID;
   const filePath =
     `client/public/${siteMapFileName}` || "client/public/sitemap.xml";
-  const targetBranch = BranchesEnum.develop;
+  const targetBranch = CONFIG.IS_DEV
+    ? BranchesEnum.develop
+    : BranchesEnum.master;
 
   try {
     let currentContent = "";
@@ -53,6 +55,8 @@ export const handleUpdateGitLabSitemap = async (
       console.log("🛑 URL already exists in sitemap!");
       return;
     }
+
+    // 3. Update sitemap file content with given URLs
     const updatedContent = await handleAddUrlToSitemap(currentContent, newUrls);
 
     // 4. Push update to GitLab
@@ -82,14 +86,16 @@ export const handleUpdateGitLabSitemap = async (
           "Content-Type": "application/json",
         },
       });
+
+      console.log(
+        `✅ Successfully updated "${siteMapFileName}" in GitLab repository`
+      );
     } catch (error) {
       throw new Error(`❌ Failed to commit! ${error}`);
     }
-
-    console.log(
-      `✅ Successfully updated "${siteMapFileName}" in GitLab repository`
-    );
   } catch (error) {
-    throw new Error(`❌ Failed to update "${siteMapFileName}"! ${error}`);
+    throw new Error(`❌ Failed to update "${siteMapFileName}"!`, {
+      cause: error,
+    });
   }
 };
