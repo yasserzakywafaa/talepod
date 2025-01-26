@@ -1,10 +1,20 @@
 import "./BlogCard.scss";
 
-import { Box, Card, CardContent, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Chip,
+  Typography,
+} from "@mui/material";
 
-import { ArticleOutlined } from "@mui/icons-material";
+import { ArrowRightAltOutlined } from "@mui/icons-material";
+// import { ArticleOutlined } from "@mui/icons-material";
 import { Blog } from "src/Pages/Blog/store/state";
 import { CSSProperties } from "react";
+import { Languages } from "src/shared/languages";
 // import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import routes from "src/application/routes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
@@ -22,7 +32,7 @@ interface BlogCard {
 
 const StoryCard = (props: BlogCard) => {
   const navigate = useNavigate();
-  const { isDesktop, isMobile } = useDeviceSize();
+  const { isDesktop } = useDeviceSize();
   const hasDirectionRtl = props.blog.language === "ar";
 
   const handleOnCardClick = () => {
@@ -51,19 +61,16 @@ const StoryCard = (props: BlogCard) => {
           alignItems: "center",
         }}
       >
-        {!isMobile && (
+        {/* {!isMobile && (
           <Box className="blog-card-content-image" sx={{ width: "10%", mr: 1 }}>
             <ArticleOutlined color="primary" sx={{ fontSize: "3rem" }} />
           </Box>
-        )}
+        )} */}
 
-        <Box
-          className="blog-card-content-text"
-          sx={{ width: !isMobile ? "85%" : "100%" }}
-        >
+        <Box className="blog-card-content-text">
           <Typography
             gutterBottom
-            variant="h5"
+            variant="h6"
             component="div"
             className={`blog-card-title ${!isDesktop ? "ellipsis" : ""} ${
               hasDirectionRtl ? "direction-rtl" : ""
@@ -84,7 +91,7 @@ const StoryCard = (props: BlogCard) => {
         </Box>
       </CardContent>
 
-      {/* <CardActions>
+      <CardActions>
         <Box
           display="flex"
           className="blog-card-tags"
@@ -97,8 +104,37 @@ const StoryCard = (props: BlogCard) => {
             color: (theme) => theme.palette.secondary.main,
           }}
         >
+          <Box
+            display="flex"
+            className="story-card-tags-wrapper"
+            justifyContent="space-between"
+            sx={{ mr: 2 }}
+          >
+            {props.blog.language && (
+              <Chip
+                size="small"
+                variant="outlined"
+                label={
+                  Languages.find((lang) => props.blog.language === lang.value)
+                    ?.name
+                }
+                color="secondary"
+              />
+            )}
+          </Box>
+
+          <Button
+            size="small"
+            type="button"
+            color="primary"
+            aria-label="read more"
+            variant="text"
+            endIcon={<ArrowRightAltOutlined />}
+          >
+            Read More
+          </Button>
         </Box>
-      </CardActions> */}
+      </CardActions>
     </Card>
   );
 };

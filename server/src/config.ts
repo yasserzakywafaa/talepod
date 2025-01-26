@@ -58,6 +58,8 @@ const CONFIG = {
 
   // Database
   MONGODB_URI: process.env.MONGODB_URI,
+  MONGODB_URI_DEV: process.env.MONGODB_URI_DEV,
+  MONGODB_URI_PROD: process.env.MONGODB_URI_PROD,
 
   GITLAB_PROJECT_ID: process.env.GITLAB_PROJECT_ID,
   GITLAB_ACCESS_TOKEN: process.env.GITLAB_ACCESS_TOKEN,

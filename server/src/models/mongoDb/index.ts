@@ -18,6 +18,8 @@ import CONFIG from "../../config";
 
 let dbClient: MongoClient;
 let database: Db;
+const { IS_DEV, MONGODB_URI_DEV, IS_PROD, MONGODB_URI_PROD, MONGODB_URI } =
+  CONFIG;
 
 export enum DBNames {
   TALEPOD_DEV = "talepod_dev",
@@ -33,23 +35,19 @@ export enum DBCollections {
 }
 
 const getMongoDbUri = (): string => {
-  switch (true) {
-    // case CONFIG.IS_DEV:
-    //   return CONFIG.MONGODB_URI;
-
-    // case CONFIG.IS_PROD:
-    //   // Uncomment when going to production
-    //   // return CONFIG.MONGODB_URI_PROD;
-    //   return CONFIG.MONGODB_URI_DEV;
-
-    default:
-      return CONFIG.MONGODB_URI;
+  if (IS_DEV && MONGODB_URI_DEV) {
+    return MONGODB_URI_DEV;
   }
+
+  if (IS_PROD && MONGODB_URI_PROD) {
+    return MONGODB_URI_PROD;
+  }
+
+  return MONGODB_URI ?? "";
 };
 
 const getDatabaseName = (): string => {
-  return CONFIG.IS_DEV ? DBNames.TALEPOD_DEV : DBNames.TALEPOD_PROD;
-  // return DBNames.TALEPOD_PROD;
+  return IS_DEV ? DBNames.TALEPOD_DEV : DBNames.TALEPOD_PROD;
 };
 
 const databaseInit = async () => {

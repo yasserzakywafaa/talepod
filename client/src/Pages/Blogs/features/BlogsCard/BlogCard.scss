@@ -5,27 +5,32 @@
   align-items: stretch;
 
   cursor: pointer;
-  // height: 140px;
-  min-width: calc(50% - 1rem);
+  height: 200px;
+  min-width: calc(33% - 1rem);
   max-width: calc(50% - 1rem);
   margin-left: 0.5rem;
   margin-right: 0.5rem;
   position: relative;
   background-color: transparent;
   .blog-card-content {
-    padding: 8px;
     padding-top: 8px;
     padding-bottom: 8px;
+
+    .blog-card-content-text {
+      width: 100%;
+    }
+
     .blog-card-title {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      font-weight: 600;
     }
     .blog-card-summary {
       display: -webkit-box; /* Defines a flexible box layout model */
       -webkit-box-orient: vertical; /* Sets the orientation of the box layout */
-      line-clamp: 2; /* Limits the text to 2 lines */
-      -webkit-line-clamp: 2;
+      line-clamp: 5; /* Limits the text to 5 lines */
+      -webkit-line-clamp: 5;
       overflow: hidden;
       text-overflow: ellipsis;
     }
