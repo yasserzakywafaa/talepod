@@ -180,6 +180,12 @@ export const handleCreateBulkBlogs = async (
             console.error("❌  handleCreateBlog error", error);
             continue;
           }
+
+          // Force garbage collection every 5 blogs
+          if (blogsUrlsToIncludeInSitemap.length % 5 === 0 && global.gc) {
+            global.gc();
+            await new Promise((resolve) => setTimeout(resolve, 500)); // Add small delay
+          }
         }
       }
     }
