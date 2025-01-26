@@ -18,6 +18,12 @@ const CONFIG = {
   PUBLIC_URLS_CLIENT_DEV: process.env.PUBLIC_URLS_CLIENT_DEV,
   PUBLIC_URLS_CLIENT_PROD: process.env.PUBLIC_URLS_CLIENT_PROD,
 
+  // App Main URL
+  APP_URL:
+    process.env.NODE_ENV === "development"
+      ? "dev.talepod.com"
+      : "www.talepod.com",
+
   // Paths
   FRONTEND_DEV_PATH: path.resolve("../client/public"),
   FRONTEND_BUILD_PATH: path.resolve("../client/build"),

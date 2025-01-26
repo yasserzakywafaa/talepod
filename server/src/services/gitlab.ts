@@ -18,7 +18,7 @@ export enum BranchesEnum {
   develop = "develop",
 }
 
-export const handleUpdateGitLabSitemap = async (
+export const handleUpdateSitemapInGitLab = async (
   props: AddUrlToSiteMapParams
 ) => {
   const { siteMapFileName, newUrls } = props;
