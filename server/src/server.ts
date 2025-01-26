@@ -1,6 +1,5 @@
-import { agendaInit, testScheduleHandler } from "./services/agenda/agenda";
-
 import CONFIG from "./config";
+// import { agendaInit } from "./services/agenda/agenda";
 import authRoutes from "./routes/authRoutes";
 import blogsRoutes from "./routes/blogsRoutes";
 import bodyParser from "body-parser";
@@ -64,10 +63,8 @@ const startServer = async () => {
       });
     });
 
-    // Await Agenda initialization
-    await agendaInit();
-
-    await testScheduleHandler();
+    // // Await Agenda initialization
+    // await agendaInit();
 
     // // // Create Bulk Blogs for SEO purposes
     // // await handleCreateBulkBlogs([...blogTopics, ...popularStories]);

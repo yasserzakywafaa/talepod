@@ -13,11 +13,11 @@ const createWeeklyBlogJob = async (job?: Job<BlogData>) => {
   try {
     // const { topic, author, targetPublishDate } = job.attrs.data;
 
+    // TODO: Remove when creating other blogs soon.
     const prompt = getCreateBlogPrompt(
       "Winnie-the-Pooh by A.A. Milne",
       SupportedLanguages.en
     );
-
     await handleCreateBlog(prompt, SupportedLanguages.en);
 
     console.log(`✅ Job "Create Weekly Blog" has been executed..`);
