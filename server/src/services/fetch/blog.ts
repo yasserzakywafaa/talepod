@@ -145,8 +145,6 @@ export const handleGetBlogBySlug = async (blogSlug: string): Promise<Blog> => {
       throw new Error("❌ Invalid blog slug");
     }
 
-    // Use MongoDB’s $unionWith aggregation pipeline stage
-    // to perform a union of the two collections and then filter by the slug.
     const pipeline = [{ $match: { slug: blogSlug } }, { $limit: 1 }];
 
     const results = await database
@@ -157,8 +155,7 @@ export const handleGetBlogBySlug = async (blogSlug: string): Promise<Blog> => {
     if (results.length > 0) {
       const blog = results[0] as Blog;
       console.log("✅ Get Blog by slug:", {
-        blogSlug,
-        isPremium: blog.isPremium,
+        blogSlug
       });
       return blog;
     } else {

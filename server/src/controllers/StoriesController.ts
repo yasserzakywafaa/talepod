@@ -28,7 +28,6 @@ export const getAllStories = async (
     );
     const { pageNumber = 1, pageSize = 20 } = filters;
     const matchStage = hasActiveFilters ? [{ $match: getQuery(filters) }] : [];
-    // Aggregation pipeline
     const pipeline = [
       {
         $unionWith: {
@@ -36,7 +35,6 @@ export const getAllStories = async (
           pipeline: matchStage,
         },
       },
-      // Build the match stage for filters
       ...matchStage,
       {
         $facet: {
@@ -59,7 +57,7 @@ export const getAllStories = async (
       .aggregate(pipeline)
       .toArray();
     const { metadata, results } = aggregatedStories[0] as AggregationResult;
-    const totalCount = metadata[0] ? metadata[0].totalDocumentsCount : 0;
+    const totalCount = metadata[0] ? metadata[0].totalStoriesCount : 0;
 
     const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
 
@@ -150,8 +148,6 @@ export const getStoryBySlug = async (
   }
 
   try {
-    // Use MongoDB’s $unionWith aggregation pipeline stage
-    // to perform a union of the two collections and then filter by the slug.
     const pipeline = [
       {
         $unionWith: {
@@ -289,16 +285,7 @@ export const getOriginalStories = async (
     const matchStage = hasActiveFilters ? [{ $match: getQuery(filters) }] : [];
     // Aggregation pipeline
     const pipeline = [
-      // { $sort: { createdAt: -1 } },
-      // {
-      //   $unionWith: {
-      //     coll: DBCollections.stories,
-      //     pipeline: matchStage,
-      //   },
-      // },
-      // Build the match stage for filters
       ...matchStage,
-      // { $sort: { createdAt: -1 } }, // Returns a memory limit error!!
       {
         $facet: {
           metadata: [
@@ -309,7 +296,6 @@ export const getOriginalStories = async (
           results: [
             { $skip: (pageNumber - 1) * pageSize },
             { $limit: pageSize },
-            // { $sort: { createdAt: -1 } },
           ],
         },
       },
@@ -441,15 +427,7 @@ export const getAllUsersStories = async (
     // Aggregation pipeline
     const pipeline = [
       { $sort: { createdAt: -1 } },
-      // {
-      //   $unionWith: {
-      //     coll: DBCollections.stories,
-      //     pipeline: matchStage,
-      //   },
-      // },
-      // Build the match stage for filters
       ...matchStage,
-      // { $sort: { createdAt: -1 } }, // Returns a memory limit error!!
       {
         $facet: {
           metadata: [
@@ -460,7 +438,6 @@ export const getAllUsersStories = async (
           results: [
             { $skip: (pageNumber - 1) * pageSize },
             { $limit: pageSize },
-            // { $sort: { createdAt: -1 } },
           ],
         },
       },
@@ -471,7 +448,7 @@ export const getAllUsersStories = async (
       .aggregate(pipeline)
       .toArray();
     const { metadata, results } = aggregatedStories[0] as AggregationResult;
-    const totalCount = metadata[0] ? metadata[0].totalDocumentsCount : 0;
+    const totalCount = metadata[0] ? metadata[0].totalStoriesCount : 0;
 
     const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
 
