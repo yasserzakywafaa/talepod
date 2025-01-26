@@ -18,12 +18,6 @@ const CONFIG = {
   PUBLIC_URLS_CLIENT_DEV: process.env.PUBLIC_URLS_CLIENT_DEV,
   PUBLIC_URLS_CLIENT_PROD: process.env.PUBLIC_URLS_CLIENT_PROD,
 
-  // App Main URL
-  APP_URL:
-    process.env.NODE_ENV === "development"
-      ? "dev.talepod.com"
-      : "www.talepod.com",
-
   // Paths
   FRONTEND_DEV_PATH: path.resolve("../client/public"),
   FRONTEND_BUILD_PATH: path.resolve("../client/build"),
@@ -104,6 +98,12 @@ const CONFIG = {
   MAX_STORIES_LIMIT_FREE: 4,
   MAX_STORIES_LIMIT_PREMIUM: 50,
   MAX_STORIES_LIMIT_ADVANCED: 999,
+
+  // App Main URL
+  APP_URL:
+    process.env.NODE_ENV === "development"
+      ? "https://dev.talepod.com"
+      : "https://www.talepod.com",
 };
 
 export default CONFIG;
