@@ -28,7 +28,7 @@ const BlogPage = () => {
 
   return (
     <Page
-      title="Blog | TalePod"
+      title={`${blog && blog.title} | TalePod`}
       className="contact-page"
       isLoading={isFetching}
     >
