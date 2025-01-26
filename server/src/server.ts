@@ -66,7 +66,7 @@ const startServer = async () => {
 
     // Create Bulk Blogs for SEO purposes
     // // await handleCreateBulkBlogs([...blogTopics, ...popularStories]);
-    await handleCreateBulkBlogs(popularStories);
+    // // await handleCreateBulkBlogs(popularStories);
   } catch (error) {
     console.error("❌  Server Error!", error);
   }
