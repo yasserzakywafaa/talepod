@@ -1,19 +1,20 @@
 import CONFIG from "./config";
 import authRoutes from "./routes/authRoutes";
+import blogsRoutes from "./routes/blogsRoutes";
 import bodyParser from "body-parser";
 import contactRoutes from "./routes/contactRoutes";
 import { databaseInit } from "./models/mongoDb";
 import express from "express";
 import handleCorsConfig from "./cors-config";
+import { handleCreateBulkBlogs } from "./services/create/blog";
 import openaiRoutes from "./routes/openaiRoutes";
-import path from "path";
+import paymentWebhooksRouter from "./routes/paymentsWebhooksRoutes";
+import paymentsRoutes from "./routes/paymentsRoutes";
+import { popularStories } from "./shared/mockedData/PopularStories";
 import storiesRoutes from "./routes/storiesRoutes";
 import testRoutes from "./routes/testRoutes";
-import paymentsRoutes from "./routes/paymentsRoutes";
-import paymentWebhooksRouter from "./routes/paymentsWebhooksRoutes";
 
 const expressApp = express();
-const buildPath = path.join(__dirname, "../client/");
 
 const getPort = (): string => {
   // If process.env.PORT is set, use it.
@@ -22,8 +23,6 @@ const getPort = (): string => {
   switch (true) {
     case CONFIG.IS_DEV:
       return CONFIG.DEV_PORT;
-    case CONFIG.IS_STAG:
-      return CONFIG.STAG_PORT;
     case CONFIG.IS_PROD:
       return CONFIG.PROD_PORT;
     default:
@@ -51,34 +50,28 @@ expressApp.use(openaiRoutes);
 expressApp.use(contactRoutes);
 expressApp.use(authRoutes);
 expressApp.use(paymentsRoutes);
+expressApp.use(blogsRoutes);
 
-// Initiate MongoDB connection
-databaseInit();
+const startServer = async () => {
+  try {
+    // Await MongoDB database connection initialization
+    await databaseInit();
 
-if (CONFIG.SERVE_STATIC_CONTENT === "true") {
-  // // Load API routes dynamically
-  // loadRoutes(expressApp);
-
-  // Serve Frontend Bundled Application
-  expressApp.use(express.static(buildPath));
-
-  expressApp.get("*", (req, res) => {
-    console.log("🎯 Route path :>>>", {
-      SERVE_STATIC_CONTENT: CONFIG.SERVE_STATIC_CONTENT,
-      buildPath,
-      path: req.path,
-      sendFile: path.join(buildPath, "index.html"),
+    expressApp.listen(PORT, (): void => {
+      console.log("🎯 Server running on:>>>", {
+        PORT,
+        ENVIRONMENT: CONFIG.NODE_ENV,
+      });
     });
 
-    res.sendFile(path.join(buildPath, "index.html"));
-  });
-}
+    // Create Bulk Blogs for SEO purposes
+    // // await handleCreateBulkBlogs([...blogTopics, ...popularStories]);
+    // // await handleCreateBulkBlogs(popularStories);
+  } catch (error) {
+    console.error("❌  Server Error!", error);
+  }
+};
 
-expressApp.listen(PORT, (): void => {
-  console.log("🎯 Server running on:>>>", {
-    PORT,
-    ENVIRONMENT: CONFIG.NODE_ENV,
-  });
-});
+startServer(); // Call the async function to start the server
 
 module.exports = expressApp;

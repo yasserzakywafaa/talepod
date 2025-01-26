@@ -1,3 +1,4 @@
+import { Blog, BlogData, BlogParams, User } from "../types";
 import { Db, Document, MongoClient, ObjectId, WithId } from "mongodb";
 import {
   ProfileInfo,
@@ -14,7 +15,6 @@ import {
 } from "./crudOperations";
 
 import CONFIG from "../../config";
-import { User } from "../types";
 
 let dbClient: MongoClient;
 let database: Db;
@@ -29,6 +29,7 @@ export enum DBCollections {
   stories_library = "stories_library",
   stories_library_backup = "stories_library_backup",
   users = "users",
+  blogs = "blogs",
 }
 
 const getMongoDbUri = (): string => {
@@ -164,7 +165,7 @@ const getDocumentByFieldFromDb = async (
 
     return document;
   } catch (error) {
-    throw new Error("❌ Error saving user data to DB", { cause: error });
+    throw new Error("❌ Failed to get document to DB", { cause: error });
   }
 };
 
@@ -254,6 +255,24 @@ const updateUserInDb = async (
   }
 };
 
+const saveBlogToDb = async (
+  blog: Partial<Blog>
+): Promise<ObjectId | undefined> => {
+  try {
+    console.log("🧮 Saving Blog to Database 🧮");
+    const blogId: ObjectId = await createDocument(
+      // blogData,
+      blog,
+      DBCollections.blogs
+    );
+    console.log("✅ Blog saved to DB successfully");
+
+    return blogId;
+  } catch (error) {
+    throw new Error("❌ Error saving blog data to DB", { cause: error });
+  }
+};
+
 // // // FOR DEVELOPMENT USE ONLY
 // const copyDocumentsFromDatabaseToAnotherDatabase = async () => {
 //   // Access the Dev and Prod databases
@@ -261,10 +280,7 @@ const updateUserInDb = async (
 //   const prodDb = dbClient.db(DBNames.TALEPOD_PROD);
 
 //   // Collection names to copy
-//   const collectionsToCopy = [
-//     DBCollections.stories_library,
-//     DBCollections.stories_library_backup,
-//   ];
+//   const collectionsToCopy = [DBCollections.blogs];
 
 //   for (const collectionName of collectionsToCopy) {
 //     // Fetch all documents from the Dev collection
@@ -302,4 +318,5 @@ export {
   saveFileDataToDb,
   saveUserDataToDb,
   updateUserInDb,
+  saveBlogToDb,
 };

@@ -85,6 +85,7 @@ const AppContent = () => {
 
   const handleUpdates = async () => {
     const storedAuthInfo = getLocalStorageAuthItems();
+    document.body.classList.toggle(state.themeMode);
 
     if (!storedAuthInfo.isAuthenticated) {
       // User is not logged in, set initial auth state
@@ -110,6 +111,7 @@ const AppContent = () => {
     }
     handleIsFetchingUserInfo(false);
 
+    // Google Analytics Tracking
     const gaClientId = getClientIdFromGoogleAnalyticsCookie();
     if (gaClientId) {
       setTrackingInfo({
@@ -121,10 +123,6 @@ const AppContent = () => {
   useEffect(() => {
     handleUpdates();
   }, []);
-
-  useEffect(() => {
-    console.log("AppContent.tsx:>>> Client ID:", state.trackingInfo.clientId);
-  }, [state.trackingInfo]);
 
   return (
     <ThemeProvider theme={state.themeMode === "light" ? lightTheme : darkTheme}>
@@ -139,6 +137,9 @@ const AppContent = () => {
             <Route path={routes.create} element={<CreateStoryPage />} />
             <Route path={routes.explore} element={<ExplorePage />} />
 
+            <Route path={routes.blogs} element={<BlogsPage />} />
+            <Route path={routes.blog(":slug")} element={<BlogPage />} />
+
             {state.auth.isAuthenticated && !!state.auth.user ? (
               <>
                 <Route
@@ -150,9 +151,6 @@ const AppContent = () => {
                   path={routes.myProfile(":userId")}
                   element={<MyProfilePage />}
                 />
-
-                <Route path={routes.blogs} element={<BlogsPage />} />
-                <Route path={routes.blog(":slug")} element={<BlogPage />} />
 
                 {hasAdminRights(state.auth.user) && (
                   <Route

@@ -37,6 +37,10 @@ const APP_CONSTANTS = {
     USER: "user",
     IS_AUTHENTICATED: "isAuthenticated",
   },
+  APP_THEME_CLASS: {
+    DARK: "dark",
+    LIGHT: "light",
+  },
   MAX_STORIES_LIMIT_FREE: 4,
   MAX_STORIES_LIMIT_PREMIUM: 50,
   MAX_STORIES_LIMIT_ADVANCED: 999,

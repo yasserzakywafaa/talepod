@@ -5,13 +5,11 @@ dotenv.config();
 
 const CONFIG = {
   DEV_PORT: process.env.DEV_PORT,
-  STAG_PORT: process.env.STAG_PORT,
   PROD_PORT: process.env.PROD_PORT,
 
   // Environment
   NODE_ENV: process.env.NODE_ENV,
   IS_DEV: process.env.NODE_ENV === "development",
-  IS_STAG: process.env.NODE_ENV === "staging",
   IS_PROD: process.env.NODE_ENV === "production",
 
   // Public URLs
@@ -28,6 +26,29 @@ const CONFIG = {
   SERVER_TEXT_TO_SPEECH_PATH: "assets/audio",
   SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH: path.resolve("./assets/audio"),
 
+  // GitLab
+  GITLAB: {
+    FILE_URL: (projectId: string, filePath: string, branch: string) =>
+      `https://gitlab.com/api/v4/projects/${projectId}/repository/files/${encodeURIComponent(
+        filePath
+      )}/raw?ref=${branch}`,
+    UPDATE_URL: (projectId: string) =>
+      `https://gitlab.com/api/v4/projects/${projectId}/repository/commits`,
+  },
+
+  // Google Service Account
+  GOOGLE_TYPE: process.env.GOOGLE_TYPE,
+  GOOGLE_PROJECT_ID: process.env.GOOGLE_PROJECT_ID,
+  GOOGLE_PRIVATE_KEY_ID: process.env.GOOGLE_PRIVATE_KEY_ID,
+  GOOGLE_PRIVATE_KEY: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"), // Fix newline formatting,
+  GOOGLE_CLIENT_EMAIL: process.env.GOOGLE_CLIENT_EMAIL,
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  GOOGLE_AUTH_URI: process.env.GOOGLE_AUTH_URI,
+  GOOGLE_TOKEN_URI: process.env.GOOGLE_TOKEN_URI,
+  GOOGLE_AUTH_PROVIDER_CERT_URL: process.env.GOOGLE_AUTH_PROVIDER_CERT_URL,
+  GOOGLE_CLIENT_CERT_URL: process.env.GOOGLE_CLIENT_CERT_URL,
+  GOOGLE_UNIVERSE_DOMAIN: process.env.GOOGLE_UNIVERSE_DOMAIN,
+
   // APIs keys for AI
   // Openai
   OPENAI_MODEL_NAME: process.env.OPENAI_MODEL_NAME,
@@ -37,6 +58,9 @@ const CONFIG = {
 
   // Database
   MONGODB_URI: process.env.MONGODB_URI,
+
+  GITLAB_PROJECT_ID: process.env.GITLAB_PROJECT_ID,
+  GITLAB_ACCESS_TOKEN: process.env.GITLAB_ACCESS_TOKEN,
 
   // Hosting
   HOST_AWS_S3_BUCKET_NAME_DEV: process.env.HOST_AWS_S3_BUCKET_NAME_DEV,

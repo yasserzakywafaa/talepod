@@ -7,15 +7,18 @@ const retry = async <T>(
     try {
       return await callbackFn();
     } catch (error) {
-      if (index === numberOfRetries - 1) {
-        throw error; // rethrow the last error after all retries fail
-      }
       console.error(`❌ Attempt ${index + 1} failed!`, [error]);
+
       await new Promise((res) => setTimeout(res, delay));
+
+      if (index === numberOfRetries - 1) {
+        // Rethrow the last error after all retries fail
+        throw new Error("❌ Retries exceeded without successful execution!");
+      }
     }
   }
 
-  throw new Error("❌ Retries exceeded without successful execution!");
+  return undefined;
 };
 
 export default retry;

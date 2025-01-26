@@ -1,26 +1,35 @@
-import { BlogInitialState, getBlogInitialState } from "./state";
+import { Blog, BlogInitialState, getBlogInitialState } from "./state";
 
 import { useState } from "react";
 
 export interface BlogStore {
   state: BlogInitialState;
-  isFetching: (isFetching: boolean) => void;
+  setIsFetching: (isFetching: boolean) => void;
+  updateBlog: (blog: Blog | undefined) => void;
 }
 
 const useBlogStore = (): BlogStore => {
   const initialState = getBlogInitialState();
   const [state, setState] = useState<BlogInitialState>(initialState);
 
-  const isFetching = (isFetching: boolean) => {
+  const setIsFetching = (isFetching: boolean) => {
     setState((prev) => ({
       ...prev,
       isFetching,
     }));
   };
 
+  const updateBlog = (blog: Blog) => {
+    setState((prev) => ({
+      ...prev,
+      blog,
+    }));
+  };
+
   return {
     state,
-    isFetching,
+    setIsFetching,
+    updateBlog,
   };
 };
 

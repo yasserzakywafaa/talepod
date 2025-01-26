@@ -77,11 +77,15 @@ const useApplicationStore = (): ApplicationStore => {
       case "light":
         themeColorMetaTag &&
           themeColorMetaTag.setAttribute("content", "#F5F5F5");
+        document.body.classList.toggle(APP_CONSTANTS.APP_THEME_CLASS.DARK);
+        document.body.classList.toggle(APP_CONSTANTS.APP_THEME_CLASS.LIGHT);
         break;
 
       case "dark":
         themeColorMetaTag &&
           themeColorMetaTag.setAttribute("content", "#2E3B4E");
+        document.body.classList.toggle(APP_CONSTANTS.APP_THEME_CLASS.LIGHT);
+        document.body.classList.toggle(APP_CONSTANTS.APP_THEME_CLASS.DARK);
         break;
     }
   };

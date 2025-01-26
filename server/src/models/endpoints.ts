@@ -37,6 +37,10 @@ const END_POINTS = {
     GET_SUBSCRIPTION_DETAILS: `/api/v1/auth/get-subscription-details`,
     CANCEL_SUBSCRIPTION: `/api/v1/payments/cancel-subscription`,
   },
+  BLOGS: {
+    GET_ALL_BLOGS: "/api/v1/blogs/blogs-list",
+    GET_BLOG_BY_SLUG: (slug: string) => `/api/v1/blogs/${slug}`,
+  },
 };
 
 export default END_POINTS;
