@@ -14,7 +14,7 @@ import extractBlogParts from "../../utils/extractBlogParts";
 import { getCreateBlogPrompt } from "./getCreateBlogPrompt";
 import { getSlugFromText } from "../../utils/stringUtils";
 import { handleSubmitSitemapToGoogle } from "../googleapis";
-import { handleUpdateGitLabSitemap } from "../gitlab";
+import { handleUpdateSitemapInGitLab } from "../gitlab";
 import retry from "../../utils/retryFunction";
 import { updateDocument } from "../../models/mongoDb/crudOperations";
 
@@ -132,8 +132,6 @@ export const handleCreateBulkBlogs = async (
   dataToCreateArray: BaseDataParams[],
   blogPrompt?: string
 ) => {
-  let newBlog: Partial<Blog>;
-  let createBlogPrompt = blogPrompt;
   const blogsUrlsToIncludeInSitemap = [];
 
   for (const dataToCreate of dataToCreateArray) {
@@ -149,26 +147,25 @@ export const handleCreateBulkBlogs = async (
             language.value,
             DBCollections.blogs
           );
-          if (linkedBlog && linkedBlog._id) {
-            console.log("📋  Linked Blog:>>>", linkedBlog.title);
+          const linkedBlogFullUrl = `${CONFIG.APP_URL}/blog/${linkedBlog?.slug}`;
 
-            createBlogPrompt = getCreateBlogPrompt(data, language.value, {
-              title: linkedBlog.title,
-              url: `${
-                CONFIG.IS_DEV ? "dev.talepod.com" : "www.talepod.com"
-              }/blog/${linkedBlog.slug}`,
-            });
-          } else {
-            createBlogPrompt = getCreateBlogPrompt(data, language.value);
-          }
+          console.log("📋  Linked Blog URL:>>>", linkedBlogFullUrl);
+
+          const createBlogPrompt = linkedBlog?._id
+            ? getCreateBlogPrompt(data, language.value, {
+                title: linkedBlog.title,
+                url: linkedBlogFullUrl,
+              })
+            : getCreateBlogPrompt(data, language.value);
 
           try {
-            newBlog = await handleCreateBlog(createBlogPrompt, language.value);
+            const newBlog: Partial<Blog> = await handleCreateBlog(
+              createBlogPrompt,
+              language.value
+            );
             if (newBlog && newBlog.slug) {
               blogsUrlsToIncludeInSitemap.push(
-                `${
-                  CONFIG.IS_DEV ? "dev.talepod.com" : "www.talepod.com"
-                }/blog/${newBlog.slug}`
+                `${CONFIG.APP_URL}/blog/${newBlog.slug}`
               );
 
               console.log("🧮  Blogs Count:>>>", {
@@ -191,18 +188,16 @@ export const handleCreateBulkBlogs = async (
     }
   }
 
-  // Add new created blogs URLs to sitemap-blogs.xml file
-  if (blogsUrlsToIncludeInSitemap.length) {
-    await handleUpdateGitLabSitemap({
+  if (blogsUrlsToIncludeInSitemap.length && !CONFIG.IS_DEV && CONFIG.IS_PROD) {
+    // Add new created blogs URLs to sitemap-blogs.xml file
+    await handleUpdateSitemapInGitLab({
       newUrls: blogsUrlsToIncludeInSitemap,
       siteMapFileName,
     });
 
-    // // Submit the update sitemap-blogs.xml file to Google
-    // if (!CONFIG.IS_DEV && CONFIG.IS_PROD) {
-    //   setTimeout(async () => {
-    //     await handleSubmitSitemapToGoogle(siteMapFileName);
-    //   }, 300000); // 5 minutes
-    // }
+    // Submit the update sitemap-blogs.xml file to Google
+    setTimeout(async () => {
+      await handleSubmitSitemapToGoogle(siteMapFileName);
+    }, 300000); // 5 minutes
   }
 };

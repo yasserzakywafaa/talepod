@@ -1,6 +1,6 @@
 import { Auth, google, webmasters_v3 } from "googleapis";
 
-import CONFIG from "src/config";
+import CONFIG from "../config";
 
 const credentials = {
   type: CONFIG.GOOGLE_TYPE,

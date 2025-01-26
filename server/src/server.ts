@@ -6,9 +6,11 @@ import contactRoutes from "./routes/contactRoutes";
 import { databaseInit } from "./models/mongoDb";
 import express from "express";
 import handleCorsConfig from "./cors-config";
+// import { handleCreateBulkBlogs } from "./services/create/blog";
 import openaiRoutes from "./routes/openaiRoutes";
 import paymentWebhooksRouter from "./routes/paymentsWebhooksRoutes";
 import paymentsRoutes from "./routes/paymentsRoutes";
+// import { popularStories } from "./shared/mockedData/PopularStories";
 import storiesRoutes from "./routes/storiesRoutes";
 import testRoutes from "./routes/testRoutes";
 
@@ -64,7 +66,7 @@ const startServer = async () => {
 
     // Create Bulk Blogs for SEO purposes
     // // await handleCreateBulkBlogs([...blogTopics, ...popularStories]);
-    // // await handleCreateBulkBlogs(popularStories);
+    // //     await handleCreateBulkBlogs(popularStories);
   } catch (error) {
     console.error("❌  Server Error!", error);
   }
