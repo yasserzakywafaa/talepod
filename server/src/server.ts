@@ -66,6 +66,8 @@ const startServer = async () => {
     // // await handleCreateBulkBlogs([...blogTopics, ...popularStories]);
     // // await handleCreateBulkBlogs(popularStories);
     // // await handleSubmitSitemapToGoogle("sitemap-blogs.xml");
+
+    // // await handleFixBlogLinks();
   } catch (error) {
     console.error("❌  Server Error!", error);
   }
