@@ -308,6 +308,7 @@ export {
   dbClient,
   database,
   databaseInit,
+  getMongoDbUri,
   closeDatabase,
   getDocumentFromDb,
   getDocumentByFieldFromDb,

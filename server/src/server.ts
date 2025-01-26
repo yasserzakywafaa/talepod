@@ -1,3 +1,5 @@
+import { agendaInit, testScheduleHandler } from "./services/agenda/agenda";
+
 import CONFIG from "./config";
 import authRoutes from "./routes/authRoutes";
 import blogsRoutes from "./routes/blogsRoutes";
@@ -61,6 +63,11 @@ const startServer = async () => {
         ENVIRONMENT: CONFIG.NODE_ENV,
       });
     });
+
+    // Await Agenda initialization
+    await agendaInit();
+
+    await testScheduleHandler();
 
     // // // Create Bulk Blogs for SEO purposes
     // // await handleCreateBulkBlogs([...blogTopics, ...popularStories]);
