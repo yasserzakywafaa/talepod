@@ -36,10 +36,10 @@ export const handleSubmitSitemapToGoogle = async (siteMapFileName: string) => {
   });
 
   // Specify your site URL (as registered in Search Console)
-  const siteUrl = "https://www.talepod.com"; // Ensure this matches exactly
-  const sitemapUrl = `https://www.talepod.com/${siteMapFileName}`; // Full URL of your sitemap
+  const siteUrl = "sc-domain:talepod.com"; // Ensure this matches exactly
+  const sitemapUrl = `${CONFIG.APP_URL}/${siteMapFileName}`; // Full URL of your sitemap
 
-  console.log("🛠️  Submitting   🛠️");
+  console.log(`🛠️  Submitting "${siteMapFileName}"  🛠️`);
 
   try {
     // Submit the sitemap
@@ -47,12 +47,15 @@ export const handleSubmitSitemapToGoogle = async (siteMapFileName: string) => {
       siteUrl: siteUrl,
       feedpath: sitemapUrl,
     });
-    console.log("✅ Sitemap submitted successfully!");
+    console.log(`✅ Sitemap "${siteMapFileName}" file submitted successfully!`);
   } catch (error) {
     if (error instanceof Error) {
-      console.error("❌ Error submitting sitemap:", error.message);
+      console.error(
+        `❌ Error submitting sitemap "${siteMapFileName}" file:`,
+        error.message
+      );
       if (error.message.includes("Permission denied")) {
-        console.error("Verify service account has Search Console ownership");
+        console.error("❌ Verify service account has Search Console ownership");
       }
     } else {
       console.error("❌ Unknown error:", error);
