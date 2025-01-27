@@ -65,10 +65,13 @@ export const createStorySeo = async (
           content: userSeoPrompt,
         },
       ],
-      model: CONFIG.OPENAI_MODEL_NAME,
+      model: CONFIG.OPENAI_MODEL_NAME ?? "gpt-4o",
       n: 1,
     });
     const openaiResponse = createRequest.choices[0].message.content;
+
+    if (!openaiResponse) return;
+
     const storySEO: StorySeo = {
       createdAt: new Date(),
       content: openaiResponse
@@ -181,7 +184,7 @@ export const createImages = async (
 
   // OpenAI Image Generation API Call
   try {
-    const imageUrls = [];
+    const imageUrls: string[] = [];
 
     // Make multiple requests to generate each image
     for (let i = 0; i < numImages; i++) {
@@ -198,7 +201,7 @@ export const createImages = async (
 
       // Extract the URL of the generated image from the response and add it to the array
       const imageUrl = imageRequest.data[0].url;
-      imageUrls.push(imageUrl);
+      imageUrl && imageUrls.push(imageUrl);
     }
 
     console.log("ℹ️  Image create successfully", {

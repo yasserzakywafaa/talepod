@@ -28,9 +28,9 @@
     "noImplicitReturns": true,
     "noImplicitThis": false,
     "noImplicitAny": false,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": false,
-    "noUnusedLocals": false,
+    "noUnusedLocals": true,
     "importHelpers": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -51,10 +51,13 @@
     "preserveConstEnums": true
   },
   // "ts-node": {
-  //   "files": true
+  //   // "loader": "ts-node/esm", // Make sure ts-node/esm is used to handle TypeScript as an ES module
+  //   "compilerOptions": {
+  //     "module": "ESNext",
+  //     "esModuleInterop": true,
+  //     "resolveJsonModule": true
+  //   }
   // },
-  // "include": ["src"],
-  // "include": ["./client/src/**/*.ts", "./server/src/**/*.ts"],
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
 }

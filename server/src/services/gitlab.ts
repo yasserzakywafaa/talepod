@@ -5,7 +5,14 @@ import { handleAddUrlToSitemap } from "./create/sitemap";
 interface GitLabFileUpdate {
   branch: string;
   commit_message: string;
+  actions: GitLabFileUpdateAction[];
+}
+
+interface GitLabFileUpdateAction {
+  action: string;
+  file_path: string;
   content: string;
+  encoding: string;
 }
 
 export interface AddUrlToSiteMapParams {
@@ -22,8 +29,9 @@ export const handleUpdateSitemapInGitLab = async (
   props: AddUrlToSiteMapParams
 ) => {
   const { siteMapFileName, newUrls } = props;
-  const gitLabToken = CONFIG.GITLAB_ACCESS_TOKEN;
-  const projectId = CONFIG.GITLAB_PROJECT_ID;
+  if (!CONFIG.GITLAB.GITLAB_PROJECT_ID || !CONFIG.GITLAB.GITLAB_ACCESS_TOKEN)
+    return;
+
   const filePath =
     `client/public/${siteMapFileName}` || "client/public/sitemap.xml";
   const targetBranch = CONFIG.IS_DEV
@@ -33,9 +41,13 @@ export const handleUpdateSitemapInGitLab = async (
   try {
     let currentContent = "";
     // 1. Get current file content
-    const fileUrl = CONFIG.GITLAB.FILE_URL(projectId, filePath, targetBranch);
+    const fileUrl = CONFIG.GITLAB.FILE_URL(
+      CONFIG.GITLAB.GITLAB_PROJECT_ID,
+      filePath,
+      targetBranch
+    );
     const response = await axios.get(fileUrl, {
-      headers: { "PRIVATE-TOKEN": gitLabToken },
+      headers: { "PRIVATE-TOKEN": CONFIG.GITLAB.GITLAB_ACCESS_TOKEN },
     });
 
     if (response.status === 200) {
@@ -60,8 +72,8 @@ export const handleUpdateSitemapInGitLab = async (
     const updatedContent = await handleAddUrlToSitemap(currentContent, newUrls);
 
     // 4. Push update to GitLab
-    const updateUrl = CONFIG.GITLAB.UPDATE_URL(projectId);
-    const commitData = {
+    const updateUrl = CONFIG.GITLAB.UPDATE_URL(CONFIG.GITLAB.GITLAB_PROJECT_ID);
+    const commitData: GitLabFileUpdate = {
       branch: targetBranch,
       commit_message: `Add ${newUrls.length} new URL(s) to "${siteMapFileName}" file.`,
       actions: [
@@ -82,7 +94,7 @@ export const handleUpdateSitemapInGitLab = async (
     try {
       await axios.post(updateUrl, commitData, {
         headers: {
-          "PRIVATE-TOKEN": gitLabToken,
+          "PRIVATE-TOKEN": CONFIG.GITLAB.GITLAB_ACCESS_TOKEN,
           "Content-Type": "application/json",
         },
       });

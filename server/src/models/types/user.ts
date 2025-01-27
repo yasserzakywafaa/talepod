@@ -48,8 +48,8 @@ export interface UserSubscription {
   paymentHistory?: UserPaymentHistory[];
   maxStoriesAllowed: number;
   paymentStatus: Stripe.Checkout.Session.PaymentStatus;
-  plan: Stripe.Plan;
-  price: Stripe.Price;
+  plan: Stripe.Plan | undefined;
+  price: Stripe.Price | undefined;
 }
 
 export enum SubscriptionPlanEnum {
@@ -97,7 +97,7 @@ export const getInitialUserData = (): Omit<User, "_id"> => {
       type: SubscriptionPlanEnum.Free,
       startDate: new Date(),
       maxStoriesAllowed: 4,
-      endDate: undefined,
+      endDate: new Date(),
       paymentStatus: "unpaid",
       plan: undefined,
       price: undefined,

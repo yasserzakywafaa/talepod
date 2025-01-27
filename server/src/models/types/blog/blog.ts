@@ -3,7 +3,6 @@ import { ContentStructure } from "./blogParams/ContentStructure";
 import { Frequency } from "./blogParams/Frequency";
 import { Language } from "..";
 import { ObjectId } from "mongodb";
-import { PagingInfo } from "../api";
 import { SubscriptionPlanEnum } from "../user";
 import { SupportedLanguages } from "src/utils/languages";
 import { TargetAudience } from "./blogParams/TargetAudience";

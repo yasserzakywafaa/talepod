@@ -7,10 +7,13 @@ import {
   Story,
   StoryFilters,
   User,
-  UserRole,
   UserStatus,
 } from "../models/types";
-import { DBCollections, database, getDocumentFromDb } from "../models/mongoDb";
+import {
+  DBCollectionsEnum,
+  database,
+  getDocumentFromDb,
+} from "../models/mongoDb";
 import { NextFunction, Request, Response } from "express";
 
 import { ObjectId } from "mongodb";
@@ -28,20 +31,18 @@ export const getAllStories = async (
     );
     const { pageNumber = 1, pageSize = 20 } = filters;
     const matchStage = hasActiveFilters ? [{ $match: getQuery(filters) }] : [];
-    // Aggregation pipeline
     const pipeline = [
       {
         $unionWith: {
-          coll: DBCollections.stories,
+          coll: DBCollectionsEnum.stories,
           pipeline: matchStage,
         },
       },
-      // Build the match stage for filters
       ...matchStage,
       {
         $facet: {
           metadata: [
-            { $count: "totalStoriesCount" },
+            { $count: "totalDocumentsCount" },
             { $addFields: { pageNumber, pageSize } },
           ],
           // Paginate results
@@ -55,7 +56,7 @@ export const getAllStories = async (
     ];
 
     const aggregatedStories = await database
-      .collection(DBCollections.stories_library)
+      .collection(DBCollectionsEnum.stories_library)
       .aggregate(pipeline)
       .toArray();
     const { metadata, results } = aggregatedStories[0] as AggregationResult;
@@ -150,12 +151,10 @@ export const getStoryBySlug = async (
   }
 
   try {
-    // Use MongoDB’s $unionWith aggregation pipeline stage
-    // to perform a union of the two collections and then filter by the slug.
     const pipeline = [
       {
         $unionWith: {
-          coll: DBCollections.stories_library,
+          coll: DBCollectionsEnum.stories_library,
           pipeline: [],
         },
       },
@@ -164,7 +163,7 @@ export const getStoryBySlug = async (
     ];
 
     const results = await database
-      .collection(DBCollections.stories)
+      .collection(DBCollectionsEnum.stories)
       .aggregate(pipeline)
       .toArray();
 
@@ -194,7 +193,7 @@ export const getAllUserStories = async (
   const userId = request.query.userId as string;
   const user = (await getDocumentFromDb(
     new ObjectId(userId),
-    DBCollections.users
+    DBCollectionsEnum.users
   )) as User;
   const hasActiveFilters: boolean = request.query.hasActiveFilters === "true";
   const filters: StoryFilters = JSON.parse(
@@ -210,7 +209,7 @@ export const getAllUserStories = async (
 
   try {
     // Get all stories in collection
-    const allStoriesDocuments = database.collection(DBCollections.stories);
+    const allStoriesDocuments = database.collection(DBCollectionsEnum.stories);
 
     // Get all stories for this specific user (if any)
     const allUserStoriesDocuments = allStoriesDocuments
@@ -289,34 +288,24 @@ export const getOriginalStories = async (
     const matchStage = hasActiveFilters ? [{ $match: getQuery(filters) }] : [];
     // Aggregation pipeline
     const pipeline = [
-      // { $sort: { createdAt: -1 } },
-      // {
-      //   $unionWith: {
-      //     coll: DBCollections.stories,
-      //     pipeline: matchStage,
-      //   },
-      // },
-      // Build the match stage for filters
       ...matchStage,
-      // { $sort: { createdAt: -1 } }, // Returns a memory limit error!!
       {
         $facet: {
           metadata: [
-            { $count: "totalStoriesCount" },
+            { $count: "totalDocumentsCount" },
             { $addFields: { pageNumber, pageSize } },
           ],
           // Paginate results
           results: [
             { $skip: (pageNumber - 1) * pageSize },
             { $limit: pageSize },
-            // { $sort: { createdAt: -1 } },
           ],
         },
       },
     ];
 
     const aggregatedStories = await database
-      .collection(DBCollections.stories_library)
+      .collection(DBCollectionsEnum.stories_library)
       .aggregate(pipeline)
       .toArray();
     const { metadata, results } = aggregatedStories[0] as AggregationResult;
@@ -441,33 +430,24 @@ export const getAllUsersStories = async (
     // Aggregation pipeline
     const pipeline = [
       { $sort: { createdAt: -1 } },
-      // {
-      //   $unionWith: {
-      //     coll: DBCollections.stories,
-      //     pipeline: matchStage,
-      //   },
-      // },
-      // Build the match stage for filters
       ...matchStage,
-      // { $sort: { createdAt: -1 } }, // Returns a memory limit error!!
       {
         $facet: {
           metadata: [
-            { $count: "totalStoriesCount" },
+            { $count: "totalDocumentsCount" },
             { $addFields: { pageNumber, pageSize } },
           ],
           // Paginate results
           results: [
             { $skip: (pageNumber - 1) * pageSize },
             { $limit: pageSize },
-            // { $sort: { createdAt: -1 } },
           ],
         },
       },
     ];
 
     const aggregatedStories = await database
-      .collection(DBCollections.stories)
+      .collection(DBCollectionsEnum.stories)
       .aggregate(pipeline)
       .toArray();
     const { metadata, results } = aggregatedStories[0] as AggregationResult;

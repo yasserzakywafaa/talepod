@@ -21,7 +21,7 @@ export const getAudioFileUrl = (
  * Create a slug from a text
  */
 export const getSlugFromText = (text: string) => {
-  let slug: string;
+  let slug: string = "";
   const latinChars = /[A-Za-z]/;
   const nonLatinChars = /[^A-Za-z\s]/;
 

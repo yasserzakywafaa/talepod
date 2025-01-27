@@ -18,7 +18,7 @@ const retry = async <T>(
     }
   }
 
-  return undefined;
+  return "" as T;
 };
 
 export default retry;

@@ -28,6 +28,8 @@ const CONFIG = {
 
   // GitLab
   GITLAB: {
+    GITLAB_PROJECT_ID: process.env.GITLAB_PROJECT_ID,
+    GITLAB_ACCESS_TOKEN: process.env.GITLAB_ACCESS_TOKEN,
     FILE_URL: (projectId: string, filePath: string, branch: string) =>
       `https://gitlab.com/api/v4/projects/${projectId}/repository/files/${encodeURIComponent(
         filePath
@@ -40,7 +42,7 @@ const CONFIG = {
   GOOGLE_TYPE: process.env.GOOGLE_TYPE,
   GOOGLE_PROJECT_ID: process.env.GOOGLE_PROJECT_ID,
   GOOGLE_PRIVATE_KEY_ID: process.env.GOOGLE_PRIVATE_KEY_ID,
-  GOOGLE_PRIVATE_KEY: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"), // Fix newline formatting,
+  GOOGLE_PRIVATE_KEY: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n"), // Fix newline formatting,
   GOOGLE_CLIENT_EMAIL: process.env.GOOGLE_CLIENT_EMAIL,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_AUTH_URI: process.env.GOOGLE_AUTH_URI,
@@ -60,9 +62,6 @@ const CONFIG = {
   MONGODB_URI: process.env.MONGODB_URI,
   MONGODB_URI_DEV: process.env.MONGODB_URI_DEV,
   MONGODB_URI_PROD: process.env.MONGODB_URI_PROD,
-
-  GITLAB_PROJECT_ID: process.env.GITLAB_PROJECT_ID,
-  GITLAB_ACCESS_TOKEN: process.env.GITLAB_ACCESS_TOKEN,
 
   // Hosting
   HOST_AWS_S3_BUCKET_NAME_DEV: process.env.HOST_AWS_S3_BUCKET_NAME_DEV,

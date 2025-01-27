@@ -1,5 +1,5 @@
 import {
-  DBCollections,
+  DBCollectionsEnum,
   getDocumentByFieldFromDb,
   getDocumentFromDb,
   saveUserDataToDb,
@@ -42,6 +42,9 @@ export const authByGoogle = async (
       family_name: familyName,
       picture,
     } = verifyResponseData;
+
+    if (!userId) return;
+
     let user: User = {
       ...getInitialUserData(),
       userId,
@@ -55,7 +58,7 @@ export const authByGoogle = async (
       const userDocument = await getDocumentByFieldFromDb(
         "userId",
         userId,
-        DBCollections.users
+        DBCollectionsEnum.users
       );
       if (!userDocument) {
         // If user doesn't exist, create a new user record
@@ -104,7 +107,7 @@ export const getUserInfo = async (
   try {
     const userDocument = (await getDocumentFromDb(
       new ObjectId(user_id),
-      DBCollections.users
+      DBCollectionsEnum.users
     )) as User;
     console.log("ℹ️  getUserInfo", {
       user_id,

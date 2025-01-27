@@ -1,11 +1,11 @@
-import { DBCollections, database } from ".";
+import { DBCollectionsEnum, database } from ".";
 
 import { ObjectId } from "mongodb";
 
 // Create a new document
 export const createDocument = async (
   data: any,
-  collectionName: DBCollections
+  collectionName: DBCollectionsEnum
 ) => {
   const collection = database.collection(collectionName);
   const result = await collection.insertOne(data);
@@ -16,7 +16,7 @@ export const createDocument = async (
 // Read a document by ID
 export const readDocument = async (
   docId: any,
-  collectionName: DBCollections
+  collectionName: DBCollectionsEnum
 ) => {
   const documents = database.collection(collectionName);
   const document = await documents.findOne({ _id: docId });
@@ -28,7 +28,7 @@ export const readDocument = async (
 export const readDocumentByField = async (
   field: string,
   value: string,
-  collectionName: DBCollections
+  collectionName: DBCollectionsEnum
 ) => {
   const documents = database.collection(collectionName);
   const document = await documents.findOne({ [field]: value });
@@ -40,7 +40,7 @@ export const readDocumentByField = async (
 export const updateDocument = async <T>(
   docId: string,
   fieldsToUpdate: Partial<T>,
-  collectionName: DBCollections
+  collectionName: DBCollectionsEnum
 ) => {
   console.log("🧮 Updating Document in Database 🧮");
   try {
@@ -62,7 +62,7 @@ export const updateDocument = async <T>(
 // Delete a document by ID
 export const deleteDocument = async (
   storyId: string,
-  collectionName: DBCollections
+  collectionName: DBCollectionsEnum
 ) => {
   const stories = database.collection(collectionName);
   try {
@@ -71,6 +71,6 @@ export const deleteDocument = async (
 
     return result.deletedCount === 1;
   } catch (error) {
-    throw new Error("❌ Failed to delete document!", error);
+    throw new Error("❌ Failed to delete document!", { cause: error });
   }
 };

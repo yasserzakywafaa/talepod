@@ -5,10 +5,10 @@ import fs from "fs";
 
 // Create an S3 client
 const s3Client = new S3Client({
-  region: CONFIG.HOST_AWS_REGION,
+  region: CONFIG.HOST_AWS_REGION ?? "",
   credentials: {
-    accessKeyId: CONFIG.HOST_AWS_ACCESS_KEY,
-    secretAccessKey: CONFIG.HOST_AWS_SECRET_KEY,
+    accessKeyId: CONFIG.HOST_AWS_ACCESS_KEY ?? "",
+    secretAccessKey: CONFIG.HOST_AWS_SECRET_KEY ?? "",
   },
 });
 
