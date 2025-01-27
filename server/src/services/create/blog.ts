@@ -1,10 +1,10 @@
 import { BaseDataParams, Blog, BlogData, BlogParts } from "../../models/types";
 import { DBCollections, saveBlogToDb } from "../../models/mongoDb";
+import { Languages, SupportedLanguages } from "../../utils/languages";
 
 import CONFIG from "../../config";
 import { ObjectId } from "mongodb";
 import OpenAi from "openai";
-import { SupportedLanguages } from "../../utils/languages";
 import extractBlogParts from "../../utils/extractBlogParts";
 // import fs from "fs";
 // import { getCreateBlogPrompt } from "./getCreateBlogPrompt";
@@ -137,51 +137,50 @@ export const handleCreateBulkBlogs = async (
   // const tempFilePath = path.join(__dirname, "temp_sitemap_urls.txt");
 
   for (const dataToCreate of dataToCreateArray) {
-    console.log("⌛︎  dataToCreate:>>>", dataToCreate);
-    // for (const language of Languages) {
-    //   if (dataToCreate.language === language.value) {
-    //     console.log("⌛︎  Current Language:>>>", language.value);
+    for (const language of Languages) {
+      if (dataToCreate.language === language.value) {
+        console.log("⌛︎  Current Language:>>>", language.value);
 
-    //     for (const data of dataToCreate.data) {
-    //       console.log("⌛︎  Current Data:>>>", data);
+        //     for (const data of dataToCreate.data) {
+        //       console.log("⌛︎  Current Data:>>>", data);
 
-    //       try {
-    //         console.log("⏸️  Create LOGIC here");
-    //         // const linkedBlog = await getDocumentByFieldFromDb(
-    //         //   "language",
-    //         //   language.value,
-    //         //   DBCollections.blogs
-    //         // );
+        //       try {
+        //         console.log("⏸️  Create LOGIC here");
+        //         // const linkedBlog = await getDocumentByFieldFromDb(
+        //         //   "language",
+        //         //   language.value,
+        //         //   DBCollections.blogs
+        //         // );
 
-    //         // const newBlog: Partial<Blog> = await handleCreateBlog(
-    //         //   getCreateBlogPrompt(
-    //         //     data,
-    //         //     language.value,
-    //         //     linkedBlog?._id
-    //         //       ? {
-    //         //           title: linkedBlog.title,
-    //         //           url: `${CONFIG.APP_URL}/blog/${linkedBlog?.slug}`,
-    //         //         }
-    //         //       : undefined
-    //         //   ),
-    //         //   language.value
-    //         // );
+        //         // const newBlog: Partial<Blog> = await handleCreateBlog(
+        //         //   getCreateBlogPrompt(
+        //         //     data,
+        //         //     language.value,
+        //         //     linkedBlog?._id
+        //         //       ? {
+        //         //           title: linkedBlog.title,
+        //         //           url: `${CONFIG.APP_URL}/blog/${linkedBlog?.slug}`,
+        //         //         }
+        //         //       : undefined
+        //         //   ),
+        //         //   language.value
+        //         // );
 
-    //         // if (newBlog?.slug) {
-    //         //   const newBlogFullUrl = `${CONFIG.APP_URL}/blog/${newBlog.slug}`;
-    //         //   // Write the URL to a file immediately (memory efficient)
-    //         //   fs.appendFileSync(tempFilePath, newBlogFullUrl + "\n");
+        //         // if (newBlog?.slug) {
+        //         //   const newBlogFullUrl = `${CONFIG.APP_URL}/blog/${newBlog.slug}`;
+        //         //   // Write the URL to a file immediately (memory efficient)
+        //         //   fs.appendFileSync(tempFilePath, newBlogFullUrl + "\n");
 
-    //         //   // Force garbage collection
-    //         //   if (global.gc) global.gc();
-    //         // }
-    //       } catch (error) {
-    //         console.error("❌  handleCreateBlog error", error);
-    //         continue;
-    //       }
-    //     }
-    //   }
-    // }
+        //         //   // Force garbage collection
+        //         //   if (global.gc) global.gc();
+        //         // }
+        //       } catch (error) {
+        //         console.error("❌  handleCreateBlog error", error);
+        //         continue;
+        //       }
+        //     }
+      }
+    }
   }
 
   // try {
