@@ -45,10 +45,16 @@ const agendaInit = async (): Promise<void> => {
 };
 
 const testScheduleHandler = async (data?: any): Promise<void> => {
+  if (!agenda) {
+    throw new Error("❌ Agenda is not initialized. Call agendaInit() first.");
+  }
   await agenda.every("2 minutes", AgendaJobsEnum.Test, data, {});
 };
 
 const scheduleWeeklyBlog = async (blogData?: any): Promise<void> => {
+  if (!agenda) {
+    throw new Error("❌ Agenda is not initialized. Call agendaInit() first.");
+  }
   // Schedule every Monday at 9:00 AM
   await agenda.every("0 9 * * 1", AgendaJobsEnum.CreateWeeklyBlog, blogData, {
     // timezone: "America/New_York",
@@ -58,9 +64,7 @@ const scheduleWeeklyBlog = async (blogData?: any): Promise<void> => {
 const cancelJob = async (jobId: string): Promise<void> => {
   try {
     if (!agenda) {
-      throw new Error(
-        "Agenda is not initialized. Call initializeAgenda() first."
-      );
+      throw new Error("❌ Agenda is not initialized. Call agendaInit() first.");
     }
     await agenda.cancel({ _id: jobId as any });
     console.log(`Job with ID ${jobId} canceled.`);
@@ -70,13 +74,14 @@ const cancelJob = async (jobId: string): Promise<void> => {
 };
 
 const stopAgenda = async (): Promise<void> => {
-  if (agenda) {
-    try {
-      await agenda.stop();
-      console.log("Agenda stopped manually.");
-    } catch (error) {
-      console.error("Error stopping Agenda:", error);
-    }
+  if (!agenda) {
+    throw new Error("❌ Agenda is not initialized. Call agendaInit() first.");
+  }
+  try {
+    await agenda.stop();
+    console.log("Agenda stopped manually.");
+  } catch (error) {
+    console.error("Error stopping Agenda:", error);
   }
 };
 

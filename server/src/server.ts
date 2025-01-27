@@ -70,18 +70,20 @@ const startServer = async () => {
     // // // Create Bulk Blogs for SEO purposes
     // // await handleCreateBulkBlogs([...blogTopics, ...popularStories]);
     // // await handleCreateBulkBlogs(popularStories);
-    await handleCreateBulkBlogs([
-      {
-        language: popularStories[0].language,
-        data: [popularStories[0].data[0]],
-        // data: [],
-      },
-    ]);
+    if (false) {
+      await handleCreateBulkBlogs([
+        {
+          language: popularStories[0].language,
+          data: [popularStories[0].data[0]],
+          // data: [],
+        },
+      ]);
+    }
     // // await handleSubmitSitemapToGoogle("sitemap-blogs.xml");
 
     // // await handleFixBlogLinks();
   } catch (error) {
-    console.error("❌  Server Error!", error);
+    console.error("🤓  Server Error!", error);
   }
 };
 
