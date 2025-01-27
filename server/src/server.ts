@@ -8,7 +8,6 @@ import { databaseInit } from "./models/mongoDb";
 import express from "express";
 import { getCreateBlogPrompt } from "./services/create/getCreateBlogPrompt";
 import handleCorsConfig from "./cors-config";
-import { handleCreateBlog } from "./services/create/blog";
 import openaiRoutes from "./routes/openaiRoutes";
 import paymentWebhooksRouter from "./routes/paymentsWebhooksRoutes";
 import paymentsRoutes from "./routes/paymentsRoutes";
@@ -87,7 +86,7 @@ const startServer = async () => {
       popularStories[0].data[0],
       popularStories[0].language
     );
-    await handleCreateBlog(createBlogPrompt, popularStories[0].language);
+    console.log("⚠️ createBlogPrompt:>>>", createBlogPrompt);
   } catch (error) {
     console.error("❌  Server Error!", error);
   }
