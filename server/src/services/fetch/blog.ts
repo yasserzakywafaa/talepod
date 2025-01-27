@@ -4,7 +4,7 @@ import {
   DocumentWithId,
   PagingInfo,
 } from "../../models/types";
-import { DBCollections, database } from "../../models/mongoDb";
+import { DBCollectionsEnum, database } from "../../models/mongoDb";
 
 import { updateDocument } from "../../models/mongoDb/crudOperations";
 
@@ -71,7 +71,7 @@ export const handleFixBlogLinks = async (): Promise<{
           await updateDocument(
             blog._id.toString(),
             updateFields,
-            DBCollections.blogs
+            DBCollectionsEnum.blogs
           );
           fixedCount++;
         }
@@ -109,7 +109,7 @@ export const handleGetAllBlogs = async (
     ];
 
     const aggregatedBlogs = await database
-      .collection(DBCollections.blogs)
+      .collection(DBCollectionsEnum.blogs)
       .aggregate(pipeline)
       .toArray();
     const { metadata, results } = aggregatedBlogs[0] as AggregationResult;
@@ -149,7 +149,7 @@ export const handleGetBlogBySlug = async (blogSlug: string): Promise<Blog> => {
     const pipeline = [{ $match: { slug: blogSlug } }, { $limit: 1 }];
 
     const results = await database
-      .collection(DBCollections.blogs)
+      .collection(DBCollectionsEnum.blogs)
       .aggregate(pipeline)
       .toArray();
 

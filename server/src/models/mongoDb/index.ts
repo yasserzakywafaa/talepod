@@ -26,7 +26,7 @@ export enum DBNames {
   TALEPOD_PROD = "talepod_prod",
 }
 
-export enum DBCollections {
+export enum DBCollectionsEnum {
   stories = "stories",
   stories_library = "stories_library",
   stories_library_backup = "stories_library_backup",
@@ -71,7 +71,7 @@ const databaseInit = async () => {
 };
 
 const createCollections = async () => {
-  const collections = Object.keys(DBCollections);
+  const collections = Object.keys(DBCollectionsEnum);
 
   for (const collectionName of collections) {
     const collection = await database
@@ -88,8 +88,8 @@ const createCollections = async () => {
 
 const createIndexes = async () => {
   const collectionsToSearch = [
-    DBCollections.stories,
-    DBCollections.stories_library,
+    DBCollectionsEnum.stories,
+    DBCollectionsEnum.stories_library,
   ];
 
   try {
@@ -111,7 +111,7 @@ const createIndexes = async () => {
       await stories.createIndex({ "storyParams.environment.value": 1 });
     }
 
-    const users = database.collection(DBCollections.users);
+    const users = database.collection(DBCollectionsEnum.users);
     await users.createIndex({ _id: 1 });
     await users.createIndex({ userId: 1 });
     await users.createIndex({ email: 1 });
@@ -143,7 +143,10 @@ const closeDatabase = async () => {
 };
 
 // // Data Handling
-const getDocumentFromDb = async (docId: any, collectionName: DBCollections) => {
+const getDocumentFromDb = async (
+  docId: any,
+  collectionName: DBCollectionsEnum
+) => {
   try {
     const document = await readDocument(docId, collectionName);
 
@@ -156,7 +159,7 @@ const getDocumentFromDb = async (docId: any, collectionName: DBCollections) => {
 const getDocumentByFieldFromDb = async (
   field: string,
   value: string,
-  collectionName: DBCollections
+  collectionName: DBCollectionsEnum
 ) => {
   try {
     const document = await readDocumentByField(field, value, collectionName);
@@ -180,7 +183,7 @@ const saveStoryToDb = async (
     };
     const storyId: ObjectId = await createDocument(
       storyData,
-      DBCollections.stories
+      DBCollectionsEnum.stories
     );
     console.log("✅ Story saved to DB successfully");
 
@@ -195,7 +198,7 @@ const saveStorySeoToDb = async (
   storySeo: StorySeo
 ): Promise<void> => {
   try {
-    await updateDocument(storyId, { seo: storySeo }, DBCollections.stories);
+    await updateDocument(storyId, { seo: storySeo }, DBCollectionsEnum.stories);
     console.log("✅ Story SEO saved to DB successfully");
   } catch (error) {
     throw new Error("❌ Error saving story SEO to DB", { cause: error });
@@ -214,7 +217,7 @@ const saveFileDataToDb = async (
       createdAt: new Date(),
     };
 
-    await updateDocument(storyId, { audioFile }, DBCollections.stories);
+    await updateDocument(storyId, { audioFile }, DBCollectionsEnum.stories);
 
     console.log("✅ File saved to DB successfully");
   } catch (error) {
@@ -224,7 +227,7 @@ const saveFileDataToDb = async (
 
 const saveUserDataToDb = async (user: User): Promise<ObjectId | undefined> => {
   try {
-    const newUserId = await createDocument(user, DBCollections.users);
+    const newUserId = await createDocument(user, DBCollectionsEnum.users);
     console.log("✅ User saved to DB successfully");
     return newUserId;
   } catch (error) {
@@ -240,7 +243,7 @@ const updateUserInDb = async (
     const updatedUser = await updateDocument(
       userId,
       updatedUserData,
-      DBCollections.users
+      DBCollectionsEnum.users
     );
 
     if (!updatedUser) throw new Error("User not found or update failed");
@@ -261,7 +264,7 @@ const saveBlogToDb = async (
     const blogId: ObjectId = await createDocument(
       // blogData,
       blog,
-      DBCollections.blogs
+      DBCollectionsEnum.blogs
     );
     console.log("✅ Blog saved to DB successfully");
 

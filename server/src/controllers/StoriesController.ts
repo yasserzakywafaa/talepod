@@ -9,7 +9,11 @@ import {
   User,
   UserStatus,
 } from "../models/types";
-import { DBCollections, database, getDocumentFromDb } from "../models/mongoDb";
+import {
+  DBCollectionsEnum,
+  database,
+  getDocumentFromDb,
+} from "../models/mongoDb";
 import { NextFunction, Request, Response } from "express";
 
 import { ObjectId } from "mongodb";
@@ -30,7 +34,7 @@ export const getAllStories = async (
     const pipeline = [
       {
         $unionWith: {
-          coll: DBCollections.stories,
+          coll: DBCollectionsEnum.stories,
           pipeline: matchStage,
         },
       },
@@ -52,7 +56,7 @@ export const getAllStories = async (
     ];
 
     const aggregatedStories = await database
-      .collection(DBCollections.stories_library)
+      .collection(DBCollectionsEnum.stories_library)
       .aggregate(pipeline)
       .toArray();
     const { metadata, results } = aggregatedStories[0] as AggregationResult;
@@ -150,7 +154,7 @@ export const getStoryBySlug = async (
     const pipeline = [
       {
         $unionWith: {
-          coll: DBCollections.stories_library,
+          coll: DBCollectionsEnum.stories_library,
           pipeline: [],
         },
       },
@@ -159,7 +163,7 @@ export const getStoryBySlug = async (
     ];
 
     const results = await database
-      .collection(DBCollections.stories)
+      .collection(DBCollectionsEnum.stories)
       .aggregate(pipeline)
       .toArray();
 
@@ -189,7 +193,7 @@ export const getAllUserStories = async (
   const userId = request.query.userId as string;
   const user = (await getDocumentFromDb(
     new ObjectId(userId),
-    DBCollections.users
+    DBCollectionsEnum.users
   )) as User;
   const hasActiveFilters: boolean = request.query.hasActiveFilters === "true";
   const filters: StoryFilters = JSON.parse(
@@ -205,7 +209,7 @@ export const getAllUserStories = async (
 
   try {
     // Get all stories in collection
-    const allStoriesDocuments = database.collection(DBCollections.stories);
+    const allStoriesDocuments = database.collection(DBCollectionsEnum.stories);
 
     // Get all stories for this specific user (if any)
     const allUserStoriesDocuments = allStoriesDocuments
@@ -301,7 +305,7 @@ export const getOriginalStories = async (
     ];
 
     const aggregatedStories = await database
-      .collection(DBCollections.stories_library)
+      .collection(DBCollectionsEnum.stories_library)
       .aggregate(pipeline)
       .toArray();
     const { metadata, results } = aggregatedStories[0] as AggregationResult;
@@ -443,7 +447,7 @@ export const getAllUsersStories = async (
     ];
 
     const aggregatedStories = await database
-      .collection(DBCollections.stories)
+      .collection(DBCollectionsEnum.stories)
       .aggregate(pipeline)
       .toArray();
     const { metadata, results } = aggregatedStories[0] as AggregationResult;

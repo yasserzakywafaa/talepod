@@ -1,16 +1,17 @@
+import { closeDatabase, databaseInit } from "./models/mongoDb";
+import express, { NextFunction, Request, Response } from "express";
+
 import CONFIG from "./config";
 import authRoutes from "./routes/authRoutes";
 import blogsRoutes from "./routes/blogsRoutes";
-import bodyParser from "body-parser";
+import compression from "compression";
 import contactRoutes from "./routes/contactRoutes";
-import { databaseInit } from "./models/mongoDb";
-import express from "express";
 import handleCorsConfig from "./cors-config";
-import { handleCreateBulkBlogs } from "./services/create/blog";
+import helmet from "helmet";
 import openaiRoutes from "./routes/openaiRoutes";
 import paymentWebhooksRouter from "./routes/paymentsWebhooksRoutes";
 import paymentsRoutes from "./routes/paymentsRoutes";
-import { popularStories } from "./shared/mockedData/PopularStories";
+import rateLimit from "express-rate-limit";
 import storiesRoutes from "./routes/storiesRoutes";
 import testRoutes from "./routes/testRoutes";
 
@@ -38,10 +39,22 @@ handleCorsConfig(expressApp);
 // which is manipulated but the "express.json()" middleware
 expressApp.use(paymentWebhooksRouter);
 
+// Security middleware
+expressApp.use(helmet());
+expressApp.disable("x-powered-by");
+
 // Middleware
 expressApp.use(express.json());
-expressApp.use(bodyParser.json());
+expressApp.use(compression());
 expressApp.use(express.urlencoded({ extended: true }));
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per window
+});
+
+// Apply the rate limiter globally
+expressApp.use(limiter);
 
 // Mount API routes
 expressApp.use(testRoutes);
@@ -52,34 +65,52 @@ expressApp.use(authRoutes);
 expressApp.use(paymentsRoutes);
 expressApp.use(blogsRoutes);
 
+// 404 Handler
+expressApp.use((req: Request, res: Response) => {
+  res.status(404).json({ error: "🙁 Endpoint not found" });
+});
+
+// Central error handler
+expressApp.use(
+  (err: Error, req: Request, res: Response, next: NextFunction) => {
+    console.error(`❌ [${new Date().toISOString()}] Error: ${err.stack}`);
+    res.status(500).json({
+      error: CONFIG.IS_PROD ? "❌ Internal server error" : err.message,
+      stack: CONFIG.IS_DEV ? err.stack : undefined,
+    });
+  }
+);
+
 const startServer = async () => {
   try {
     // Await MongoDB database connection initialization
     await databaseInit();
+    // // Await Agenda initialization
+    // await agendaInit();
 
-    expressApp.listen(PORT, (): void => {
+    const server = expressApp.listen(PORT, (): void => {
       console.log("🎯 Server running on:>>>", {
         PORT,
         ENVIRONMENT: CONFIG.NODE_ENV,
       });
     });
 
-    // // Await Agenda initialization
-    // await agendaInit();
+    // Graceful shutdown
+    const shutdown = async (signal: string) => {
+      console.log(`Received ${signal}, shutting down...`);
+      server.close(async () => {
+        // Add any cleanup tasks here
+        await closeDatabase();
+        console.log("🚪 HTTP server closed!");
+        process.exit(0);
+      });
+    };
+
+    process.on("SIGINT", shutdown);
+    process.on("SIGTERM", shutdown);
 
     // // // Create Bulk Blogs for SEO purposes
-    // // await handleCreateBulkBlogs([...blogTopics, ...popularStories]);
-    // // await handleCreateBulkBlogs(popularStories);
-    await handleCreateBulkBlogs([
-      {
-        language: popularStories[0].language,
-        data: [popularStories[0].data[0]],
-        // data: [],
-      },
-    ]);
-    // // await handleSubmitSitemapToGoogle("sitemap-blogs.xml");
-
-    // // await handleFixBlogLinks();
+    // // await handleCreateBulkBlogs(blogTopics);
   } catch (error) {
     console.error("🤓  Server Error!", error);
   }

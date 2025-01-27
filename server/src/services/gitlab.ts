@@ -29,7 +29,8 @@ export const handleUpdateSitemapInGitLab = async (
   props: AddUrlToSiteMapParams
 ) => {
   const { siteMapFileName, newUrls } = props;
-  if (!CONFIG.GITLAB_PROJECT_ID || !CONFIG.GITLAB_ACCESS_TOKEN) return;
+  if (!CONFIG.GITLAB.GITLAB_PROJECT_ID || !CONFIG.GITLAB.GITLAB_ACCESS_TOKEN)
+    return;
 
   const filePath =
     `client/public/${siteMapFileName}` || "client/public/sitemap.xml";
@@ -41,12 +42,12 @@ export const handleUpdateSitemapInGitLab = async (
     let currentContent = "";
     // 1. Get current file content
     const fileUrl = CONFIG.GITLAB.FILE_URL(
-      CONFIG.GITLAB_PROJECT_ID,
+      CONFIG.GITLAB.GITLAB_PROJECT_ID,
       filePath,
       targetBranch
     );
     const response = await axios.get(fileUrl, {
-      headers: { "PRIVATE-TOKEN": CONFIG.GITLAB_ACCESS_TOKEN },
+      headers: { "PRIVATE-TOKEN": CONFIG.GITLAB.GITLAB_ACCESS_TOKEN },
     });
 
     if (response.status === 200) {
@@ -71,7 +72,7 @@ export const handleUpdateSitemapInGitLab = async (
     const updatedContent = await handleAddUrlToSitemap(currentContent, newUrls);
 
     // 4. Push update to GitLab
-    const updateUrl = CONFIG.GITLAB.UPDATE_URL(CONFIG.GITLAB_PROJECT_ID);
+    const updateUrl = CONFIG.GITLAB.UPDATE_URL(CONFIG.GITLAB.GITLAB_PROJECT_ID);
     const commitData: GitLabFileUpdate = {
       branch: targetBranch,
       commit_message: `Add ${newUrls.length} new URL(s) to "${siteMapFileName}" file.`,
@@ -93,7 +94,7 @@ export const handleUpdateSitemapInGitLab = async (
     try {
       await axios.post(updateUrl, commitData, {
         headers: {
-          "PRIVATE-TOKEN": CONFIG.GITLAB_ACCESS_TOKEN,
+          "PRIVATE-TOKEN": CONFIG.GITLAB.GITLAB_ACCESS_TOKEN,
           "Content-Type": "application/json",
         },
       });

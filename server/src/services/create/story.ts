@@ -1,5 +1,5 @@
 import {
-  DBCollections,
+  DBCollectionsEnum,
   getDocumentFromDb,
   saveStoryToDb,
 } from "../../models/mongoDb";
@@ -61,7 +61,7 @@ export const handleCreateStory = async (
 ) => {
   const user = (await getDocumentFromDb(
     new ObjectId(userInfo._id),
-    DBCollections.users
+    DBCollectionsEnum.users
   )) as User;
 
   const createAndExtractStoryParts = async (): Promise<StoryParts> => {
@@ -131,7 +131,7 @@ export const handleCreateStory = async (
             .toString()
             .slice(-9)}`,
         },
-        DBCollections.stories
+        DBCollectionsEnum.stories
       )) as Story;
       storyData["slug"] = storyWithSlug.slug;
     } catch (error) {
@@ -149,7 +149,7 @@ export const handleCreateStory = async (
             storyCount: user.storyCount + 1,
             stories: [...user.stories, storyId.toString()],
           },
-          DBCollections.users
+          DBCollectionsEnum.users
         )) as User;
 
         console.log(`✅ User updated with new storyId:>>>`, {

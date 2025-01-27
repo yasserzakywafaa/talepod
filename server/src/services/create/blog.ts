@@ -1,6 +1,6 @@
 import { BaseDataParams, Blog, BlogData, BlogParts } from "../../models/types";
 import {
-  DBCollections,
+  DBCollectionsEnum,
   getDocumentByFieldFromDb,
   saveBlogToDb,
 } from "../../models/mongoDb";
@@ -80,7 +80,7 @@ export const handleCreateBlog = async (
         return undefined;
       }
     } catch (error) {
-      throw new Error(`${error}`);
+      throw error;
     } finally {
       blogParts = undefined;
     }
@@ -114,7 +114,7 @@ export const handleCreateBlog = async (
             .toString()
             .slice(-6)}`,
         },
-        DBCollections.blogs
+        DBCollectionsEnum.blogs
       )) as Blog;
       blogData["slug"] = blogWithSlug.slug;
     } catch (error) {
@@ -158,7 +158,7 @@ export const handleCreateBulkBlogs = async (
             const linkedBlog = await getDocumentByFieldFromDb(
               "language",
               language.value,
-              DBCollections.blogs
+              DBCollectionsEnum.blogs
             );
 
             const newBlog: Partial<Blog> | undefined = await handleCreateBlog(
