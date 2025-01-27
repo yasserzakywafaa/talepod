@@ -176,7 +176,11 @@ export const handleCreateBulkBlogs = async (
                 `${CONFIG.APP_URL}/blog/${newBlog.slug}` + "\n"
               );
 
-              console.log("⏸️  EXTRA", { tempFilePath });
+              console.log("⏸️  EXTRA", {
+                slug: newBlog?.slug,
+                blogsUrlsToIncludeInSitemap,
+                tempFilePath,
+              });
 
               // Force garbage collection
               if (global.gc) global.gc();
