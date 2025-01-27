@@ -6,8 +6,9 @@ import bodyParser from "body-parser";
 import contactRoutes from "./routes/contactRoutes";
 import { databaseInit } from "./models/mongoDb";
 import express from "express";
+import { getCreateBlogPrompt } from "./services/create/getCreateBlogPrompt";
 import handleCorsConfig from "./cors-config";
-import { handleCreateBulkBlogs } from "./services/create/blog";
+import { handleCreateBlog } from "./services/create/blog";
 import openaiRoutes from "./routes/openaiRoutes";
 import paymentWebhooksRouter from "./routes/paymentsWebhooksRoutes";
 import paymentsRoutes from "./routes/paymentsRoutes";
@@ -71,16 +72,22 @@ const startServer = async () => {
     // // // Create Bulk Blogs for SEO purposes
     // // await handleCreateBulkBlogs([...blogTopics, ...popularStories]);
     // // await handleCreateBulkBlogs(popularStories);
-    await handleCreateBulkBlogs([
-      {
-        language: popularStories[0].language,
-        data: [popularStories[0].data[0]],
-        // data: [],
-      },
-    ]);
+    // await handleCreateBulkBlogs([
+    //   {
+    //     language: popularStories[0].language,
+    //     data: [popularStories[0].data[0]],
+    //     // data: [],
+    //   },
+    // ]);
     // // await handleSubmitSitemapToGoogle("sitemap-blogs.xml");
 
     // // await handleFixBlogLinks();
+
+    const createBlogPrompt = getCreateBlogPrompt(
+      popularStories[0].data[0],
+      popularStories[0].language
+    );
+    await handleCreateBlog(createBlogPrompt, popularStories[0].language);
   } catch (error) {
     console.error("❌  Server Error!", error);
   }
