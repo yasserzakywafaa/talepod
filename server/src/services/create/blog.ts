@@ -9,24 +9,27 @@ import { Languages, SupportedLanguages } from "../../utils/languages";
 import CONFIG from "../../config";
 import { ObjectId } from "mongodb";
 import OpenAi from "openai";
-import axios from "axios";
 import extractBlogParts from "../../utils/extractBlogParts";
+import fs from "fs";
 import { getCreateBlogPrompt } from "./getCreateBlogPrompt";
 import { getSlugFromText } from "../../utils/stringUtils";
 import { handleSubmitSitemapToGoogle } from "../googleapis";
 import { handleUpdateSitemapInGitLab } from "../gitlab";
+import path from "path";
 import retry from "../../utils/retryFunction";
 import { updateDocument } from "../../models/mongoDb/crudOperations";
 
-const openai = new OpenAi();
 const siteMapFileName = "sitemap-blogs.xml";
 
 export const handleCreateBlogRequest = async (
   blogPrompt: string
 ): Promise<string | null> => {
+  const maxPromptTokens = 4000; // GPT-4 token limit
+  const maxTokens = Math.min(maxPromptTokens - blogPrompt.length, 1000); // Adjust max tokens
+
   try {
     console.log("🛠️  Sending Request to AI to create a Blog  🛠️");
-    // OpenAI Text Generation API Call
+    const openai = new OpenAi();
     const createRequest = await openai.chat.completions.create({
       // const createRequest = await axios.post(
       // "http://192.168.1.3:1234/v1/chat/completions",
@@ -45,7 +48,7 @@ export const handleCreateBlogRequest = async (
       ],
       model: CONFIG.OPENAI_MODEL_NAME ?? "gpt-4o",
       n: 1,
-      max_tokens: 1000,
+      max_tokens: maxTokens,
       temperature: 0.4,
     });
 
@@ -62,19 +65,22 @@ export const handleCreateBlog = async (
 ): Promise<Partial<Blog>> => {
   console.log("🛠️  Creating Blog  🛠️");
 
+  let blogId: ObjectId;
+  let blogParts: BlogParts;
+
   const createAndExtractBlogParts = async (): Promise<BlogParts> => {
     try {
       const response = await handleCreateBlogRequest(blogPrompt);
-      const blogParts = extractBlogParts(response);
+      blogParts = extractBlogParts(response);
 
       return blogParts;
     } catch (error) {
       throw new Error(`${error}`);
+    } finally {
+      blogParts = null;
     }
   };
 
-  let blogId: ObjectId;
-  let blogParts: BlogParts;
   try {
     try {
       blogParts = await retry(createAndExtractBlogParts, 3, 2000);
@@ -132,7 +138,9 @@ export const handleCreateBulkBlogs = async (
   dataToCreateArray: BaseDataParams[],
   blogPrompt?: string
 ) => {
-  const blogsUrlsToIncludeInSitemap = [];
+  // const blogsUrlsToIncludeInSitemap = [];
+  // File for temporary storing blogs URLs
+  const tempFilePath = path.join(__dirname, "temp_sitemap_urls.txt");
 
   for (const dataToCreate of dataToCreateArray) {
     for (const language of Languages) {
@@ -148,9 +156,6 @@ export const handleCreateBulkBlogs = async (
             DBCollections.blogs
           );
           const linkedBlogFullUrl = `${CONFIG.APP_URL}/blog/${linkedBlog?.slug}`;
-
-          console.log("📋  Linked Blog URL:>>>", linkedBlogFullUrl);
-
           const createBlogPrompt = linkedBlog?._id
             ? getCreateBlogPrompt(data, language.value, {
                 title: linkedBlog.title,
@@ -163,30 +168,47 @@ export const handleCreateBulkBlogs = async (
               createBlogPrompt,
               language.value
             );
-            if (newBlog && newBlog.slug) {
-              blogsUrlsToIncludeInSitemap.push(
-                `${CONFIG.APP_URL}/blog/${newBlog.slug}`
-              );
 
-              console.log("🧮  Blogs Count:>>>", {
-                count: blogsUrlsToIncludeInSitemap.length,
-                blogsUrlsToIncludeInSitemap,
-              });
+            if (newBlog?.slug) {
+              // blogsUrlsToIncludeInSitemap.push(
+              //   `${CONFIG.APP_URL}/blog/${newBlog.slug}`
+              // );
+
+              const newBlogFullUrl = `${CONFIG.APP_URL}/blog/${newBlog.slug}`;
+              // Write the URL to a file immediately (memory efficient)
+              fs.appendFileSync(tempFilePath, newBlogFullUrl + "\n");
+
+              // console.log(
+              //   "🧮  Blogs Count:>>>",
+              //   blogsUrlsToIncludeInSitemap.length
+              // );
+
+              // Force garbage collection
+              if (global.gc) global.gc();
             }
           } catch (error) {
             console.error("❌  handleCreateBlog error", error);
             continue;
           }
-
-          // Force garbage collection every 5 blogs
-          if (blogsUrlsToIncludeInSitemap.length % 5 === 0 && global.gc) {
-            global.gc();
-            await new Promise((resolve) => setTimeout(resolve, 500)); // Add small delay
-          }
         }
       }
     }
   }
+
+  // Process the saved URLs in the file
+  const blogsUrlsToIncludeInSitemap = fs
+    .readFileSync(tempFilePath, "utf-8")
+    .split("\n");
+
+  // Remove the file
+  fs.unlink(tempFilePath, (error) => {
+    if (error) {
+      console.error(`❌ Error removing file: ${error}`);
+      return;
+    }
+
+    console.log(`✅  File ${tempFilePath} has been successfully removed.`);
+  });
 
   if (blogsUrlsToIncludeInSitemap.length && !CONFIG.IS_DEV && CONFIG.IS_PROD) {
     // Add new created blogs URLs to sitemap-blogs.xml file
