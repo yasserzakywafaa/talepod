@@ -11,7 +11,7 @@ import extractBlogParts from "../../utils/extractBlogParts";
 import { getSlugFromText } from "../../utils/stringUtils";
 // import { handleSubmitSitemapToGoogle } from "../googleapis";
 // import { handleUpdateSitemapInGitLab } from "../gitlab";
-// import path from "path";
+import path from "path";
 import retry from "../../utils/retryFunction";
 import { updateDocument } from "../../models/mongoDb/crudOperations";
 
@@ -133,8 +133,8 @@ export const handleCreateBulkBlogs = async (
   dataToCreateArray: BaseDataParams[],
   blogPrompt?: string
 ) => {
-  // let blogsUrlsToIncludeInSitemap: string[] = [];
-  // const tempFilePath = path.join(__dirname, "temp_sitemap_urls.txt");
+  let blogsUrlsToIncludeInSitemap: string[] = [];
+  const tempFilePath = path.join(__dirname, "temp_sitemap_urls.txt");
 
   for (const dataToCreate of dataToCreateArray) {
     for (const language of Languages) {
@@ -143,6 +143,11 @@ export const handleCreateBulkBlogs = async (
 
         for (const data of dataToCreate.data) {
           console.log("⌛︎  Current Data:>>>", data);
+
+          console.log("⏸️  EXTRA:>>>", {
+            blogsUrlsToIncludeInSitemap,
+            tempFilePath,
+          });
 
           //       try {
           //         console.log("⏸️  Create LOGIC here");
