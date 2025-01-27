@@ -10,9 +10,8 @@ import CONFIG from "../../config";
 import { ObjectId } from "mongodb";
 import OpenAi from "openai";
 import extractBlogParts from "../../utils/extractBlogParts";
+import fs from "fs";
 import { getCreateBlogPrompt } from "./getCreateBlogPrompt";
-// import fs from "fs";
-// import { getCreateBlogPrompt } from "./getCreateBlogPrompt";
 import { getSlugFromText } from "../../utils/stringUtils";
 // import { handleSubmitSitemapToGoogle } from "../googleapis";
 // import { handleUpdateSitemapInGitLab } from "../gitlab";
@@ -170,20 +169,18 @@ export const handleCreateBulkBlogs = async (
               language.value
             );
 
-            console.log("⏸️  EXTRA", {
-              newBlog,
-              blogsUrlsToIncludeInSitemap,
-              tempFilePath,
-            });
+            if (newBlog?.slug) {
+              // Write the URL to a file immediately (memory efficient)
+              fs.appendFileSync(
+                tempFilePath,
+                `${CONFIG.APP_URL}/blog/${newBlog.slug}` + "\n"
+              );
 
-            // if (newBlog?.slug) {
-            //   const newBlogFullUrl = `${CONFIG.APP_URL}/blog/${newBlog.slug}`;
-            //   // Write the URL to a file immediately (memory efficient)
-            //   fs.appendFileSync(tempFilePath, newBlogFullUrl + "\n");
+              console.log("⏸️  EXTRA", { tempFilePath });
 
-            //   // Force garbage collection
-            //   if (global.gc) global.gc();
-            // }
+              // Force garbage collection
+              if (global.gc) global.gc();
+            }
           } catch (error) {
             console.error("❌  handleCreateBlog error", error);
             continue;
@@ -193,26 +190,26 @@ export const handleCreateBulkBlogs = async (
     }
   }
 
-  // try {
-  //   // Process the saved URLs in the file
-  //   blogsUrlsToIncludeInSitemap = fs
-  //     .readFileSync(tempFilePath, "utf-8")
-  //     .split("\n");
-  // } catch (error) {
-  //   throw new Error(`❌ Error reading file "${tempFilePath}"!`, {
-  //     cause: error,
-  //   });
-  // }
+  try {
+    // Process the saved URLs in the file
+    blogsUrlsToIncludeInSitemap = fs
+      .readFileSync(tempFilePath, "utf-8")
+      .split("\n");
+  } catch (error) {
+    throw new Error(`❌ Error reading file "${tempFilePath}"!`, {
+      cause: error,
+    });
+  }
 
-  // try {
-  //   // Remove the file
-  //   fs.unlinkSync(tempFilePath);
-  //   console.log(`✅  File ${tempFilePath} has been successfully removed.`);
-  // } catch (error) {
-  //   throw new Error(`❌ Error removing file "${tempFilePath}"!`, {
-  //     cause: error,
-  //   });
-  // }
+  try {
+    // Remove the file
+    fs.unlinkSync(tempFilePath);
+    console.log(`✅  File ${tempFilePath} has been successfully removed.`);
+  } catch (error) {
+    throw new Error(`❌ Error removing file "${tempFilePath}"!`, {
+      cause: error,
+    });
+  }
 
   // if (blogsUrlsToIncludeInSitemap.length && !CONFIG.IS_DEV && CONFIG.IS_PROD) {
   //   // Add new created blogs URLs to sitemap-blogs.xml file
