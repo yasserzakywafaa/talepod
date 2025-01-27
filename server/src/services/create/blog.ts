@@ -1,21 +1,17 @@
 import { BaseDataParams, Blog, BlogData, BlogParts } from "../../models/types";
-import {
-  DBCollections,
-  getDocumentByFieldFromDb,
-  saveBlogToDb,
-} from "../../models/mongoDb";
+import { DBCollections, saveBlogToDb } from "../../models/mongoDb";
 import { Languages, SupportedLanguages } from "../../utils/languages";
 
 import CONFIG from "../../config";
 import { ObjectId } from "mongodb";
 import OpenAi from "openai";
 import extractBlogParts from "../../utils/extractBlogParts";
-import fs from "fs";
-import { getCreateBlogPrompt } from "./getCreateBlogPrompt";
+// import fs from "fs";
+// import { getCreateBlogPrompt } from "./getCreateBlogPrompt";
 import { getSlugFromText } from "../../utils/stringUtils";
 import { handleSubmitSitemapToGoogle } from "../googleapis";
 import { handleUpdateSitemapInGitLab } from "../gitlab";
-import path from "path";
+// import path from "path";
 import retry from "../../utils/retryFunction";
 import { updateDocument } from "../../models/mongoDb/crudOperations";
 
@@ -138,7 +134,7 @@ export const handleCreateBulkBlogs = async (
   blogPrompt?: string
 ) => {
   let blogsUrlsToIncludeInSitemap: string[] = [];
-  const tempFilePath = path.join(__dirname, "temp_sitemap_urls.txt");
+  // const tempFilePath = path.join(__dirname, "temp_sitemap_urls.txt");
 
   for (const dataToCreate of dataToCreateArray) {
     for (const language of Languages) {
@@ -149,34 +145,35 @@ export const handleCreateBulkBlogs = async (
           console.log("⌛︎  Current Data:>>>", data);
 
           try {
-            const linkedBlog = await getDocumentByFieldFromDb(
-              "language",
-              language.value,
-              DBCollections.blogs
-            );
+            console.log("⏸️  Create LOGIC here");
+            // const linkedBlog = await getDocumentByFieldFromDb(
+            //   "language",
+            //   language.value,
+            //   DBCollections.blogs
+            // );
 
-            const newBlog: Partial<Blog> = await handleCreateBlog(
-              getCreateBlogPrompt(
-                data,
-                language.value,
-                linkedBlog?._id
-                  ? {
-                      title: linkedBlog.title,
-                      url: `${CONFIG.APP_URL}/blog/${linkedBlog?.slug}`,
-                    }
-                  : undefined
-              ),
-              language.value
-            );
+            // const newBlog: Partial<Blog> = await handleCreateBlog(
+            //   getCreateBlogPrompt(
+            //     data,
+            //     language.value,
+            //     linkedBlog?._id
+            //       ? {
+            //           title: linkedBlog.title,
+            //           url: `${CONFIG.APP_URL}/blog/${linkedBlog?.slug}`,
+            //         }
+            //       : undefined
+            //   ),
+            //   language.value
+            // );
 
-            if (newBlog?.slug) {
-              const newBlogFullUrl = `${CONFIG.APP_URL}/blog/${newBlog.slug}`;
-              // Write the URL to a file immediately (memory efficient)
-              fs.appendFileSync(tempFilePath, newBlogFullUrl + "\n");
+            // if (newBlog?.slug) {
+            //   const newBlogFullUrl = `${CONFIG.APP_URL}/blog/${newBlog.slug}`;
+            //   // Write the URL to a file immediately (memory efficient)
+            //   fs.appendFileSync(tempFilePath, newBlogFullUrl + "\n");
 
-              // Force garbage collection
-              if (global.gc) global.gc();
-            }
+            //   // Force garbage collection
+            //   if (global.gc) global.gc();
+            // }
           } catch (error) {
             console.error("❌  handleCreateBlog error", error);
             continue;
@@ -186,26 +183,26 @@ export const handleCreateBulkBlogs = async (
     }
   }
 
-  try {
-    // Process the saved URLs in the file
-    blogsUrlsToIncludeInSitemap = fs
-      .readFileSync(tempFilePath, "utf-8")
-      .split("\n");
-  } catch (error) {
-    throw new Error(`❌ Error reading file "${tempFilePath}"!`, {
-      cause: error,
-    });
-  }
+  // try {
+  //   // Process the saved URLs in the file
+  //   blogsUrlsToIncludeInSitemap = fs
+  //     .readFileSync(tempFilePath, "utf-8")
+  //     .split("\n");
+  // } catch (error) {
+  //   throw new Error(`❌ Error reading file "${tempFilePath}"!`, {
+  //     cause: error,
+  //   });
+  // }
 
-  try {
-    // Remove the file
-    fs.unlinkSync(tempFilePath);
-    console.log(`✅  File ${tempFilePath} has been successfully removed.`);
-  } catch (error) {
-    throw new Error(`❌ Error removing file "${tempFilePath}"!`, {
-      cause: error,
-    });
-  }
+  // try {
+  //   // Remove the file
+  //   fs.unlinkSync(tempFilePath);
+  //   console.log(`✅  File ${tempFilePath} has been successfully removed.`);
+  // } catch (error) {
+  //   throw new Error(`❌ Error removing file "${tempFilePath}"!`, {
+  //     cause: error,
+  //   });
+  // }
 
   if (blogsUrlsToIncludeInSitemap.length && !CONFIG.IS_DEV && CONFIG.IS_PROD) {
     // Add new created blogs URLs to sitemap-blogs.xml file
