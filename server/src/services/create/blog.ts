@@ -13,13 +13,13 @@ import extractBlogParts from "../../utils/extractBlogParts";
 import fs from "fs";
 import { getCreateBlogPrompt } from "./getCreateBlogPrompt";
 import { getSlugFromText } from "../../utils/stringUtils";
-// import { handleSubmitSitemapToGoogle } from "../googleapis";
-// import { handleUpdateSitemapInGitLab } from "../gitlab";
+import { handleSubmitSitemapToGoogle } from "../googleapis";
+import { handleUpdateSitemapInGitLab } from "../gitlab";
 import path from "path";
 import retry from "../../utils/retryFunction";
 import { updateDocument } from "../../models/mongoDb/crudOperations";
 
-// const siteMapFileName = "sitemap-blogs.xml";
+const siteMapFileName = "sitemap-blogs.xml";
 
 export const handleCreateBlogRequest = async (
   blogPrompt: string
@@ -61,22 +61,28 @@ export const handleCreateBlogRequest = async (
 export const handleCreateBlog = async (
   blogPrompt: string,
   language: SupportedLanguages
-): Promise<Partial<Blog>> => {
+): Promise<Partial<Blog | undefined>> => {
   console.log("🛠️  Creating Blog  🛠️");
 
   let blogId: ObjectId;
-  let blogParts: BlogParts;
+  let blogParts: BlogParts | undefined;
 
-  const createAndExtractBlogParts = async (): Promise<BlogParts> => {
+  const createAndExtractBlogParts = async (): Promise<
+    BlogParts | undefined
+  > => {
     try {
       const response = await handleCreateBlogRequest(blogPrompt);
-      blogParts = extractBlogParts(response);
 
-      return blogParts;
+      if (response) {
+        blogParts = extractBlogParts(response);
+        return blogParts;
+      } else {
+        return undefined;
+      }
     } catch (error) {
       throw new Error(`${error}`);
     } finally {
-      blogParts = null;
+      blogParts = undefined;
     }
   };
 
@@ -84,7 +90,7 @@ export const handleCreateBlog = async (
     try {
       blogParts = await retry(createAndExtractBlogParts, 3, 2000);
     } catch (error) {
-      throw new Error(`${error}`);
+      throw error;
     }
 
     if (!blogParts) return undefined;
@@ -155,7 +161,7 @@ export const handleCreateBulkBlogs = async (
               DBCollections.blogs
             );
 
-            const newBlog: Partial<Blog> = await handleCreateBlog(
+            const newBlog: Partial<Blog> | undefined = await handleCreateBlog(
               getCreateBlogPrompt(
                 data,
                 language.value,
@@ -175,13 +181,6 @@ export const handleCreateBulkBlogs = async (
                 tempFilePath,
                 `${CONFIG.APP_URL}/blog/${newBlog.slug}` + "\n"
               );
-
-              console.log("⏸️  EXTRA", {
-                slug: newBlog?.slug,
-                blogsUrlsToIncludeInSitemap,
-                tempFilePath,
-              });
-
               // Force garbage collection
               if (global.gc) global.gc();
             }
@@ -208,23 +207,23 @@ export const handleCreateBulkBlogs = async (
   try {
     // Remove the file
     fs.unlinkSync(tempFilePath);
-    console.log(`✅  File ${tempFilePath} has been successfully removed.`);
+    console.log(`✅ File ${tempFilePath} has been successfully removed.`);
   } catch (error) {
     throw new Error(`❌ Error removing file "${tempFilePath}"!`, {
       cause: error,
     });
   }
 
-  // if (blogsUrlsToIncludeInSitemap.length && !CONFIG.IS_DEV && CONFIG.IS_PROD) {
-  //   // Add new created blogs URLs to sitemap-blogs.xml file
-  //   await handleUpdateSitemapInGitLab({
-  //     newUrls: blogsUrlsToIncludeInSitemap,
-  //     siteMapFileName,
-  //   });
+  if (blogsUrlsToIncludeInSitemap.length && !CONFIG.IS_DEV && CONFIG.IS_PROD) {
+    // Add new created blogs URLs to sitemap-blogs.xml file
+    await handleUpdateSitemapInGitLab({
+      newUrls: blogsUrlsToIncludeInSitemap,
+      siteMapFileName,
+    });
 
-  //   // Submit the update sitemap-blogs.xml file to Google
-  //   setTimeout(async () => {
-  //     await handleSubmitSitemapToGoogle(siteMapFileName);
-  //   }, 300000); // 5 minutes
-  // }
+    // Submit the update sitemap-blogs.xml file to Google
+    setTimeout(async () => {
+      await handleSubmitSitemapToGoogle(siteMapFileName);
+    }, 300000); // 5 minutes
+  }
 };

@@ -71,6 +71,6 @@ export const deleteDocument = async (
 
     return result.deletedCount === 1;
   } catch (error) {
-    throw new Error("❌ Failed to delete document!", error);
+    throw new Error("❌ Failed to delete document!", { cause: error });
   }
 };

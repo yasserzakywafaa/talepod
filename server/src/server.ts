@@ -16,7 +16,7 @@ import testRoutes from "./routes/testRoutes";
 
 const expressApp = express();
 
-const getPort = (): string => {
+const getPort = (): string | undefined => {
   // If process.env.PORT is set, use it.
   if (process.env.PORT) return process.env.PORT;
 

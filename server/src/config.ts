@@ -40,7 +40,7 @@ const CONFIG = {
   GOOGLE_TYPE: process.env.GOOGLE_TYPE,
   GOOGLE_PROJECT_ID: process.env.GOOGLE_PROJECT_ID,
   GOOGLE_PRIVATE_KEY_ID: process.env.GOOGLE_PRIVATE_KEY_ID,
-  GOOGLE_PRIVATE_KEY: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"), // Fix newline formatting,
+  GOOGLE_PRIVATE_KEY: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n"), // Fix newline formatting,
   GOOGLE_CLIENT_EMAIL: process.env.GOOGLE_CLIENT_EMAIL,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_AUTH_URI: process.env.GOOGLE_AUTH_URI,

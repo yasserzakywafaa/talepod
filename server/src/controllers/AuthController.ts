@@ -42,6 +42,9 @@ export const authByGoogle = async (
       family_name: familyName,
       picture,
     } = verifyResponseData;
+
+    if (!userId) return;
+
     let user: User = {
       ...getInitialUserData(),
       userId,

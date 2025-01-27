@@ -26,7 +26,7 @@ const openai = new OpenAi();
 
 export const handleCreateStoryRequest = async (
   storyPrompt: string
-): Promise<string> => {
+): Promise<string | null> => {
   try {
     // OpenAI Text Generation API Call
     const createRequest = await openai.chat.completions.create({
@@ -41,7 +41,7 @@ export const handleCreateStoryRequest = async (
           content: storyPrompt,
         },
       ],
-      model: CONFIG.OPENAI_MODEL_NAME,
+      model: CONFIG.OPENAI_MODEL_NAME ?? "gpt-4o",
       n: 1,
       max_tokens: 1000,
       temperature: 0.4,
@@ -67,7 +67,7 @@ export const handleCreateStory = async (
   const createAndExtractStoryParts = async (): Promise<StoryParts> => {
     const openaiResponse = await handleCreateStoryRequest(storyPrompt);
 
-    if (openaiResponse.length) {
+    if (openaiResponse && openaiResponse.length) {
       // Extract the parts from the story
       return extractStoryParts(openaiResponse);
     } else {
@@ -77,6 +77,7 @@ export const handleCreateStory = async (
 
   if (
     user.role !== UserRole.admin &&
+    user.subscription &&
     user.storyCount >= user.subscription.maxStoriesAllowed
   ) {
     throw new Error(
@@ -89,7 +90,7 @@ export const handleCreateStory = async (
     );
   }
 
-  let storyId: ObjectId;
+  let storyId: ObjectId | undefined;
   let storyParts: StoryParts;
   try {
     storyParts = await retry(createAndExtractStoryParts, 3, 2000);
@@ -108,7 +109,8 @@ export const handleCreateStory = async (
       author: user._id,
       createdAt: new Date(),
       isPremium:
-        user.isPaidUser && user.subscription.type !== SubscriptionPlanEnum.Free,
+        user.isPaidUser &&
+        user.subscription?.type !== SubscriptionPlanEnum.Free,
     };
     const updatedStoryParams: StoryParams = {
       ...storyParams,
@@ -118,6 +120,8 @@ export const handleCreateStory = async (
     try {
       // Save story to MongoDB Atlas
       storyId = await saveStoryToDb(storyData, profileInfo, updatedStoryParams);
+
+      if (!storyId) return;
 
       // Update the story document with the slug (title + id)
       const storyWithSlug = (await updateDocument<Story>(
@@ -130,14 +134,6 @@ export const handleCreateStory = async (
         DBCollections.stories
       )) as Story;
       storyData["slug"] = storyWithSlug.slug;
-
-      return {
-        ...storyData,
-        _id: storyId,
-        profileInfo,
-        storyParams,
-        createdAt: new Date(),
-      };
     } catch (error) {
       throw new Error("❌ Failed to save the created story to Db", {
         cause: error,
@@ -168,10 +164,17 @@ export const handleCreateStory = async (
     }
 
     console.log("✅ Story Created Successfully", {
-      //   request: request.path,
       storySlug: storyData.slug,
       MODEL_NAME: CONFIG.OPENAI_MODEL_NAME,
     });
+
+    return {
+      ...storyData,
+      _id: storyId,
+      profileInfo,
+      storyParams,
+      createdAt: new Date(),
+    };
   } catch (error) {
     throw new Error(`❌ Failed to create a story! ${error}`);
   }

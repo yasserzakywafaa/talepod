@@ -28,8 +28,12 @@ export const handleFixBlogLinks = async (): Promise<{
 
   try {
     while (true) {
-      // Get blogs in batches
-      const { results } = await handleGetAllBlogs({ pageNumber, pageSize });
+      const allBlogs = await handleGetAllBlogs({ pageNumber, pageSize });
+      if (!allBlogs) {
+        throw new Error("❌ Failed to fetch all blogs!");
+      }
+
+      const { results } = allBlogs;
       if (!results || results.length === 0) break;
 
       totalCount += results.length;
@@ -79,8 +83,7 @@ export const handleFixBlogLinks = async (): Promise<{
     console.log(`✅ Fixed links in ${fixedCount} of ${totalCount} blogs`);
     return { fixed: fixedCount, total: totalCount };
   } catch (error) {
-    console.error("❌ Error fixing blog links:", error);
-    throw new Error("Failed to fix blog links");
+    throw new Error("❌ Error fixing blog link", { cause: error });
   }
 };
 
@@ -90,7 +93,6 @@ export const handleGetAllBlogs = async (
   try {
     const { pageNumber = 1, pageSize = 20 } = pagingInfo;
 
-    // Aggregation pipeline
     const pipeline = [
       {
         $facet: {
@@ -98,7 +100,6 @@ export const handleGetAllBlogs = async (
             { $count: "totalDocumentsCount" },
             { $addFields: { pageNumber, pageSize } },
           ],
-          // Paginate results
           results: [
             { $skip: (pageNumber - 1) * pageSize },
             { $limit: pageSize },
@@ -132,10 +133,10 @@ export const handleGetAllBlogs = async (
       paging,
     };
   } catch (error) {
-    console.error("❌ Failed to get all blogs!", {
-      error,
+    throw new Error("❌ Failed to get all blogs!", {
+      cause: error,
     });
-    return undefined;
+    // return undefined;
   }
 };
 
@@ -155,7 +156,7 @@ export const handleGetBlogBySlug = async (blogSlug: string): Promise<Blog> => {
     if (results.length > 0) {
       const blog = results[0] as Blog;
       console.log("✅ Get Blog by slug:", {
-        blogSlug
+        blogSlug,
       });
       return blog;
     } else {

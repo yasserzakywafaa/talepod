@@ -16,7 +16,7 @@ const webhookSecret = CONFIG.IS_DEV
   ? CONFIG.STRIPE_TEST_WEBHOOK_SECRET
   : CONFIG.STRIPE_LIVE_WEBHOOK_SECRET;
 
-const stripe = new Stripe(secretKey, {
+const stripe = new Stripe(secretKey ?? "", {
   typescript: true,
 });
 
@@ -153,7 +153,8 @@ export const createCheckoutSession = async (
     try {
       // Send current session to Google Analytics
       const timeStamp = session.created * 1000;
-      const totalAmount = session.amount_total / 100;
+      const totalAmount =
+        (session.amount_total && session.amount_total / 100) ?? 0;
       const payload: GoogleAnalyticsPayload = {
         timestamp_micros: timeStamp,
         client_id: googleAnalyticsClientId || "1234567890.987654321",
@@ -166,7 +167,7 @@ export const createCheckoutSession = async (
               value: totalAmount,
               affiliation: undefined,
               transaction_id: undefined,
-              currency: session.currency,
+              currency: session.currency ?? "eur",
               event_timestamp: timeStamp,
               items: [
                 {
@@ -209,8 +210,8 @@ export const webhook = async (
   try {
     event = stripe.webhooks.constructEvent(
       request.body,
-      request.headers["stripe-signature"],
-      webhookSecret
+      request.headers["stripe-signature"] ?? "",
+      webhookSecret ?? ""
     );
     await handleWebhookEvents(event);
 
@@ -402,7 +403,7 @@ export const handleUpdateUserSubscription = async (
     console.log("handleUpdateUserSubscription:>>> 2️⃣", {
       user,
       userInfoToUpdate,
-      paymentHistory: userInfoToUpdate.subscription.paymentHistory[0],
+      paymentHistory: userInfoToUpdate.subscription?.paymentHistory?.[0],
     });
 
     await updateUserInDb(subscription.metadata.userId, {
@@ -426,7 +427,7 @@ export const handleSendSubscriptionToGoogleAnalytics = async (
   const payload: GoogleAnalyticsPayload = {
     timestamp_micros: invoice.created * 1000,
     client_id:
-      invoice.subscription_details.metadata.googleAnalyticsClientId ||
+      invoice.subscription_details?.metadata?.googleAnalyticsClientId ||
       "1234567890.987654321",
     non_personalized_ads: true,
     events: [
@@ -441,7 +442,9 @@ export const handleSendSubscriptionToGoogleAnalytics = async (
           event_timestamp: invoice.created * 1000,
           items: [
             {
-              item_name: invoice.subscription_details.metadata.subscriptionPlan, // Plan name
+              item_name:
+                invoice.subscription_details?.metadata?.subscriptionPlan ??
+                SubscriptionPlanEnum.Premium, // Plan name
               item_id: subscriptionId,
               price: totalAmount,
               quantity: 1,
@@ -459,8 +462,8 @@ export const sendToGoogleAnalytics = async (
   payload: GoogleAnalyticsPayload
 ): Promise<void> => {
   const POST_URL = CONFIG.GOOGLE_ANALYTICS_TRACKING_URL(
-    CONFIG.GOOGLE_ANALYTICS_MEASUREMENT_ID,
-    CONFIG.GOOGLE_ANALYTICS_API_SECRET
+    CONFIG.GOOGLE_ANALYTICS_MEASUREMENT_ID ?? "",
+    CONFIG.GOOGLE_ANALYTICS_API_SECRET ?? ""
   );
 
   console.log("✅ sendToGoogleAnalytics:>>>", POST_URL, payload);
