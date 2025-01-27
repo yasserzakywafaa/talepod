@@ -1,5 +1,9 @@
 import { BaseDataParams, Blog, BlogData, BlogParts } from "../../models/types";
-import { DBCollections, saveBlogToDb } from "../../models/mongoDb";
+import {
+  DBCollections,
+  getDocumentByFieldFromDb,
+  saveBlogToDb,
+} from "../../models/mongoDb";
 import { Languages, SupportedLanguages } from "../../utils/languages";
 
 import CONFIG from "../../config";
@@ -144,45 +148,44 @@ export const handleCreateBulkBlogs = async (
         for (const data of dataToCreate.data) {
           console.log("⌛︎  Current Data:>>>", data);
 
-          console.log("⏸️  EXTRA:>>>", {
-            blogsUrlsToIncludeInSitemap,
-            tempFilePath,
-          });
+          try {
+            const linkedBlog = await getDocumentByFieldFromDb(
+              "language",
+              language.value,
+              DBCollections.blogs
+            );
+            console.log("⏸️  linkedBlog", {
+              linkedBlog,
+              blogsUrlsToIncludeInSitemap,
+              tempFilePath,
+            });
 
-          //       try {
-          //         console.log("⏸️  Create LOGIC here");
-          //         // const linkedBlog = await getDocumentByFieldFromDb(
-          //         //   "language",
-          //         //   language.value,
-          //         //   DBCollections.blogs
-          //         // );
+            // const newBlog: Partial<Blog> = await handleCreateBlog(
+            //   getCreateBlogPrompt(
+            //     data,
+            //     language.value,
+            //     linkedBlog?._id
+            //       ? {
+            //           title: linkedBlog.title,
+            //           url: `${CONFIG.APP_URL}/blog/${linkedBlog?.slug}`,
+            //         }
+            //       : undefined
+            //   ),
+            //   language.value
+            // );
 
-          //         // const newBlog: Partial<Blog> = await handleCreateBlog(
-          //         //   getCreateBlogPrompt(
-          //         //     data,
-          //         //     language.value,
-          //         //     linkedBlog?._id
-          //         //       ? {
-          //         //           title: linkedBlog.title,
-          //         //           url: `${CONFIG.APP_URL}/blog/${linkedBlog?.slug}`,
-          //         //         }
-          //         //       : undefined
-          //         //   ),
-          //         //   language.value
-          //         // );
+            // if (newBlog?.slug) {
+            //   const newBlogFullUrl = `${CONFIG.APP_URL}/blog/${newBlog.slug}`;
+            //   // Write the URL to a file immediately (memory efficient)
+            //   fs.appendFileSync(tempFilePath, newBlogFullUrl + "\n");
 
-          //         // if (newBlog?.slug) {
-          //         //   const newBlogFullUrl = `${CONFIG.APP_URL}/blog/${newBlog.slug}`;
-          //         //   // Write the URL to a file immediately (memory efficient)
-          //         //   fs.appendFileSync(tempFilePath, newBlogFullUrl + "\n");
-
-          //         //   // Force garbage collection
-          //         //   if (global.gc) global.gc();
-          //         // }
-          //       } catch (error) {
-          //         console.error("❌  handleCreateBlog error", error);
-          //         continue;
-          //       }
+            //   // Force garbage collection
+            //   if (global.gc) global.gc();
+            // }
+          } catch (error) {
+            console.error("❌  handleCreateBlog error", error);
+            continue;
+          }
         }
       }
     }
