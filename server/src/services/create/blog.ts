@@ -10,6 +10,7 @@ import CONFIG from "../../config";
 import { ObjectId } from "mongodb";
 import OpenAi from "openai";
 import extractBlogParts from "../../utils/extractBlogParts";
+import { getCreateBlogPrompt } from "./getCreateBlogPrompt";
 // import fs from "fs";
 // import { getCreateBlogPrompt } from "./getCreateBlogPrompt";
 import { getSlugFromText } from "../../utils/stringUtils";
@@ -154,25 +155,26 @@ export const handleCreateBulkBlogs = async (
               language.value,
               DBCollections.blogs
             );
-            console.log("⏸️  linkedBlog", {
-              linkedBlog,
+
+            const newBlog: Partial<Blog> = await handleCreateBlog(
+              getCreateBlogPrompt(
+                data,
+                language.value,
+                linkedBlog?._id
+                  ? {
+                      title: linkedBlog.title,
+                      url: `${CONFIG.APP_URL}/blog/${linkedBlog?.slug}`,
+                    }
+                  : undefined
+              ),
+              language.value
+            );
+
+            console.log("⏸️  EXTRA", {
+              newBlog,
               blogsUrlsToIncludeInSitemap,
               tempFilePath,
             });
-
-            // const newBlog: Partial<Blog> = await handleCreateBlog(
-            //   getCreateBlogPrompt(
-            //     data,
-            //     language.value,
-            //     linkedBlog?._id
-            //       ? {
-            //           title: linkedBlog.title,
-            //           url: `${CONFIG.APP_URL}/blog/${linkedBlog?.slug}`,
-            //         }
-            //       : undefined
-            //   ),
-            //   language.value
-            // );
 
             // if (newBlog?.slug) {
             //   const newBlogFullUrl = `${CONFIG.APP_URL}/blog/${newBlog.slug}`;
