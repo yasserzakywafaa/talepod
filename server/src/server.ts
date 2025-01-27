@@ -75,6 +75,7 @@ const startServer = async () => {
       {
         language: popularStories[0].language,
         data: [popularStories[0].data[0]],
+        // data: [],
       },
     ]);
     // // await handleSubmitSitemapToGoogle("sitemap-blogs.xml");

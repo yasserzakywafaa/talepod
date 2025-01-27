@@ -137,6 +137,7 @@ export const handleCreateBulkBlogs = async (
   dataToCreateArray: BaseDataParams[],
   blogPrompt?: string
 ) => {
+  let blogsUrlsToIncludeInSitemap: string[] = [];
   const tempFilePath = path.join(__dirname, "temp_sitemap_urls.txt");
 
   for (const dataToCreate of dataToCreateArray) {
@@ -186,20 +187,26 @@ export const handleCreateBulkBlogs = async (
     }
   }
 
-  // Process the saved URLs in the file
-  const blogsUrlsToIncludeInSitemap = fs
-    .readFileSync(tempFilePath, "utf-8")
-    .split("\n");
+  try {
+    // Process the saved URLs in the file
+    blogsUrlsToIncludeInSitemap = fs
+      .readFileSync(tempFilePath, "utf-8")
+      .split("\n");
+  } catch (error) {
+    throw new Error(`❌ Error reading file "${tempFilePath}"!`, {
+      cause: error,
+    });
+  }
 
-  // Remove the file
-  fs.unlink(tempFilePath, (error) => {
-    if (error) {
-      console.error(`❌ Error removing file: ${error}`);
-      return;
-    }
-
+  try {
+    // Remove the file
+    fs.unlinkSync(tempFilePath);
     console.log(`✅  File ${tempFilePath} has been successfully removed.`);
-  });
+  } catch (error) {
+    throw new Error(`❌ Error removing file "${tempFilePath}"!`, {
+      cause: error,
+    });
+  }
 
   if (blogsUrlsToIncludeInSitemap.length && !CONFIG.IS_DEV && CONFIG.IS_PROD) {
     // Add new created blogs URLs to sitemap-blogs.xml file
