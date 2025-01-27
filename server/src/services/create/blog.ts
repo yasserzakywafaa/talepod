@@ -154,19 +154,18 @@ export const handleCreateBulkBlogs = async (
               language.value,
               DBCollections.blogs
             );
-            const createBlogPrompt = getCreateBlogPrompt(
-              data,
-              language.value,
-              linkedBlog?._id
-                ? {
-                    title: linkedBlog.title,
-                    url: `${CONFIG.APP_URL}/blog/${linkedBlog?.slug}`,
-                  }
-                : undefined
-            );
 
             const newBlog: Partial<Blog> = await handleCreateBlog(
-              createBlogPrompt,
+              getCreateBlogPrompt(
+                data,
+                language.value,
+                linkedBlog?._id
+                  ? {
+                      title: linkedBlog.title,
+                      url: `${CONFIG.APP_URL}/blog/${linkedBlog?.slug}`,
+                    }
+                  : undefined
+              ),
               language.value
             );
 

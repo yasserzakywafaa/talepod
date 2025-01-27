@@ -1,3 +1,4 @@
+import { Blog } from "./models/types";
 import CONFIG from "./config";
 // import { agendaInit } from "./services/agenda/agenda";
 import authRoutes from "./routes/authRoutes";
@@ -8,6 +9,7 @@ import { databaseInit } from "./models/mongoDb";
 import express from "express";
 import { getCreateBlogPrompt } from "./services/create/getCreateBlogPrompt";
 import handleCorsConfig from "./cors-config";
+import { handleCreateBlog } from "./services/create/blog";
 import openaiRoutes from "./routes/openaiRoutes";
 import paymentWebhooksRouter from "./routes/paymentsWebhooksRoutes";
 import paymentsRoutes from "./routes/paymentsRoutes";
@@ -82,11 +84,15 @@ const startServer = async () => {
 
     // // await handleFixBlogLinks();
 
-    const createBlogPrompt = getCreateBlogPrompt(
-      popularStories[0].data[0],
+    const newBlog: Partial<Blog> = await handleCreateBlog(
+      getCreateBlogPrompt(
+        popularStories[0].data[0],
+        popularStories[0].language
+      ),
       popularStories[0].language
     );
-    console.log("⚠️ createBlogPrompt:>>>", createBlogPrompt);
+
+    console.log("⚠️ newBlog:>>>", newBlog.title);
   } catch (error) {
     console.error("❌  Server Error!", error);
   }
