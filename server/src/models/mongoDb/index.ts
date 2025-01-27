@@ -1,4 +1,4 @@
-import { Blog, BlogData, BlogParams, User } from "../types";
+import { Blog, User } from "../types";
 import { Db, Document, MongoClient, ObjectId, WithId } from "mongodb";
 import {
   ProfileInfo,

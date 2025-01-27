@@ -5,7 +5,14 @@ import { handleAddUrlToSitemap } from "./create/sitemap";
 interface GitLabFileUpdate {
   branch: string;
   commit_message: string;
+  actions: GitLabFileUpdateAction[];
+}
+
+interface GitLabFileUpdateAction {
+  action: string;
+  file_path: string;
   content: string;
+  encoding: string;
 }
 
 export interface AddUrlToSiteMapParams {
@@ -61,7 +68,7 @@ export const handleUpdateSitemapInGitLab = async (
 
     // 4. Push update to GitLab
     const updateUrl = CONFIG.GITLAB.UPDATE_URL(projectId);
-    const commitData = {
+    const commitData: GitLabFileUpdate = {
       branch: targetBranch,
       commit_message: `Add ${newUrls.length} new URL(s) to "${siteMapFileName}" file.`,
       actions: [

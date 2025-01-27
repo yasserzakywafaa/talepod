@@ -7,7 +7,6 @@ import {
   Story,
   StoryFilters,
   User,
-  UserRole,
   UserStatus,
 } from "../models/types";
 import { DBCollections, database, getDocumentFromDb } from "../models/mongoDb";

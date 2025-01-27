@@ -5,7 +5,6 @@ export const testHello = async (
   response: Response,
   next: NextFunction
 ) => {
-  const userPrompt = request.body.userPrompt;
   try {
     console.log("ℹ️  Testing testHello route");
 

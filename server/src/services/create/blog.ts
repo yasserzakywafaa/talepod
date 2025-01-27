@@ -29,8 +29,7 @@ export const handleCreateBlogRequest = async (
 
   try {
     console.log("🛠️  Sending Request to AI to create a Blog  🛠️");
-    const openai = new OpenAi();
-    const createRequest = await openai.chat.completions.create({
+    const createRequest = await new OpenAi().chat.completions.create({
       // const createRequest = await axios.post(
       // "http://192.168.1.3:1234/v1/chat/completions",
       // {
@@ -138,8 +137,6 @@ export const handleCreateBulkBlogs = async (
   dataToCreateArray: BaseDataParams[],
   blogPrompt?: string
 ) => {
-  // const blogsUrlsToIncludeInSitemap = [];
-  // File for temporary storing blogs URLs
   const tempFilePath = path.join(__dirname, "temp_sitemap_urls.txt");
 
   for (const dataToCreate of dataToCreateArray) {
@@ -150,38 +147,32 @@ export const handleCreateBulkBlogs = async (
         for (const data of dataToCreate.data) {
           console.log("⌛︎  Current Data:>>>", data);
 
-          const linkedBlog = await getDocumentByFieldFromDb(
-            "language",
-            language.value,
-            DBCollections.blogs
-          );
-          const linkedBlogFullUrl = `${CONFIG.APP_URL}/blog/${linkedBlog?.slug}`;
-          const createBlogPrompt = linkedBlog?._id
-            ? getCreateBlogPrompt(data, language.value, {
-                title: linkedBlog.title,
-                url: linkedBlogFullUrl,
-              })
-            : getCreateBlogPrompt(data, language.value);
-
           try {
+            const linkedBlog = await getDocumentByFieldFromDb(
+              "language",
+              language.value,
+              DBCollections.blogs
+            );
+            const createBlogPrompt = getCreateBlogPrompt(
+              data,
+              language.value,
+              linkedBlog?._id
+                ? {
+                    title: linkedBlog.title,
+                    url: `${CONFIG.APP_URL}/blog/${linkedBlog?.slug}`,
+                  }
+                : undefined
+            );
+
             const newBlog: Partial<Blog> = await handleCreateBlog(
               createBlogPrompt,
               language.value
             );
 
             if (newBlog?.slug) {
-              // blogsUrlsToIncludeInSitemap.push(
-              //   `${CONFIG.APP_URL}/blog/${newBlog.slug}`
-              // );
-
               const newBlogFullUrl = `${CONFIG.APP_URL}/blog/${newBlog.slug}`;
               // Write the URL to a file immediately (memory efficient)
               fs.appendFileSync(tempFilePath, newBlogFullUrl + "\n");
-
-              // console.log(
-              //   "🧮  Blogs Count:>>>",
-              //   blogsUrlsToIncludeInSitemap.length
-              // );
 
               // Force garbage collection
               if (global.gc) global.gc();
