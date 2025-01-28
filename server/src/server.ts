@@ -2,14 +2,11 @@ import { closeDatabase, databaseInit } from "./models/mongoDb";
 import express, { NextFunction, Request, Response } from "express";
 
 import CONFIG from "./config";
-import { SupportedLanguages } from "./utils/languages";
 import authRoutes from "./routes/authRoutes";
-import { blogTopics } from "./shared/mockedData/BlogTopics";
 import blogsRoutes from "./routes/blogsRoutes";
 import compression from "compression";
 import contactRoutes from "./routes/contactRoutes";
 import handleCorsConfig from "./cors-config";
-import { handleCreateBulkBlogs } from "./services/create/blog";
 import helmet from "helmet";
 import openaiRoutes from "./routes/openaiRoutes";
 import paymentWebhooksRouter from "./routes/paymentsWebhooksRoutes";
@@ -113,32 +110,33 @@ const startServer = async () => {
     process.on("SIGTERM", shutdown);
 
     // // // Create Bulk Blogs for SEO purposes
-    await handleCreateBulkBlogs([
-      {
-        language: SupportedLanguages.en,
-        data: [blogTopics[0].data[0]],
-      },
-      {
-        language: SupportedLanguages.en,
-        data: [blogTopics[0].data[1]],
-      },
-      {
-        language: SupportedLanguages.en,
-        data: [blogTopics[0].data[2]],
-      },
-      {
-        language: SupportedLanguages.en,
-        data: [blogTopics[0].data[3]],
-      },
-      {
-        language: SupportedLanguages.en,
-        data: [blogTopics[0].data[4]],
-      },
-      {
-        language: SupportedLanguages.en,
-        data: [blogTopics[0].data[5]],
-      },
-    ]);
+    // // await handleCreateBulkBlogs(blogTopics);
+    // await handleCreateBulkBlogs([
+    //   {
+    //     language: SupportedLanguages.en,
+    //     data: [blogTopics[0].data[0]],
+    //   },
+    //   {
+    //     language: SupportedLanguages.en,
+    //     data: [blogTopics[0].data[1]],
+    //   },
+    //   {
+    //     language: SupportedLanguages.en,
+    //     data: [blogTopics[0].data[2]],
+    //   },
+    //   {
+    //     language: SupportedLanguages.en,
+    //     data: [blogTopics[0].data[3]],
+    //   },
+    //   {
+    //     language: SupportedLanguages.en,
+    //     data: [blogTopics[0].data[4]],
+    //   },
+    //   {
+    //     language: SupportedLanguages.en,
+    //     data: [blogTopics[0].data[5]],
+    //   },
+    // ]);
   } catch (error) {
     console.error("🤓  Server Error!", error);
   }
