@@ -3,6 +3,7 @@ import {
   DBCollectionsEnum,
   getDocumentByFieldFromDb,
   saveBlogToDb,
+  saveBulkBlogToDb,
 } from "../../models/mongoDb";
 import { Languages, SupportedLanguages } from "../../utils/languages";
 
@@ -16,6 +17,7 @@ import { getSlugFromText } from "../../utils/stringUtils";
 import { handleSubmitSitemapToGoogle } from "../googleapis";
 import { handleUpdateSitemapInGitLab } from "../gitlab";
 import path from "path";
+import readline from "readline";
 import retry from "../../utils/retryFunction";
 import { updateDocument } from "../../models/mongoDb/crudOperations";
 
@@ -61,10 +63,10 @@ export const handleCreateBlogRequest = async (
 export const handleCreateBlog = async (
   blogPrompt: string,
   language: SupportedLanguages
-): Promise<Partial<Blog | undefined>> => {
+): Promise<Partial<BlogData | undefined>> => {
   console.log("🛠️  Creating Blog  🛠️");
 
-  let blogId: ObjectId;
+  // let blogId: ObjectId;
   let blogParts: BlogParts | undefined;
 
   const createAndExtractBlogParts = async (): Promise<
@@ -95,43 +97,13 @@ export const handleCreateBlog = async (
 
     if (!blogParts) return undefined;
 
-    const blogData: BlogData = {
+    const blogData: Partial<BlogData> = {
       ...blogParts,
       language,
       createdAt: new Date(),
     };
 
-    try {
-      // Save blog to MongoDB Atlas
-      blogId = (await saveBlogToDb(blogData)) as any;
-      if (!blogId) return undefined;
-
-      // Update the blog document with the slug (title + id)
-      const blogWithSlug = (await updateDocument<Blog>(
-        blogId.toString(),
-        {
-          slug: `${getSlugFromText(blogParts.title)}-${blogId
-            .toString()
-            .slice(-6)}`,
-        },
-        DBCollectionsEnum.blogs
-      )) as Blog;
-      blogData["slug"] = blogWithSlug.slug;
-    } catch (error) {
-      throw new Error("❌ Failed to save the created blog to Db", {
-        cause: error,
-      });
-    }
-
-    console.log("✅ Blog Created Successfully", {
-      blogSlug: blogData.slug,
-    });
-
-    return {
-      ...blogData,
-      _id: blogId,
-      createdAt: new Date(),
-    };
+    return blogData;
   } catch (error) {
     throw new Error(`❌ Failed to create a blog!`, {
       cause: error,
@@ -139,12 +111,63 @@ export const handleCreateBlog = async (
   }
 };
 
+export const saveSingleBlogToDb = async (
+  blogData: BlogData
+): Promise<Blog | undefined> => {
+  let blogId: ObjectId;
+  try {
+    blogId = (await saveBlogToDb(blogData)) as any;
+    if (!blogId) return undefined;
+
+    // Update the blog document with the slug (title + id)
+    const blogWithSlug = (await updateDocument<Blog>(
+      blogId.toString(),
+      {
+        slug: `${getSlugFromText(blogData.title)}-${blogId
+          .toString()
+          .slice(-6)}`,
+      },
+      DBCollectionsEnum.blogs
+    )) as Blog;
+    blogData["slug"] = blogWithSlug.slug;
+  } catch (error) {
+    throw new Error("❌ Failed to save the created blog to Db", {
+      cause: error,
+    });
+  }
+
+  console.log("✅ Blog Created Successfully", {
+    blogSlug: blogData.slug,
+  });
+
+  return {
+    ...blogData,
+    _id: blogId,
+    createdAt: new Date(),
+  };
+};
+
 export const handleCreateBulkBlogs = async (
   dataToCreateArray: BaseDataParams[],
   blogPrompt?: string
 ) => {
-  let blogsUrlsToIncludeInSitemap: string[] = [];
-  const tempFilePath = path.join(__dirname, "temp_sitemap_urls.txt");
+  const tempUrlsFilePath = path.join(__dirname, "temp_sitemap_urls.txt");
+  const urlStream = fs.createWriteStream(tempUrlsFilePath, { flags: "a" });
+
+  // New: Temporary file and stream for blog content
+  const tempBlogsFilePath = path.join(__dirname, "temp_blogs_content.txt");
+  const blogContentStream = fs.createWriteStream(tempBlogsFilePath, {
+    flags: "a",
+  });
+
+  // Add error handlers for the streams
+  urlStream.on("error", (err) => {
+    console.error("❌ Error writing to urlStream:", err);
+  });
+
+  blogContentStream.on("error", (err) => {
+    console.error("❌ Error writing to blogContentStream:", err);
+  });
 
   for (const dataToCreate of dataToCreateArray) {
     for (const language of Languages) {
@@ -160,7 +183,6 @@ export const handleCreateBulkBlogs = async (
               language.value,
               DBCollectionsEnum.blogs
             );
-
             const newBlog: Partial<Blog> | undefined = await handleCreateBlog(
               getCreateBlogPrompt(
                 data,
@@ -175,12 +197,13 @@ export const handleCreateBulkBlogs = async (
               language.value
             );
 
-            if (newBlog?.slug) {
-              // Write the URL to a file immediately (memory efficient)
-              fs.appendFileSync(
-                tempFilePath,
-                `${CONFIG.APP_URL}/blog/${newBlog.slug}` + "\n"
-              );
+            if (newBlog?.title) {
+              // Write URL to the stream immediately (memory efficient)
+              urlStream.write(`${CONFIG.APP_URL}/blog/${newBlog.slug}\n`);
+
+              // Write blog content to the stream *with a delimiter*
+              blogContentStream.write(`${JSON.stringify(newBlog)}\n`);
+
               // Force garbage collection
               if (global.gc) global.gc();
             }
@@ -192,38 +215,107 @@ export const handleCreateBulkBlogs = async (
       }
     }
   }
+  urlStream.end(); // Close the stream when done
+  blogContentStream.end(); // Close the stream when done
 
-  try {
-    // Process the saved URLs in the file
-    blogsUrlsToIncludeInSitemap = fs
-      .readFileSync(tempFilePath, "utf-8")
-      .split("\n");
-  } catch (error) {
-    throw new Error(`❌ Error reading file "${tempFilePath}"!`, {
-      cause: error,
-    });
-  }
+  // Process both files *after* both streams are finished
+  Promise.all([
+    new Promise<void>((resolve, reject) => {
+      urlStream.on("finish", resolve);
+      urlStream.on("error", reject);
+    }),
+    new Promise<void>((resolve, reject) => {
+      blogContentStream.on("finish", resolve);
+      blogContentStream.on("error", reject);
+    }).then(async () => {
+      let blogsUrlsToIncludeInSitemap: string[] = [];
 
-  try {
-    // Remove the file
-    fs.unlinkSync(tempFilePath);
-    console.log(`✅ File ${tempFilePath} has been successfully removed.`);
-  } catch (error) {
-    throw new Error(`❌ Error removing file "${tempFilePath}"!`, {
-      cause: error,
-    });
-  }
+      try {
+        const fileContent = fs.readFileSync(tempUrlsFilePath, "utf8"); // Process the saved URLs in the file
+        blogsUrlsToIncludeInSitemap = fileContent
+          .split("\n")
+          .filter((url) => url !== ""); // Filter out empty strings
+      } catch (error) {
+        throw new Error(`❌ Error reading file "${tempUrlsFilePath}"!`, {
+          cause: error,
+        });
+      }
 
-  if (blogsUrlsToIncludeInSitemap.length && !CONFIG.IS_DEV && CONFIG.IS_PROD) {
-    // Add new created blogs URLs to sitemap-blogs.xml file
-    await handleUpdateSitemapInGitLab({
-      newUrls: blogsUrlsToIncludeInSitemap,
-      siteMapFileName,
-    });
+      const lineReader = readline.createInterface({
+        input: fs.createReadStream(tempBlogsFilePath),
+        crlfDelay: Infinity,
+      });
 
-    // Submit the update sitemap-blogs.xml file to Google
-    setTimeout(async () => {
-      await handleSubmitSitemapToGoogle(siteMapFileName);
-    }, 300000); // 5 minutes
-  }
+      let blogCount = 0;
+
+      // Use a generator function to yield batches of blog data
+      async function* generateBlogBatches(
+        reader: readline.Interface,
+        batchSize: number
+      ) {
+        let currentBatch: Blog[] = [];
+        for await (const line of reader) {
+          try {
+            const blog: Blog = JSON.parse(line);
+            currentBatch.push(blog);
+
+            if (currentBatch.length >= batchSize) {
+              yield currentBatch;
+              currentBatch = [];
+            }
+          } catch (parseError) {
+            console.error("Error parsing blog content:", parseError);
+          }
+        }
+        if (currentBatch.length > 0) {
+          yield currentBatch; // Yield any remaining blogs
+        }
+      }
+
+      // Stream the batches to the database
+      const BATCH_SIZE = 5;
+      for await (const batch of generateBlogBatches(lineReader, BATCH_SIZE)) {
+        try {
+          const result = await saveBulkBlogToDb(batch);
+          blogCount += result.insertedCount;
+          console.log(`⌛︎ ${blogCount} blogs inserted so far...`);
+        } catch (error) {
+          throw new Error("❌ Error during bulk insert!", { cause: error });
+        }
+      }
+
+      console.log(`ℹ️  ${blogCount} blogs inserted in total.`);
+      // ////////////////////////////////////////////////
+
+      try {
+        fs.unlinkSync(tempUrlsFilePath);
+        fs.unlinkSync(tempBlogsFilePath);
+        console.log(`✅ Files have been successfully removed.`, {
+          tempUrlsFilePath,
+          tempBlogsFilePath,
+        });
+      } catch (error) {
+        throw new Error(`❌ Error removing files!`, {
+          cause: error,
+        });
+      }
+
+      if (
+        blogsUrlsToIncludeInSitemap.length &&
+        !CONFIG.IS_DEV &&
+        CONFIG.IS_PROD
+      ) {
+        // Add new created blogs URLs to sitemap-blogs.xml file
+        await handleUpdateSitemapInGitLab({
+          newUrls: blogsUrlsToIncludeInSitemap,
+          siteMapFileName,
+        });
+
+        // Submit the update sitemap-blogs.xml file to Google
+        setTimeout(async () => {
+          await handleSubmitSitemapToGoogle(siteMapFileName);
+        }, 300000); // 5 minutes
+      }
+    }),
+  ]);
 };

@@ -1,5 +1,12 @@
 import { Blog, User } from "../types";
-import { Db, Document, MongoClient, ObjectId, WithId } from "mongodb";
+import {
+  Db,
+  Document,
+  InsertManyResult,
+  MongoClient,
+  ObjectId,
+  WithId,
+} from "mongodb";
 import {
   ProfileInfo,
   Story,
@@ -8,6 +15,7 @@ import {
   StorySeo,
 } from "../types/story";
 import {
+  createBulkDocuments,
   createDocument,
   readDocument,
   readDocumentByField,
@@ -274,6 +282,23 @@ const saveBlogToDb = async (
   }
 };
 
+const saveBulkBlogToDb = async (
+  blogs: Blog[]
+): Promise<InsertManyResult<Document>> => {
+  try {
+    console.log("🧮 Saving Blog in Bulk to Database 🧮");
+    const documents: InsertManyResult<Document> = await createBulkDocuments(
+      blogs,
+      DBCollectionsEnum.blogs
+    );
+    console.log("✅ Blogs saved in Bulk to DB successfully");
+
+    return documents;
+  } catch (error) {
+    throw new Error("❌ Error saving blogs in bulk to DB", { cause: error });
+  }
+};
+
 // // // FOR DEVELOPMENT USE ONLY
 // const copyDocumentsFromDatabaseToAnotherDatabase = async () => {
 //   // Access the Dev and Prod databases
@@ -321,4 +346,5 @@ export {
   saveUserDataToDb,
   updateUserInDb,
   saveBlogToDb,
+  saveBulkBlogToDb,
 };

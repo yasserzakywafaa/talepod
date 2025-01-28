@@ -42,7 +42,7 @@ export enum BlogTypeEnum {
   PUBLIC = "Public",
 }
 
-export interface BlogData extends Partial<Blog> {
+export interface BlogData extends Blog {
   language: SupportedLanguages;
 }
 
