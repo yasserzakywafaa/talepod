@@ -181,9 +181,9 @@ const Footer = () => {
             />
           </Typography>
 
-          <Typography variant="body2" color="text.secondary" mx={2}>
+          <Typography variant="body2" color="text.secondary" mx={1}>
             {"Copyright © "}
-            <Link href={routes.home}>TalePod&nbsp;</Link>
+            <Link href={routes.home}>TalePod</Link>&nbsp;
             {new Date().getFullYear()}
           </Typography>
         </Box>

@@ -10,7 +10,7 @@ import { Time } from "./blogParams/Time";
 import { ToneStyle } from "./blogParams/Tone";
 
 export interface Blog {
-  _id: ObjectId;
+  _id?: ObjectId;
   slug: string;
   title: string;
   introduction: string;
@@ -42,7 +42,7 @@ export enum BlogTypeEnum {
   PUBLIC = "Public",
 }
 
-export interface BlogData extends Partial<Blog> {
+export interface BlogData extends Blog {
   language: SupportedLanguages;
 }
 

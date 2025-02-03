@@ -46,3 +46,19 @@ export const getSlugFromText = (text: string) => {
 
   return slug;
 };
+
+/**
+ * Generate random string
+ */
+export const getRandomString = (length = 8, prefix = "") => {
+  let str = "";
+
+  while (str.length <= length) {
+    const [character] = Math.random().toString(36).substr(2),
+      isTrue = Math.floor(Math.random() * 2) === 0;
+
+    str += character[isTrue ? "toLowerCase" : "toUpperCase"]();
+  }
+
+  return `${prefix}_${str}`;
+};

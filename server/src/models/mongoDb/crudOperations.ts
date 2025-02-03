@@ -15,30 +15,30 @@ export const createDocument = async (
 
 // Read a document by ID
 export const readDocument = async (
-  docId: any,
+  documentId: any,
   collectionName: DBCollectionsEnum
 ) => {
-  const documents = database.collection(collectionName);
-  const document = await documents.findOne({ _id: docId });
+  const collection = database.collection(collectionName);
+  const document = await collection.findOne({ _id: documentId });
 
   return document;
 };
 
-// Read a document by ID
+// Read a document by Field
 export const readDocumentByField = async (
   field: string,
   value: string,
   collectionName: DBCollectionsEnum
 ) => {
-  const documents = database.collection(collectionName);
-  const document = await documents.findOne({ [field]: value });
+  const collection = database.collection(collectionName);
+  const document = await collection.findOne({ [field]: value });
 
   return document;
 };
 
 // Update a document by ID
 export const updateDocument = async <T>(
-  docId: string,
+  documentId: string,
   fieldsToUpdate: Partial<T>,
   collectionName: DBCollectionsEnum
 ) => {
@@ -46,7 +46,7 @@ export const updateDocument = async <T>(
   try {
     const documents = database.collection(collectionName);
     const results = await documents.findOneAndUpdate(
-      { _id: new ObjectId(docId) },
+      { _id: new ObjectId(documentId) },
       { $set: fieldsToUpdate },
       { returnDocument: "after" }
     );
@@ -61,16 +61,33 @@ export const updateDocument = async <T>(
 
 // Delete a document by ID
 export const deleteDocument = async (
-  storyId: string,
+  documentId: string,
   collectionName: DBCollectionsEnum
 ) => {
-  const stories = database.collection(collectionName);
+  const collection = database.collection(collectionName);
   try {
-    const result = await stories.deleteOne({ _id: new ObjectId(storyId) });
+    const result = await collection.deleteOne({
+      _id: new ObjectId(documentId),
+    });
     console.log("✅ Document deleted successfully.");
 
     return result.deletedCount === 1;
   } catch (error) {
     throw new Error("❌ Failed to delete document!", { cause: error });
+  }
+};
+
+// Create new bulk documents
+export const createBulkDocuments = async (
+  documents: any[],
+  collectionName: DBCollectionsEnum
+) => {
+  try {
+    const collection = database.collection(collectionName);
+    const results = await collection.insertMany(documents);
+
+    return results;
+  } catch (error) {
+    throw new Error("❌ Error saving blogs in bulk:", { cause: error });
   }
 };
