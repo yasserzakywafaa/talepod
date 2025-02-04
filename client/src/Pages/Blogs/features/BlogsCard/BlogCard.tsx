@@ -124,7 +124,7 @@ const StoryCard = (props: BlogCard) => {
           </Box>
 
           <Button
-            size="small"
+            size="medium"
             type="button"
             color="primary"
             aria-label="read more"

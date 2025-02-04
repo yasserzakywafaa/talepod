@@ -94,6 +94,7 @@ export const handleGetAllBlogs = async (
     const { pageNumber = 1, pageSize = 20 } = pagingInfo;
 
     const pipeline = [
+      { $sort: { createdAt: -1 } },
       {
         $facet: {
           metadata: [
