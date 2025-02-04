@@ -14,6 +14,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { Notify } from "../Notification/Notification";
 import ProfileAvatar from "../ProfileAvatar";
+import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import routes from "src/application/routes";
 
 interface UserAccountMenuButtonProps {
@@ -49,6 +50,10 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
 
   const handleOnMyProfileClick = () => {
     auth.user && navigate(routes.myProfile(auth.user._id));
+  };
+
+  const handleOnUsersBlogsClick = () => {
+    auth.user && navigate(routes.usersStories);
   };
 
   const handleOnLogoutClick = () => {
@@ -128,6 +133,24 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
         </MenuItem>
 
         <Divider />
+
+        {auth.isAuthenticated && hasAdminRights(auth.user) ? (
+          <>
+            <MenuItem onClick={handleOnUsersBlogsClick}>
+              <ListItemIcon>
+                <WebStoriesOutlined fontSize="small" color="primary" />
+              </ListItemIcon>
+
+              <Typography variant="body1" color="text.primary">
+                Users Blogs
+              </Typography>
+            </MenuItem>
+
+            <Divider />
+          </>
+        ) : (
+          <></>
+        )}
 
         <MenuItem onClick={handleOnLogoutClick}>
           <ListItemIcon>

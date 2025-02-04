@@ -11,7 +11,6 @@ import {
   SearchOutlined,
   VpnKeyOutlined,
   WbSunnyOutlined,
-  WebStoriesOutlined,
 } from "@mui/icons-material";
 import {
   AppBar,
@@ -34,7 +33,6 @@ import { PricingModal } from "src/components/Modals/PricingModal/PricingModal";
 import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal";
 import ToggleColorMode from "src/components/shared/ToggleColorMode";
 import UserAccountMenuButton from "./UserAccountButton";
-import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import routes from "src/application/routes";
 import { scrollToSection } from "src/shared/utils/scrollTo";
 import { useApplicationContext } from "src/application/store/Provider";
@@ -274,24 +272,6 @@ const ApplicationBar = () => {
                       </>
                     )}
 
-                    {auth.isAuthenticated && hasAdminRights(auth.user) ? (
-                      <MenuItem
-                        onClick={handleOnMenuItemClick("users-stories")}
-                      >
-                        <WebStoriesOutlined
-                          fontSize="medium"
-                          color="secondary"
-                          sx={{ mr: 1 }}
-                        />
-
-                        <Typography variant="body1" color="text.primary">
-                          Users Stories
-                        </Typography>
-                      </MenuItem>
-                    ) : (
-                      <></>
-                    )}
-
                     {!isInStandaloneMode && (
                       <MenuItem onClick={handleOnMenuItemClick("install")}>
                         <InstallMobileOutlined
@@ -300,9 +280,9 @@ const ApplicationBar = () => {
                           sx={{ mr: 1 }}
                         />
 
-                        <Typography variant="body1" color="text.primary">
+                        {/* <Typography variant="body1" color="text.primary">
                           Install App
-                        </Typography>
+                        </Typography> */}
                       </MenuItem>
                     )}
 
@@ -449,24 +429,6 @@ const ApplicationBar = () => {
                             <Typography variant="h6">Log in</Typography>
                           </MenuItem>
                         </>
-                      )}
-
-                      {auth.isAuthenticated && hasAdminRights(auth.user) ? (
-                        <MenuItem
-                          onClick={handleOnMenuItemClick("users-stories")}
-                        >
-                          <WebStoriesOutlined
-                            fontSize="medium"
-                            color="secondary"
-                            sx={{ mr: 1 }}
-                          />
-
-                          <Typography variant="body1" color="text.primary">
-                            Users Stories
-                          </Typography>
-                        </MenuItem>
-                      ) : (
-                        <></>
                       )}
 
                       {!isInStandaloneMode && (
