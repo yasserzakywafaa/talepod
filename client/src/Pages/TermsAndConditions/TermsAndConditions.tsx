@@ -40,7 +40,7 @@ const TermsAndConditions = () => {
         <Typography variant="subtitle1" gutterBottom color="primary">
           Last updated:{" "}
           <span className="bold">
-            {new Date("01/07/2024").toLocaleDateString("en-GB", {
+            {new Date("01/01/2025").toLocaleDateString("en-GB", {
               dateStyle: "short",
             })}
           </span>
@@ -68,12 +68,6 @@ const TermsAndConditions = () => {
             Definitions
           </Typography>
           <List>
-            <ListItem>
-              <ListItemText
-                primary="Affiliate"
-                secondary="means an entity that controls, is controlled by or is under common control with a party, where 'control' means ownership of 50% or more of the shares, equity interest or other securities entitled to vote for election of directors or other managing authority."
-              />
-            </ListItem>
             <ListItem>
               <ListItemText
                 primary="Country"
@@ -150,6 +144,7 @@ const TermsAndConditions = () => {
             Your access to and use of the Service is also conditioned on Your
             acceptance of and compliance with the{" "}
             <Link
+              component="a"
               href={routes.privacyPolicy}
               onClick={handleLinkClick(routes.privacyPolicy)}
             >
@@ -160,6 +155,38 @@ const TermsAndConditions = () => {
             information when You use the Application or the Website and tells
             You about Your privacy rights and how the law protects You. Please
             read Our Privacy Policy carefully before using Our Service.
+          </Typography>
+        </Box>
+
+        <Box my={2}>
+          <Typography variant="h5" color="primary" gutterBottom>
+            Sharing personal information
+          </Typography>
+          <Typography paragraph>
+            Talepod uses personal information according to the Terms of Service
+            and this{" "}
+            <Link
+              component="a"
+              href={routes.privacyPolicy}
+              onClick={handleLinkClick(routes.privacyPolicy)}
+            >
+              Privacy Policy
+            </Link>
+            . Talepod may disclose your personal information to third parties,
+            including marketing, advertising and analytics providers.
+          </Typography>
+          <Typography paragraph>
+            We may also disclose information or allow third parties to directly
+            collect information using third party cookies and related tracking
+            technologies (such as pixels and web beacons) via our website, such
+            as social media companies, advertising networks, companies that
+            provide analytics (including ad tracking and reporting), security
+            providers and others that help us to deliver our services.
+          </Typography>
+          <Typography paragraph>
+            We only employ such third party tools based on your consent, opt-out
+            preferences, or other appropriate legal requirements mandated by
+            applicable laws and regulations.
           </Typography>
         </Box>
 
@@ -300,6 +327,7 @@ const TermsAndConditions = () => {
             If You have any concern or dispute about the Service, You agree to
             first try to resolve the dispute informally by{" "}
             <Link
+              component="a"
               href={routes.contact}
               onClick={handleLinkClick(routes.contact)}
             >
@@ -405,6 +433,7 @@ const TermsAndConditions = () => {
                 primary="By visiting this page on our website: "
                 secondary={
                   <Link
+                    component="a"
                     href={routes.contact}
                     onClick={handleLinkClick(routes.contact)}
                   >
