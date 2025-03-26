@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import MainCharacter from "../../../assets/images/sleeping_bunny_with_a_moon.webp";
+import { ParticlesComponent } from "src/components/shared/ParticlesComponent";
 import Typography from "@mui/material/Typography";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
@@ -36,6 +37,10 @@ export default function Hero() {
           pb: { xs: 6, sm: 6 },
         }}
       >
+        <div style={{ position: "absolute", zIndex: "-1" }}>
+          <ParticlesComponent />
+        </div>
+
         <Box
           sx={{
             display: { xs: "flex", sm: "flex" },
