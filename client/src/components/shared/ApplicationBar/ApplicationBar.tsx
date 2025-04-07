@@ -2,15 +2,12 @@ import {
   AlternateEmailOutlined,
   ArticleOutlined,
   AutoFixHighOutlined,
-  HomeOutlined,
-  InstallMobileOutlined,
+  EarbudsOutlined,
   LockOpenOutlined,
   MenuOutlined,
-  ModeNightOutlined,
-  RefreshOutlined,
   SearchOutlined,
   VpnKeyOutlined,
-  WbSunnyOutlined,
+  WebStoriesOutlined,
 } from "@mui/icons-material";
 import {
   AppBar,
@@ -25,18 +22,17 @@ import {
 } from "@mui/material";
 import { useMatch, useNavigate } from "react-router-dom";
 
-import BackButton from "./BackButton";
 import { CancelSubscriptionModal } from "src/components/Modals/CancelSubscriptionModal/CancelSubscriptionModal";
 import { InstallAppModal } from "src/components/Modals/InstallAppModal/InstallAppModal";
 import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
+import Logo from "../../../assets/images/sleeping_bunny_with_a_moon.webp";
 import { PricingModal } from "src/components/Modals/PricingModal/PricingModal";
 import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal";
-import ToggleColorMode from "src/components/shared/ToggleColorMode";
+import SettingsMenuButton from "./SettingsMenuButton";
 import UserAccountMenuButton from "./UserAccountButton";
 import routes from "src/application/routes";
 import { scrollToSection } from "src/shared/utils/scrollTo";
 import { useApplicationContext } from "src/application/store/Provider";
-import { useDetectBrowserType } from "src/shared/hooks/useDetectBrowserType";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
@@ -53,11 +49,8 @@ const ApplicationBar = () => {
   const {
     store: {
       state: { themeMode, auth },
-      toggleThemeMode,
     },
-    manager: { handleSetAuthInfo },
   } = useApplicationContext();
-  const { isInStandaloneMode } = useDetectBrowserType();
 
   const {
     store: { handleToggleLoginModal },
@@ -69,19 +62,18 @@ const ApplicationBar = () => {
 
   // Add all the pages the will contain the AppBar
   const pagesMatch = {
-    isHomePage: !!useMatch(routes.home),
+    isFeaturesPage: !!useMatch(routes.features),
     isCreatePage: !!useMatch(routes.create),
     isExplorePage: !!useMatch(routes.explore),
+    isBlogsPage: !!useMatch(routes.blogs),
     isContactPage: !!useMatch(routes.contact),
-    isViewStoryPage: !!useMatch(routes.story(":id")),
+    isViewBlogPage: !!useMatch(routes.blog(":id")),
     isMyStoriesPage: !!useMatch(routes.myStories(":userId")),
-    isCheckoutPage: !!useMatch(routes.checkout),
     isUnauthorized: !!useMatch(routes.unauthorized),
     isPrivacyPolicy: !!useMatch(routes.privacyPolicy),
     isTermsOfService: !!useMatch(routes.termsAndConditions),
-    isLandingPage: !!window.location.pathname.includes("bedtime-stories"),
+    isLandingPage: !!window.location.pathname.includes("blogs"),
   };
-  // const isAppBarVisible = Object.values(pagesMatch).every((p) => p === false);
   const isAppBarVisible = true;
 
   const toggleDrawer = (newOpen: boolean) => () => {
@@ -90,8 +82,8 @@ const ApplicationBar = () => {
 
   const handleOnMenuItemClick = (sectionId: string) => () => {
     switch (sectionId) {
-      case "home":
-        navigate(routes.home);
+      case "features":
+        navigate(routes.features);
         break;
       case "explore":
         navigate(routes.explore);
@@ -102,11 +94,8 @@ const ApplicationBar = () => {
       case "contact":
         navigate(routes.contact);
         break;
-      case "blogs":
-        navigate(routes.blogs);
-        break;
-      case "refresh":
-        window.location.reload();
+      case "original-stories":
+        navigate(routes.explore);
         break;
       case "install":
         setIsInstallAppDialogOpen(true);
@@ -114,14 +103,15 @@ const ApplicationBar = () => {
       case "users-stories":
         navigate(routes.usersStories);
         return;
+      case "my-stories":
+        auth.user && navigate(routes.myStories(auth.user._id));
+        return;
 
       default:
         scrollToSection(sectionId);
     }
     setIsDrawerOpen(false);
   };
-
-  const handleOnBackClick = () => navigate(-1);
 
   return (
     <>
@@ -132,11 +122,11 @@ const ApplicationBar = () => {
             boxShadow: 0,
             bgcolor: "transparent",
             backgroundImage: "none",
-            mt: 2,
+            mt: 1,
             // zIndex: 1500,
           }}
         >
-          <Container maxWidth="lg">
+          <Container maxWidth="lg" className="application-bar-container">
             <Toolbar
               variant="regular"
               sx={{
@@ -144,12 +134,7 @@ const ApplicationBar = () => {
                 alignItems: "center",
                 justifyContent: "space-between",
                 flexShrink: 0,
-                borderRadius: "4px",
-                backdropFilter: {
-                  xs: pagesMatch.isHomePage ? "none" : "blur(24px)",
-                  sm: pagesMatch.isHomePage ? "none" : "blur(24px)",
-                  lg: "blur(24px)",
-                },
+                backdropFilter: "blur(24px)",
                 maxHeight: 40,
                 borderColor: "divider",
                 boxShadow: isDesktop
@@ -163,19 +148,27 @@ const ApplicationBar = () => {
               {!isTablet && (
                 <>
                   <Box role="menu" sx={{ display: { xs: "none", md: "flex" } }}>
-                    <MenuItem onClick={handleOnMenuItemClick("home")}>
-                      <HomeOutlined
+                    <MenuItem
+                      className={`menu-item ${
+                        pagesMatch.isFeaturesPage && "active-menu-item"
+                      }`}
+                      onClick={handleOnMenuItemClick("features")}
+                    >
+                      <EarbudsOutlined
                         fontSize="medium"
                         color="primary"
                         sx={{ mr: 1 }}
                       />
                       <Typography variant="body1" color="text.primary">
-                        Home
+                        Features
                       </Typography>
                     </MenuItem>
 
                     <MenuItem
                       sx={{ py: "6px", px: "12px" }}
+                      className={`menu-item ${
+                        pagesMatch.isExplorePage && "active-menu-item"
+                      }`}
                       onClick={handleOnMenuItemClick("explore")}
                     >
                       <SearchOutlined
@@ -190,6 +183,9 @@ const ApplicationBar = () => {
                     </MenuItem>
 
                     <MenuItem
+                      className={`menu-item ${
+                        pagesMatch.isCreatePage && "active-menu-item"
+                      }`}
                       sx={{ py: "6px", px: "12px" }}
                       onClick={handleOnMenuItemClick("create")}
                     >
@@ -204,8 +200,11 @@ const ApplicationBar = () => {
                     </MenuItem>
 
                     <MenuItem
+                      className={`menu-item ${
+                        pagesMatch.isBlogsPage && "active-menu-item"
+                      }`}
                       sx={{ py: "6px", px: "12px" }}
-                      onClick={handleOnMenuItemClick("blogs")}
+                      onClick={handleOnMenuItemClick("original-stories")}
                     >
                       <ArticleOutlined
                         fontSize="medium"
@@ -218,6 +217,9 @@ const ApplicationBar = () => {
                     </MenuItem>
 
                     <MenuItem
+                      className={`menu-item ${
+                        pagesMatch.isContactPage && "active-menu-item"
+                      }`}
                       sx={{ py: "6px", px: "12px" }}
                       onClick={handleOnMenuItemClick("contact")}
                     >
@@ -230,6 +232,34 @@ const ApplicationBar = () => {
                         Contact Us
                       </Typography>
                     </MenuItem>
+
+                    {auth.isAuthenticated ? (
+                      <>
+                        <Divider
+                          orientation="vertical"
+                          sx={{ height: "30px", marginX: "1rem" }}
+                        />
+
+                        <MenuItem
+                          className={`menu-item ${
+                            pagesMatch.isMyStoriesPage && "active-menu-item"
+                          }`}
+                          onClick={handleOnMenuItemClick("my-stories")}
+                        >
+                          <WebStoriesOutlined
+                            color="secondary"
+                            fontSize="medium"
+                            sx={{ mr: 1 }}
+                          />
+
+                          <Typography variant="body1" color="text.primary">
+                            My Stories
+                          </Typography>
+                        </MenuItem>
+                      </>
+                    ) : (
+                      <></>
+                    )}
                   </Box>
 
                   <Box
@@ -240,10 +270,7 @@ const ApplicationBar = () => {
                     }}
                   >
                     {auth.isAuthenticated ? (
-                      <UserAccountMenuButton
-                        auth={auth}
-                        handleLogOut={handleSetAuthInfo}
-                      />
+                      <UserAccountMenuButton auth={auth} />
                     ) : (
                       <>
                         <MenuItem onClick={handleToggleRegisterModal}>
@@ -272,24 +299,11 @@ const ApplicationBar = () => {
                       </>
                     )}
 
-                    {!isInStandaloneMode && (
-                      <MenuItem onClick={handleOnMenuItemClick("install")}>
-                        <InstallMobileOutlined
-                          fontSize="medium"
-                          color="secondary"
-                          sx={{ mr: 1 }}
-                        />
-
-                        {/* <Typography variant="body1" color="text.primary">
-                          Install App
-                        </Typography> */}
-                      </MenuItem>
-                    )}
-
-                    <ToggleColorMode
-                      mode={themeMode}
-                      toggleColorMode={toggleThemeMode}
-                    />
+                    <MenuItem>
+                      <SettingsMenuButton
+                        setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
+                      />
+                    </MenuItem>
                   </Box>
                 </>
               )}
@@ -301,32 +315,39 @@ const ApplicationBar = () => {
                   component="div"
                   flexDirection="row"
                   justifyContent={
-                    pagesMatch.isHomePage ? "flex-end" : "space-between"
+                    pagesMatch.isCreatePage ? "flex-end" : "space-between"
                   }
                   width="100%"
                 >
-                  {!pagesMatch.isHomePage && (
-                    <BackButton onClick={handleOnBackClick} />
+                  {pagesMatch.isFeaturesPage ? (
+                    <Box sx={{ width: "30px", height: "30px" }}>
+                      <picture>
+                        <source srcSet={Logo} type="image/webp" />
+                        <img
+                          width="100%"
+                          height="100%"
+                          src={Logo}
+                          className="logo"
+                          alt="features-page-image"
+                          aria-label="rabbit-sleeping-on-a-pillow"
+                        />
+                      </picture>
+                    </Box>
+                  ) : (
+                    // <BackButton onClick={handleOnBackClick} />
+                    <></>
                   )}
 
-                  {!pagesMatch.isHomePage && !pagesMatch.isCreatePage && (
-                    <Box
-                      width="100%"
-                      margin="auto"
-                      display="flex"
-                      justifyContent="center"
+                  {!pagesMatch.isFeaturesPage && !pagesMatch.isCreatePage && (
+                    <Button
+                      size="small"
+                      color="primary"
+                      variant="contained"
+                      endIcon={<AutoFixHighOutlined />}
+                      onClick={handleOnMenuItemClick("create")}
                     >
-                      <Button
-                        size="small"
-                        color="secondary"
-                        variant="text"
-                        sx={{ my: 2, px: 2 }}
-                        endIcon={<AutoFixHighOutlined />}
-                        onClick={handleOnMenuItemClick("create")}
-                      >
-                        Create Story
-                      </Button>
-                    </Box>
+                      Create Story
+                    </Button>
                   )}
 
                   <Button
@@ -349,125 +370,149 @@ const ApplicationBar = () => {
                       sx={{
                         p: 1,
                         pt: 2,
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
                         flexGrow: 1,
                         minWidth: "50dvw",
                         backgroundColor: "background.paper",
                       }}
                     >
-                      <MenuItem onClick={handleOnMenuItemClick("home")}>
-                        <HomeOutlined
-                          fontSize="medium"
-                          color="primary"
-                          sx={{ mr: 1 }}
-                        />
-                        <Typography variant="h6">Home</Typography>
-                      </MenuItem>
-
-                      <MenuItem onClick={handleOnMenuItemClick("explore")}>
-                        <SearchOutlined
-                          fontSize="medium"
-                          color="primary"
-                          sx={{ mr: 1 }}
-                        />
-
-                        <Typography variant="h6">Explore</Typography>
-                      </MenuItem>
-
-                      <MenuItem onClick={handleOnMenuItemClick("create")}>
-                        <AutoFixHighOutlined
-                          fontSize="medium"
-                          color="primary"
-                          sx={{ mr: 1 }}
-                        />
-                        <Typography variant="h6">Create Story</Typography>
-                      </MenuItem>
-
-                      <MenuItem onClick={handleOnMenuItemClick("blogs")}>
-                        <ArticleOutlined
-                          fontSize="medium"
-                          color="primary"
-                          sx={{ mr: 1 }}
-                        />
-                        <Typography variant="h6">Blogs</Typography>
-                      </MenuItem>
-
-                      <MenuItem onClick={handleOnMenuItemClick("contact")}>
-                        <AlternateEmailOutlined
-                          fontSize="medium"
-                          color="primary"
-                          sx={{ mr: 1 }}
-                        />
-                        <Typography variant="h6">Contact Us</Typography>
-                      </MenuItem>
-
-                      <Divider sx={{ width: "80%", margin: "auto" }} />
-
-                      {auth.isAuthenticated ? (
-                        <MenuItem>
-                          <UserAccountMenuButton
-                            auth={auth}
-                            handleLogOut={handleSetAuthInfo}
-                          />
-                        </MenuItem>
-                      ) : (
-                        <>
-                          <MenuItem onClick={handleToggleRegisterModal}>
-                            <LockOpenOutlined
-                              fontSize="medium"
-                              color="secondary"
-                              sx={{ mr: 1 }}
-                            />
-                            <Typography variant="h6">Register</Typography>
-                          </MenuItem>
-
-                          <MenuItem onClick={handleToggleLoginModal}>
-                            <VpnKeyOutlined
-                              fontSize="medium"
-                              color="secondary"
-                              sx={{ mr: 1 }}
-                            />
-                            <Typography variant="h6">Log in</Typography>
-                          </MenuItem>
-                        </>
-                      )}
-
-                      {!isInStandaloneMode && (
-                        <MenuItem onClick={handleOnMenuItemClick("install")}>
-                          <InstallMobileOutlined
+                      <Box>
+                        <MenuItem
+                          className={`menu-item ${
+                            pagesMatch.isFeaturesPage && "active-menu-item"
+                          }`}
+                          onClick={handleOnMenuItemClick("features")}
+                        >
+                          <EarbudsOutlined
                             fontSize="medium"
-                            color="secondary"
+                            color="primary"
                             sx={{ mr: 1 }}
                           />
-                          <Typography variant="h6">Install App</Typography>
+                          <Typography variant="h6">Features</Typography>
                         </MenuItem>
-                      )}
 
-                      <MenuItem onClick={toggleThemeMode}>
-                        {themeMode === "dark" ? (
-                          <WbSunnyOutlined
+                        <MenuItem
+                          className={`menu-item ${
+                            pagesMatch.isExplorePage && "active-menu-item"
+                          }`}
+                          onClick={handleOnMenuItemClick("explore")}
+                        >
+                          <SearchOutlined
                             fontSize="medium"
-                            color="secondary"
+                            color="primary"
                             sx={{ mr: 1 }}
                           />
+
+                          <Typography variant="h6">Explore</Typography>
+                        </MenuItem>
+
+                        <MenuItem
+                          className={`menu-item ${
+                            pagesMatch.isCreatePage && "active-menu-item"
+                          }`}
+                          onClick={handleOnMenuItemClick("create")}
+                        >
+                          <AutoFixHighOutlined
+                            fontSize="medium"
+                            color="primary"
+                            sx={{ mr: 1 }}
+                          />
+                          <Typography variant="h6">Create Story</Typography>
+                        </MenuItem>
+
+                        <MenuItem
+                          className={`menu-item ${
+                            pagesMatch.isBlogsPage && "active-menu-item"
+                          }`}
+                          onClick={handleOnMenuItemClick("original-stories")}
+                        >
+                          <ArticleOutlined
+                            fontSize="medium"
+                            color="primary"
+                            sx={{ mr: 1 }}
+                          />
+                          <Typography variant="h6">Blogs</Typography>
+                        </MenuItem>
+
+                        <MenuItem
+                          className={`menu-item ${
+                            pagesMatch.isContactPage && "active-menu-item"
+                          }`}
+                          onClick={handleOnMenuItemClick("contact")}
+                        >
+                          <AlternateEmailOutlined
+                            fontSize="medium"
+                            color="primary"
+                            sx={{ mr: 1 }}
+                          />
+                          <Typography variant="h6">Contact Us</Typography>
+                        </MenuItem>
+
+                        {auth.isAuthenticated ? (
+                          <>
+                            <Divider sx={{ marginX: "1rem" }} />
+
+                            <MenuItem
+                              className={`menu-item ${
+                                pagesMatch.isMyStoriesPage && "active-menu-item"
+                              }`}
+                              onClick={handleOnMenuItemClick("my-stories")}
+                            >
+                              <WebStoriesOutlined
+                                color="secondary"
+                                fontSize="medium"
+                                sx={{ mr: 1 }}
+                              />
+
+                              <Typography variant="h6">My Stories</Typography>
+                            </MenuItem>
+                          </>
                         ) : (
-                          <ModeNightOutlined
-                            fontSize="medium"
-                            color="secondary"
-                            sx={{ mr: 1 }}
-                          />
+                          <></>
+                        )}
+                      </Box>
+
+                      <Box marginBottom="1rem">
+                        {auth.isAuthenticated ? (
+                          <MenuItem>
+                            <UserAccountMenuButton auth={auth} />
+                          </MenuItem>
+                        ) : (
+                          <>
+                            <MenuItem onClick={handleToggleRegisterModal}>
+                              <LockOpenOutlined
+                                fontSize="medium"
+                                color="secondary"
+                                sx={{ mr: 1 }}
+                              />
+                              <Typography variant="h6">Register</Typography>
+                            </MenuItem>
+
+                            <MenuItem onClick={handleToggleLoginModal}>
+                              <VpnKeyOutlined
+                                fontSize="medium"
+                                color="secondary"
+                                sx={{ mr: 1 }}
+                              />
+                              <Typography variant="h6">Log in</Typography>
+                            </MenuItem>
+                          </>
                         )}
 
-                        <Typography variant="h6">Appearance</Typography>
-                      </MenuItem>
-
-                      <MenuItem onClick={handleOnMenuItemClick("refresh")}>
-                        <RefreshOutlined
-                          fontSize="medium"
-                          color="secondary"
-                          sx={{ mr: 1 }}
-                        />
-                        <Typography variant="h6">Refresh App</Typography>
-                      </MenuItem>
+                        <MenuItem>
+                          <SettingsMenuButton
+                            setIsInstallAppDialogOpen={
+                              setIsInstallAppDialogOpen
+                            }
+                          >
+                            <Typography variant="h6" sx={{ ml: 1 }}>
+                              Settings
+                            </Typography>
+                          </SettingsMenuButton>
+                        </MenuItem>
+                      </Box>
                     </Box>
                   </Drawer>
                 </Box>

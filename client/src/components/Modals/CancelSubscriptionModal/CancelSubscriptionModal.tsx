@@ -66,7 +66,7 @@ export const CancelSubscriptionModal = () => {
             You will lose access to all the Premium benefits
           </Typography>
 
-          {currentPlan.description.map((desc) => (
+          {currentPlan.features.map((desc) => (
             <Box
               key={desc}
               sx={{

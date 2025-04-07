@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 const NotFoundPage = () => {
   const navigate = useNavigate();
-  const handleOnClick = () => navigate(routes.home);
+  const handleOnClick = () => navigate(routes.features);
 
   return (
     <>

@@ -6,6 +6,7 @@ import {
 } from "./state";
 
 import APP_CONSTANTS from "../shared/app_constants";
+import { SubscriptionPlanEnum } from "src/shared/user";
 import { useState } from "react";
 
 export interface ApplicationStore {
@@ -107,6 +108,7 @@ const useApplicationStore = (): ApplicationStore => {
       } = APP_CONSTANTS.LOCAL_STORAGE;
       const storedToken = localStorage.getItem(TOKEN) || "";
       const storedUser = localStorage.getItem(USER);
+      const parsedUser = storedUser ? JSON.parse(storedUser) : null;
       const storedIsAuthenticated = localStorage.getItem(IS_AUTHENTICATION);
 
       setState((prev) => ({
@@ -115,6 +117,14 @@ const useApplicationStore = (): ApplicationStore => {
           token: storedToken,
           isAuthenticated: storedIsAuthenticated === "true" ? true : false,
           user: storedUser ? JSON.parse(storedUser) : null,
+        },
+        userType: {
+          isFreeUser:
+            parsedUser?.subscription.type === SubscriptionPlanEnum.Free,
+          isPaidUser:
+            parsedUser?.subscription.type !== SubscriptionPlanEnum.Free,
+          isPremiumUser:
+            parsedUser?.subscription.type === SubscriptionPlanEnum.Premium,
         },
       }));
     }

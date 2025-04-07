@@ -17,7 +17,7 @@ import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import routes from "./routes";
 import { useApplicationContext } from "./store/Provider";
 
-const HomePage = lazy(() => import("../Pages/Home/Home"));
+const FeaturesPage = lazy(() => import("../Pages/Features/Features"));
 const CreateStoryPage = lazy(() => import("../Pages/CreateStory/CreateStory"));
 const ExplorePage = lazy(() => import("../Pages/Explore/Explore"));
 const UsersStoriesPage = lazy(
@@ -133,7 +133,7 @@ const AppContent = () => {
       {!state.isFetchingUserInfo && (
         <BrowserRouter>
           <Routes>
-            <Route index path={routes.home} element={<HomePage />} />
+            <Route index path={routes.features} element={<FeaturesPage />} />
             <Route path={routes.create} element={<CreateStoryPage />} />
             <Route path={routes.explore} element={<ExplorePage />} />
 

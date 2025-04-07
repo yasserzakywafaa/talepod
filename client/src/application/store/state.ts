@@ -9,6 +9,13 @@ export interface ApplicationInitialState {
   auth: Authentication;
   previousUrl: string;
   trackingInfo: TrackingInfo;
+  userType: UserType;
+}
+
+export interface UserType {
+  isFreeUser: boolean;
+  isPaidUser: boolean;
+  isPremiumUser: boolean;
 }
 
 export interface TrackingInfo {
@@ -36,6 +43,11 @@ export const getApplicationInitialState = (): ApplicationInitialState => {
     auth: {
       user: null,
       isAuthenticated: false,
+    },
+    userType: {
+      isFreeUser: true,
+      isPaidUser: false,
+      isPremiumUser: false,
     },
     trackingInfo: {
       clientId: "",

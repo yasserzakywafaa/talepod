@@ -21,8 +21,23 @@
   }
 }
 
+.application-bar-container {
+  .active-menu-item {
+    background: linear-gradient(
+      to top,
+      #ad932d,
+      transparent,
+      transparent,
+      transparent,
+      transparent,
+      transparent
+    );
+  }
+}
+
 img {
   pointer-events: none;
+  margin: auto;
 }
 
 .direction-rtl {
