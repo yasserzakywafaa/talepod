@@ -102,7 +102,7 @@ const useApplicationStore = (): ApplicationStore => {
       }));
     } else {
       const {
-        IS_AUTHENTICATED: IS_AUTHENTICATION,
+        AUTHENTICATED: IS_AUTHENTICATION,
         TOKEN,
         USER,
       } = APP_CONSTANTS.LOCAL_STORAGE;

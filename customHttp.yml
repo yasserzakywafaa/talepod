@@ -1,0 +1,15 @@
+applications:
+  - appRoot: client
+    customHeaders:
+      - pattern: "**/*"
+        headers:
+          - key: Content-Security-Policy
+            value: >
+              default-src 'self'; 
+              script-src 'self' 'nonce-$NONCE' 'strict-dynamic' https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com https://m.stripe.network blob: https://accounts.google.com 'nonce-$NONCE'; 
+              connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.stripe.com https://api-dev.talepod.com https://api.talepod.com; 
+              img-src 'self' https://www.google-analytics.com data:; 
+              frame-src 'self' https://*.stripe.com; 
+              style-src 'self' 'unsafe-inline' 'nonce-$NONCE'; 
+              font-src 'self' data:; 
+              object-src 'none';

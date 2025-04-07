@@ -10,9 +10,9 @@ const APP_CONSTANTS = {
   PROD_API_URL: process.env.REACT_APP_PROD_API_URL,
 
   // Environment
-  IS_DEV_LOCAL_SERVER: process.env.REACT_APP_IS_DEV_LOCAL_SERVER === "true",
-  IS_DEV: process.env.NODE_ENV === "development",
-  IS_PROD: process.env.NODE_ENV === "production",
+  IS_LOCAL: process.env.REACT_APP_ENV === "local",
+  IS_DEV: process.env.REACT_APP_ENV === "development",
+  IS_PROD: process.env.REACT_APP_ENV === "production",
 
   // Auth
   GOOGLE_OAUTH_CLIENT_ID: process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID,
@@ -35,7 +35,8 @@ const APP_CONSTANTS = {
   LOCAL_STORAGE: {
     TOKEN: "token",
     USER: "user",
-    IS_AUTHENTICATED: "isAuthenticated",
+    AUTHENTICATED: "isAuthenticated",
+    STORY_GENERATED: "isBlogGenerated",
   },
   APP_THEME_CLASS: {
     DARK: "dark",
@@ -44,6 +45,12 @@ const APP_CONSTANTS = {
   MAX_STORIES_LIMIT_FREE: 4,
   MAX_STORIES_LIMIT_PREMIUM: 50,
   MAX_STORIES_LIMIT_ADVANCED: 999,
+  // App Main URL
+  APP_URL:
+    process.env.REACT_APP_ENV === "local" ||
+    process.env.REACT_APP_ENV === "development"
+      ? "https://dev.talepod.com"
+      : "https://www.talepod.com",
 };
 
 export default APP_CONSTANTS;

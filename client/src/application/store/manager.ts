@@ -21,9 +21,9 @@ export const useApplicationManager = (
   };
 
   const handleSetAuthInfo = (authInfo: Authentication) => {
-    const { USER, IS_AUTHENTICATED } = APP_CONSTANTS.LOCAL_STORAGE;
+    const { USER, AUTHENTICATED } = APP_CONSTANTS.LOCAL_STORAGE;
     localStorage.setItem(USER, JSON.stringify(authInfo.user));
-    localStorage.setItem(IS_AUTHENTICATED, JSON.stringify(!!authInfo.user));
+    localStorage.setItem(AUTHENTICATED, JSON.stringify(!!authInfo.user));
     // store.updateAuthInfo(authInfo);
     store.updateAuthInfo();
   };

@@ -5,7 +5,7 @@
     <meta name="theme-color" id="theme-color" content="#F5F5F5" />
     <meta name="msapplication-TileColor" content="#F5F5F5" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>TalePod - The Ultimate Bedtime Stories Creator</title>
+    <title>TalePod - AI-Powered Bedtime Story Creation in Seconds</title>
     <meta
       name="description"
       content="Discover TalePod, where bedtime becomes magical with personalized, unique, enchanting bedtime stories crafted to your child's dreams and imagination."
@@ -17,10 +17,6 @@
     <meta name="author" content="TalePod" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="en" />
-    <!-- <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self' https://*.talepod.com; img-src 'self' data: https://*.talepod.com; script-src 'self' https://*.talepod.com;"
-    /> -->
 
     <!-- Open Graph tags (for social media) -->
     <meta property="og:url" content="https://www.talepod.com/" />
@@ -28,7 +24,7 @@
     <meta
       property="og:title"
       id="og-title"
-      content="Create Bedtime Stories with TalePod"
+      content="Talepod: AI-Powered Story Creation in Seconds"
     />
     <meta
       property="og:description"
@@ -42,7 +38,7 @@
     <meta
       name="twitter:title"
       id="twitter-title"
-      content="Create Bedtime Stories"
+      content="Talepod: AI-Powered Story Creation in Seconds"
     />
     <meta
       name="twitter:description"
@@ -196,30 +192,30 @@
         "url": "https://www.talepod.com"
       }
     </script>
+    <meta name="csp-nonce" content="%NONCE_PLACEHOLDER%" />
 
-    <!-- Google-tag (gtag.js) -->
-    <script>
-      // Only load Google Analytics if running on production
-      if (
-        window.location.hostname === "talepod.com" ||
-        window.location.hostname === "www.talepod.com"
-      ) {
-        // Create a script element
-        var gaScript = document.createElement("script");
-        gaScript.src =
-          "https://www.googletagmanager.com/gtag/js?id=G-CCQF7Y9X9H";
-        gaScript.async = true;
-        document.head.appendChild(gaScript);
+    <!-- Conditional Google Tag Manager -->
+    <script nonce="%NONCE_PLACEHOLDER%">
+      if ("%REACT_APP_ENV%" === "production") {
+        const gaScript1 = document.createElement("script");
+        gaScript1.async = true;
+        gaScript1.nonce = "%NONCE_PLACEHOLDER%";
+        gaScript1.src =
+          "https://www.googletagmanager.com/gtag/js?id=%REACT_APP_GOOGLE_ANALYTICS_ID%";
+        document.head.appendChild(gaScript1);
 
-        // Initialize Google Analytics
-        window.dataLayer = window.dataLayer || [];
-        function gtag() {
-          dataLayer.push(arguments);
-        }
-        gtag("js", new Date());
-        gtag("config", "G-CCQF7Y9X9H");
+        const gaScript2 = document.createElement("script");
+        gaScript2.nonce = "%NONCE_PLACEHOLDER%";
+        gaScript2.textContent = `
+            window.gtag('js', new Date());
+            window.gtag('config', '%REACT_APP_GOOGLE_ANALYTICS_ID%');
+          `;
+        document.head.appendChild(gaScript2);
+
+        console.log("📊 Google Analytics: Script loaded ✅");
       }
     </script>
+    <!-- End Conditional Google Tag Manager -->
   </head>
 
   <body>

@@ -3,7 +3,7 @@ import APP_CONSTANTS from "src/application/shared/app_constants";
 export const getLocalStorageAuthItems = () => {
   return {
     isAuthenticated:
-      localStorage.getItem(APP_CONSTANTS.LOCAL_STORAGE.IS_AUTHENTICATED) ===
+      localStorage.getItem(APP_CONSTANTS.LOCAL_STORAGE.AUTHENTICATED) ===
       "true",
     user: JSON.parse(
       localStorage.getItem(APP_CONSTANTS.LOCAL_STORAGE.USER) ?? "null"

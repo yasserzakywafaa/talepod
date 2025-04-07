@@ -17,7 +17,7 @@ import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import routes from "./routes";
 import { useApplicationContext } from "./store/Provider";
 
-const FeaturesPage = lazy(() => import("../Pages/Features/Features"));
+const FeaturesPage = lazy(() => import("../Pages/Features/FeaturesPage"));
 const CreateStoryPage = lazy(() => import("../Pages/CreateStory/CreateStory"));
 const ExplorePage = lazy(() => import("../Pages/Explore/Explore"));
 const UsersStoriesPage = lazy(
