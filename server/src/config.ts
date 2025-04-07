@@ -72,6 +72,7 @@ const CONFIG = {
 
   // Email Service
   SMTP: process.env.SMTP,
+  SMTP_PORT: process.env.SMTP_PORT,
   EMAIL: process.env.EMAIL,
   PASSWORD: process.env.PASSWORD,
 

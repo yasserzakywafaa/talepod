@@ -14,7 +14,7 @@ export const contactSupport = async (
   // Configure the transporter for nodemailer
   const transporter = nodeMailer.createTransport({
     host: CONFIG.SMTP,
-    port: 465,
+    port: parseInt(CONFIG.SMTP_PORT ?? "587"),
     secure: true,
     auth: {
       user: CONFIG.EMAIL,
