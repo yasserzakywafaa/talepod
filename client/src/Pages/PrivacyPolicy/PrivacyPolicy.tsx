@@ -136,8 +136,8 @@ const PrivacyPolicyPage = () => {
                 primary="Website"
                 secondary={
                   <Link
-                    href={routes.home}
-                    onClick={handleLinkClick(routes.home)}
+                    href={routes.features}
+                    onClick={handleLinkClick(routes.features)}
                   >
                     {window.location.origin}
                   </Link>

@@ -36,9 +36,7 @@ const GoogleAuth = (props: GoogleAuthProps) => {
       handleSetAuthInfo(authInfo);
       Notify({
         type: "success",
-        content: isRegister
-          ? "Registered Successfully!"
-          : `Hey ${authInfo.user?.name.givenName}, welcome back!`,
+        content: `Hi ${authInfo.user?.name.givenName} 👋🏻`,
       });
     } else {
       Notify({

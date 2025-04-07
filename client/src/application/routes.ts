@@ -1,5 +1,5 @@
 const routes = {
-  home: `/`,
+  features: `/`,
   create: `/create`,
   explore: `/bedtime-stories`,
   usersStories: `/users-bedtime-stories`,

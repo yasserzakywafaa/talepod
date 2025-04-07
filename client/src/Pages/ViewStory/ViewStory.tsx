@@ -25,6 +25,7 @@ import {
   ToastTypes,
 } from "src/components/shared/Notification/Notification";
 
+import APP_CONSTANTS from "src/application/shared/app_constants";
 import Box from "@mui/material/Box";
 import { LoaderComponentNameEnum } from "src/components/shared/Loader/LoaderSpinner";
 import { LyricsOutlined } from "@mui/icons-material";
@@ -32,6 +33,7 @@ import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import ReactMarkdown from "react-markdown";
 import Share from "../../components/shared/Share/Share";
+import { ShareFloating } from "src/components/shared/Share/ShareFloating";
 import StoryNotFound from "./features/StoryNotFound";
 import { VerifiedBadge } from "src/components/shared/VerifiedBadge";
 import ViewStoryAuthorInfo from "./features/ViewStoryAuthorInfo";
@@ -44,7 +46,6 @@ import { useEffect } from "react";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
 import { useParams } from "react-router-dom";
 import { useViewStoryContext } from "./store/Provider";
-import { ShareFloating } from "src/components/shared/Share/ShareFloating";
 
 const ViewStoryPage: React.FC = () => {
   const { userId, slug } = useParams<{ userId: string; slug: string }>();
@@ -97,8 +98,8 @@ const ViewStoryPage: React.FC = () => {
 
     if (auth.user?._id !== userId && !story.storyParams.createdByAdmin) {
       return true;
-    } 
-    
+    }
+
     return false;
   };
 
@@ -187,14 +188,18 @@ const ViewStoryPage: React.FC = () => {
     if (story && story._id) {
       handleUpdateMetaTags(story);
 
-      const newStoryCreated =
-        window.localStorage.getItem("newStoryCreated") === "true";
-      if (newStoryCreated) {
+      const isStoryGenerated =
+        window.localStorage.getItem(
+          APP_CONSTANTS.LOCAL_STORAGE.STORY_GENERATED
+        ) === "true";
+      if (isStoryGenerated) {
         Notify({
           type: ToastTypes.Success,
           content: "Story created successfully.",
         });
-        window.localStorage.removeItem("newStoryCreated");
+        window.localStorage.removeItem(
+          APP_CONSTANTS.LOCAL_STORAGE.STORY_GENERATED
+        );
       }
 
       // Get story author Info

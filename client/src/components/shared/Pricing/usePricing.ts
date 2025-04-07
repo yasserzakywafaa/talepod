@@ -1,6 +1,6 @@
+import APP_CONSTANTS from "src/application/shared/app_constants";
 import { Product } from "src/shared/payment";
 import { SubscriptionPlanEnum } from "src/shared/user";
-import { SubscriptionPlanProps } from "./Pricing";
 import { getCurrencySymbol } from "src/shared/utils/getCurrencySymbol";
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
@@ -9,12 +9,35 @@ import { usePaymentContext } from "../Payment/store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 
+interface SubscriptionPlanProps {
+  title: SubscriptionPlanEnum;
+  subheader?: string;
+  product?: Product;
+  features: string[];
+  buttonText: string;
+  buttonDisabled?: boolean;
+  buttonVariant: "text" | "outlined" | "contained";
+  buttonAction?: () => void;
+}
+
+interface SubscriptionPlanTableProps {
+  title: SubscriptionPlanEnum;
+  subheader?: string;
+  product?: Product;
+  features: { [key: string]: string | number | boolean | undefined };
+  buttonText: string;
+  buttonDisabled?: boolean;
+  buttonVariant: "text" | "outlined" | "contained";
+  buttonAction?: () => void;
+}
+
 export const usePricing = () => {
   const navigate = useNavigate();
   const {
     store: {
       state: {
         auth: { user, isAuthenticated },
+        userType: { isFreeUser, isPremiumUser },
       },
     },
     manager: { handleIsFetching },
@@ -212,7 +235,7 @@ export const usePricing = () => {
     {
       title: SubscriptionPlanEnum.Free,
       product: undefined,
-      description: [
+      features: [
         "Standard customer support",
         "Create up to 4 bedtime stories",
         "Basic text-to-speech conversion",
@@ -227,7 +250,7 @@ export const usePricing = () => {
       title: SubscriptionPlanEnum.Premium,
       // subheader: "Recommended",
       product: getMonthlyPlan(SubscriptionPlanEnum.Premium),
-      description: [
+      features: [
         "Priority customer support",
         "Customizable story parameters",
         "High-quality text-to-speech conversion",
@@ -242,7 +265,7 @@ export const usePricing = () => {
     // {
     //   title: SubscriptionPlanEnum.advanced,
     //   subheader: "Coming Soon",
-    //   description: [
+    //   features: [
     //     "Unlimited story generation",
     //     "Access to exclusive story content",
     //     "Offline access to stories",
@@ -257,8 +280,48 @@ export const usePricing = () => {
     // },
   ];
 
+  const plansForTable: SubscriptionPlanTableProps[] = [
+    {
+      title: SubscriptionPlanEnum.Free,
+      product: undefined,
+      features: {
+        "Number of stories": APP_CONSTANTS.MAX_STORIES_LIMIT_FREE,
+        "Story customization": false,
+        "Visibility of Stories": "Public",
+        "Customizable story parameters": false,
+        "High-quality text-to-speech conversion": false,
+        "Access your Premium created stories": false,
+        "Customer support": "Standard",
+      },
+      buttonDisabled: false,
+      buttonText: getButtonText(SubscriptionPlanEnum.Free),
+      buttonVariant: isAuthenticated ? "outlined" : "contained",
+      buttonAction: () => handleOnSubscribeClick(SubscriptionPlanEnum.Free),
+    },
+    {
+      title: SubscriptionPlanEnum.Premium,
+      subheader: "",
+      product: getMonthlyPlan(SubscriptionPlanEnum.Premium),
+      features: {
+        "Number of stories": APP_CONSTANTS.MAX_STORIES_LIMIT_PREMIUM,
+        "Story customization": true,
+        "Visibility of Stories": "Public",
+        "Customizable story parameters": true,
+        "High-quality text-to-speech conversion": true,
+        "Access your Premium created stories": true,
+        "Customer support": "Priority",
+      },
+      buttonDisabled: isPremiumUser,
+      buttonText: getButtonText(SubscriptionPlanEnum.Premium),
+      buttonVariant: isFreeUser ? "contained" : "outlined",
+      buttonAction: () => handleOnSubscribeClick(SubscriptionPlanEnum.Premium),
+    },
+  ];
+
   return {
     plans,
+    plansForTable,
+    prices,
     getPrice,
     getCurrency,
     getMonthlyPlan,

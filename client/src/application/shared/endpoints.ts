@@ -1,19 +1,19 @@
 import APP_CONSTANTS from "./app_constants";
 
 const getPublicURL = (): string | undefined => {
-  if (APP_CONSTANTS.IS_DEV) {
-    if (APP_CONSTANTS.IS_DEV_LOCAL_SERVER) {
-      return `http://localhost:${APP_CONSTANTS.DEV_SERVER_PORT}`;
-    }
+  const {
+    IS_LOCAL,
+    IS_DEV,
+    IS_PROD,
+    DEV_SERVER_PORT,
+    DEV_API_URL,
+    PROD_API_URL,
+  } = APP_CONSTANTS;
 
-    return APP_CONSTANTS.DEV_API_URL;
-  }
+  if (!IS_LOCAL && IS_DEV && !IS_PROD) return DEV_API_URL; // DEV env
+  if (!IS_LOCAL && !IS_DEV && IS_PROD) return PROD_API_URL; // PROD env
 
-  if (APP_CONSTANTS.DEV_API_URL) {
-    return APP_CONSTANTS.DEV_API_URL;
-  }
-
-  return APP_CONSTANTS.PROD_API_URL;
+  return `http://localhost:${DEV_SERVER_PORT}`; // LOCAL env
 };
 
 const publicApiUrl = getPublicURL();

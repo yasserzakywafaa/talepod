@@ -144,7 +144,11 @@ const CreateStoryForm = () => {
             navigate(routes.myStory(user._id, story.slug), {
               replace: false,
             });
-            window.localStorage.setItem("newStoryCreated", "true");
+            // window.localStorage.setItem("newStoryCreated", "true");
+            window.localStorage.setItem(
+              APP_CONSTANTS.LOCAL_STORAGE.STORY_GENERATED,
+              "true"
+            );
           }
         }
       } catch (error) {
