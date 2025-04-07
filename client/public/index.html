@@ -194,6 +194,13 @@
     </script>
     <meta name="csp-nonce" content="%NONCE_PLACEHOLDER%" />
 
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () {
+        dataLayer.push(arguments);
+      };
+    </script>
+
     <!-- Conditional Google Tag Manager -->
     <script nonce="%NONCE_PLACEHOLDER%">
       if ("%REACT_APP_ENV%" === "production") {
