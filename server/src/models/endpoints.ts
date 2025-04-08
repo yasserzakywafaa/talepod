@@ -41,6 +41,12 @@ const END_POINTS = {
     GET_ALL_BLOGS: "/api/v1/blogs/blogs-list",
     GET_BLOG_BY_SLUG: (slug: string) => `/api/v1/blogs/${slug}`,
   },
+  WEBHOOKS: {
+    N8N: {
+      NEW_STORY_ADDED:
+        "https://n8n.yasserzaky.com/webhook/talepod-new-story-added",
+    },
+  },
 };
 
 export default END_POINTS;

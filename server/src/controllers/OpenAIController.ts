@@ -13,6 +13,7 @@ import { IMAGES_SIZES } from "../models/openaiModel";
 import OpenAi from "openai";
 import fs from "fs";
 import { handleCreateStory } from "../services/create/story";
+import { handleTriggerWebhookN8n } from "../services/webhooks/n8n";
 import { uploadFileToS3 } from "../services/amazonS3";
 
 const openai = new OpenAi();
@@ -38,6 +39,21 @@ export const createStory = async (
       storyParams,
       userInfo
     );
+
+    if (story) {
+      // Trigger webhook n8n with new blog data
+      await handleTriggerWebhookN8n({
+        eventName: "New Blog Added",
+        data: {
+          id: `${story._id}`,
+          title: `${story.title}`,
+          url: `${CONFIG.APP_URL}/bedtime-story/${story.slug}`,
+          user: userInfo,
+          isDev: CONFIG.IS_DEV,
+          isProd: CONFIG.IS_DEV,
+        },
+      });
+    }
 
     response.json(story);
   } catch (error) {
