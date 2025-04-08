@@ -45,9 +45,9 @@ export const createStory = async (
       await handleTriggerWebhookN8n({
         eventName: "New Blog Added",
         data: {
-          storyId: `${story._id}`,
-          storyTitle: `${story.title}`,
-          storyUrl: `${CONFIG.APP_URL}/story/${story.slug}`,
+          id: `${story._id}`,
+          title: `${story.title}`,
+          url: `${CONFIG.APP_URL}/bedtime-story/${story.slug}`,
           user: userInfo,
           isDev: CONFIG.IS_DEV,
           isProd: CONFIG.IS_DEV,

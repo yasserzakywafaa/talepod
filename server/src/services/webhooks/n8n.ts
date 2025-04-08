@@ -5,9 +5,9 @@ import axios from "axios";
 export interface WebhookN8n {
   eventName: string;
   data: {
-    storyId: string;
-    storyTitle: string;
-    storyUrl: string;
+    id: string;
+    title: string;
+    url: string;
     user: User;
     isDev: boolean;
     isProd: boolean;
