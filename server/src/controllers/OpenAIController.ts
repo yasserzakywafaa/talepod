@@ -50,7 +50,7 @@ export const createStory = async (
           url: `${CONFIG.APP_URL}/bedtime-story/${story.slug}`,
           user: userInfo,
           isDev: CONFIG.IS_DEV,
-          isProd: CONFIG.IS_DEV,
+          isProd: CONFIG.IS_PROD,
         },
       });
     }
