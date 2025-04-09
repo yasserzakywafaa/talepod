@@ -129,7 +129,6 @@ const StoryExamples = () => {
             marginLeft: "-1rem",
             minWidth: "30px",
             maxWidth: "40px",
-            borderRadius: "50%",
             transform: "translateY(-50%)",
             color:
               themeMode === "light"
@@ -153,7 +152,6 @@ const StoryExamples = () => {
             marginRight: "-1rem",
             minWidth: "30px",
             maxWidth: "40px",
-            borderRadius: "50%",
             transform: "translateY(-50%)",
             color:
               themeMode === "light"

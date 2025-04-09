@@ -165,7 +165,7 @@ const HowItWorks = () => {
           >
             {isAuthenticated ? "Start Creating Now!" : "Start Your Free Trial!"}
           </Button>
-          <Typography variant="body2" color="inherit" sx={{ mt: 1 }}>
+          <Typography variant="body2" color="secondary" sx={{ mt: 1 }}>
             **No Credit Card Required
           </Typography>
         </Box>

@@ -8,6 +8,15 @@
   overflow-x: hidden;
 }
 
+.hero-image-mobile {
+  position: absolute;
+  left: auto;
+  right: -8rem;
+  opacity: 0.15;
+  top: 40%;
+  bottom: auto;
+}
+
 .features-page {
   position: relative;
   padding-top: 5rem;

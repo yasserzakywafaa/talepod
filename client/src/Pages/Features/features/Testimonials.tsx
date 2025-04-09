@@ -124,7 +124,7 @@ const Testimonials = () => {
   return (
     <Container sx={{ pb: 4 }}>
       <Typography variant="h4" align="center" color="primary" gutterBottom>
-        What Parents Are Saying About TalePod
+        What Parents Are Saying
       </Typography>
       <Box
         sx={{
@@ -144,7 +144,6 @@ const Testimonials = () => {
             marginLeft: "-1rem",
             minWidth: "30px",
             maxWidth: "40px",
-            borderRadius: "50%",
             transform: "translateY(-50%)",
             color:
               themeMode === "light"
@@ -168,7 +167,6 @@ const Testimonials = () => {
             marginRight: "-1rem",
             minWidth: "30px",
             maxWidth: "40px",
-            borderRadius: "50%",
             transform: "translateY(-50%)",
             color:
               themeMode === "light"
@@ -201,7 +199,7 @@ const Testimonials = () => {
             <Box
               key={index}
               sx={{
-                maxWidth: { xs: "94%", sm: CARD_WIDTH, md: CARD_WIDTH },
+                maxWidth: { xs: "85%", sm: CARD_WIDTH, md: CARD_WIDTH },
                 width: "100%",
                 flexShrink: 0,
               }}

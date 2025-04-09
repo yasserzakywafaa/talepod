@@ -43,7 +43,7 @@ export const createStory = async (
     if (story) {
       // Trigger webhook n8n with new blog data
       await handleTriggerWebhookN8n({
-        eventName: "New Blog Added",
+        eventName: "New Story Added",
         data: {
           id: `${story._id}`,
           title: `${story.title}`,
