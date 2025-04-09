@@ -8,13 +8,17 @@
   overflow-x: hidden;
 }
 
-.hero-image-mobile {
-  position: absolute;
-  left: auto;
-  right: -8rem;
-  opacity: 0.15;
-  top: 40%;
-  bottom: auto;
+.hero-container {
+  overflow: hidden;
+  .hero-image-mobile {
+    position: absolute;
+    left: auto;
+    right: -8rem;
+    opacity: 0.15;
+    bottom: 0;
+    pointer-events: none;
+    z-index: -1;
+  }
 }
 
 .features-page {

@@ -97,7 +97,7 @@ const Testimonials = () => {
     },
   } = useApplicationContext();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const CARD_WIDTH = 300; // Fixed card width for scrolling
+  const CARD_WIDTH = 250; // Fixed card width for scrolling
 
   const handleOnChevronLeftClick = () => {
     const container = scrollContainerRef.current;
