@@ -74,6 +74,7 @@ const ApplicationBar = () => {
     isContactPage: !!useMatch(routes.contact),
     isViewBlogPage: !!useMatch(routes.blog(":id")),
     isMyStoriesPage: !!useMatch(routes.myStories(":userId")),
+    isMyProfilePage: !!useMatch(routes.myProfile(":userId")),
     isUnauthorized: !!useMatch(routes.unauthorized),
     isPrivacyPolicy: !!useMatch(routes.privacyPolicy),
     isTermsOfService: !!useMatch(routes.termsAndConditions),
@@ -327,7 +328,10 @@ const ApplicationBar = () => {
                     }}
                   >
                     {auth.isAuthenticated ? (
-                      <UserAccountMenuButton auth={auth} />
+                      <UserAccountMenuButton
+                        auth={auth}
+                        isMyProfilePage={pagesMatch.isMyProfilePage}
+                      />
                     ) : (
                       <>
                         <MenuItem
@@ -427,11 +431,6 @@ const ApplicationBar = () => {
                       <Box>
                         <MenuItem
                           className={`menu-item`}
-                          color={
-                            pagesMatch.isFeaturesPage
-                              ? primaryColor
-                              : "text.primary"
-                          }
                           onClick={handleOnMenuItemClick("features")}
                         >
                           <EarbudsOutlined
@@ -439,16 +438,20 @@ const ApplicationBar = () => {
                             color="primary"
                             sx={{ mr: 1 }}
                           />
-                          <Typography variant="h6">Features</Typography>
+                          <Typography
+                            variant="h6"
+                            color={
+                              pagesMatch.isFeaturesPage
+                                ? primaryColor
+                                : "text.primary"
+                            }
+                          >
+                            Features
+                          </Typography>
                         </MenuItem>
 
                         <MenuItem
                           className={`menu-item`}
-                          color={
-                            pagesMatch.isExplorePage
-                              ? primaryColor
-                              : "text.primary"
-                          }
                           onClick={handleOnMenuItemClick("explore")}
                         >
                           <SearchOutlined
@@ -457,16 +460,20 @@ const ApplicationBar = () => {
                             sx={{ mr: 1 }}
                           />
 
-                          <Typography variant="h6">Explore</Typography>
+                          <Typography
+                            variant="h6"
+                            color={
+                              pagesMatch.isExplorePage
+                                ? primaryColor
+                                : "text.primary"
+                            }
+                          >
+                            Explore
+                          </Typography>
                         </MenuItem>
 
                         <MenuItem
                           className={`menu-item`}
-                          color={
-                            pagesMatch.isCreatePage
-                              ? primaryColor
-                              : "text.primary"
-                          }
                           onClick={handleOnMenuItemClick("create")}
                         >
                           <AutoFixHighOutlined
@@ -474,16 +481,20 @@ const ApplicationBar = () => {
                             color="primary"
                             sx={{ mr: 1 }}
                           />
-                          <Typography variant="h6">Create Story</Typography>
+                          <Typography
+                            variant="h6"
+                            color={
+                              pagesMatch.isCreatePage
+                                ? primaryColor
+                                : "text.primary"
+                            }
+                          >
+                            Create Story
+                          </Typography>
                         </MenuItem>
 
                         <MenuItem
                           className={`menu-item`}
-                          color={
-                            pagesMatch.isBlogsPage
-                              ? primaryColor
-                              : "text.primary"
-                          }
                           onClick={handleOnMenuItemClick("original-stories")}
                         >
                           <ArticleOutlined
@@ -491,16 +502,20 @@ const ApplicationBar = () => {
                             color="primary"
                             sx={{ mr: 1 }}
                           />
-                          <Typography variant="h6">Blogs</Typography>
+                          <Typography
+                            variant="h6"
+                            color={
+                              pagesMatch.isBlogsPage
+                                ? primaryColor
+                                : "text.primary"
+                            }
+                          >
+                            Blogs
+                          </Typography>
                         </MenuItem>
 
                         <MenuItem
                           className={`menu-item`}
-                          color={
-                            pagesMatch.isContactPage
-                              ? primaryColor
-                              : "text.primary"
-                          }
                           onClick={handleOnMenuItemClick("contact")}
                         >
                           <AlternateEmailOutlined
@@ -508,7 +523,16 @@ const ApplicationBar = () => {
                             color="primary"
                             sx={{ mr: 1 }}
                           />
-                          <Typography variant="h6">Contact Us</Typography>
+                          <Typography
+                            variant="h6"
+                            color={
+                              pagesMatch.isContactPage
+                                ? primaryColor
+                                : "text.primary"
+                            }
+                          >
+                            Contact Us
+                          </Typography>
                         </MenuItem>
 
                         {auth.isAuthenticated ? (
@@ -517,11 +541,6 @@ const ApplicationBar = () => {
 
                             <MenuItem
                               className={`menu-item`}
-                              color={
-                                pagesMatch.isMyStoriesPage
-                                  ? primaryColor
-                                  : "text.primary"
-                              }
                               onClick={handleOnMenuItemClick("my-stories")}
                             >
                               <WebStoriesOutlined
@@ -530,7 +549,16 @@ const ApplicationBar = () => {
                                 sx={{ mr: 1 }}
                               />
 
-                              <Typography variant="h6">My Stories</Typography>
+                              <Typography
+                                variant="h6"
+                                color={
+                                  pagesMatch.isMyStoriesPage
+                                    ? primaryColor
+                                    : "text.primary"
+                                }
+                              >
+                                My Stories
+                              </Typography>
                             </MenuItem>
                           </>
                         ) : (
@@ -541,7 +569,10 @@ const ApplicationBar = () => {
                       <Box marginBottom="1rem">
                         {auth.isAuthenticated ? (
                           <MenuItem>
-                            <UserAccountMenuButton auth={auth} />
+                            <UserAccountMenuButton
+                              auth={auth}
+                              isMyProfilePage={pagesMatch.isMyProfilePage}
+                            />
                           </MenuItem>
                         ) : (
                           <>

@@ -8,11 +8,12 @@ import { primaryColor } from "src/application/shared/themes";
 
 interface UserAccountMenuButtonProps {
   auth: Authentication;
+  isMyProfilePage: boolean;
 }
 
 const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
   const navigate = useNavigate();
-  const { auth } = props;
+  const { auth, isMyProfilePage } = props;
 
   if (!auth.user) return;
 
@@ -45,7 +46,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
 
         <Typography
           variant="h6"
-          color="text.primary"
+          color={isMyProfilePage ? primaryColor : "text.primary"}
           sx={{
             maxWidth: "100px",
             overflowX: "hidden",
