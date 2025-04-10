@@ -8,6 +8,7 @@ import {
 
 import { useApplicationContext } from "src/application/store/Provider";
 import { useRef } from "react";
+import { useAutoScroll } from "src/shared/hooks/useAutoScroll";
 
 interface StoryExample {
   title: string;
@@ -81,29 +82,23 @@ const StoryExamples = () => {
       state: { themeMode },
     },
   } = useApplicationContext();
+  const CARD_WIDTH = 300;
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const CARD_WIDTH = 300; // Fixed card width for scrolling
+
+  const { scrollNext, scrollPrev, handleInteraction } = useAutoScroll({
+    scrollContainerRef,
+    scrollAmount: CARD_WIDTH,
+    scrollIntervalMs: 4000,
+    pauseOnInteractionMs: 8000,
+    loop: true,
+  });
 
   const handleOnChevronLeftClick = () => {
-    const container = scrollContainerRef.current;
-    if (container) {
-      const newScrollLeft = Math.max(0, container.scrollLeft - CARD_WIDTH);
-      container.scrollTo({
-        left: newScrollLeft,
-        behavior: "smooth",
-      });
-    }
+    handleInteraction(scrollPrev);
   };
 
   const handleOnChevronRightClick = () => {
-    const container = scrollContainerRef.current;
-    if (container) {
-      const newScrollLeft = container.scrollLeft + CARD_WIDTH;
-      container.scrollTo({
-        left: newScrollLeft,
-        behavior: "smooth",
-      });
-    }
+    handleInteraction(scrollNext);
   };
 
   return (
