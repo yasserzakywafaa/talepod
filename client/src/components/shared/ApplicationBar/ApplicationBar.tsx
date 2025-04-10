@@ -25,7 +25,6 @@ import { useMatch, useNavigate } from "react-router-dom";
 import { CancelSubscriptionModal } from "src/components/Modals/CancelSubscriptionModal/CancelSubscriptionModal";
 import { InstallAppModal } from "src/components/Modals/InstallAppModal/InstallAppModal";
 import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
-import Logo from "../../../assets/images/sleeping_bunny_with_a_moon.webp";
 import { PricingModal } from "src/components/Modals/PricingModal/PricingModal";
 import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal";
 import SettingsMenuButton from "./SettingsMenuButton";
@@ -37,6 +36,7 @@ import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useState } from "react";
+import useDetectScroll from "src/shared/hooks/useDetectScroll";
 
 const ApplicationBar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -44,6 +44,7 @@ const ApplicationBar = () => {
     useState<boolean>(false);
 
   const navigate = useNavigate();
+  const { isScrolledFromTop } = useDetectScroll();
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
 
   const {
@@ -315,30 +316,11 @@ const ApplicationBar = () => {
                   component="div"
                   flexDirection="row"
                   justifyContent={
-                    pagesMatch.isCreatePage ? "flex-end" : "space-between"
+                    isScrolledFromTop ? "space-between" : "flex-end"
                   }
                   width="100%"
                 >
-                  {pagesMatch.isFeaturesPage ? (
-                    <Box sx={{ width: "30px", height: "30px" }}>
-                      <picture>
-                        <source srcSet={Logo} type="image/webp" />
-                        <img
-                          width="100%"
-                          height="100%"
-                          src={Logo}
-                          className="logo"
-                          alt="features-page-image"
-                          aria-label="rabbit-sleeping-on-a-pillow"
-                        />
-                      </picture>
-                    </Box>
-                  ) : (
-                    // <BackButton onClick={handleOnBackClick} />
-                    <></>
-                  )}
-
-                  {!pagesMatch.isFeaturesPage && !pagesMatch.isCreatePage && (
+                  {isScrolledFromTop ? (
                     <Button
                       size="small"
                       color="primary"
@@ -348,6 +330,8 @@ const ApplicationBar = () => {
                     >
                       Create Story
                     </Button>
+                  ) : (
+                    <></>
                   )}
 
                   <Button

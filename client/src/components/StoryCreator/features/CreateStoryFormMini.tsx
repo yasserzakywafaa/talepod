@@ -59,9 +59,6 @@ const CreateStoryFormMini = () => {
     return false;
   };
 
-  const isFormHasErrors = (): boolean => {
-    return hasCensoredWords(profileInfo.name);
-  };
 
   const handleOnFieldChangeForMini = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -86,7 +83,7 @@ const CreateStoryFormMini = () => {
     }
 
     const form = event.currentTarget;
-    if (!form.checkValidity() || isFormHasErrors()) {
+    if (!form.checkValidity() || hasCensoredWords(profileInfo.name)) {
       form.reportValidity();
       return;
     }
@@ -132,7 +129,7 @@ const CreateStoryFormMini = () => {
   };
 
   return (
-    <Box className="story-creator-form mini">
+    <Box className="story-creator-form mini" width="100%">
       <Box
         marginTop={4}
         marginBottom={1}
@@ -151,11 +148,11 @@ const CreateStoryFormMini = () => {
           required
           id="name"
           name="name"
-          label="Name"
+          label="Child/Adult Name"
           type="text"
           value={profileInfo.name}
           className="form-item"
-          sx={{ width: { xs: "80%", sm: "100%" } }}
+          sx={{ width: { xs: "70%", sm: "50%" } }}
           error={hasCensoredWords(profileInfo.name)}
           helperText={
             hasCensoredWords(profileInfo.name) && "Not Appropriate 🙈"

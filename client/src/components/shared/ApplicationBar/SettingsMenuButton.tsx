@@ -160,7 +160,7 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
                 </MenuItem>
               </>
             ) : (
-              <></>
+              []
             )}
             <Divider />
 
@@ -177,7 +177,7 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
             </MenuItem>
           </>
         ) : (
-          <></>
+          []
         )}
       </Menu>
     </>

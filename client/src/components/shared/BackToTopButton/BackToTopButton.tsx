@@ -3,21 +3,19 @@ import { useEffect, useState } from "react";
 
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { scrollToTop } from "src/shared/utils/scrollTo";
+import useDetectScroll from "src/shared/hooks/useDetectScroll";
 
 const ScrollToTopButton = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const { isScrolledFromTop } = useDetectScroll();
 
   const toggleVisibility = () => {
-    if (window.scrollY > 200) setIsVisible(true);
-    else setIsVisible(false);
+    setIsVisible(isScrolledFromTop);
   };
 
   useEffect(() => {
-    window.addEventListener("scroll", toggleVisibility);
-    return () => {
-      window.removeEventListener("scroll", toggleVisibility);
-    };
-  }, []);
+    toggleVisibility();
+  }, [isScrolledFromTop]);
 
   return (
     <Zoom in={isVisible}>
