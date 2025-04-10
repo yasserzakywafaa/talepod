@@ -37,6 +37,10 @@ import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Pro
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useState } from "react";
 import useDetectScroll from "src/shared/hooks/useDetectScroll";
+import {
+  primaryColor,
+  secondaryColorForDarkTheme,
+} from "src/application/shared/themes";
 
 const ApplicationBar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -114,6 +118,28 @@ const ApplicationBar = () => {
     setIsDrawerOpen(false);
   };
 
+  const buttonHoverStylePrimary = {
+    "&:hover": {
+      "& .MuiTypography-root": {
+        color: secondaryColorForDarkTheme,
+      },
+      "& .MuiSvgIcon-root": {
+        color: secondaryColorForDarkTheme,
+      },
+    },
+  };
+
+  const buttonHoverStyleSecondary = {
+    "&:hover": {
+      "& .MuiTypography-root": {
+        color: primaryColor,
+      },
+      "& .MuiSvgIcon-root": {
+        color: primaryColor,
+      },
+    },
+  };
+
   return (
     <>
       {isAppBarVisible && (
@@ -150,9 +176,8 @@ const ApplicationBar = () => {
                 <>
                   <Box role="menu" sx={{ display: { xs: "none", md: "flex" } }}>
                     <MenuItem
-                      className={`menu-item ${
-                        pagesMatch.isFeaturesPage && "active-menu-item"
-                      }`}
+                      className={`menu-item`}
+                      sx={{ ...buttonHoverStylePrimary }}
                       onClick={handleOnMenuItemClick("features")}
                     >
                       <EarbudsOutlined
@@ -160,16 +185,21 @@ const ApplicationBar = () => {
                         color="primary"
                         sx={{ mr: 1 }}
                       />
-                      <Typography variant="body1" color="text.primary">
+                      <Typography
+                        variant="body1"
+                        color={
+                          pagesMatch.isFeaturesPage
+                            ? primaryColor
+                            : "text.primary"
+                        }
+                      >
                         Features
                       </Typography>
                     </MenuItem>
 
                     <MenuItem
-                      sx={{ py: "6px", px: "12px" }}
-                      className={`menu-item ${
-                        pagesMatch.isExplorePage && "active-menu-item"
-                      }`}
+                      className={`menu-item`}
+                      sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
                       onClick={handleOnMenuItemClick("explore")}
                     >
                       <SearchOutlined
@@ -178,16 +208,21 @@ const ApplicationBar = () => {
                         sx={{ mr: 1 }}
                       />
 
-                      <Typography variant="body1" color="text.primary">
+                      <Typography
+                        variant="body1"
+                        color={
+                          pagesMatch.isExplorePage
+                            ? primaryColor
+                            : "text.primary"
+                        }
+                      >
                         Explore
                       </Typography>
                     </MenuItem>
 
                     <MenuItem
-                      className={`menu-item ${
-                        pagesMatch.isCreatePage && "active-menu-item"
-                      }`}
-                      sx={{ py: "6px", px: "12px" }}
+                      className={`menu-item`}
+                      sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
                       onClick={handleOnMenuItemClick("create")}
                     >
                       <AutoFixHighOutlined
@@ -195,16 +230,21 @@ const ApplicationBar = () => {
                         color="primary"
                         sx={{ mr: 1 }}
                       />
-                      <Typography variant="body1" color="text.primary">
+                      <Typography
+                        variant="body1"
+                        color={
+                          pagesMatch.isCreatePage
+                            ? primaryColor
+                            : "text.primary"
+                        }
+                      >
                         Create Story
                       </Typography>
                     </MenuItem>
 
                     <MenuItem
-                      className={`menu-item ${
-                        pagesMatch.isBlogsPage && "active-menu-item"
-                      }`}
-                      sx={{ py: "6px", px: "12px" }}
+                      className={`menu-item`}
+                      sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
                       onClick={handleOnMenuItemClick("original-stories")}
                     >
                       <ArticleOutlined
@@ -212,16 +252,19 @@ const ApplicationBar = () => {
                         color="primary"
                         sx={{ mr: 1 }}
                       />
-                      <Typography variant="body1" color="text.primary">
+                      <Typography
+                        variant="body1"
+                        color={
+                          pagesMatch.isBlogsPage ? primaryColor : "text.primary"
+                        }
+                      >
                         Blogs
                       </Typography>
                     </MenuItem>
 
                     <MenuItem
-                      className={`menu-item ${
-                        pagesMatch.isContactPage && "active-menu-item"
-                      }`}
-                      sx={{ py: "6px", px: "12px" }}
+                      className={`menu-item`}
+                      sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
                       onClick={handleOnMenuItemClick("contact")}
                     >
                       <AlternateEmailOutlined
@@ -229,7 +272,14 @@ const ApplicationBar = () => {
                         color="primary"
                         sx={{ mr: 1 }}
                       />
-                      <Typography variant="body1" color="text.primary">
+                      <Typography
+                        variant="body1"
+                        color={
+                          pagesMatch.isContactPage
+                            ? primaryColor
+                            : "text.primary"
+                        }
+                      >
                         Contact Us
                       </Typography>
                     </MenuItem>
@@ -242,9 +292,8 @@ const ApplicationBar = () => {
                         />
 
                         <MenuItem
-                          className={`menu-item ${
-                            pagesMatch.isMyStoriesPage && "active-menu-item"
-                          }`}
+                          className={`menu-item`}
+                          sx={{ ...buttonHoverStylePrimary }}
                           onClick={handleOnMenuItemClick("my-stories")}
                         >
                           <WebStoriesOutlined
@@ -253,7 +302,14 @@ const ApplicationBar = () => {
                             sx={{ mr: 1 }}
                           />
 
-                          <Typography variant="body1" color="text.primary">
+                          <Typography
+                            variant="body1"
+                            color={
+                              pagesMatch.isMyStoriesPage
+                                ? primaryColor
+                                : "text.primary"
+                            }
+                          >
                             My Stories
                           </Typography>
                         </MenuItem>
@@ -274,7 +330,10 @@ const ApplicationBar = () => {
                       <UserAccountMenuButton auth={auth} />
                     ) : (
                       <>
-                        <MenuItem onClick={handleToggleRegisterModal}>
+                        <MenuItem
+                          sx={{ ...buttonHoverStyleSecondary }}
+                          onClick={handleToggleRegisterModal}
+                        >
                           <LockOpenOutlined
                             fontSize="medium"
                             color="secondary"
@@ -286,7 +345,10 @@ const ApplicationBar = () => {
                           </Typography>
                         </MenuItem>
 
-                        <MenuItem onClick={handleToggleLoginModal}>
+                        <MenuItem
+                          sx={{ ...buttonHoverStyleSecondary }}
+                          onClick={handleToggleLoginModal}
+                        >
                           <VpnKeyOutlined
                             fontSize="medium"
                             color="secondary"
@@ -300,7 +362,7 @@ const ApplicationBar = () => {
                       </>
                     )}
 
-                    <MenuItem>
+                    <MenuItem sx={{ ...buttonHoverStyleSecondary }}>
                       <SettingsMenuButton
                         setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
                       />
@@ -364,9 +426,12 @@ const ApplicationBar = () => {
                     >
                       <Box>
                         <MenuItem
-                          className={`menu-item ${
-                            pagesMatch.isFeaturesPage && "active-menu-item"
-                          }`}
+                          className={`menu-item`}
+                          color={
+                            pagesMatch.isFeaturesPage
+                              ? primaryColor
+                              : "text.primary"
+                          }
                           onClick={handleOnMenuItemClick("features")}
                         >
                           <EarbudsOutlined
@@ -378,9 +443,12 @@ const ApplicationBar = () => {
                         </MenuItem>
 
                         <MenuItem
-                          className={`menu-item ${
-                            pagesMatch.isExplorePage && "active-menu-item"
-                          }`}
+                          className={`menu-item`}
+                          color={
+                            pagesMatch.isExplorePage
+                              ? primaryColor
+                              : "text.primary"
+                          }
                           onClick={handleOnMenuItemClick("explore")}
                         >
                           <SearchOutlined
@@ -393,9 +461,12 @@ const ApplicationBar = () => {
                         </MenuItem>
 
                         <MenuItem
-                          className={`menu-item ${
-                            pagesMatch.isCreatePage && "active-menu-item"
-                          }`}
+                          className={`menu-item`}
+                          color={
+                            pagesMatch.isCreatePage
+                              ? primaryColor
+                              : "text.primary"
+                          }
                           onClick={handleOnMenuItemClick("create")}
                         >
                           <AutoFixHighOutlined
@@ -407,9 +478,12 @@ const ApplicationBar = () => {
                         </MenuItem>
 
                         <MenuItem
-                          className={`menu-item ${
-                            pagesMatch.isBlogsPage && "active-menu-item"
-                          }`}
+                          className={`menu-item`}
+                          color={
+                            pagesMatch.isBlogsPage
+                              ? primaryColor
+                              : "text.primary"
+                          }
                           onClick={handleOnMenuItemClick("original-stories")}
                         >
                           <ArticleOutlined
@@ -421,9 +495,12 @@ const ApplicationBar = () => {
                         </MenuItem>
 
                         <MenuItem
-                          className={`menu-item ${
-                            pagesMatch.isContactPage && "active-menu-item"
-                          }`}
+                          className={`menu-item`}
+                          color={
+                            pagesMatch.isContactPage
+                              ? primaryColor
+                              : "text.primary"
+                          }
                           onClick={handleOnMenuItemClick("contact")}
                         >
                           <AlternateEmailOutlined
@@ -439,9 +516,12 @@ const ApplicationBar = () => {
                             <Divider sx={{ marginX: "1rem" }} />
 
                             <MenuItem
-                              className={`menu-item ${
-                                pagesMatch.isMyStoriesPage && "active-menu-item"
-                              }`}
+                              className={`menu-item`}
+                              color={
+                                pagesMatch.isMyStoriesPage
+                                  ? primaryColor
+                                  : "text.primary"
+                              }
                               onClick={handleOnMenuItemClick("my-stories")}
                             >
                               <WebStoriesOutlined

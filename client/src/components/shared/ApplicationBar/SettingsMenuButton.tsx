@@ -20,6 +20,7 @@ import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useDetectBrowserType } from "src/shared/hooks/useDetectBrowserType";
+import { primaryColor } from "src/application/shared/themes";
 
 export interface SettingsMenuButtonProps {
   children?: JSX.Element;
@@ -74,6 +75,17 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
     if (isUserPrivatePages) navigate(routes.unauthorized);
   };
 
+  const buttonHoverStylePrimary = {
+    "&:hover": {
+      "& .MuiTypography-root": {
+        color: primaryColor,
+      },
+      "& .MuiSvgIcon-root": {
+        color: primaryColor,
+      },
+    },
+  };
+
   return (
     <>
       <Box
@@ -104,7 +116,7 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
         variant="menu"
         onClose={handleCloseMenu}
       >
-        <MenuItem onClick={toggleThemeMode}>
+        <MenuItem sx={{ ...buttonHoverStylePrimary }} onClick={toggleThemeMode}>
           <ListItemIcon>
             {themeMode === "dark" ? (
               <WbSunnyOutlined
@@ -125,7 +137,10 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
         </MenuItem>
 
         {!isInStandaloneMode && (
-          <MenuItem onClick={handleOnInstallClick}>
+          <MenuItem
+            sx={{ ...buttonHoverStylePrimary }}
+            onClick={handleOnInstallClick}
+          >
             <ListItemIcon>
               <InstallMobileOutlined
                 fontSize="medium"
@@ -138,7 +153,10 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
           </MenuItem>
         )}
 
-        <MenuItem onClick={handleOnRefreshClick}>
+        <MenuItem
+          sx={{ ...buttonHoverStylePrimary }}
+          onClick={handleOnRefreshClick}
+        >
           <RefreshOutlined fontSize="medium" color="secondary" sx={{ mr: 1 }} />
           <Typography variant="body1">Refresh App</Typography>
         </MenuItem>
@@ -149,7 +167,10 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
               <>
                 <Divider />
 
-                <MenuItem onClick={handleOnUsersBlogsClick}>
+                <MenuItem
+                  sx={{ ...buttonHoverStylePrimary }}
+                  onClick={handleOnUsersBlogsClick}
+                >
                   <ListItemIcon>
                     <WebStoriesOutlined fontSize="small" color="secondary" />
                   </ListItemIcon>
@@ -164,7 +185,10 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
             )}
             <Divider />
 
-            <MenuItem onClick={handleOnLogoutClick}>
+            <MenuItem
+              sx={{ ...buttonHoverStylePrimary }}
+              onClick={handleOnLogoutClick}
+            >
               <ListItemIcon>
                 <LogoutOutlined
                   fontSize="medium"

@@ -4,6 +4,7 @@ import { Authentication } from "src/application/store/state";
 import ProfileAvatar from "../ProfileAvatar";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
+import { primaryColor } from "src/application/shared/themes";
 
 interface UserAccountMenuButtonProps {
   auth: Authentication;
@@ -50,6 +51,9 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
             overflowX: "hidden",
             whiteSpace: "nowrap",
             textOverflow: "ellipsis",
+            "&.MuiTypography-root:hover": {
+              color: primaryColor,
+            },
           }}
           marginLeft={1}
         >
