@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 
 import { Authentication } from "src/application/store/state";
-import ProfileAvatar from "../ProfileAvatar";
+import ProfileAvatar from "../../ProfileAvatar";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 import { primaryColor } from "src/application/shared/themes";

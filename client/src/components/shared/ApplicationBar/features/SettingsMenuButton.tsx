@@ -15,7 +15,7 @@ import { useMatch, useNavigate } from "react-router-dom";
 
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { Notify } from "../Notification/Notification";
+import { Notify } from "../../Notification/Notification";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
