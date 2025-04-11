@@ -69,17 +69,17 @@ export const ParticlesComponent = () => {
           },
           particles: {
             color: {
-              value: primaryColor,
+              value: themeMode === "dark" ? white : primaryColor,
             },
             links: {
               color: themeMode === "dark" ? white : secondaryColorForLightTheme,
               distance: 150,
-              enable: true,
+              enable: false,
               opacity: 0.25,
               width: 1,
             },
             move: {
-              direction: "right",
+              direction: "none",
               enable: true,
               outModes: {
                 default: "bounce",
@@ -93,10 +93,10 @@ export const ParticlesComponent = () => {
               value: isMobile ? 100 : 40,
             },
             opacity: {
-              value: 0.5,
+              value: 0.75,
             },
             shape: {
-              type: "circle",
+              type: "star",
               // type: "image",
               // options: {
               //   image: {
@@ -107,7 +107,7 @@ export const ParticlesComponent = () => {
               // },
             },
             size: {
-              value: { min: 1, max: 5 },
+              value: { min: 1, max: 3 },
             },
           },
           detectRetina: true,

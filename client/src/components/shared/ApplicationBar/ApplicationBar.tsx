@@ -1,35 +1,11 @@
-import {
-  AlternateEmailOutlined,
-  ArticleOutlined,
-  AutoFixHighOutlined,
-  EarbudsOutlined,
-  LockOpenOutlined,
-  MenuOutlined,
-  SearchOutlined,
-  VpnKeyOutlined,
-  WebStoriesOutlined,
-} from "@mui/icons-material";
-import {
-  AppBar,
-  Box,
-  Button,
-  Container,
-  Divider,
-  Drawer,
-  MenuItem,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { AppBar, Container, Toolbar } from "@mui/material";
 import { useMatch, useNavigate } from "react-router-dom";
 
 import { CancelSubscriptionModal } from "src/components/Modals/CancelSubscriptionModal/CancelSubscriptionModal";
 import { InstallAppModal } from "src/components/Modals/InstallAppModal/InstallAppModal";
 import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
-import Logo from "../../../assets/images/sleeping_bunny_with_a_moon.webp";
 import { PricingModal } from "src/components/Modals/PricingModal/PricingModal";
 import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal";
-import SettingsMenuButton from "./SettingsMenuButton";
-import UserAccountMenuButton from "./UserAccountButton";
 import routes from "src/application/routes";
 import { scrollToSection } from "src/shared/utils/scrollTo";
 import { useApplicationContext } from "src/application/store/Provider";
@@ -37,6 +13,25 @@ import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useState } from "react";
+import useDetectScroll from "src/shared/hooks/useDetectScroll";
+
+import ApplicationBarMobileView from "./features/ApplicationBarMobileView";
+import ApplicationBarDesktopView from "./features/ApplicationBarDesktopView";
+
+export interface PagesMatch {
+  isFeaturesPage: boolean;
+  isCreatePage: boolean;
+  isExplorePage: boolean;
+  isBlogsPage: boolean;
+  isContactPage: boolean;
+  isViewBlogPage: boolean;
+  isMyStoriesPage: boolean;
+  isMyProfilePage: boolean;
+  isUnauthorized: boolean;
+  isPrivacyPolicy: boolean;
+  isTermsOfService: boolean;
+  isLandingPage: boolean;
+}
 
 const ApplicationBar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -44,7 +39,8 @@ const ApplicationBar = () => {
     useState<boolean>(false);
 
   const navigate = useNavigate();
-  const { isDesktop, isTablet, isMobile } = useDeviceSize();
+  const { isScrolledFromTop } = useDetectScroll();
+  const { isDesktop } = useDeviceSize();
 
   const {
     store: {
@@ -60,8 +56,8 @@ const ApplicationBar = () => {
     store: { handleToggleRegisterModal },
   } = useRegisterModalContext();
 
-  // Add all the pages the will contain the AppBar
-  const pagesMatch = {
+  const isAppBarVisible = true;
+  const pagesMatch: PagesMatch = {
     isFeaturesPage: !!useMatch(routes.features),
     isCreatePage: !!useMatch(routes.create),
     isExplorePage: !!useMatch(routes.explore),
@@ -69,15 +65,15 @@ const ApplicationBar = () => {
     isContactPage: !!useMatch(routes.contact),
     isViewBlogPage: !!useMatch(routes.blog(":id")),
     isMyStoriesPage: !!useMatch(routes.myStories(":userId")),
+    isMyProfilePage: !!useMatch(routes.myProfile(":userId")),
     isUnauthorized: !!useMatch(routes.unauthorized),
     isPrivacyPolicy: !!useMatch(routes.privacyPolicy),
     isTermsOfService: !!useMatch(routes.termsAndConditions),
     isLandingPage: !!window.location.pathname.includes("blogs"),
   };
-  const isAppBarVisible = true;
 
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setIsDrawerOpen(newOpen);
+  const handleSetDrawer = (isOpen: boolean) => () => {
+    setIsDrawerOpen(isOpen);
   };
 
   const handleOnMenuItemClick = (sectionId: string) => () => {
@@ -93,6 +89,9 @@ const ApplicationBar = () => {
         break;
       case "contact":
         navigate(routes.contact);
+        break;
+      case "blogs":
+        navigate(routes.blogs);
         break;
       case "original-stories":
         navigate(routes.explore);
@@ -119,11 +118,10 @@ const ApplicationBar = () => {
         <AppBar
           position="fixed"
           sx={{
+            mt: 1,
             boxShadow: 0,
             bgcolor: "transparent",
             backgroundImage: "none",
-            mt: 1,
-            // zIndex: 1500,
           }}
         >
           <Container maxWidth="lg" className="application-bar-container">
@@ -145,378 +143,26 @@ const ApplicationBar = () => {
                   : undefined,
               }}
             >
-              {!isTablet && (
-                <>
-                  <Box role="menu" sx={{ display: { xs: "none", md: "flex" } }}>
-                    <MenuItem
-                      className={`menu-item ${
-                        pagesMatch.isFeaturesPage && "active-menu-item"
-                      }`}
-                      onClick={handleOnMenuItemClick("features")}
-                    >
-                      <EarbudsOutlined
-                        fontSize="medium"
-                        color="primary"
-                        sx={{ mr: 1 }}
-                      />
-                      <Typography variant="body1" color="text.primary">
-                        Features
-                      </Typography>
-                    </MenuItem>
+              <ApplicationBarDesktopView
+                auth={auth}
+                pagesMatch={pagesMatch}
+                handleToggleLoginModal={handleToggleLoginModal}
+                handleToggleRegisterModal={handleToggleRegisterModal}
+                setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
+                handleOnMenuItemClick={handleOnMenuItemClick}
+              />
 
-                    <MenuItem
-                      sx={{ py: "6px", px: "12px" }}
-                      className={`menu-item ${
-                        pagesMatch.isExplorePage && "active-menu-item"
-                      }`}
-                      onClick={handleOnMenuItemClick("explore")}
-                    >
-                      <SearchOutlined
-                        fontSize="medium"
-                        color="primary"
-                        sx={{ mr: 1 }}
-                      />
-
-                      <Typography variant="body1" color="text.primary">
-                        Explore
-                      </Typography>
-                    </MenuItem>
-
-                    <MenuItem
-                      className={`menu-item ${
-                        pagesMatch.isCreatePage && "active-menu-item"
-                      }`}
-                      sx={{ py: "6px", px: "12px" }}
-                      onClick={handleOnMenuItemClick("create")}
-                    >
-                      <AutoFixHighOutlined
-                        fontSize="medium"
-                        color="primary"
-                        sx={{ mr: 1 }}
-                      />
-                      <Typography variant="body1" color="text.primary">
-                        Create Story
-                      </Typography>
-                    </MenuItem>
-
-                    <MenuItem
-                      className={`menu-item ${
-                        pagesMatch.isBlogsPage && "active-menu-item"
-                      }`}
-                      sx={{ py: "6px", px: "12px" }}
-                      onClick={handleOnMenuItemClick("original-stories")}
-                    >
-                      <ArticleOutlined
-                        fontSize="medium"
-                        color="primary"
-                        sx={{ mr: 1 }}
-                      />
-                      <Typography variant="body1" color="text.primary">
-                        Blogs
-                      </Typography>
-                    </MenuItem>
-
-                    <MenuItem
-                      className={`menu-item ${
-                        pagesMatch.isContactPage && "active-menu-item"
-                      }`}
-                      sx={{ py: "6px", px: "12px" }}
-                      onClick={handleOnMenuItemClick("contact")}
-                    >
-                      <AlternateEmailOutlined
-                        fontSize="medium"
-                        color="primary"
-                        sx={{ mr: 1 }}
-                      />
-                      <Typography variant="body1" color="text.primary">
-                        Contact Us
-                      </Typography>
-                    </MenuItem>
-
-                    {auth.isAuthenticated ? (
-                      <>
-                        <Divider
-                          orientation="vertical"
-                          sx={{ height: "30px", marginX: "1rem" }}
-                        />
-
-                        <MenuItem
-                          className={`menu-item ${
-                            pagesMatch.isMyStoriesPage && "active-menu-item"
-                          }`}
-                          onClick={handleOnMenuItemClick("my-stories")}
-                        >
-                          <WebStoriesOutlined
-                            color="secondary"
-                            fontSize="medium"
-                            sx={{ mr: 1 }}
-                          />
-
-                          <Typography variant="body1" color="text.primary">
-                            My Stories
-                          </Typography>
-                        </MenuItem>
-                      </>
-                    ) : (
-                      <></>
-                    )}
-                  </Box>
-
-                  <Box
-                    sx={{
-                      gap: 0.5,
-                      alignItems: "center",
-                      display: { xs: "none", md: "flex" },
-                    }}
-                  >
-                    {auth.isAuthenticated ? (
-                      <UserAccountMenuButton auth={auth} />
-                    ) : (
-                      <>
-                        <MenuItem onClick={handleToggleRegisterModal}>
-                          <LockOpenOutlined
-                            fontSize="medium"
-                            color="secondary"
-                            sx={{ mr: 1 }}
-                          />
-
-                          <Typography variant="body1" color="text.primary">
-                            Register
-                          </Typography>
-                        </MenuItem>
-
-                        <MenuItem onClick={handleToggleLoginModal}>
-                          <VpnKeyOutlined
-                            fontSize="medium"
-                            color="secondary"
-                            sx={{ mr: 1 }}
-                          />
-
-                          <Typography variant="body1" color="text.primary">
-                            Login
-                          </Typography>
-                        </MenuItem>
-                      </>
-                    )}
-
-                    <MenuItem>
-                      <SettingsMenuButton
-                        setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
-                      />
-                    </MenuItem>
-                  </Box>
-                </>
-              )}
-
-              {/* Mobile */}
-              {(isTablet || isMobile) && !isDesktop && (
-                <Box
-                  display="flex"
-                  component="div"
-                  flexDirection="row"
-                  justifyContent={
-                    pagesMatch.isCreatePage ? "flex-end" : "space-between"
-                  }
-                  width="100%"
-                >
-                  {pagesMatch.isFeaturesPage ? (
-                    <Box sx={{ width: "30px", height: "30px" }}>
-                      <picture>
-                        <source srcSet={Logo} type="image/webp" />
-                        <img
-                          width="100%"
-                          height="100%"
-                          src={Logo}
-                          className="logo"
-                          alt="features-page-image"
-                          aria-label="rabbit-sleeping-on-a-pillow"
-                        />
-                      </picture>
-                    </Box>
-                  ) : (
-                    // <BackButton onClick={handleOnBackClick} />
-                    <></>
-                  )}
-
-                  {!pagesMatch.isFeaturesPage && !pagesMatch.isCreatePage && (
-                    <Button
-                      size="small"
-                      color="primary"
-                      variant="contained"
-                      endIcon={<AutoFixHighOutlined />}
-                      onClick={handleOnMenuItemClick("create")}
-                    >
-                      Create Story
-                    </Button>
-                  )}
-
-                  <Button
-                    variant="text"
-                    color="primary"
-                    aria-label="menu"
-                    onClick={toggleDrawer(true)}
-                    sx={{ minWidth: "30px", p: "4px" }}
-                  >
-                    <MenuOutlined fontSize="medium" />
-                  </Button>
-
-                  <Drawer
-                    anchor="right"
-                    open={isDrawerOpen}
-                    onClose={toggleDrawer(false)}
-                  >
-                    <Box
-                      role="menu"
-                      sx={{
-                        p: 1,
-                        pt: 2,
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "space-between",
-                        flexGrow: 1,
-                        minWidth: "50dvw",
-                        backgroundColor: "background.paper",
-                      }}
-                    >
-                      <Box>
-                        <MenuItem
-                          className={`menu-item ${
-                            pagesMatch.isFeaturesPage && "active-menu-item"
-                          }`}
-                          onClick={handleOnMenuItemClick("features")}
-                        >
-                          <EarbudsOutlined
-                            fontSize="medium"
-                            color="primary"
-                            sx={{ mr: 1 }}
-                          />
-                          <Typography variant="h6">Features</Typography>
-                        </MenuItem>
-
-                        <MenuItem
-                          className={`menu-item ${
-                            pagesMatch.isExplorePage && "active-menu-item"
-                          }`}
-                          onClick={handleOnMenuItemClick("explore")}
-                        >
-                          <SearchOutlined
-                            fontSize="medium"
-                            color="primary"
-                            sx={{ mr: 1 }}
-                          />
-
-                          <Typography variant="h6">Explore</Typography>
-                        </MenuItem>
-
-                        <MenuItem
-                          className={`menu-item ${
-                            pagesMatch.isCreatePage && "active-menu-item"
-                          }`}
-                          onClick={handleOnMenuItemClick("create")}
-                        >
-                          <AutoFixHighOutlined
-                            fontSize="medium"
-                            color="primary"
-                            sx={{ mr: 1 }}
-                          />
-                          <Typography variant="h6">Create Story</Typography>
-                        </MenuItem>
-
-                        <MenuItem
-                          className={`menu-item ${
-                            pagesMatch.isBlogsPage && "active-menu-item"
-                          }`}
-                          onClick={handleOnMenuItemClick("original-stories")}
-                        >
-                          <ArticleOutlined
-                            fontSize="medium"
-                            color="primary"
-                            sx={{ mr: 1 }}
-                          />
-                          <Typography variant="h6">Blogs</Typography>
-                        </MenuItem>
-
-                        <MenuItem
-                          className={`menu-item ${
-                            pagesMatch.isContactPage && "active-menu-item"
-                          }`}
-                          onClick={handleOnMenuItemClick("contact")}
-                        >
-                          <AlternateEmailOutlined
-                            fontSize="medium"
-                            color="primary"
-                            sx={{ mr: 1 }}
-                          />
-                          <Typography variant="h6">Contact Us</Typography>
-                        </MenuItem>
-
-                        {auth.isAuthenticated ? (
-                          <>
-                            <Divider sx={{ marginX: "1rem" }} />
-
-                            <MenuItem
-                              className={`menu-item ${
-                                pagesMatch.isMyStoriesPage && "active-menu-item"
-                              }`}
-                              onClick={handleOnMenuItemClick("my-stories")}
-                            >
-                              <WebStoriesOutlined
-                                color="secondary"
-                                fontSize="medium"
-                                sx={{ mr: 1 }}
-                              />
-
-                              <Typography variant="h6">My Stories</Typography>
-                            </MenuItem>
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                      </Box>
-
-                      <Box marginBottom="1rem">
-                        {auth.isAuthenticated ? (
-                          <MenuItem>
-                            <UserAccountMenuButton auth={auth} />
-                          </MenuItem>
-                        ) : (
-                          <>
-                            <MenuItem onClick={handleToggleRegisterModal}>
-                              <LockOpenOutlined
-                                fontSize="medium"
-                                color="secondary"
-                                sx={{ mr: 1 }}
-                              />
-                              <Typography variant="h6">Register</Typography>
-                            </MenuItem>
-
-                            <MenuItem onClick={handleToggleLoginModal}>
-                              <VpnKeyOutlined
-                                fontSize="medium"
-                                color="secondary"
-                                sx={{ mr: 1 }}
-                              />
-                              <Typography variant="h6">Log in</Typography>
-                            </MenuItem>
-                          </>
-                        )}
-
-                        <MenuItem>
-                          <SettingsMenuButton
-                            setIsInstallAppDialogOpen={
-                              setIsInstallAppDialogOpen
-                            }
-                          >
-                            <Typography variant="h6" sx={{ ml: 1 }}>
-                              Settings
-                            </Typography>
-                          </SettingsMenuButton>
-                        </MenuItem>
-                      </Box>
-                    </Box>
-                  </Drawer>
-                </Box>
-              )}
+              <ApplicationBarMobileView
+                auth={auth}
+                pagesMatch={pagesMatch}
+                isDrawerOpen={isDrawerOpen}
+                isScrolledFromTop={isScrolledFromTop}
+                handleSetDrawer={handleSetDrawer}
+                handleToggleLoginModal={handleToggleLoginModal}
+                handleToggleRegisterModal={handleToggleRegisterModal}
+                setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
+                handleOnMenuItemClick={handleOnMenuItemClick}
+              />
             </Toolbar>
           </Container>
         </AppBar>

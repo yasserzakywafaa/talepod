@@ -1,11 +1,8 @@
-import { AutoFixHighOutlined, SearchOutlined } from "@mui/icons-material";
-
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import routes from "src/application/routes";
-import { useNavigate } from "react-router-dom";
+import CreateStoryFormMini from "src/components/StoryCreator/features/CreateStoryFormMini";
+import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
 interface HeroProps {
   heroImage: string;
@@ -15,31 +12,15 @@ interface HeroProps {
 }
 
 const Hero = (props: HeroProps) => {
-  const navigate = useNavigate();
-
-  const handleCallToActionClick =
-    (name: string) =>
-    (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-      event.preventDefault();
-
-      switch (name) {
-        case "create":
-          navigate(routes.create);
-          break;
-
-        case "explore":
-          navigate(routes.explore);
-          break;
-      }
-    };
+  const { isMobile } = useDeviceSize();
 
   return (
-    <Box id="hero">
+    <Box id="hero" sx={{ mt: { xs: 1, sm: 4 }, mb: { xs: 2, sm: 8 } }}>
       <Container
         className="hero-container"
         sx={{
           pt: { xs: 2, sm: 4 },
-          pb: { xs: 6, sm: 6 },
+          position: "relative",
         }}
       >
         <Box
@@ -60,21 +41,23 @@ const Hero = (props: HeroProps) => {
           >
             <Typography
               variant="h1"
+              color="text.primary"
               sx={{
-                // display: "flex",
                 flexDirection: { xs: "column", md: "row" },
                 alignSelf: "center",
                 textAlign: "center",
-                fontSize: { xs: "2rem", sm: "3rem" },
-                color: (theme) => theme.palette.text.primary,
+                fontSize: { xs: "2rem", sm: "2.75rem" },
+                textWrap: "nowrap",
               }}
             >
-              {props.pageTitleWhite}&nbsp; <br />
+              <Typography component="span" sx={{ fontSize: "inherit" }}>
+                {props.pageTitleWhite}&nbsp; <br />
+              </Typography>
               <Typography
                 component="span"
                 variant="h1"
                 sx={{
-                  fontSize: { xs: "2rem", sm: "3rem" },
+                  fontSize: "inherit",
                   color: (theme) =>
                     theme.palette.mode === "light"
                       ? "secondary.main"
@@ -98,43 +81,15 @@ const Hero = (props: HeroProps) => {
               {props.pageHeader}
             </Typography>
 
-            <Box
-              sx={{
-                display: "flex",
-                flexWrap: "wrap",
-                alignItems: "center",
-                justifyContent: "space-around",
-              }}
-            >
-              <Button
-                size="medium"
-                color="primary"
-                LinkComponent="a"
-                variant="contained"
-                href={routes.create}
-                sx={{ my: 2, px: 2 }}
-                endIcon={<AutoFixHighOutlined />}
-                onClick={handleCallToActionClick("create")}
-              >
-                Create for free
-              </Button>
+            <CreateStoryFormMini />
 
-              <Button
-                size="medium"
-                color="secondary"
-                LinkComponent="a"
-                variant="outlined"
-                href={routes.create}
-                sx={{ my: 2, ml: 1, px: 2 }}
-                endIcon={<SearchOutlined />}
-                onClick={handleCallToActionClick("explore")}
-              >
-                Bedtime Stories
-              </Button>
-            </Box>
+            <Typography variant="body2" color="secondary">
+              **No Credit Card Required
+            </Typography>
           </Box>
 
           <Box
+            className={isMobile ? "hero-image-mobile" : "hero-image"}
             sx={{
               maxWidth: { xs: "300px", sm: "100%" },
             }}

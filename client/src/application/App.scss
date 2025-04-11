@@ -21,17 +21,22 @@
   }
 }
 
-.application-bar-container {
-  .active-menu-item {
-    background: linear-gradient(
-      to top,
-      #ad932d,
-      transparent,
-      transparent,
-      transparent,
-      transparent,
-      transparent
-    );
+.section {
+  margin-bottom: 2rem;
+  padding: 1rem 2rem;
+  overflow-x: hidden;
+}
+
+.hero-container {
+  overflow: hidden;
+  .hero-image-mobile {
+    position: absolute;
+    left: auto;
+    right: -6rem;
+    opacity: 0.15;
+    bottom: 0;
+    pointer-events: none;
+    z-index: -1;
   }
 }
 

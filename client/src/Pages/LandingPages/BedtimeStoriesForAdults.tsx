@@ -6,8 +6,6 @@ import {
 } from "@mui/icons-material";
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
-import Box from "@mui/material/Box";
-import FAQ from "./features/FAQ";
 import Hero from "./features/Hero";
 import LionCub from "../../assets/images/landing_pages/lion_cub.webp";
 import Page from "src/components/shared/Page/Page";
@@ -16,6 +14,17 @@ import { Pricing } from "src/components/shared/Pricing/Pricing";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.webp";
 import { useApplicationContext } from "src/application/store/Provider";
+import { ParticlesComponent } from "src/components/shared/ParticlesComponent";
+import PricingTable from "src/components/shared/Pricing/PricingTable";
+import Benefits from "../Features/features/Benefits";
+import FAQ from "../Features/features/FAQ";
+import Guarantee from "../Features/features/Guarantee";
+import HowItWorks from "../Features/features/HowItWorks";
+import KeyFeatures from "../Features/features/KeyFeatures";
+import StoryExamples from "../Features/features/StoryExamples";
+import CallToAction from "../Features/features/CallToAction";
+import useDeviceSize from "src/shared/hooks/useDeviceSize";
+import Testimonials from "../Features/features/Testimonials";
 
 const BedtimeStoriesForAdults = () => {
   const {
@@ -23,6 +32,7 @@ const BedtimeStoriesForAdults = () => {
       state: { isFetching },
     },
   } = useApplicationContext();
+  const { isDesktop, isTablet, isMobile } = useDeviceSize();
 
   const benefitsList = (
     <List>
@@ -74,6 +84,10 @@ const BedtimeStoriesForAdults = () => {
       className="bedtime-stories-for-adults-page"
       isLoading={isFetching}
     >
+      <div style={{ position: "absolute", zIndex: "-1" }}>
+        <ParticlesComponent />
+      </div>
+
       <Hero
         heroImage={LionCub}
         pageTitleWhite="Create Relaxing"
@@ -81,17 +95,50 @@ const BedtimeStoriesForAdults = () => {
         pageHeader="Enjoy peaceful and personalized stories to wind down after a long day."
       />
 
-      <Box sx={{ backgroundColor: "transparent" }}>
-        <PersonalizedBedtimeStoryText
-          whyPersonalizeBedtimeStories="whether you're seeking calm or adventure, TalePod offers stories that cater to your mood and preferences."
-          introducingTalePod="TalePod lets adults create their own bedtime stories or enjoy pre-made stories designed for relaxation and peace. Unwind with a story that suits your personal taste."
-          personalizeImage={Unicorn}
-          benefitsList={benefitsList}
-          benefitsImage={<RandomImage />}
-        />
+      <div className="section">
+        <Testimonials />
+      </div>
+
+      <PersonalizedBedtimeStoryText
+        whyPersonalizeBedtimeStories="whether you're seeking calm or adventure, TalePod offers stories that cater to your mood and preferences."
+        introducingTalePod="TalePod lets adults create their own bedtime stories or enjoy pre-made stories designed for relaxation and peace. Unwind with a story that suits your personal taste."
+        personalizeImage={Unicorn}
+        benefitsList={benefitsList}
+        benefitsImage={<RandomImage />}
+      />
+
+      <div className="section">
+        <KeyFeatures />
+      </div>
+
+      <div className="section">
+        <HowItWorks />
+      </div>
+
+      <div className="section">
+        <StoryExamples />
+      </div>
+
+      <div className="section">
+        <Benefits />
+      </div>
+
+      <div className="section">
+        {isDesktop && <PricingTable />}
+        {(isTablet || isMobile) && <Pricing />}
+      </div>
+
+      <div className="section">
+        <Guarantee />
+      </div>
+
+      <div className="section">
+        <CallToAction />
+      </div>
+
+      <div className="section">
         <FAQ />
-        <Pricing />
-      </Box>
+      </div>
     </Page>
   );
 };

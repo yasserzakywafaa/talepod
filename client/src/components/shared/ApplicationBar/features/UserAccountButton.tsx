@@ -1,17 +1,19 @@
 import { Box, Typography } from "@mui/material";
 
 import { Authentication } from "src/application/store/state";
-import ProfileAvatar from "../ProfileAvatar";
+import ProfileAvatar from "../../ProfileAvatar";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
+import { primaryColor } from "src/application/shared/themes";
 
 interface UserAccountMenuButtonProps {
   auth: Authentication;
+  isMyProfilePage: boolean;
 }
 
 const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
   const navigate = useNavigate();
-  const { auth } = props;
+  const { auth, isMyProfilePage } = props;
 
   if (!auth.user) return;
 
@@ -44,12 +46,15 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
 
         <Typography
           variant="h6"
-          color="text.primary"
+          color={isMyProfilePage ? primaryColor : "text.primary"}
           sx={{
             maxWidth: "100px",
             overflowX: "hidden",
             whiteSpace: "nowrap",
             textOverflow: "ellipsis",
+            "&.MuiTypography-root:hover": {
+              color: primaryColor,
+            },
           }}
           marginLeft={1}
         >

@@ -163,7 +163,8 @@ export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
       gender: Genders[Math.floor(Math.random() * Genders.length)],
       age: Math.floor(Math.random() * 50),
       interests: "",
-      language: Languages[Math.floor(Math.random() * Languages.length)],
+      // language: Languages[Math.floor(Math.random() * Languages.length)],
+      language: Languages[0],
     },
     storyParams: {
       audioLength: 10,
