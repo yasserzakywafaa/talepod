@@ -6,8 +6,6 @@ import {
 } from "@mui/icons-material";
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
-import Box from "@mui/material/Box";
-import FAQ from "./features/FAQ";
 import Hero from "./features/Hero";
 import Page from "src/components/shared/Page/Page";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
@@ -16,6 +14,17 @@ import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.webp";
 import WiseOwl from "../../assets/images/landing_pages/wise_owl.webp";
 import { useApplicationContext } from "src/application/store/Provider";
+import { ParticlesComponent } from "src/components/shared/ParticlesComponent";
+import PricingTable from "src/components/shared/Pricing/PricingTable";
+import useDeviceSize from "src/shared/hooks/useDeviceSize";
+import Benefits from "../Features/features/Benefits";
+import FAQ from "../Features/features/FAQ";
+import Guarantee from "../Features/features/Guarantee";
+import HowItWorks from "../Features/features/HowItWorks";
+import KeyFeatures from "../Features/features/KeyFeatures";
+import StoryExamples from "../Features/features/StoryExamples";
+import Testimonials from "../Features/features/Testimonials";
+import CallToAction from "../Features/features/CallToAction";
 
 const EducationalBedtimeStories = () => {
   const {
@@ -23,6 +32,7 @@ const EducationalBedtimeStories = () => {
       state: { isFetching },
     },
   } = useApplicationContext();
+  const { isDesktop, isTablet, isMobile } = useDeviceSize();
 
   const benefitsList = (
     <List>
@@ -74,6 +84,9 @@ const EducationalBedtimeStories = () => {
       className="educational-bedtime-stories-page"
       isLoading={isFetching}
     >
+      <div style={{ position: "absolute", zIndex: "-1" }}>
+        <ParticlesComponent />
+      </div>
       <Hero
         heroImage={WiseOwl}
         pageTitleWhite="Educational Bedtime Stories"
@@ -81,17 +94,50 @@ const EducationalBedtimeStories = () => {
         pageHeader="Teach and inspire your child with personalized educational stories."
       />
 
-      <Box sx={{ backgroundColor: "transparent" }}>
-        <PersonalizedBedtimeStoryText
-          whyPersonalizeBedtimeStories="can be used for both learning and relaxation. Personalized educational stories offer the perfect balance between entertainment and teaching."
-          introducingTalePod="TalePod lets you create bedtime stories that are not only fun but also provide valuable learning moments for your child."
-          personalizeImage={Unicorn}
-          benefitsList={benefitsList}
-          benefitsImage={<RandomImage />}
-        />
+      <div className="section">
+        <Testimonials />
+      </div>
+
+      <PersonalizedBedtimeStoryText
+        whyPersonalizeBedtimeStories="can be used for both learning and relaxation. Personalized educational stories offer the perfect balance between entertainment and teaching."
+        introducingTalePod="TalePod lets you create bedtime stories that are not only fun but also provide valuable learning moments for your child."
+        personalizeImage={Unicorn}
+        benefitsList={benefitsList}
+        benefitsImage={<RandomImage />}
+      />
+
+      <div className="section">
+        <KeyFeatures />
+      </div>
+
+      <div className="section">
+        <HowItWorks />
+      </div>
+
+      <div className="section">
+        <StoryExamples />
+      </div>
+
+      <div className="section">
+        <Benefits />
+      </div>
+
+      <div className="section">
+        {isDesktop && <PricingTable />}
+        {(isTablet || isMobile) && <Pricing />}
+      </div>
+
+      <div className="section">
+        <Guarantee />
+      </div>
+
+      <div className="section">
+        <CallToAction />
+      </div>
+
+      <div className="section">
         <FAQ />
-        <Pricing />
-      </Box>
+      </div>
     </Page>
   );
 };

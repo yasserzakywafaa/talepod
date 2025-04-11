@@ -1,4 +1,4 @@
-import { AutoAwesomeOutlined, SettingsOutlined } from "@mui/icons-material";
+import { ArrowRightAltOutlined, AutoAwesomeOutlined } from "@mui/icons-material";
 import { Box, Button, TextField } from "@mui/material";
 import { ProfileInfo, Story } from "../store/state";
 import { UserRole, UserStatus } from "src/shared/user";
@@ -58,7 +58,6 @@ const CreateStoryFormMini = () => {
 
     return false;
   };
-
 
   const handleOnFieldChangeForMini = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -148,10 +147,12 @@ const CreateStoryFormMini = () => {
           required
           id="name"
           name="name"
-          label="Child/Adult Name"
           type="text"
-          value={profileInfo.name}
           className="form-item"
+          label="Name"
+          value={profileInfo.name}
+          placeholder="Emily, Noah, etc."
+          InputLabelProps={{ shrink: true }}
           sx={{ width: { xs: "70%", sm: "50%" } }}
           error={hasCensoredWords(profileInfo.name)}
           helperText={
@@ -175,18 +176,18 @@ const CreateStoryFormMini = () => {
             type="button"
             variant="text"
             sx={{ marginY: 1 }}
-            title="advanced-button"
-            startIcon={<SettingsOutlined />}
+            title="more-story-options-available-button"
+            endIcon={<ArrowRightAltOutlined />}
             onClick={handleOnAdvancedClick}
           >
-            Advanced
+            More story options available
           </Button>
 
           <Button
             type="submit"
             size="large"
             variant="contained"
-            title="submit-button"
+            title="generate-story-button"
             disabled={isCreateButtonDisabled()}
             endIcon={<AutoAwesomeOutlined />}
           >

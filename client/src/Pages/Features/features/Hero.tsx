@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import CreateStoryFormMini from "src/components/StoryCreator/features/CreateStoryFormMini";
 import MainCharacter from "../../../assets/images/sleeping_bunny_with_a_moon.webp";
-import { ParticlesComponent } from "src/components/shared/ParticlesComponent";
 import Typography from "@mui/material/Typography";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
@@ -18,10 +17,6 @@ const Hero = () => {
           position: "relative",
         }}
       >
-        <div style={{ position: "absolute", zIndex: "-1" }}>
-          <ParticlesComponent />
-        </div>
-
         <Box
           sx={{
             display: { xs: "flex", sm: "flex" },
@@ -48,21 +43,23 @@ const Hero = () => {
             >
               <Typography
                 variant="h1"
+                color="text.primary"
                 sx={{
                   display: "flex",
                   flexDirection: { xs: "column", md: "row" },
                   alignSelf: "center",
                   textAlign: "center",
-                  fontSize: { xs: "2rem", sm: "3rem" },
-                  color: (theme) => theme.palette.text.primary,
+                  fontSize: { xs: "2rem", sm: "2.75rem" },
+                  textWrap: "nowrap",
                 }}
               >
-                Create Custom&nbsp;
+                <Typography component="span" sx={{ fontSize: "inherit" }}>
+                  Generate Custom&nbsp;
+                </Typography>
                 <Typography
                   component="span"
-                  variant="h1"
                   sx={{
-                    fontSize: { xs: "2rem", sm: "3rem" },
+                    fontSize: "inherit",
                     color: (theme) =>
                       theme.palette.mode === "light"
                         ? "secondary.main"
@@ -83,8 +80,8 @@ const Hero = () => {
                   fontSize: { xs: "1.5rem", sm: "2rem" },
                 }}
               >
-                Craft personalized bedtime stories tailored to your child's
-                dreams and imagination.
+                Craft AI-powered personalized bedtime stories tailored to your
+                child's dreams.
               </Typography>
             </Box>
 

@@ -17,6 +17,7 @@ import Testimonials from "./features/Testimonials"; // Import Testimonials
 import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
+import { ParticlesComponent } from "src/components/shared/ParticlesComponent";
 
 const FeaturesPage = () => {
   const {
@@ -43,6 +44,10 @@ const FeaturesPage = () => {
         isCreateStoryFetching ? LoaderComponentNameEnum.CreateStory : undefined
       }
     >
+      <div style={{ position: "absolute", zIndex: "-1" }}>
+        <ParticlesComponent />
+      </div>
+
       <Hero />
 
       <div className="section">

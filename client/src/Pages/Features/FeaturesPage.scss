@@ -2,25 +2,6 @@
 * Features Page
 */
 
-.section {
-  margin-bottom: 2rem;
-  padding: 1rem 2rem;
-  overflow-x: hidden;
-}
-
-.hero-container {
-  overflow: hidden;
-  .hero-image-mobile {
-    position: absolute;
-    left: auto;
-    right: -8rem;
-    opacity: 0.15;
-    bottom: 0;
-    pointer-events: none;
-    z-index: -1;
-  }
-}
-
 .features-page {
   position: relative;
   padding-top: 5rem;
