@@ -7,8 +7,8 @@ import {
 } from "src/application/shared/themes";
 
 import { useApplicationContext } from "src/application/store/Provider";
-import { useRef } from "react";
 import { useAutoScroll } from "src/shared/hooks/useAutoScroll";
+import { useRef } from "react";
 
 interface StoryExample {
   title: string;
@@ -102,7 +102,7 @@ const StoryExamples = () => {
   };
 
   return (
-    <Container sx={{ pb: 4 }}>
+    <Container sx={{ py: 4 }}>
       <Typography variant="h4" align="center" color="primary" gutterBottom>
         Examples of Stories You Can Create
       </Typography>

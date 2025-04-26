@@ -1,7 +1,7 @@
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
-import Box from "@mui/material/Box";
+import { Card } from "@mui/material";
 import Container from "@mui/material/Container";
 import { ExpandMoreOutlined } from "@mui/icons-material";
 import Link from "@mui/material/Link";
@@ -61,7 +61,7 @@ export default function FAQ() {
       >
         Frequently asked questions
       </Typography>
-      <Box sx={{ width: "100%" }}>
+      <Card sx={{ width: "100%" }}>
         <Accordion
           expanded={expanded === "panel1"}
           onChange={handleChange("panel1")}
@@ -236,7 +236,7 @@ export default function FAQ() {
             </Typography>
           </AccordionDetails>
         </Accordion>
-      </Box>
+      </Card>
     </Container>
   );
 }

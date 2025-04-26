@@ -18,12 +18,12 @@ import {
   Typography,
 } from "@mui/material";
 
-import SettingsMenuButton from "./SettingsMenuButton";
-import UserAccountMenuButton from "./UserAccountButton";
-import useDeviceSize from "src/shared/hooks/useDeviceSize";
-import { primaryColor } from "src/application/shared/themes";
 import { Authentication } from "src/application/store/state";
 import { PagesMatch } from "../ApplicationBar";
+import SettingsMenuButton from "./SettingsMenuButton";
+import UserAccountMenuButton from "./UserAccountButton";
+import { primaryColor } from "src/application/shared/themes";
+import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
 interface ApplicationBarMobileViewParams {
   auth: Authentication;
@@ -126,6 +126,44 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
 
                 <MenuItem
                   className={`menu-item`}
+                  onClick={handleOnMenuItemClick("create")}
+                >
+                  <AutoFixHighOutlined
+                    fontSize="medium"
+                    color="primary"
+                    sx={{ mr: 1 }}
+                  />
+                  <Typography
+                    variant="h6"
+                    color={
+                      pagesMatch.isCreatePage ? primaryColor : "text.primary"
+                    }
+                  >
+                    Create Story
+                  </Typography>
+                </MenuItem>
+
+                <MenuItem
+                  className={`menu-item`}
+                  onClick={handleOnMenuItemClick("contact")}
+                >
+                  <AlternateEmailOutlined
+                    fontSize="medium"
+                    color="primary"
+                    sx={{ mr: 1 }}
+                  />
+                  <Typography
+                    variant="h6"
+                    color={
+                      pagesMatch.isContactPage ? primaryColor : "text.primary"
+                    }
+                  >
+                    Contact Us
+                  </Typography>
+                </MenuItem>
+
+                <MenuItem
+                  className={`menu-item`}
                   onClick={handleOnMenuItemClick("explore")}
                 >
                   <SearchOutlined
@@ -146,25 +184,6 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
 
                 <MenuItem
                   className={`menu-item`}
-                  onClick={handleOnMenuItemClick("create")}
-                >
-                  <AutoFixHighOutlined
-                    fontSize="medium"
-                    color="primary"
-                    sx={{ mr: 1 }}
-                  />
-                  <Typography
-                    variant="h6"
-                    color={
-                      pagesMatch.isCreatePage ? primaryColor : "text.primary"
-                    }
-                  >
-                    Create Story
-                  </Typography>
-                </MenuItem>
-
-                <MenuItem
-                  className={`menu-item`}
                   onClick={handleOnMenuItemClick("blogs")}
                 >
                   <ArticleOutlined
@@ -179,25 +198,6 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                     }
                   >
                     Blogs
-                  </Typography>
-                </MenuItem>
-
-                <MenuItem
-                  className={`menu-item`}
-                  onClick={handleOnMenuItemClick("contact")}
-                >
-                  <AlternateEmailOutlined
-                    fontSize="medium"
-                    color="primary"
-                    sx={{ mr: 1 }}
-                  />
-                  <Typography
-                    variant="h6"
-                    color={
-                      pagesMatch.isContactPage ? primaryColor : "text.primary"
-                    }
-                  >
-                    Contact Us
                   </Typography>
                 </MenuItem>
 
