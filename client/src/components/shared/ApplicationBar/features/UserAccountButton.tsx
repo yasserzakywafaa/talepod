@@ -1,28 +1,29 @@
 import { Box, Typography } from "@mui/material";
 
-import { Authentication } from "src/application/store/state";
 import ProfileAvatar from "../../ProfileAvatar";
+import { User } from "src/shared/user";
+import { primaryColor } from "src/application/shared/themes";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
-import { primaryColor } from "src/application/shared/themes";
 
 interface UserAccountMenuButtonProps {
-  auth: Authentication;
-  isMyProfilePage: boolean;
+  user: User;
+  isMyProfilePage?: boolean;
+  navigateToProfile?: boolean;
 }
 
 const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
   const navigate = useNavigate();
-  const { auth, isMyProfilePage } = props;
+  const { user, isMyProfilePage = false, navigateToProfile = true } = props;
 
-  if (!auth.user) return;
+  if (!user) return;
 
-  const userFullName = `${
-    auth.user.name.givenName
-  } ${auth.user.name.familyName.charAt(0)}.`;
+  const userFullName = `${user.name.givenName} ${user.name.familyName.charAt(
+    0
+  )}.`;
 
   const handleOnMyProfileClick = () => {
-    auth.user && navigate(routes.myProfile(auth.user._id));
+    user && navigate(routes.myProfile(user._id));
   };
 
   return (
@@ -36,10 +37,10 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
           alignItems: "center",
           cursor: "pointer",
         }}
-        onClick={handleOnMyProfileClick}
+        onClick={navigateToProfile ? handleOnMyProfileClick : undefined}
       >
         <ProfileAvatar
-          auth={auth}
+          user={user}
           avatarSize={{ width: 20, height: 20 }}
           verifiedBadgeSize={14}
         />

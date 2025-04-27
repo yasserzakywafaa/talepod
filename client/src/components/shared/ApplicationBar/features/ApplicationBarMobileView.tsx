@@ -21,6 +21,7 @@ import {
 import { Authentication } from "src/application/store/state";
 import { PagesMatch } from "../ApplicationBar";
 import SettingsMenuButton from "./SettingsMenuButton";
+import { User } from "src/shared/user";
 import UserAccountMenuButton from "./UserAccountButton";
 import { primaryColor } from "src/application/shared/themes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
@@ -236,7 +237,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                 {auth.isAuthenticated ? (
                   <MenuItem>
                     <UserAccountMenuButton
-                      auth={auth}
+                      user={auth.user as User}
                       isMyProfilePage={pagesMatch.isMyProfilePage}
                     />
                   </MenuItem>

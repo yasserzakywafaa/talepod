@@ -17,6 +17,7 @@ import {
 import { Authentication } from "src/application/store/state";
 import { PagesMatch } from "../ApplicationBar";
 import SettingsMenuButton from "./SettingsMenuButton";
+import { User } from "src/shared/user";
 import UserAccountMenuButton from "./UserAccountButton";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
@@ -202,7 +203,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
           >
             {auth.isAuthenticated ? (
               <UserAccountMenuButton
-                auth={auth}
+                user={auth.user as User}
                 isMyProfilePage={pagesMatch.isMyProfilePage}
               />
             ) : (

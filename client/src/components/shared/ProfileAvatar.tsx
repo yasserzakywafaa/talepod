@@ -1,38 +1,38 @@
 import { Avatar, Badge } from "@mui/material";
 
-import { Authentication } from "src/application/store/state";
+import { User } from "src/shared/user";
 import { VerifiedBadge } from "./VerifiedBadge";
 
 export interface ProfileAvatarProps {
-  auth: Authentication;
+  user: User;
   avatarSize: { width: number; height: number };
   verifiedBadgeSize: number;
 }
 
 const ProfileAvatar = (props: ProfileAvatarProps) => {
-  const { auth, avatarSize, verifiedBadgeSize } = props;
+  const { user, avatarSize, verifiedBadgeSize } = props;
 
-  if (!auth || !auth.user) return <></>;
+  if (!user) return <></>;
 
   return (
     <Badge
       overlap="circular"
       badgeContent={
-        auth.user.isPaidUser && <VerifiedBadge fontSize={verifiedBadgeSize} />
+        user.isPaidUser && <VerifiedBadge fontSize={verifiedBadgeSize} />
       }
     >
-      {auth.user.picture ? (
+      {user.picture ? (
         <Avatar
           alt="User Picture"
-          src={auth.user.picture}
+          src={user.picture}
           sx={{ width: avatarSize.width, height: avatarSize.height }}
         />
       ) : (
         <Avatar
           sx={{ mr: 1, width: avatarSize.width, height: avatarSize.height }}
         >
-          {auth.user.name.givenName.charAt(0)}
-          {auth.user.name.familyName.charAt(0)}
+          {user.name.givenName.charAt(0)}
+          {user.name.familyName.charAt(0)}
         </Avatar>
       )}
     </Badge>

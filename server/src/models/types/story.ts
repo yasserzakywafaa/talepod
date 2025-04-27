@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import { PagingInfo } from "./api";
+import { User } from "./user";
 
 export interface Story {
   _id: ObjectId;
@@ -17,6 +18,7 @@ export interface Story {
   tags?: string[];
   coverImageUrl?: string;
   isFeatured: boolean;
+  authorProfile?: User;
 }
 
 export interface StoryData extends Partial<Story> {

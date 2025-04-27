@@ -1,30 +1,25 @@
 import "./StoryCard.scss";
 
 import {
-  AdultGenderEnum,
-  ChildGenderEnum,
-  Story,
-} from "src/components/StoryCreator/store/state";
-import {
+  Avatar,
   Box,
   Button,
   Card,
   CardActions,
   CardContent,
   Chip,
+  Grid,
   Typography,
 } from "@mui/material";
-import {
-  FemaleOutlined,
-  HeadphonesOutlined,
-  MaleOutlined,
-} from "@mui/icons-material";
 
 import { CSSProperties } from "react";
+import { HeadphonesOutlined } from "@mui/icons-material";
+import { Story } from "src/components/StoryCreator/store/state";
+import UserAccountMenuButton from "../ApplicationBar/features/UserAccountButton";
+import { VerifiedBadge } from "../VerifiedBadge";
 import routes from "src/application/routes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useNavigate } from "react-router-dom";
-import { VerifiedBadge } from "../VerifiedBadge";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 
 interface StoryCard {
@@ -40,7 +35,7 @@ interface StoryCard {
 const StoryCard = (props: StoryCard) => {
   const navigate = useNavigate();
   const { isDesktop } = useDeviceSize();
-  const { audioFile } = props.story;
+  const { audioFile, authorProfile } = props.story;
   const profileInfo = props.story.profileInfo || {};
   const hasDirectionRtl = props.story.profileInfo.language.value === "ar";
 
@@ -65,6 +60,7 @@ const StoryCard = (props: StoryCard) => {
       className="story-card"
       sx={{
         mb: 2,
+        boxShadow: (theme) => `0px 2px 0px ${theme.palette.secondary.main}`,
         ":hover": {
           boxShadow: (theme) => `2px 2px 3px ${theme.palette.primary.main}`,
           transform: "scale(1.01)",
@@ -121,73 +117,106 @@ const StoryCard = (props: StoryCard) => {
       </CardContent>
 
       <CardActions>
-        <Box
-          display="flex"
-          className="story-card-tags"
+        <Grid
+          container
+          spacing={2}
+          paddingX={1}
+          className="story-card-tags-wrapper"
           justifyContent="space-between"
           alignItems="center"
-          sx={{
-            pl: 1,
-            pr: 1,
-            width: "100%",
-            color: (theme) => theme.palette.secondary.main,
-          }}
         >
-          <Box
-            display="flex"
-            className="story-card-tags-wrapper"
+          <Grid
+            item
+            spacing={2}
             justifyContent="space-between"
-            sx={{ mr: 2 }}
+            alignItems="center"
+            className="story-card-tags"
           >
             {audioFile && audioFile.url && (
-              <HeadphonesOutlined
-                fontSize="small"
+              <Chip
+                size="small"
+                variant="outlined"
+                label="Original"
+                color="primary"
                 className="story-card-tags-item"
+                icon={<HeadphonesOutlined />}
               />
             )}
 
-            {(profileInfo.gender === ChildGenderEnum.Girl ||
+            {/* {(profileInfo.gender === ChildGenderEnum.Girl ||
               profileInfo.gender === AdultGenderEnum.Female) && (
-              <FemaleOutlined
-                fontSize="small"
+              <Chip
+                size="small"
+                variant="outlined"
+                color="secondary"
                 className="story-card-tags-item"
+                label={<FemaleOutlined />}
               />
             )}
 
             {(profileInfo.gender === ChildGenderEnum.Boy ||
               profileInfo.gender === AdultGenderEnum.Male) && (
-              <MaleOutlined fontSize="small" className="story-card-tags-item" />
-            )}
+              <Chip
+                size="small"
+                variant="outlined"
+                color="secondary"
+                label={<MaleOutlined />}
+                className="story-card-tags-item"
+              />
+            )} */}
 
             {profileInfo.language && (
-              <span className="story-card-tags-item">
-                {" "}
-                {profileInfo.language.value.toUpperCase()}
-              </span>
+              <Chip
+                size="small"
+                variant="outlined"
+                className="story-card-tags-item"
+                color="secondary"
+                label={profileInfo.language.value.toUpperCase()}
+              />
             )}
-          </Box>
 
-          {!props.story.storyParams.createdByAdmin && props.story.createdAt && (
-            <Chip
-              size="small"
-              variant="outlined"
-              label={new Date(props.story.createdAt).toLocaleString("en-GB", {
-                timeStyle: "short",
-                dateStyle: "short",
-              })}
-              color="secondary"
-            />
-          )}
+            {!props.story.storyParams.createdByAdmin &&
+              props.story.createdAt && (
+                <Chip
+                  size="small"
+                  variant="outlined"
+                  label={new Date(props.story.createdAt).toLocaleString(
+                    "en-GB",
+                    {
+                      timeStyle: "short",
+                      dateStyle: "short",
+                    }
+                  )}
+                  color="secondary"
+                />
+              )}
 
-          {props.story.storyParams.createdByAdmin && (
-            <Chip
-              size="small"
-              variant="outlined"
-              label="Original"
-              color="primary"
-            />
-          )}
-        </Box>
+            {props.story.storyParams.createdByAdmin && (
+              <Chip
+                size="small"
+                variant="outlined"
+                label="Original"
+                color="primary"
+              />
+            )}
+          </Grid>
+
+          <Grid item>
+            {authorProfile &&
+              (isDesktop ? (
+                <UserAccountMenuButton
+                  user={authorProfile}
+                  navigateToProfile={false}
+                />
+              ) : (
+                <Avatar
+                  variant="square"
+                  alt="User Picture"
+                  src={authorProfile.picture}
+                />
+              ))}
+          </Grid>
+        </Grid>
       </CardActions>
     </Card>
   );

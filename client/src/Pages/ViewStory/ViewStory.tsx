@@ -232,6 +232,8 @@ const ViewStoryPage: React.FC = () => {
 
         {story && (
           <>
+            <ShareFloating />
+
             <Card
               className="view-story-card"
               vocab="https://schema.org"
@@ -414,8 +416,6 @@ const ViewStoryPage: React.FC = () => {
                     </Box>
                   )}
                 </Card>
-
-                <ShareFloating />
 
                 {isDesktop ? (
                   <Typography
