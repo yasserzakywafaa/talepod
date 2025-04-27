@@ -3,6 +3,8 @@ import { Language, Languages } from "src/shared/languages";
 import { Moral, Morals } from "src/shared/mockedData/Moral";
 import { Tone, Tones } from "src/shared/mockedData/Tone";
 
+import { User } from "src/shared/user";
+
 export interface StoryCreatorInitialState {
   isFetching: boolean;
   profileInfo: ProfileInfo;
@@ -76,6 +78,7 @@ export interface Story {
   tags?: string[];
   coverImageUrl?: string;
   isFeatured: boolean;
+  authorProfile?: User;
 }
 
 export interface StorySeo {

@@ -10,6 +10,7 @@ export const primaryColorOpaqueThirty = "#ad932d4d"; // Dark Goldenrod 30% Opaci
 export const secondaryColorForDarkTheme = "#00BFFF"; // Deep Sky Blue
 export const secondaryColorForLightTheme = "#0080ab"; // Dark Deep Sky Blue
 export const darkBackground = "linear-gradient(to top, #000000, #2E3B4E)"; // Night Sky
+export const defaultBackDropFilterBlur = "blur(4px)";
 
 export const theme = createTheme({
   palette: {
@@ -50,6 +51,25 @@ export const theme = createTheme({
         },
       },
     },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          backdropFilter: defaultBackDropFilterBlur,
+        },
+        outlined: {
+          backdropFilter: defaultBackDropFilterBlur,
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& .MuiOutlinedInput-root": {
+            backdropFilter: defaultBackDropFilterBlur,
+          },
+        },
+      },
+    },
     MuiFormHelperText: {
       styleOverrides: {
         root: {
@@ -69,6 +89,39 @@ export const theme = createTheme({
         fab: {
           border: `1px solid ${primaryColor}`,
         },
+      },
+    },
+    MuiTable: {
+      styleOverrides: {
+        root: {
+          backdropFilter: defaultBackDropFilterBlur,
+        },
+      },
+    },
+    MuiDivider: {
+      styleOverrides: {
+        root: ({ ownerState, theme }) => ({
+          ...(ownerState.orientation === "horizontal" && {
+            margin: "auto",
+            borderColor: "transparent",
+            borderBottomWidth: "thin",
+            boxShadow: `-9px -2px 1px ${
+              theme.palette.mode === "light"
+                ? secondaryColorForLightTheme
+                : secondaryColorForDarkTheme
+            }, 13px 2px 1px ${primaryColor}`,
+          }),
+          ...(ownerState.orientation === "vertical" && {
+            margin: "auto",
+            borderColor: "transparent",
+            borderBottomWidth: "thin",
+            boxShadow: `-2px -5px 1px ${
+              theme.palette.mode === "light"
+                ? secondaryColorForLightTheme
+                : secondaryColorForDarkTheme
+            }, 2px 2px 1px ${primaryColor}`,
+          }),
+        }),
       },
     },
   },

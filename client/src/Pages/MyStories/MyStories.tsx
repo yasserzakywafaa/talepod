@@ -1,6 +1,6 @@
 import "./MyStories.scss";
 
-import { Badge, Button, Container, Pagination } from "@mui/material";
+import { Badge, Button, Container, Grid, Pagination } from "@mui/material";
 
 import Box from "@mui/material/Box";
 import { FilterAltOutlined } from "@mui/icons-material";
@@ -10,10 +10,10 @@ import NoStoriesFound from "./features/NoStoriesFound";
 import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import StoryCard from "src/components/shared/StoryCard/StoryCard";
+import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 import { useMyStoriesContext } from "../MyStories/store/Provider";
 import { useNavigate } from "react-router-dom";
-import { useApplicationContext } from "src/application/store/Provider";
 
 const MyStoriesPage: React.FC = () => {
   const navigate = useNavigate();
@@ -114,18 +114,22 @@ const MyStoriesPage: React.FC = () => {
                 pb: { xs: 2, sm: 2 },
               }}
             >
-              {stories.map((story, index) => {
-                const isStoryLocked = !user?.isPaidUser && story.isPremium;
+              <Grid container spacing={2}>
+                {stories.map((story, index) => {
+                  const isStoryLocked = !user?.isPaidUser && story.isPremium;
 
-                return (
-                  <StoryCard
-                    key={index}
-                    story={story}
-                    page="my-stories"
-                    isStoryLocked={isStoryLocked}
-                  />
-                );
-              })}
+                  return (
+                    <Grid item key={index} xs={12} sm={6} md={6} lg={6} xl={6}>
+                      <StoryCard
+                        key={index}
+                        story={story}
+                        page="my-stories"
+                        isStoryLocked={isStoryLocked}
+                      />
+                    </Grid>
+                  );
+                })}
+              </Grid>
             </Box>
 
             <Box

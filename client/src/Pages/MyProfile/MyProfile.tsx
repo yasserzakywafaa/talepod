@@ -6,6 +6,7 @@ import Page from "src/components/shared/Page/Page";
 import ProfileAvatar from "src/components/shared/ProfileAvatar";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import SubscriptionSection from "./features/Subscription";
+import { User } from "src/shared/user";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 import { useMyProfileContext } from "./store/Provider";
@@ -81,7 +82,7 @@ const MyProfilePage = () => {
           width="fit-content"
         >
           <ProfileAvatar
-            auth={auth}
+            user={auth.user as User}
             verifiedBadgeSize={32}
             avatarSize={{ width: 100, height: 100 }}
           />

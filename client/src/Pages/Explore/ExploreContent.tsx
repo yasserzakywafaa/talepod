@@ -1,4 +1,4 @@
-import { Badge, Box, Button, Container, Pagination } from "@mui/material";
+import { Badge, Box, Button, Container, Grid, Pagination } from "@mui/material";
 
 import { FilterAltOutlined } from "@mui/icons-material";
 import FiltersPanel from "./features/FiltersPanel/FiltersPanel";
@@ -108,9 +108,15 @@ export const ExploreContent = (props: ExplorePageContentProps): JSX.Element => {
                 pb: { xs: 2, sm: 2 },
               }}
             >
-              {stories.map((story, index) => {
-                return <StoryCard key={index} story={story} />;
-              })}
+              <Grid container spacing={2}>
+                {stories.map((story, index) => {
+                  return (
+                    <Grid item key={index} xs={12} sm={6} md={6} lg={6} xl={6}>
+                      <StoryCard key={index} story={story} />
+                    </Grid>
+                  );
+                })}
+              </Grid>
             </Box>
 
             <Box

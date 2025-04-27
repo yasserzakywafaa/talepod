@@ -18,8 +18,8 @@ import {
 } from "src/application/shared/themes";
 
 import { useApplicationContext } from "src/application/store/Provider";
-import { useRef } from "react";
 import { useAutoScroll } from "src/shared/hooks/useAutoScroll";
+import { useRef } from "react";
 
 interface Testimonial {
   name: string;
@@ -205,6 +205,7 @@ const Testimonials = () => {
                   padding: 3,
                   height: "100%",
                   maxWidth: { xs: "400px", sm: "500px" },
+                  boxShadow: `-1px -1px 1px ${secondaryColorForDarkTheme}, 1px 1px 1px ${primaryColor}`,
                 }}
               >
                 <Box display="flex" alignItems="center" mb={2}>

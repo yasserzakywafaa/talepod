@@ -5,9 +5,7 @@
   align-items: stretch;
 
   cursor: pointer;
-  height: 140px;
-  min-width: 350px;
-  max-width: 350px;
+  height: 180px;
   margin-left: 1rem;
   margin-right: 1rem;
   position: relative;
@@ -57,13 +55,6 @@
 
 /* Tablet (11-inch) */
 @media (max-width: 1024px) {
-  .story-card {
-    width: 50%;
-    min-width: auto;
-    max-width: 48%;
-    margin-left: 0;
-    margin-right: 0;
-  }
 }
 
 /* Small tablet */
@@ -72,16 +63,8 @@
 
 /* Big Phone */
 @media (max-width: 430px) {
-  .story-card {
-    width: 100%;
-    max-width: 100%;
-  }
 }
 
 /* Small Phone */
 @media (max-width: 320px), (max-height: 568px) {
-  .story-card {
-    width: 100%;
-    max-width: 100%;
-  }
 }

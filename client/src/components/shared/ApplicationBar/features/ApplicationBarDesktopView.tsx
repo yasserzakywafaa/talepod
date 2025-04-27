@@ -9,18 +9,17 @@ import {
   WebStoriesOutlined,
 } from "@mui/icons-material";
 import { Box, Divider, MenuItem, Typography } from "@mui/material";
-
-import SettingsMenuButton from "./SettingsMenuButton";
-import UserAccountMenuButton from "./UserAccountButton";
-
-import useDeviceSize from "src/shared/hooks/useDeviceSize";
-
 import {
   primaryColor,
   secondaryColorForDarkTheme,
 } from "src/application/shared/themes";
+
 import { Authentication } from "src/application/store/state";
 import { PagesMatch } from "../ApplicationBar";
+import SettingsMenuButton from "./SettingsMenuButton";
+import { User } from "src/shared/user";
+import UserAccountMenuButton from "./UserAccountButton";
+import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
 interface ApplicationBarDesktopViewParams {
   auth: Authentication;
@@ -92,6 +91,42 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
             <MenuItem
               className={`menu-item`}
               sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
+              onClick={handleOnMenuItemClick("create")}
+            >
+              <AutoFixHighOutlined
+                fontSize="medium"
+                color="primary"
+                sx={{ mr: 1 }}
+              />
+              <Typography
+                variant="body1"
+                color={pagesMatch.isCreatePage ? primaryColor : "text.primary"}
+              >
+                Create Story
+              </Typography>
+            </MenuItem>
+
+            <MenuItem
+              className={`menu-item`}
+              sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
+              onClick={handleOnMenuItemClick("contact")}
+            >
+              <AlternateEmailOutlined
+                fontSize="medium"
+                color="primary"
+                sx={{ mr: 1 }}
+              />
+              <Typography
+                variant="body1"
+                color={pagesMatch.isContactPage ? primaryColor : "text.primary"}
+              >
+                Contact Us
+              </Typography>
+            </MenuItem>
+
+            <MenuItem
+              className={`menu-item`}
+              sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
               onClick={handleOnMenuItemClick("explore")}
             >
               <SearchOutlined
@@ -111,24 +146,6 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
             <MenuItem
               className={`menu-item`}
               sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
-              onClick={handleOnMenuItemClick("create")}
-            >
-              <AutoFixHighOutlined
-                fontSize="medium"
-                color="primary"
-                sx={{ mr: 1 }}
-              />
-              <Typography
-                variant="body1"
-                color={pagesMatch.isCreatePage ? primaryColor : "text.primary"}
-              >
-                Create Story
-              </Typography>
-            </MenuItem>
-
-            <MenuItem
-              className={`menu-item`}
-              sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
               onClick={handleOnMenuItemClick("blogs")}
             >
               <ArticleOutlined
@@ -141,24 +158,6 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                 color={pagesMatch.isBlogsPage ? primaryColor : "text.primary"}
               >
                 Blogs
-              </Typography>
-            </MenuItem>
-
-            <MenuItem
-              className={`menu-item`}
-              sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
-              onClick={handleOnMenuItemClick("contact")}
-            >
-              <AlternateEmailOutlined
-                fontSize="medium"
-                color="primary"
-                sx={{ mr: 1 }}
-              />
-              <Typography
-                variant="body1"
-                color={pagesMatch.isContactPage ? primaryColor : "text.primary"}
-              >
-                Contact Us
               </Typography>
             </MenuItem>
 
@@ -204,7 +203,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
           >
             {auth.isAuthenticated ? (
               <UserAccountMenuButton
-                auth={auth}
+                user={auth.user as User}
                 isMyProfilePage={pagesMatch.isMyProfilePage}
               />
             ) : (
