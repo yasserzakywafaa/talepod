@@ -20,6 +20,7 @@ import {
 
 import { Authentication } from "src/application/store/state";
 import { PagesMatch } from "../ApplicationBar";
+import ProductHuntBadge from "../../ProductHunt/ProductHuntBadge";
 import SettingsMenuButton from "./SettingsMenuButton";
 import { User } from "src/shared/user";
 import UserAccountMenuButton from "./UserAccountButton";
@@ -60,22 +61,35 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
           display="flex"
           component="div"
           flexDirection="row"
-          justifyContent={isScrolledFromTop ? "space-between" : "flex-end"}
+          justifyContent="space-between"
+          alignItems="center"
           width="100%"
         >
-          {isScrolledFromTop ? (
+          {pagesMatch.isFeaturesPage ? (
+            !isScrolledFromTop ? (
+              <></>
+            ) : (
+              <Button
+                size="medium"
+                color="primary"
+                variant="contained"
+                onClick={handleOnMenuItemClick("create")}
+              >
+                Create Story
+              </Button>
+            )
+          ) : (
             <Button
-              size="small"
+              size="medium"
               color="primary"
               variant="contained"
-              endIcon={<AutoFixHighOutlined />}
               onClick={handleOnMenuItemClick("create")}
             >
               Create Story
             </Button>
-          ) : (
-            <></>
           )}
+
+          <ProductHuntBadge />
 
           <Button
             variant="text"

@@ -2,11 +2,12 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import CreateStoryFormMini from "src/components/StoryCreator/features/CreateStoryFormMini";
 import MainCharacter from "../../../assets/images/sleeping_bunny_with_a_moon.webp";
+import ProductHuntBadge from "src/components/shared/ProductHunt/ProductHuntBadge";
 import Typography from "@mui/material/Typography";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
 const Hero = () => {
-  const { isMobile } = useDeviceSize();
+  const { isMobile, isTablet } = useDeviceSize();
 
   return (
     <Box id="hero" sx={{ mt: { xs: 1, sm: 4 }, mb: { xs: 2, sm: 8 } }}>
@@ -17,6 +18,12 @@ const Hero = () => {
           position: "relative",
         }}
       >
+        {!isMobile && !isTablet && (
+          <Box display="flex" justifyContent="center" marginBottom="2rem">
+            <ProductHuntBadge />
+          </Box>
+        )}
+
         <Box
           sx={{
             display: { xs: "flex", sm: "flex" },
