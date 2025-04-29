@@ -1,6 +1,11 @@
 import "./StoryCard.scss";
 
 import {
+  AdultGenderEnum,
+  ChildGenderEnum,
+  Story,
+} from "src/components/StoryCreator/store/state";
+import {
   Avatar,
   Box,
   Button,
@@ -11,10 +16,13 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
+import {
+  FemaleOutlined,
+  HeadphonesOutlined,
+  MaleOutlined,
+} from "@mui/icons-material";
 
 import { CSSProperties } from "react";
-import { HeadphonesOutlined } from "@mui/icons-material";
-import { Story } from "src/components/StoryCreator/store/state";
 import UserAccountMenuButton from "../ApplicationBar/features/UserAccountButton";
 import { VerifiedBadge } from "../VerifiedBadge";
 import routes from "src/application/routes";
@@ -128,43 +136,11 @@ const StoryCard = (props: StoryCard) => {
           <Grid
             item
             spacing={2}
+            display="flex"
             justifyContent="space-between"
             alignItems="center"
             className="story-card-tags"
           >
-            {audioFile && audioFile.url && (
-              <Chip
-                size="small"
-                variant="outlined"
-                label="Original"
-                color="primary"
-                className="story-card-tags-item"
-                icon={<HeadphonesOutlined />}
-              />
-            )}
-
-            {/* {(profileInfo.gender === ChildGenderEnum.Girl ||
-              profileInfo.gender === AdultGenderEnum.Female) && (
-              <Chip
-                size="small"
-                variant="outlined"
-                color="secondary"
-                className="story-card-tags-item"
-                label={<FemaleOutlined />}
-              />
-            )}
-
-            {(profileInfo.gender === ChildGenderEnum.Boy ||
-              profileInfo.gender === AdultGenderEnum.Male) && (
-              <Chip
-                size="small"
-                variant="outlined"
-                color="secondary"
-                label={<MaleOutlined />}
-                className="story-card-tags-item"
-              />
-            )} */}
-
             {profileInfo.language && (
               <Chip
                 size="small"
@@ -180,10 +156,10 @@ const StoryCard = (props: StoryCard) => {
                 <Chip
                   size="small"
                   variant="outlined"
+                  className="story-card-tags-item"
                   label={new Date(props.story.createdAt).toLocaleString(
                     "en-GB",
                     {
-                      timeStyle: "short",
                       dateStyle: "short",
                     }
                   )}
@@ -197,6 +173,25 @@ const StoryCard = (props: StoryCard) => {
                 variant="outlined"
                 label="Original"
                 color="primary"
+                className="story-card-tags-item"
+              />
+            )}
+
+            {(profileInfo.gender === ChildGenderEnum.Girl ||
+              profileInfo.gender === AdultGenderEnum.Female) && (
+              <FemaleOutlined fontSize="medium" color="primary" />
+            )}
+
+            {(profileInfo.gender === ChildGenderEnum.Boy ||
+              profileInfo.gender === AdultGenderEnum.Male) && (
+              <MaleOutlined fontSize="medium" color="primary" />
+            )}
+
+            {audioFile && audioFile.url && (
+              <HeadphonesOutlined
+                fontSize="medium"
+                color="primary"
+                sx={{ marginLeft: "0.25rem" }}
               />
             )}
           </Grid>
