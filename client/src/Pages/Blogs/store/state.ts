@@ -1,5 +1,5 @@
 import { Blog } from "src/Pages/Blog/store/state";
-import { PagingInfo } from "src/shared/types";
+import { PagingInfo } from "src/shared/types/types";
 
 export interface BlogsInitialState {
   isFetching: boolean;

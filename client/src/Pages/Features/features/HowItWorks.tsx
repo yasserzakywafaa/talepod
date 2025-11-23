@@ -87,7 +87,7 @@ const HowItWorks = () => {
               />
             )}
 
-            <Grid item xs={12} md={12}>
+            <Grid size={{ xs: 12, md: 12 }}>
               <Paper
                 elevation={3}
                 sx={{
@@ -108,7 +108,7 @@ const HowItWorks = () => {
                 </Typography>
               </Paper>
             </Grid>
-            <Grid item xs={12} md={12}>
+            <Grid size={{ xs: 12, md: 12 }}>
               <Paper
                 elevation={3}
                 sx={{
@@ -129,7 +129,7 @@ const HowItWorks = () => {
                 </Typography>
               </Paper>
             </Grid>
-            <Grid item xs={12} md={12}>
+            <Grid size={{ xs: 12, md: 12 }}>
               <Paper
                 elevation={3}
                 sx={{

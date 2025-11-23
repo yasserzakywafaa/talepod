@@ -1,6 +1,6 @@
 import { Avatar, Badge } from "@mui/material";
 
-import { User } from "src/shared/user";
+import { User } from "src/shared/types/user";
 import { VerifiedBadge } from "./VerifiedBadge";
 
 export interface ProfileAvatarProps {

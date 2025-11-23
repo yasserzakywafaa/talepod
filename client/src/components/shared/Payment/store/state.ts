@@ -1,5 +1,6 @@
+import { Price, Product } from "src/shared/types/payment";
+
 import { Stripe } from "@stripe/stripe-js";
-import { Price, Product } from "src/shared/payment";
 
 export interface PaymentInitialState {
   publishableKey: string;

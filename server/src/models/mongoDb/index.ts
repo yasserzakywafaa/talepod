@@ -1,10 +1,14 @@
-import { Blog, User } from "../types";
+import { AggregationResult, BaseFilters, Blog, User } from "../types";
 import {
+  Collection,
   Db,
+  DeleteResult,
   Document,
+  Filter,
   InsertManyResult,
   MongoClient,
   ObjectId,
+  Sort,
   WithId,
 } from "mongodb";
 import {
@@ -19,6 +23,7 @@ import {
   createDocument,
   readDocument,
   readDocumentByField,
+  readDocumentByQuery,
   updateDocument,
 } from "./crudOperations";
 
@@ -178,6 +183,91 @@ const getDocumentByFieldFromDb = async (
   }
 };
 
+const getDocumentByQueryFromDb = async (
+  query: Record<string, any>,
+  collectionName: DBCollectionsEnum
+) => {
+  try {
+    const document = await readDocumentByQuery(query, collectionName);
+
+    return document;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getDocumentsByQueryFromDb = async <T extends Document = Document>(
+  query: Filter<T>,
+  collectionName: DBCollectionsEnum
+): Promise<WithId<T>[]> => {
+  try {
+    const collection: Collection<T> = database.collection<T>(collectionName);
+    const documents = await collection.find(query).toArray();
+
+    return documents;
+  } catch (error) {
+    console.error(
+      `❌ Error fetching documents from ${collectionName} with query ${JSON.stringify(
+        query
+      )}:`,
+      error
+    );
+    // Re-throw the error so the calling function's catch block can handle it
+    throw new Error(
+      `❌ Failed to fetch documents by query from ${collectionName}`
+    );
+  }
+};
+
+export const deleteDocumentByQuery = async (
+  query: Filter<Document>,
+  collectionName: DBCollectionsEnum | string
+): Promise<DeleteResult> => {
+  if (!query || Object.keys(query).length === 0) {
+    throw new Error("❌ Deletion query cannot be empty.");
+  }
+
+  // Optional: Add extra logging for debugging (consider sensitive data in queries)
+  console.log(
+    `Attempting deleteOne in collection "${collectionName}" with query:`,
+    JSON.stringify(query)
+  );
+
+  try {
+    if (!database) {
+      throw new Error(
+        "❌ Database is not initialized. Call databaseInit() first."
+      );
+    }
+    const collection: Collection = database.collection(collectionName);
+    const result: DeleteResult = await collection.deleteOne(query);
+
+    if (result.deletedCount === 1) {
+      console.log(
+        `✅ Successfully deleted 1 document from "${collectionName}" matching query.`
+      );
+    } else {
+      console.log(
+        `ℹ️ No document found in "${collectionName}" matching query for deletion.`
+      );
+    }
+
+    return result; // Contains { acknowledged: boolean, deletedCount: number }
+  } catch (error) {
+    console.error(
+      `❌ Database error during deleteOne in "${collectionName}" with query ${JSON.stringify(
+        query
+      )}:`,
+      error
+    );
+    // Re-throw the error to be handled by the calling controller
+    throw new Error(
+      `Failed to delete document from ${collectionName}: ${
+        error instanceof Error ? error.message : String(error)
+      }`
+    );
+  }
+};
 const saveStoryToDb = async (
   story: Partial<Story>,
   profileInfo: ProfileInfo,
@@ -299,6 +389,68 @@ const saveBulkBlogToDb = async (
   }
 };
 
+// Pagination utility function using MongoDB aggregation pipeline
+const getPaginatedDocuments = async <T extends Document = Document>(
+  query: Filter<T>,
+  collectionName: DBCollectionsEnum,
+  paginationParams: BaseFilters,
+  options?: {
+    customPipelineStages?: Record<string, any>[];
+    sort?: Sort;
+  }
+): Promise<AggregationResult<T>> => {
+  try {
+    const { pageNumber, pageSize } = paginationParams;
+    const collection: Collection<T> = database.collection<T>(collectionName);
+
+    // Create sort object - use custom sort if provided, otherwise default to createdAt: -1
+    const sort: Sort = options?.sort || { createdAt: -1 };
+    const pipeline: Record<string, any>[] = [];
+    pipeline.push({ $sort: sort });
+
+    // Add custom pipeline stages before match if provided
+    if (options?.customPipelineStages) {
+      pipeline.push(...options.customPipelineStages);
+    }
+
+    // Match stage
+    pipeline.push({ $match: query });
+
+    // Facet stage to get both data and count in one query
+    pipeline.push({
+      $facet: {
+        metadata: [
+          { $count: "totalCount" },
+          { $addFields: { pageNumber, pageSize } },
+        ],
+        results: [{ $skip: (pageNumber - 1) * pageSize }, { $limit: pageSize }],
+      },
+    });
+
+    const aggregatedDocs = await collection.aggregate(pipeline).toArray();
+    const { metadata, results } = aggregatedDocs[0] as AggregationResult<T>;
+    const totalCount = metadata[0] ? metadata[0].totalCount : 0;
+    const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
+
+    return {
+      metadata,
+      results,
+      paging: {
+        pageNumber,
+        pageSize,
+        totalCount,
+        totalPagesCount,
+      },
+    };
+  } catch (error) {
+    console.error(
+      `❌ Error fetching paginated documents from ${collectionName}:`,
+      error
+    );
+    throw error;
+  }
+};
+
 // // // FOR DEVELOPMENT USE ONLY
 // const copyDocumentsFromDatabaseToAnotherDatabase = async () => {
 //   // Access the Dev and Prod databases
@@ -340,6 +492,8 @@ export {
   closeDatabase,
   getDocumentFromDb,
   getDocumentByFieldFromDb,
+  getDocumentByQueryFromDb,
+  getPaginatedDocuments,
   saveStoryToDb,
   saveStorySeoToDb,
   saveFileDataToDb,

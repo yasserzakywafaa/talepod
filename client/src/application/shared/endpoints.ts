@@ -58,6 +58,30 @@ const END_POINTS = {
     GET_SUBSCRIPTION_DETAILS: `${publicApiUrl}/api/v1/auth/get-subscription-details`,
     CANCEL_SUBSCRIPTION: `${publicApiUrl}/api/v1/payments/cancel-subscription`,
   },
+  DASHBOARD: {
+    OVERVIEW: {
+      GET_USERS_COUNT: `${publicApiUrl}/api/v1/dashboard/overview/users-count`,
+      GET_STORIES_COUNT: `${publicApiUrl}/api/v1/dashboard/overview/stories-count`,
+    },
+    USERS: {
+      GET_ALL_USERS: `${publicApiUrl}/api/v1/dashboard/users`,
+      GET_USER_BY_ID: (userId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/users/${userId}`,
+      GET_USER_STORIES_COUNT: (userId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/users/${userId}/stories/count`,
+      UPDATE_USER_ROLE: (userId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/users/${userId}/role`,
+      BLOCK_USER: (userId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/users/block/${userId}`,
+      DELETE_USER: (userId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/users/delete/${userId}`,
+    },
+    STORIES: {
+      GET_ALL_STORIES: `${publicApiUrl}/api/v1/dashboard/stories`,
+      DELETE_STORY: (storyId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/stories/delete/${storyId}`,
+    },
+  },
   BLOGS: {
     GET_ALL_BLOGS: `${publicApiUrl}/api/v1/blogs/blogs-list`,
     GET_BLOG_BY_SLUG: (slug: string) => `${publicApiUrl}/api/v1/blogs/${slug}`,

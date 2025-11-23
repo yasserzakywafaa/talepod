@@ -1,7 +1,7 @@
 import { BlogsInitialState, getBlogsInitialState } from "./state";
 
 import { Blog } from "src/Pages/Blog/store/state";
-import { PagingInfo } from "src/shared/types";
+import { PagingInfo } from "src/shared/types/types";
 import { useState } from "react";
 
 export interface BlogsStore {

@@ -119,7 +119,10 @@ const MyStoriesPage: React.FC = () => {
                   const isStoryLocked = !user?.isPaidUser && story.isPremium;
 
                   return (
-                    <Grid item key={index} xs={12} sm={6} md={6} lg={6} xl={6}>
+                    <Grid
+                      key={index}
+                      size={{ xs: 12, sm: 6, md: 6, lg: 6, xl: 6 }}
+                    >
                       <StoryCard
                         key={index}
                         story={story}

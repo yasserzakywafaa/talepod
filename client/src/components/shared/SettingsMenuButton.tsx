@@ -9,18 +9,16 @@ import {
   RefreshOutlined,
   Settings,
   WbSunnyOutlined,
-  WebStoriesOutlined,
 } from "@mui/icons-material";
 import { useMatch, useNavigate } from "react-router-dom";
 
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { Notify } from "../../Notification/Notification";
-import { hasAdminRights } from "src/shared/utils/getUserRoles";
+import { Notify } from "./Notification/Notification";
+import { primaryColor } from "src/application/shared/themes";
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useDetectBrowserType } from "src/shared/hooks/useDetectBrowserType";
-import { primaryColor } from "src/application/shared/themes";
 
 export interface SettingsMenuButtonProps {
   children?: JSX.Element;
@@ -56,10 +54,6 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
 
   const handleOnRefreshClick = () => {
     window.location.reload();
-  };
-
-  const handleOnUsersBlogsClick = () => {
-    navigate(routes.usersStories);
   };
 
   const handleOnLogoutClick = () => {
@@ -163,27 +157,11 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
 
         {auth.isAuthenticated ? (
           <>
-            {hasAdminRights(auth.user) ? (
-              <>
-                <Divider />
-
-                <MenuItem
-                  sx={{ ...buttonHoverStylePrimary }}
-                  onClick={handleOnUsersBlogsClick}
-                >
-                  <ListItemIcon>
-                    <WebStoriesOutlined fontSize="small" color="secondary" />
-                  </ListItemIcon>
-
-                  <Typography variant="body1" color="text.primary">
-                    Users Blogs
-                  </Typography>
-                </MenuItem>
-              </>
-            ) : (
-              []
-            )}
-            <Divider />
+            <Divider
+              orientation="horizontal"
+              flexItem
+              sx={{ my: 1, width: "50%" }}
+            />
 
             <MenuItem
               sx={{ ...buttonHoverStylePrimary }}

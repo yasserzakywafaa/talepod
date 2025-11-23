@@ -1,4 +1,4 @@
-import { AuthType } from "src/shared/types";
+import { AuthType } from "src/shared/types/types";
 import GoogleAuth from "src/components/shared/SocialLogins/GoogleAuth/GoogleAuth";
 
 interface SocialLoginProps {

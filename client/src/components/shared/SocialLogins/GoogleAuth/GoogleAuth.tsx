@@ -1,6 +1,6 @@
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 
-import { AuthType } from "src/shared/types";
+import { AuthType } from "src/shared/types/types";
 import { Notify } from "../../Notification/Notification";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useGoogleAuthContext } from "./store/Provider";

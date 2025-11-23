@@ -1,6 +1,7 @@
 const routes = {
   features: `/`,
   create: `/create`,
+  pricing: `/pricing`,
   explore: `/bedtime-stories`,
   usersStories: `/users-bedtime-stories`,
   story: (slug: string) => `/bedtime-story/${slug}`,
@@ -30,6 +31,15 @@ const routes = {
     babyBedtimeStories: "/baby-bedtime-stories",
     bestBedtimeStories: "/best-bedtime-stories",
     quickBedtimeStories: "/quick-bedtime-stories",
+  },
+  // Dashboard (Admin)
+  dashboard: {
+    base: "/dashboard",
+    home: "/dashboard",
+    users: "/dashboard/users",
+    viewUser: (userId: string) => `/dashboard/users/${userId}`,
+    viewUserStories: (userId: string) => `/dashboard/users/${userId}/stories`,
+    stories: "/dashboard/stories",
   },
 };
 

@@ -1,14 +1,21 @@
+import { PagingInfo } from "./api";
 import { WithId } from "mongodb";
 
 export type DocumentWithId = WithId<Document>;
 
 export interface Metadata {
-  totalDocumentsCount: number;
+  totalCount: number;
   pageNumber: number;
   pageSize: number;
 }
 
-export interface AggregationResult {
+export interface AggregationResult<T> {
   metadata: Metadata[];
-  results: DocumentWithId[];
+  results: T[];
+  paging?: PagingInfo;
+}
+
+export interface BaseFilters {
+  pageNumber: number;
+  pageSize: number;
 }

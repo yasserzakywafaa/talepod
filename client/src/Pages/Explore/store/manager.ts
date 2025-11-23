@@ -1,4 +1,7 @@
-import { ApiRequestParams, ApiResponseWithPaging } from "src/shared/types";
+import {
+  ApiRequestParams,
+  ApiResponseWithPaging,
+} from "src/shared/types/types";
 import {
   ExploreStoryFilters,
   StoriesToDisplay,

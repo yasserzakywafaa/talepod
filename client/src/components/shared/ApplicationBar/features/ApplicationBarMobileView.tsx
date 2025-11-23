@@ -1,13 +1,12 @@
 import {
   AlternateEmailOutlined,
-  ArticleOutlined,
+  AttachMoneyOutlined,
   AutoFixHighOutlined,
   EarbudsOutlined,
   LockOpenOutlined,
   MenuOutlined,
   SearchOutlined,
   VpnKeyOutlined,
-  WebStoriesOutlined,
 } from "@mui/icons-material";
 import {
   Box,
@@ -17,13 +16,14 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
+import Logo, { LogoComponentEnum } from "../../Logo";
 
 import { Authentication } from "src/application/store/state";
 import { PagesMatch } from "../ApplicationBar";
 import ProductHuntBadge from "../../ProductHunt/ProductHuntBadge";
-import SettingsMenuButton from "./SettingsMenuButton";
-import { User } from "src/shared/user";
-import UserAccountMenuButton from "./UserAccountButton";
+import SettingsMenuButton from "../../SettingsMenuButton";
+import { User } from "src/shared/types/user";
+import UserAccountMenuButton from "../../UserAccountButton";
 import { primaryColor } from "src/application/shared/themes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
@@ -67,7 +67,13 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
         >
           {pagesMatch.isFeaturesPage ? (
             !isScrolledFromTop ? (
-              <></>
+              <Box sx={{ width: "80px" }}>
+                <Logo
+                  variant="small"
+                  component={LogoComponentEnum.ANCHOR}
+                  style={{ width: "100%", height: "100%" }}
+                />
+              </Box>
             ) : (
               <Button
                 size="medium"
@@ -158,24 +164,11 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                   </Typography>
                 </MenuItem>
 
-                <MenuItem
-                  className={`menu-item`}
-                  onClick={handleOnMenuItemClick("contact")}
-                >
-                  <AlternateEmailOutlined
-                    fontSize="medium"
-                    color="primary"
-                    sx={{ mr: 1 }}
-                  />
-                  <Typography
-                    variant="h6"
-                    color={
-                      pagesMatch.isContactPage ? primaryColor : "text.primary"
-                    }
-                  >
-                    Contact Us
-                  </Typography>
-                </MenuItem>
+                <Divider
+                  orientation="horizontal"
+                  flexItem
+                  sx={{ my: 1, width: "30%", mx: "2rem" }}
+                />
 
                 <MenuItem
                   className={`menu-item`}
@@ -199,9 +192,35 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
 
                 <MenuItem
                   className={`menu-item`}
-                  onClick={handleOnMenuItemClick("blogs")}
+                  onClick={handleOnMenuItemClick("pricing")}
                 >
-                  <ArticleOutlined
+                  <AttachMoneyOutlined
+                    fontSize="medium"
+                    color="primary"
+                    sx={{ mr: 1 }}
+                  />
+
+                  <Typography
+                    variant="h6"
+                    color={
+                      pagesMatch.isPricingPage ? primaryColor : "text.primary"
+                    }
+                  >
+                    Pricing
+                  </Typography>
+                </MenuItem>
+
+                <Divider
+                  orientation="horizontal"
+                  flexItem
+                  sx={{ my: 1, width: "30%", mx: "2rem" }}
+                />
+
+                <MenuItem
+                  className={`menu-item`}
+                  onClick={handleOnMenuItemClick("contact")}
+                >
+                  <AlternateEmailOutlined
                     fontSize="medium"
                     color="primary"
                     sx={{ mr: 1 }}
@@ -209,42 +228,12 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                   <Typography
                     variant="h6"
                     color={
-                      pagesMatch.isBlogsPage ? primaryColor : "text.primary"
+                      pagesMatch.isContactPage ? primaryColor : "text.primary"
                     }
                   >
-                    Blogs
+                    Contact Us
                   </Typography>
                 </MenuItem>
-
-                {auth.isAuthenticated ? (
-                  <>
-                    <Divider sx={{ marginX: "1rem" }} />
-
-                    <MenuItem
-                      className={`menu-item`}
-                      onClick={handleOnMenuItemClick("my-stories")}
-                    >
-                      <WebStoriesOutlined
-                        color="secondary"
-                        fontSize="medium"
-                        sx={{ mr: 1 }}
-                      />
-
-                      <Typography
-                        variant="h6"
-                        color={
-                          pagesMatch.isMyStoriesPage
-                            ? primaryColor
-                            : "text.primary"
-                        }
-                      >
-                        My Stories
-                      </Typography>
-                    </MenuItem>
-                  </>
-                ) : (
-                  <></>
-                )}
               </Box>
 
               <Box marginBottom="1rem">

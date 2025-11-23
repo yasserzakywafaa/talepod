@@ -11,7 +11,7 @@ import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import LoaderSpinner from "../Loader/LoaderSpinner";
 import PaymentWrapper from "../Payment/Payment";
-import { SubscriptionPlanEnum } from "src/shared/user";
+import { SubscriptionPlanEnum } from "src/shared/types/user";
 import Typography from "@mui/material/Typography";
 import { primaryColorOpaqueTen } from "src/application/shared/themes";
 import { usePricing } from "./usePricing";
@@ -57,7 +57,7 @@ export const Pricing = () => {
             const isBasicPlan = plan.title === SubscriptionPlanEnum.Premium;
 
             return (
-              <Grid item xs={12} md={6} key={plan.title}>
+              <Grid size={{ xs: 12, md: 6 }} key={plan.title}>
                 <Card
                   sx={{
                     paddingY: 2,

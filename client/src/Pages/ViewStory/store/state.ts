@@ -7,7 +7,7 @@ import {
 } from "src/components/StoryCreator/store/state";
 
 import { Languages } from "src/shared/languages";
-import { User } from "src/shared/user";
+import { User } from "src/shared/types/user";
 
 export interface ViewStoryInitialState {
   story: Story;

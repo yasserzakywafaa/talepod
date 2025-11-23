@@ -1,6 +1,7 @@
 import APP_CONSTANTS from "src/application/shared/app_constants";
-import { Product } from "src/shared/payment";
-import { SubscriptionPlanEnum } from "src/shared/user";
+import { Price } from "src/shared/types/payment";
+import { Product } from "src/shared/types/payment";
+import { SubscriptionPlanEnum } from "src/shared/types/user";
 import { getCurrencySymbol } from "src/shared/utils/getCurrencySymbol";
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
@@ -67,7 +68,9 @@ export const usePricing = () => {
       const productName = product.name.toLocaleLowerCase();
       if (
         productName.includes(planName) &&
-        product.prices.find((price) => price.recurring?.interval === "month")
+        product.prices.find(
+          (price: Price) => price.recurring?.interval === "month"
+        )
       ) {
         return product;
       } else return;
@@ -80,7 +83,9 @@ export const usePricing = () => {
     const currentPlan = products.find((product) => {
       if (
         product.name.toLocaleLowerCase().includes(plan) &&
-        product.prices.find((price) => price.recurring?.interval === "year")
+        product.prices.find(
+          (price: Price) => price.recurring?.interval === "year"
+        )
       ) {
         return product;
       } else return;

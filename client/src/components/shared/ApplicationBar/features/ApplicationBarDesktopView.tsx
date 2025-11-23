@@ -1,14 +1,13 @@
 import {
   AlternateEmailOutlined,
-  ArticleOutlined,
+  AttachMoneyOutlined,
   AutoFixHighOutlined,
-  EarbudsOutlined,
   LockOpenOutlined,
   SearchOutlined,
   VpnKeyOutlined,
-  WebStoriesOutlined,
 } from "@mui/icons-material";
-import { Box, Divider, MenuItem, Typography } from "@mui/material";
+import { Box, MenuItem, Typography } from "@mui/material";
+import Logo, { LogoComponentEnum } from "../../Logo";
 import {
   primaryColor,
   secondaryColorForDarkTheme,
@@ -16,9 +15,9 @@ import {
 
 import { Authentication } from "src/application/store/state";
 import { PagesMatch } from "../ApplicationBar";
-import SettingsMenuButton from "./SettingsMenuButton";
-import { User } from "src/shared/user";
-import UserAccountMenuButton from "./UserAccountButton";
+import SettingsMenuButton from "../../SettingsMenuButton";
+import { User } from "src/shared/types/user";
+import UserAccountMenuButton from "../../UserAccountButton";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
 interface ApplicationBarDesktopViewParams {
@@ -73,19 +72,11 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
               sx={{ ...buttonHoverStylePrimary }}
               onClick={handleOnMenuItemClick("features")}
             >
-              <EarbudsOutlined
-                fontSize="medium"
-                color="primary"
-                sx={{ mr: 1 }}
+              <Logo
+                variant="small"
+                component={LogoComponentEnum.ANCHOR}
+                style={{ width: "50px", height: "50px" }}
               />
-              <Typography
-                variant="body1"
-                color={
-                  pagesMatch.isFeaturesPage ? primaryColor : "text.primary"
-                }
-              >
-                Features
-              </Typography>
             </MenuItem>
 
             <MenuItem
@@ -103,24 +94,6 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                 color={pagesMatch.isCreatePage ? primaryColor : "text.primary"}
               >
                 Create Story
-              </Typography>
-            </MenuItem>
-
-            <MenuItem
-              className={`menu-item`}
-              sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
-              onClick={handleOnMenuItemClick("contact")}
-            >
-              <AlternateEmailOutlined
-                fontSize="medium"
-                color="primary"
-                sx={{ mr: 1 }}
-              />
-              <Typography
-                variant="body1"
-                color={pagesMatch.isContactPage ? primaryColor : "text.primary"}
-              >
-                Contact Us
               </Typography>
             </MenuItem>
 
@@ -146,52 +119,39 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
             <MenuItem
               className={`menu-item`}
               sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
-              onClick={handleOnMenuItemClick("blogs")}
+              onClick={handleOnMenuItemClick("pricing")}
             >
-              <ArticleOutlined
+              <AttachMoneyOutlined
+                fontSize="medium"
+                color="primary"
+                sx={{ mr: 0.5 }}
+              />
+
+              <Typography
+                variant="body1"
+                color={pagesMatch.isPricingPage ? primaryColor : "text.primary"}
+              >
+                Pricing
+              </Typography>
+            </MenuItem>
+
+            <MenuItem
+              className={`menu-item`}
+              sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
+              onClick={handleOnMenuItemClick("contact")}
+            >
+              <AlternateEmailOutlined
                 fontSize="medium"
                 color="primary"
                 sx={{ mr: 1 }}
               />
               <Typography
                 variant="body1"
-                color={pagesMatch.isBlogsPage ? primaryColor : "text.primary"}
+                color={pagesMatch.isContactPage ? primaryColor : "text.primary"}
               >
-                Blogs
+                Contact Us
               </Typography>
             </MenuItem>
-
-            {auth.isAuthenticated ? (
-              <>
-                <Divider
-                  orientation="vertical"
-                  sx={{ height: "30px", marginX: "1rem" }}
-                />
-
-                <MenuItem
-                  className={`menu-item`}
-                  sx={{ ...buttonHoverStylePrimary }}
-                  onClick={handleOnMenuItemClick("my-stories")}
-                >
-                  <WebStoriesOutlined
-                    color="secondary"
-                    fontSize="medium"
-                    sx={{ mr: 1 }}
-                  />
-
-                  <Typography
-                    variant="body1"
-                    color={
-                      pagesMatch.isMyStoriesPage ? primaryColor : "text.primary"
-                    }
-                  >
-                    My Stories
-                  </Typography>
-                </MenuItem>
-              </>
-            ) : (
-              <></>
-            )}
           </Box>
 
           <Box

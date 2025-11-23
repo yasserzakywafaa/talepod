@@ -199,7 +199,7 @@ export const darkTheme = createTheme({
     ...theme.palette,
     mode: "dark",
     background: {
-      default: darkBackground,
+      // default: "#2E3B4E", // End color of the gradient - solid for MUI compatibility
     },
     text: {
       primary: "#FFFFFF", // White

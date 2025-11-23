@@ -6,7 +6,7 @@ import Page from "src/components/shared/Page/Page";
 import ProfileAvatar from "src/components/shared/ProfileAvatar";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import SubscriptionSection from "./features/Subscription";
-import { User } from "src/shared/user";
+import { User } from "src/shared/types/user";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 import { useMyProfileContext } from "./store/Provider";
@@ -94,12 +94,12 @@ const MyProfilePage = () => {
 
         <Grid container spacing={3} sx={{ marginY: 3 }}>
           {/* Profile Information */}
-          <Grid item xs={12} md={8}>
+          <Grid size={{ xs: 12, md: 8 }}>
             <Card elevation={3} sx={{ padding: 3 }}>
               <Typography variant="h5">Profile Information</Typography>
 
               <Grid container spacing={2} sx={{ marginTop: 2 }}>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Typography
                     variant="h6"
                     component="p"
@@ -113,7 +113,7 @@ const MyProfilePage = () => {
                   </span>
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Typography
                     variant="h6"
                     component="p"
@@ -124,7 +124,7 @@ const MyProfilePage = () => {
                   <span className="bold">{`${user.email}`}</span>
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Typography
                     variant="h6"
                     component="p"
@@ -139,7 +139,7 @@ const MyProfilePage = () => {
                   </span>
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Typography variant="h6" component="p">
                     <span className="text-underline">Appearance</span>
                     <Switch

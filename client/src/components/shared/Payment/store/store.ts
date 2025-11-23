@@ -1,8 +1,8 @@
 import { PaymentInitialState, getPaymentInitialState } from "./state";
+import { Price, Product } from "src/shared/types/payment";
 
 import { Stripe } from "@stripe/stripe-js";
 import { useState } from "react";
-import { Price, Product } from "src/shared/payment";
 
 export interface PaymentStore {
   state: PaymentInitialState;

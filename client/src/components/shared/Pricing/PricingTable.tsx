@@ -25,7 +25,7 @@ import {
 } from "src/application/shared/themes";
 
 import PaymentWrapper from "../Payment/Payment";
-import { SubscriptionPlanEnum } from "src/shared/user";
+import { SubscriptionPlanEnum } from "src/shared/types/user";
 import { useApplicationContext } from "src/application/store/Provider";
 import { usePricing } from "./usePricing";
 

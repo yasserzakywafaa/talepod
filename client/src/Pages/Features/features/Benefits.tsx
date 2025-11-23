@@ -37,7 +37,7 @@ const Benefits = () => {
         routine.
       </Typography>
       <Grid container spacing={3} mt={2}>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Card sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
             <CardContent>
               <Box display="flex" alignItems="center" p={3}>
@@ -52,7 +52,7 @@ const Benefits = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Card sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
             <CardContent>
               <Box display="flex" alignItems="center" p={3}>
@@ -67,7 +67,7 @@ const Benefits = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Card sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
             <CardContent>
               <Box display="flex" alignItems="center" p={3}>
@@ -82,7 +82,7 @@ const Benefits = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Card sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
             <CardContent>
               <Box display="flex" alignItems="center" p={3}>
@@ -97,7 +97,7 @@ const Benefits = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Card sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
             <CardContent>
               <Box display="flex" alignItems="center" p={3}>
@@ -112,7 +112,7 @@ const Benefits = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Card sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
             <CardContent>
               <Box display="flex" alignItems="center" p={3}>

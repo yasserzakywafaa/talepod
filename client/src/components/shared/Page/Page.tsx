@@ -5,7 +5,7 @@ import { Container, ContainerTypeMap, Divider } from "@mui/material";
 import LoaderSpinner, {
   LoaderComponentNameEnum,
 } from "../Loader/LoaderSpinner";
-import { darkTheme, lightTheme } from "src/application/shared/themes";
+import { darkBackground, lightTheme } from "src/application/shared/themes";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import ApplicationBar from "../ApplicationBar/ApplicationBar";
@@ -95,7 +95,7 @@ const Page = (params: PageProps) => {
         style={{
           background:
             themeMode === "dark"
-              ? darkTheme.palette.background.default
+              ? darkBackground
               : lightTheme.palette.background.default,
         }}
       />

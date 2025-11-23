@@ -37,7 +37,7 @@ const KeyFeatures = () => {
         story creator.
       </Typography>
       <Grid container spacing={3} mt={2}>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Card sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
             <CardContent sx={{ textAlign: "center" }}>
               <Box display="flex" justifyContent="center" mb={2}>
@@ -51,7 +51,7 @@ const KeyFeatures = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Card sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
             <CardContent sx={{ textAlign: "center" }}>
               <Box display="flex" justifyContent="center" mb={2}>
@@ -65,7 +65,7 @@ const KeyFeatures = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Card sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
             <CardContent sx={{ textAlign: "center" }}>
               <Box display="flex" justifyContent="center" mb={2}>
@@ -79,7 +79,7 @@ const KeyFeatures = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Card sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
             <CardContent sx={{ textAlign: "center" }}>
               <Box display="flex" justifyContent="center" mb={2}>
@@ -93,7 +93,7 @@ const KeyFeatures = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Card sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
             <CardContent sx={{ textAlign: "center" }}>
               <Box display="flex" justifyContent="center" mb={2}>
@@ -107,7 +107,7 @@ const KeyFeatures = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Card sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
             <CardContent sx={{ textAlign: "center" }}>
               <Box display="flex" justifyContent="center" mb={2}>

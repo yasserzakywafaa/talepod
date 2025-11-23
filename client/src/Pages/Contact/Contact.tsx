@@ -37,11 +37,11 @@ const ContactPage = () => {
         </Typography>
 
         <Grid container spacing={5}>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <ContactForm />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <ContactMap />
           </Grid>
         </Grid>

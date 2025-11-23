@@ -140,7 +140,7 @@ const FiltersPanel: React.FC = (): JSX.Element => {
 
           <FormControl className="filters-form-item">
             <InputLabel id="language-select-label">Language</InputLabel>
-            <Select
+            <Select<string[]>
               required
               multiple
               name="language"
@@ -149,7 +149,9 @@ const FiltersPanel: React.FC = (): JSX.Element => {
               id="language-select"
               value={filters.language}
               labelId="language-select-label"
-              renderValue={(selected) => selected.join(", ").toUpperCase()}
+              renderValue={(selected) =>
+                !selected.length ? "None..." : selected.join(", ").toUpperCase()
+              }
               onChange={handleSelectChange}
             >
               {Languages.map((language, index) => {
@@ -171,7 +173,7 @@ const FiltersPanel: React.FC = (): JSX.Element => {
 
           <FormControl className="filters-form-item">
             <InputLabel id="age-select-label">Age</InputLabel>
-            <Select
+            <Select<string[]>
               multiple
               name="age"
               label="Age"
@@ -276,7 +278,7 @@ const FiltersPanel: React.FC = (): JSX.Element => {
 
           <FormControl className="filters-form-item">
             <InputLabel id="nationality-select-label">Moral</InputLabel>
-            <Select
+            <Select<string[]>
               multiple
               name="moral"
               label="Moral"
@@ -304,7 +306,7 @@ const FiltersPanel: React.FC = (): JSX.Element => {
 
           <FormControl className="filters-form-item">
             <InputLabel id="nationality-select-label">Tone</InputLabel>
-            <Select
+            <Select<string[]>
               multiple
               name="tone"
               variant="outlined"
@@ -332,7 +334,7 @@ const FiltersPanel: React.FC = (): JSX.Element => {
 
           <FormControl className="filters-form-item">
             <InputLabel id="nationality-select-label">Environment</InputLabel>
-            <Select
+            <Select<string[]>
               multiple
               name="environment"
               variant="outlined"

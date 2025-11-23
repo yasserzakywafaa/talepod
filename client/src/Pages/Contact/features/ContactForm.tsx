@@ -22,7 +22,7 @@ const ContactForm = () => {
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <TextField
             required
             fullWidth
@@ -32,7 +32,7 @@ const ContactForm = () => {
             onChange={handleOnFieldChange}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <TextField
             required
             fullWidth
@@ -43,7 +43,7 @@ const ContactForm = () => {
             onChange={handleOnFieldChange}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <TextField
             required
             fullWidth
@@ -53,7 +53,7 @@ const ContactForm = () => {
             onChange={handleOnFieldChange}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <TextField
             required
             multiline
@@ -65,7 +65,7 @@ const ContactForm = () => {
             onChange={handleOnFieldChange}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Button type="submit" variant="contained" endIcon={<SendOutlined />}>
             Send Message
           </Button>
