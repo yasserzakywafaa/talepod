@@ -1,7 +1,7 @@
 import { Alert, Avatar, Box, Typography } from "@mui/material";
 
 import { Story } from "src/components/StoryCreator/store/state";
-import { User } from "src/shared/user";
+import { User } from "src/shared/types/user";
 
 interface ViewStoryAuthorInfoParams {
   story: Story;

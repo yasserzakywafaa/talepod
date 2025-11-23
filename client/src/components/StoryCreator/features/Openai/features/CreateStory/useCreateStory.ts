@@ -12,7 +12,7 @@ import axios, { AxiosResponse } from "axios";
 
 import END_POINTS from "src/application/shared/endpoints";
 import { OpenaiStore } from "../../store/store";
-import { User } from "src/shared/user";
+import { User } from "src/shared/types/user";
 import { useApplicationContext } from "src/application/store/Provider";
 
 export interface UseTextGeneration {

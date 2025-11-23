@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoutes";
 import blogsRoutes from "./routes/blogsRoutes";
 import compression from "compression";
 import contactRoutes from "./routes/contactRoutes";
+import dashboardRoutes from "./routes/dashboardRoutes";
 // import { getRandomTwoArrayDataItems } from "./models/types";
 import handleCorsConfig from "./cors-config";
 // import { handleCreateBulkBlogs } from "./services/create/blog";
@@ -54,7 +55,7 @@ expressApp.use(express.urlencoded({ extended: true }));
 expressApp.set("trust proxy", 1);
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per window
+  max: 500, // Limit each IP to 500 requests per window
 });
 // Apply the rate limiter globally
 expressApp.use(limiter);
@@ -67,6 +68,7 @@ expressApp.use(contactRoutes);
 expressApp.use(authRoutes);
 expressApp.use(paymentsRoutes);
 expressApp.use(blogsRoutes);
+expressApp.use(dashboardRoutes);
 
 // 404 Handler
 expressApp.use((req: Request, res: Response) => {

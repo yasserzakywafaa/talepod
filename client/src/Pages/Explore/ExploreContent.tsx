@@ -111,7 +111,10 @@ export const ExploreContent = (props: ExplorePageContentProps): JSX.Element => {
               <Grid container spacing={2}>
                 {stories.map((story, index) => {
                   return (
-                    <Grid item key={index} xs={12} sm={6} md={6} lg={6} xl={6}>
+                    <Grid
+                      size={{ xs: 12, sm: 6, md: 6, lg: 6, xl: 6 }}
+                      key={index}
+                    >
                       <StoryCard key={index} story={story} />
                     </Grid>
                   );

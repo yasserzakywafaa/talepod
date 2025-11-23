@@ -1,5 +1,9 @@
-import { Mode, PaymentStatus, SessionStatus } from "src/shared/payment";
-import { SubscriptionPlanEnum, User, UserSubscription } from "src/shared/user";
+import { Mode, PaymentStatus, SessionStatus } from "src/shared/types/payment";
+import {
+  SubscriptionPlanEnum,
+  User,
+  UserSubscription,
+} from "src/shared/types/user";
 
 export interface PaymentStatusInitialState {
   isFetching: boolean;

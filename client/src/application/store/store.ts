@@ -6,7 +6,7 @@ import {
 } from "./state";
 
 import APP_CONSTANTS from "../shared/app_constants";
-import { SubscriptionPlanEnum } from "src/shared/user";
+import { SubscriptionPlanEnum } from "src/shared/types/user";
 import { useState } from "react";
 
 export interface ApplicationStore {

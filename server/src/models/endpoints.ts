@@ -47,6 +47,30 @@ const END_POINTS = {
         "https://n8n.yasserzaky.com/webhook/talepod-new-story-added",
     },
   },
+  DASHBOARD: {
+    OVERVIEW: {
+      GET_USERS_COUNT: "/api/v1/dashboard/overview/users-count",
+      GET_STORIES_COUNT: "/api/v1/dashboard/overview/stories-count",
+    },
+    USERS: {
+      GET_ALL_USERS: "/api/v1/dashboard/users",
+      GET_USER_BY_ID: (userId: string) => `/api/v1/dashboard/users/${userId}`,
+      GET_USER_STORIES_COUNT: (userId: string) =>
+        `/api/v1/dashboard/users/${userId}/stories/count`,
+      UPDATE_USER_ROLE: (userId: string) =>
+        `/api/v1/dashboard/users/${userId}/role`,
+      BLOCK_USER: (userId: string) => `/api/v1/dashboard/users/block/${userId}`,
+      UNBLOCK_USER: (userId: string) =>
+        `/api/v1/dashboard/users/unblock/${userId}`,
+      DELETE_USER: (userId: string) =>
+        `/api/v1/dashboard/users/delete/${userId}`,
+    },
+    STORIES: {
+      GET_ALL_STORIES: "/api/v1/dashboard/stories",
+      DELETE_STORY: (storyId: string) =>
+        `/api/v1/dashboard/stories/delete/${storyId}`,
+    },
+  },
 };
 
 export default END_POINTS;

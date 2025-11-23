@@ -1,7 +1,7 @@
 import { Alert, Button, Card, Grid, Typography } from "@mui/material";
 import { AutoAwesomeOutlined, HeartBrokenOutlined } from "@mui/icons-material";
 
-import { SubscriptionPlanEnum } from "src/shared/user";
+import { SubscriptionPlanEnum } from "src/shared/types/user";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useCancelSubscriptionModalContext } from "src/components/Modals/CancelSubscriptionModal/store/Provider";
 import { useMyProfileContext } from "../store/Provider";
@@ -45,11 +45,11 @@ const SubscriptionSection = () => {
   const handleOnSubscribeClick = () => handleTogglePricingModal();
 
   return (
-    <Grid item xs={12} md={8} id="subscription">
+    <Grid size={{ xs: 12, md: 8 }} id="subscription">
       <Card elevation={3} sx={{ padding: 3 }}>
         <Typography variant="h5">Subscription</Typography>
         <Grid container spacing={2} sx={{ marginTop: 2 }}>
-          <Grid item xs={6} md={4}>
+          <Grid size={{ xs: 6, md: 4 }}>
             <Typography variant="h6" component="p" className="text-underline">
               Plan Type
             </Typography>
@@ -59,7 +59,7 @@ const SubscriptionSection = () => {
           {user.isPaidUser &&
           user.subscription.type !== SubscriptionPlanEnum.Free ? (
             <>
-              <Grid item xs={6} md={4}>
+              <Grid size={{ xs: 6, md: 4 }}>
                 <Typography
                   variant="h6"
                   component="p"
@@ -77,7 +77,7 @@ const SubscriptionSection = () => {
                 </span>
               </Grid>
 
-              <Grid item xs={6} md={4}>
+              <Grid size={{ xs: 6, md: 4 }}>
                 <Typography
                   variant="h6"
                   component="p"
@@ -108,7 +108,7 @@ const SubscriptionSection = () => {
                       </Alert>
                     </Grid> */}
 
-              <Grid item xs={12} sm={3} md={4}>
+              <Grid size={{ xs: 12, sm: 3, md: 4 }}>
                 <Button
                   fullWidth
                   color="error"
@@ -121,7 +121,7 @@ const SubscriptionSection = () => {
               </Grid>
             </>
           ) : (
-            <Grid item xs={6} md={6}>
+            <Grid size={{ xs: 6, md: 6 }}>
               <Button
                 fullWidth
                 color="primary"
@@ -136,7 +136,7 @@ const SubscriptionSection = () => {
           )}
 
           {hasMaxBlogsLimit ? (
-            <Grid item xs={12} md={12}>
+            <Grid size={{ xs: 12, md: 12 }}>
               <Alert
                 severity="warning"
                 variant="outlined"
@@ -147,7 +147,7 @@ const SubscriptionSection = () => {
               </Alert>
             </Grid>
           ) : (
-            <Grid item xs={12} sm={6} md={8}>
+            <Grid size={{ xs: 12, sm: 6, md: 8 }}>
               <Alert
                 severity="info"
                 variant="outlined"
@@ -164,7 +164,7 @@ const SubscriptionSection = () => {
           )}
 
           {isCancelledButStillActive && subscription.current_period_end && (
-            <Grid item xs={12} md={12}>
+            <Grid size={{ xs: 12, md: 12 }}>
               <Alert
                 severity="info"
                 variant="outlined"

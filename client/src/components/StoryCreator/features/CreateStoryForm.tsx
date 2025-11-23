@@ -28,7 +28,11 @@ import {
 import { Environment, Environments } from "src/shared/mockedData/Environments";
 import { Language, Languages } from "../../../shared/languages";
 import { Moral, Morals } from "src/shared/mockedData/Moral";
-import { SubscriptionPlanEnum, UserRole, UserStatus } from "src/shared/user";
+import {
+  SubscriptionPlanEnum,
+  UserRole,
+  UserStatus,
+} from "src/shared/types/user";
 import { Tone, Tones } from "src/shared/mockedData/Tone";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";

@@ -59,8 +59,9 @@ export const getAllStories = async (
       .collection(DBCollectionsEnum.stories_library)
       .aggregate(pipeline)
       .toArray();
-    const { metadata, results } = aggregatedStories[0] as AggregationResult;
-    const totalCount = metadata[0] ? metadata[0].totalDocumentsCount : 0;
+    const { metadata, results } =
+      aggregatedStories[0] as AggregationResult<DocumentWithId>;
+    const totalCount = metadata[0] ? metadata[0].totalCount : 0;
 
     const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
 
@@ -82,60 +83,11 @@ export const getAllStories = async (
       results,
       paging,
     });
-
-    // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // // Get all stories in collection
-    // const allStoriesDocuments = database.collection(DBCollections.stories);
-    // const allStoriesDocumentsCount = await allStoriesDocuments.countDocuments();
-
-    // // Get all stories by filters (if any)
-    // const filteredDocuments = allStoriesDocuments
-    //   .find(getQuery(filters))
-    //   .sort({ createdAt: -1, [StoryFiltersEnum.language]: -1 });
-    // const filteredStoriesCount = (await filteredDocuments.toArray()).length;
-
-    // // Get only the pagination stories by same filter (if any)
-    // const filteredDocumentsClone = allStoriesDocuments
-    //   .find(getQuery(filters))
-    //   .sort({ createdAt: -1, [StoryFiltersEnum.language]: -1 })
-    //   .clone();
-    // const filteredStories = await filteredDocumentsClone
-    //   .skip((Number(pageNumber) - 1) * Number(pageSize))
-    //   .limit(pageSize)
-    //   .toArray();
-
-    // const totalCount = hasActiveFilters
-    //   ? filteredStoriesCount
-    //   : allStoriesDocumentsCount;
-
-    // const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
-
-    // console.log("ℹ️  Fetched all stories successfully", {
-    //   filters,
-    //   hasActiveFilters,
-    //   allStoriesDocumentsCount,
-    //   filteredStoriesCount,
-    //   totalCount,
-    //   totalPagesCount,
-    // });
-
-    // const paging: PagingInfo = {
-    //   pageNumber,
-    //   pageSize,
-    //   totalPagesCount,
-    //   totalCount,
-    // };
-    // response.status(200).json({
-    //   results: filteredStories as DocumentWithId[],
-    //   paging,
-    // });
   } catch (error) {
     console.error("❌ Failed to get all stories!", {
       error,
     });
-    // next(error);
-    return undefined;
+    next(error);
   }
 };
 
@@ -281,14 +233,16 @@ export const getAllUserStories = async (
 
     // --- 5. Process Aggregation Results ---
     // The result of $facet is an array containing an object with 'metadata' and 'results' keys
-    const facetResult = aggregationResult[0] as AggregationResult | undefined;
+    const facetResult = aggregationResult[0] as
+      | AggregationResult<DocumentWithId>
+      | undefined;
 
     // Safely access metadata and results, providing defaults
     const metadata = facetResult?.metadata?.[0]; // Metadata is an array, get the first element
     const results = facetResult?.results ?? []; // Default to empty array if no results found
 
     // Calculate total count and pages
-    const totalCount = metadata?.totalDocumentsCount ?? 0;
+    const totalCount = metadata?.totalCount ?? 0;
     // Ensure pageSize is positive to avoid division by zero or negative numbers
     const totalPagesCount = pageSize > 0 ? Math.ceil(totalCount / pageSize) : 0;
 
@@ -330,71 +284,6 @@ export const getAllUserStories = async (
       }),
     });
   }
-
-  // try {
-  //   // Get all stories in collection
-  //   const allStoriesDocuments = database.collection(DBCollectionsEnum.stories);
-
-  //   // Get all stories for this specific user (if any)
-  //   const allUserStoriesDocuments = allStoriesDocuments
-  //     .find({ $and: [{ author: { $eq: new ObjectId(userId) } }] })
-  //     .sort({ createdAt: -1 });
-  //   const allUserStoriesDocumentsCount = (
-  //     await allUserStoriesDocuments.toArray()
-  //   ).length;
-
-  //   // Get all stories by filters (if any)
-  //   const filteredUserDocuments = allStoriesDocuments
-  //     .find(getQuery(filters, userId))
-  //     .sort({ createdAt: -1 });
-  //   const filteredUserStoriesCount = (await filteredUserDocuments.toArray())
-  //     .length;
-
-  //   // Get only the pagination stories by same filter (if any)
-  //   const filteredDocumentsClone = allStoriesDocuments
-  //     .find(getQuery(filters, userId))
-  //     .sort({ createdAt: -1 })
-  //     .clone();
-  //   const filteredStories = await filteredDocumentsClone
-  //     .skip((Number(pageNumber) - 1) * Number(pageSize))
-  //     .limit(pageSize)
-  //     .toArray();
-
-  //   const totalCount = hasActiveFilters
-  //     ? filteredUserStoriesCount
-  //     : filteredStories.length;
-
-  //   const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
-
-  //   console.log("ℹ️  Fetched all User stories successfully", {
-  //     userId,
-  //     filters,
-  //     hasActiveFilters,
-  //     allUserStoriesDocumentsCount,
-  //     filteredUserStoriesCount,
-  //     totalCount,
-  //     totalPagesCount,
-  //   });
-
-  //   const paging: PagingInfo = {
-  //     pageNumber,
-  //     pageSize,
-  //     totalPagesCount,
-  //     totalCount,
-  //   };
-  //   response.status(200).json({
-  //     results: filteredStories as DocumentWithId[],
-  //     paging,
-  //   });
-  // } catch (error) {
-  //   console.error("❌ Failed to get all stories!", {
-  //     error,
-  //   });
-  //   // return undefined;
-  //   response.status(403).json({
-  //     message: error,
-  //   });
-  // }
 };
 
 export const getOriginalStories = async (
@@ -402,7 +291,6 @@ export const getOriginalStories = async (
   response: Response<PageResponse<DocumentWithId> | PageErrorResponse<unknown>>,
   next: NextFunction
 ) => {
-  //  With Pipeline
   try {
     const hasActiveFilters: boolean = request.query.hasActiveFilters === "true";
     const filters: StoryFilters = JSON.parse(
@@ -432,8 +320,9 @@ export const getOriginalStories = async (
       .collection(DBCollectionsEnum.stories_library)
       .aggregate(pipeline)
       .toArray();
-    const { metadata, results } = aggregatedStories[0] as AggregationResult;
-    const totalCount = metadata[0] ? metadata[0].totalDocumentsCount : 0;
+    const { metadata, results } =
+      aggregatedStories[0] as AggregationResult<DocumentWithId>;
+    const totalCount = metadata[0] ? metadata[0].totalCount : 0;
 
     const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
 
@@ -463,79 +352,8 @@ export const getOriginalStories = async (
     console.error("❌ Failed to get Original stories!", {
       error,
     });
-    // next(error);
-    return undefined;
+    next(error);
   }
-  // ////////////////////////////////////////////////////////////////////////////////
-  // // Without Pipeline, just .find()
-  // // TODO: NEEDS FIXING
-  // const hasActiveFilters: boolean = request.query.hasActiveFilters === "true";
-  // const filters: StoryFilters = JSON.parse(
-  //   (request.query.filters as string) || "{}"
-  // );
-  // const { pageNumber = 1, pageSize = 20 } = filters;
-
-  // try {
-  //   // Get all stories in collection
-  //   const allStoriesDocuments = database.collection(
-  //     DBCollections.stories_library
-  //   );
-  //   const allOriginalStoriesDocuments = allStoriesDocuments.find();
-  //   const allOriginalStoriesDocumentsCount = (
-  //     await allOriginalStoriesDocuments.toArray()
-  //   ).length;
-
-  //   // Get all original stories by filters
-  //   const filteredStoriesDocuments = allStoriesDocuments.find(
-  //     getQuery(filters)
-  //   );
-  //   // .limit(pageSize);
-  //   const filteredOriginalStoriesCount = (
-  //     await filteredStoriesDocuments.toArray()
-  //   ).length;
-
-  //   // Get only the pagination stories by same filter (if any)
-  //   const filteredDocumentsClone = allStoriesDocuments
-  //     .find(getQuery(filters))
-  //     .clone();
-  //   const filteredStories = await filteredDocumentsClone
-  //     .skip((Number(pageNumber) - 1) * Number(pageSize))
-  //     .limit(pageSize)
-  //     .toArray();
-
-  //   const totalCount = hasActiveFilters
-  //     ? filteredOriginalStoriesCount
-  //     : allOriginalStoriesDocumentsCount;
-
-  //   const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
-
-  //   console.log("ℹ️  Fetched all Original stories successfully", {
-  //     filters,
-  //     hasActiveFilters,
-  //     allOriginalStoriesDocumentsCount,
-  //     filteredOriginalStoriesCount,
-  //     totalCount,
-  //     totalPagesCount,
-  //   });
-
-  //   const paging: PagingInfo = {
-  //     pageNumber,
-  //     pageSize,
-  //     totalPagesCount,
-  //     totalCount,
-  //   };
-  //   response.status(200).json({
-  //     results: filteredStories as DocumentWithId[],
-  //     paging,
-  //   });
-  // } catch (error) {
-  //   console.error("❌ Failed to get Original stories!", {
-  //     error,
-  //   });
-  //   response.status(403).json({
-  //     message: error,
-  //   });
-  // }
 };
 
 export const getAllUsersStories = async (
@@ -543,7 +361,6 @@ export const getAllUsersStories = async (
   response: Response<PageResponse<DocumentWithId> | PageErrorResponse<unknown>>,
   next: NextFunction
 ) => {
-  //  With Pipeline
   try {
     const hasActiveFilters: boolean = request.query.hasActiveFilters === "true";
     const filters: StoryFilters = JSON.parse(
@@ -574,8 +391,9 @@ export const getAllUsersStories = async (
       .collection(DBCollectionsEnum.stories)
       .aggregate(pipeline)
       .toArray();
-    const { metadata, results } = aggregatedStories[0] as AggregationResult;
-    const totalCount = metadata[0] ? metadata[0].totalDocumentsCount : 0;
+    const { metadata, results } =
+      aggregatedStories[0] as AggregationResult<DocumentWithId>;
+    const totalCount = metadata[0] ? metadata[0].totalCount : 0;
 
     const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
 
@@ -601,73 +419,8 @@ export const getAllUsersStories = async (
     console.error("❌ Failed to get Users stories!", {
       error,
     });
-    // next(error);
-    return undefined;
+    next(error);
   }
-  // ////////////////////////////////////////////////////////////////////////////////
-  // // Without Pipeline, just .find()
-  // // TODO: NEEDS FIXING
-  // const hasActiveFilters: boolean = request.query.hasActiveFilters === "true";
-  // const filters: StoryFilters = JSON.parse(
-  //   (request.query.filters as string) || "{}"
-  // );
-  // const { pageNumber = 1, pageSize = 20 } = filters;
-
-  // try {
-  //   // Get all stories in collection
-  //   const allStoriesDocuments = database.collection(DBCollections.stories);
-  //   const allOriginalStoriesDocumentsCount = (
-  //     await allStoriesDocuments.find().toArray()
-  //   ).length;
-
-  //   // Get all original stories by filters
-  //   const filteredDocuments = allStoriesDocuments.find(getQuery(filters));
-  //   // .limit(pageSize);
-  //   const filteredOriginalStoriesCount = (await filteredDocuments.toArray())
-  //     .length;
-
-  //   // Get only the pagination stories by same filter (if any)
-  //   const filteredDocumentsClone = allStoriesDocuments
-  //     .find(getQuery(filters))
-  //     .clone();
-  //   const filteredStories = await filteredDocumentsClone
-  //     .skip((Number(pageNumber) - 1) * Number(pageSize))
-  //     .limit(pageSize)
-  //     .toArray();
-
-  //   const totalCount = hasActiveFilters
-  //     ? filteredOriginalStoriesCount
-  //     : allOriginalStoriesDocumentsCount;
-
-  //   const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
-
-  //   console.log("ℹ️  Fetched all Users stories successfully", {
-  //     filters,
-  //     hasActiveFilters,
-  //     allOriginalStoriesDocumentsCount,
-  //     filteredOriginalStoriesCount,
-  //     totalCount,
-  //     totalPagesCount,
-  //   });
-
-  //   const paging: PagingInfo = {
-  //     pageNumber,
-  //     pageSize,
-  //     totalPagesCount,
-  //     totalCount,
-  //   };
-  //   response.status(200).json({
-  //     results: filteredStories as DocumentWithId[],
-  //     paging,
-  //   });
-  // } catch (error) {
-  //   console.error("❌ Failed to get Users stories!", {
-  //     error,
-  //   });
-  //   response.status(403).json({
-  //     message: error,
-  //   });
-  // }
 };
 
 // // FOR DEVELOPMENT USE ONLY

@@ -1,5 +1,5 @@
-import { Price, Product } from "src/shared/payment";
-import { SubscriptionPlanEnum, User } from "src/shared/user";
+import { Price, Product } from "src/shared/types/payment";
+import { SubscriptionPlanEnum, User } from "src/shared/types/user";
 import axios, { AxiosResponse } from "axios";
 
 import END_POINTS from "src/application/shared/endpoints";

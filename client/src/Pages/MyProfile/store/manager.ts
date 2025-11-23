@@ -1,4 +1,4 @@
-import { User, UserSubscription } from "src/shared/user";
+import { User, UserSubscription } from "src/shared/types/user";
 import axios, { AxiosResponse } from "axios";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";

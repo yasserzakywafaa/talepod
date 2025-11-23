@@ -23,7 +23,7 @@ import {
 } from "@mui/icons-material";
 
 import { CSSProperties } from "react";
-import UserAccountMenuButton from "../ApplicationBar/features/UserAccountButton";
+import UserAccountMenuButton from "../UserAccountButton";
 import { VerifiedBadge } from "../VerifiedBadge";
 import routes from "src/application/routes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
@@ -129,15 +129,15 @@ const StoryCard = (props: StoryCard) => {
           container
           spacing={2}
           paddingX={1}
+          width="100%"
           className="story-card-tags-wrapper"
-          justifyContent="space-between"
           alignItems="center"
+          direction="row"
         >
           <Grid
-            item
+            size={{ xs: 12, md: 6 }}
             spacing={2}
             display="flex"
-            justifyContent="space-between"
             alignItems="center"
             className="story-card-tags"
           >
@@ -196,13 +196,15 @@ const StoryCard = (props: StoryCard) => {
             )}
           </Grid>
 
-          <Grid item>
+          <Grid
+            size={{ xs: 12, md: 6 }}
+            display="flex"
+            justifyContent="flex-end"
+            alignItems="center"
+          >
             {authorProfile &&
               (isDesktop ? (
-                <UserAccountMenuButton
-                  user={authorProfile}
-                  navigateToProfile={false}
-                />
+                <UserAccountMenuButton user={authorProfile} />
               ) : (
                 <Avatar
                   variant="square"

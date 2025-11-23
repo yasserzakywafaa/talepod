@@ -1,7 +1,10 @@
-import { ArrowRightAltOutlined, AutoAwesomeOutlined } from "@mui/icons-material";
+import {
+  ArrowRightAltOutlined,
+  AutoAwesomeOutlined,
+} from "@mui/icons-material";
 import { Box, Button, TextField } from "@mui/material";
 import { ProfileInfo, Story } from "../store/state";
-import { UserRole, UserStatus } from "src/shared/user";
+import { UserRole, UserStatus } from "src/shared/types/user";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import { SupportedLanguages } from "src/shared/languages";

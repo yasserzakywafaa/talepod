@@ -1,7 +1,7 @@
 import { AudioUserVoice, Story } from "src/components/StoryCreator/store/state";
 import { ViewStoryInitialState, getViewStoryInitialState } from "./state";
 
-import { User } from "src/shared/user";
+import { User } from "src/shared/types/user";
 import { useState } from "react";
 
 export interface ViewStoryStore {

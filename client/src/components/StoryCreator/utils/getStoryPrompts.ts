@@ -5,7 +5,7 @@ import {
   StoryCreatorInitialState,
 } from "../store/state";
 
-import { Keywords } from "src/shared/seo";
+import { Keywords } from "src/shared/types/seo";
 
 export const getCreateStoryPrompt = (
   promptParams: StoryCreatorInitialState

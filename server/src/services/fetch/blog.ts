@@ -69,7 +69,7 @@ export const handleFixBlogLinks = async (): Promise<{
         // Update blog if any fields were modified
         if (Object.keys(updateFields).length > 0) {
           await updateDocument(
-            blog._id.toString(),
+            blog._id?.toString() || "undefined",
             updateFields,
             DBCollectionsEnum.blogs
           );
@@ -98,7 +98,7 @@ export const handleGetAllBlogs = async (
       {
         $facet: {
           metadata: [
-            { $count: "totalDocumentsCount" },
+            { $count: "totalCount" },
             { $addFields: { pageNumber, pageSize } },
           ],
           results: [
@@ -113,8 +113,9 @@ export const handleGetAllBlogs = async (
       .collection(DBCollectionsEnum.blogs)
       .aggregate(pipeline)
       .toArray();
-    const { metadata, results } = aggregatedBlogs[0] as AggregationResult;
-    const totalCount = metadata[0] ? metadata[0].totalDocumentsCount : 0;
+    const { metadata, results } =
+      aggregatedBlogs[0] as AggregationResult<DocumentWithId>;
+    const totalCount = metadata[0] ? metadata[0].totalCount : 0;
     const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
 
     const paging: PagingInfo = {

@@ -68,10 +68,7 @@ const Checkout = () => {
       <Grid container sx={{ height: { xs: "100%", sm: "100dvh" } }}>
         {/* Desktop */}
         <Grid
-          item
-          xs={12}
-          sm={5}
-          lg={4}
+          size={{ xs: 12, sm: 12, md: 5, lg: 4 }}
           sx={{
             display: { xs: "none", md: "flex" },
             flexDirection: "column",
@@ -115,10 +112,7 @@ const Checkout = () => {
 
         {/* Mobile */}
         <Grid
-          item
-          sm={12}
-          md={7}
-          lg={8}
+          size={{ xs: 12, sm: 12, md: 7, lg: 8 }}
           sx={{
             display: "flex",
             flexDirection: "column",

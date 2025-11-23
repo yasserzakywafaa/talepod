@@ -1,6 +1,6 @@
 import { MyProfileState, getMyProfileInitialState } from "./state";
 
-import { UserSubscription } from "src/shared/user";
+import { UserSubscription } from "src/shared/types/user";
 import { useState } from "react";
 
 export interface MyProfileStore {

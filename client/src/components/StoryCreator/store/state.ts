@@ -3,7 +3,7 @@ import { Language, Languages } from "src/shared/languages";
 import { Moral, Morals } from "src/shared/mockedData/Moral";
 import { Tone, Tones } from "src/shared/mockedData/Tone";
 
-import { User } from "src/shared/user";
+import { User } from "src/shared/types/user";
 
 export interface StoryCreatorInitialState {
   isFetching: boolean;

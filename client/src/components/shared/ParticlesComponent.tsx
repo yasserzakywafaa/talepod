@@ -90,7 +90,7 @@ export const ParticlesComponent = () => {
             },
             number: {
               density: { enable: true },
-              value: isMobile ? 100 : 40,
+              value: isMobile ? 40 : 10,
             },
             opacity: {
               value: 0.75,

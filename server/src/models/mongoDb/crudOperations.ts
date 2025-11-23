@@ -36,6 +36,23 @@ export const readDocumentByField = async (
   return document;
 };
 
+// Read a document by query
+export const readDocumentByQuery = async (
+  query: Record<string, any>,
+  collectionName: DBCollectionsEnum
+) => {
+  try {
+    const documents = database.collection(collectionName);
+    const document = await documents.findOne(query, {
+      sort: { createdAt: -1 },
+    });
+
+    return document;
+  } catch (error) {
+    throw new Error("❌ Failed to get document by query!", { cause: error });
+  }
+};
+
 // Update a document by ID
 export const updateDocument = async <T>(
   documentId: string,

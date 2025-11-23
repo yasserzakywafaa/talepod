@@ -2,7 +2,7 @@ import {
   ApiRequestParams,
   ApiResponseWithPaging,
   PagingInfo,
-} from "src/shared/types";
+} from "src/shared/types/types";
 import axios, { AxiosResponse } from "axios";
 
 import { Blog } from "src/Pages/Blog/store/state";

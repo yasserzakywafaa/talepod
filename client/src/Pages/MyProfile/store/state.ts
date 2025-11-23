@@ -1,4 +1,4 @@
-import { User, UserSubscription } from "src/shared/user";
+import { User, UserSubscription } from "src/shared/types/user";
 
 export interface MyProfileState {
   isFetching: boolean;

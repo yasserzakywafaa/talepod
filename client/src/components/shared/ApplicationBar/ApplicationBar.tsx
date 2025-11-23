@@ -1,6 +1,8 @@
 import { AppBar, Container, Toolbar } from "@mui/material";
 import { useMatch, useNavigate } from "react-router-dom";
 
+import ApplicationBarDesktopView from "./features/ApplicationBarDesktopView";
+import ApplicationBarMobileView from "./features/ApplicationBarMobileView";
 import { CancelSubscriptionModal } from "src/components/Modals/CancelSubscriptionModal/CancelSubscriptionModal";
 import { InstallAppModal } from "src/components/Modals/InstallAppModal/InstallAppModal";
 import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
@@ -9,19 +11,17 @@ import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal
 import routes from "src/application/routes";
 import { scrollToSection } from "src/shared/utils/scrollTo";
 import { useApplicationContext } from "src/application/store/Provider";
+import useDetectScroll from "src/shared/hooks/useDetectScroll";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useState } from "react";
-import useDetectScroll from "src/shared/hooks/useDetectScroll";
-
-import ApplicationBarMobileView from "./features/ApplicationBarMobileView";
-import ApplicationBarDesktopView from "./features/ApplicationBarDesktopView";
 
 export interface PagesMatch {
   isFeaturesPage: boolean;
   isCreatePage: boolean;
   isExplorePage: boolean;
+  isPricingPage: boolean;
   isBlogsPage: boolean;
   isContactPage: boolean;
   isViewBlogPage: boolean;
@@ -61,6 +61,7 @@ const ApplicationBar = () => {
     isFeaturesPage: !!useMatch(routes.features),
     isCreatePage: !!useMatch(routes.create),
     isExplorePage: !!useMatch(routes.explore),
+    isPricingPage: !!useMatch(routes.pricing),
     isBlogsPage: !!useMatch(routes.blogs),
     isContactPage: !!useMatch(routes.contact),
     isViewBlogPage: !!useMatch(routes.blog(":id")),
@@ -87,20 +88,17 @@ const ApplicationBar = () => {
       case "create":
         navigate(routes.create);
         break;
+      case "pricing":
+        navigate(routes.pricing);
+        break;
       case "contact":
         navigate(routes.contact);
-        break;
-      case "blogs":
-        navigate(routes.blogs);
         break;
       case "original-stories":
         navigate(routes.explore);
         break;
       case "install":
         setIsInstallAppDialogOpen(true);
-        return;
-      case "users-stories":
-        navigate(routes.usersStories);
         return;
       case "my-stories":
         auth.user && navigate(routes.myStories(auth.user._id));

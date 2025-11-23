@@ -4,20 +4,16 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { darkTheme, lightTheme } from "./shared/themes";
 import { lazy, useEffect } from "react";
 
-import APP_CONSTANTS from "./shared/app_constants";
-// import APP_CONSTANTS from "./shared/app_constants";
 import { CssBaseline } from "@mui/material";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import NotFoundPage from "../Pages/NotFound/NotFound";
 import { ThemeProvider } from "@emotion/react";
-import { getApplicationInitialState } from "./store/state";
-import { getClientIdFromGoogleAnalyticsCookie } from "src/shared/utils/cookies";
-import { getLocalStorageAuthItems } from "src/shared/utils/localstorage";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import routes from "./routes";
 import { useApplicationContext } from "./store/Provider";
 
 const FeaturesPage = lazy(() => import("../Pages/Features/FeaturesPage"));
+const PricingPage = lazy(() => import("../Pages/Pricing/Pricing"));
 const CreateStoryPage = lazy(() => import("../Pages/CreateStory/CreateStory"));
 const ExplorePage = lazy(() => import("../Pages/Explore/Explore"));
 const UsersStoriesPage = lazy(
@@ -77,51 +73,34 @@ const QuickBedtimeStories = lazy(
   () => import("../Pages/LandingPages/QuickBedtimeStories")
 );
 
+// Dashboard Layout and Pages
+const DashboardLayout = lazy(
+  () => import("./layouts/DashboardLayout/DashboardLayout")
+);
+const DashboardPage = lazy(
+  () => import("../Pages/Dashboard/DashboardOverview/DashboardOverview")
+);
+const DashboardUsersPage = lazy(
+  () => import("../Pages/Dashboard/DashboardUsers/DashboardUsers")
+);
+const DashboardStoriesPage = lazy(
+  () => import("../Pages/Dashboard/DashboardStories/DashboardStories")
+);
+const DashboardUser = lazy(
+  () => import("../Pages/Dashboard/DashboardUser/DashboardUser")
+);
+const DashboardUserStoriesPage = lazy(
+  () => import("../Pages/Dashboard/DashboardUser/features/UserStoriesPage")
+);
+
 const AppContent = () => {
   const {
-    store: { state, handleIsFetchingUserInfo, setTrackingInfo },
-    manager: { handleSetAuthInfo, handleFetchUserInfo },
+    store: { state },
+    manager: { handleInitialAuthentication },
   } = useApplicationContext();
 
-  const handleUpdates = async () => {
-    const storedAuthInfo = getLocalStorageAuthItems();
-    document.body.classList.toggle(state.themeMode);
-
-    if (!storedAuthInfo.isAuthenticated) {
-      // User is not logged in, set initial auth state
-      handleSetAuthInfo(getApplicationInitialState().auth);
-
-      // return;
-    } else {
-      // User is already logged in, update auth state
-      const userId = storedAuthInfo.user?._id;
-      if (userId) {
-        const fetchedUser = await handleFetchUserInfo(userId);
-
-        handleSetAuthInfo({
-          isAuthenticated: true,
-          user: fetchedUser,
-        });
-
-        localStorage.setItem(
-          APP_CONSTANTS.LOCAL_STORAGE.USER,
-          JSON.stringify(fetchedUser)
-        );
-      }
-    }
-    handleIsFetchingUserInfo(false);
-
-    // Google Analytics Tracking
-    const gaClientId = getClientIdFromGoogleAnalyticsCookie();
-    if (gaClientId) {
-      setTrackingInfo({
-        clientId: gaClientId,
-      });
-    }
-  };
-
   useEffect(() => {
-    handleUpdates();
+    handleInitialAuthentication();
   }, []);
 
   return (
@@ -133,48 +112,10 @@ const AppContent = () => {
       {!state.isFetchingUserInfo && (
         <BrowserRouter>
           <Routes>
+            {/* Public Routes */}
             <Route index path={routes.features} element={<FeaturesPage />} />
-            <Route path={routes.create} element={<CreateStoryPage />} />
-            <Route path={routes.explore} element={<ExplorePage />} />
-
-            <Route path={routes.blogs} element={<BlogsPage />} />
-            <Route path={routes.blog(":slug")} element={<BlogPage />} />
-
-            {state.auth.isAuthenticated && !!state.auth.user ? (
-              <>
-                <Route
-                  path={routes.myStories(":userId")}
-                  element={<MyStoriesPage />}
-                />
-
-                <Route
-                  path={routes.myProfile(":userId")}
-                  element={<MyProfilePage />}
-                />
-
-                {hasAdminRights(state.auth.user) && (
-                  <Route
-                    path={routes.usersStories}
-                    element={<UsersStoriesPage />}
-                  />
-                )}
-
-                <Route
-                  path={routes.paymentStatus(":sessionId")}
-                  element={<PaymentStatusPage />}
-                />
-              </>
-            ) : (
-              <Route path="*" element={<Navigate to={routes.unauthorized} />} />
-            )}
-
-            <Route
-              path={routes.myStory(":userId", ":slug")}
-              element={<ViewStoryPage />}
-            />
-
+            <Route path={routes.pricing} element={<PricingPage />} />
             <Route path={routes.contact} element={<ContactPage />} />
-            <Route path={routes.story(":slug")} element={<ViewStoryPage />} />
             <Route
               path={routes.privacyPolicy}
               element={<PrivacyPolicyPage />}
@@ -183,8 +124,75 @@ const AppContent = () => {
               path={routes.termsAndConditions}
               element={<TermsAndConditionsPage />}
             />
-            <Route path={routes.checkout} element={<CheckoutPage />} />
             <Route path={routes.unauthorized} element={<UnauthorizedPage />} />
+
+            {/* Story Creation Routes */}
+            <Route path={routes.create} element={<CreateStoryPage />} />
+
+            {/* Story Viewing Routes */}
+            <Route path={routes.explore} element={<ExplorePage />} />
+            <Route path={routes.story(":slug")} element={<ViewStoryPage />} />
+            <Route
+              path={routes.myStory(":userId", ":slug")}
+              element={<ViewStoryPage />}
+            />
+
+            {/* Blog Routes */}
+            <Route path={routes.blogs} element={<BlogsPage />} />
+            <Route path={routes.blog(":slug")} element={<BlogPage />} />
+
+            {/* Authenticated User Routes */}
+            {state.auth.isAuthenticated && !!state.auth.user ? (
+              <>
+                <Route
+                  path={routes.myStories(":userId")}
+                  element={<MyStoriesPage />}
+                />
+                <Route
+                  path={routes.myProfile(":userId")}
+                  element={<MyProfilePage />}
+                />
+                <Route
+                  path={routes.paymentStatus(":sessionId")}
+                  element={<PaymentStatusPage />}
+                />
+
+                {/* Admin Routes */}
+                {hasAdminRights(state.auth.user) && (
+                  <>
+                    <Route
+                      path={routes.usersStories}
+                      element={<UsersStoriesPage />}
+                    />
+
+                    {/* Admin Dashboard - Nested Routes */}
+                    <Route
+                      path={routes.dashboard.base}
+                      element={<DashboardLayout />}
+                    >
+                      <Route index element={<DashboardPage />} />
+                      <Route path="users" element={<DashboardUsersPage />} />
+                      <Route
+                        path={routes.dashboard.viewUser(":userId")}
+                        element={<DashboardUser />}
+                      />
+                      <Route
+                        path={routes.dashboard.viewUserStories(":userId")}
+                        element={<DashboardUserStoriesPage />}
+                      />
+                      <Route
+                        path={routes.dashboard.stories}
+                        element={<DashboardStoriesPage />}
+                      />
+                    </Route>
+                  </>
+                )}
+              </>
+            ) : (
+              <Route path="*" element={<Navigate to={routes.unauthorized} />} />
+            )}
+
+            <Route path={routes.checkout} element={<CheckoutPage />} />
 
             {/* Landing Pages */}
             <Route
@@ -227,7 +235,6 @@ const AppContent = () => {
               path={routes.landingPages.quickBedtimeStories}
               element={<QuickBedtimeStories />}
             />
-            {/* End of Landing Pages */}
 
             {/* Fallback route for 404 errors */}
             <Route path="*" element={<NotFoundPage />} />

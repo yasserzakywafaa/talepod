@@ -1,4 +1,4 @@
-import { PagingInfo } from "src/shared/types";
+import { PagingInfo } from "src/shared/types/types";
 import { Story } from "src/components/StoryCreator/store/state";
 
 export interface MyStoriesInitialState {
