@@ -15,9 +15,13 @@ import { getLocalStorageAuthItems } from "src/shared/utils/localstorage";
 
 export interface ApplicationManager {
   handleIsFetching: (isFetching: boolean) => void;
+  handleToggleThemeMode: () => void;
   handleSetAuthInfo: (authInfo: Authentication) => void;
   handleFetchUserInfo: (userId: string) => Promise<User>;
   handleInitialAuthentication: () => Promise<void>;
+  handleUpdateUserInfoInApplication: (
+    userInfoToUpdate: Partial<User>
+  ) => Promise<void>;
 }
 
 export const useApplicationManager = (
@@ -27,6 +31,18 @@ export const useApplicationManager = (
     store.handleIsFetching(isFetching);
   };
 
+  const handleToggleThemeMode = async () => {
+    store.toggleThemeMode();
+
+    if (store.state.auth.isAuthenticated && store.state.auth.user) {
+      await handleUpdateUserInfoInApplication({
+        preferences: {
+          ...store.state.auth.user.preferences,
+          theme: store.state.themeMode === "dark" ? "light" : "dark",
+        },
+      });
+    }
+  };
   const handleSetAuthInfo = (authInfo: Authentication) => {
     const { USER, AUTHENTICATED: IS_AUTHENTICATED } =
       APP_CONSTANTS.LOCAL_STORAGE;
@@ -99,10 +115,40 @@ export const useApplicationManager = (
     }
   };
 
+  const handleUpdateUserInfoInApplication = async (
+    userInfoToUpdate: Partial<User>
+  ) => {
+    if (!store.state.auth.user) return;
+
+    try {
+      const updatedUser: AxiosResponse<User, any> = await axios.post(
+        END_POINTS.AUTH.UPDATE_USER_INFO,
+        {
+          userId: store.state.auth.user._id,
+          userInfoToUpdate,
+          headers: {
+            "Content-Type": "application/json",
+            "X-Custom-Header": new Date().toISOString(),
+          },
+        }
+      );
+      debugger;
+
+      store.updateAuthInfo({
+        isAuthenticated: true,
+        user: updatedUser.data,
+      });
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return {
     handleIsFetching,
+    handleToggleThemeMode,
     handleSetAuthInfo,
     handleFetchUserInfo,
     handleInitialAuthentication,
+    handleUpdateUserInfoInApplication,
   };
 };

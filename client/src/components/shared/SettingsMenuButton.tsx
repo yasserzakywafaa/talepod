@@ -30,9 +30,8 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
   const {
     store: {
       state: { themeMode, auth },
-      toggleThemeMode,
     },
-    manager: { handleSetAuthInfo },
+    manager: { handleSetAuthInfo, handleToggleThemeMode },
   } = useApplicationContext();
   const { isInStandaloneMode } = useDetectBrowserType();
   const [element, setElement] = React.useState<null | HTMLElement>(null);
@@ -66,7 +65,7 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
       content: "Logged out",
     });
 
-    if (isUserPrivatePages) navigate(routes.unauthorized);
+    if (isUserPrivatePages) navigate(routes.features);
   };
 
   const buttonHoverStylePrimary = {
@@ -110,7 +109,10 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
         variant="menu"
         onClose={handleCloseMenu}
       >
-        <MenuItem sx={{ ...buttonHoverStylePrimary }} onClick={toggleThemeMode}>
+        <MenuItem
+          sx={{ ...buttonHoverStylePrimary }}
+          onClick={handleToggleThemeMode}
+        >
           <ListItemIcon>
             {themeMode === "dark" ? (
               <WbSunnyOutlined
