@@ -33,7 +33,10 @@ const GoogleAuth = (props: GoogleAuthProps) => {
     const authInfo = await handleOnGoogleAuthSuccess(credentialResponse);
 
     if (authInfo) {
-      handleSetAuthInfo(authInfo);
+      handleSetAuthInfo({
+        ...authInfo,
+        isAuthenticated: !!authInfo.user,
+      });
       Notify({
         type: "success",
         content: `Hi ${authInfo.user?.name.givenName} 👋🏻`,

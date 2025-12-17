@@ -20,7 +20,6 @@ import Logo, { LogoComponentEnum } from "../../Logo";
 
 import { Authentication } from "src/application/store/state";
 import { PagesMatch } from "../ApplicationBar";
-import ProductHuntBadge from "../../ProductHunt/ProductHuntBadge";
 import SettingsMenuButton from "../../SettingsMenuButton";
 import { User } from "src/shared/types/user";
 import UserAccountMenuButton from "../../UserAccountButton";
@@ -71,7 +70,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                 <Logo
                   variant="small"
                   component={LogoComponentEnum.ANCHOR}
-                  style={{ width: "100%", height: "100%" }}
+                  style={{ width: "100%", height: "100%", maxWidth: "60px" }}
                 />
               </Box>
             ) : (
@@ -94,8 +93,6 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
               Create Story
             </Button>
           )}
-
-          <ProductHuntBadge />
 
           <Button
             variant="text"

@@ -3,6 +3,7 @@ import {
   Authentication,
   TrackingInfo,
   getApplicationInitialState,
+  getThemePreference,
 } from "./state";
 
 import APP_CONSTANTS from "../shared/app_constants";
@@ -57,9 +58,28 @@ const useApplicationStore = (): ApplicationStore => {
     }));
   };
 
+  const applyThemeToDOM = (theme: "light" | "dark") => {
+    const themeColorMetaTag = document.getElementById("theme-color");
+
+    switch (theme) {
+      case "light":
+        themeColorMetaTag &&
+          themeColorMetaTag.setAttribute("content", "#F5F5F5");
+        document.body.classList.remove(APP_CONSTANTS.APP_THEME_CLASS.DARK);
+        document.body.classList.add(APP_CONSTANTS.APP_THEME_CLASS.LIGHT);
+        break;
+
+      case "dark":
+        themeColorMetaTag &&
+          themeColorMetaTag.setAttribute("content", "#2E3B4E");
+        document.body.classList.remove(APP_CONSTANTS.APP_THEME_CLASS.LIGHT);
+        document.body.classList.add(APP_CONSTANTS.APP_THEME_CLASS.DARK);
+        break;
+    }
+  };
+
   const toggleThemeMode = () => {
     let appTheme = state.themeMode;
-    const themeColorMetaTag = document.getElementById("theme-color");
 
     setState((prev) => {
       appTheme = prev.themeMode === "dark" ? "light" : "dark";
@@ -74,32 +94,23 @@ const useApplicationStore = (): ApplicationStore => {
       appTheme
     );
 
-    switch (appTheme) {
-      case "light":
-        themeColorMetaTag &&
-          themeColorMetaTag.setAttribute("content", "#F5F5F5");
-        document.body.classList.toggle(APP_CONSTANTS.APP_THEME_CLASS.DARK);
-        document.body.classList.toggle(APP_CONSTANTS.APP_THEME_CLASS.LIGHT);
-        break;
-
-      case "dark":
-        themeColorMetaTag &&
-          themeColorMetaTag.setAttribute("content", "#2E3B4E");
-        document.body.classList.toggle(APP_CONSTANTS.APP_THEME_CLASS.LIGHT);
-        document.body.classList.toggle(APP_CONSTANTS.APP_THEME_CLASS.DARK);
-        break;
-    }
+    applyThemeToDOM(appTheme);
   };
 
   const updateAuthInfo = (authInfo?: Authentication) => {
     if (authInfo) {
+      const userTheme = getThemePreference(authInfo.user);
+
       setState((prev) => ({
         ...prev,
+        themeMode: userTheme,
         auth: {
           isAuthenticated: authInfo.isAuthenticated,
           user: authInfo.user,
         },
       }));
+
+      applyThemeToDOM(userTheme);
     } else {
       const {
         AUTHENTICATED: IS_AUTHENTICATION,
@@ -107,12 +118,14 @@ const useApplicationStore = (): ApplicationStore => {
         USER,
       } = APP_CONSTANTS.LOCAL_STORAGE;
       const storedToken = localStorage.getItem(TOKEN) || "";
-      const storedUser = localStorage.getItem(USER);
+      const storedUser = localStorage.getItem(USER) ?? null;
       const parsedUser = storedUser ? JSON.parse(storedUser) : null;
       const storedIsAuthenticated = localStorage.getItem(IS_AUTHENTICATION);
+      const userTheme = getThemePreference(parsedUser);
 
       setState((prev) => ({
         ...prev,
+        themeMode: userTheme,
         auth: {
           token: storedToken,
           isAuthenticated: storedIsAuthenticated === "true" ? true : false,
