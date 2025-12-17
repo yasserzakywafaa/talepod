@@ -94,6 +94,7 @@ export const useApplicationManager = (
         const fetchedUser = await handleFetchUserInfo(userId);
 
         handleSetAuthInfo({
+          ...storedAuthInfo,
           isAuthenticated: true,
           user: fetchedUser,
         });
@@ -132,7 +133,6 @@ export const useApplicationManager = (
           },
         }
       );
-      debugger;
 
       store.updateAuthInfo({
         isAuthenticated: true,
