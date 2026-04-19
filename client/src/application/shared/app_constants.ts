@@ -4,18 +4,18 @@ const APP_CONSTANTS = {
   },
 
   // Variables
-  DEV_CLIENT_PORT: process.env.REACT_APP_PORT,
-  DEV_SERVER_PORT: process.env.REACT_APP_SERVER_PORT,
-  DEV_API_URL: process.env.REACT_APP_DEV_API_URL,
-  PROD_API_URL: process.env.REACT_APP_PROD_API_URL,
+  DEV_CLIENT_PORT: import.meta.env.REACT_APP_PORT,
+  DEV_SERVER_PORT: import.meta.env.REACT_APP_SERVER_PORT,
+  DEV_API_URL: import.meta.env.REACT_APP_DEV_API_URL,
+  PROD_API_URL: import.meta.env.REACT_APP_PROD_API_URL,
 
   // Environment
-  IS_LOCAL: process.env.REACT_APP_ENV === "local",
-  IS_DEV: process.env.REACT_APP_ENV === "development",
-  IS_PROD: process.env.REACT_APP_ENV === "production",
+  IS_LOCAL: import.meta.env.REACT_APP_ENV === "local",
+  IS_DEV: import.meta.env.REACT_APP_ENV === "development",
+  IS_PROD: import.meta.env.REACT_APP_ENV === "production",
 
   // Auth
-  GOOGLE_OAUTH_CLIENT_ID: process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID,
+  GOOGLE_OAUTH_CLIENT_ID: import.meta.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID,
 
   // Censored Words
   CENSORED_WORDS_FETCH_URLS: {
@@ -47,8 +47,8 @@ const APP_CONSTANTS = {
   MAX_STORIES_LIMIT_ADVANCED: 999,
   // App Main URL
   APP_URL:
-    process.env.REACT_APP_ENV === "local" ||
-    process.env.REACT_APP_ENV === "development"
+    import.meta.env.REACT_APP_ENV === "local" ||
+    import.meta.env.REACT_APP_ENV === "development"
       ? "https://dev.talepod.com"
       : "https://www.talepod.com",
 };
