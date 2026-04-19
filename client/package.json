@@ -11,14 +11,14 @@
     "url": "https://gitlab.com/yasserzakywafaa/talepod.git"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "start:windows": "set REACT_APP_ENV=local&& react-scripts start",
-    "start:dev": "REACT_APP_ENV=development react-scripts start",
-    "start:prod": "serve -l 5000 -s build",
-    "build": "rimraf build && react-scripts build && node ./public/generate-nonce.js",
-    "test": "react-scripts test",
-    "test-watch": "react-scripts test --watch",
-    "eject": "react-scripts eject"
+    "start": "vite",
+    "start:windows": "set REACT_APP_ENV=local&& vite",
+    "start:dev": "REACT_APP_ENV=development vite",
+    "start:prod": "serve -l 5000 -s dist",
+    "build": "rimraf dist && vite build",
+    "postbuild": "node public/scripts/generate-nonce.js",
+    "preview": "vite preview",
+    "test": "echo \"No tests configured\" && exit 0"
   },
   "dependencies": {
     "@emotion/react": "latest",
@@ -38,18 +38,26 @@
     "@types/react-router-dom": "5.3.3",
     "axios": "1.6.8",
     "classnames": "2.5.1",
-    "raw-loader": "4.0.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-markdown": "9.0.1",
     "react-router-dom": "6.22.3",
-    "react-scripts": "5.0.1",
-    "react-toastify": "10.0.5"
+    "react-toastify": "10.0.5",
+    "rimraf": "^6.1.2"
   },
   "devDependencies": {
+    "@sparticuz/chromium": "^143.0.4",
+    "@types/node": "latest",
+    "@vitejs/plugin-react": "^6.0.1",
     "sass": "1.75.0",
     "serve": "14.2.1",
-    "typescript": "5.4.5"
+    "typescript": "5.4.5",
+    "vite": "^8.0.3",
+    "vite-plugin-prerender": "^1.0.8",
+    "puppeteer": "npm:puppeteer-core@^24.22.0"
+  },
+  "resolutions": {
+    "puppeteer": "npm:puppeteer-core@^24.22.0"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0",

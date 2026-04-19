@@ -31,7 +31,7 @@
       id="og-description"
       content="Personalize bedtime stories tailored to your child's dreams and imagination."
     />
-    <meta property="og:image" content="%PUBLIC_URL%/icons/icon_512x512.png" />
+    <meta property="og:image" content="/icons/icon_512x512.png" />
 
     <!-- Twitter Card tags -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -45,7 +45,7 @@
       id="twitter-description"
       content="Create custom personalized bedtime stories tailored to your child's dreams and imagination."
     />
-    <meta name="twitter:image" content="%PUBLIC_URL%/icons/icon_512x512.png" />
+    <meta name="twitter:image" content="/icons/icon_512x512.png" />
     <!-- End of Open Graph tags (for social media) -->
 
     <!-- touch-startup-image -->
@@ -146,43 +146,31 @@
 
     <!-- App Icons -->
     <link rel="canonical" href="https://www.talepod.com/" />
-    <link
-      rel="icon"
-      href="%PUBLIC_URL%/icons/favicon.ico"
-      type="image/x-icon"
-    />
-    <link
-      rel="shortcut icon"
-      href="%PUBLIC_URL%/icons/favicon.ico"
-      type="image/x-icon"
-    />
+    <link rel="icon" href="/icons/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/icons/favicon.ico" type="image/x-icon" />
 
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href="%PUBLIC_URL%/icons/apple_touch_icon.png"
+      href="/icons/apple_touch_icon.png"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="32x32"
-      href="%PUBLIC_URL%/icons/favicon_32x32.png"
+      href="/icons/favicon_32x32.png"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href="%PUBLIC_URL%/icons/favicon_16x16.png"
+      href="/icons/favicon_16x16.png"
     />
-    <link
-      rel="mask-icon"
-      href="%PUBLIC_URL%/icons/safari_pinned_tab.svg"
-      color="#ad932d"
-    />
-    <link rel="manifest" href="%PUBLIC_URL%/app.webmanifest.json" />
+    <link rel="mask-icon" href="/icons/safari_pinned_tab.svg" color="#ad932d" />
+    <link rel="manifest" href="/app.webmanifest.json" />
     <link rel="alternate" hreflang="en" href="https://www.talepod.com/" />
 
-    <script src="%PUBLIC_URL%/sw-register.js" async></script>
+    <script src="/sw-register.js" async></script>
 
     <script type="application/ld+json" defer>
       {
@@ -228,5 +216,6 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>
