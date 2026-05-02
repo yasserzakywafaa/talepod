@@ -15,7 +15,12 @@
     "start:watch": "nodemon src/server.ts",
     "start:prod": "NODE_ENV=production node build/server.js",
     "build": "tsc",
-    "build:vercel": "yarn build && mv build ../build/server"
+    "build:vercel": "yarn build && mv build ../build/server",
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f server",
+    "docker:deploy": "docker compose up --build -d"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.591.0",
