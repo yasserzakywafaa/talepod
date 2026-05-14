@@ -40,10 +40,7 @@ export const handleCreateStoryRequest = async (
         },
       ],
       {
-        // max_tokens: 1000,
-        // ...(CONFIG.OPENAI_API_KEY
-        //   ? { externalOpenAiApiKey: CONFIG.OPENAI_API_KEY }
-        //   : {}),
+        max_tokens: CONFIG.AI_MAX_TOKENS.DEFAULT,
       },
     );
 

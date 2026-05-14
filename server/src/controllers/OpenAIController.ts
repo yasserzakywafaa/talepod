@@ -86,9 +86,6 @@ export const createStorySeo = async (
       ],
       {
         max_tokens: CONFIG.AI_MAX_TOKENS.DEFAULT,
-        ...(CONFIG.OPENAI_API_KEY
-          ? { externalOpenAiApiKey: CONFIG.OPENAI_API_KEY }
-          : {}),
       },
     );
 

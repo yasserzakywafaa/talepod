@@ -70,8 +70,6 @@ const CONFIG = {
   OPENROUTER_TTS_MODEL: "openai/gpt-4o-mini-tts-2025-12-15",
   OPENROUTER_IMAGES_MODEL: "recraft/recraft-v4",
 
-  // Legacy OpenAI API key (kept for backward compatibility with externalOpenAiApiKey)
-  OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   AI_MAX_TOKENS: {
     DEFAULT: 4000,
   },

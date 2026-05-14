@@ -1,8 +1,6 @@
 import { BlogData, BlogParts } from "../../models/types";
 
 import CONFIG from "../../config";
-// import { ObjectId } from "mongodb";
-import { handleOpenRouterAIRequest } from "../../utils/openRouterClient";
 // import {
 //   DBCollectionsEnum,
 //   getDocumentByFieldFromDb,
@@ -10,6 +8,8 @@ import { handleOpenRouterAIRequest } from "../../utils/openRouterClient";
 // } from "../../models/mongoDb";
 import { SupportedLanguages } from "../../utils/languages";
 import extractBlogParts from "../../utils/extractBlogParts";
+// import { ObjectId } from "mongodb";
+import { handleOpenRouterAIRequest } from "../../utils/openRouterClient";
 // import fs from "fs";
 // import { getCreateBlogPrompt } from "./getCreateBlogPrompt";
 // import { handleSubmitSitemapToGoogle } from "../googleapis";
@@ -17,12 +17,13 @@ import extractBlogParts from "../../utils/extractBlogParts";
 // import path from "path";
 // import readline from "readline";
 import retry from "../../utils/retryFunction";
+
 // import { getRandomString, getSlugFromText } from "../../utils/stringUtils";
 
 // const siteMapFileName = "sitemap-blogs.xml";
 
 export const handleCreateBlogRequest = async (
-  blogPrompt: string
+  blogPrompt: string,
 ): Promise<string | null> => {
   const maxPromptTokens = 4000; // GPT-4 token limit
   const maxTokens = Math.min(maxPromptTokens - blogPrompt.length, 1000); // Adjust max tokens
@@ -45,9 +46,6 @@ export const handleCreateBlogRequest = async (
       ],
       {
         max_tokens: maxTokens,
-        ...(CONFIG.OPENAI_API_KEY
-          ? { externalOpenAiApiKey: CONFIG.OPENAI_API_KEY }
-          : {}),
       },
     );
 
@@ -63,7 +61,7 @@ export const handleCreateBlogRequest = async (
 
 export const handleCreateBlog = async (
   blogPrompt: string,
-  language: SupportedLanguages
+  language: SupportedLanguages,
 ): Promise<Partial<BlogData | undefined>> => {
   console.log("🛠️  Creating Blog  🛠️");
 
