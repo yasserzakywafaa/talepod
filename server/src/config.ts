@@ -135,8 +135,8 @@ const CONFIG = {
   SERVER_URL:
     process.env.LOCAL_SERVER_URL ||
     (process.env.NODE_ENV === "development"
-      ? process.env.PUBLIC_URLS_SERVER_DEV || "https://api-dev.talepod.com"
-      : process.env.PUBLIC_URLS_SERVER_PROD || "https://api.talepod.com"),
+      ? "https://api-dev.talepod.com"
+      : "https://api.talepod.com"),
 };
 
 export default CONFIG;
