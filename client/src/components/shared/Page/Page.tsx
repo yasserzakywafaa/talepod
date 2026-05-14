@@ -1,7 +1,8 @@
 import "./Page.scss";
 
-import { CSSProperties, useEffect } from "react";
+import { CSSProperties, useEffect, useRef } from "react";
 import { Container, ContainerTypeMap, Divider } from "@mui/material";
+import axios from "axios";
 import LoaderSpinner, {
   LoaderComponentNameEnum,
 } from "../Loader/LoaderSpinner";
@@ -15,8 +16,10 @@ import { OverridableComponent } from "@mui/material/OverridableComponent";
 import ScrollToTopButton from "../BackToTopButton/BackToTopButton";
 import SwipeToRefresh from "./features/SwipeToRefresh/SwipeToRefresh";
 import classNames from "classnames";
+import END_POINTS from "src/application/shared/endpoints";
+import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export interface PageProps {
   title: string;
@@ -49,8 +52,11 @@ const Page = (params: PageProps) => {
       state: { isFetching, themeMode },
       setPreviousUrl,
     },
+    manager: { handleSetAuthInfo },
   } = useApplicationContext();
   const location = useLocation();
+  const navigate = useNavigate();
+  const oauthReturnHandledRef = useRef(false);
 
   const isPageLoading = isLoading || isFetching;
 
@@ -80,6 +86,40 @@ const Page = (params: PageProps) => {
   useEffect(() => {
     document.title = title;
   }, [title]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const authStatus = params.get("authStatus");
+    const provider = params.get("provider");
+    if (authStatus !== "success" || !provider) {
+      oauthReturnHandledRef.current = false;
+      return;
+    }
+    if (oauthReturnHandledRef.current) return;
+    oauthReturnHandledRef.current = true;
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const { data } = await axios.get(END_POINTS.AUTH.USER_INFO, {
+          withCredentials: true,
+        });
+        if (cancelled) return;
+        handleSetAuthInfo({
+          isAuthenticated: true,
+          user: data,
+        });
+        navigate(routes.myProfile(data._id), { replace: true });
+      } catch {
+        if (cancelled) return;
+        navigate(routes.auth.login, { replace: true });
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [location.search, navigate, handleSetAuthInfo]);
 
   useEffect(() => {
     // Prevent scrolling while page is loading

@@ -1,8 +1,6 @@
 import { BlogData, BlogParts } from "../../models/types";
 
 import CONFIG from "../../config";
-// import { ObjectId } from "mongodb";
-import OpenAi from "openai";
 // import {
 //   DBCollectionsEnum,
 //   getDocumentByFieldFromDb,
@@ -10,6 +8,8 @@ import OpenAi from "openai";
 // } from "../../models/mongoDb";
 import { SupportedLanguages } from "../../utils/languages";
 import extractBlogParts from "../../utils/extractBlogParts";
+// import { ObjectId } from "mongodb";
+import { handleOpenRouterAIRequest } from "../../utils/openRouterClient";
 // import fs from "fs";
 // import { getCreateBlogPrompt } from "./getCreateBlogPrompt";
 // import { handleSubmitSitemapToGoogle } from "../googleapis";
@@ -17,23 +17,22 @@ import extractBlogParts from "../../utils/extractBlogParts";
 // import path from "path";
 // import readline from "readline";
 import retry from "../../utils/retryFunction";
+
 // import { getRandomString, getSlugFromText } from "../../utils/stringUtils";
 
 // const siteMapFileName = "sitemap-blogs.xml";
 
 export const handleCreateBlogRequest = async (
-  blogPrompt: string
+  blogPrompt: string,
 ): Promise<string | null> => {
   const maxPromptTokens = 4000; // GPT-4 token limit
   const maxTokens = Math.min(maxPromptTokens - blogPrompt.length, 1000); // Adjust max tokens
 
   try {
     console.log("🛠️  Sending Request to AI to create a Blog  🛠️");
-    const createRequest = await new OpenAi().chat.completions.create({
-      // const createRequest = await axios.post(
-      // "http://192.168.1.3:1234/v1/chat/completions",
-      // {
-      messages: [
+    const createRequest = await handleOpenRouterAIRequest(
+      CONFIG.OPENROUTER_DEFAULT_MODEL_NAME,
+      [
         {
           role: "system",
           content:
@@ -45,13 +44,15 @@ export const handleCreateBlogRequest = async (
           content: blogPrompt,
         },
       ],
-      model: CONFIG.OPENAI_MODEL_NAME ?? "gpt-4o",
-      n: 1,
-      max_tokens: maxTokens,
-      temperature: 0.4,
-    });
+      {
+        max_tokens: maxTokens,
+      },
+    );
 
-    return createRequest.choices[0].message.content;
+    const first = createRequest.choices[0] as {
+      message?: { content?: string | null };
+    };
+    return first?.message?.content ?? null;
     // return createRequest.data.choices[0].message.content;
   } catch (error) {
     throw new Error("❌  Create a blog request failed!");
@@ -60,7 +61,7 @@ export const handleCreateBlogRequest = async (
 
 export const handleCreateBlog = async (
   blogPrompt: string,
-  language: SupportedLanguages
+  language: SupportedLanguages,
 ): Promise<Partial<BlogData | undefined>> => {
   console.log("🛠️  Creating Blog  🛠️");
 

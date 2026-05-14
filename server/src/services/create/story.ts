@@ -16,21 +16,19 @@ import {
 
 import CONFIG from "../../config";
 import { ObjectId } from "mongodb";
-import OpenAi from "openai";
 import extractStoryParts from "../../utils/extractStoryParts";
 import { getSlugFromText } from "../../utils/stringUtils";
+import { handleOpenRouterAIRequest } from "../../utils/openRouterClient";
 import retry from "../../utils/retryFunction";
 import { updateDocument } from "../../models/mongoDb/crudOperations";
 
-const openai = new OpenAi();
-
 export const handleCreateStoryRequest = async (
-  storyPrompt: string
+  storyPrompt: string,
 ): Promise<string | null> => {
   try {
-    // OpenAI Text Generation API Call
-    const createRequest = await openai.chat.completions.create({
-      messages: [
+    const createRequest = await handleOpenRouterAIRequest(
+      CONFIG.OPENROUTER_DEFAULT_MODEL_NAME,
+      [
         {
           role: "system",
           content:
@@ -41,13 +39,15 @@ export const handleCreateStoryRequest = async (
           content: storyPrompt,
         },
       ],
-      model: CONFIG.OPENAI_MODEL_NAME ?? "gpt-4o",
-      n: 1,
-      max_tokens: 1000,
-      temperature: 0.4,
-    });
+      {
+        max_tokens: CONFIG.AI_MAX_TOKENS.DEFAULT,
+      },
+    );
 
-    return createRequest.choices[0].message.content;
+    const first = createRequest.choices[0] as {
+      message?: { content?: string | null };
+    };
+    return first?.message?.content ?? null;
   } catch (error) {
     throw new Error("❌  Create a story request failed!");
   }
@@ -57,11 +57,11 @@ export const handleCreateStory = async (
   storyPrompt: string,
   profileInfo: ProfileInfo,
   storyParams: StoryParams,
-  userInfo: User
+  userInfo: User,
 ) => {
   const user = (await getDocumentFromDb(
     new ObjectId(userInfo._id),
-    DBCollectionsEnum.users
+    DBCollectionsEnum.users,
   )) as User;
 
   const createAndExtractStoryParts = async (): Promise<StoryParts> => {
@@ -81,12 +81,12 @@ export const handleCreateStory = async (
     user.storyCount >= user.subscription.maxStoriesAllowed
   ) {
     throw new Error(
-      `You have consumed your maximum credit of ${user.subscription.maxStoriesAllowed} stories`
+      `You have consumed your maximum credit of ${user.subscription.maxStoriesAllowed} stories`,
     );
   }
   if (user.status !== UserStatus.active) {
     throw new Error(
-      "Your account is not active and not allowed to create stories!"
+      "Your account is not active and not allowed to create stories!",
     );
   }
 
@@ -101,7 +101,7 @@ export const handleCreateStory = async (
       storyParts = await retry(createAndExtractStoryParts, 3, 2000);
 
       console.error(
-        `❌ The story exceeds the maximum number of characters [4,000]!`
+        `❌ The story exceeds the maximum number of characters [4,000]!`,
       );
     }
     const storyData: Partial<Story> = {
@@ -131,7 +131,7 @@ export const handleCreateStory = async (
             .toString()
             .slice(-9)}`,
         },
-        DBCollectionsEnum.stories
+        DBCollectionsEnum.stories,
       )) as Story;
       storyData["slug"] = storyWithSlug.slug;
     } catch (error) {
@@ -149,7 +149,7 @@ export const handleCreateStory = async (
             storyCount: user.storyCount + 1,
             stories: [...user.stories, storyId.toString()],
           },
-          DBCollectionsEnum.users
+          DBCollectionsEnum.users,
         )) as User;
 
         console.log(`✅ User updated with new storyId:>>>`, {
@@ -165,7 +165,7 @@ export const handleCreateStory = async (
 
     console.log("✅ Story Created Successfully", {
       storySlug: storyData.slug,
-      MODEL_NAME: CONFIG.OPENAI_MODEL_NAME,
+      MODEL_NAME: CONFIG.OPENROUTER_DEFAULT_MODEL_NAME,
     });
 
     return {

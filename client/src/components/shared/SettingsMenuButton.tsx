@@ -10,7 +10,7 @@ import {
   Settings,
   WbSunnyOutlined,
 } from "@mui/icons-material";
-import { useMatch, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -31,16 +31,12 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
     store: {
       state: { themeMode, auth },
     },
-    manager: { handleSetAuthInfo, handleToggleThemeMode },
+    manager: { handleToggleThemeMode },
   } = useApplicationContext();
   const { isInStandaloneMode } = useDetectBrowserType();
   const [element, setElement] = React.useState<null | HTMLElement>(null);
 
   const isOpen = Boolean(element);
-  const isUserPrivatePages =
-    !!useMatch(routes.myStories(":userId")) ||
-    !!useMatch(routes.myProfile(":userId"));
-
   const handleMenuButtonClick = (event: React.MouseEvent<HTMLElement>) => {
     setElement(event.currentTarget);
   };
@@ -56,16 +52,8 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
   };
 
   const handleOnLogoutClick = () => {
-    handleSetAuthInfo({
-      isAuthenticated: false,
-      user: null,
-    });
-    Notify({
-      type: "info",
-      content: "Logged out",
-    });
-
-    if (isUserPrivatePages) navigate(routes.features);
+    handleCloseMenu();
+    navigate(routes.auth.logout);
   };
 
   const buttonHoverStylePrimary = {

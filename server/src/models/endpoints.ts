@@ -4,13 +4,20 @@ const END_POINTS = {
     ROUTE_TWO: "/api/v1/test-route-two",
     HELLO: "/api/v1/hello",
   },
-  OPENAI: {
-    CREATE: {
-      STORY: "/api/v1/openai/create/story",
-      STORY_SEO: "/api/v1/story-seo",
-      STORY_AUDIO: "/api/v1/openai/create/story-audio",
-      IMAGES: "/api/v1/openai/create/images",
-    },
+  CREATE: {
+    STORY: "/api/v1/create/story",
+    STORY_SEO: "/api/v1/create/story-seo",
+    STORY_AUDIO: "/api/v1/create/story-audio",
+    IMAGES: "/api/v1/create/images",
+    BLOG: "/api/v1/create/blog",
+  },
+  /** @deprecated Legacy paths — keep handlers mounted for redirects / old clients */
+  LEGACY_OPENAI: {
+    STORY: "/api/v1/openai/create/story",
+    STORY_SEO: "/api/v1/story-seo",
+    STORY_AUDIO: "/api/v1/openai/create/story-audio",
+    IMAGES: "/api/v1/openai/create/images",
+    BLOG: "/api/v1/openai/create/blog",
   },
   STORIES: {
     GET_ALL_STORIES: "/api/v1/bedtime-stories",
@@ -23,9 +30,17 @@ const END_POINTS = {
     SUPPORT: "/api/v1/contact-support",
   },
   AUTH: {
-    GOOGLE: `/api/v1/auth/google-auth`,
     USER_INFO: `/api/v1/auth/user-info`,
+    USER_PROFILE: "/api/v1/auth/user-profile/:userId",
     UPDATE_USER_INFO: `/api/v1/auth/update-user-info`,
+    LOGOUT: `/api/v1/auth/logout`,
+    GOOGLE: `/api/v1/auth/google`,
+    GOOGLE_CALLBACK: `/api/v1/auth/google/callback`,
+    REFRESH_TOKEN: `/api/v1/auth/refresh-token`,
+    PHONE_REGISTER_SEND_OTP: `/api/v1/auth/phone/register/send-otp`,
+    PHONE_REGISTER_VERIFY_OTP: `/api/v1/auth/phone/register/verify-otp`,
+    PHONE_LOGIN_SEND_OTP: `/api/v1/auth/phone/login/send-otp`,
+    PHONE_LOGIN_VERIFY_OTP: `/api/v1/auth/phone/login/verify-otp`,
   },
   PAYMENTS: {
     CONFIG: `/api/v1/payments/config`,

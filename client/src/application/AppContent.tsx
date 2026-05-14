@@ -1,12 +1,13 @@
 import "./App.scss";
 
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { darkTheme, lightTheme } from "./shared/themes";
 import { lazy, useEffect } from "react";
 
 import { CssBaseline } from "@mui/material";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import NotFoundPage from "../Pages/NotFound/NotFound";
+import ProtectedRoute from "./ProtectedRoute";
 import { ThemeProvider } from "@emotion/react";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import routes from "./routes";
@@ -27,6 +28,9 @@ const BlogPage = lazy(() => import("../Pages/Blog/Blog"));
 const MyProfilePage = lazy(() => import("../Pages/MyProfile/MyProfile"));
 const ContactPage = lazy(() => import("../Pages/Contact/Contact"));
 const ViewStoryPage = lazy(() => import("../Pages/ViewStory/ViewStory"));
+const LoginPage = lazy(() => import("../Pages/Login"));
+const RegisterPage = lazy(() => import("../Pages/Register"));
+const LogoutPage = lazy(() => import("../Pages/Logout"));
 const CheckoutPage = lazy(() => import("../Pages/Checkout/CheckoutPage"));
 const PaymentStatusPage = lazy(
   () => import("../Pages/PaymentStatus/PaymentStatus")
@@ -125,6 +129,9 @@ const AppContent = () => {
               element={<TermsAndConditionsPage />}
             />
             <Route path={routes.unauthorized} element={<UnauthorizedPage />} />
+            <Route path={routes.auth.login} element={<LoginPage />} />
+            <Route path={routes.auth.register} element={<RegisterPage />} />
+            <Route path={routes.auth.logout} element={<LogoutPage />} />
 
             {/* Story Creation Routes */}
             <Route path={routes.create} element={<CreateStoryPage />} />
@@ -141,56 +148,71 @@ const AppContent = () => {
             <Route path={routes.blogs} element={<BlogsPage />} />
             <Route path={routes.blog(":slug")} element={<BlogPage />} />
 
-            {/* Authenticated User Routes */}
-            {state.auth.isAuthenticated && !!state.auth.user ? (
-              <>
-                <Route
-                  path={routes.myStories(":userId")}
-                  element={<MyStoriesPage />}
-                />
-                <Route
-                  path={routes.myProfile(":userId")}
-                  element={<MyProfilePage />}
-                />
-                <Route
-                  path={routes.paymentStatus(":sessionId")}
-                  element={<PaymentStatusPage />}
-                />
+            {/* Authenticated user routes */}
+            <Route
+              path={routes.myStories(":userId")}
+              element={
+                <ProtectedRoute>
+                  <MyStoriesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={routes.myProfile(":userId")}
+              element={
+                <ProtectedRoute>
+                  <MyProfilePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={routes.paymentStatus(":sessionId")}
+              element={
+                <ProtectedRoute>
+                  <PaymentStatusPage />
+                </ProtectedRoute>
+              }
+            />
 
-                {/* Admin Routes */}
-                {hasAdminRights(state.auth.user) && (
-                  <>
+            {/* Admin Routes */}
+            {state.auth.isAuthenticated &&
+              !!state.auth.user &&
+              hasAdminRights(state.auth.user) && (
+                <>
+                  <Route
+                    path={routes.usersStories}
+                    element={
+                      <ProtectedRoute>
+                        <UsersStoriesPage />
+                      </ProtectedRoute>
+                    }
+                  />
+
+                  <Route
+                    path={routes.dashboard.base}
+                    element={
+                      <ProtectedRoute>
+                        <DashboardLayout />
+                      </ProtectedRoute>
+                    }
+                  >
+                    <Route index element={<DashboardPage />} />
+                    <Route path="users" element={<DashboardUsersPage />} />
                     <Route
-                      path={routes.usersStories}
-                      element={<UsersStoriesPage />}
+                      path={routes.dashboard.viewUser(":userId")}
+                      element={<DashboardUser />}
                     />
-
-                    {/* Admin Dashboard - Nested Routes */}
                     <Route
-                      path={routes.dashboard.base}
-                      element={<DashboardLayout />}
-                    >
-                      <Route index element={<DashboardPage />} />
-                      <Route path="users" element={<DashboardUsersPage />} />
-                      <Route
-                        path={routes.dashboard.viewUser(":userId")}
-                        element={<DashboardUser />}
-                      />
-                      <Route
-                        path={routes.dashboard.viewUserStories(":userId")}
-                        element={<DashboardUserStoriesPage />}
-                      />
-                      <Route
-                        path={routes.dashboard.stories}
-                        element={<DashboardStoriesPage />}
-                      />
-                    </Route>
-                  </>
-                )}
-              </>
-            ) : (
-              <Route path="*" element={<Navigate to={routes.unauthorized} />} />
-            )}
+                      path={routes.dashboard.viewUserStories(":userId")}
+                      element={<DashboardUserStoriesPage />}
+                    />
+                    <Route
+                      path={routes.dashboard.stories}
+                      element={<DashboardStoriesPage />}
+                    />
+                  </Route>
+                </>
+              )}
 
             <Route path={routes.checkout} element={<CheckoutPage />} />
 

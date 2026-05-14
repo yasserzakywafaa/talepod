@@ -32,15 +32,25 @@ export const useMyProfileManager = (
     if (!auth.user) return;
 
     try {
-      await axios.post(END_POINTS.AUTH.UPDATE_USER_INFO, {
-        userId: auth.user._id,
-        userInfoToUpdate,
-        headers: {
-          "Content-Type": "application/json",
-          "X-Custom-Header": new Date().toISOString(),
+      const { data } = await axios.post<User>(
+        END_POINTS.AUTH.UPDATE_USER_INFO,
+        {
+          userId: auth.user._id,
+          userInfoToUpdate,
         },
-      });
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+            "X-Custom-Header": new Date().toISOString(),
+          },
+        },
+      );
 
+      handleSetAuthInfo({
+        isAuthenticated: true,
+        user: data,
+      });
       handleIsFetching(false);
     } catch (error) {
       console.error("Error:", error);
@@ -62,7 +72,8 @@ export const useMyProfileManager = (
           params: {
             subscriptionId: auth.user.subscription.id,
           },
-        }
+          withCredentials: true,
+        },
       );
 
       store.setSubscriptionDetails(response.data);
@@ -79,28 +90,36 @@ export const useMyProfileManager = (
     try {
       handleIsFetching(true);
 
-      await axios.post(END_POINTS.PAYMENTS.CANCEL_SUBSCRIPTION, {
-        userId: auth.user?._id,
-        subscriptionId: auth.user?.subscription.id,
-        userStoryCount: auth.user?.stories.length,
-        headers: {
-          "Content-Type": "application/json",
-          "X-Custom-Header": new Date().toISOString(),
+      await axios.post(
+        END_POINTS.PAYMENTS.CANCEL_SUBSCRIPTION,
+        {
+          userId: auth.user?._id,
+          subscriptionId: auth.user?.subscription.id,
+          userStoryCount: auth.user?.stories.length,
         },
-      });
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+            "X-Custom-Header": new Date().toISOString(),
+          },
+        },
+      );
     } catch (error) {
       console.error("Error:", error);
     } finally {
       if (auth.user) {
-        const fetchedUser = await handleFetchUserInfo(auth.user._id);
-        handleSetAuthInfo({
-          isAuthenticated: true,
-          user: fetchedUser,
-        });
-        localStorage.setItem(
-          APP_CONSTANTS.LOCAL_STORAGE.USER,
-          JSON.stringify(fetchedUser)
-        );
+        const fetchedUser = await handleFetchUserInfo();
+        if (fetchedUser) {
+          handleSetAuthInfo({
+            isAuthenticated: true,
+            user: fetchedUser,
+          });
+          localStorage.setItem(
+            APP_CONSTANTS.LOCAL_STORAGE.USER,
+            JSON.stringify(fetchedUser),
+          );
+        }
       }
 
       Notify({

@@ -22,12 +22,12 @@ import { getQuery } from "../models/mongoDb/query";
 export const getAllStories = async (
   request: Request,
   response: Response<PageResponse<DocumentWithId>>,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const hasActiveFilters: boolean = request.query.hasActiveFilters === "true";
     const filters: StoryFilters = JSON.parse(
-      (request.query.filters as string) || "{}"
+      (request.query.filters as string) || "{}",
     );
     const { pageNumber = 1, pageSize = 20 } = filters;
     const matchStage = hasActiveFilters ? [{ $match: getQuery(filters) }] : [];
@@ -94,7 +94,7 @@ export const getAllStories = async (
 export const getStoryBySlug = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const storySlug = request.params.slug;
   if (!storySlug || typeof storySlug !== "string") {
@@ -144,7 +144,7 @@ export const getStoryBySlug = async (
 
     if (!story.authorProfile) {
       console.warn(
-        `⚠️ Blog found (slug: ${storySlug}), but author profile (ID: ${story.author}) was missing.`
+        `⚠️ Story found (slug: ${storySlug}), but author profile (ID: ${story.author}) was missing.`,
       );
     }
 
@@ -165,16 +165,16 @@ export const getStoryBySlug = async (
 export const getAllUserStories = async (
   request: Request,
   response: Response<PageResponse<DocumentWithId> | PageErrorResponse<unknown>>,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const userId = request.query.userId as string;
   const user = (await getDocumentFromDb(
     new ObjectId(userId),
-    DBCollectionsEnum.users
+    DBCollectionsEnum.users,
   )) as User;
   // const hasActiveFilters: boolean = request.query.hasActiveFilters === "true";
   const filters: StoryFilters = JSON.parse(
-    (request.query.filters as string) || "{}"
+    (request.query.filters as string) || "{}",
   );
   const { pageNumber = 1, pageSize = 20 } = filters;
 
@@ -289,12 +289,12 @@ export const getAllUserStories = async (
 export const getOriginalStories = async (
   request: Request,
   response: Response<PageResponse<DocumentWithId> | PageErrorResponse<unknown>>,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const hasActiveFilters: boolean = request.query.hasActiveFilters === "true";
     const filters: StoryFilters = JSON.parse(
-      (request.query.filters as string) || "{}"
+      (request.query.filters as string) || "{}",
     );
     const { pageNumber = 1, pageSize = 20 } = filters;
     const matchStage = hasActiveFilters ? [{ $match: getQuery(filters) }] : [];
@@ -359,12 +359,12 @@ export const getOriginalStories = async (
 export const getAllUsersStories = async (
   request: Request,
   response: Response<PageResponse<DocumentWithId> | PageErrorResponse<unknown>>,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const hasActiveFilters: boolean = request.query.hasActiveFilters === "true";
     const filters: StoryFilters = JSON.parse(
-      (request.query.filters as string) || "{}"
+      (request.query.filters as string) || "{}",
     );
     const { pageNumber = 1, pageSize = 20 } = filters;
     const matchStage = hasActiveFilters ? [{ $match: getQuery(filters) }] : [];

@@ -31,7 +31,7 @@ export const useImageGeneration = (store: OpenaiStore): UseImageGeneration => {
   const handleCreateImage = async (userPrompt: string) => {
     try {
       const response = await axios.post(
-        END_POINTS.OPENAI.GENERATE.IMAGES,
+        END_POINTS.CREATE.GENERATE.IMAGES,
         {
           userPrompt,
           numImages: 5, // Specify the number of images to generate

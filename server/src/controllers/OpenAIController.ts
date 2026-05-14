@@ -6,22 +6,26 @@ import {
   StorySeo,
   User,
 } from "../models/types";
+import {
+  createOpenRouterClient,
+  handleOpenRouterAIRequest,
+} from "../utils/openRouterClient";
 import { saveFileDataToDb, saveStorySeoToDb } from "../models/mongoDb";
 
 import CONFIG from "../config";
 import { IMAGES_SIZES } from "../models/openaiModel";
-import OpenAi from "openai";
 import fs from "fs";
+import { handleCreateBlogRequest } from "../services/create/blog";
 import { handleCreateStory } from "../services/create/story";
 import { handleTriggerWebhookN8n } from "../services/webhooks/n8n";
 import { uploadFileToS3 } from "../services/amazonS3";
 
-const openai = new OpenAi();
+const getOpenRouterSdkClient = () => createOpenRouterClient();
 
 export const createStory = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const { storyPrompt } = request.body;
   const profileInfo = request.body.profileInfo as ProfileInfo;
@@ -37,11 +41,10 @@ export const createStory = async (
       storyPrompt,
       profileInfo,
       storyParams,
-      userInfo
+      userInfo,
     );
 
     if (story) {
-      // Trigger webhook n8n with new blog data
       await handleTriggerWebhookN8n({
         eventName: "New Story Added",
         data: {
@@ -64,14 +67,14 @@ export const createStory = async (
 export const createStorySeo = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const { storyId, userSeoPrompt } = request.body;
 
-  // OpenAI Text Generation API Call
   try {
-    const createRequest = await openai.chat.completions.create({
-      messages: [
+    const createRequest = await handleOpenRouterAIRequest(
+      CONFIG.OPENROUTER_DEFAULT_MODEL_NAME,
+      [
         {
           role: "system",
           content: "You are a Search Engine Optimization expert.",
@@ -81,25 +84,28 @@ export const createStorySeo = async (
           content: userSeoPrompt,
         },
       ],
-      model: CONFIG.OPENAI_MODEL_NAME ?? "gpt-4o",
-      n: 1,
-    });
-    const openaiResponse = createRequest.choices[0].message.content;
+      {
+        max_tokens: CONFIG.AI_MAX_TOKENS.DEFAULT,
+      },
+    );
 
-    if (!openaiResponse) return;
+    const first = createRequest.choices[0] as {
+      message?: { content?: string | null };
+    };
+    const text = first?.message?.content;
+    if (!text) return;
 
     const storySEO: StorySeo = {
       createdAt: new Date(),
-      content: openaiResponse
+      content: text
         .replace(/{|}/g, "")
         .replaceAll("```", "")
         .replaceAll("html", "")
         .trim(),
     };
 
-    if (openaiResponse.length) {
+    if (text.length) {
       try {
-        // Save story to MongoDB Atlas
         await saveStorySeoToDb(storyId, storySEO);
 
         response.json(storySEO);
@@ -112,7 +118,7 @@ export const createStorySeo = async (
 
     console.log("✅ Story SEO Created Successfully", {
       request: request.path,
-      MODEL_NAME: CONFIG.OPENAI_MODEL_NAME,
+      MODEL_NAME: CONFIG.OPENROUTER_DEFAULT_MODEL_NAME,
     });
   } catch (error) {
     console.error("❌ Failed to create the story SEO!", {
@@ -125,41 +131,38 @@ export const createStorySeo = async (
 export const createStoryAudio = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const { storyId, storyText, fileName, audioFileVoice } = request.body;
   const { SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH } = CONFIG;
 
-  // OpenAI Text-to-Speech Generation API Call
   try {
-    const createRequest = await openai.audio.speech.create({
+    const createRequest = await getOpenRouterSdkClient().audio.speech.create({
       speed: 0.98,
       input: storyText,
       response_format: "mp3",
       voice: audioFileVoice ?? "nova",
-      model: CONFIG.OPENAI_TTS_MODEL_NAME || "tts-1-hd",
+      model: CONFIG.OPENROUTER_TTS_MODEL,
     });
 
     const audioFileName = `${fileName}.mp3`;
     const filePath = `${CONFIG.SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH}/${audioFileName}`;
-    const buffer = Buffer.from(await createRequest.arrayBuffer());
+    const audioBytes = new Uint8Array(await createRequest.arrayBuffer());
     !fs.existsSync(SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH) &&
       fs.mkdirSync(SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH, {
         recursive: true,
       });
-    await fs.promises.writeFile(filePath, buffer);
+    await fs.promises.writeFile(filePath, audioBytes);
 
     try {
-      // Upload file to Amazon S3
       const fileUrl = await uploadFileToS3(fileName, filePath);
       if (fileUrl) {
         try {
-          // Save file to MongoDB Atlas
           await saveFileDataToDb(storyId, audioFileName, fileUrl);
         } catch (error) {
           throw new Error(
             "❌ Failed to save the S3 audio file URL file to Db!",
-            { cause: error }
+            { cause: error },
           );
         }
       } else {
@@ -193,40 +196,33 @@ export const createStoryAudio = async (
 export const createImages = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
-  // const userPrompt = request.body.userPrompt;
   const { userPrompt, numImages } = request.body;
 
-  // OpenAI Image Generation API Call
   try {
     const imageUrls: string[] = [];
 
-    // Make multiple requests to generate each image
     for (let i = 0; i < numImages; i++) {
-      const imageRequest = await openai.images.generate({
-        n: 1, // Generate one image per request
-        model: CONFIG.OPENAI_IMAGES_MODEL_NAME,
+      const imageRequest = await getOpenRouterSdkClient().images.generate({
+        n: 1,
+        model: CONFIG.OPENROUTER_IMAGES_MODEL,
         size: IMAGES_SIZES["1024x1024"],
         response_format: "url",
         prompt: userPrompt,
         style: "natural",
         quality: "hd",
-        // user: ""
       });
 
-      // Extract the URL of the generated image from the response and add it to the array
       const imageUrl = imageRequest.data[0].url;
       imageUrl && imageUrls.push(imageUrl);
     }
 
     console.log("ℹ️  Image create successfully", {
       request,
-      // response: imageRequest,
       response: imageUrls,
-      MODEL_NAME: CONFIG.OPENAI_IMAGES_MODEL_NAME,
+      MODEL_NAME: CONFIG.OPENROUTER_IMAGES_MODEL,
     });
-    // response.json(imageRequest.data[0].url);
     response.json(imageUrls);
   } catch (error) {
     console.error("❌ Failed to create images", {
@@ -236,11 +232,30 @@ export const createImages = async (
   }
 };
 
+export const createBlog = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  const { blogPrompt } = request.body;
+  if (!blogPrompt || typeof blogPrompt !== "string") {
+    response.status(400).json({ message: "blogPrompt is required" });
+    return;
+  }
+  try {
+    const content = await handleCreateBlogRequest(blogPrompt);
+    response.json({ content });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const OpenAIController = {
   createStory,
   createStorySeo,
   createStoryAudio,
   createImages,
+  createBlog,
 };
 
 export default OpenAIController;

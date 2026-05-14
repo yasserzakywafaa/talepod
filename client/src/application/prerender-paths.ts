@@ -12,6 +12,8 @@ export const prerenderPaths: string[] = [
   "/contact",
   "/privacy-policy",
   "/terms-and-conditions",
+  "/login",
+  "/register",
   "/logout",
   "/checkout",
   "/unauthorized",
