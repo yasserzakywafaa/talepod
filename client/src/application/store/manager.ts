@@ -17,15 +17,18 @@ export interface ApplicationManager {
   handleIsFetching: (isFetching: boolean) => void;
   handleToggleThemeMode: () => void;
   handleSetAuthInfo: (authInfo: Authentication) => void;
-  handleFetchUserInfo: (userId: string) => Promise<User>;
+  /** Current session user (cookies + GET user-info). */
+  handleFetchUserInfo: () => Promise<User | null>;
+  /** Public profile for another user (e.g. story author). */
+  handleFetchUserById: (userId: string) => Promise<User | null>;
   handleInitialAuthentication: () => Promise<void>;
   handleUpdateUserInfoInApplication: (
-    userInfoToUpdate: Partial<User>
+    userInfoToUpdate: Partial<User>,
   ) => Promise<void>;
 }
 
 export const useApplicationManager = (
-  store: ApplicationStore
+  store: ApplicationStore,
 ): ApplicationManager => {
   const handleIsFetching = (isFetching: boolean) => {
     store.handleIsFetching(isFetching);
@@ -43,71 +46,89 @@ export const useApplicationManager = (
       });
     }
   };
+
   const handleSetAuthInfo = (authInfo: Authentication) => {
     const { USER, AUTHENTICATED: IS_AUTHENTICATED } =
       APP_CONSTANTS.LOCAL_STORAGE;
+    localStorage.setItem(
+      IS_AUTHENTICATED,
+      authInfo.isAuthenticated ? "true" : "false",
+    );
     localStorage.setItem(USER, JSON.stringify(authInfo.user));
-    localStorage.setItem(IS_AUTHENTICATED, JSON.stringify(!!authInfo.user));
     store.updateAuthInfo(authInfo);
   };
 
-  const handleFetchUserInfo = async (userId: string): Promise<User> => {
+  const handleFetchUserInfo = async (): Promise<User | null> => {
     try {
-      const response: AxiosResponse<User, User> = await axios.get(
+      const response: AxiosResponse<User> = await axios.get(
         END_POINTS.AUTH.USER_INFO,
-        {
-          params: {
-            _id: userId,
-          },
-        }
+        { withCredentials: true },
       );
+      return response.data;
+    } catch (error) {
+      console.error("Failed to get session user:", error);
+      return null;
+    }
+  };
 
+  const handleFetchUserById = async (
+    userId: string,
+  ): Promise<User | null> => {
+    if (!userId) return null;
+    try {
+      const response: AxiosResponse<User> = await axios.get(
+        END_POINTS.AUTH.USER_PROFILE(userId),
+        { withCredentials: true },
+      );
       return response.data;
     } catch (error) {
       getAxiosError(error);
-      throw new Error(`❌  Failed to get User Information!  ${error}`);
+      return null;
     }
   };
 
   const handleInitialAuthentication = async () => {
     const storedAuthInfo = getLocalStorageAuthItems();
 
-    // Apply initial theme (will be updated if user is authenticated)
     const initialTheme = getThemePreference(storedAuthInfo.user);
     document.body.classList.remove(
       APP_CONSTANTS.APP_THEME_CLASS.DARK,
-      APP_CONSTANTS.APP_THEME_CLASS.LIGHT
+      APP_CONSTANTS.APP_THEME_CLASS.LIGHT,
     );
     document.body.classList.add(
       initialTheme === "dark"
         ? APP_CONSTANTS.APP_THEME_CLASS.DARK
-        : APP_CONSTANTS.APP_THEME_CLASS.LIGHT
+        : APP_CONSTANTS.APP_THEME_CLASS.LIGHT,
     );
 
-    if (!storedAuthInfo.isAuthenticated) {
-      // User is not logged in, set initial auth state
+    if (!storedAuthInfo.isAuthenticated || storedAuthInfo.user === null) {
       handleSetAuthInfo(getApplicationInitialState().auth);
-    } else {
-      // User is already logged in, update auth state
-      const userId = storedAuthInfo.user?._id;
-      if (userId) {
-        const fetchedUser = await handleFetchUserInfo(userId);
-
-        handleSetAuthInfo({
-          ...storedAuthInfo,
-          isAuthenticated: true,
-          user: fetchedUser,
-        });
-
-        localStorage.setItem(
-          APP_CONSTANTS.LOCAL_STORAGE.USER,
-          JSON.stringify(fetchedUser)
-        );
+      store.handleIsFetchingUserInfo(false);
+      const gaClientId = getClientIdFromGoogleAnalyticsCookie();
+      if (gaClientId) {
+        store.setTrackingInfo({ clientId: gaClientId });
       }
+      return;
     }
+
+    const fetchedUser = await handleFetchUserInfo();
+    if (fetchedUser) {
+      handleSetAuthInfo({
+        isAuthenticated: true,
+        user: fetchedUser,
+      });
+      localStorage.setItem(
+        APP_CONSTANTS.LOCAL_STORAGE.USER,
+        JSON.stringify(fetchedUser),
+      );
+    } else {
+      localStorage.setItem(APP_CONSTANTS.LOCAL_STORAGE.AUTHENTICATED, "false");
+      localStorage.setItem(APP_CONSTANTS.LOCAL_STORAGE.USER, "null");
+      handleSetAuthInfo(getApplicationInitialState().auth);
+    }
+
     store.handleIsFetchingUserInfo(false);
 
-    // Google Analytics Tracking
     const gaClientId = getClientIdFromGoogleAnalyticsCookie();
     if (gaClientId) {
       store.setTrackingInfo({
@@ -117,24 +138,27 @@ export const useApplicationManager = (
   };
 
   const handleUpdateUserInfoInApplication = async (
-    userInfoToUpdate: Partial<User>
+    userInfoToUpdate: Partial<User>,
   ) => {
     if (!store.state.auth.user) return;
 
     try {
-      const updatedUser: AxiosResponse<User, any> = await axios.post(
+      const updatedUser: AxiosResponse<User> = await axios.post(
         END_POINTS.AUTH.UPDATE_USER_INFO,
         {
           userId: store.state.auth.user._id,
           userInfoToUpdate,
+        },
+        {
+          withCredentials: true,
           headers: {
             "Content-Type": "application/json",
             "X-Custom-Header": new Date().toISOString(),
           },
-        }
+        },
       );
 
-      store.updateAuthInfo({
+      handleSetAuthInfo({
         isAuthenticated: true,
         user: updatedUser.data,
       });
@@ -148,6 +172,7 @@ export const useApplicationManager = (
     handleToggleThemeMode,
     handleSetAuthInfo,
     handleFetchUserInfo,
+    handleFetchUserById,
     handleInitialAuthentication,
     handleUpdateUserInfoInApplication,
   };

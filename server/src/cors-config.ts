@@ -3,9 +3,14 @@ import { Express } from "express";
 import cors from "cors";
 
 const getAllowedOrigins = (): string[] => {
-  const { IS_DEV, PUBLIC_URLS_CLIENT_DEV, IS_PROD, PUBLIC_URLS_CLIENT_PROD } =
-    CONFIG;
-  if (IS_DEV && PUBLIC_URLS_CLIENT_DEV) {
+  const {
+    IS_LOCAL,
+    IS_DEV,
+    PUBLIC_URLS_CLIENT_DEV,
+    IS_PROD,
+    PUBLIC_URLS_CLIENT_PROD,
+  } = CONFIG;
+  if ((IS_LOCAL || IS_DEV) && PUBLIC_URLS_CLIENT_DEV) {
     return PUBLIC_URLS_CLIENT_DEV.split(", ");
   }
   if (IS_PROD && PUBLIC_URLS_CLIENT_PROD) {
@@ -15,7 +20,7 @@ const getAllowedOrigins = (): string[] => {
   return [
     "https://talepod.com",
     "https://www.talepod.com",
-    "https://api.talepod.com",
+    "https://dev.talepod.com",
   ];
 };
 
@@ -27,7 +32,7 @@ const corsOptions = {
       callback(null, true);
     } else {
       console.error(`❌ Not allowed by CORS: ${origin}`);
-      callback(new Error(`❌ Not allowed by CORS: ${origin}`));
+      callback(new Error("❌ Not allowed by CORS"));
     }
   },
   // origin: "*",
@@ -38,13 +43,11 @@ const corsOptions = {
 };
 
 const handleCorsConfig = (expressApp: Express) => {
-  if (CONFIG.IS_DEV) {
-    expressApp.use(cors());
-  } else {
-    expressApp.use(cors(corsOptions));
-    // Explicitly handle OPTIONS requests
-    expressApp.options("*", cors(corsOptions));
-  }
+  // Always use the full cors options to ensure credentials are allowed
+  expressApp.use(cors(corsOptions));
+
+  // Explicitly handle OPTIONS requests
+  expressApp.options("*", cors(corsOptions));
 };
 
 export default handleCorsConfig;

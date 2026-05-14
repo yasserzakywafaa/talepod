@@ -19,6 +19,11 @@ const routes = {
   checkout: `/checkout`,
   unauthorized: `/unauthorized`,
   notfound: `/notfound`,
+  auth: {
+    login: "/login",
+    register: "/register",
+    logout: "/logout",
+  },
   // Landing Pages
   landingPages: {
     bedtimeStoriesForKids: "/bedtime-stories-for-kids",

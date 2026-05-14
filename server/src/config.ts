@@ -9,8 +9,12 @@ const CONFIG = {
 
   // Environment
   NODE_ENV: process.env.NODE_ENV,
+  IS_LOCAL: process.env.NODE_ENV === "local",
   IS_DEV: process.env.NODE_ENV === "development",
   IS_PROD: process.env.NODE_ENV === "production",
+
+  LOCAL_CLIENT_URL: process.env.LOCAL_CLIENT_URL,
+  LOCAL_SERVER_URL: process.env.LOCAL_SERVER_URL,
 
   // Public URLs
   PUBLIC_URLS_SERVER_DEV: process.env.PUBLIC_URLS_SERVER_DEV,
@@ -32,7 +36,7 @@ const CONFIG = {
     GITLAB_ACCESS_TOKEN: process.env.GITLAB_ACCESS_TOKEN,
     FILE_URL: (projectId: string, filePath: string, branch: string) =>
       `https://gitlab.com/api/v4/projects/${projectId}/repository/files/${encodeURIComponent(
-        filePath
+        filePath,
       )}/raw?ref=${branch}`,
     UPDATE_URL: (projectId: string) =>
       `https://gitlab.com/api/v4/projects/${projectId}/repository/commits`,
@@ -51,12 +55,26 @@ const CONFIG = {
   GOOGLE_CLIENT_CERT_URL: process.env.GOOGLE_CLIENT_CERT_URL,
   GOOGLE_UNIVERSE_DOMAIN: process.env.GOOGLE_UNIVERSE_DOMAIN,
 
-  // APIs keys for AI
-  // Openai
-  OPENAI_MODEL_NAME: process.env.OPENAI_MODEL_NAME,
-  OPENAI_TTS_MODEL_NAME: process.env.OPENAI_TTS_MODEL_NAME,
-  OPENAI_IMAGES_MODEL_NAME: process.env.OPENAI_IMAGES_MODEL_NAME,
+  // // APIs keys for AI
+
+  // OpenRouter (primary AI provider)
+  OPENROUTER_API_KEY:
+    process.env.NODE_ENV === "development"
+      ? process.env.OPENROUTER_API_KEY_DEV
+      : process.env.OPENROUTER_API_KEY_PROD,
+  // OPENROUTER_MODEL_NAME: "x-ai/grok-4-fast",
+  OPENROUTER_MODEL_NAME: "",
+  OPENROUTER_DEFAULT_MODEL_NAME: "openai/gpt-5-mini",
+  OPENROUTER_WEB_BROWSE_MODEL:
+    process.env.OPENROUTER_WEB_BROWSE_MODEL || "openai/gpt-5-mini:online",
+  OPENROUTER_TTS_MODEL: "openai/gpt-4o-mini-tts-2025-12-15",
+  OPENROUTER_IMAGES_MODEL: "recraft/recraft-v4",
+
+  // Legacy OpenAI API key (kept for backward compatibility with externalOpenAiApiKey)
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+  AI_MAX_TOKENS: {
+    DEFAULT: 4000,
+  },
 
   // Database
   MONGODB_URI: process.env.MONGODB_URI,
@@ -94,7 +112,15 @@ const CONFIG = {
 
   // Auth
   GOOGLE_OAUTH_CLIENT_ID: process.env.GOOGLE_OAUTH_CLIENT_ID,
+  GOOGLE_OAUTH_CLIENT_SECRET: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
   JWT_SECRET: process.env.JWT_SECRET,
+  OAUTH_CALLBACK_URL: (baseURL: string, userId: string, provider: string) =>
+    `${baseURL}?authStatus=success&provider=${provider}&userId=${userId}`,
+  TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID,
+  TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
+  TWILIO_VERIFY_SERVICE_SID: process.env.TWILIO_VERIFY_SERVICE_SID,
+  PHONE_OTP_EXPIRY_SECONDS: Number(process.env.PHONE_OTP_EXPIRY_SECONDS) || 300,
+  PHONE_OTP_MAX_ATTEMPTS: Number(process.env.PHONE_OTP_MAX_ATTEMPTS) || 5,
 
   // App Constants
   MAX_STORIES_LIMIT_FREE: 4,
@@ -103,9 +129,16 @@ const CONFIG = {
 
   // App Main URL
   APP_URL:
-    process.env.NODE_ENV === "development"
+    process.env.LOCAL_CLIENT_URL ||
+    (process.env.NODE_ENV === "development"
       ? "https://dev.talepod.com"
-      : "https://www.talepod.com",
+      : "https://www.talepod.com"),
+
+  SERVER_URL:
+    process.env.LOCAL_SERVER_URL ||
+    (process.env.NODE_ENV === "development"
+      ? process.env.PUBLIC_URLS_SERVER_DEV || "https://api-dev.talepod.com"
+      : process.env.PUBLIC_URLS_SERVER_PROD || "https://api.talepod.com"),
 };
 
 export default CONFIG;

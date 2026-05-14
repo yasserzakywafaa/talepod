@@ -399,11 +399,6 @@
     tar-fs "^3.1.1"
     yargs "^17.7.2"
 
-"@react-oauth/google@^0.12.1":
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/@react-oauth/google/-/google-0.12.1.tgz#b76432c3a525e9afe076f787d2ded003fcc1bee9"
-  integrity sha512-qagsy22t+7UdkYAiT5ZhfM4StXi9PPNvw0zuwNmabrWyMKddczMtBIOARflbaIj+wHiQjnMAsZmzsUYuXeyoSg==
-
 "@remix-run/router@1.15.3":
   version "1.15.3"
   resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.15.3.tgz#d2509048d69dbb72d5389a14945339f1430b2d3c"
@@ -2701,6 +2696,11 @@ kind-of@^6.0.2:
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.3.tgz#07c05034a6c349fa06e24fa35aa76db4580ce4dd"
   integrity sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==
 
+libphonenumber-js@^1.12.41, libphonenumber-js@^1.13.1:
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.13.1.tgz#607baae726e1ab5c6df1425bb886601cef44f500"
+  integrity sha512-GEw0GLL7YUUA6nv21IsCvVjtI5Ejn84sjbdfQ9KxdbqEVOk1PZh7xejn01EEiniKw+dBeCfim+8MGeuvVuE2BA==
+
 lightningcss-android-arm64@1.32.0:
   version "1.32.0"
   resolved "https://registry.yarnpkg.com/lightningcss-android-arm64/-/lightningcss-android-arm64-1.32.0.tgz#f033885116dfefd9c6f54787523e3514b61e1968"
@@ -3257,6 +3257,13 @@ ms@2.1.3, ms@^2.1.3:
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
+
+mui-tel-input@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/mui-tel-input/-/mui-tel-input-11.0.0.tgz#bb20e3714a3c4c9b2bed81d46036202f6f8cb7d7"
+  integrity sha512-F9OLHW2LHpJavV8eO+OdBRNYBE+j2e1C4Dnj/vfojGl853bawp/ddpNz0Jze1lWTEIau5tRiBDZeQ1EMKA/ZnA==
+  dependencies:
+    libphonenumber-js "^1.12.41"
 
 nanoid@^3.3.11:
   version "3.3.11"

@@ -1,10 +1,17 @@
 import { ObjectId } from "mongodb";
 import Stripe from "stripe";
 
+export enum AuthProviderEnum {
+  google = "google",
+  phone = "phone",
+}
+
 export interface User {
   _id?: ObjectId;
   userId: string;
   email: string;
+  phoneNumber?: string;
+  phoneVerified?: boolean;
   name: UserName;
   picture: string;
   createdAt: Date;
@@ -19,6 +26,9 @@ export interface User {
   preferences?: UserPreferences;
   location?: string;
   timezone?: string;
+  refreshToken?: string;
+  provider?: AuthProviderEnum;
+  verified?: boolean;
 }
 
 export interface UserName {

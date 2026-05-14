@@ -4,6 +4,10 @@ export interface User {
   _id: string;
   userId: string;
   email: string;
+  phoneNumber?: string;
+  phoneVerified?: boolean;
+  provider?: string;
+  verified?: boolean;
   name: UserName;
   picture: string;
   createdAt: Date;

@@ -64,7 +64,7 @@ export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
 
     try {
       const response: AxiosResponse<Story, Story> = await axios.post(
-        END_POINTS.OPENAI.GENERATE.STORY,
+        END_POINTS.CREATE.GENERATE.STORY,
         PAYLOAD,
         {
           headers: {
@@ -109,7 +109,7 @@ export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
   ): Promise<StorySeo> => {
     try {
       const response: AxiosResponse<StorySeo, StorySeo> = await axios.post(
-        END_POINTS.OPENAI.GENERATE.STORY_SEO,
+        END_POINTS.CREATE.GENERATE.STORY_SEO,
         {
           storyId,
           userSeoPrompt,

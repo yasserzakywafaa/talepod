@@ -13,8 +13,6 @@ import { scrollToSection } from "src/shared/utils/scrollTo";
 import { useApplicationContext } from "src/application/store/Provider";
 import useDetectScroll from "src/shared/hooks/useDetectScroll";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
-import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
-import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useState } from "react";
 
 export interface PagesMatch {
@@ -48,13 +46,8 @@ const ApplicationBar = () => {
     },
   } = useApplicationContext();
 
-  const {
-    store: { handleToggleLoginModal },
-  } = useLoginModalContext();
-
-  const {
-    store: { handleToggleRegisterModal },
-  } = useRegisterModalContext();
+  const goToLogin = () => navigate(routes.auth.login);
+  const goToRegister = () => navigate(routes.auth.register);
 
   const isAppBarVisible = true;
   const pagesMatch: PagesMatch = {
@@ -144,8 +137,8 @@ const ApplicationBar = () => {
               <ApplicationBarDesktopView
                 auth={auth}
                 pagesMatch={pagesMatch}
-                handleToggleLoginModal={handleToggleLoginModal}
-                handleToggleRegisterModal={handleToggleRegisterModal}
+                handleToggleLoginModal={goToLogin}
+                handleToggleRegisterModal={goToRegister}
                 setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
                 handleOnMenuItemClick={handleOnMenuItemClick}
               />
@@ -156,8 +149,8 @@ const ApplicationBar = () => {
                 isDrawerOpen={isDrawerOpen}
                 isScrolledFromTop={isScrolledFromTop}
                 handleSetDrawer={handleSetDrawer}
-                handleToggleLoginModal={handleToggleLoginModal}
-                handleToggleRegisterModal={handleToggleRegisterModal}
+                handleToggleLoginModal={goToLogin}
+                handleToggleRegisterModal={goToRegister}
                 setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
                 handleOnMenuItemClick={handleOnMenuItemClick}
               />

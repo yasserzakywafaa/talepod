@@ -53,7 +53,7 @@ export const useCreateStoryAudio = (store: OpenaiStore): UseTextGeneration => {
 
       const response: AxiosResponse<StoryAudioFile, StoryAudioFile> =
         await axios.post(
-          END_POINTS.OPENAI.GENERATE.STORY_AUDIO,
+          END_POINTS.CREATE.GENERATE.STORY_AUDIO,
           {
             fileName,
             storyId: story._id,

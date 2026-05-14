@@ -11,7 +11,6 @@ import { SupportedLanguages } from "src/shared/languages";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
-import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useNavigate } from "react-router-dom";
 import { useOpenaiContext } from "./Openai/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
@@ -32,12 +31,8 @@ const CreateStoryFormMini = () => {
         auth: { isAuthenticated, user },
       },
     },
-    manager: { handleFetchUserInfo },
+    manager: { handleSetAuthInfo, handleFetchUserInfo },
   } = useApplicationContext();
-
-  const {
-    store: { handleToggleLoginModal },
-  } = useLoginModalContext();
 
   const { manager: OpenaiManager } = useOpenaiContext();
   const { isCreateStoryFetching, handleCreateStoryRequest } = OpenaiManager;
@@ -80,7 +75,7 @@ const CreateStoryFormMini = () => {
     event.stopPropagation();
 
     if (!isAuthenticated) {
-      handleToggleLoginModal();
+      navigate(routes.auth.login);
       return;
     }
 
@@ -108,7 +103,13 @@ const CreateStoryFormMini = () => {
         );
 
         if (user) {
-          await handleFetchUserInfo(user._id);
+          const refreshedUser = await handleFetchUserInfo();
+          if (refreshedUser) {
+            handleSetAuthInfo({
+              isAuthenticated: true,
+              user: refreshedUser,
+            });
+          }
 
           if (story._id && story.slug) {
             navigate(routes.myStory(user._id, story.slug), {

@@ -27,7 +27,6 @@
     "@mui/material": "latest",
     "@mui/styles": "latest",
     "@mui/x-data-grid": "^8.4.0",
-    "@react-oauth/google": "^0.12.1",
     "@stripe/react-stripe-js": "^2.8.0",
     "@stripe/stripe-js": "^4.5.0",
     "@tsparticles/engine": "^3.8.1",
@@ -38,6 +37,8 @@
     "@types/react-router-dom": "5.3.3",
     "axios": "1.6.8",
     "classnames": "2.5.1",
+    "libphonenumber-js": "^1.13.1",
+    "mui-tel-input": "^11.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-markdown": "9.0.1",
@@ -49,12 +50,12 @@
     "@sparticuz/chromium": "^143.0.4",
     "@types/node": "latest",
     "@vitejs/plugin-react": "^6.0.1",
+    "puppeteer": "npm:puppeteer-core@^24.22.0",
     "sass": "1.75.0",
     "serve": "14.2.1",
     "typescript": "5.4.5",
     "vite": "^8.0.3",
-    "vite-plugin-prerender": "^1.0.8",
-    "puppeteer": "npm:puppeteer-core@^24.22.0"
+    "vite-plugin-prerender": "^1.0.8"
   },
   "resolutions": {
     "puppeteer": "npm:puppeteer-core@^24.22.0"

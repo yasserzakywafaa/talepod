@@ -37,14 +37,10 @@ import { Tone, Tones } from "src/shared/mockedData/Tone";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import StorySettings from "./StorySettings";
-import { getApplicationInitialState } from "src/application/store/state";
-import { getLocalStorageAuthItems } from "src/shared/utils/localstorage";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
-import { useEffect } from "react";
-import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useNavigate } from "react-router-dom";
 import { useOpenaiContext } from "./Openai/store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
@@ -66,14 +62,9 @@ const CreateStoryForm = () => {
       state: {
         auth: { isAuthenticated, user },
       },
-      handleIsFetchingUserInfo,
     },
     manager: { handleSetAuthInfo, handleFetchUserInfo },
   } = useApplicationContext();
-
-  const {
-    store: { handleToggleLoginModal },
-  } = useLoginModalContext();
 
   const {
     store: { handleTogglePricingModal },
@@ -120,7 +111,7 @@ const CreateStoryForm = () => {
     event.stopPropagation();
 
     if (!isAuthenticated) {
-      handleToggleLoginModal();
+      navigate(routes.auth.login);
       return;
     }
 
@@ -142,7 +133,13 @@ const CreateStoryForm = () => {
         );
 
         if (user) {
-          await handleFetchUserInfo(user._id);
+          const refreshedUser = await handleFetchUserInfo();
+          if (refreshedUser) {
+            handleSetAuthInfo({
+              isAuthenticated: true,
+              user: refreshedUser,
+            });
+          }
 
           if (story._id && story.slug) {
             navigate(routes.myStory(user._id, story.slug), {
@@ -273,38 +270,6 @@ const CreateStoryForm = () => {
       );
     }
   };
-
-  const handleUpdates = async () => {
-    const storedAuthInfo = getLocalStorageAuthItems();
-
-    if (!storedAuthInfo.isAuthenticated) {
-      // User is not logged in, set initial auth state
-      handleSetAuthInfo(getApplicationInitialState().auth);
-
-      // return;
-    } else {
-      // User is already logged in, update auth state
-      const userId = storedAuthInfo.user?._id;
-      if (userId) {
-        const fetchedUser = await handleFetchUserInfo(userId);
-
-        handleSetAuthInfo({
-          isAuthenticated: true,
-          user: fetchedUser,
-        });
-
-        localStorage.setItem(
-          APP_CONSTANTS.LOCAL_STORAGE.USER,
-          JSON.stringify(fetchedUser)
-        );
-      }
-    }
-    handleIsFetchingUserInfo(false);
-  };
-
-  useEffect(() => {
-    handleUpdates();
-  }, []);
 
   // const handleCreateStoryLibrary = async () => {
   //   // Other languages popular names

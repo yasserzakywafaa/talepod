@@ -23,13 +23,13 @@ const END_POINTS = {
     ROUTE_ONE: `${publicApiUrl}/api/v1/test-route-one`,
     ROUTE_TWO: `${publicApiUrl}/api/v1/test-route-two`,
   },
-  OPENAI: {
+  CREATE: {
     GENERATE: {
-      STORY: `${publicApiUrl}/api/v1/openai/create/story`,
-      STORY_SEO: `${publicApiUrl}/api/v1/story-seo`,
-      STORY_AUDIO: `${publicApiUrl}/api/v1/openai/create/story-audio`,
-      IMAGES: `${publicApiUrl}/api/v1/openai/create/images`,
-      BLOG: `${publicApiUrl}/api/v1/openai/create/blog`,
+      STORY: `${publicApiUrl}/api/v1/create/story`,
+      STORY_SEO: `${publicApiUrl}/api/v1/create/story-seo`,
+      STORY_AUDIO: `${publicApiUrl}/api/v1/create/story-audio`,
+      IMAGES: `${publicApiUrl}/api/v1/create/images`,
+      BLOG: `${publicApiUrl}/api/v1/create/blog`,
     },
   },
   STORIES: {
@@ -44,9 +44,18 @@ const END_POINTS = {
     SUPPORT: `${publicApiUrl}/api/v1/contact-support`,
   },
   AUTH: {
-    GOOGLE: `${publicApiUrl}/api/v1/auth/google-auth`,
     USER_INFO: `${publicApiUrl}/api/v1/auth/user-info`,
+    USER_PROFILE: (userId: string) =>
+      `${publicApiUrl}/api/v1/auth/user-profile/${userId}`,
     UPDATE_USER_INFO: `${publicApiUrl}/api/v1/auth/update-user-info`,
+    LOGOUT: `${publicApiUrl}/api/v1/auth/logout`,
+    GOOGLE: `${publicApiUrl}/api/v1/auth/google`,
+    GOOGLE_CALLBACK: `${publicApiUrl}/api/v1/auth/google/callback`,
+    REFRESH_TOKEN: `${publicApiUrl}/api/v1/auth/refresh-token`,
+    PHONE_REGISTER_SEND_OTP: `${publicApiUrl}/api/v1/auth/phone/register/send-otp`,
+    PHONE_REGISTER_VERIFY_OTP: `${publicApiUrl}/api/v1/auth/phone/register/verify-otp`,
+    PHONE_LOGIN_SEND_OTP: `${publicApiUrl}/api/v1/auth/phone/login/send-otp`,
+    PHONE_LOGIN_VERIFY_OTP: `${publicApiUrl}/api/v1/auth/phone/login/verify-otp`,
   },
   PAYMENTS: {
     CONFIG: `${publicApiUrl}/api/v1/payments/config`,

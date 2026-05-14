@@ -1,63 +1,19 @@
-import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
-
 import { AuthType } from "src/shared/types/types";
-import { Notify } from "../../Notification/Notification";
-import { useApplicationContext } from "src/application/store/Provider";
-import { useGoogleAuthContext } from "./store/Provider";
+import { Button } from "@mui/material";
+import END_POINTS from "src/application/shared/endpoints";
+import { Google as GoogleIcon } from "@mui/icons-material";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 
 interface GoogleAuthProps {
-  authType: AuthType;
-  onSuccessCallbackFn?: () => void;
+  authType?: AuthType;
 }
 
-const GoogleAuth = (props: GoogleAuthProps) => {
-  const { authType, onSuccessCallbackFn } = props;
+const GoogleAuth = (props: GoogleAuthProps): JSX.Element => {
+  const { authType } = props;
   const isRegister = authType === "register";
-
-  const {
-    manager: { handleOnGoogleAuthSuccess, handleOnGoogleAuthError },
-  } = useGoogleAuthContext();
-
-  const {
-    manager: { handleSetAuthInfo },
-  } = useApplicationContext();
   const { store: registerStore } = useRegisterModalContext();
   const { store: loginStore } = useLoginModalContext();
-
-  const handleClickListener = () => toggleIsFetching(true);
-  const handleCloseCallback = () => toggleIsFetching(false);
-
-  const onSuccessCallback = async (credentialResponse: CredentialResponse) => {
-    const authInfo = await handleOnGoogleAuthSuccess(credentialResponse);
-
-    if (authInfo) {
-      handleSetAuthInfo({
-        ...authInfo,
-        isAuthenticated: !!authInfo.user,
-      });
-      Notify({
-        type: "success",
-        content: `Hi ${authInfo.user?.name.givenName} 👋🏻`,
-      });
-    } else {
-      Notify({
-        type: "error",
-        content: isRegister ? "Failed to register!" : `Failed to login!`,
-      });
-    }
-
-    toggleIsModalVisible();
-    toggleIsFetching(false);
-    toggleIsFetching(false);
-    onSuccessCallbackFn?.();
-  };
-
-  const onErrorCallback = () => {
-    handleOnGoogleAuthError();
-    toggleIsFetching(false);
-  };
 
   const toggleIsFetching = (isFetching: boolean) => {
     if (isRegister) {
@@ -67,31 +23,26 @@ const GoogleAuth = (props: GoogleAuthProps) => {
     }
   };
 
-  const toggleIsModalVisible = () => {
-    if (isRegister) {
-      registerStore.handleToggleRegisterModal();
-    } else {
-      loginStore.handleToggleLoginModal();
-    }
+  const handleGoogleLogin = () => {
+    toggleIsFetching(true);
+    window.location.assign(END_POINTS.AUTH.GOOGLE);
   };
 
   return (
-    <>
-      <GoogleLogin
-        size="large"
-        shape="square"
-        context="use"
-        ux_mode="popup"
-        theme="filled_blue"
-        text="continue_with"
-        logo_alignment="left"
-        cancel_on_tap_outside={false}
-        onError={onErrorCallback}
-        onSuccess={onSuccessCallback}
-        click_listener={handleClickListener}
-        intermediate_iframe_close_callback={handleCloseCallback}
-      />
-    </>
+    <Button
+      fullWidth
+      variant="contained"
+      onClick={handleGoogleLogin}
+      sx={{
+        display: "flex",
+        justifyContent: "flex-start",
+        textTransform: "none",
+        gap: 2,
+      }}
+    >
+      <GoogleIcon />
+      {isRegister ? "Register with Google" : "Login with Google"}
+    </Button>
   );
 };
 

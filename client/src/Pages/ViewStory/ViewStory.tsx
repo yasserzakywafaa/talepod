@@ -79,7 +79,7 @@ const ViewStoryPage: React.FC = () => {
     store: {
       state: { auth },
     },
-    manager: { handleFetchUserInfo },
+    manager: { handleFetchUserById },
   } = useApplicationContext();
 
   const hasDirectionRtl = story && story.profileInfo.language.value === "ar";
@@ -126,8 +126,8 @@ const ViewStoryPage: React.FC = () => {
 
   const handleFetchStoryAuthorInfo = async () => {
     try {
-      const fetchedStoryAuthorInfo = await handleFetchUserInfo(story.author);
-      updateStoryAuthor(fetchedStoryAuthorInfo);
+      const fetchedStoryAuthorInfo = await handleFetchUserById(story.author);
+      updateStoryAuthor(fetchedStoryAuthorInfo ?? undefined);
     } catch (error) {
       getAxiosError(error);
     }
