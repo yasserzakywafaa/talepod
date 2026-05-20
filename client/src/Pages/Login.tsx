@@ -50,7 +50,7 @@ const LoginPage = () => {
   }
 
   return (
-    <Page title="Login | TalePod">
+    <Page title="Login | TalePod" noIndex>
       <Container
         sx={{
           display: "flex",

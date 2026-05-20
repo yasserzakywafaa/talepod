@@ -30,6 +30,7 @@ const PrivacyPolicyPage = () => {
       title="Privacy Policy | TalePod"
       className="privacy-policy-page"
       isLoading={false}
+      noIndex
     >
       <Container sx={{ mt: 3 }}>
         <Box component="div" className="bg-image-character">

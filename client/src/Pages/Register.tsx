@@ -27,7 +27,7 @@ const RegisterPage = () => {
   }
 
   return (
-    <Page title="Register | TalePod">
+    <Page title="Register | TalePod" noIndex>
       <Container
         sx={{
           display: "flex",
