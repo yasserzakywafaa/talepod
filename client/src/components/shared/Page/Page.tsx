@@ -25,6 +25,7 @@ export interface PageProps {
   title: string;
   className?: string;
   isLoading?: boolean;
+  noIndex?: boolean;
   style?: CSSProperties;
   swipeToRefresh?: boolean;
   children?: React.ReactNode;
@@ -40,6 +41,7 @@ const Page = (params: PageProps) => {
     style,
     children,
     isLoading,
+    noIndex = false,
     className = "",
     containerProps = {},
     swipeToRefresh,
@@ -86,6 +88,21 @@ const Page = (params: PageProps) => {
   useEffect(() => {
     document.title = title;
   }, [title]);
+
+  useEffect(() => {
+    let robotsMeta = document.querySelector(
+      "meta[name='robots']",
+    ) as HTMLMetaElement | null;
+    if (!robotsMeta) {
+      robotsMeta = document.createElement("meta");
+      robotsMeta.setAttribute("name", "robots");
+      document.head.appendChild(robotsMeta);
+    }
+    robotsMeta.setAttribute(
+      "content",
+      noIndex ? "noindex, follow" : "index, follow",
+    );
+  }, [noIndex]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);

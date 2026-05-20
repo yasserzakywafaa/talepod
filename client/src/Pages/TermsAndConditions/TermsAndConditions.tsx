@@ -28,6 +28,7 @@ const TermsAndConditions = () => {
       title="Terms and Conditions | TalePod"
       className="terms-and-conditions-page"
       isLoading={false}
+      noIndex
     >
       <Container sx={{ mt: 3 }}>
         <Box component="div" className="bg-image-character">
