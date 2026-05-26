@@ -19,11 +19,48 @@
 .view-story-seo-card {
   .view-story-seo-card-content {
     a {
-      color: #ad932d;
+      color: var(--primary);
       &:visited {
-        color: #00bfff;
+        color: var(--accent);
       }
     }
+  }
+}
+
+.comic-reader {
+  max-width: 680px;
+  margin: 8px auto 0;
+
+  .swiper {
+    padding-bottom: 34px;
+  }
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+  }
+
+  .swiper-button-next::after,
+  .swiper-button-prev::after {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .swiper-pagination-bullet {
+    width: 7px;
+    height: 7px;
+    background: var(--border-strong);
+    opacity: 1;
+  }
+
+  .swiper-pagination-bullet-active {
+    width: 22px;
+    border-radius: 4px;
+    background: var(--honey-400);
   }
 }
 
@@ -36,6 +73,21 @@
           font-size: 2rem;
         }
       }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .comic-reader {
+    .swiper-button-next,
+    .swiper-button-prev {
+      width: 34px;
+      height: 34px;
+    }
+
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+      font-size: 15px;
     }
   }
 }

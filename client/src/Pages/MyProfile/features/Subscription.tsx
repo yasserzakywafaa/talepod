@@ -1,4 +1,4 @@
-import { Alert, Button, Card, Grid, Typography } from "@mui/material";
+import { Alert, Box, Button, Card, Grid, Typography } from "@mui/material";
 import { AutoAwesomeOutlined, HeartBrokenOutlined } from "@mui/icons-material";
 
 import { SubscriptionPlanEnum } from "src/shared/types/user";
@@ -45,7 +45,7 @@ const SubscriptionSection = () => {
   const handleOnSubscribeClick = () => handleTogglePricingModal();
 
   return (
-    <Grid size={{ xs: 12, md: 8 }} id="subscription">
+    <Box id="subscription">
       <Card elevation={3} sx={{ padding: 3 }}>
         <Typography variant="h5">Subscription</Typography>
         <Grid container spacing={2} sx={{ marginTop: 2 }}>
@@ -183,7 +183,7 @@ const SubscriptionSection = () => {
           )}
         </Grid>
       </Card>
-    </Grid>
+    </Box>
   );
 };
 

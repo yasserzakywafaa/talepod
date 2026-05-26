@@ -5,6 +5,16 @@ import { Tone, Tones } from "src/shared/mockedData/Tone";
 
 import { User } from "src/shared/types/user";
 
+/** V2 story formats: "comic" (~6 illustrated pages) | "long" (prose + cover). */
+export type StoryFormat = "comic" | "long";
+
+export interface ComicPage {
+  index: number;
+  caption: string;
+  imagePrompt?: string;
+  imageUrl?: string;
+}
+
 export interface StoryCreatorInitialState {
   isFetching: boolean;
   profileInfo: ProfileInfo;
@@ -12,6 +22,10 @@ export interface StoryCreatorInitialState {
   createStory: CreateStoryProps;
   createAudio: CreateAudioProps;
   isStorySettingsExpanded: boolean;
+  /** Chosen story format (defaults to "comic" — the V2 flagship). */
+  format: StoryFormat;
+  /** Comic-only panel style: "Classic" | "Speech bubbles". */
+  panelStyle: string;
 }
 
 export enum ChildGenderEnum {
@@ -53,6 +67,7 @@ export interface StoryParams {
   totalCharacters: number;
   environment: Environment;
   createdByAdmin?: boolean;
+  panelStyle?: string;
 }
 
 export interface CreateStoryProps {
@@ -79,6 +94,9 @@ export interface Story {
   coverImageUrl?: string;
   isFeatured: boolean;
   authorProfile?: User;
+  format?: StoryFormat;
+  pages?: ComicPage[];
+  imagesStatus?: "pending" | "ready" | "failed";
 }
 
 export interface StorySeo {
@@ -161,6 +179,8 @@ export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
   return {
     isFetching: false,
     isStorySettingsExpanded: false,
+    format: "comic",
+    panelStyle: "Speech bubbles",
     profileInfo: {
       name: "",
       gender: Genders[Math.floor(Math.random() * Genders.length)],

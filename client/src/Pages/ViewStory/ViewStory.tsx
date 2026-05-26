@@ -27,6 +27,7 @@ import {
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import Box from "@mui/material/Box";
+import ComicReader from "./features/ComicReader";
 import { LoaderComponentNameEnum } from "src/components/shared/Loader/LoaderSpinner";
 import { LyricsOutlined } from "@mui/icons-material";
 import Page from "src/components/shared/Page/Page";
@@ -83,6 +84,8 @@ const ViewStoryPage: React.FC = () => {
   } = useApplicationContext();
 
   const hasDirectionRtl = story && story.profileInfo.language.value === "ar";
+  const isComic =
+    !!story && story.format === "comic" && !!story.pages?.length;
 
   const dropdownOptionsFemale = userAudioVoiceNames.filter(
     (voice) => voice.gender === AdultGenderEnum.Female
@@ -243,6 +246,31 @@ const ViewStoryPage: React.FC = () => {
                 <RandomImage />
               </Box>
               <CardContent className="view-story-card-content">
+                {!isComic && story.coverImageUrl && (
+                  <Box
+                    sx={{
+                      mb: 2,
+                      mx: "auto",
+                      maxWidth: 560,
+                      aspectRatio: "5 / 4",
+                      overflow: "hidden",
+                      borderRadius: "var(--r-xl)",
+                      boxShadow: "var(--shadow-md)",
+                    }}
+                  >
+                    <img
+                      src={story.coverImageUrl}
+                      alt={story.title}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        display: "block",
+                      }}
+                    />
+                  </Box>
+                )}
+
                 <Typography
                   gutterBottom
                   variant="h4"
@@ -268,6 +296,8 @@ const ViewStoryPage: React.FC = () => {
                   {story.summary}
                 </Typography>
 
+                {/* Audio creation/playback — long stories only (comic v1 has no narration) */}
+                {!isComic && (
                 <Card
                   className="view-story-card-story-wrapper"
                   sx={{
@@ -416,36 +446,43 @@ const ViewStoryPage: React.FC = () => {
                     </Box>
                   )}
                 </Card>
-
-                {isDesktop ? (
-                  <Typography
-                    gutterBottom
-                    variant="h6"
-                    component="h6"
-                    sx={{ color: (theme) => theme.palette.primary.main }}
-                  >
-                    Story
-                  </Typography>
-                ) : (
-                  <></>
                 )}
 
-                <Box
-                  component="article"
-                  className={`view-story-card-main-story ${
-                    hasDirectionRtl ? "direction-rtl" : ""
-                  }`}
-                >
-                  <ReactMarkdown>{story.mainStory}</ReactMarkdown>
-                </Box>
+                {isComic ? (
+                  <ComicReader story={story} />
+                ) : (
+                  <>
+                    {isDesktop ? (
+                      <Typography
+                        gutterBottom
+                        variant="h6"
+                        component="h6"
+                        sx={{ color: (theme) => theme.palette.primary.main }}
+                      >
+                        Story
+                      </Typography>
+                    ) : (
+                      <></>
+                    )}
 
-                <pre
-                  className={`italics view-story-card-poem ${
-                    hasDirectionRtl ? "direction-rtl" : ""
-                  }`}
-                >
-                  {story.poem}
-                </pre>
+                    <Box
+                      component="article"
+                      className={`view-story-card-main-story ${
+                        hasDirectionRtl ? "direction-rtl" : ""
+                      }`}
+                    >
+                      <ReactMarkdown>{story.mainStory}</ReactMarkdown>
+                    </Box>
+
+                    <pre
+                      className={`italics view-story-card-poem ${
+                        hasDirectionRtl ? "direction-rtl" : ""
+                      }`}
+                    >
+                      {story.poem}
+                    </pre>
+                  </>
+                )}
 
                 {story.author && (
                   <ViewStoryAuthorInfo

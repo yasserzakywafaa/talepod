@@ -1,11 +1,11 @@
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import { Badge, Icon } from "src/components/shared/v2";
+import BillingToggle from "./BillingToggle";
 import Box from "@mui/material/Box";
+import PayPerStoryCallout from "./PayPerStoryCallout";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
-import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
@@ -13,11 +13,24 @@ import LoaderSpinner from "../Loader/LoaderSpinner";
 import PaymentWrapper from "../Payment/Payment";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
 import Typography from "@mui/material/Typography";
-import { primaryColorOpaqueTen } from "src/application/shared/themes";
+import characterLion from "src/assets/images/v2/character_lion.webp";
+import mascotPuppy from "src/assets/images/v2/mascot_puppy.webp";
 import { usePricing } from "./usePricing";
 
+const planMascot = (title: SubscriptionPlanEnum) =>
+  title === SubscriptionPlanEnum.Free ? mascotPuppy : characterLion;
+
 export const Pricing = () => {
-  const { plans, prices, getPrice, getCurrency } = usePricing();
+  const {
+    plans,
+    prices,
+    getCurrency,
+    getDisplayPrice,
+    billingInterval,
+    setBillingInterval,
+    isYearlyAvailable,
+    getYearlySavingsPercent,
+  } = usePricing();
 
   return (
     <>
@@ -38,134 +51,176 @@ export const Pricing = () => {
         <Box
           sx={{
             width: { sm: "100%", md: "60%" },
-            textAlign: { sm: "left", md: "center" },
+            textAlign: "center",
           }}
         >
-          <Typography component="h2" variant="h4" color="primary">
-            Pricing
+          <Typography
+            component="h2"
+            variant="h4"
+            color="primary"
+            sx={{ fontFamily: "var(--font-display)" }}
+          >
+            One price for unlimited bedtimes
+          </Typography>
+          <Typography variant="subtitle1" color="textSecondary">
+            Start free. Upgrade when bedtime becomes the best part of the day.
           </Typography>
         </Box>
+
+        {isYearlyAvailable && (
+          <BillingToggle
+            value={billingInterval}
+            onChange={setBillingInterval}
+            savingsPercent={getYearlySavingsPercent()}
+          />
+        )}
+
         <Grid
           container
           spacing={3}
-          alignItems="flex-start"
+          alignItems="stretch"
           justifyContent="center"
+          sx={{ width: "100%" }}
         >
           {!prices.length && <LoaderSpinner position="absolute" />}
 
           {plans.map((plan) => {
-            const isBasicPlan = plan.title === SubscriptionPlanEnum.Premium;
+            const isPremium = plan.title === SubscriptionPlanEnum.Premium;
+            const display = getDisplayPrice(plan.product);
 
             return (
-              <Grid size={{ xs: 12, md: 6 }} key={plan.title}>
+              <Grid
+                size={{ xs: 12, md: plans.length >= 3 ? 4 : 6 }}
+                key={plan.title}
+              >
                 <Card
                   sx={{
-                    paddingY: 2,
-                    paddingX: 1,
-                    minHeight: { xs: "", sm: "500px" },
-                    flexBasis: "20%",
+                    height: "100%",
+                    minHeight: { xs: "", sm: "520px" },
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
-                    border: isBasicPlan ? "1px solid" : undefined,
-                    borderColor: isBasicPlan ? "primary.main" : undefined,
-                    backgroundColor: isBasicPlan
-                      ? primaryColorOpaqueTen
-                      : undefined,
+                    p: { xs: 2, sm: 3 },
+                    position: "relative",
+                    overflow: "hidden",
+                    border: isPremium ? "2px solid" : "1px solid var(--border)",
+                    borderColor: isPremium ? "primary.main" : undefined,
+                    boxShadow: isPremium ? "var(--shadow-lg)" : "var(--shadow-sm)",
+                    transform: {
+                      xs: "none",
+                      md: isPremium ? "scale(1.03)" : "none",
+                    },
                   }}
                 >
-                  <CardContent>
+                  <CardContent sx={{ p: 0 }}>
+                    {isPremium && (
+                      <Box sx={{ mb: 1.5 }}>
+                        <Badge tone="honey">Most popular</Badge>
+                      </Box>
+                    )}
+
                     <Box
                       sx={{
-                        mb: 1,
                         display: "flex",
-                        justifyContent: "space-between",
                         alignItems: "center",
+                        gap: 1.25,
+                        mb: 2,
                       }}
                     >
-                      <Typography component="h3" variant="h6">
+                      <Box
+                        component="img"
+                        src={planMascot(plan.title)}
+                        alt=""
+                        sx={{ width: 44, height: 44 }}
+                      />
+                      <Typography
+                        component="h3"
+                        variant="h5"
+                        sx={{ fontFamily: "var(--font-display)" }}
+                      >
                         {plan.title}
                       </Typography>
-                      {plan.subheader &&
-                        plan.title !== SubscriptionPlanEnum.Free && (
-                          <Chip
-                            size="small"
-                            variant="filled"
-                            label={plan.subheader}
-                            icon={<AutoAwesomeIcon />}
-                            sx={{
-                              backgroundColor: "primary.contrastText",
-                              "& .MuiChip-label": {
-                                color: "primary.dark",
-                              },
-                              "& .MuiChip-icon": {
-                                color: "primary.dark",
-                              },
-                            }}
-                          />
-                        )}
                     </Box>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "baseline",
-                      }}
-                    >
+
+                    <Box sx={{ display: "flex", alignItems: "baseline", gap: 0.5 }}>
                       {plan.product ? (
                         <>
+                          {!display.billedYearly &&
+                            plan.product.metadata
+                              ?.monthly_discounted_price && (
+                              <Typography
+                                component="span"
+                                variant="h6"
+                                sx={{
+                                  textDecoration: "line-through",
+                                  color: "text.secondary",
+                                  mr: 0.5,
+                                }}
+                              >
+                                {getCurrency(plan.title)}
+                                {plan.product.metadata.monthly_discounted_price}
+                              </Typography>
+                            )}
                           <Typography
-                            component="h4"
-                            variant="h4"
+                            component="span"
                             sx={{
-                              textDecoration: "line-through",
-                              color: "gray",
+                              fontFamily: "var(--font-display)",
+                              fontSize: { xs: 40, sm: 48 },
+                              lineHeight: 1,
                             }}
                           >
                             {getCurrency(plan.title)}
-                            {plan.product.metadata.monthly_discounted_price}
-                          </Typography>{" "}
-                          &nbsp;
-                          <Typography component="h4" variant="h4">
-                            {getCurrency(plan.title)}
-                            {getPrice(plan.product).monthly}
+                            {display.amount}
                           </Typography>
-                          <Typography component="h4" variant="h6">
+                          <Typography component="span" variant="subtitle1">
                             /month
                           </Typography>
                         </>
                       ) : (
-                        <>
-                          <Typography component="h4" variant="h4">
-                            {getCurrency(SubscriptionPlanEnum.Premium)}0
-                          </Typography>
-                        </>
+                        <Typography
+                          component="span"
+                          sx={{
+                            fontFamily: "var(--font-display)",
+                            fontSize: { xs: 40, sm: 48 },
+                            lineHeight: 1,
+                          }}
+                        >
+                          {getCurrency(SubscriptionPlanEnum.Premium)}0
+                        </Typography>
                       )}
                     </Box>
-                    <Divider
-                      sx={{
-                        my: 2,
-                        opacity: 0.2,
-                        borderColor: "grey.500",
-                      }}
-                    />
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ mt: 0.5 }}
+                    >
+                      {!plan.product
+                        ? "free forever"
+                        : display.billedYearly
+                        ? `billed yearly · ${getCurrency(plan.title)}${
+                            display.yearlyTotal
+                          }/yr`
+                        : "billed monthly"}
+                    </Typography>
+
+                    <Divider sx={{ my: 2, opacity: 0.2, borderColor: "grey.500" }} />
+
                     {plan.features.map((feature) => (
                       <Box
                         key={feature}
                         sx={{
-                          gap: 1.5,
-                          paddingY: 1,
+                          gap: 1.25,
+                          py: 1,
                           display: "flex",
-                          alignItems: "center",
+                          alignItems: "flex-start",
                         }}
                       >
-                        <CheckCircleRoundedIcon
-                          sx={{
-                            width: 20,
-                            color:
-                              plan.title === SubscriptionPlanEnum.Premium
-                                ? "primary.light"
-                                : "primary.main",
-                          }}
+                        <Icon
+                          name="check_circle"
+                          size={18}
+                          color={
+                            isPremium ? "var(--honey-400)" : "var(--honey-500)"
+                          }
                         />
                         <Typography component="span" variant="subtitle2">
                           {feature}
@@ -174,10 +229,11 @@ export const Pricing = () => {
                     ))}
                   </CardContent>
 
-                  <CardActions>
+                  <CardActions sx={{ p: 0, mt: 2 }}>
                     {plan.buttonAction && plan.buttonText && (
                       <Button
                         fullWidth
+                        size="large"
                         component="button"
                         disabled={!!plan.buttonDisabled}
                         variant={plan.buttonVariant}
@@ -192,6 +248,8 @@ export const Pricing = () => {
             );
           })}
         </Grid>
+
+        <PayPerStoryCallout />
       </Container>
     </>
   );

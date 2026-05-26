@@ -5,6 +5,7 @@ import {
 import {
   ProfileInfo,
   Story,
+  StoryFormat,
   StoryParams,
   StorySeo,
 } from "src/components/StoryCreator/store/state";
@@ -21,7 +22,8 @@ export interface UseTextGeneration {
   handleCreateStoryRequest: (
     storyPrompt: string,
     profileInfo: ProfileInfo,
-    storyParams: StoryParams
+    storyParams: StoryParams,
+    format?: StoryFormat
   ) => Promise<Story>;
   handleCreateStorySeoRequest: (
     storyId: string,
@@ -53,12 +55,14 @@ export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
   const handleCreateStoryRequest = async (
     storyPrompt: string,
     profileInfo: ProfileInfo,
-    storyParams: StoryParams
+    storyParams: StoryParams,
+    format: StoryFormat = "long"
   ): Promise<Story> => {
     const PAYLOAD = {
       storyPrompt,
       profileInfo,
       storyParams,
+      format,
       userInfo: auth.user as User,
     };
 

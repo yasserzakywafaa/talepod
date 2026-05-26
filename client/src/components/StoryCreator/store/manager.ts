@@ -1,4 +1,9 @@
-import { AdultGenderEnum, ChildGenderEnum, ProfileInfo } from "./state";
+import {
+  AdultGenderEnum,
+  ChildGenderEnum,
+  ProfileInfo,
+  StoryFormat,
+} from "./state";
 
 import { Country } from "src/shared/countries";
 import { Environment } from "src/shared/mockedData/Environments";
@@ -17,6 +22,8 @@ export interface StoryCreatorManager {
     name: string,
     value: Tone | Moral | Environment | number
   ) => void;
+  handleSetFormat: (format: StoryFormat) => void;
+  handleSetPanelStyle: (panelStyle: string) => void;
 }
 
 export const useStoryCreatorManager = (
@@ -50,6 +57,20 @@ export const useStoryCreatorManager = (
     });
   };
 
+  const handleSetFormat = (format: StoryFormat) => {
+    updateState({
+      ...store.state,
+      format,
+    });
+  };
+
+  const handleSetPanelStyle = (panelStyle: string) => {
+    updateState({
+      ...store.state,
+      panelStyle,
+    });
+  };
+
   useEffect(() => {
     updateState({
       ...state,
@@ -73,10 +94,12 @@ export const useStoryCreatorManager = (
         handleUpdateProfileInfo("gender", ChildGenderEnum.Boy);
       }
     }
-  }, [state.profileInfo, state.storyParams]);
+  }, [state.profileInfo, state.storyParams, state.format, state.panelStyle]);
 
   return {
     handleUpdateProfileInfo,
     handleUpdateStoryInfo,
+    handleSetFormat,
+    handleSetPanelStyle,
   };
 };

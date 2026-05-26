@@ -1,18 +1,18 @@
 import "./Footer.scss";
 
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import { Divider } from "@mui/material";
-import Link from "@mui/material/Link";
+import { Box, Grid, Link, Stack, Typography } from "@mui/material";
+
+import Logo from "../Logo";
 import PortugalFlag from "src/assets/images/portugal_flag.png";
 import SwitzerlandFlag from "src/assets/images/switzerland_flag.png";
-import Typography from "@mui/material/Typography";
+import mascotBunny from "src/assets/images/v2/mascot_sleeping_bunny.webp";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
   const navigate = useNavigate();
-  const footerLandingPagesLinks = [
+
+  const landingLinks = [
     {
       text: "Bedtime stories for kids",
       href: routes.landingPages.bedtimeStoriesForKids,
@@ -55,140 +55,167 @@ const Footer = () => {
     },
   ];
 
-  const handleFooterLinkItemClick =
+  const productLinks = [
+    { text: "Create a story", href: routes.create },
+    { text: "Explore", href: routes.explore },
+    { text: "Pricing", href: routes.pricing },
+    { text: "Blog", href: routes.blogs },
+    { text: "Contact", href: routes.contact },
+  ];
+
+  const go =
     (route: string) =>
     (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
       event.preventDefault();
       navigate(route);
     };
 
+  const linkSx = {
+    fontSize: 13,
+    color: "rgba(255,255,255,0.78)",
+    textDecoration: "none",
+    "&:hover": { color: "var(--honey-300)" },
+  };
+
+  const headingSx = {
+    fontSize: 12,
+    fontWeight: 700,
+    textTransform: "uppercase",
+    letterSpacing: "0.06em",
+    color: "var(--honey-300)",
+    mb: 1.5,
+  };
+
   return (
-    <Container
+    <Box
+      component="footer"
       className="footer"
       sx={{
-        gap: { xs: 4, sm: 8 },
-        p: { xs: 2, sm: 2 },
-        textAlign: { sm: "center", md: "left" },
+        mt: 6,
+        px: { xs: 3, sm: 5 },
+        py: { xs: 4, sm: 6 },
+        color: "#fff",
+        background: "var(--bg-sunken)",
+        borderTop: "1px solid var(--divider)",
+        borderRadius: "var(--r-xl) var(--r-xl) 0 0",
       }}
     >
       <Box
-        display="flex"
-        flexWrap="wrap"
-        flexDirection={{ xs: "column", sm: "row" }}
-        justifyContent="space-between"
-      >
-        <Box
-          width={{ sm: "40%" }}
-          mb={{ xs: 3, sm: 0 }}
-          paddingRight={{ sm: "1rem" }}
-        >
-          <Typography variant="body1" color="text.secondary">
-            We embrace the principles of the{" "}
-            <span className="bold">Montessori Method</span> to create our
-            stories. This educational approach fosters independence, creativity,
-            and a love of learning in children.
-          </Typography>
-
-          <Typography variant="body1" color="text.secondary">
-            Each tale is carefully crafted to encourage young readers to explore
-            their imaginations, develop problem-solving skills, and cultivate a
-            sense of curiosity about the world around them. Use Talepod to
-            transform bedtime stories into magical adventures with our AI
-            bedtime story generator and narrator.
-          </Typography>
-        </Box>
-
-        <Box
-          display="flex"
-          flexWrap="wrap"
-          flexDirection="row"
-          width={{ sm: "60%" }}
-          justifyContent={{ sm: "flex-end" }}
-          className="footer-landing-pages-links"
-        >
-          {footerLandingPagesLinks.map((link, index) => (
-            <Link
-              key={index}
-              href={link.href}
-              color="text.secondary"
-              sx={{ p: "5px", width: "300px" }}
-              // onClick={handleFooterLinkItemClick(link.href)}
-            >
-              {link.text}
-            </Link>
-          ))}
-        </Box>
-      </Box>
-
-      <Divider sx={{ my: 4 }} />
-
-      <Box
         sx={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
+          display: "grid",
+          gap: 4,
+          gridTemplateColumns: {
+            xs: "1fr",
+            sm: "1.5fr 1fr",
+            md: "1.6fr 1fr 2fr",
+          },
+          maxWidth: 1200,
+          mx: "auto",
         }}
       >
-        <Box display="flex" justifyContent="center" alignContent="center">
-          <Link
-            sx={{ pt: "5px" }}
-            color="text.secondary"
-            href={routes.privacyPolicy}
-            onClick={handleFooterLinkItemClick(routes.privacyPolicy)}
+        {/* Brand */}
+        <Grid container>
+          <Stack alignItems="center" gap={1.25} mb={1.5}>
+            <img src={mascotBunny} alt="" width={40} height={40} />
+            <Logo isText />
+          </Stack>
+          <Typography
+            sx={{
+              fontSize: 13,
+              maxWidth: 300,
+            }}
           >
-            Privacy Policy
-          </Link>
+            Personalized bedtime stories — gently written and illustrated by AI,
+            crafted with the Montessori spirit of curiosity, for the children
+            you love most.
+          </Typography>
+        </Grid>
 
-          <Divider
-            variant="middle"
-            orientation="vertical"
-            sx={{ width: "3px", height: "20px", mx: 1 }}
-          />
-
-          <Link
-            sx={{ pt: "5px" }}
-            color="text.secondary"
-            href={routes.termsAndConditions}
-            onClick={handleFooterLinkItemClick(routes.termsAndConditions)}
-          >
-            Terms and Conditions
-          </Link>
+        {/* Product */}
+        <Box>
+          <Typography sx={headingSx}>Product</Typography>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+            {productLinks.map((l) => (
+              <Link key={l.text} href={l.href} onClick={go(l.href)} sx={linkSx}>
+                {l.text}
+              </Link>
+            ))}
+          </Box>
         </Box>
 
-        <Box
-          mt={1}
-          display="flex"
-          flexWrap="wrap"
-          justifyContent="center"
-          alignContent="center"
-        >
-          <Typography variant="body2" color="textSecondary" align="center">
-            Made in Switzerland and Portugal{" "}
-            <img
-              width="20px"
-              height="20px"
-              src={SwitzerlandFlag}
-              alt="Switzerland Flag"
-              style={{ verticalAlign: "middle" }}
-            />{" "}
-            <img
-              width="20px"
-              height="20px"
-              src={PortugalFlag}
-              alt="Switzerland Flag"
-              style={{ verticalAlign: "middle" }}
-            />
-          </Typography>
-
-          <Typography variant="body2" color="text.secondary" mx={1}>
-            {"Copyright © "}
-            <Link href={routes.features}>TalePod</Link>&nbsp;
-            {new Date().getFullYear()}
-          </Typography>
+        {/* Bedtime stories for */}
+        <Box>
+          <Typography sx={headingSx}>Bedtime stories for</Typography>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+              gap: 1,
+            }}
+            className="footer-landing-pages-links"
+          >
+            {landingLinks.map((l) => (
+              <Link key={l.text} href={l.href} sx={linkSx}>
+                {l.text}
+              </Link>
+            ))}
+          </Box>
         </Box>
       </Box>
-    </Container>
+
+      {/* Bottom bar */}
+      <Box
+        sx={{
+          maxWidth: 1200,
+          mx: "auto",
+          mt: 4,
+          pt: 2.5,
+          borderTop: "1px solid rgba(255,255,255,0.12)",
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          gap: 1.5,
+          fontSize: 12,
+          color: "rgba(255,255,255,0.6)",
+        }}
+      >
+        <span>© {new Date().getFullYear()} TalePod</span>
+        <span>·</span>
+        <Link
+          href={routes.privacyPolicy}
+          onClick={go(routes.privacyPolicy)}
+          sx={linkSx}
+        >
+          Privacy
+        </Link>
+        <span>·</span>
+        <Link
+          href={routes.termsAndConditions}
+          onClick={go(routes.termsAndConditions)}
+          sx={linkSx}
+        >
+          Terms
+        </Link>
+        <Box sx={{ flex: 1 }} />
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
+          Made in Switzerland &amp; Portugal
+          <img
+            src={SwitzerlandFlag}
+            alt="Switzerland"
+            width={18}
+            height={18}
+            style={{ verticalAlign: "middle" }}
+          />
+          <img
+            src={PortugalFlag}
+            alt="Portugal"
+            width={18}
+            height={18}
+            style={{ verticalAlign: "middle" }}
+          />
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

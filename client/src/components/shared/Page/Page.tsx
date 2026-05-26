@@ -1,7 +1,7 @@
 import "./Page.scss";
 
 import { CSSProperties, useEffect, useRef } from "react";
-import { Container, ContainerTypeMap, Divider } from "@mui/material";
+import { Container, ContainerTypeMap } from "@mui/material";
 import axios from "axios";
 import LoaderSpinner, {
   LoaderComponentNameEnum,
@@ -77,7 +77,7 @@ const Page = (params: PageProps) => {
     themeColorMetaTag &&
       themeColorMetaTag.setAttribute(
         "content",
-        themeMode === "dark" ? "#2E3B4E" : "#F5F5F5"
+        themeMode === "dark" ? "#14133E" : "#FAF4EA"
       );
 
     return () => {
@@ -181,7 +181,6 @@ const Page = (params: PageProps) => {
           <LoaderSpinner loaderComponentName={loaderComponentName} />
         )}
 
-        <Divider sx={{ my: 4 }} />
         <Footer />
       </Container>
     </>

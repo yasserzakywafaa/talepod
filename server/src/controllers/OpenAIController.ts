@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import {
   ProfileInfo,
   StoryAudioFile,
+  StoryFormat,
   StoryParams,
   StorySeo,
   User,
@@ -13,10 +14,13 @@ import {
 import { saveFileDataToDb, saveStorySeoToDb } from "../models/mongoDb";
 
 import CONFIG from "../config";
-import { IMAGES_SIZES } from "../models/openaiModel";
 import fs from "fs";
 import { handleCreateBlogRequest } from "../services/create/blog";
 import { handleCreateStory } from "../services/create/story";
+import {
+  generateImage,
+  handleGenerateStoryImages,
+} from "../services/create/images";
 import { handleTriggerWebhookN8n } from "../services/webhooks/n8n";
 import { uploadFileToS3 } from "../services/amazonS3";
 
@@ -31,9 +35,12 @@ export const createStory = async (
   const profileInfo = request.body.profileInfo as ProfileInfo;
   const storyParams = request.body.storyParams as StoryParams;
   const userInfo = request.body.userInfo as User;
+  // Absent on pre-V2 clients → defaults to "long" for back-compat.
+  const format = (request.body.format as StoryFormat) ?? "long";
 
   console.log("⌛︎  Creating Story...", {
     request: request.path,
+    format,
   });
 
   try {
@@ -42,6 +49,7 @@ export const createStory = async (
       profileInfo,
       storyParams,
       userInfo,
+      format,
     );
 
     if (story) {
@@ -59,6 +67,12 @@ export const createStory = async (
     }
 
     response.json(story);
+
+    // Generate + persist illustrations in the background (best-effort).
+    // The client reader polls the story until `imagesStatus` flips off "pending".
+    if (story?._id) {
+      void handleGenerateStoryImages(String(story._id));
+    }
   } catch (error) {
     next(`❌ ${error}`);
   }
@@ -204,17 +218,7 @@ export const createImages = async (
     const imageUrls: string[] = [];
 
     for (let i = 0; i < numImages; i++) {
-      const imageRequest = await getOpenRouterSdkClient().images.generate({
-        n: 1,
-        model: CONFIG.OPENROUTER_IMAGES_MODEL,
-        size: IMAGES_SIZES["1024x1024"],
-        response_format: "url",
-        prompt: userPrompt,
-        style: "natural",
-        quality: "hd",
-      });
-
-      const imageUrl = imageRequest.data[0].url;
+      const imageUrl = await generateImage(userPrompt, `generated-image-${i + 1}`);
       imageUrl && imageUrls.push(imageUrl);
     }
 

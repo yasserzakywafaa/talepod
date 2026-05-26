@@ -5,19 +5,7 @@
 .features-page {
   position: relative;
   padding-top: 5rem;
-  color: #000000;
-  &.dark {
-    background-color: #252526;
-    .navigation-bar {
-      &.bg-color-transparent {
-        .logo {
-          svg {
-            fill: #fff;
-          }
-        }
-      }
-    }
-  }
+  color: var(--fg);
 }
 
 .testimonials {
@@ -28,13 +16,16 @@
   }
 
   .testimonial-card {
-    background-color: #f8f8f8;
+    background-color: var(--surface);
+    color: var(--fg);
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-sm);
     .author {
       font-weight: bold;
       margin-top: 10px;
+      color: var(--fg-2);
     }
   }
 }
@@ -47,10 +38,12 @@
   }
 
   .feature-card {
-    background-color: #f8f8f8;
+    background-color: var(--surface);
+    color: var(--fg);
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-sm);
   }
 }
 
@@ -74,16 +67,18 @@
   }
 
   .story-example-card {
-    background-color: #f8f8f8;
+    background-color: var(--surface);
+    color: var(--fg);
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-sm);
   }
 }
 
 .guarantee {
   padding: 20px;
-  border-radius: 8px;
+  border-radius: var(--r-lg);
   text-align: center;
 }
 

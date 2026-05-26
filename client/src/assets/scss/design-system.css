@@ -1,0 +1,428 @@
+/* =========================================================================
+   TalePod Design System — Colors & Type Tokens (v2 redesign, 2026)
+   =========================================================================
+   Adapted from the Claude Design handoff (colors_and_type.css). Warm,
+   dreamy, bedtime-storybook palette: honey gold + twilight purple +
+   parchment cream, with plum dark surfaces. Dark mode is the default.
+
+   Yeseva One (display) + Caveat (accent) + Material Symbols (icons) are
+   loaded from Google Fonts via <link> in index.html. Lexend Deca (body)
+   ships locally from ../fonts/LexendDeca/.
+   ========================================================================= */
+
+/* --- Lexend Deca (local, all 9 weights) ---------------------------------- */
+@font-face {
+  font-family: "Lexend Deca";
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/LexendDeca/LexendDeca-Thin.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Lexend Deca";
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/LexendDeca/LexendDeca-ExtraLight.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Lexend Deca";
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/LexendDeca/LexendDeca-Light.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Lexend Deca";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/LexendDeca/LexendDeca-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Lexend Deca";
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/LexendDeca/LexendDeca-Medium.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Lexend Deca";
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/LexendDeca/LexendDeca-SemiBold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Lexend Deca";
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/LexendDeca/LexendDeca-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Lexend Deca";
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/LexendDeca/LexendDeca-ExtraBold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Lexend Deca";
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/LexendDeca/LexendDeca-Black.ttf") format("truetype");
+}
+
+:root {
+  /* === BRAND PALETTE — modernized warm bedtime ============================ */
+  --honey-50: oklch(0.98 0.02 85);
+  --honey-100: oklch(0.95 0.05 85);
+  --honey-200: oklch(0.9 0.09 84);
+  --honey-300: oklch(0.85 0.12 82);
+  --honey-400: oklch(0.81 0.14 80); /* PRIMARY — buttons, accents */
+  --honey-500: oklch(0.73 0.15 76);
+  --honey-600: oklch(0.62 0.14 70);
+  --honey-700: oklch(0.5 0.12 65);
+  --honey-800: oklch(0.38 0.1 60);
+  --honey-900: oklch(0.28 0.07 55);
+
+  --twilight-50: oklch(0.97 0.02 295);
+  --twilight-100: oklch(0.93 0.04 290);
+  --twilight-200: oklch(0.86 0.07 290);
+  --twilight-300: oklch(0.74 0.11 288);
+  --twilight-400: oklch(0.63 0.13 285);
+  --twilight-500: oklch(0.55 0.14 282); /* SECONDARY */
+  --twilight-600: oklch(0.46 0.13 280);
+  --twilight-700: oklch(0.36 0.11 278);
+  --twilight-800: oklch(0.27 0.09 276);
+  --twilight-900: oklch(0.18 0.07 275); /* night-sky base */
+
+  --parchment-50: oklch(0.99 0.01 85);
+  --parchment-100: oklch(0.97 0.015 82); /* page bg light */
+  --parchment-200: oklch(0.94 0.02 80); /* card bg light */
+  --parchment-300: oklch(0.89 0.025 78); /* border light */
+  --parchment-400: oklch(0.82 0.03 75);
+
+  --plum-50: oklch(0.95 0.01 290);
+  --plum-100: oklch(0.85 0.02 285);
+  --plum-200: oklch(0.7 0.03 280);
+  --plum-300: oklch(0.55 0.04 280);
+  --plum-400: oklch(0.42 0.05 278);
+  --plum-500: oklch(0.32 0.06 276);
+  --plum-600: oklch(0.24 0.06 275); /* card bg dark */
+  --plum-700: oklch(0.18 0.06 274); /* page bg dark */
+  --plum-800: oklch(0.13 0.05 273);
+  --plum-900: oklch(0.08 0.03 272);
+
+  --mint: oklch(0.86 0.06 195);
+  --blush: oklch(0.81 0.08 22);
+  --star: oklch(0.91 0.13 92);
+  --rose: oklch(0.72 0.13 15);
+
+  --success: oklch(0.66 0.14 145);
+  --warning: oklch(0.78 0.15 65);
+  --danger: oklch(0.62 0.2 25);
+  --info: var(--twilight-400);
+
+  /* === SEMANTIC TOKENS (LIGHT theme is default token set) ================= */
+  --bg: var(--parchment-100);
+  --bg-sunken: oklch(0.95 0.025 80);
+  --surface: #ffffff;
+  --surface-2: var(--parchment-200);
+  --surface-elevated: #ffffff;
+  --border: var(--parchment-300);
+  --border-strong: oklch(0.78 0.04 75);
+  --divider: oklch(0.92 0.02 80);
+
+  --fg: var(--plum-700);
+  --fg-1: var(--plum-700);
+  --fg-2: var(--plum-400);
+  --fg-3: var(--plum-300);
+  --fg-onbrand: #ffffff;
+
+  --primary: var(--honey-400);
+  --primary-hover: var(--honey-500);
+  --primary-press: var(--honey-600);
+
+  --accent: var(--twilight-500);
+  --accent-hover: var(--twilight-600);
+
+  --link: var(--twilight-600);
+
+  /* === RADIUS ============================================================ */
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+  --r-2xl: 36px;
+  --r-pill: 999px;
+
+  /* === SPACING (4px grid) ================================================ */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  /* === SHADOWS / ELEVATION (warm-toned) ================================== */
+  --shadow-xs: 0 1px 2px oklch(0.45 0.05 70 / 0.06);
+  --shadow-sm:
+    0 2px 6px oklch(0.45 0.05 70 / 0.08), 0 1px 2px oklch(0.45 0.05 70 / 0.06);
+  --shadow-md:
+    0 6px 18px oklch(0.4 0.06 70 / 0.1), 0 2px 4px oklch(0.4 0.06 70 / 0.06);
+  --shadow-lg:
+    0 18px 40px oklch(0.35 0.07 75 / 0.14),
+    0 6px 12px oklch(0.35 0.06 70 / 0.08);
+  --shadow-xl:
+    0 32px 72px oklch(0.3 0.08 80 / 0.18), 0 12px 24px oklch(0.3 0.07 75 / 0.1);
+  --glow-honey:
+    0 0 0 6px oklch(0.81 0.14 80 / 0.18), 0 8px 24px oklch(0.73 0.15 76 / 0.3);
+  --glow-twilight:
+    0 0 0 6px oklch(0.55 0.14 282 / 0.2), 0 8px 24px oklch(0.46 0.13 280 / 0.3);
+
+  /* === BACKGROUNDS — signature gradients ================================= */
+  --bg-twilight: linear-gradient(
+    180deg,
+    oklch(0.2 0.07 280) 0%,
+    oklch(0.32 0.1 275) 45%,
+    oklch(0.55 0.13 30) 100%
+  );
+  --bg-dawn: linear-gradient(
+    180deg,
+    oklch(0.92 0.05 85) 0%,
+    oklch(0.86 0.07 30) 60%,
+    oklch(0.78 0.1 290) 100%
+  );
+  --bg-storybook: radial-gradient(
+    ellipse at top,
+    oklch(0.95 0.05 85) 0%,
+    oklch(0.97 0.015 82) 60%
+  );
+
+  /* === MOTION ============================================================ */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.34, 1.1, 0.64, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-1: 120ms;
+  --dur-2: 200ms;
+  --dur-3: 320ms;
+  --dur-4: 500ms;
+
+  /* === TYPE TOKENS ======================================================= */
+  --font-display: "Yeseva One", "Cormorant Garamond", Georgia, serif;
+  --font-body:
+    "Lexend Deca", "LexendDeca", system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  --font-accent: "Caveat", "Segoe Script", cursive;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+  --fs-xs: 12px;
+  --fs-sm: 14px;
+  --fs-base: 16px;
+  --fs-md: 18px;
+  --fs-lg: 20px;
+  --fs-xl: 24px;
+  --fs-2xl: 30px;
+  --fs-3xl: 38px;
+  --fs-4xl: 48px;
+  --fs-5xl: 60px;
+  --fs-hero: 76px;
+
+  --lh-tight: 1.15;
+  --lh-snug: 1.3;
+  --lh-body: 1.55;
+  --lh-loose: 1.75;
+
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+  --tracking-caps: 0.08em;
+
+  --blur-sm: 6px;
+  --blur-md: 14px;
+  --blur-lg: 24px;
+}
+
+/* =========================================================================
+   Dark theme — the bedtime "night mode" the app defaults to.
+   Triggered by [data-theme="dark"] on <html>.
+   ========================================================================= */
+[data-theme="dark"],
+body.dark,
+.theme-dark {
+  --bg: var(--plum-700);
+  --bg-sunken: var(--plum-800);
+  --surface: var(--plum-600);
+  --surface-2: oklch(0.28 0.06 275);
+  --surface-elevated: oklch(0.3 0.07 276);
+  --border: oklch(0.32 0.06 275);
+  --border-strong: oklch(0.42 0.06 278);
+  --divider: oklch(0.28 0.05 274);
+
+  --fg: oklch(0.97 0.01 80);
+  --fg-1: oklch(0.97 0.01 80);
+  --fg-2: oklch(0.78 0.02 80);
+  --fg-3: oklch(0.6 0.03 80);
+
+  --primary: var(--honey-300);
+  --primary-hover: var(--honey-200);
+  --primary-press: var(--honey-400);
+
+  --accent: var(--twilight-300);
+  --accent-hover: var(--twilight-200);
+
+  --link: var(--twilight-200);
+
+  /* Parchment swatches re-mapped to dark plums so anything still
+     pointing directly at --parchment-* stays in-theme. */
+  --parchment-50: var(--plum-700);
+  --parchment-100: var(--plum-700);
+  --parchment-200: var(--plum-600);
+  --parchment-300: oklch(0.32 0.06 275);
+  --parchment-400: oklch(0.42 0.06 278);
+
+  --bg-storybook: radial-gradient(
+    ellipse at top,
+    oklch(0.22 0.08 278) 0%,
+    var(--plum-700) 60%
+  );
+}
+
+/* =========================================================================
+   Semantic typography helpers — drop onto elements directly.
+   ========================================================================= */
+.t-hero {
+  font-family: var(--font-display);
+  font-size: clamp(var(--fs-4xl), 6vw, var(--fs-hero));
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+  font-weight: 400;
+  color: var(--fg);
+}
+.t-h1 {
+  font-family: var(--font-display);
+  font-size: var(--fs-4xl);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+  font-weight: 400;
+}
+.t-h2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-3xl);
+  line-height: var(--lh-tight);
+  font-weight: 400;
+}
+.t-h3 {
+  font-family: var(--font-body);
+  font-size: var(--fs-2xl);
+  line-height: var(--lh-snug);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+}
+.t-h4 {
+  font-family: var(--font-body);
+  font-size: var(--fs-xl);
+  line-height: var(--lh-snug);
+  font-weight: 600;
+}
+.t-h5 {
+  font-family: var(--font-body);
+  font-size: var(--fs-lg);
+  line-height: var(--lh-snug);
+  font-weight: 600;
+}
+.t-body {
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
+  font-weight: 400;
+}
+.t-body-lg {
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  font-weight: 400;
+}
+.t-body-sm {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+  font-weight: 400;
+}
+.t-caption {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: var(--tracking-wide);
+  color: var(--fg-2);
+}
+.t-overline {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.t-label {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  line-height: 1.3;
+  font-weight: 500;
+}
+.t-accent {
+  font-family: var(--font-accent);
+  font-size: var(--fs-2xl);
+  line-height: 1.2;
+}
+.t-mono {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+}
+
+/* Story reading body — used inside the long-story reader */
+.t-story {
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  line-height: var(--lh-loose);
+  font-weight: 300;
+  color: var(--fg);
+  letter-spacing: 0;
+  text-wrap: pretty;
+}
+.t-story p {
+  margin: 0 0 1.15rem;
+}
+
+/* Material Symbols default sizing safeguard */
+.material-symbols-outlined {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
+  user-select: none;
+}
+
+/* Marketing / landing page section rhythm (used by FeaturesPage + LandingPages) */
+.section {
+  max-width: 1100px;
+  margin-inline: auto;
+  padding: var(--space-10) var(--space-4);
+}
+.section h2,
+.section .section-title {
+  font-family: var(--font-display);
+  color: var(--fg);
+}

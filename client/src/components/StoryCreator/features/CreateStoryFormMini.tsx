@@ -58,7 +58,7 @@ const CreateStoryFormMini = () => {
   };
 
   const handleOnFieldChangeForMini = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const { name, value } = event.target;
     handleUpdateProfileInfo(name as keyof ProfileInfo, value);
@@ -69,7 +69,7 @@ const CreateStoryFormMini = () => {
   };
 
   const handleOnFormSubmit = async (
-    event: React.FormEvent<HTMLFormElement>
+    event: React.FormEvent<HTMLFormElement>,
   ) => {
     event.preventDefault();
     event.stopPropagation();
@@ -99,7 +99,7 @@ const CreateStoryFormMini = () => {
               value: SupportedLanguages.en,
             },
           },
-          storyParams
+          storyParams,
         );
 
         if (user) {
@@ -117,7 +117,7 @@ const CreateStoryFormMini = () => {
             });
             window.localStorage.setItem(
               APP_CONSTANTS.LOCAL_STORAGE.STORY_GENERATED,
-              "true"
+              "true",
             );
           }
         }
@@ -142,8 +142,8 @@ const CreateStoryFormMini = () => {
         component="form"
         autoComplete="off"
         flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
+        alignItems={{ xs: "center", md: "flex-start" }}
+        justifyContent={{ xs: "center", md: "flex-start" }}
         onSubmit={handleOnFormSubmit}
         className="story-creator-form-wrapper"
       >
@@ -169,9 +169,8 @@ const CreateStoryFormMini = () => {
           marginX={2}
           display="flex"
           component="div"
-          alignItems="center"
+          alignItems="flex-start"
           flexDirection="column"
-          justifyContent="center"
           className="blog-creator-form-wrapper-button"
         >
           <Button

@@ -2,6 +2,20 @@ import { ObjectId } from "mongodb";
 import { PagingInfo } from "./api";
 import { User } from "./user";
 
+/** V2 story formats. Stories created before V2 have no `format` and are
+ *  treated as "long" everywhere (back-compat). */
+export type StoryFormat = "comic" | "long";
+
+/** A single comic-book page: short caption shown in the reader plus an
+ *  illustration. `imagePrompt` is stored at creation time so the picture can
+ *  be generated later; `imageUrl` is empty until image generation is wired. */
+export interface ComicPage {
+  index: number;
+  caption: string;
+  imagePrompt?: string;
+  imageUrl?: string;
+}
+
 export interface Story {
   _id: ObjectId;
   title: string;
@@ -19,7 +33,19 @@ export interface Story {
   coverImageUrl?: string;
   isFeatured: boolean;
   authorProfile?: User;
+  /** "comic" | "long". Absent on pre-V2 stories → treated as "long". */
+  format?: StoryFormat;
+  /** Populated for comic-format stories only. */
+  pages?: ComicPage[];
+  /** Background image-generation state. Absent on pre-V2 stories (never poll). */
+  imagesStatus?: ImagesStatus;
+  /** Canonical visual description of the hero (+ recurring companions),
+   *  generated once and reused across the cover + every comic page so the
+   *  character stays on-model across independent image generations. */
+  characterSheet?: string;
 }
+
+export type ImagesStatus = "pending" | "ready" | "failed";
 
 export interface StoryData extends Partial<Story> {
   profileInfo: ProfileInfo;
@@ -75,6 +101,8 @@ export interface StoryParams {
   maxCharacters: number;
   totalCharacters: number;
   environment: Environment;
+  /** Comic-only: "Classic" | "Speech bubbles". */
+  panelStyle?: string;
 }
 
 export type Tone = BasicParam;

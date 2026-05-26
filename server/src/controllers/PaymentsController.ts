@@ -23,7 +23,7 @@ const stripe = new Stripe(secretKey ?? "", {
 export const config = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   const publishableKey = CONFIG.IS_DEV
     ? CONFIG.STRIPE_TEST_PUB_KEY
@@ -41,7 +41,7 @@ export const config = async (
 export const getPricesList = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const pricesList = await stripe.prices.list({
@@ -60,7 +60,7 @@ export const getPricesList = async (
 export const getProductsListWithPrices = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     // Get all active Products List
@@ -101,7 +101,7 @@ export const getProductsListWithPrices = async (
 export const createCheckoutSession = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   const {
     priceId,
@@ -110,23 +110,39 @@ export const createCheckoutSession = async (
     success_url,
     cancel_url,
     googleAnalyticsClientId,
+    mode = "subscription",
+    credits,
   } = request.body.metadata;
   const user = await getUserDataById(userId);
+  // Pay-per-story is a one-time purchase (mode "payment"); subscriptions keep
+  // the original "subscription" mode. Default preserves existing behavior.
+  const isOneTimePurchase = mode === "payment";
 
   try {
     // Create a new Stripe Checkout Session
-    const session = await stripe.checkout.sessions.create({
+    const sessionParams: Stripe.Checkout.SessionCreateParams = {
       payment_method_types: ["card"],
       line_items: [
         {
           price: priceId,
-          adjustable_quantity: {
-            enabled: false,
-          },
+          ...(isOneTimePurchase
+            ? {
+                adjustable_quantity: {
+                  enabled: true,
+                  minimum: 1,
+                  maximum: 100,
+                },
+              }
+            : {
+                adjustable_quantity: {
+                  enabled: false,
+                },
+              }),
+
           quantity: 1,
         },
       ],
-      mode: "subscription",
+      mode: isOneTimePurchase ? "payment" : "subscription",
       ui_mode: "hosted",
       // {CHECKOUT_SESSION_ID} is a string literal; do not change it!
       // the actual Session ID is returned in the query parameter when your customer
@@ -138,17 +154,25 @@ export const createCheckoutSession = async (
         userId,
         subscriptionPlan,
         googleAnalyticsClientId,
+        purchaseType: isOneTimePurchase ? "story_credit" : "subscription",
+        ...(isOneTimePurchase ? { credits: String(credits ?? 1) } : {}),
       },
       customer: user.stripeCustomerId ?? undefined,
-      subscription_data: {
+    };
+
+    // subscription_data is only valid in subscription mode.
+    if (!isOneTimePurchase) {
+      sessionParams.subscription_data = {
         metadata: {
           userId,
           subscriptionPlan,
           googleAnalyticsClientId,
         },
-      },
-      expand: ["subscription"],
-    });
+      };
+      sessionParams.expand = ["subscription"];
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionParams);
 
     try {
       // Send current session to Google Analytics
@@ -186,7 +210,7 @@ export const createCheckoutSession = async (
     } catch (error) {
       console.error(
         `❌  Failed to send session data to Google Analytics!`,
-        error
+        error,
       );
     }
 
@@ -204,14 +228,14 @@ export const createCheckoutSession = async (
 export const webhook = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   let event: Stripe.Event;
   try {
     event = stripe.webhooks.constructEvent(
       request.body,
       request.headers["stripe-signature"] ?? "",
-      webhookSecret ?? ""
+      webhookSecret ?? "",
     );
     await handleWebhookEvents(event);
 
@@ -225,7 +249,7 @@ export const webhook = async (
 };
 
 export const handleWebhookEvents = async (
-  event: Stripe.Event
+  event: Stripe.Event,
 ): Promise<void> => {
   const { type, data } = event;
   let session: Stripe.Checkout.Session;
@@ -239,19 +263,28 @@ export const handleWebhookEvents = async (
       session = data.object;
       console.log(
         "❌ webhook:>>> checkout.session.async_payment_failed!",
-        session
+        session,
       );
       return;
     case "checkout.session.async_payment_succeeded":
       session = data.object;
       console.log(
         "✅  webhook:>>> checkout.session.async_payment_succeeded!",
-        session
+        session,
       );
       return;
     case "checkout.session.completed":
       session = data.object;
       console.log("✅ webhook:>>>checkout.session.completed!", session);
+      // One-time pay-per-story purchases settle here (subscriptions settle via
+      // invoice.payment_succeeded). Grant the purchased story credits.
+      if (session.mode === "payment" && session.payment_status === "paid") {
+        try {
+          await handleGrantStoryCredits(session);
+        } catch (error) {
+          console.error(`❌  Failed to grant story credits!`, error);
+        }
+      }
       return;
     case "checkout.session.expired":
       session = data.object;
@@ -263,42 +296,42 @@ export const handleWebhookEvents = async (
       subscription = data.object;
       console.log(
         "✅ webhook:>>> customer.subscription.created!",
-        subscription
+        subscription,
       );
       return;
     case "customer.subscription.deleted":
       subscription = data.object;
       console.log(
         "✅  webhook:>>> customer.subscription.deleted!",
-        subscription
+        subscription,
       );
       return;
     case "customer.subscription.paused":
       subscription = data.object;
       console.log(
         "⏸️  webhook:>>> customer.subscription.paused!",
-        subscription
+        subscription,
       );
       return;
     case "customer.subscription.resumed":
       subscription = data.object;
       console.log(
         "✅  webhook:>>> customer.subscription.resumed!",
-        subscription
+        subscription,
       );
       return;
     case "customer.subscription.trial_will_end":
       subscription = data.object;
       console.log(
         "⚠️ webhook:>>> customer.subscription.trial_will_end!",
-        subscription
+        subscription,
       );
       return;
     case "customer.subscription.updated":
       subscription = data.object;
       console.log(
         "✅  webhook:>>> customer.subscription.updated!",
-        subscription
+        subscription,
       );
       return;
 
@@ -327,7 +360,7 @@ export const handleWebhookEvents = async (
           } catch (error) {
             console.error(
               `❌  Failed to send subscription to Google Analytics!`,
-              error
+              error,
             );
           }
         }
@@ -340,7 +373,7 @@ export const handleWebhookEvents = async (
       paymentMethod = data.object;
       console.log(
         "✅ webhook:>>> payment_method.automatically_updated!",
-        paymentMethod
+        paymentMethod,
       );
       return;
     case "payment_method.updated":
@@ -352,8 +385,36 @@ export const handleWebhookEvents = async (
   return undefined;
 };
 
+export const handleGrantStoryCredits = async (
+  session: Stripe.Checkout.Session,
+): Promise<void> => {
+  const userId = session.metadata?.userId || session.client_reference_id || "";
+  const credits = Number(session.metadata?.credits ?? 1) || 1;
+
+  if (!userId) {
+    console.error(
+      `❌  Cannot grant story credits — missing userId on session.`,
+    );
+    return;
+  }
+
+  try {
+    const user = await getUserDataById(userId);
+    const newTotal = (user.storyCredits ?? 0) + credits;
+
+    await updateUserInDb(userId, { storyCredits: newTotal });
+
+    console.log(
+      `✅ Granted ${credits} story credit(s) to user ${userId}. New total: ${newTotal}`,
+    );
+  } catch (error) {
+    console.error(`❌  Failed to grant story credits!`, { error });
+    throw error;
+  }
+};
+
 export const handleUpdateUserSubscription = async (
-  invoice: Stripe.Invoice
+  invoice: Stripe.Invoice,
 ): Promise<void> => {
   const subscriptionId = invoice.subscription;
   if (!subscriptionId) {
@@ -363,7 +424,7 @@ export const handleUpdateUserSubscription = async (
 
   try {
     const subscription = await stripe.subscriptions.retrieve(
-      subscriptionId as string
+      subscriptionId as string,
     );
     const subscriptionItem = subscription.items.data[0];
 
@@ -418,7 +479,7 @@ export const handleUpdateUserSubscription = async (
 };
 
 export const handleSendSubscriptionToGoogleAnalytics = async (
-  invoice: Stripe.Invoice
+  invoice: Stripe.Invoice,
 ): Promise<void> => {
   const subscriptionId = invoice.subscription as string;
   const totalAmount = invoice.total / 100;
@@ -461,11 +522,11 @@ export const handleSendSubscriptionToGoogleAnalytics = async (
 };
 
 export const sendToGoogleAnalytics = async (
-  payload: GoogleAnalyticsPayload
+  payload: GoogleAnalyticsPayload,
 ): Promise<void> => {
   const POST_URL = CONFIG.GOOGLE_ANALYTICS_TRACKING_URL(
     CONFIG.GOOGLE_ANALYTICS_MEASUREMENT_ID ?? "",
-    CONFIG.GOOGLE_ANALYTICS_API_SECRET ?? ""
+    CONFIG.GOOGLE_ANALYTICS_API_SECRET ?? "",
   );
 
   console.log("✅ sendToGoogleAnalytics:>>>", POST_URL, payload);
@@ -487,7 +548,7 @@ export const sendToGoogleAnalytics = async (
 export const getCheckoutSessionData = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   const sessionId = request.query.sessionId as string;
   const userId = request.query.userId as string;
@@ -501,8 +562,9 @@ export const getCheckoutSessionData = async (
     const session = await stripe.checkout.sessions.retrieve(sessionId, {
       expand: ["invoice", "subscription"],
     });
-    const subscription = session.subscription as Stripe.Subscription;
-    const subscriptionItem = subscription.items.data[0];
+    // One-time (pay-per-story) sessions have no subscription — guard for it.
+    const subscription = session.subscription as Stripe.Subscription | null;
+    const subscriptionItem = subscription?.items?.data?.[0];
 
     response.status(200).json({ session, subscriptionItem, user });
   } catch (error) {
@@ -516,7 +578,7 @@ export const getCheckoutSessionData = async (
 export const getSubscriptionDetails = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   const subscriptionId = request.query.subscriptionId as string;
   if (!subscriptionId) {
@@ -539,7 +601,7 @@ export const getSubscriptionDetails = async (
 export const cancelSubscription = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   const { subscriptionId, userId, userStoryCount } = request.body;
 
@@ -554,7 +616,7 @@ export const cancelSubscription = async (
       subscriptionId,
       {
         cancel_at_period_end: true,
-      }
+      },
     );
 
     // Update User Data
