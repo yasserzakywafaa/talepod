@@ -1,4 +1,32 @@
+import { CSSProperties } from "react";
 import { createTheme } from "@mui/material/styles";
+
+/* Custom theme tokens (TS augmentation) so plain MUI carries the V2 design:
+   a Yeseva `display` Typography variant, a `magic` gradient Button variant,
+   and a small uppercase `badge` Chip variant (replaces the old v2 kit). */
+declare module "@mui/material/styles" {
+  interface TypographyVariants {
+    display: CSSProperties;
+  }
+  interface TypographyVariantsOptions {
+    display?: CSSProperties;
+  }
+}
+declare module "@mui/material/Typography" {
+  interface TypographyPropsVariantOverrides {
+    display: true;
+  }
+}
+declare module "@mui/material/Button" {
+  interface ButtonPropsVariantOverrides {
+    magic: true;
+  }
+}
+declare module "@mui/material/Chip" {
+  interface ChipPropsVariantOverrides {
+    badge: true;
+  }
+}
 
 /* =========================================================================
    TalePod V2 theme bridge.

@@ -54,12 +54,7 @@ const CreateStoryForm = () => {
   const { isDesktop } = useDeviceSize();
   const {
     store: {
-      state: {
-        profileInfo,
-        storyParams,
-        isStorySettingsExpanded,
-        format,
-      },
+      state: { profileInfo, storyParams, isStorySettingsExpanded, format },
     },
     store: storyCreatorStore,
     manager: {
@@ -472,52 +467,6 @@ const CreateStoryForm = () => {
             </AccordionDetails>
           </Accordion>
         )}
-
-        {/* V2: format-specific options */}
-        <Box
-          sx={{
-            width: "100%",
-            my: 2,
-            p: 2,
-            borderRadius: "var(--r-lg)",
-            border: "1px solid var(--border)",
-            background: "var(--surface)",
-          }}
-        >
-          {format === "comic" ? (
-            <>
-              <div
-                className="t-overline"
-                style={{ marginBottom: 6, display: "flex", gap: 6 }}
-              >
-                <Icon name="view_carousel" size={16} color="var(--honey-500)" />
-                Comic · ~6 illustrated pages
-              </div>
-              <div
-                style={{
-                  fontSize: 12,
-                  color: "var(--fg-3)",
-                  lineHeight: 1.45,
-                }}
-              >
-                Each page pairs an illustration with a short line of warm
-                narration and a touch of character dialogue.
-              </div>
-            </>
-          ) : (
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <Icon name="image" size={20} color="var(--twilight-400)" />
-              <div style={{ flex: 1, fontSize: 14, color: "var(--fg)" }}>
-                Cover illustration included <Badge tone="new">New</Badge>
-                <div
-                  style={{ fontSize: 12, color: "var(--fg-3)", marginTop: 2 }}
-                >
-                  Add narration after your story is ready
-                </div>
-              </div>
-            </div>
-          )}
-        </Box>
 
         {/* Alerts */}
         <Box

@@ -1,7 +1,6 @@
-import { FC } from "react";
-
-import Icon from "./Icon";
 import { Badge } from "./DataDisplay";
+import { FC } from "react";
+import Icon from "./Icon";
 import characterKitten from "src/assets/images/v2/character_kitten.webp";
 import characterLion from "src/assets/images/v2/character_lion.webp";
 import characterOwl from "src/assets/images/v2/character_owl.webp";
@@ -40,7 +39,7 @@ const ITEMS: FormatItem[] = [
     icon: "menu_book",
     badge: "Chapter book",
     title: "Long story",
-    sub: "One cover · rich text · narration later",
+    sub: "Cover illustration · rich text · narration later",
     art: [characterLion],
   },
 ];
@@ -101,7 +100,11 @@ const FormatChooser: FC<FormatChooserProps> = ({
                   flexShrink: 0,
                 }}
               >
-                <Icon name={it.icon} size={20} color={sel ? "#fff" : "var(--fg)"} />
+                <Icon
+                  name={it.icon}
+                  size={20}
+                  color={sel ? "#fff" : "var(--fg)"}
+                />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <Badge tone={sel ? "honey" : "twilight"}>{it.badge}</Badge>
@@ -178,7 +181,9 @@ const FormatPreview: FC<FormatPreviewProps> = ({ kind, art, compact }) => {
           overflow: "hidden",
         }}
       >
-        <div style={{ position: "absolute", inset: 0, backgroundImage: stars }} />
+        <div
+          style={{ position: "absolute", inset: 0, backgroundImage: stars }}
+        />
         {art.map((a, i) => (
           <div
             key={i}

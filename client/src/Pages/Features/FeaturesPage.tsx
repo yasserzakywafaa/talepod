@@ -53,6 +53,10 @@ const FeaturesPage = () => {
       <Hero />
 
       <div className="section">
+        <StoryFormats />
+      </div>
+
+      <div className="section">
         <Testimonials />
       </div>
 
@@ -69,10 +73,6 @@ const FeaturesPage = () => {
       </div>
 
       <Divider sx={{ width: "50%" }} />
-
-      <div className="section">
-        <StoryFormats />
-      </div>
 
       <Divider sx={{ width: "50%" }} />
 

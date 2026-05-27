@@ -94,7 +94,6 @@ const Footer = () => {
         mt: 6,
         px: { xs: 3, sm: 5 },
         py: { xs: 4, sm: 6 },
-        color: "#fff",
         background: "var(--bg-sunken)",
         borderTop: "1px solid var(--divider)",
         borderRadius: "var(--r-xl) var(--r-xl) 0 0",
@@ -176,7 +175,6 @@ const Footer = () => {
           alignItems: "center",
           gap: 1.5,
           fontSize: 12,
-          color: "rgba(255,255,255,0.6)",
         }}
       >
         <span>© {new Date().getFullYear()} TalePod</span>
