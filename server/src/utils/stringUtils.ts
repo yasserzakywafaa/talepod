@@ -62,3 +62,10 @@ export const getRandomString = (length = 8, prefix = "") => {
 
   return `${prefix}_${str}`;
 };
+
+/**
+ * Counts words in a text (whitespace-delimited). Good enough for the
+ * space-separated languages TalePod supports; used to report story length.
+ */
+export const countWords = (text: string): number =>
+  (text || "").trim().split(/\s+/).filter(Boolean).length;

@@ -15,7 +15,6 @@ export const prerenderPaths: string[] = [
   "/login",
   "/register",
   "/logout",
-  "/checkout",
   "/unauthorized",
   "/bedtime-stories-for-kids",
   "/bedtime-stories-for-adults",

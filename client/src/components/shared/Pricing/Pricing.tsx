@@ -14,8 +14,8 @@ import LoaderSpinner from "../Loader/LoaderSpinner";
 import PaymentWrapper from "../Payment/Payment";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
 import Typography from "@mui/material/Typography";
-import characterLion from "src/assets/images/v2/character_lion.webp";
-import mascotPuppy from "src/assets/images/v2/mascot_puppy.webp";
+import characterLion from "src/assets/images/landing_pages/lion_cub.webp";
+import mascotPuppy from "src/assets/images/cute_puppy_with_sparkling_eyes.webp";
 import { usePricing } from "./usePricing";
 
 const planMascot = (title: SubscriptionPlanEnum) =>

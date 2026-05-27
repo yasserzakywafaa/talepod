@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Card,
-  CardMedia,
   Chip,
   FormControl,
   InputLabel,
@@ -23,6 +22,7 @@ import {
 
 import { FC } from "react";
 import { LyricsOutlined } from "@mui/icons-material";
+import { AudioPlayer } from "src/components/shared/AudioPlayer/AudioPlayer";
 import { VerifiedBadge } from "src/components/shared/VerifiedBadge";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
@@ -217,7 +217,12 @@ const StoryAudio: FC = () => {
             Listen to the Story
           </Typography>
 
-          <CardMedia component="audio" controls src={story.audioFile.url} />
+          <AudioPlayer
+            url={story.audioFile.url}
+            title={story.title}
+            voiceLabel={audioFileVoice.value}
+            coverImage={story.coverImageUrl || story.pages?.[0]?.imageUrl}
+          />
 
           <Chip
             sx={{ mt: 2, mb: 1 }}

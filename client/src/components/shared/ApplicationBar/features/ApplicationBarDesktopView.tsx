@@ -112,7 +112,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                 variant="body1"
                 color={pagesMatch.isExplorePage ? primaryColor : "text.primary"}
               >
-                Explore
+                Library
               </Typography>
             </MenuItem>
 

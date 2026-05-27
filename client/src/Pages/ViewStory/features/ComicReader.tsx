@@ -1,24 +1,25 @@
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
+import { Box, ButtonBase, IconButton } from "@mui/material";
 import {
   CloseRounded,
   GridViewOutlined,
   ViewCarouselOutlined,
 } from "@mui/icons-material";
 import { FC, useState } from "react";
-
-import { IconButton } from "@mui/material";
-import { Story } from "src/components/StoryCreator/store/state";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+
+import { Story } from "src/components/StoryCreator/store/state";
 import type { Swiper as SwiperClass } from "swiper";
-import characterKitten from "src/assets/images/v2/character_kitten.webp";
-import characterLion from "src/assets/images/v2/character_lion.webp";
-import characterMonkey from "src/assets/images/v2/character_monkey.webp";
-import characterOwl from "src/assets/images/v2/character_owl.webp";
-import mascotFox from "src/assets/images/v2/mascot_fox.webp";
-import mascotSleepingBunny from "src/assets/images/v2/mascot_sleeping_bunny.webp";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+import characterKitten from "src/assets/images/landing_pages/dreamy_kitten.webp";
+import characterLion from "src/assets/images/landing_pages/lion_cub.webp";
+import characterMonkey from "src/assets/images/landing_pages/monkey_holding_banana.webp";
+import characterOwl from "src/assets/images/landing_pages/wise_owl.webp";
+import mascotFox from "src/assets/images/dreaming_fox_with_a_pillow.webp";
+import mascotSleepingBunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
 
 /**
  * Paged comic-book reader (ebook style): swipeable full-bleed scenes with a
@@ -58,20 +59,20 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
 
   if (showGrid) {
     return (
-      <div style={{ maxWidth: 720, margin: "8px auto 0" }}>
-        <div
-          style={{
+      <Box sx={{ maxWidth: 720, margin: "8px auto 0" }}>
+        <Box
+          sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            marginBottom: 12,
+            marginBottom: "12px",
           }}
         >
-          <div
-            style={{
+          <Box
+            sx={{
               display: "flex",
               alignItems: "center",
-              gap: 6,
+              gap: "6px",
               fontSize: 13,
               color: "var(--fg-2)",
             }}
@@ -80,7 +81,7 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
               sx={{ fontSize: 16, color: "var(--honey-400)" }}
             />
             Comic · {total} pages · tap a page to jump
-          </div>
+          </Box>
           <IconButton
             aria-label="close"
             onClick={() => setShowGrid(false)}
@@ -88,29 +89,29 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
           >
             <CloseRounded />
           </IconButton>
-        </div>
-        <div
-          style={{
+        </Box>
+        <Box
+          sx={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
-            gap: 12,
+            gap: "12px",
           }}
         >
           {pages.map((p, i) => {
             const current = i === activeIndex;
             const hasGeneratedArt = !!p.imageUrl;
             return (
-              <button
+              <ButtonBase
                 key={i}
-                type="button"
                 onClick={() => {
                   setActiveIndex(i);
                   setShowGrid(false);
                   swiper?.slideTo(i);
                 }}
-                style={{
+                sx={{
+                  display: "block",
+                  width: "100%",
                   padding: 0,
-                  cursor: "pointer",
                   background: "var(--surface)",
                   borderRadius: "var(--r-lg)",
                   overflow: "hidden",
@@ -121,8 +122,8 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
                   boxShadow: current ? "var(--glow-honey)" : "var(--shadow-xs)",
                 }}
               >
-                <div
-                  style={{
+                <Box
+                  sx={{
                     aspectRatio: "4/5",
                     background: SCENE_GRADIENT,
                     display: "flex",
@@ -131,10 +132,11 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
                     position: "relative",
                   }}
                 >
-                  <img
+                  <Box
+                    component="img"
                     src={artFor(i, p.imageUrl)}
                     alt=""
-                    style={
+                    sx={
                       hasGeneratedArt
                         ? {
                             position: "absolute",
@@ -143,47 +145,47 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
                             height: "100%",
                             objectFit: "cover",
                           }
-                        : { width: "78%", marginBottom: -2 }
+                        : { width: "78%", marginBottom: "-2px" }
                     }
                   />
-                  <div
-                    style={{
+                  <Box
+                    sx={{
                       position: "absolute",
-                      top: 6,
-                      left: 6,
+                      top: "6px",
+                      left: "6px",
                       background: "rgba(0,0,0,0.5)",
                       color: "#fff",
                       fontSize: 10,
                       fontWeight: 700,
                       padding: "2px 7px",
-                      borderRadius: 999,
+                      borderRadius: "999px",
                     }}
                   >
                     {i + 1}
-                  </div>
-                </div>
-                <div
-                  style={{
+                  </Box>
+                </Box>
+                <Box
+                  className="tp-clamp-2"
+                  sx={{
                     padding: "8px 10px",
                     fontSize: 11,
                     lineHeight: 1.3,
                     color: "var(--fg-2)",
                     fontWeight: 500,
                   }}
-                  className="tp-clamp-2"
                 >
                   {p.caption}
-                </div>
-              </button>
+                </Box>
+              </ButtonBase>
             );
           })}
-        </div>
-      </div>
+        </Box>
+      </Box>
     );
   }
 
   return (
-    <div className="comic-reader">
+    <Box className="comic-reader">
       <Swiper
         modules={[Navigation, Pagination]}
         navigation
@@ -198,8 +200,8 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
           const hasGeneratedArt = !!page.imageUrl;
           return (
             <SwiperSlide key={page.index ?? index}>
-              <div
-                style={{
+              <Box
+                sx={{
                   position: "relative",
                   aspectRatio: "4/3",
                   borderRadius: "var(--r-xl)",
@@ -211,17 +213,18 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
                   justifyContent: "center",
                 }}
               >
-                <div
-                  style={{
+                <Box
+                  sx={{
                     position: "absolute",
                     inset: 0,
                     backgroundImage: hasGeneratedArt ? "none" : STARS,
                   }}
                 />
-                <img
+                <Box
+                  component="img"
                   src={artFor(index, page.imageUrl)}
                   alt=""
-                  style={
+                  sx={
                     hasGeneratedArt
                       ? {
                           position: "absolute",
@@ -232,61 +235,57 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
                         }
                       : {
                           width: "48%",
-                          marginBottom: -2,
+                          marginBottom: "-2px",
                           position: "relative",
                           filter: "drop-shadow(0 12px 24px rgba(0,0,0,0.4))",
                         }
                   }
                 />
 
-                <button
-                  type="button"
+                <IconButton
                   aria-label="All pages"
                   onClick={() => setShowGrid(true)}
-                  style={{
+                  sx={{
                     position: "absolute",
-                    top: 10,
-                    right: 10,
+                    top: "10px",
+                    right: "10px",
                     width: 36,
                     height: 36,
                     borderRadius: "50%",
                     border: "1px solid rgba(255,255,255,0.2)",
                     background: "rgba(0,0,0,0.35)",
                     color: "#fff",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
                     zIndex: 3,
+                    "&:hover": { background: "rgba(0,0,0,0.5)" },
                   }}
                 >
                   <GridViewOutlined sx={{ fontSize: 18, color: "#fff" }} />
-                </button>
-              </div>
+                </IconButton>
+              </Box>
 
               {/* Caption card keeps the story readable even if generated image text is imperfect. */}
-              <div
-                style={{
-                  marginTop: 14,
+              <Box
+                sx={{
+                  marginTop: "14px",
                   background: "var(--surface)",
                   borderRadius: "var(--r-lg)",
                   padding: "14px 18px",
                   border: "1px solid var(--border)",
                 }}
               >
-                <div
-                  style={{
+                <Box
+                  sx={{
                     fontFamily: "var(--font-accent)",
                     fontSize: 18,
                     color: "var(--honey-300)",
-                    marginBottom: 4,
+                    marginBottom: "4px",
                   }}
                 >
                   Page {index + 1} of {total}
-                </div>
-                <div
+                </Box>
+                <Box
                   dir="auto"
-                  style={{
+                  sx={{
                     fontFamily: "var(--font-body)",
                     fontSize: 16,
                     lineHeight: 1.5,
@@ -295,13 +294,13 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
                   }}
                 >
                   {page.caption}
-                </div>
-              </div>
+                </Box>
+              </Box>
             </SwiperSlide>
           );
         })}
       </Swiper>
-    </div>
+    </Box>
   );
 };
 

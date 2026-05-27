@@ -5,7 +5,7 @@ import { Box, Grid, Link, Stack, Typography } from "@mui/material";
 import Logo from "../Logo";
 import PortugalFlag from "src/assets/images/portugal_flag.png";
 import SwitzerlandFlag from "src/assets/images/switzerland_flag.png";
-import mascotBunny from "src/assets/images/v2/mascot_sleeping_bunny.webp";
+import mascotBunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 
@@ -57,7 +57,7 @@ const Footer = () => {
 
   const productLinks = [
     { text: "Create a story", href: routes.create },
-    { text: "Explore", href: routes.explore },
+    { text: "Library", href: routes.explore },
     { text: "Pricing", href: routes.pricing },
     { text: "Blog", href: routes.blogs },
     { text: "Contact", href: routes.contact },

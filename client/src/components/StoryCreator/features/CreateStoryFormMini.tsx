@@ -194,7 +194,7 @@ const CreateStoryFormMini = () => {
             disabled={isCreateButtonDisabled()}
             endIcon={<AutoAwesomeOutlined />}
           >
-            {!isAuthenticated ? "Signup to Generate Story" : "Generate Story"}
+            Generate Story
           </Button>
         </Box>
       </Box>

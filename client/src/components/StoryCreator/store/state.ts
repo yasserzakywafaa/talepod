@@ -63,6 +63,9 @@ export interface StoryParams {
   minCharacters: number;
   maxCharacters: number;
   totalCharacters: number;
+  minWords: number;
+  maxWords: number;
+  totalWords: number;
   environment: Environment;
   createdByAdmin?: boolean;
   panelStyle?: string;
@@ -174,11 +177,25 @@ export const userAudioVoiceNames: AudioUserVoice[] = [
   },
 ];
 
+/**
+ * Story format to open the create flow on. Honours a `?style=comic|long` query
+ * param (set by the homepage "Try …" CTAs) so deep-links preselect the right
+ * format. Read at store-init time — the create provider is page-scoped, so the
+ * URL is correct here and there's no effect-ordering race with the manager.
+ */
+const getInitialStoryFormat = (): StoryFormat => {
+  if (typeof window !== "undefined") {
+    const style = new URLSearchParams(window.location.search).get("style");
+    if (style === "comic" || style === "long") return style;
+  }
+  return "comic";
+};
+
 export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
   return {
     isFetching: false,
     isStorySettingsExpanded: false,
-    format: "comic",
+    format: getInitialStoryFormat(),
     profileInfo: {
       name: "",
       gender: Genders[Math.floor(Math.random() * Genders.length)],
@@ -192,6 +209,9 @@ export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
       minCharacters: 3900,
       maxCharacters: 4000,
       totalCharacters: 4000,
+      minWords: 1200,
+      maxWords: 1800,
+      totalWords: 1500,
       moral: Morals[Math.floor(Math.random() * Morals.length)],
       tone: Tones[Math.floor(Math.random() * Tones.length)],
       environment:

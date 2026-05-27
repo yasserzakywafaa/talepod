@@ -70,13 +70,17 @@ const CONFIG = {
   OPENROUTER_DEFAULT_MODEL_NAME: "openai/gpt-5-mini",
   OPENROUTER_WEB_BROWSE_MODEL:
     process.env.OPENROUTER_WEB_BROWSE_MODEL || "openai/gpt-5-mini:online",
-  OPENROUTER_TTS_MODEL: "openai/gpt-4o-mini-tts-2025-12-15",
+  OPENROUTER_TTS_MODEL:
+    process.env.OPENROUTER_TTS_MODEL || "openai/gpt-4o-mini-tts-2025-12-15",
   OPENROUTER_IMAGES_MODEL: "x-ai/grok-imagine-image-quality",
   OPENROUTER_IMAGES_REF_MODEL:
     process.env.OPENROUTER_IMAGES_REF_MODEL || "google/gemini-2.5-flash-image",
 
   AI_MAX_TOKENS: {
     DEFAULT: 4000,
+    // Long stories are now word-targeted (~1.2k–1.8k words). Give the model
+    // ample output headroom — esp. for token-dense languages like Arabic.
+    STORY: 8000,
   },
 
   // Database

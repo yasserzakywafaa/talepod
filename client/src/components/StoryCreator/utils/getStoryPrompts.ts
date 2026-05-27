@@ -39,7 +39,7 @@ const getLongStoryPrompt = (
 ): string => {
   const { name, age, gender, interests, language } = promptParams.profileInfo;
 
-  const { moral, tone, environment, minCharacters, maxCharacters } =
+  const { moral, tone, environment, minWords, maxWords } =
     promptParams.storyParams;
 
   // `Write a story that is ${audioLength} minutes long ${
@@ -47,7 +47,9 @@ const getLongStoryPrompt = (
     language.value ? ` in the language of ${language.name},` : "English"
   } with the following outputs inside of the curly brackets for the data ETL process.
     Make sure the Title, Story summary, Story, and Poem are each between curly brackets for easy data extraction.
-    Both the Story and the Poem combined MUST BE between ${minCharacters} and ${maxCharacters} characters in length.
+    The Story should be a LONG, immersive multi-scene bedtime story of approximately ${Math.round(
+      (minWords + maxWords) / 2
+    )} words (keep it between ${minWords} and ${maxWords} words), unfolding across several scenes with a clear beginning, a developed middle, and a satisfying ending. The Poem is separate and short (4-6 rhyming verses) and does NOT count toward that word target.
 
     Consider the following parameters while creating the story:
       • Use appropriate punctuation (commas, periods, question marks) to guide natural pauses and intonation.

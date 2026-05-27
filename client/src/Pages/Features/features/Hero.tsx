@@ -3,8 +3,8 @@ import Chip from "@mui/material/Chip";
 import CreateStoryFormMini from "src/components/StoryCreator/features/CreateStoryFormMini";
 import { CheckCircleOutlined, PlayArrowRounded } from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
-import bunny from "../../../assets/images/v2/mascot_sleeping_bunny.webp";
-import penguin from "../../../assets/images/v2/mascot_penguin.webp";
+import bunny from "../../../assets/images/sleeping_bunny_with_a_moon.webp";
+import penguin from "../../../assets/images/cute_penguin_with_a_fish.webp";
 
 // Decorative twinkling-stars layer (faithful to design MHero).
 const STAR_FIELD =

@@ -38,8 +38,9 @@
 
   .swiper-button-next,
   .swiper-button-prev {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
+    padding: 0.5rem;
     border-radius: 50%;
     background: rgba(0, 0, 0, 0.4);
     color: #fff;
@@ -47,7 +48,6 @@
 
   .swiper-button-next::after,
   .swiper-button-prev::after {
-    font-size: 18px;
     font-weight: 700;
   }
 
@@ -82,8 +82,8 @@
   .comic-reader {
     .swiper-button-next,
     .swiper-button-prev {
-      width: 34px;
-      height: 34px;
+      width: 30px;
+      height: 30px;
     }
 
     .swiper-button-next::after,

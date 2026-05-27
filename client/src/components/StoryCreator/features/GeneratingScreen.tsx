@@ -10,7 +10,7 @@ import { FC, useEffect, useState } from "react";
 
 import { Chip } from "@mui/material";
 import { StoryFormat } from "../store/state";
-import bunny from "src/assets/images/v2/mascot_sleeping_bunny.webp";
+import bunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
 
 /**
  * Immersive, format-aware "generating" overlay shown while a story is being

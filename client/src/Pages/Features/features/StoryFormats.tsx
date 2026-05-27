@@ -1,18 +1,12 @@
-import {
-  AutoFixHighOutlined,
-  CheckCircleOutlined,
-} from "@mui/icons-material";
+import { AutoFixHighOutlined, CheckCircleOutlined } from "@mui/icons-material";
 import { Box, Button, Chip } from "@mui/material";
-import characterKitten from "src/assets/images/v2/character_kitten.webp";
-import characterLion from "src/assets/images/v2/character_lion.webp";
-import characterOwl from "src/assets/images/v2/character_owl.webp";
-import mascotSleepingBunny from "src/assets/images/v2/mascot_sleeping_bunny.webp";
+
+import characterKitten from "src/assets/images/landing_pages/dreamy_kitten.webp";
+import characterLion from "src/assets/images/landing_pages/lion_cub.webp";
+import characterOwl from "src/assets/images/landing_pages/wise_owl.webp";
+import mascotSleepingBunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
-
-/* The flagship V2 product change: two story formats (Comic + Long).
-   Faithful port of the design bundle's `MFormats` section, rebuilt with the
-   shared v2 components + CSS tokens so it adapts to dark/light automatically. */
 
 const PREVIEW_SKY =
   "linear-gradient(170deg, oklch(0.30 0.10 280), oklch(0.45 0.12 30))";
@@ -269,7 +263,8 @@ const FormatPanel: React.FC<FormatPanelProps> = ({
 
 const StoryFormats: React.FC = () => {
   const navigate = useNavigate();
-  const goCreate = () => navigate(routes.create);
+  const goCreate = (style: "comic" | "long") =>
+    navigate(`${routes.create}?style=${style}`);
 
   return (
     <Box component="section" sx={{ width: "100%" }}>
@@ -319,7 +314,7 @@ const StoryFormats: React.FC = () => {
             "5–7 minutes of bedtime",
           ]}
           previewKind="comic"
-          onTry={goCreate}
+          onTry={() => goCreate("comic")}
         />
         <FormatPanel
           tone="twilight"
@@ -333,7 +328,7 @@ const StoryFormats: React.FC = () => {
             "Save and resume across devices",
           ]}
           previewKind="long"
-          onTry={goCreate}
+          onTry={() => goCreate("long")}
         />
       </Box>
     </Box>

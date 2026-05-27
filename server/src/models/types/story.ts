@@ -103,6 +103,13 @@ export interface StoryParams {
   minCharacters: number;
   maxCharacters: number;
   totalCharacters: number;
+  /**
+   * Word-based story length (long stories). Optional for back-compat with
+   * stories created before the character→word length switch.
+   */
+  minWords?: number;
+  maxWords?: number;
+  totalWords?: number;
   environment: Environment;
   /** Comic-only: "Classic" | "Speech bubbles". */
   panelStyle?: string;

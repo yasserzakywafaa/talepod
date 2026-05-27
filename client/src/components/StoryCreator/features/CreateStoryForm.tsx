@@ -25,7 +25,6 @@ import {
   ExpandMoreOutlined,
   LoyaltyOutlined,
 } from "@mui/icons-material";
-import FormatChooser from "src/components/shared/FormatChooser";
 import { Environment, Environments } from "src/shared/mockedData/Environments";
 import { Language, Languages } from "../../../shared/languages";
 import { Moral, Morals } from "src/shared/mockedData/Moral";
@@ -35,16 +34,18 @@ import {
   UserStatus,
 } from "src/shared/types/user";
 import { Tone, Tones } from "src/shared/mockedData/Tone";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
+import FormatChooser from "src/components/shared/FormatChooser";
 import GeneratingScreen from "./GeneratingScreen";
 import StorySettings from "./StorySettings";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
+import { useEffect } from "react";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
-import { useNavigate } from "react-router-dom";
 import { useOpenaiContext } from "./Openai/store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
@@ -63,6 +64,15 @@ const CreateStoryForm = () => {
       handleSetFormat,
     },
   } = useStoryCreatorContext();
+
+  const [searchParams] = useSearchParams();
+  const style = searchParams.get("style");
+
+  useEffect(() => {
+    if (style === "comic" || style === "long") {
+      handleSetFormat(style);
+    }
+  }, [style]);
 
   const {
     store: {

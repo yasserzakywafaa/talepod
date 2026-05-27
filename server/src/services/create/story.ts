@@ -20,7 +20,7 @@ import { ObjectId } from "mongodb";
 import extractStoryParts, {
   extractComicParts,
 } from "../../utils/extractStoryParts";
-import { getSlugFromText } from "../../utils/stringUtils";
+import { countWords, getSlugFromText } from "../../utils/stringUtils";
 import { handleOpenRouterAIRequest } from "../../utils/openRouterClient";
 import retry from "../../utils/retryFunction";
 import { updateDocument } from "../../models/mongoDb/crudOperations";
@@ -43,7 +43,7 @@ export const handleCreateStoryRequest = async (
         },
       ],
       {
-        max_tokens: CONFIG.AI_MAX_TOKENS.DEFAULT,
+        max_tokens: CONFIG.AI_MAX_TOKENS.STORY,
       },
     );
 
@@ -130,6 +130,7 @@ export const handleCreateStory = async (
       updatedStoryParams = {
         ...storyParams,
         totalCharacters: mainStory.length,
+        totalWords: countWords(mainStory),
       };
     } else {
       const createAndExtractStoryParts = async (): Promise<StoryParts> => {
@@ -140,17 +141,13 @@ export const handleCreateStory = async (
         throw new Error("❌ Failed to create a story!");
       };
 
-      let storyParts = await retry(createAndExtractStoryParts, 3, 2000);
-      let totalCharacters = (storyParts.mainStory + storyParts.poem).length;
-
-      // Count the total characters in the story
-      if (totalCharacters > 4000) {
-        storyParts = await retry(createAndExtractStoryParts, 3, 2000);
-        totalCharacters = (storyParts.mainStory + storyParts.poem).length;
-        console.error(
-          `❌ The story exceeds the maximum number of characters [4,000]!`,
-        );
-      }
+      // Long stories are word-targeted now (no character cap / re-roll); the
+      // TTS pipeline chunks whatever length this produces.
+      const storyParts = await retry(createAndExtractStoryParts, 3, 2000);
+      const totalCharacters = (storyParts.mainStory + storyParts.poem).length;
+      const totalWords = countWords(
+        `${storyParts.mainStory} ${storyParts.poem}`,
+      );
       title = storyParts.title;
       storyData = {
         ...baseMeta,
@@ -160,6 +157,7 @@ export const handleCreateStory = async (
       updatedStoryParams = {
         ...storyParams,
         totalCharacters,
+        totalWords,
       };
     }
 
