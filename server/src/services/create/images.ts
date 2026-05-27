@@ -4,6 +4,7 @@ import { DBCollectionsEnum, getDocumentFromDb } from "../../models/mongoDb";
 import CONFIG from "../../config";
 import { ObjectId } from "mongodb";
 import fs from "fs";
+import { optimizeToJpeg } from "../../utils/imageOptimize";
 import { updateDocument } from "../../models/mongoDb/crudOperations";
 import { uploadFileToS3 } from "../amazonS3";
 import { handleOpenRouterAIRequest } from "../../utils/openRouterClient";
@@ -82,6 +83,22 @@ const readGeneratedImage = async (url: string): Promise<ImageBytes> => {
   }
 
   return readRemoteImage(url);
+};
+
+/**
+ * Downscale + recompress a generated image to a web/print-friendly JPEG before
+ * we host it. Models can return very large PNGs (multi-MB), which make the
+ * reader janky and balloon the exported eBook PDF; a capped-width JPEG keeps
+ * both snappy. Best-effort: returns the original bytes if sharp is unavailable.
+ */
+const optimizeImage = async (image: ImageBytes): Promise<ImageBytes> => {
+  const optimized = await optimizeToJpeg(Buffer.from(image.bytes), 1280);
+  if (!optimized) return image;
+  return {
+    bytes: new Uint8Array(optimized),
+    contentType: "image/jpeg",
+    extension: "jpg",
+  };
 };
 
 export const generateImageUrl = async (
@@ -179,7 +196,8 @@ export const generateImage = async (
         referenceImageUrls: options.referenceImageUrls,
       },
     );
-    const generatedImage = await readGeneratedImage(sourceUrl);
+    const rawImage = await readGeneratedImage(sourceUrl);
+    const generatedImage = await optimizeImage(rawImage);
 
     const dir = CONFIG.SERVER_IMAGES_ABSOLUTE_PATH;
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });

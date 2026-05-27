@@ -25,12 +25,7 @@ import {
   ExpandMoreOutlined,
   LoyaltyOutlined,
 } from "@mui/icons-material";
-import {
-  Badge,
-  FormatChooser,
-  Icon,
-  Segmented,
-} from "src/components/shared/v2";
+import { Badge, FormatChooser, Icon } from "src/components/shared/v2";
 import { Environment, Environments } from "src/shared/mockedData/Environments";
 import { Language, Languages } from "../../../shared/languages";
 import { Moral, Morals } from "src/shared/mockedData/Moral";
@@ -64,7 +59,6 @@ const CreateStoryForm = () => {
         storyParams,
         isStorySettingsExpanded,
         format,
-        panelStyle,
       },
     },
     store: storyCreatorStore,
@@ -72,7 +66,6 @@ const CreateStoryForm = () => {
       handleUpdateProfileInfo,
       handleUpdateStoryInfo,
       handleSetFormat,
-      handleSetPanelStyle,
     },
   } = useStoryCreatorContext();
 
@@ -160,7 +153,7 @@ const CreateStoryForm = () => {
         const story: Story = await handleCreateStoryRequest(
           createStoryPrompt,
           profileInfo,
-          { ...storyParams, panelStyle },
+          storyParams,
           format,
         );
 
@@ -495,37 +488,20 @@ const CreateStoryForm = () => {
             <>
               <div
                 className="t-overline"
-                style={{ marginBottom: 10, display: "flex", gap: 6 }}
+                style={{ marginBottom: 6, display: "flex", gap: 6 }}
               >
                 <Icon name="view_carousel" size={16} color="var(--honey-500)" />
-                Comic options · ~6 pages
+                Comic · ~6 illustrated pages
               </div>
-              <div
-                style={{
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: "var(--fg-2)",
-                  marginBottom: 8,
-                }}
-              >
-                Panel style
-              </div>
-              <Segmented
-                options={["Classic", "Speech bubbles"]}
-                value={panelStyle}
-                onChange={handleSetPanelStyle}
-              />
               <div
                 style={{
                   fontSize: 12,
                   color: "var(--fg-3)",
-                  marginTop: 8,
                   lineHeight: 1.45,
                 }}
               >
-                {panelStyle === "Speech bubbles"
-                  ? 'Each page weaves a short line of character dialogue (e.g. "Hello!") into the narration.'
-                  : "Each page is told as gentle third-person storybook narration, with no spoken lines."}
+                Each page pairs an illustration with a short line of warm
+                narration and a touch of character dialogue.
               </div>
             </>
           ) : (

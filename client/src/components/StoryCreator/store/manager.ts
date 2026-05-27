@@ -23,7 +23,6 @@ export interface StoryCreatorManager {
     value: Tone | Moral | Environment | number
   ) => void;
   handleSetFormat: (format: StoryFormat) => void;
-  handleSetPanelStyle: (panelStyle: string) => void;
 }
 
 export const useStoryCreatorManager = (
@@ -64,13 +63,6 @@ export const useStoryCreatorManager = (
     });
   };
 
-  const handleSetPanelStyle = (panelStyle: string) => {
-    updateState({
-      ...store.state,
-      panelStyle,
-    });
-  };
-
   useEffect(() => {
     updateState({
       ...state,
@@ -94,12 +86,11 @@ export const useStoryCreatorManager = (
         handleUpdateProfileInfo("gender", ChildGenderEnum.Boy);
       }
     }
-  }, [state.profileInfo, state.storyParams, state.format, state.panelStyle]);
+  }, [state.profileInfo, state.storyParams, state.format]);
 
   return {
     handleUpdateProfileInfo,
     handleUpdateStoryInfo,
     handleSetFormat,
-    handleSetPanelStyle,
   };
 };

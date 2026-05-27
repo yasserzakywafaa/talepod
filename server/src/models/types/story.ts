@@ -43,6 +43,9 @@ export interface Story {
    *  generated once and reused across the cover + every comic page so the
    *  character stays on-model across independent image generations. */
   characterSheet?: string;
+  /** Cached S3 URL of the exported eBook PDF (screen layout). Regenerated
+   *  while images are still filling in so it never caches a placeholder. */
+  pdfUrl?: string;
 }
 
 export type ImagesStatus = "pending" | "ready" | "failed";

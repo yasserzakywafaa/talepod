@@ -108,7 +108,6 @@ export const getCreateComicPrompt = (
 ): string => {
   const { name, age, gender, interests, language } = promptParams.profileInfo;
   const { moral, tone, environment } = promptParams.storyParams;
-  const panelStyle = promptParams.panelStyle || "Speech bubbles";
 
   return `Write a 6-page children's bedtime COMIC story${
     language.value ? ` in the language of ${language.name}` : " in English"
@@ -121,11 +120,7 @@ Output ONLY curly-bracket sections for an automated ETL process, in this EXACT o
 {A one-sentence summary, no longer than 100 characters}
 
 Then, for EACH of the 6 pages in order, output two sections:
-{The page story caption: 2 to 4 short sentences of warm comic-book narration${
-    panelStyle === "Speech bubbles"
-      ? ", including one short line of character dialogue when it fits naturally"
-      : ""
-  }. This is the actual story text shown to the reader under the image.}
+{The page story caption: 2 to 4 short sentences of warm comic-book narration, including one short line of character dialogue when it fits naturally. This is the actual story text shown to the reader under the image.}
 {The page illustration prompt: one vivid paragraph describing ONE single comic scene only. Describe the characters, action, setting, emotion, and camera angle. Do not include the actual caption text in this section. Do not describe multiple panels or a collage.}
 
 That is 14 curly-bracket sections total: title, summary, then 6 pairs of story caption and scene prompt. Do not number the pages or add any other text.

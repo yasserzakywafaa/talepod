@@ -31,6 +31,8 @@ const CONFIG = {
   SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH: path.resolve("./assets/audio"),
   SERVER_IMAGES_PATH: "assets/images",
   SERVER_IMAGES_ABSOLUTE_PATH: path.resolve("./assets/images"),
+  SERVER_PDFS_PATH: "assets/pdfs",
+  SERVER_PDFS_ABSOLUTE_PATH: path.resolve("./assets/pdfs"),
 
   // GitLab
   GITLAB: {

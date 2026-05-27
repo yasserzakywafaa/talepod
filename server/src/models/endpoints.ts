@@ -25,6 +25,9 @@ const END_POINTS = {
     GET_ALL_USER_STORIES: "/api/v1/user-bedtime-stories",
     GET_ORIGINAL_STORIES: "/api/v1/bedtime-stories/originals",
     GET_USERS_STORIES: "/api/v1/bedtime-stories/users",
+    EXPORT_STORY_PDF: (slug: string) => `/api/v1/bedtime-story/${slug}/pdf`,
+    EMAIL_STORY_PDF: (slug: string) =>
+      `/api/v1/bedtime-story/${slug}/email-pdf`,
   },
   CONTACT: {
     SUPPORT: "/api/v1/contact-support",

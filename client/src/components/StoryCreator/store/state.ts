@@ -24,8 +24,6 @@ export interface StoryCreatorInitialState {
   isStorySettingsExpanded: boolean;
   /** Chosen story format (defaults to "comic" — the V2 flagship). */
   format: StoryFormat;
-  /** Comic-only panel style: "Classic" | "Speech bubbles". */
-  panelStyle: string;
 }
 
 export enum ChildGenderEnum {
@@ -97,6 +95,7 @@ export interface Story {
   format?: StoryFormat;
   pages?: ComicPage[];
   imagesStatus?: "pending" | "ready" | "failed";
+  pdfUrl?: string;
 }
 
 export interface StorySeo {
@@ -180,7 +179,6 @@ export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
     isFetching: false,
     isStorySettingsExpanded: false,
     format: "comic",
-    panelStyle: "Speech bubbles",
     profileInfo: {
       name: "",
       gender: Genders[Math.floor(Math.random() * Genders.length)],
