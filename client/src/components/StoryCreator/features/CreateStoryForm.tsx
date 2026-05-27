@@ -25,7 +25,7 @@ import {
   ExpandMoreOutlined,
   LoyaltyOutlined,
 } from "@mui/icons-material";
-import { Badge, FormatChooser, Icon } from "src/components/shared/v2";
+import FormatChooser from "src/components/shared/FormatChooser";
 import { Environment, Environments } from "src/shared/mockedData/Environments";
 import { Language, Languages } from "../../../shared/languages";
 import { Moral, Morals } from "src/shared/mockedData/Moral";

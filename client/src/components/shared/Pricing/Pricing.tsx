@@ -1,6 +1,7 @@
-import { Badge, Icon } from "src/components/shared/v2";
+import { CheckCircleOutlined } from "@mui/icons-material";
 import BillingToggle from "./BillingToggle";
 import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
 import PayPerStoryCallout from "./PayPerStoryCallout";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -115,7 +116,7 @@ export const Pricing = () => {
                   <CardContent sx={{ p: 0 }}>
                     {isPremium && (
                       <Box sx={{ mb: 1.5 }}>
-                        <Badge tone="honey">Most popular</Badge>
+                        <Chip variant="badge" label="Most popular" />
                       </Box>
                     )}
 
@@ -215,12 +216,13 @@ export const Pricing = () => {
                           alignItems: "flex-start",
                         }}
                       >
-                        <Icon
-                          name="check_circle"
-                          size={18}
-                          color={
-                            isPremium ? "var(--honey-400)" : "var(--honey-500)"
-                          }
+                        <CheckCircleOutlined
+                          sx={{
+                            fontSize: 18,
+                            color: isPremium
+                              ? "var(--honey-400)"
+                              : "var(--honey-500)",
+                          }}
                         />
                         <Typography component="span" variant="subtitle2">
                           {feature}

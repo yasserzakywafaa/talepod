@@ -7,7 +7,12 @@ import {
 } from "src/components/StoryCreator/store/state";
 import { Avatar, Box, Button, Chip, Typography } from "@mui/material";
 
-import { Badge, Icon } from "src/components/shared/v2";
+import {
+  FemaleOutlined,
+  GraphicEqOutlined,
+  MaleOutlined,
+} from "@mui/icons-material";
+
 import { CSSProperties } from "react";
 import UserAccountMenuButton from "../UserAccountButton";
 import { VerifiedBadge } from "../VerifiedBadge";
@@ -93,13 +98,15 @@ const StoryCard = (props: StoryCardProps) => {
           </div>
         )}
         <div className="story-card-cover-badge">
-          <Badge tone={isComic ? "honey" : "twilight"}>
-            {isComic ? "Comic" : "Story"}
-          </Badge>
+          <Chip
+            variant="badge"
+            color={isComic ? "primary" : "secondary"}
+            label={isComic ? "Comic" : "Story"}
+          />
         </div>
         {audioFile && audioFile.url && (
           <div className="story-card-cover-audio" title="Has narration">
-            <Icon name="graphic_eq" size={16} color="#fff" />
+            <GraphicEqOutlined sx={{ fontSize: 16, color: "#fff" }} />
           </div>
         )}
       </div>
@@ -155,11 +162,11 @@ const StoryCard = (props: StoryCardProps) => {
           )}
           {(profileInfo.gender === ChildGenderEnum.Girl ||
             profileInfo.gender === AdultGenderEnum.Female) && (
-            <Icon name="female" size={18} color="var(--primary)" />
+            <FemaleOutlined sx={{ fontSize: 18, color: "var(--primary)" }} />
           )}
           {(profileInfo.gender === ChildGenderEnum.Boy ||
             profileInfo.gender === AdultGenderEnum.Male) && (
-            <Icon name="male" size={18} color="var(--primary)" />
+            <MaleOutlined sx={{ fontSize: 18, color: "var(--primary)" }} />
           )}
         </div>
 

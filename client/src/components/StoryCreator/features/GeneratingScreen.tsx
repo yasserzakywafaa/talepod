@@ -1,6 +1,14 @@
-import { Badge, Icon } from "src/components/shared/v2";
+import {
+  AutoAwesomeOutlined,
+  DoneAllOutlined,
+  EditOutlined,
+  ImageOutlined,
+  PaletteOutlined,
+  SvgIconComponent,
+} from "@mui/icons-material";
 import { FC, useEffect, useState } from "react";
 
+import { Chip } from "@mui/material";
 import { StoryFormat } from "../store/state";
 import bunny from "src/assets/images/v2/mascot_sleeping_bunny.webp";
 
@@ -16,31 +24,31 @@ export interface GeneratingScreenProps {
 
 const STAGES: Record<
   StoryFormat,
-  { label: string; sub: string; icon: string; rail: string }[]
+  { label: string; sub: string; icon: SvgIconComponent; rail: string }[]
 > = {
   comic: [
     {
       label: "Imagining…",
       sub: "Picking the scenes for tonight",
-      icon: "auto_awesome",
+      icon: AutoAwesomeOutlined,
       rail: "Idea",
     },
     {
       label: "Writing captions…",
       sub: "Short, comic-panel lines",
-      icon: "edit",
+      icon: EditOutlined,
       rail: "Write",
     },
     {
       label: "Painting the scenes…",
       sub: "Each page gets its own watercolor",
-      icon: "palette",
+      icon: PaletteOutlined,
       rail: "Paint",
     },
     {
       label: "Almost ready…",
       sub: "Bundling the comic",
-      icon: "done_all",
+      icon: DoneAllOutlined,
       rail: "Done",
     },
   ],
@@ -48,25 +56,25 @@ const STAGES: Record<
     {
       label: "Imagining…",
       sub: "Setting the scene",
-      icon: "auto_awesome",
+      icon: AutoAwesomeOutlined,
       rail: "Idea",
     },
     {
       label: "Writing your story…",
       sub: "Warm, rich bedtime prose",
-      icon: "edit",
+      icon: EditOutlined,
       rail: "Write",
     },
     {
       label: "Painting the cover…",
       sub: "One soft watercolor cover",
-      icon: "image",
+      icon: ImageOutlined,
       rail: "Cover",
     },
     {
       label: "Almost ready…",
       sub: "Tucking it into the library",
-      icon: "done_all",
+      icon: DoneAllOutlined,
       rail: "Done",
     },
   ],
@@ -136,9 +144,11 @@ const GeneratingScreen: FC<GeneratingScreenProps> = ({ format, childName }) => {
       />
 
       <div style={{ position: "relative" }}>
-        <Badge tone={format === "comic" ? "honey" : "twilight"}>
-          {format === "comic" ? "Comic · ~6 pages" : "Long story"}
-        </Badge>
+        <Chip
+          variant="badge"
+          color={format === "comic" ? "primary" : "secondary"}
+          label={format === "comic" ? "Comic · ~6 pages" : "Long story"}
+        />
       </div>
 
       {childName && (
@@ -212,10 +222,11 @@ const GeneratingScreen: FC<GeneratingScreenProps> = ({ format, childName }) => {
                 transition: "background var(--dur-3) var(--ease-out)",
               }}
             >
-              <Icon
-                name={s.icon}
-                size={20}
-                color={i <= active ? "#1a1224" : "rgba(255,255,255,0.6)"}
+              <s.icon
+                sx={{
+                  fontSize: 20,
+                  color: i <= active ? "#1a1224" : "rgba(255,255,255,0.6)",
+                }}
               />
             </div>
             <div

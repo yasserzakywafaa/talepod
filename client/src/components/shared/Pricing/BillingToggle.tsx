@@ -1,5 +1,6 @@
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+
 import { BillingInterval } from "./usePricing";
-import { Segmented } from "src/components/shared/v2";
 
 interface BillingToggleProps {
   value: BillingInterval;
@@ -15,17 +16,17 @@ const BillingToggle: React.FC<BillingToggleProps> = ({
   onChange,
   savingsPercent,
 }) => (
-  <Segmented
+  <ToggleButtonGroup
+    exclusive
+    size="small"
     value={value}
-    onChange={(v) => onChange(v as BillingInterval)}
-    options={[
-      { value: "month", label: "Monthly" },
-      {
-        value: "year",
-        label: savingsPercent ? `Yearly · save ${savingsPercent}%` : "Yearly",
-      },
-    ]}
-  />
+    onChange={(_event, next) => next && onChange(next as BillingInterval)}
+  >
+    <ToggleButton value="month">Monthly</ToggleButton>
+    <ToggleButton value="year">
+      {savingsPercent ? `Yearly · save ${savingsPercent}%` : "Yearly"}
+    </ToggleButton>
+  </ToggleButtonGroup>
 );
 
 export default BillingToggle;

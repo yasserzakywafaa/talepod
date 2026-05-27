@@ -1,7 +1,7 @@
-import { Badge, Icon } from "src/components/shared/v2";
-
 import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
 import CreateStoryFormMini from "src/components/StoryCreator/features/CreateStoryFormMini";
+import { CheckCircleOutlined, PlayArrowRounded } from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
 import bunny from "../../../assets/images/v2/mascot_sleeping_bunny.webp";
 import penguin from "../../../assets/images/v2/mascot_penguin.webp";
@@ -60,7 +60,7 @@ const Hero = () => {
               textAlign: { xs: "center", md: "left" },
             }}
           >
-            <Badge tone="honey">New · Now in comic format</Badge>
+            <Chip variant="badge" label="New · Now in comic format" />
 
             <Typography
               component="h1"
@@ -135,10 +135,8 @@ const Hero = () => {
                     gap: 0.75,
                   }}
                 >
-                  <Icon
-                    name="check_circle"
-                    size={14}
-                    color="var(--honey-300)"
+                  <CheckCircleOutlined
+                    sx={{ fontSize: 14, color: "var(--honey-300)" }}
                   />
                   {t}
                 </Box>
@@ -242,7 +240,7 @@ const Hero = () => {
                       flexShrink: 0,
                     }}
                   >
-                    <Icon name="play_arrow" size={16} color="#fff" />
+                    <PlayArrowRounded sx={{ fontSize: 16, color: "#fff" }} />
                   </Box>
                   <Box sx={{ fontSize: 11 }}>
                     <Box sx={{ fontWeight: 600 }}>Fairy Tale voice</Box>

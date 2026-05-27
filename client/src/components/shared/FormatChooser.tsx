@@ -1,24 +1,28 @@
-import { Badge } from "./DataDisplay";
+import {
+  CheckRounded,
+  MenuBookOutlined,
+  SvgIconComponent,
+  ViewCarouselOutlined,
+} from "@mui/icons-material";
+
+import { Chip } from "@mui/material";
 import { FC } from "react";
-import Icon from "./Icon";
 import characterKitten from "src/assets/images/v2/character_kitten.webp";
 import characterLion from "src/assets/images/v2/character_lion.webp";
 import characterOwl from "src/assets/images/v2/character_owl.webp";
 import mascotSleepingBunny from "src/assets/images/v2/mascot_sleeping_bunny.webp";
 
-/** The two story formats a user can create in V2. */
 export type StoryFormat = "comic" | "long";
 
 export interface FormatChooserProps {
   value: StoryFormat;
   onChange: (value: StoryFormat) => void;
-  /** "stacked" (mobile, vertical) | "row" (tablet/desktop, side-by-side) */
   variant?: "stacked" | "row";
 }
 
 interface FormatItem {
   id: StoryFormat;
-  icon: string;
+  icon: SvgIconComponent;
   badge: string;
   title: string;
   sub: string;
@@ -28,7 +32,7 @@ interface FormatItem {
 const ITEMS: FormatItem[] = [
   {
     id: "comic",
-    icon: "view_carousel",
+    icon: ViewCarouselOutlined,
     badge: "Picture story",
     title: "Comic book",
     sub: "~6 illustrated pages · best for younger kids",
@@ -36,7 +40,7 @@ const ITEMS: FormatItem[] = [
   },
   {
     id: "long",
-    icon: "menu_book",
+    icon: MenuBookOutlined,
     badge: "Chapter book",
     title: "Long story",
     sub: "Cover illustration · rich text · narration later",
@@ -100,14 +104,16 @@ const FormatChooser: FC<FormatChooserProps> = ({
                   flexShrink: 0,
                 }}
               >
-                <Icon
-                  name={it.icon}
-                  size={20}
-                  color={sel ? "#fff" : "var(--fg)"}
+                <it.icon
+                  sx={{ fontSize: 20, color: sel ? "#fff" : "var(--fg)" }}
                 />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <Badge tone={sel ? "honey" : "twilight"}>{it.badge}</Badge>
+                <Chip
+                  variant="badge"
+                  color={sel ? "primary" : "secondary"}
+                  label={it.badge}
+                />
                 <div
                   style={{
                     fontFamily: "var(--font-display)",
@@ -144,7 +150,7 @@ const FormatChooser: FC<FormatChooserProps> = ({
                   marginTop: 4,
                 }}
               >
-                {sel && <Icon name="check" size={14} color="#fff" />}
+                {sel && <CheckRounded sx={{ fontSize: 14, color: "#fff" }} />}
               </div>
             </div>
           </button>

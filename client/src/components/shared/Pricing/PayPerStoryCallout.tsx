@@ -1,5 +1,8 @@
-import { Badge, Btn, Icon } from "src/components/shared/v2";
-import { Box, Typography } from "@mui/material";
+import {
+  AutoFixHighOutlined,
+  LocalActivityOutlined,
+} from "@mui/icons-material";
+import { Box, Button, Chip, Typography } from "@mui/material";
 
 import { usePricing } from "./usePricing";
 
@@ -42,12 +45,12 @@ const PayPerStoryCallout: React.FC = () => {
             flexShrink: 0,
           }}
         >
-          <Icon name="local_activity" size={32} color="#fff" />
+          <LocalActivityOutlined sx={{ fontSize: 32, color: "#fff" }} />
         </Box>
 
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.75 }}>
-            <Badge tone="twilight">No subscription</Badge>
+            <Chip variant="badge" color="secondary" label="No subscription" />
             <Typography variant="caption" color="text.secondary">
               For occasional bedtimes
             </Typography>
@@ -98,14 +101,13 @@ const PayPerStoryCallout: React.FC = () => {
               / story
             </Typography>
           </Box>
-          <Btn
-            variant="primary"
-            size="md"
-            icon="auto_fix_high"
+          <Button
+            variant="contained"
+            startIcon={<AutoFixHighOutlined />}
             onClick={handleBuyStory}
           >
             Buy one story
-          </Btn>
+          </Button>
         </Box>
       </Box>
     </Box>

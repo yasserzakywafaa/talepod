@@ -91,8 +91,77 @@ export const theme = createTheme({
   },
   typography: {
     fontFamily: "'Lexend Deca', LexendDeca, system-ui, sans-serif",
+    // Yeseva display variant (use <Typography variant="display">) — the V2
+    // headline serif, applied selectively (h1–h6 stay on Lexend).
+    display: {
+      fontFamily: "'Yeseva One', 'Cormorant Garamond', Georgia, serif",
+      fontWeight: 400,
+      lineHeight: 1.08,
+    },
   },
   components: {
+    MuiTypography: {
+      defaultProps: {
+        variantMapping: { display: "h2" },
+      },
+    },
+    // Small uppercase pill — <Chip variant="badge" /> (default honey,
+    // color="secondary" → twilight). Replaces the old v2 Badge.
+    MuiChip: {
+      variants: [
+        {
+          props: { variant: "badge" },
+          style: {
+            height: "auto",
+            borderRadius: 6,
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: "0.05em",
+            textTransform: "uppercase",
+            backgroundColor: "var(--honey-400)",
+            color: "#fff",
+            "& .MuiChip-label": { padding: "3px 8px" },
+          },
+        },
+        {
+          props: { variant: "badge", color: "secondary" },
+          style: {
+            backgroundColor: "var(--twilight-500)",
+            color: "#fff",
+          },
+        },
+      ],
+    },
+    // Segmented control look (<ToggleButtonGroup>) — replaces the old v2
+    // Segmented; honey selected pill.
+    MuiToggleButtonGroup: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "var(--surface)",
+          borderRadius: 999,
+          padding: 4,
+          border: "1px solid var(--border)",
+          gap: 4,
+        },
+      },
+    },
+    MuiToggleButton: {
+      styleOverrides: {
+        root: {
+          border: "none",
+          borderRadius: "999px !important",
+          textTransform: "none",
+          fontWeight: 600,
+          padding: "6px 16px",
+          color: "var(--fg-2)",
+          "&.Mui-selected": {
+            backgroundColor: "var(--honey-400)",
+            color: "#fff",
+            "&:hover": { backgroundColor: "var(--honey-400)" },
+          },
+        },
+      },
+    },
     MuiCard: {
       styleOverrides: {
         root: {
@@ -112,6 +181,7 @@ export const theme = createTheme({
       },
     },
     MuiButton: {
+      defaultProps: { disableElevation: true },
       styleOverrides: {
         root: {
           textTransform: "capitalize",
@@ -124,6 +194,20 @@ export const theme = createTheme({
           },
         },
       },
+      // Gradient "magic" CTA — <Button variant="magic"> (replaces v2 Btn magic).
+      variants: [
+        {
+          props: { variant: "magic" },
+          style: {
+            background:
+              "linear-gradient(135deg, var(--honey-400), var(--twilight-500))",
+            color: "#fff",
+            borderRadius: 999,
+            boxShadow: "var(--shadow-md)",
+            "&:hover": { filter: "brightness(1.04)" },
+          },
+        },
+      ],
     },
     MuiSelect: {
       styleOverrides: {

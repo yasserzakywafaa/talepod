@@ -1,7 +1,22 @@
 import "./MyProfile.scss";
 
-import { Badge, Btn, Icon } from "src/components/shared/v2";
-import { Box, Card, Container, Grid, Switch, Typography } from "@mui/material";
+import {
+  CreditCardOutlined,
+  LocalActivityOutlined,
+  PersonOutlined,
+  SvgIconComponent,
+  WorkspacePremiumOutlined,
+} from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  Card,
+  Chip,
+  Container,
+  Grid,
+  Switch,
+  Typography,
+} from "@mui/material";
 import { SubscriptionPlanEnum, User } from "src/shared/types/user";
 import { useEffect, useState } from "react";
 
@@ -15,9 +30,9 @@ import { usePricingModalContext } from "src/components/Modals/PricingModal/store
 
 type ProfileTab = "profile" | "billing";
 
-const TABS: [ProfileTab, string, string][] = [
-  ["profile", "Profile", "person"],
-  ["billing", "Billing", "credit_card"],
+const TABS: [ProfileTab, string, SvgIconComponent][] = [
+  ["profile", "Profile", PersonOutlined],
+  ["billing", "Billing", CreditCardOutlined],
 ];
 
 const MyProfilePage = () => {
@@ -108,7 +123,7 @@ const MyProfilePage = () => {
             mb: 3,
           }}
         >
-          {TABS.map(([id, label, icon]) => {
+          {TABS.map(([id, label, TabIcon]) => {
             const on = tab === id;
             return (
               <Box
@@ -135,7 +150,7 @@ const MyProfilePage = () => {
                   mb: "-1px",
                 }}
               >
-                <Icon name={icon} size={18} />
+                <TabIcon sx={{ fontSize: 18 }} />
                 {label}
               </Box>
             );
@@ -223,7 +238,10 @@ const MyProfilePage = () => {
                 boxShadow: "var(--shadow-md)",
               }}
             >
-              <Badge tone="honey">{user.subscription.type} plan</Badge>
+              <Chip
+                variant="badge"
+                label={`${user.subscription.type} plan`}
+              />
               <Typography
                 sx={{
                   fontFamily: "var(--font-display)",
@@ -290,7 +308,9 @@ const MyProfilePage = () => {
                   <Box
                     sx={{ display: "inline-flex", alignItems: "center", gap: 0.75 }}
                   >
-                    <Icon name="local_activity" size={18} color="var(--honey-300)" />
+                    <LocalActivityOutlined
+                      sx={{ fontSize: 18, color: "var(--honey-300)" }}
+                    />
                     <span>Story credits</span>
                   </Box>
                   <span style={{ fontWeight: 700 }}>{user.storyCredits}</span>
@@ -299,15 +319,14 @@ const MyProfilePage = () => {
 
               {isFreeUser && (
                 <Box sx={{ mt: 2 }}>
-                  <Btn
-                    variant="primary"
-                    size="md"
-                    full
-                    icon="workspace_premium"
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    startIcon={<WorkspacePremiumOutlined />}
                     onClick={handleTogglePricingModal}
                   >
                     Upgrade to Premium
-                  </Btn>
+                  </Button>
                 </Box>
               )}
             </Box>

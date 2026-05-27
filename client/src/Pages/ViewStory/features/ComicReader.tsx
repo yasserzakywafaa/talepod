@@ -1,6 +1,11 @@
+import {
+  CloseRounded,
+  GridViewOutlined,
+  ViewCarouselOutlined,
+} from "@mui/icons-material";
 import { FC, useState } from "react";
 
-import { Icon, IconBtn } from "src/components/shared/v2";
+import { IconButton } from "@mui/material";
 import { Story } from "src/components/StoryCreator/store/state";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -71,10 +76,18 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
               color: "var(--fg-2)",
             }}
           >
-            <Icon name="view_carousel" size={16} color="var(--honey-400)" />
+            <ViewCarouselOutlined
+              sx={{ fontSize: 16, color: "var(--honey-400)" }}
+            />
             Comic · {total} pages · tap a page to jump
           </div>
-          <IconBtn name="close" size={38} onClick={() => setShowGrid(false)} />
+          <IconButton
+            aria-label="close"
+            onClick={() => setShowGrid(false)}
+            sx={{ color: "var(--fg)" }}
+          >
+            <CloseRounded />
+          </IconButton>
         </div>
         <div
           style={{
@@ -247,7 +260,7 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
                     zIndex: 3,
                   }}
                 >
-                  <Icon name="grid_view" size={18} color="#fff" />
+                  <GridViewOutlined sx={{ fontSize: 18, color: "#fff" }} />
                 </button>
               </div>
 

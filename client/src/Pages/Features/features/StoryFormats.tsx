@@ -1,6 +1,8 @@
-import { Badge, Btn, Icon } from "src/components/shared/v2";
-
-import { Box } from "@mui/material";
+import {
+  AutoFixHighOutlined,
+  CheckCircleOutlined,
+} from "@mui/icons-material";
+import { Box, Button, Chip } from "@mui/material";
 import characterKitten from "src/assets/images/v2/character_kitten.webp";
 import characterLion from "src/assets/images/v2/character_lion.webp";
 import characterOwl from "src/assets/images/v2/character_owl.webp";
@@ -192,7 +194,11 @@ const FormatPanel: React.FC<FormatPanelProps> = ({
 
       {/* Copy */}
       <div>
-        <Badge tone={isHoney ? "honey" : "twilight"}>{badge}</Badge>
+        <Chip
+          variant="badge"
+          color={isHoney ? "primary" : "secondary"}
+          label={badge}
+        />
         <h3
           style={{
             fontFamily: "var(--font-display)",
@@ -237,10 +243,11 @@ const FormatPanel: React.FC<FormatPanelProps> = ({
               color: "var(--fg-2)",
             }}
           >
-            <Icon
-              name="check_circle"
-              size={16}
-              color={isHoney ? "var(--honey-500)" : "var(--twilight-500)"}
+            <CheckCircleOutlined
+              sx={{
+                fontSize: 16,
+                color: isHoney ? "var(--honey-500)" : "var(--twilight-500)",
+              }}
             />
             <span>{f}</span>
           </li>
@@ -248,14 +255,13 @@ const FormatPanel: React.FC<FormatPanelProps> = ({
       </ul>
 
       <div>
-        <Btn
-          variant={isHoney ? "primary" : "secondary"}
-          size="md"
-          icon="auto_fix_high"
+        <Button
+          variant={isHoney ? "contained" : "outlined"}
+          startIcon={<AutoFixHighOutlined />}
           onClick={onTry}
         >
           Try {title.toLowerCase()}
-        </Btn>
+        </Button>
       </div>
     </Box>
   );
