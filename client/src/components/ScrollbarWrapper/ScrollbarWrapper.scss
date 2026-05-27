@@ -33,7 +33,7 @@
     opacity: 0;
     visibility: hidden;
     border-radius: 5px;
-    background-color: #eee;
+    background-color: var(--surface-2);
   }
 
   /* Handle */
@@ -41,12 +41,12 @@
     opacity: 0;
     border-radius: 5px;
     visibility: hidden;
-    background-color: #999;
+    background-color: var(--border-strong);
   }
   /* Handle on hover */
   &::-webkit-scrollbar-thumb:hover {
     visibility: hidden;
-    background-color: #2da1be;
+    background-color: var(--accent);
   }
 
   .scroll-snap {

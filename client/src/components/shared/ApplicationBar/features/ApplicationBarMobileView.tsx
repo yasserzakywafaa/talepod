@@ -183,7 +183,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                       pagesMatch.isExplorePage ? primaryColor : "text.primary"
                     }
                   >
-                    Explore
+                    Library
                   </Typography>
                 </MenuItem>
 

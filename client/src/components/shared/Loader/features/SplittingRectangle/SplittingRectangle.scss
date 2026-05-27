@@ -1,6 +1,6 @@
 $color-background: #eaecfa;
-$color-text: #00bfff;
-$color-loader: #ad932d;
+$color-text: var(--accent);
+$color-loader: var(--primary);
 
 .splitting-rectangle-loader {
   top: 50%;

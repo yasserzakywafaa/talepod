@@ -1,5 +1,6 @@
 import "../assets/scss/fonts.scss";
 import "../assets/scss/default.scss";
+import "../assets/scss/design-system.css";
 
 import { FC, Suspense } from "react";
 

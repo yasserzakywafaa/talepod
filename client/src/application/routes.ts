@@ -16,7 +16,6 @@ const routes = {
   privacyPolicy: `/privacy-policy`,
   termsAndConditions: `/terms-and-conditions`,
   logout: `/logout`,
-  checkout: `/checkout`,
   unauthorized: `/unauthorized`,
   notfound: `/notfound`,
   auth: {

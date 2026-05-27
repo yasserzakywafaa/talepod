@@ -126,6 +126,7 @@ const ApplicationBar = () => {
                 backdropFilter: "blur(24px)",
                 maxHeight: 40,
                 borderColor: "divider",
+                borderRadius: "var(--r-xl) var(--r-xl)",
                 boxShadow: isDesktop
                   ? (theme) =>
                       themeMode === "light"

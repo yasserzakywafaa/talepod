@@ -18,7 +18,7 @@ const PricingPage = lazy(() => import("../Pages/Pricing/Pricing"));
 const CreateStoryPage = lazy(() => import("../Pages/CreateStory/CreateStory"));
 const ExplorePage = lazy(() => import("../Pages/Explore/Explore"));
 const UsersStoriesPage = lazy(
-  () => import("../Pages/UsersStories/UsersStories")
+  () => import("../Pages/UsersStories/UsersStories"),
 );
 const MyStoriesPage = lazy(() => import("../Pages/MyStories/MyStories"));
 
@@ -31,70 +31,69 @@ const ViewStoryPage = lazy(() => import("../Pages/ViewStory/ViewStory"));
 const LoginPage = lazy(() => import("../Pages/Login"));
 const RegisterPage = lazy(() => import("../Pages/Register"));
 const LogoutPage = lazy(() => import("../Pages/Logout"));
-const CheckoutPage = lazy(() => import("../Pages/Checkout/CheckoutPage"));
 const PaymentStatusPage = lazy(
-  () => import("../Pages/PaymentStatus/PaymentStatus")
+  () => import("../Pages/PaymentStatus/PaymentStatus"),
 );
 const PrivacyPolicyPage = lazy(
-  () => import("../Pages/PrivacyPolicy/PrivacyPolicy")
+  () => import("../Pages/PrivacyPolicy/PrivacyPolicy"),
 );
 const TermsAndConditionsPage = lazy(
-  () => import("../Pages/TermsAndConditions/TermsAndConditions")
+  () => import("../Pages/TermsAndConditions/TermsAndConditions"),
 );
 const UnauthorizedPage = lazy(
-  () => import("../Pages/Unauthorized/Unauthorized")
+  () => import("../Pages/Unauthorized/Unauthorized"),
 );
 
 // Landing Pages
 const BedtimeStoriesForKids = lazy(
-  () => import("../Pages/LandingPages/BedtimeStoriesForKids")
+  () => import("../Pages/LandingPages/BedtimeStoriesForKids"),
 );
 const BedtimeStoriesForAdults = lazy(
-  () => import("../Pages/LandingPages/BedtimeStoriesForAdults")
+  () => import("../Pages/LandingPages/BedtimeStoriesForAdults"),
 );
 const ShortBedtimeStories = lazy(
-  () => import("../Pages/LandingPages/ShortBedtimeStories")
+  () => import("../Pages/LandingPages/ShortBedtimeStories"),
 );
 const ChristmasBedtimeStories = lazy(
-  () => import("../Pages/LandingPages/ChristmasBedtimeStories")
+  () => import("../Pages/LandingPages/ChristmasBedtimeStories"),
 );
 const BedtimeStoriesForGirlfriend = lazy(
-  () => import("../Pages/LandingPages/BedtimeStoriesForGirlfriend")
+  () => import("../Pages/LandingPages/BedtimeStoriesForGirlfriend"),
 );
 const BedtimeStoriesForToddlers = lazy(
-  () => import("../Pages/LandingPages/BedtimeStoriesForToddlers")
+  () => import("../Pages/LandingPages/BedtimeStoriesForToddlers"),
 );
 const EducationalBedtimeStories = lazy(
-  () => import("../Pages/LandingPages/EducationalBedtimeStories")
+  () => import("../Pages/LandingPages/EducationalBedtimeStories"),
 );
 const BabyBedtimeStories = lazy(
-  () => import("../Pages/LandingPages/BabyBedtimeStories")
+  () => import("../Pages/LandingPages/BabyBedtimeStories"),
 );
 const BestBedtimeStories = lazy(
-  () => import("../Pages/LandingPages/BestBedtimeStories")
+  () => import("../Pages/LandingPages/BestBedtimeStories"),
 );
 const QuickBedtimeStories = lazy(
-  () => import("../Pages/LandingPages/QuickBedtimeStories")
+  () => import("../Pages/LandingPages/QuickBedtimeStories"),
 );
 
 // Dashboard Layout and Pages
 const DashboardLayout = lazy(
-  () => import("./layouts/DashboardLayout/DashboardLayout")
+  () => import("./layouts/DashboardLayout/DashboardLayout"),
 );
 const DashboardPage = lazy(
-  () => import("../Pages/Dashboard/DashboardOverview/DashboardOverview")
+  () => import("../Pages/Dashboard/DashboardOverview/DashboardOverview"),
 );
 const DashboardUsersPage = lazy(
-  () => import("../Pages/Dashboard/DashboardUsers/DashboardUsers")
+  () => import("../Pages/Dashboard/DashboardUsers/DashboardUsers"),
 );
 const DashboardStoriesPage = lazy(
-  () => import("../Pages/Dashboard/DashboardStories/DashboardStories")
+  () => import("../Pages/Dashboard/DashboardStories/DashboardStories"),
 );
 const DashboardUser = lazy(
-  () => import("../Pages/Dashboard/DashboardUser/DashboardUser")
+  () => import("../Pages/Dashboard/DashboardUser/DashboardUser"),
 );
 const DashboardUserStoriesPage = lazy(
-  () => import("../Pages/Dashboard/DashboardUser/features/UserStoriesPage")
+  () => import("../Pages/Dashboard/DashboardUser/features/UserStoriesPage"),
 );
 
 const AppContent = () => {
@@ -213,8 +212,6 @@ const AppContent = () => {
                   </Route>
                 </>
               )}
-
-            <Route path={routes.checkout} element={<CheckoutPage />} />
 
             {/* Landing Pages */}
             <Route

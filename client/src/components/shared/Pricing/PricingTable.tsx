@@ -24,6 +24,8 @@ import {
   primaryColorOpaqueThirty,
 } from "src/application/shared/themes";
 
+import BillingToggle from "./BillingToggle";
+import PayPerStoryCallout from "./PayPerStoryCallout";
 import PaymentWrapper from "../Payment/Payment";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
 import { useApplicationContext } from "src/application/store/Provider";
@@ -37,7 +39,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 interface PricingTableProps {}
 
 const PricingTable: React.FC<PricingTableProps> = () => {
-  const { plansForTable, getPrice, getCurrency } = usePricing();
+  const {
+    plansForTable,
+    getCurrency,
+    getDisplayPrice,
+    billingInterval,
+    setBillingInterval,
+    isYearlyAvailable,
+    getYearlySavingsPercent,
+  } = usePricing();
   const tableFeatures = Object.keys(plansForTable[0].features);
   const {
     store: {
@@ -77,6 +87,14 @@ const PricingTable: React.FC<PricingTableProps> = () => {
           </Typography>
         </Box>
 
+        {isYearlyAvailable && (
+          <BillingToggle
+            value={billingInterval}
+            onChange={setBillingInterval}
+            savingsPercent={getYearlySavingsPercent()}
+          />
+        )}
+
         <TableContainer
           component={Paper}
           sx={{
@@ -104,7 +122,9 @@ const PricingTable: React.FC<PricingTableProps> = () => {
                   />
                 </StyledTableCell>
 
-                {plansForTable.map((plan) => (
+                {plansForTable.map((plan) => {
+                  const display = getDisplayPrice(plan.product);
+                  return (
                   <StyledTableCell
                     key={plan.title}
                     sx={{
@@ -153,21 +173,25 @@ const PricingTable: React.FC<PricingTableProps> = () => {
                     >
                       {plan.product ? (
                         <>
-                          <Typography
-                            component="h4"
-                            variant="h5"
-                            sx={{
-                              textDecoration: "line-through",
-                              color: "gray",
-                            }}
-                          >
-                            {getCurrency(plan.title)}
-                            {plan.product.metadata.monthly_discounted_price}
-                          </Typography>
-                          &nbsp;
+                          {!display.billedYearly &&
+                            plan.product.metadata
+                              ?.monthly_discounted_price && (
+                              <Typography
+                                component="h4"
+                                variant="h5"
+                                sx={{
+                                  textDecoration: "line-through",
+                                  color: "gray",
+                                  mr: 0.5,
+                                }}
+                              >
+                                {getCurrency(plan.title)}
+                                {plan.product.metadata.monthly_discounted_price}
+                              </Typography>
+                            )}
                           <Typography component="h4" variant="h5">
                             {getCurrency(plan.title)}
-                            {getPrice(plan.product).monthly}
+                            {display.amount}
                           </Typography>
                           <Typography component="h4" variant="subtitle1">
                             /month
@@ -181,6 +205,16 @@ const PricingTable: React.FC<PricingTableProps> = () => {
                         </>
                       )}
                     </Box>
+                    {plan.product && display.billedYearly && (
+                      <Typography
+                        variant="caption"
+                        color="textSecondary"
+                        sx={{ display: "block" }}
+                      >
+                        billed yearly · {getCurrency(plan.title)}
+                        {display.yearlyTotal}/yr
+                      </Typography>
+                    )}
                     {plan.buttonText ? (
                       <Button
                         variant={plan.buttonVariant}
@@ -196,7 +230,8 @@ const PricingTable: React.FC<PricingTableProps> = () => {
                       <></>
                     )}
                   </StyledTableCell>
-                ))}
+                  );
+                })}
               </TableRow>
             </TableHead>
 
@@ -246,6 +281,8 @@ const PricingTable: React.FC<PricingTableProps> = () => {
             </TableBody>
           </Table>
         </TableContainer>
+
+        <PayPerStoryCallout />
       </Container>
     </>
   );

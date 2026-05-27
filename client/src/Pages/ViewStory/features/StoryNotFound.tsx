@@ -46,7 +46,7 @@ const StoryNotFound: React.FC = () => {
               endIcon={<SearchOutlined />}
               onClick={handleOnClick}
             >
-              Explore Stories
+              Browse Library
             </Button>
           </Box>
         </Box>

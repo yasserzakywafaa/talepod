@@ -15,6 +15,7 @@ import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryTex
 import { Pricing } from "src/components/shared/Pricing/Pricing";
 import PricingTable from "src/components/shared/Pricing/PricingTable";
 import StoryExamples from "./features/StoryExamples"; // Import StoryExamples
+import StoryFormats from "./features/StoryFormats";
 import Testimonials from "./features/Testimonials"; // Import Testimonials
 import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
@@ -52,6 +53,10 @@ const FeaturesPage = () => {
       <Hero />
 
       <div className="section">
+        <StoryFormats />
+      </div>
+
+      <div className="section">
         <Testimonials />
       </div>
 
@@ -69,7 +74,9 @@ const FeaturesPage = () => {
 
       <Divider sx={{ width: "50%" }} />
 
-      <div className="section">
+      <Divider sx={{ width: "50%" }} />
+
+      <div className="section" id="how-it-works">
         <HowItWorks />
       </div>
 

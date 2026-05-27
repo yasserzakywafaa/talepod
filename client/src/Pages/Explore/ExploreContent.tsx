@@ -53,7 +53,7 @@ export const ExploreContent = (props: ExplorePageContentProps): JSX.Element => {
     <Page
       isLoading={isFetching || (isFetching && !stories.length)}
       className="explore-page"
-      title="Explore Bedtime Stories on TalePod"
+      title="Library of Bedtime Stories on TalePod"
       loaderComponentName={LoaderComponentNameEnum.BedtimeStories}
     >
       <Container className="explore-container">

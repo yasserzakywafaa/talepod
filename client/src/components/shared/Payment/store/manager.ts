@@ -18,7 +18,8 @@ export interface PaymentManager {
     priceId: string,
     priceObject: Price,
     plan: SubscriptionPlanEnum,
-    user: User | null
+    user: User | null,
+    options?: { mode?: "payment" | "subscription"; credits?: number }
   ) => Promise<void>;
 }
 
@@ -108,7 +109,8 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
     priceId: string,
     priceObject: Price,
     subscriptionPlan: SubscriptionPlanEnum,
-    user: User | null
+    user: User | null,
+    options?: { mode?: "payment" | "subscription"; credits?: number }
   ): Promise<any> => {
     if (!user) return;
 
@@ -127,6 +129,8 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
             )}`,
             cancel_url: `${window.location.href}`,
             googleAnalyticsClientId: trackingInfo.clientId,
+            mode: options?.mode ?? "subscription",
+            credits: options?.credits,
           },
           headers: {
             "Content-Type": "application/json",

@@ -5,6 +5,16 @@ import { Tone, Tones } from "src/shared/mockedData/Tone";
 
 import { User } from "src/shared/types/user";
 
+/** V2 story formats: "comic" (~6 illustrated pages) | "long" (prose + cover). */
+export type StoryFormat = "comic" | "long";
+
+export interface ComicPage {
+  index: number;
+  caption: string;
+  imagePrompt?: string;
+  imageUrl?: string;
+}
+
 export interface StoryCreatorInitialState {
   isFetching: boolean;
   profileInfo: ProfileInfo;
@@ -12,6 +22,8 @@ export interface StoryCreatorInitialState {
   createStory: CreateStoryProps;
   createAudio: CreateAudioProps;
   isStorySettingsExpanded: boolean;
+  /** Chosen story format (defaults to "comic" — the V2 flagship). */
+  format: StoryFormat;
 }
 
 export enum ChildGenderEnum {
@@ -51,8 +63,12 @@ export interface StoryParams {
   minCharacters: number;
   maxCharacters: number;
   totalCharacters: number;
+  minWords: number;
+  maxWords: number;
+  totalWords: number;
   environment: Environment;
   createdByAdmin?: boolean;
+  panelStyle?: string;
 }
 
 export interface CreateStoryProps {
@@ -79,6 +95,10 @@ export interface Story {
   coverImageUrl?: string;
   isFeatured: boolean;
   authorProfile?: User;
+  format?: StoryFormat;
+  pages?: ComicPage[];
+  imagesStatus?: "pending" | "ready" | "failed";
+  pdfUrl?: string;
 }
 
 export interface StorySeo {
@@ -157,10 +177,25 @@ export const userAudioVoiceNames: AudioUserVoice[] = [
   },
 ];
 
+/**
+ * Story format to open the create flow on. Honours a `?style=comic|long` query
+ * param (set by the homepage "Try …" CTAs) so deep-links preselect the right
+ * format. Read at store-init time — the create provider is page-scoped, so the
+ * URL is correct here and there's no effect-ordering race with the manager.
+ */
+const getInitialStoryFormat = (): StoryFormat => {
+  if (typeof window !== "undefined") {
+    const style = new URLSearchParams(window.location.search).get("style");
+    if (style === "comic" || style === "long") return style;
+  }
+  return "comic";
+};
+
 export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
   return {
     isFetching: false,
     isStorySettingsExpanded: false,
+    format: getInitialStoryFormat(),
     profileInfo: {
       name: "",
       gender: Genders[Math.floor(Math.random() * Genders.length)],
@@ -174,6 +209,9 @@ export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
       minCharacters: 3900,
       maxCharacters: 4000,
       totalCharacters: 4000,
+      minWords: 1200,
+      maxWords: 1800,
+      totalWords: 1500,
       moral: Morals[Math.floor(Math.random() * Morals.length)],
       tone: Tones[Math.floor(Math.random() * Tones.length)],
       environment:

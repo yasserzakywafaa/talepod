@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import {
   ProfileInfo,
   StoryAudioFile,
+  StoryFormat,
   StoryParams,
   StorySeo,
   User,
@@ -13,12 +14,16 @@ import {
 import { saveFileDataToDb, saveStorySeoToDb } from "../models/mongoDb";
 
 import CONFIG from "../config";
-import { IMAGES_SIZES } from "../models/openaiModel";
 import fs from "fs";
 import { handleCreateBlogRequest } from "../services/create/blog";
 import { handleCreateStory } from "../services/create/story";
+import {
+  generateImage,
+  handleGenerateStoryImages,
+} from "../services/create/images";
 import { handleTriggerWebhookN8n } from "../services/webhooks/n8n";
 import { uploadFileToS3 } from "../services/amazonS3";
+import { chunkTextForTts } from "../utils/ttsChunk";
 
 const getOpenRouterSdkClient = () => createOpenRouterClient();
 
@@ -31,9 +36,12 @@ export const createStory = async (
   const profileInfo = request.body.profileInfo as ProfileInfo;
   const storyParams = request.body.storyParams as StoryParams;
   const userInfo = request.body.userInfo as User;
+  // Absent on pre-V2 clients → defaults to "long" for back-compat.
+  const format = (request.body.format as StoryFormat) ?? "long";
 
   console.log("⌛︎  Creating Story...", {
     request: request.path,
+    format,
   });
 
   try {
@@ -42,6 +50,7 @@ export const createStory = async (
       profileInfo,
       storyParams,
       userInfo,
+      format,
     );
 
     if (story) {
@@ -59,6 +68,12 @@ export const createStory = async (
     }
 
     response.json(story);
+
+    // Generate + persist illustrations in the background (best-effort).
+    // The client reader polls the story until `imagesStatus` flips off "pending".
+    if (story?._id) {
+      void handleGenerateStoryImages(String(story._id));
+    }
   } catch (error) {
     next(`❌ ${error}`);
   }
@@ -137,22 +152,43 @@ export const createStoryAudio = async (
   const { SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH } = CONFIG;
 
   try {
-    const createRequest = await getOpenRouterSdkClient().audio.speech.create({
-      speed: 0.98,
-      input: storyText,
-      response_format: "mp3",
-      voice: audioFileVoice ?? "nova",
-      model: CONFIG.OPENROUTER_TTS_MODEL,
-    });
+    // Warm, calm bedtime steering. gpt-4o-mini-tts honours `instructions`;
+    // models that don't support it simply ignore the field.
+    const bedtimeInstructions =
+      "Narrate like a gentle bedtime storyteller: a warm, soft, soothing voice with slow, calm pacing and tender, cozy expressiveness — as if gently reading a young child to sleep.";
+
+    // TTS input is length-capped (≈2k tokens / 4096 chars), so synthesize the
+    // story in sentence-aligned chunks and stitch the MP3 buffers into one file.
+    // This fixes long stories that were previously truncated to a single call.
+    const chunks = chunkTextForTts(storyText);
+    if (!chunks.length) {
+      throw new Error("No narratable text was provided for audio generation.");
+    }
+
+    const client = getOpenRouterSdkClient();
+    const audioBuffers: Buffer[] = [];
+    for (const chunk of chunks) {
+      const createRequest = await client.audio.speech.create({
+        speed: 0.95,
+        input: chunk,
+        response_format: "mp3",
+        voice: audioFileVoice ?? "nova",
+        model: CONFIG.OPENROUTER_TTS_MODEL,
+        instructions: bedtimeInstructions,
+      } as Parameters<typeof client.audio.speech.create>[0] & {
+        instructions?: string;
+      });
+      audioBuffers.push(Buffer.from(await createRequest.arrayBuffer()));
+    }
+    const audioData = Buffer.concat(audioBuffers);
 
     const audioFileName = `${fileName}.mp3`;
     const filePath = `${CONFIG.SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH}/${audioFileName}`;
-    const audioBytes = new Uint8Array(await createRequest.arrayBuffer());
     !fs.existsSync(SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH) &&
       fs.mkdirSync(SERVER_TEXT_TO_SPEECH_ABSOLUTE_PATH, {
         recursive: true,
       });
-    await fs.promises.writeFile(filePath, audioBytes);
+    await fs.promises.writeFile(filePath, audioData);
 
     try {
       const fileUrl = await uploadFileToS3(fileName, filePath);
@@ -204,17 +240,7 @@ export const createImages = async (
     const imageUrls: string[] = [];
 
     for (let i = 0; i < numImages; i++) {
-      const imageRequest = await getOpenRouterSdkClient().images.generate({
-        n: 1,
-        model: CONFIG.OPENROUTER_IMAGES_MODEL,
-        size: IMAGES_SIZES["1024x1024"],
-        response_format: "url",
-        prompt: userPrompt,
-        style: "natural",
-        quality: "hd",
-      });
-
-      const imageUrl = imageRequest.data[0].url;
+      const imageUrl = await generateImage(userPrompt, `generated-image-${i + 1}`);
       imageUrl && imageUrls.push(imageUrl);
     }
 

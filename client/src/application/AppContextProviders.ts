@@ -3,7 +3,6 @@ import { ApplicationContextProvider } from "./store/Provider";
 import { BlogContextProvider } from "src/Pages/Blog/store/Provider";
 import { BlogsContextProvider } from "src/Pages/Blogs/store/Provider";
 import { CancelSubscriptionModalContextProvider } from "src/components/Modals/CancelSubscriptionModal/store/Provider";
-import { CheckoutContextProvider } from "src/components/Checkout/store/Provider";
 import { ContactContextProvider } from "src/Pages/Contact/store/Provider";
 import { DashboardOverviewContextProvider } from "src/Pages/Dashboard/DashboardOverview/store/Provider";
 import { DashboardStoriesContextProvider } from "src/Pages/Dashboard/DashboardStories/store/Provider";
@@ -37,7 +36,6 @@ const contextProviders = [
   ContactContextProvider,
   BlogsContextProvider,
   BlogContextProvider,
-  CheckoutContextProvider,
   PaymentContextProvider,
   PaymentStatusContextProvider,
 

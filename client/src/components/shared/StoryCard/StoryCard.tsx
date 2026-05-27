@@ -5,32 +5,24 @@ import {
   ChildGenderEnum,
   Story,
 } from "src/components/StoryCreator/store/state";
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Chip,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Button, Chip, Typography } from "@mui/material";
+
 import {
   FemaleOutlined,
-  HeadphonesOutlined,
+  GraphicEqOutlined,
   MaleOutlined,
 } from "@mui/icons-material";
 
 import { CSSProperties } from "react";
 import UserAccountMenuButton from "../UserAccountButton";
 import { VerifiedBadge } from "../VerifiedBadge";
+import mascotBunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
 import routes from "src/application/routes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useNavigate } from "react-router-dom";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 
-interface StoryCard {
+interface StoryCardProps {
   story: Story;
   page?: string;
   image?: string;
@@ -40,12 +32,20 @@ interface StoryCard {
   classNames?: string | string[];
 }
 
-const StoryCard = (props: StoryCard) => {
+/** Cover image for the card: real art if generated, else a watercolor gradient + mascot. */
+const getCover = (story: Story): string | undefined =>
+  story.coverImageUrl ||
+  story.pages?.find((page) => page.imageUrl)?.imageUrl ||
+  undefined;
+
+const StoryCard = (props: StoryCardProps) => {
   const navigate = useNavigate();
   const { isDesktop } = useDeviceSize();
   const { audioFile, authorProfile } = props.story;
   const profileInfo = props.story.profileInfo || {};
   const hasDirectionRtl = props.story.profileInfo.language.value === "ar";
+  const isComic = props.story.format === "comic";
+  const cover = getCover(props.story);
 
   const {
     store: { handleTogglePricingModal },
@@ -61,161 +61,127 @@ const StoryCard = (props: StoryCard) => {
     }
   };
 
-  const handleOnUpgradeClick = () => handleTogglePricingModal();
-
   return (
-    <Card
+    <Box
       className="story-card"
-      sx={{
-        mb: 2,
-        boxShadow: (theme) => `0px 2px 0px ${theme.palette.secondary.main}`,
-        ":hover": {
-          boxShadow: (theme) => `2px 2px 3px ${theme.palette.primary.main}`,
-          transform: "scale(1.01)",
-          transition: "200ms",
-        },
-      }}
+      style={props.style}
       onClick={props.isStoryLocked ? undefined : handleOnCardClick}
     >
       {props.isStoryLocked && (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          className="story-card-locked-overlay"
-        >
+        <Box className="story-card-locked-overlay">
           <Box className="story-card-locked-overlay-verified-icon">
             <VerifiedBadge fontSize={20} />
           </Box>
-
           <Button
             size="small"
             type="button"
             color="primary"
             aria-label="upgrade"
             variant="contained"
-            onClick={handleOnUpgradeClick}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleTogglePricingModal();
+            }}
           >
             Upgrade
           </Button>
         </Box>
       )}
 
-      <CardContent className="story-card-content">
+      {/* Cover */}
+      <div className="story-card-cover">
+        {cover ? (
+          <img src={cover} alt={props.story.title} className="story-card-cover-img" />
+        ) : (
+          <div className="story-card-cover-placeholder">
+            <img src={mascotBunny} alt="" />
+          </div>
+        )}
+        <div className="story-card-cover-badge">
+          <Chip
+            variant="badge"
+            color={isComic ? "primary" : "secondary"}
+            label={isComic ? "Comic" : "Story"}
+          />
+        </div>
+        {audioFile && audioFile.url && (
+          <div className="story-card-cover-audio" title="Has narration">
+            <GraphicEqOutlined sx={{ fontSize: 16, color: "#fff" }} />
+          </div>
+        )}
+      </div>
+
+      {/* Body */}
+      <div className="story-card-content">
         <Typography
-          gutterBottom
-          variant="h5"
-          component="div"
-          className={`story-card-title ${!isDesktop ? "ellipsis" : ""} ${
-            hasDirectionRtl ? "direction-rtl" : ""
-          }`}
+          className={`story-card-title ${hasDirectionRtl ? "direction-rtl" : ""}`}
         >
           {props.story.title}
         </Typography>
-
         <Typography
-          variant="body2"
-          color="text.secondary"
           className={`story-card-summary ${
             hasDirectionRtl ? "direction-rtl" : ""
           }`}
         >
           {props.story.summary}
         </Typography>
-      </CardContent>
+      </div>
 
-      <CardActions>
-        <Grid
-          container
-          spacing={2}
-          paddingX={1}
-          width="100%"
-          className="story-card-tags-wrapper"
-          alignItems="center"
-          direction="row"
-        >
-          <Grid
-            size={{ xs: 12, md: 6 }}
-            spacing={2}
-            display="flex"
-            alignItems="center"
-            className="story-card-tags"
-          >
-            {profileInfo.language && (
+      {/* Footer meta */}
+      <div className="story-card-meta">
+        <div className="story-card-tags">
+          {profileInfo.language && (
+            <Chip
+              size="small"
+              variant="outlined"
+              color="secondary"
+              className="story-card-tags-item"
+              label={profileInfo.language.value.toUpperCase()}
+            />
+          )}
+          {props.story.storyParams.createdByAdmin ? (
+            <Chip
+              size="small"
+              variant="outlined"
+              label="Original"
+              color="primary"
+              className="story-card-tags-item"
+            />
+          ) : (
+            props.story.createdAt && (
               <Chip
                 size="small"
                 variant="outlined"
-                className="story-card-tags-item"
                 color="secondary"
-                label={profileInfo.language.value.toUpperCase()}
-              />
-            )}
-
-            {!props.story.storyParams.createdByAdmin &&
-              props.story.createdAt && (
-                <Chip
-                  size="small"
-                  variant="outlined"
-                  className="story-card-tags-item"
-                  label={new Date(props.story.createdAt).toLocaleString(
-                    "en-GB",
-                    {
-                      dateStyle: "short",
-                    }
-                  )}
-                  color="secondary"
-                />
-              )}
-
-            {props.story.storyParams.createdByAdmin && (
-              <Chip
-                size="small"
-                variant="outlined"
-                label="Original"
-                color="primary"
                 className="story-card-tags-item"
+                label={new Date(props.story.createdAt).toLocaleString("en-GB", {
+                  dateStyle: "short",
+                })}
               />
-            )}
+            )
+          )}
+          {(profileInfo.gender === ChildGenderEnum.Girl ||
+            profileInfo.gender === AdultGenderEnum.Female) && (
+            <FemaleOutlined sx={{ fontSize: 18, color: "var(--primary)" }} />
+          )}
+          {(profileInfo.gender === ChildGenderEnum.Boy ||
+            profileInfo.gender === AdultGenderEnum.Male) && (
+            <MaleOutlined sx={{ fontSize: 18, color: "var(--primary)" }} />
+          )}
+        </div>
 
-            {(profileInfo.gender === ChildGenderEnum.Girl ||
-              profileInfo.gender === AdultGenderEnum.Female) && (
-              <FemaleOutlined fontSize="medium" color="primary" />
-            )}
-
-            {(profileInfo.gender === ChildGenderEnum.Boy ||
-              profileInfo.gender === AdultGenderEnum.Male) && (
-              <MaleOutlined fontSize="medium" color="primary" />
-            )}
-
-            {audioFile && audioFile.url && (
-              <HeadphonesOutlined
-                fontSize="medium"
-                color="primary"
-                sx={{ marginLeft: "0.25rem" }}
-              />
-            )}
-          </Grid>
-
-          <Grid
-            size={{ xs: 12, md: 6 }}
-            display="flex"
-            justifyContent="flex-end"
-            alignItems="center"
-          >
-            {authorProfile &&
-              (isDesktop ? (
-                <UserAccountMenuButton user={authorProfile} />
-              ) : (
-                <Avatar
-                  variant="square"
-                  alt="User Picture"
-                  src={authorProfile.picture}
-                />
-              ))}
-          </Grid>
-        </Grid>
-      </CardActions>
-    </Card>
+        {authorProfile &&
+          (isDesktop ? (
+            <UserAccountMenuButton user={authorProfile} />
+          ) : (
+            <Avatar
+              variant="square"
+              alt="User Picture"
+              src={authorProfile.picture}
+            />
+          ))}
+      </div>
+    </Box>
   );
 };
 

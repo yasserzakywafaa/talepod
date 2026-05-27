@@ -52,6 +52,8 @@ const PaymentStatusPage = () => {
     }`;
   };
 
+  const isStoryCredit = sessionData.mode === "payment";
+
   const handleOnCreateClick = () => navigate(routes.create);
   const handleOnMyProfileClick = () =>
     auth.user && navigate(routes.myProfile(auth.user._id));
@@ -155,27 +157,38 @@ const PaymentStatusPage = () => {
                 completed successfully!
               </Typography>
 
-              <Typography
-                marginY={1}
-                variant="h6"
-                color="primary"
-                className="bold"
-                textAlign="center"
-              >
-                {sessionData.subscription?.plan.nickname}
-              </Typography>
+              {isStoryCredit ? (
+                <Typography marginY={1} variant="h6" textAlign="center">
+                  A story credit has been added to your account 🎉 You now have{" "}
+                  <b>{auth.user.storyCredits ?? 1}</b> credit
+                  {(auth.user.storyCredits ?? 1) === 1 ? "" : "s"} to use anytime
+                  — even beyond your plan’s limit.
+                </Typography>
+              ) : (
+                <>
+                  <Typography
+                    marginY={1}
+                    variant="h6"
+                    color="primary"
+                    className="bold"
+                    textAlign="center"
+                  >
+                    {sessionData.subscription?.plan.nickname}
+                  </Typography>
 
-              <Typography marginY={1} variant="h6" textAlign="center">
-                Your subscription will end on{" "}
-                <b>
-                  {new Date(
-                    auth.user.subscription.endDate || ""
-                  ).toLocaleString("en-GB", {
-                    dateStyle: "short",
-                  })}
-                </b>
-                .
-              </Typography>
+                  <Typography marginY={1} variant="h6" textAlign="center">
+                    Your subscription will end on{" "}
+                    <b>
+                      {new Date(
+                        auth.user.subscription.endDate || ""
+                      ).toLocaleString("en-GB", {
+                        dateStyle: "short",
+                      })}
+                    </b>
+                    .
+                  </Typography>
+                </>
+              )}
 
               <Box
                 marginY={1}
@@ -204,7 +217,7 @@ const PaymentStatusPage = () => {
                   endIcon={<AutoFixHighOutlined />}
                   onClick={handleOnCreateClick}
                 >
-                  Create Premium Stories
+                  {isStoryCredit ? "Create a Story" : "Create Premium Stories"}
                 </Button>
               </Box>
             </Box>

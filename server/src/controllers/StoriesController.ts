@@ -16,8 +16,11 @@ import {
 } from "../models/mongoDb";
 import { NextFunction, Request, Response } from "express";
 
+import { AuthenticatedRequest } from "../middleware/authMiddleware";
 import { ObjectId } from "mongodb";
+import { getStoryPdfUrl } from "../services/create/pdf";
 import { getQuery } from "../models/mongoDb/query";
+import { sendEmail } from "../utils/sendEmail";
 
 export const getAllStories = async (
   request: Request,
@@ -423,57 +426,135 @@ export const getAllUsersStories = async (
   }
 };
 
-// // FOR DEVELOPMENT USE ONLY
-// let globalAllStories;
-// const bulkUpdateStoriesByField = async () => {
-//   const storiesCollection = database.collection(DBCollections.stories_library);
-//   const stories = await database
-//     .collection(DBCollections.stories_library)
-//     .find(
-//       {
-//         //   $and: [
-//         //     {
-//         //       "profileInfo.language.value": {
-//         //         $in: ["en"],
-//         //       },
-//         //     },
-//         //   ],
-//       }
-//       // { projection: { title: 1 } }
-//     )
-//     .toArray();
+/** Look up a full story document by slug across both story collections. */
+const findStoryBySlug = async (slug: string): Promise<Story | null> => {
+  const fromUsers = await database
+    .collection(DBCollectionsEnum.stories)
+    .findOne({ slug });
+  if (fromUsers) return fromUsers as unknown as Story;
 
-//   console.log("ℹ️ bulkUpdateStoriesByField:>>>", {
-//     storiesCount: stories.length,
-//   });
+  const fromLibrary = await database
+    .collection(DBCollectionsEnum.stories_library)
+    .findOne({ slug });
+  return (fromLibrary as unknown as Story) || null;
+};
 
-//   // try {
-//   //   stories.forEach(async (story: Story, index) => {
-//   //     // console.log("ℹ️ Story:>>> BEFORE", {
-//   //     //   title: story.title,
-//   //     // });
+const safeFileLabel = (title: string): string =>
+  `${
+    (title || "story")
+      .replace(/[^a-z0-9]+/gi, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 60) || "story"
+  }.pdf`;
 
-//   //     // // // USE THIS BETTER TO UPDATE ONE COLLECTION AT A TIME
-//   //     // const newStoryDocument = await storiesCollection.findOneAndUpdate(
-//   //     //   { _id: story._id },
-//   //     //   {
-//   //     //     $set: {
-//   //     //       title: `${story.title}`,
-//   //     //     },
-//   //     //   },
-//   //     //   { returnDocument: "after" }
-//   //     // );
-//   //     // console.log("ℹ️ newStoryDocument:>>> After", {
-//   //     //   originalTitle: story.title,
-//   //     //   newBackupTitle: newStoryDocument.title,
-//   //     // });
-//   //   });
+const escapeHtml = (value: string): string =>
+  String(value ?? "")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 
-//   //   console.log("ℹ️ All Stories count:>>>", stories.length);
-//   // } catch (error) {
-//   //   throw new Error("❌ Failed to update story slug", { cause: error });
-//   // }
-// };
+const buildEbookEmailHtml = (title: string, url: string): string => `
+  <div style="font-family:'Lexend Deca',system-ui,sans-serif;max-width:520px;margin:0 auto;background:#FAF4EA;border-radius:18px;overflow:hidden;border:1px solid #E4D9C9">
+    <div style="background:radial-gradient(ellipse at top,#2a2a63,#0A0E2B);padding:34px 28px;text-align:center">
+      <div style="font-family:'Yeseva One',Georgia,serif;color:#F0B648;font-size:26px">TalePod</div>
+      <div style="color:#A7A0EC;font-size:14px;margin-top:4px">Bedtime stories, made just for them</div>
+    </div>
+    <div style="padding:28px">
+      <h1 style="font-size:20px;color:#171C3B;margin:0 0 10px">Your eBook is ready ✨</h1>
+      <p style="color:#4a4a5e;line-height:1.6;margin:0 0 20px">
+        &ldquo;<strong>${escapeHtml(title)}</strong>&rdquo; has been turned into a beautiful PDF storybook.
+        It is attached to this email, and you can download it any time:
+      </p>
+      <a href="${url}" style="display:inline-block;background:#F0B648;color:#ffffff;text-decoration:none;font-weight:600;padding:13px 24px;border-radius:12px">Download your eBook</a>
+      <p style="color:#8a8a98;font-size:13px;margin:22px 0 0">Sweet dreams,<br/>The TalePod team</p>
+    </div>
+  </div>`;
+
+/**
+ * GET /api/v1/bedtime-story/:slug/pdf
+ * Export the story as an eBook PDF and return its hosted URL. The PDF is
+ * generated once and cached on the story (download + email share one file).
+ */
+export const exportStoryPdf = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  const slug = request.params.slug;
+  try {
+    const story = await findStoryBySlug(slug);
+    if (!story) {
+      response.status(404).json({ message: "❌ Story not found!" });
+      return;
+    }
+
+    const url = await getStoryPdfUrl(story);
+    console.log("✅ Story PDF exported", { slug });
+    response.status(200).json({ url });
+  } catch (error) {
+    console.error("❌ Failed to export story PDF!", { slug, error });
+    next(error);
+  }
+};
+
+/**
+ * POST /api/v1/bedtime-story/:slug/email-pdf (authenticated)
+ * Email the eBook PDF to the signed-in user. Responds immediately and
+ * generates + sends the email in the background.
+ */
+export const emailStoryPdf = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  const slug = request.params.slug;
+  const user = (request as AuthenticatedRequest).user;
+  if (!user?.email) {
+    response.status(401).json({ message: "Sign in to email your eBook." });
+    return;
+  }
+
+  try {
+    const story = await findStoryBySlug(slug);
+    if (!story) {
+      response.status(404).json({ message: "❌ Story not found!" });
+      return;
+    }
+
+    // Respond right away — generation + delivery happen in the background.
+    response.status(202).json({ message: "We'll email your eBook shortly." });
+
+    void (async () => {
+      try {
+        // Reuse the single cached/generated PDF, then pull its bytes to attach.
+        const url = await getStoryPdfUrl(story);
+        const pdfResponse = await (
+          globalThis as { fetch: typeof fetch }
+        ).fetch(url);
+        const buffer = Buffer.from(await pdfResponse.arrayBuffer());
+        const title = story.title || "your bedtime story";
+        await sendEmail({
+          to: user.email,
+          subject: `Your TalePod eBook: ${title}`,
+          html: buildEbookEmailHtml(title, url),
+          text: `Your TalePod eBook "${title}" is ready.\n\nDownload it here: ${url}\n\nSweet dreams,\nTalePod`,
+          attachments: [
+            {
+              filename: safeFileLabel(title),
+              content: buffer,
+              contentType: "application/pdf",
+            },
+          ],
+        });
+        console.log("✅ Story eBook emailed", { slug, to: user.email });
+      } catch (err) {
+        console.error("❌ Failed to email story eBook", { slug, err });
+      }
+    })();
+  } catch (error) {
+    console.error("❌ Failed to start story eBook email!", { slug, error });
+    next(error);
+  }
+};
 
 const StoriesController = {
   getAllStories,
@@ -481,6 +562,8 @@ const StoriesController = {
   getAllUserStories,
   getOriginalStories,
   getAllUsersStories,
+  exportStoryPdf,
+  emailStoryPdf,
 };
 
 export default StoriesController;
