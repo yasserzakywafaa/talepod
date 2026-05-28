@@ -92,6 +92,11 @@ export default defineConfig(async ({ mode }) => {
             /http:\/\/localhost:\d+\//g,
             "/",
           );
+          // Prerender can snapshot Stripe.js iframe markup as visible text nodes.
+          renderedRoute.html = renderedRoute.html.replace(
+            />[^<]*js\.stripe\.com\/v3\/m-outer-[\s\S]*?user-select:\s*none\s*!important;">/g,
+            ">",
+          );
           return renderedRoute;
         },
       }),

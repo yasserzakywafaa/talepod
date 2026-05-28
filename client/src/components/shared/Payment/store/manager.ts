@@ -5,12 +5,19 @@ import axios, { AxiosResponse } from "axios";
 import END_POINTS from "src/application/shared/endpoints";
 import { PaymentStore } from "./store";
 import { getAxiosError } from "src/shared/utils/getAxiosError";
-import { loadStripe } from "@stripe/stripe-js";
+import { Stripe, loadStripe } from "@stripe/stripe-js";
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
+import {
+  cleanupOrphanedStripeDom,
+  isHeadlessPrerender,
+} from "../stripeDom";
+
+let stripeLoaderPromise: Promise<Stripe | null> | null = null;
 
 export interface PaymentManager {
   setUp: () => void;
+  ensureStripeReady: () => Promise<Stripe | null>;
   handleGetPublishableKey: () => void;
   handleGetPricesList: () => void;
   handleGetProductsListWithPrices: () => void;
@@ -32,33 +39,59 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
   } = useApplicationContext();
 
   const setUp = async () => {
-    handleGetPublishableKey();
-    handleGetPricesList();
-    handleGetProductsListWithPrices();
+    await Promise.all([handleGetPricesList(), handleGetProductsListWithPrices()]);
   };
 
   const handleGetPublishableKey = async (): Promise<any> => {
-    try {
-      const response: AxiosResponse<
-        { publishableKey: string },
-        { publishableKey: string }
-      > = await axios.get(END_POINTS.PAYMENTS.CONFIG, {
-        headers: {
-          "Content-Type": "application/json",
-          "X-Custom-Header": new Date().toISOString(),
-        },
-      });
-
-      store.setPublishableKey(response.data.publishableKey);
-
-      const stripePromise = await loadStripe(response.data.publishableKey);
-      store.setStripePromise(stripePromise);
-
-      return response.data;
-    } catch (error) {
-      getAxiosError(error);
-      throw new Error(`❌  Failed to get Stripe Publishable Key!  ${error}`);
+    if (store.state.stripePromise) {
+      return { publishableKey: store.state.publishableKey };
     }
+
+    if (stripeLoaderPromise) {
+      await stripeLoaderPromise;
+      return { publishableKey: store.state.publishableKey };
+    }
+
+    if (isHeadlessPrerender()) {
+      return null;
+    }
+
+    stripeLoaderPromise = (async () => {
+      try {
+        const response: AxiosResponse<
+          { publishableKey: string },
+          { publishableKey: string }
+        > = await axios.get(END_POINTS.PAYMENTS.CONFIG, {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Custom-Header": new Date().toISOString(),
+          },
+        });
+
+        store.setPublishableKey(response.data.publishableKey);
+
+        const stripe = await loadStripe(response.data.publishableKey);
+        store.setStripePromise(stripe);
+        cleanupOrphanedStripeDom();
+
+        return response.data;
+      } catch (error) {
+        stripeLoaderPromise = null;
+        getAxiosError(error);
+        throw new Error(`❌  Failed to get Stripe Publishable Key!  ${error}`);
+      }
+    })();
+
+    return stripeLoaderPromise;
+  };
+
+  const ensureStripeReady = async (): Promise<Stripe | null> => {
+    if (store.state.stripePromise) {
+      return store.state.stripePromise;
+    }
+
+    await handleGetPublishableKey();
+    return store.state.stripePromise;
   };
 
   const handleGetPricesList = async (): Promise<any> => {
@@ -140,8 +173,7 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
       );
       const { sessionId } = response.data;
 
-      // Redirect to the Stripe Checkout page
-      const stripe = store.state.stripePromise;
+      const stripe = await ensureStripeReady();
 
       if (!stripe) return;
 
@@ -161,6 +193,7 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
 
   return {
     setUp,
+    ensureStripeReady,
     handleGetPublishableKey,
     handleGetPricesList,
     handleGetProductsListWithPrices,

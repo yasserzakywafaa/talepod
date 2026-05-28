@@ -26,7 +26,7 @@ import {
 
 import BillingToggle from "./BillingToggle";
 import PayPerStoryCallout from "./PayPerStoryCallout";
-import PaymentWrapper from "../Payment/Payment";
+import { usePaymentCatalog } from "../Payment/usePaymentCatalog";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
 import { useApplicationContext } from "src/application/store/Provider";
 import { usePricing } from "./usePricing";
@@ -57,10 +57,10 @@ const PricingTable: React.FC<PricingTableProps> = () => {
   const tableBgColorOpaque =
     themeMode === "light" ? primaryColorOpaqueTen : primaryColorOpaqueThirty;
 
+  usePaymentCatalog();
+
   return (
     <>
-      <PaymentWrapper />
-
       <Container
         id="pricing-table"
         sx={{

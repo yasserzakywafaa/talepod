@@ -11,7 +11,7 @@ import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import LoaderSpinner from "../Loader/LoaderSpinner";
-import PaymentWrapper from "../Payment/Payment";
+import { usePaymentCatalog } from "../Payment/usePaymentCatalog";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
 import Typography from "@mui/material/Typography";
 import characterLion from "src/assets/images/landing_pages/lion_cub.webp";
@@ -33,10 +33,10 @@ export const Pricing = () => {
     getYearlySavingsPercent,
   } = usePricing();
 
+  usePaymentCatalog();
+
   return (
     <>
-      <PaymentWrapper />
-
       <Container
         id="pricing-cards"
         sx={{

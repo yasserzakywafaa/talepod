@@ -3,6 +3,7 @@ import App from "./application/App";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import { createRoot } from "react-dom/client";
+import { cleanupOrphanedStripeDom } from "src/components/shared/Payment/stripeDom";
 
 const nonce = document.querySelector<HTMLMetaElement>(
   'meta[name="csp-nonce"]',
@@ -28,6 +29,7 @@ if (rootElement) {
   );
 
   createRoot(rootElement).render(app);
+  cleanupOrphanedStripeDom();
 } else {
   console.error("Failed to find the root element");
 }
