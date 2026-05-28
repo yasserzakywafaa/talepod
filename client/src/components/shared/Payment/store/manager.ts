@@ -18,8 +18,7 @@ export interface PaymentManager {
     priceId: string,
     priceObject: Price,
     plan: SubscriptionPlanEnum,
-    user: User | null,
-    options?: { mode?: "payment" | "subscription"; credits?: number }
+    user: User | null
   ) => Promise<void>;
 }
 
@@ -50,9 +49,6 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
       });
 
       store.setPublishableKey(response.data.publishableKey);
-
-      const stripePromise = await loadStripe(response.data.publishableKey);
-      store.setStripePromise(stripePromise);
 
       return response.data;
     } catch (error) {
@@ -109,8 +105,7 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
     priceId: string,
     priceObject: Price,
     subscriptionPlan: SubscriptionPlanEnum,
-    user: User | null,
-    options?: { mode?: "payment" | "subscription"; credits?: number }
+    user: User | null
   ): Promise<any> => {
     if (!user) return;
 
@@ -129,8 +124,6 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
             )}`,
             cancel_url: `${window.location.href}`,
             googleAnalyticsClientId: trackingInfo.clientId,
-            mode: options?.mode ?? "subscription",
-            credits: options?.credits,
           },
           headers: {
             "Content-Type": "application/json",
@@ -140,9 +133,11 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
       );
       const { sessionId } = response.data;
 
-      // Redirect to the Stripe Checkout page
-      const stripe = store.state.stripePromise;
+      // Load Stripe only when the user actually starts checkout
+      const publishableKey = store.state.publishableKey;
+      if (!publishableKey) return;
 
+      const stripe = await loadStripe(publishableKey);
       if (!stripe) return;
 
       const { error } = await stripe.redirectToCheckout({ sessionId });
