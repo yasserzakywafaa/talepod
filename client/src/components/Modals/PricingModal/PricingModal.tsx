@@ -13,7 +13,7 @@ export const PricingModal = () => {
 
   const onCloseModal = (
     event: {},
-    reason: "backdropClick" | "escapeKeyDown"
+    reason: "backdropClick" | "escapeKeyDown",
   ) => {
     if (reason && reason === "backdropClick") return;
 
@@ -28,7 +28,7 @@ export const PricingModal = () => {
     <>
       <Dialog
         maxWidth="lg"
-        scroll="body"
+        scroll="paper"
         fullWidth={true}
         open={state.isVisible}
         onClose={onCloseModal}

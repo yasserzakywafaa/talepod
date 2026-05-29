@@ -1,13 +1,6 @@
 import "./MyProfile.scss";
 
 import {
-  CreditCardOutlined,
-  LocalActivityOutlined,
-  PersonOutlined,
-  SvgIconComponent,
-  WorkspacePremiumOutlined,
-} from "@mui/icons-material";
-import {
   Box,
   Button,
   Card,
@@ -17,6 +10,13 @@ import {
   Switch,
   Typography,
 } from "@mui/material";
+import {
+  CreditCardOutlined,
+  LocalActivityOutlined,
+  PersonOutlined,
+  SvgIconComponent,
+  WorkspacePremiumOutlined,
+} from "@mui/icons-material";
 import { SubscriptionPlanEnum, User } from "src/shared/types/user";
 import { useEffect, useState } from "react";
 
@@ -43,7 +43,6 @@ const MyProfilePage = () => {
         auth: { isAuthenticated, user },
         themeMode,
       },
-      toggleThemeMode,
     },
   } = useApplicationContext();
   const {
@@ -73,7 +72,6 @@ const MyProfilePage = () => {
         theme: themeMode === "dark" ? "light" : "dark",
       },
     });
-    toggleThemeMode();
   };
 
   const isFreeUser = user.subscription.type === SubscriptionPlanEnum.Free;
@@ -238,10 +236,7 @@ const MyProfilePage = () => {
                 boxShadow: "var(--shadow-md)",
               }}
             >
-              <Chip
-                variant="badge"
-                label={`${user.subscription.type} plan`}
-              />
+              <Chip variant="badge" label={`${user.subscription.type} plan`} />
               <Typography
                 sx={{
                   fontFamily: "var(--font-display)",
@@ -306,7 +301,11 @@ const MyProfilePage = () => {
                   }}
                 >
                   <Box
-                    sx={{ display: "inline-flex", alignItems: "center", gap: 0.75 }}
+                    sx={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 0.75,
+                    }}
                   >
                     <LocalActivityOutlined
                       sx={{ fontSize: 18, color: "var(--honey-300)" }}

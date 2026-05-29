@@ -19,7 +19,7 @@ export interface PaymentManager {
     priceObject: Price,
     plan: SubscriptionPlanEnum,
     user: User | null,
-    options?: { mode?: "payment" | "subscription"; credits?: number }
+    options?: { mode?: "payment" | "subscription"; credits?: number },
   ) => Promise<void>;
 }
 
@@ -51,9 +51,6 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
 
       store.setPublishableKey(response.data.publishableKey);
 
-      const stripePromise = await loadStripe(response.data.publishableKey);
-      store.setStripePromise(stripePromise);
-
       return response.data;
     } catch (error) {
       getAxiosError(error);
@@ -70,7 +67,7 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
             "Content-Type": "application/json",
             "X-Custom-Header": new Date().toISOString(),
           },
-        }
+        },
       );
 
       store.setPrices(response.data);
@@ -91,7 +88,7 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
             "Content-Type": "application/json",
             "X-Custom-Header": new Date().toISOString(),
           },
-        }
+        },
       );
 
       store.setProducts(response.data);
@@ -100,7 +97,7 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
     } catch (error) {
       getAxiosError(error);
       throw new Error(
-        `❌  Failed to get Stripe Product with Prices!  ${error}`
+        `❌  Failed to get Stripe Product with Prices!  ${error}`,
       );
     }
   };
@@ -110,7 +107,7 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
     priceObject: Price,
     subscriptionPlan: SubscriptionPlanEnum,
     user: User | null,
-    options?: { mode?: "payment" | "subscription"; credits?: number }
+    options?: { mode?: "payment" | "subscription"; credits?: number },
   ): Promise<any> => {
     if (!user) return;
 
@@ -125,7 +122,7 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
             subscriptionPlan,
             userId: user._id,
             success_url: `${window.location.origin}${routes.paymentStatus(
-              "{CHECKOUT_SESSION_ID}"
+              "{CHECKOUT_SESSION_ID}",
             )}`,
             cancel_url: `${window.location.href}`,
             googleAnalyticsClientId: trackingInfo.clientId,
@@ -136,13 +133,15 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
             "Content-Type": "application/json",
             "X-Custom-Header": new Date().toISOString(),
           },
-        }
+        },
       );
       const { sessionId } = response.data;
 
-      // Redirect to the Stripe Checkout page
-      const stripe = store.state.stripePromise;
+      // Load Stripe only when the user actually starts checkout
+      const publishableKey = store.state.publishableKey;
+      if (!publishableKey) return;
 
+      const stripe = await loadStripe(publishableKey);
       if (!stripe) return;
 
       const { error } = await stripe.redirectToCheckout({ sessionId });

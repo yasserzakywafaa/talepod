@@ -1,16 +1,16 @@
-import { CheckCircleOutlined } from "@mui/icons-material";
 import BillingToggle from "./BillingToggle";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
-import PayPerStoryCallout from "./PayPerStoryCallout";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
+import { CheckCircleOutlined } from "@mui/icons-material";
+import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import LoaderSpinner from "../Loader/LoaderSpinner";
+import PayPerStoryCallout from "./PayPerStoryCallout";
 import PaymentWrapper from "../Payment/Payment";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
 import Typography from "@mui/material/Typography";
@@ -97,7 +97,7 @@ export const Pricing = () => {
                 <Card
                   sx={{
                     height: "100%",
-                    minHeight: { xs: "", sm: "520px" },
+                    minHeight: { xs: "", sm: "500px" },
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
@@ -106,49 +106,52 @@ export const Pricing = () => {
                     overflow: "hidden",
                     border: isPremium ? "2px solid" : "1px solid var(--border)",
                     borderColor: isPremium ? "primary.main" : undefined,
-                    boxShadow: isPremium ? "var(--shadow-lg)" : "var(--shadow-sm)",
-                    transform: {
-                      xs: "none",
-                      md: isPremium ? "scale(1.03)" : "none",
-                    },
+                    boxShadow: isPremium
+                      ? "var(--shadow-lg)"
+                      : "var(--shadow-sm)",
                   }}
                 >
                   <CardContent sx={{ p: 0 }}>
-                    {isPremium && (
-                      <Box sx={{ mb: 1.5 }}>
-                        <Chip variant="badge" label="Most popular" />
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      gap={1.25}
+                      mb={2}
+                    >
+                      <Box display="flex" alignItems="center" gap={1.25}>
+                        <Box
+                          component="img"
+                          src={planMascot(plan.title)}
+                          alt=""
+                          sx={{ width: "15%", height: "auto", margin: 0 }}
+                        />
+                        <Typography
+                          component="h3"
+                          variant="h4"
+                          sx={{ fontFamily: "var(--font-display)" }}
+                        >
+                          {plan.title}
+                        </Typography>
                       </Box>
-                    )}
 
+                      {isPremium && (
+                        <Box sx={{ mb: 1.5 }}>
+                          <Chip variant="badge" label="Most popular" />
+                        </Box>
+                      )}
+                    </Box>
                     <Box
                       sx={{
                         display: "flex",
-                        alignItems: "center",
-                        gap: 1.25,
-                        mb: 2,
+                        alignItems: "baseline",
+                        gap: 0.5,
                       }}
                     >
-                      <Box
-                        component="img"
-                        src={planMascot(plan.title)}
-                        alt=""
-                        sx={{ width: 44, height: 44 }}
-                      />
-                      <Typography
-                        component="h3"
-                        variant="h5"
-                        sx={{ fontFamily: "var(--font-display)" }}
-                      >
-                        {plan.title}
-                      </Typography>
-                    </Box>
-
-                    <Box sx={{ display: "flex", alignItems: "baseline", gap: 0.5 }}>
                       {plan.product ? (
                         <>
                           {!display.billedYearly &&
-                            plan.product.metadata
-                              ?.monthly_discounted_price && (
+                            plan.product.metadata?.monthly_discounted_price && (
                               <Typography
                                 component="span"
                                 variant="h6"
@@ -198,13 +201,15 @@ export const Pricing = () => {
                       {!plan.product
                         ? "free forever"
                         : display.billedYearly
-                        ? `billed yearly · ${getCurrency(plan.title)}${
-                            display.yearlyTotal
-                          }/yr`
-                        : "billed monthly"}
+                          ? `billed yearly · ${getCurrency(plan.title)}${
+                              display.yearlyTotal
+                            }/yr`
+                          : "billed monthly"}
                     </Typography>
 
-                    <Divider sx={{ my: 2, opacity: 0.2, borderColor: "grey.500" }} />
+                    <Divider
+                      sx={{ my: 2, opacity: 0.2, borderColor: "grey.500" }}
+                    />
 
                     {plan.features.map((feature) => (
                       <Box

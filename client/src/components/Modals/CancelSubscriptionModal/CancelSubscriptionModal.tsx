@@ -29,12 +29,12 @@ export const CancelSubscriptionModal = () => {
   const { plans } = usePricing();
 
   const currentPlan = plans.find(
-    (plan) => plan.title === auth.user?.subscription.type
+    (plan) => plan.title === auth.user?.subscription.type,
   );
 
   const onCloseModal = (
     event: {},
-    reason: "backdropClick" | "escapeKeyDown"
+    reason: "backdropClick" | "escapeKeyDown",
   ) => {
     if (reason && reason === "backdropClick") return;
 
@@ -52,7 +52,7 @@ export const CancelSubscriptionModal = () => {
     <>
       <Dialog
         maxWidth="sm"
-        scroll="body"
+        scroll="paper"
         fullWidth={true}
         open={state.isVisible}
         onClose={onCloseModal}
