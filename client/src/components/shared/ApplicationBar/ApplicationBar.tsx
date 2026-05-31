@@ -18,7 +18,7 @@ import { useState } from "react";
 export interface PagesMatch {
   isFeaturesPage: boolean;
   isCreatePage: boolean;
-  isExplorePage: boolean;
+  isLibraryPage: boolean;
   isPricingPage: boolean;
   isBlogsPage: boolean;
   isContactPage: boolean;
@@ -53,7 +53,7 @@ const ApplicationBar = () => {
   const pagesMatch: PagesMatch = {
     isFeaturesPage: !!useMatch(routes.features),
     isCreatePage: !!useMatch(routes.create),
-    isExplorePage: !!useMatch(routes.explore),
+    isLibraryPage: !!useMatch(routes.library),
     isPricingPage: !!useMatch(routes.pricing),
     isBlogsPage: !!useMatch(routes.blogs),
     isContactPage: !!useMatch(routes.contact),
@@ -75,8 +75,8 @@ const ApplicationBar = () => {
       case "features":
         navigate(routes.features);
         break;
-      case "explore":
-        navigate(routes.explore);
+      case "library":
+        navigate(routes.library);
         break;
       case "create":
         navigate(routes.create);
@@ -88,7 +88,7 @@ const ApplicationBar = () => {
         navigate(routes.contact);
         break;
       case "original-stories":
-        navigate(routes.explore);
+        navigate(routes.library);
         break;
       case "install":
         setIsInstallAppDialogOpen(true);

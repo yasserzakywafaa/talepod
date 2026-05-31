@@ -34,6 +34,11 @@ storiesRouter.get(
 );
 
 storiesRouter.get(
+  END_POINTS.STORIES.GET_COMMUNITY_STORIES,
+  StoriesController.getCommunityStories
+);
+
+storiesRouter.get(
   END_POINTS.STORIES.GET_ORIGINAL_STORIES,
   StoriesController.getOriginalStories
 );

@@ -37,6 +37,7 @@ const END_POINTS = {
     GET_STORY_BY_SLUG: (slug: string) =>
       `${publicApiUrl}/api/v1/bedtime-story/${slug}`,
     GET_ALL_USER_STORIES: `${publicApiUrl}/api/v1/user-bedtime-stories`,
+    GET_COMMUNITY_STORIES: `${publicApiUrl}/api/v1/bedtime-stories/community`,
     GET_ORIGINAL_STORIES: `${publicApiUrl}/api/v1/bedtime-stories/originals`,
     GET_USERS_STORIES: `${publicApiUrl}/api/v1/bedtime-stories/users`,
     EXPORT_STORY_PDF: (slug: string) =>

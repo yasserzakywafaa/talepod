@@ -2,19 +2,19 @@ import { PagingInfo } from "src/shared/types/types";
 import { Story } from "src/components/StoryCreator/store/state";
 import { SupportedLanguages } from "src/shared/languages";
 
-export interface ExploreInitialState {
+export type LibraryStoriesSource = "community" | "talepod" | "users";
+
+export interface LibraryInitialState {
   isFetching: boolean;
   stories: Story[];
-  filters: ExploreStoryFilters;
+  filters: LibraryStoryFilters;
   isFiltersPanelOpen: boolean;
   activeFiltersCount: number;
   pagingInfo: PagingInfo;
-  storiesToDisplay?: StoriesToDisplay;
+  storiesSource: LibraryStoriesSource;
 }
 
-export type StoriesToDisplay = "originals" | "users";
-
-export interface ExploreStoryFilters {
+export interface LibraryStoryFilters {
   name: string | undefined;
   gender: string | undefined;
   age: number[];
@@ -22,7 +22,6 @@ export interface ExploreStoryFilters {
   moral: string[];
   tone: string[];
   environment: string[];
-  // createdByAdmin: boolean | undefined;
   audio: boolean | undefined;
 }
 
@@ -31,19 +30,19 @@ const getLanguageFromUserLanguage = (): string[] | undefined => {
   const supportedLanguages = Object.values(SupportedLanguages);
 
   const matchedLanguage = supportedLanguages.find((lang) =>
-    userLanguage.startsWith(lang)
+    userLanguage.startsWith(lang),
   ) as string;
 
   return matchedLanguage ? [matchedLanguage] : undefined;
 };
 
-export const getExploreInitialState = (
-  hasDefaultLanguage?: boolean
-): ExploreInitialState => {
+export const getLibraryInitialState = (
+  hasDefaultLanguage?: boolean,
+): LibraryInitialState => {
   return {
     isFetching: true,
     stories: [],
-    storiesToDisplay: undefined,
+    storiesSource: "community",
     isFiltersPanelOpen: false,
     activeFiltersCount: 0,
     filters: {
@@ -54,7 +53,6 @@ export const getExploreInitialState = (
       moral: [],
       tone: [],
       environment: [],
-      // createdByAdmin: true,
       audio: false,
     },
     pagingInfo: {

@@ -21,12 +21,12 @@ import {
 
 import { AdultGenderEnum } from "src/components/StoryCreator/store/state";
 import { Environments } from "src/shared/mockedData/Environments";
-import { ExploreStoryFilters } from "../../store/state";
+import { LibraryStoryFilters } from "../../store/state";
 import { Languages } from "src/shared/languages";
 import { Morals } from "src/shared/mockedData/Moral";
 import { Tones } from "src/shared/mockedData/Tone";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
-import { useExploreContext } from "../../store/Provider";
+import { useLibraryContext } from "../../store/Provider";
 
 const FiltersPanel: React.FC = (): JSX.Element => {
   const {
@@ -39,7 +39,7 @@ const FiltersPanel: React.FC = (): JSX.Element => {
       handleFilterStories,
       handleClearFilters,
     },
-  } = useExploreContext();
+  } = useLibraryContext();
 
   const handleOnPanelClose = () => {
     handleToggleFiltersPanel(false);
@@ -51,40 +51,34 @@ const FiltersPanel: React.FC = (): JSX.Element => {
 
   const handleSelectChange = (event: SelectChangeEvent<string[]>) => {
     const { name, value } = event.target;
-    handleUpdateFilters(name as keyof ExploreStoryFilters, value);
+    handleUpdateFilters(name as keyof LibraryStoryFilters, value);
   };
 
   const handleAgeSelectChange = (event: SelectChangeEvent<string[]>) => {
     const { name, value } = event.target;
-    let updatedValue: any = value;
-    if (typeof value === "object") {
-      updatedValue = value.map((v) => parseInt(v));
-    }
-    handleUpdateFilters(name as keyof ExploreStoryFilters, updatedValue);
+    const values = Array.isArray(value) ? value : [value];
+    const updatedValue = values.map((v) => parseInt(v, 10));
+    handleUpdateFilters(
+      name as keyof LibraryStoryFilters,
+      updatedValue as LibraryStoryFilters[keyof LibraryStoryFilters],
+    );
   };
 
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    handleUpdateFilters(name as keyof ExploreStoryFilters, value);
+    handleUpdateFilters(name as keyof LibraryStoryFilters, value);
   };
 
   const handleAudioCheckboxChange = (
-    event: React.SyntheticEvent<Element, Event>,
-    checked: boolean
+    _event: React.SyntheticEvent<Element, Event>,
+    checked: boolean,
   ) => {
     handleUpdateFilters("audio", checked ? true : undefined);
   };
 
-  // const handleOriginalsCheckboxChange = (
-  //   event: React.SyntheticEvent<Element, Event>,
-  //   checked: boolean
-  // ) => {
-  //   handleUpdateFilters("createdByAdmin", checked ? true : undefined);
-  // };
-
   const handleGenderChange = (
-    event: React.MouseEvent<HTMLElement>,
-    gender: string[]
+    _event: React.MouseEvent<HTMLElement>,
+    gender: string,
   ) => {
     if (gender !== null) {
       handleUpdateFilters("gender", gender);
@@ -133,8 +127,8 @@ const FiltersPanel: React.FC = (): JSX.Element => {
             variant="outlined"
             value={filters.name}
             className="filters-form-item"
-            error={hasCensoredWords(filters.name!)}
-            helperText={hasCensoredWords(filters.name!) && "Not Appropriate 🙈"}
+            error={hasCensoredWords(filters.name || "")}
+            helperText={hasCensoredWords(filters.name || "") && "Not Appropriate 🙈"}
             onChange={handleFieldChange}
           />
 
@@ -161,9 +155,7 @@ const FiltersPanel: React.FC = (): JSX.Element => {
                     value={language.value}
                     className="select-menu-item"
                   >
-                    <Checkbox
-                      checked={filters.language?.includes(language.value)}
-                    />
+                    <Checkbox checked={filters.language?.includes(language.value)} />
                     <ListItemText primary={language.name} />
                   </MenuItem>
                 );
@@ -190,10 +182,7 @@ const FiltersPanel: React.FC = (): JSX.Element => {
                   value={(value + 1).toString()}
                   className="select-menu-item"
                 >
-                  <Checkbox
-                    // checked={filters.age.includes((value + 1).toString())}
-                    checked={filters.age.includes(value + 1)}
-                  />
+                  <Checkbox checked={filters.age.includes(value + 1)} />
                   <ListItemText primary={value + 1} />
                 </MenuItem>
               ))}
@@ -262,18 +251,6 @@ const FiltersPanel: React.FC = (): JSX.Element => {
                 onChange={handleAudioCheckboxChange}
               />
             </FormGroup>
-
-            {/* <Tooltip title="Crafted and Personalized by TalePod team">
-              <FormGroup>
-                <FormControlLabel
-                  name="createdByAdmin"
-                  label="TalePod Originals"
-                  checked={filters.createdByAdmin}
-                  control={<Checkbox />}
-                  onChange={handleOriginalsCheckboxChange}
-                />
-              </FormGroup>
-            </Tooltip> */}
           </Box>
 
           <FormControl className="filters-form-item">

@@ -1,38 +1,38 @@
 import {
-  ExploreInitialState,
-  ExploreStoryFilters,
-  StoriesToDisplay,
-  getExploreInitialState,
+  LibraryInitialState,
+  LibraryStoriesSource,
+  LibraryStoryFilters,
+  getLibraryInitialState,
 } from "./state";
 
 import { PagingInfo } from "src/shared/types/types";
 import { Story } from "src/components/StoryCreator/store/state";
 import { useState } from "react";
 
-export interface ExploreStore {
-  state: ExploreInitialState;
-  isExploreFetching: (isFetching: boolean) => void;
+export interface LibraryStore {
+  state: LibraryInitialState;
+  isLibraryFetching: (isFetching: boolean) => void;
   toggleFiltersPanel: (isFetching: boolean) => void;
   sortStories: () => void;
-  setStoriesToDisplay: (storiesToDisplay: StoriesToDisplay | undefined) => void;
+  setStoriesSource: (storiesSource: LibraryStoriesSource) => void;
   updateStories: (stories: Story[]) => void;
   updatePageNumber: (pageNumber: number) => void;
   updatePagingInfo: (pagingInfo: PagingInfo) => void;
   updateFilters: (
-    key: keyof ExploreStoryFilters,
-    value: ExploreStoryFilters[typeof key]
+    key: keyof LibraryStoryFilters,
+    value: LibraryStoryFilters[typeof key],
   ) => void;
   clearFilters: () => void;
   applyFilters: (stories: Story[]) => void;
   setActiveFiltersCount: (activeFiltersCount: number) => void;
 }
 
-const useExploreStore = (): ExploreStore => {
-  const initialState = getExploreInitialState();
-  const [state, setState] = useState<ExploreInitialState>(initialState);
+const useLibraryStore = (): LibraryStore => {
+  const initialState = getLibraryInitialState();
+  const [state, setState] = useState<LibraryInitialState>(initialState);
   const { stories } = state;
 
-  const isExploreFetching = (isFetching: boolean) => {
+  const isLibraryFetching = (isFetching: boolean) => {
     setState((prev) => ({
       ...prev,
       isFetching,
@@ -53,12 +53,10 @@ const useExploreStore = (): ExploreStore => {
     }));
   };
 
-  const setStoriesToDisplay = (
-    storiesToDisplay: StoriesToDisplay | undefined
-  ) => {
+  const setStoriesSource = (storiesSource: LibraryStoriesSource) => {
     setState((prev) => ({
       ...prev,
-      storiesToDisplay,
+      storiesSource,
     }));
   };
 
@@ -70,8 +68,8 @@ const useExploreStore = (): ExploreStore => {
   };
 
   const updateFilters = (
-    key: keyof ExploreStoryFilters,
-    value: ExploreStoryFilters[typeof key]
+    key: keyof LibraryStoryFilters,
+    value: LibraryStoryFilters[typeof key],
   ) => {
     setState((prev) => ({
       ...prev,
@@ -103,7 +101,7 @@ const useExploreStore = (): ExploreStore => {
     setState((prev) => ({
       ...prev,
       activeFiltersCount: 0,
-      filters: getExploreInitialState().filters,
+      filters: getLibraryInitialState().filters,
       stories,
     }));
   };
@@ -124,10 +122,10 @@ const useExploreStore = (): ExploreStore => {
 
   return {
     state,
-    isExploreFetching,
+    isLibraryFetching,
     updateStories,
     sortStories,
-    setStoriesToDisplay,
+    setStoriesSource,
     updatePageNumber,
     updatePagingInfo,
     toggleFiltersPanel,
@@ -138,4 +136,4 @@ const useExploreStore = (): ExploreStore => {
   };
 };
 
-export default useExploreStore;
+export default useLibraryStore;

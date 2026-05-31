@@ -76,7 +76,7 @@ const PersonalizedBedtimeStoryText = (
                 sx={{ pr: "5px" }}
                 color="text.secondary"
                 href={routes.termsAndConditions}
-                onClick={handleFooterLinkItemClick(routes.explore)}
+                onClick={handleFooterLinkItemClick(routes.library)}
               >
                 Personalized bedtime stories
               </Link>
@@ -141,8 +141,8 @@ const PersonalizedBedtimeStoryText = (
         <Link
           sx={{ pr: "5px" }}
           color="text.secondary"
-          href={routes.explore}
-          onClick={handleFooterLinkItemClick(routes.explore)}
+          href={routes.library}
+          onClick={handleFooterLinkItemClick(routes.library)}
         >
           personalized bedtime stories
         </Link>{" "}

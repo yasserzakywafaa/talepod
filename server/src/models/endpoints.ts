@@ -23,6 +23,7 @@ const END_POINTS = {
     GET_ALL_STORIES: "/api/v1/bedtime-stories",
     GET_STORY_BY_ID: (storyId: string) => `/api/v1/bedtime-story/${storyId}`,
     GET_ALL_USER_STORIES: "/api/v1/user-bedtime-stories",
+    GET_COMMUNITY_STORIES: "/api/v1/bedtime-stories/community",
     GET_ORIGINAL_STORIES: "/api/v1/bedtime-stories/originals",
     GET_USERS_STORIES: "/api/v1/bedtime-stories/users",
     EXPORT_STORY_PDF: (slug: string) => `/api/v1/bedtime-story/${slug}/pdf`,

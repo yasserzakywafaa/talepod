@@ -45,7 +45,7 @@ export const getAllStories = async (
       {
         $facet: {
           metadata: [
-            { $count: "totalDocumentsCount" },
+            { $count: "totalCount" },
             { $addFields: { pageNumber, pageSize } },
           ],
           // Paginate results
@@ -215,7 +215,7 @@ export const getAllUserStories = async (
         $facet: {
           // Branch 1: Calculate metadata
           metadata: [
-            { $count: "totalDocumentsCount" }, // Count matching documents
+            { $count: "totalCount" }, // Count matching documents
             // Optionally add pagination info to metadata for context
             { $addFields: { pageNumber, pageSize } },
           ],
@@ -307,7 +307,7 @@ export const getOriginalStories = async (
       {
         $facet: {
           metadata: [
-            { $count: "totalDocumentsCount" },
+            { $count: "totalCount" },
             { $addFields: { pageNumber, pageSize } },
           ],
           // Paginate results
@@ -359,6 +359,97 @@ export const getOriginalStories = async (
   }
 };
 
+export const getCommunityStories = async (
+  request: Request,
+  response: Response<PageResponse<DocumentWithId> | PageErrorResponse<unknown>>,
+  next: NextFunction,
+) => {
+  try {
+    const hasActiveFilters: boolean = request.query.hasActiveFilters === "true";
+    const filters: StoryFilters = JSON.parse(
+      (request.query.filters as string) || "{}",
+    );
+    const { pageNumber = 1, pageSize = 20 } = filters;
+    const filtersMatchStage = hasActiveFilters ? [{ $match: getQuery(filters) }] : [];
+
+    const pipeline = [
+      {
+        $match: {
+          isPremium: false,
+          "storyParams.createdByAdmin": { $ne: true },
+        },
+      },
+      ...filtersMatchStage,
+      { $sort: { createdAt: -1 } },
+      {
+        $lookup: {
+          from: DBCollectionsEnum.users,
+          localField: "author",
+          foreignField: "_id",
+          as: "authorProfile",
+        },
+      },
+      {
+        $unwind: {
+          path: "$authorProfile",
+          preserveNullAndEmptyArrays: false,
+        },
+      },
+      {
+        $match: {
+          "authorProfile.status": UserStatus.active,
+        },
+      },
+      {
+        $facet: {
+          metadata: [
+            { $count: "totalCount" },
+            { $addFields: { pageNumber, pageSize } },
+          ],
+          results: [
+            { $skip: (pageNumber - 1) * pageSize },
+            { $limit: pageSize },
+          ],
+        },
+      },
+    ];
+
+    const aggregatedStories = await database
+      .collection(DBCollectionsEnum.stories)
+      .aggregate(pipeline)
+      .toArray();
+    const { metadata, results } =
+      aggregatedStories[0] as AggregationResult<DocumentWithId>;
+    const totalCount = metadata[0] ? metadata[0].totalCount : 0;
+
+    const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
+
+    console.log("ℹ️  Fetched community stories successfully", {
+      filters,
+      hasActiveFilters,
+      metadata,
+      totalPagesCount,
+    });
+
+    const paging: PagingInfo = {
+      pageNumber,
+      pageSize,
+      totalCount,
+      totalPagesCount,
+    };
+
+    response.status(200).json({
+      results,
+      paging,
+    });
+  } catch (error) {
+    console.error("❌ Failed to get Community stories!", {
+      error,
+    });
+    next(error);
+  }
+};
+
 export const getAllUsersStories = async (
   request: Request,
   response: Response<PageResponse<DocumentWithId> | PageErrorResponse<unknown>>,
@@ -378,7 +469,7 @@ export const getAllUsersStories = async (
       {
         $facet: {
           metadata: [
-            { $count: "totalDocumentsCount" },
+            { $count: "totalCount" },
             { $addFields: { pageNumber, pageSize } },
           ],
           // Paginate results
@@ -560,6 +651,7 @@ const StoriesController = {
   getAllStories,
   getStoryBySlug,
   getAllUserStories,
+  getCommunityStories,
   getOriginalStories,
   getAllUsersStories,
   exportStoryPdf,

@@ -2,7 +2,7 @@ const routes = {
   features: `/`,
   create: `/create`,
   pricing: `/pricing`,
-  explore: `/bedtime-stories`,
+  library: `/bedtime-stories`,
   usersStories: `/users-bedtime-stories`,
   story: (slug: string) => `/bedtime-story/${slug}`,
   paymentStatus: (sessionId: string) => `/payment-status/${sessionId}`,

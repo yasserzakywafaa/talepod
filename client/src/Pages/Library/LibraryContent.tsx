@@ -1,4 +1,13 @@
-import { Badge, Box, Button, Container, Grid, Pagination } from "@mui/material";
+import {
+  Badge,
+  Box,
+  Button,
+  Chip,
+  Container,
+  Grid,
+  Pagination,
+  Stack,
+} from "@mui/material";
 
 import { FilterAltOutlined } from "@mui/icons-material";
 import FiltersPanel from "./features/FiltersPanel/FiltersPanel";
@@ -8,25 +17,33 @@ import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import Share from "src/components/shared/Share/Share";
 import StoryCard from "src/components/shared/StoryCard/StoryCard";
-import { useExploreContext } from "./store/Provider";
+import { useLibraryContext } from "./store/Provider";
 import { useNavigate } from "react-router-dom";
 
-interface ExplorePageContentProps {
-  storiesToDisplay?: "originals" | "users";
+interface LibraryPageContentProps {
+  showSourceChips?: boolean;
 }
 
-export const ExploreContent = (props: ExplorePageContentProps): JSX.Element => {
+export const LibraryContent = (props: LibraryPageContentProps): JSX.Element => {
+  const { showSourceChips = true } = props;
   const navigate = useNavigate();
   const {
     store: {
-      state: { isFetching, stories, activeFiltersCount, pagingInfo },
+      state: {
+        isFetching,
+        stories,
+        activeFiltersCount,
+        pagingInfo,
+        storiesSource,
+      },
     },
     manager: {
       handleClearFilters,
       handleGetStoriesByPage,
+      handleSetStoriesSource,
       handleToggleFiltersPanel,
     },
-  } = useExploreContext();
+  } = useLibraryContext();
 
   const handleOnCreateClick = () => {
     navigate("/create");
@@ -36,12 +53,8 @@ export const ExploreContent = (props: ExplorePageContentProps): JSX.Element => {
     handleToggleFiltersPanel(true);
   };
 
-  // const handleSortButtonClick = () => {
-  //   handleSortStories();
-  // };
-
   const handlePaginationItemClick = async (
-    event: React.ChangeEvent<unknown>,
+    _event: React.ChangeEvent<unknown>,
     pageNumber: number,
   ) => {
     if (pageNumber !== pagingInfo.pageNumber) {
@@ -52,31 +65,42 @@ export const ExploreContent = (props: ExplorePageContentProps): JSX.Element => {
   return (
     <Page
       isLoading={isFetching || (isFetching && !stories.length)}
-      className="explore-page"
+      className="library-page"
       title="Library of Bedtime Stories on TalePod"
       loaderComponentName={LoaderComponentNameEnum.BedtimeStories}
     >
-      <Container className="explore-container">
-        {/* Modals */}
+      <Container className="library-container">
         <FiltersPanel />
 
-        {/* Filters */}
         {!isFetching && (
           <Box
             mb={1}
             display="flex"
             alignItems="center"
-            justifyContent="end"
+            justifyContent="space-between"
             mt={{ xs: 0, sm: 2 }}
-            className="explore-top-bar"
+            className="library-top-bar"
           >
-            {/* <Button
-              variant="text"
-              endIcon={<SwapVertOutlined />}
-              onClick={handleSortButtonClick}
-            >
-              Sort
-            </Button> */}
+            <Box>
+              {showSourceChips && storiesSource !== "users" && (
+                <Stack direction="row" spacing={1}>
+                  <Chip
+                    clickable
+                    label="Community"
+                    color="primary"
+                    variant={storiesSource === "community" ? "filled" : "outlined"}
+                    onClick={() => handleSetStoriesSource("community")}
+                  />
+                  <Chip
+                    clickable
+                    label="by TalePod"
+                    color="primary"
+                    variant={storiesSource === "talepod" ? "filled" : "outlined"}
+                    onClick={() => handleSetStoriesSource("talepod")}
+                  />
+                </Stack>
+              )}
+            </Box>
 
             <Button variant="text" onClick={handleFilterButtonClick}>
               Filters
@@ -97,9 +121,8 @@ export const ExploreContent = (props: ExplorePageContentProps): JSX.Element => {
               <RandomImage />
             </Box>
 
-            {/* Stories List */}
             <Box
-              className="explore-container-snap-area"
+              className="library-container-snap-area"
               sx={{
                 display: "flex",
                 flexWrap: "wrap",
@@ -130,7 +153,7 @@ export const ExploreContent = (props: ExplorePageContentProps): JSX.Element => {
                 justifyContent: "center",
                 mt: { xs: 0, sm: 1 },
               }}
-              className="explore-footer"
+              className="library-footer"
             >
               {pagingInfo.totalPagesCount && pagingInfo.totalPagesCount > 1 ? (
                 <Pagination
@@ -163,7 +186,6 @@ export const ExploreContent = (props: ExplorePageContentProps): JSX.Element => {
           <></>
         )}
 
-        {/* No Stories Found */}
         {!isFetching && !stories.length ? (
           <NoStoriesFound
             handleOnCreateClick={handleOnCreateClick}

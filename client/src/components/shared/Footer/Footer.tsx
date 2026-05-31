@@ -58,7 +58,7 @@ const Footer = () => {
 
   const productLinks = [
     { text: "Create a story", href: routes.create },
-    { text: "Library", href: routes.explore },
+    { text: "Library", href: routes.library },
     { text: "Pricing", href: routes.pricing },
     { text: "Blog", href: routes.blogs },
     { text: "Contact", href: routes.contact },
