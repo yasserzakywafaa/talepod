@@ -11,6 +11,7 @@ import { FC, useEffect, useState } from "react";
 import { Chip } from "@mui/material";
 import { StoryFormat } from "../store/state";
 import bunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
+import { bgTwilight, glowHoney, honey300, honey400 } from "src/application/shared/themes";
 
 /**
  * Immersive, format-aware "generating" overlay shown while a story is being
@@ -94,7 +95,7 @@ const GeneratingScreen: FC<GeneratingScreenProps> = ({ format, childName }) => {
     return () => clearInterval(id);
   }, [stages.length]);
 
-  const honey = "oklch(0.81 0.14 80)";
+  const honey = honey400;
   const stage = stages[active];
 
   return (
@@ -113,8 +114,7 @@ const GeneratingScreen: FC<GeneratingScreenProps> = ({ format, childName }) => {
         padding: "0 28px",
         textAlign: "center",
         fontFamily: "var(--font-body)",
-        background:
-          "linear-gradient(180deg, oklch(0.20 0.07 280) 0%, oklch(0.32 0.10 275) 45%, oklch(0.55 0.13 30) 100%)",
+        background: bgTwilight,
         animation: "tp-fade-in var(--dur-3) var(--ease-out)",
       }}
     >
@@ -156,7 +156,7 @@ const GeneratingScreen: FC<GeneratingScreenProps> = ({ format, childName }) => {
           style={{
             fontFamily: "var(--font-accent)",
             fontSize: 22,
-            color: "oklch(0.85 0.12 82)",
+            color: honey300,
             marginTop: 10,
             position: "relative",
           }}
@@ -215,10 +215,7 @@ const GeneratingScreen: FC<GeneratingScreenProps> = ({ format, childName }) => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                boxShadow:
-                  i === active
-                    ? "0 0 0 6px oklch(0.81 0.14 80 / 0.18), 0 8px 24px oklch(0.73 0.15 76 / 0.30)"
-                    : "none",
+                boxShadow: i === active ? glowHoney : "none",
                 transition: "background var(--dur-3) var(--ease-out)",
               }}
             >

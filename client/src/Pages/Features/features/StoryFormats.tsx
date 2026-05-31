@@ -7,9 +7,16 @@ import characterOwl from "src/assets/images/landing_pages/wise_owl.webp";
 import mascotSleepingBunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
+import {
+  gradCover,
+  gradScene,
+  honey500,
+  honey600,
+  twilight500,
+} from "src/application/shared/themes";
 
-const PREVIEW_SKY =
-  "linear-gradient(170deg, oklch(0.30 0.10 280), oklch(0.45 0.12 30))";
+// Empty-scene placeholder fill — single source in themes.ts (--grad-scene).
+const PREVIEW_SKY = gradScene;
 
 const COMIC_STARFIELD =
   "radial-gradient(circle at 20% 25%, rgba(255,213,107,0.55) 0 2px, transparent 3px)," +
@@ -27,7 +34,7 @@ const overlineStyle: React.CSSProperties = {
   fontWeight: 700,
   letterSpacing: "0.08em",
   textTransform: "uppercase",
-  color: "var(--honey-600)",
+  color: honey600,
 };
 
 interface FormatPanelProps {
@@ -54,10 +61,11 @@ const FormatPanel: React.FC<FormatPanelProps> = ({
   return (
     <Box
       sx={{
-        background: "var(--surface)",
+        backgroundColor: "background.paper",
         borderRadius: "var(--r-xl)",
         p: "26px",
-        border: "1px solid var(--border)",
+        border: "1px solid",
+        borderColor: "divider",
         boxShadow: "var(--shadow-md)",
         display: "flex",
         flexDirection: "column",
@@ -150,7 +158,7 @@ const FormatPanel: React.FC<FormatPanelProps> = ({
                 width: 130,
                 height: "100%",
                 borderRadius: 12,
-                background: "linear-gradient(160deg, #FFE6A8, #C9B6E8)",
+                background: gradCover,
                 display: "flex",
                 alignItems: "flex-end",
                 justifyContent: "center",
@@ -193,27 +201,29 @@ const FormatPanel: React.FC<FormatPanelProps> = ({
           color={isHoney ? "primary" : "secondary"}
           label={badge}
         />
-        <h3
-          style={{
+        <Box
+          component="h3"
+          sx={{
             fontFamily: "var(--font-display)",
             fontSize: 32,
             lineHeight: 1.1,
             margin: "10px 0 8px",
-            color: "var(--fg)",
+            color: "text.primary",
           }}
         >
           {title}
-        </h3>
-        <p
-          style={{
+        </Box>
+        <Box
+          component="p"
+          sx={{
             fontSize: 14,
             lineHeight: 1.55,
-            color: "var(--fg-2)",
+            color: "text.secondary",
             margin: 0,
           }}
         >
           {desc}
-        </p>
+        </Box>
       </div>
 
       <ul
@@ -227,24 +237,25 @@ const FormatPanel: React.FC<FormatPanelProps> = ({
         }}
       >
         {features.map((f) => (
-          <li
+          <Box
+            component="li"
             key={f}
-            style={{
+            sx={{
               display: "flex",
               alignItems: "flex-start",
-              gap: 8,
+              gap: "8px",
               fontSize: 13,
-              color: "var(--fg-2)",
+              color: "text.secondary",
             }}
           >
             <CheckCircleOutlined
               sx={{
                 fontSize: 16,
-                color: isHoney ? "var(--honey-500)" : "var(--twilight-500)",
+                color: isHoney ? honey500 : twilight500,
               }}
             />
             <span>{f}</span>
-          </li>
+          </Box>
         ))}
       </ul>
 
@@ -270,21 +281,23 @@ const StoryFormats: React.FC = () => {
     <Box component="section" sx={{ width: "100%" }}>
       <Box sx={{ textAlign: "center", mb: 5 }}>
         <div style={overlineStyle}>Two story formats</div>
-        <h2
-          style={{
+        <Box
+          component="h2"
+          sx={{
             fontFamily: "var(--font-display)",
             fontSize: "clamp(28px, 5vw, 42px)",
             lineHeight: 1.1,
             margin: "8px 0 6px",
-            color: "var(--fg)",
+            color: "text.primary",
           }}
         >
           Bedtime, told two ways.
-        </h2>
-        <p
-          style={{
+        </Box>
+        <Box
+          component="p"
+          sx={{
             fontSize: 15,
-            color: "var(--fg-2)",
+            color: "text.secondary",
             margin: "6px auto 0",
             maxWidth: 560,
             lineHeight: 1.5,
@@ -292,7 +305,7 @@ const StoryFormats: React.FC = () => {
         >
           Pick a comic book of six painted pages for younger kids, or a long,
           vivid chapter story for the readers who never want bedtime to end.
-        </p>
+        </Box>
       </Box>
 
       <Box

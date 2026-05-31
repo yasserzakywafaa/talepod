@@ -5,6 +5,12 @@ import {
 import { Box, Button, Chip, Typography } from "@mui/material";
 
 import { usePricing } from "./usePricing";
+import {
+  borderStrongDark,
+  borderStrongLight,
+  honey300,
+  twilight500,
+} from "src/application/shared/themes";
 
 /* Pay-per-story callout (per the design's "Pay as you go" section). Self-gating:
    renders only when a one-time Stripe price exists, so it stays inert until a
@@ -21,24 +27,25 @@ const PayPerStoryCallout: React.FC = () => {
   return (
     <Box sx={{ width: "100%", maxWidth: 1180, mx: "auto" }}>
       <Box
-        sx={{
-          background: "var(--surface)",
+        sx={(theme) => ({
+          backgroundColor: theme.palette.background.paper,
           borderRadius: "var(--r-xl, 20px)",
-          border: "1.5px dashed var(--border-strong, var(--border))",
+          border: `1.5px dashed ${
+            theme.palette.mode === "light" ? borderStrongLight : borderStrongDark
+          }`,
           p: { xs: 2.5, sm: "26px 32px" },
           display: "flex",
           flexDirection: { xs: "column", sm: "row" },
           alignItems: { xs: "flex-start", sm: "center" },
           gap: 3,
-        }}
+        })}
       >
         <Box
           sx={{
             width: 64,
             height: 64,
             borderRadius: "50%",
-            background:
-              "linear-gradient(160deg, var(--honey-300, #F2C45C), var(--twilight-500, #6F57BD))",
+            background: `linear-gradient(160deg, ${honey300}, ${twilight500})`,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -60,7 +67,7 @@ const PayPerStoryCallout: React.FC = () => {
               fontFamily: "var(--font-display)",
               fontSize: 24,
               lineHeight: 1.15,
-              color: "var(--fg)",
+              color: "text.primary",
               mb: 0.5,
             }}
           >
@@ -92,7 +99,7 @@ const PayPerStoryCallout: React.FC = () => {
                 fontFamily: "var(--font-display)",
                 fontSize: 40,
                 lineHeight: 1,
-                color: "var(--fg)",
+                color: "text.primary",
               }}
             >
               {priceLabel}

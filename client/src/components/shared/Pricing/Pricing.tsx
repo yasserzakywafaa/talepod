@@ -17,6 +17,7 @@ import Typography from "@mui/material/Typography";
 import characterLion from "src/assets/images/landing_pages/lion_cub.webp";
 import mascotPuppy from "src/assets/images/cute_puppy_with_sparkling_eyes.webp";
 import { usePricing } from "./usePricing";
+import { honey400, honey500 } from "src/application/shared/themes";
 
 const planMascot = (title: SubscriptionPlanEnum) =>
   title === SubscriptionPlanEnum.Free ? mascotPuppy : characterLion;
@@ -104,8 +105,8 @@ export const Pricing = () => {
                     p: { xs: 2, sm: 3 },
                     position: "relative",
                     overflow: "hidden",
-                    border: isPremium ? "2px solid" : "1px solid var(--border)",
-                    borderColor: isPremium ? "primary.main" : undefined,
+                    border: isPremium ? "2px solid" : "1px solid",
+                    borderColor: isPremium ? "primary.main" : "divider",
                     boxShadow: isPremium
                       ? "var(--shadow-lg)"
                       : "var(--shadow-sm)",
@@ -225,8 +226,8 @@ export const Pricing = () => {
                           sx={{
                             fontSize: 18,
                             color: isPremium
-                              ? "var(--honey-400)"
-                              : "var(--honey-500)",
+                              ? honey400
+                              : honey500,
                           }}
                         />
                         <Typography component="span" variant="subtitle2">

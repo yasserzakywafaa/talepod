@@ -5,6 +5,7 @@ import { CheckCircleOutlined, PlayArrowRounded } from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
 import bunny from "../../../assets/images/sleeping_bunny_with_a_moon.webp";
 import penguin from "../../../assets/images/cute_penguin_with_a_fish.webp";
+import { bgTwilight, honey300, honey400 } from "src/application/shared/themes";
 
 // Decorative twinkling-stars layer (faithful to design MHero).
 const STAR_FIELD =
@@ -25,7 +26,7 @@ const Hero = () => {
           position: "relative",
           overflow: "hidden",
           borderRadius: { xs: "var(--r-xl)", sm: "var(--r-2xl)" },
-          background: "var(--bg-twilight)",
+          background: bgTwilight,
           color: "#fff",
           px: { xs: 3, sm: 5, md: 6 },
           py: { xs: 5, sm: 7, md: 9 },
@@ -77,8 +78,7 @@ const Hero = () => {
               <Box
                 component="span"
                 sx={{
-                  backgroundImage:
-                    "linear-gradient(90deg, var(--honey-300), #FCBFC2)",
+                  backgroundImage: `linear-gradient(90deg, ${honey300}, #FCBFC2)`,
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
@@ -136,7 +136,7 @@ const Hero = () => {
                   }}
                 >
                   <CheckCircleOutlined
-                    sx={{ fontSize: 14, color: "var(--honey-300)" }}
+                    sx={{ fontSize: 14, color: honey300 }}
                   />
                   {t}
                 </Box>
@@ -174,7 +174,7 @@ const Hero = () => {
                   width: "100%",
                   height: "100%",
                   borderRadius: "30px",
-                  background: "var(--bg-twilight)",
+                  background: bgTwilight,
                   overflow: "hidden",
                   position: "relative",
                   display: "flex",
@@ -187,7 +187,7 @@ const Hero = () => {
                   sx={{
                     fontFamily: "var(--font-accent)",
                     fontSize: 18,
-                    color: "var(--honey-300)",
+                    color: honey300,
                   }}
                 >
                   For Lila · age 5
@@ -233,7 +233,7 @@ const Hero = () => {
                       width: 32,
                       height: 32,
                       borderRadius: "50%",
-                      background: "var(--honey-400)",
+                      background: honey400,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -258,12 +258,13 @@ const Hero = () => {
                 bottom: 0,
                 right: { sm: -10, md: -20 },
                 width: 200,
-                background: "var(--surface)",
-                color: "var(--fg)",
+                backgroundColor: "background.paper",
+                color: "text.primary",
                 borderRadius: "var(--r-lg)",
                 p: 1.75,
                 boxShadow: "0 20px 60px rgba(0,0,0,0.35)",
-                border: "1px solid var(--border)",
+                border: "1px solid",
+                borderColor: "divider",
                 transform: "rotate(4deg)",
               }}
             >
@@ -291,12 +292,12 @@ const Hero = () => {
                   fontFamily: "var(--font-display)",
                   fontSize: 13,
                   lineHeight: 1.2,
-                  color: "var(--fg)",
+                  color: "text.primary",
                 }}
               >
                 Pip the Penguin's First Snowflake
               </Box>
-              <Box sx={{ fontSize: 10, color: "var(--fg-3)", mt: 0.4 }}>
+              <Box sx={{ fontSize: 10, color: "text.secondary", mt: 0.4 }}>
                 For Lila · 6 min
               </Box>
             </Box>

@@ -61,10 +61,8 @@ const useApplicationStore = (): ApplicationStore => {
   const applyThemeToDOM = (theme: "light" | "dark") => {
     const themeColorMetaTag = document.getElementById("theme-color");
 
-    // Drive the design-system CSS tokens (assets/scss/design-system.css) which
-    // key off [data-theme] on <html> (and body.dark as a fallback).
-    document.documentElement.setAttribute("data-theme", theme);
-
+    // Theme colors come from MUI (the ThemeProvider in AppContent swaps
+    // light/dark). Here we only sync the browser chrome color + a body class.
     switch (theme) {
       case "light":
         themeColorMetaTag &&

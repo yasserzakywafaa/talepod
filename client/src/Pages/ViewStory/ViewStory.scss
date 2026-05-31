@@ -20,9 +20,9 @@
 .view-story-seo-card {
   .view-story-seo-card-content {
     a {
-      color: var(--primary);
+      color: #f0b648;
       &:visited {
-        color: var(--accent);
+        color: #6664c0;
       }
     }
   }
@@ -54,14 +54,14 @@
   .swiper-pagination-bullet {
     width: 7px;
     height: 7px;
-    background: var(--border-strong);
+    background: rgba(128, 120, 140, 0.55);
     opacity: 1;
   }
 
   .swiper-pagination-bullet-active {
     width: 22px;
     border-radius: 4px;
-    background: var(--honey-400);
+    background: #f0b648;
   }
 }
 

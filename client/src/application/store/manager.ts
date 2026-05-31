@@ -91,7 +91,6 @@ export const useApplicationManager = (
     const storedAuthInfo = getLocalStorageAuthItems();
 
     const initialTheme = getThemePreference(storedAuthInfo.user);
-    document.documentElement.setAttribute("data-theme", initialTheme);
     document.body.classList.remove(
       APP_CONSTANTS.APP_THEME_CLASS.DARK,
       APP_CONSTANTS.APP_THEME_CLASS.LIGHT,

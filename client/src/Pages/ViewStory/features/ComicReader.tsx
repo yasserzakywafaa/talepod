@@ -20,6 +20,7 @@ import characterMonkey from "src/assets/images/landing_pages/monkey_holding_bana
 import characterOwl from "src/assets/images/landing_pages/wise_owl.webp";
 import mascotFox from "src/assets/images/dreaming_fox_with_a_pillow.webp";
 import mascotSleepingBunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
+import { glowHoney, gradScene, honey300, honey400 } from "src/application/shared/themes";
 
 /**
  * Paged comic-book reader (ebook style): swipeable full-bleed scenes with a
@@ -36,8 +37,8 @@ const PLACEHOLDER_ART = [
   characterMonkey,
 ];
 
-const SCENE_GRADIENT =
-  "linear-gradient(170deg, oklch(0.36 0.10 280) 0%, oklch(0.55 0.13 30) 100%)";
+// Empty-scene placeholder fill — single source in themes.ts (--grad-scene).
+const SCENE_GRADIENT = gradScene;
 const STARS =
   "radial-gradient(circle at 18% 22%, rgba(255,213,107,0.85) 0 3px, transparent 4px), radial-gradient(circle at 80% 30%, rgba(255,255,255,0.7) 0 2.5px, transparent 4px), radial-gradient(circle at 65% 70%, rgba(255,213,107,0.7) 0 2px, transparent 3px), radial-gradient(circle at 35% 85%, rgba(255,255,255,0.6) 0 1.5px, transparent 3px)";
 
@@ -74,18 +75,18 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
               alignItems: "center",
               gap: "6px",
               fontSize: 13,
-              color: "var(--fg-2)",
+              color: "text.secondary",
             }}
           >
             <ViewCarouselOutlined
-              sx={{ fontSize: 16, color: "var(--honey-400)" }}
+              sx={{ fontSize: 16, color: honey400 }}
             />
             Comic · {total} pages · tap a page to jump
           </Box>
           <IconButton
             aria-label="close"
             onClick={() => setShowGrid(false)}
-            sx={{ color: "var(--fg)" }}
+            sx={{ color: "text.primary" }}
           >
             <CloseRounded />
           </IconButton>
@@ -112,19 +113,19 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
                   display: "block",
                   width: "100%",
                   padding: 0,
-                  background: "var(--surface)",
+                  backgroundColor: "background.paper",
                   borderRadius: "var(--r-lg)",
                   overflow: "hidden",
                   textAlign: "left",
-                  border: current
-                    ? "2px solid var(--honey-400)"
-                    : "1px solid var(--border)",
-                  boxShadow: current ? "var(--glow-honey)" : "var(--shadow-xs)",
+                  borderWidth: current ? 2 : 1,
+                  borderStyle: "solid",
+                  borderColor: current ? honey400 : "divider",
+                  boxShadow: current ? glowHoney : "var(--shadow-xs)",
                 }}
               >
                 <Box
                   sx={{
-                    aspectRatio: "4/5",
+                    aspectRatio: "4/3",
                     background: SCENE_GRADIENT,
                     display: "flex",
                     alignItems: "flex-end",
@@ -170,7 +171,7 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
                     padding: "8px 10px",
                     fontSize: 11,
                     lineHeight: 1.3,
-                    color: "var(--fg-2)",
+                    color: "text.secondary",
                     fontWeight: 500,
                   }}
                 >
@@ -267,17 +268,18 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
               <Box
                 sx={{
                   marginTop: "14px",
-                  background: "var(--surface)",
+                  backgroundColor: "background.paper",
                   borderRadius: "var(--r-lg)",
                   padding: "14px 18px",
-                  border: "1px solid var(--border)",
+                  border: "1px solid",
+                  borderColor: "divider",
                 }}
               >
                 <Box
                   sx={{
                     fontFamily: "var(--font-accent)",
                     fontSize: 18,
-                    color: "var(--honey-300)",
+                    color: honey300,
                     marginBottom: "4px",
                   }}
                 >
@@ -289,7 +291,7 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
                     fontFamily: "var(--font-body)",
                     fontSize: 16,
                     lineHeight: 1.5,
-                    color: "var(--fg)",
+                    color: "text.primary",
                     fontWeight: 400,
                   }}
                 >

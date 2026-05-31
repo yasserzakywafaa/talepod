@@ -42,7 +42,7 @@ export const ExploreContent = (props: ExplorePageContentProps): JSX.Element => {
 
   const handlePaginationItemClick = async (
     event: React.ChangeEvent<unknown>,
-    pageNumber: number
+    pageNumber: number,
   ) => {
     if (pageNumber !== pagingInfo.pageNumber) {
       await handleGetStoriesByPage(pageNumber);

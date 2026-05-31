@@ -27,6 +27,7 @@ import SubscriptionSection from "./features/Subscription";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useMyProfileContext } from "./store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
+import { honey300, honey400, honey700 } from "src/application/shared/themes";
 
 type ProfileTab = "profile" | "billing";
 
@@ -117,7 +118,8 @@ const MyProfilePage = () => {
           sx={{
             display: "flex",
             gap: 0.5,
-            borderBottom: "1px solid var(--border)",
+            borderBottom: "1px solid",
+            borderColor: "divider",
             mb: 3,
           }}
         >
@@ -138,9 +140,9 @@ const MyProfilePage = () => {
                   fontFamily: "inherit",
                   fontSize: 14,
                   fontWeight: on ? 700 : 500,
-                  color: on ? "var(--honey-700)" : "var(--fg-2)",
+                  color: on ? honey700 : "text.secondary",
                   borderBottom: on
-                    ? "2px solid var(--honey-400)"
+                    ? `2px solid ${honey400}`
                     : "2px solid transparent",
                   display: "inline-flex",
                   alignItems: "center",
@@ -284,7 +286,7 @@ const MyProfilePage = () => {
                     sx={{
                       width: `${usedPercent}%`,
                       height: "100%",
-                      background: "var(--honey-300, #F2C45C)",
+                      background: honey300,
                     }}
                   />
                 </Box>
@@ -308,7 +310,7 @@ const MyProfilePage = () => {
                     }}
                   >
                     <LocalActivityOutlined
-                      sx={{ fontSize: 18, color: "var(--honey-300)" }}
+                      sx={{ fontSize: 18, color: honey300 }}
                     />
                     <span>Story credits</span>
                   </Box>

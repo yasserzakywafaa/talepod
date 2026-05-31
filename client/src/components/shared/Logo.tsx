@@ -4,6 +4,7 @@ import { Box } from "@mui/material";
 import TalePodLogo from "src/assets/images/sleeping_bunny_with_a_moon.webp";
 import TalePodLogoSmall from "src/assets/images/sleeping_bunny_with_a_moon.webp";
 import routes from "src/application/routes";
+import { honey300, twilight500 } from "src/application/shared/themes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useNavigate } from "react-router-dom";
 
@@ -56,14 +57,14 @@ const Logo = (props: LogoProps) => {
       >
         <span
           style={{
-            color: themeMode === "dark" ? "" : "var(--twilight-500)",
+            color: themeMode === "dark" ? "" : twilight500,
           }}
         >
           Tale
         </span>
         <span
           style={{
-            color: "var(--honey-300)",
+            color: honey300,
           }}
         >
           Pod

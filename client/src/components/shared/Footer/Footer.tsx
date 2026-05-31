@@ -1,6 +1,7 @@
 import "./Footer.scss";
 
 import { Box, Grid, Link, Stack, Typography } from "@mui/material";
+import { bgSunkenDark, honey300 } from "src/application/shared/themes";
 
 import Logo from "../Logo";
 import PortugalFlag from "src/assets/images/portugal_flag.png";
@@ -74,7 +75,7 @@ const Footer = () => {
     fontSize: 13,
     color: "rgba(255,255,255,0.78)",
     textDecoration: "none",
-    "&:hover": { color: "var(--honey-300)" },
+    "&:hover": { color: honey300 },
   };
 
   const headingSx = {
@@ -82,7 +83,7 @@ const Footer = () => {
     fontWeight: 700,
     textTransform: "uppercase",
     letterSpacing: "0.06em",
-    color: "var(--honey-300)",
+    color: honey300,
     mb: 1.5,
   };
 
@@ -94,8 +95,8 @@ const Footer = () => {
         mt: 6,
         px: { xs: 3, sm: 5 },
         py: { xs: 4, sm: 6 },
-        background: "var(--bg-sunken)",
-        borderTop: "1px solid var(--divider)",
+        background: bgSunkenDark,
+        borderTop: "1px solid rgba(255,255,255,0.12)",
         borderRadius: "var(--r-xl) var(--r-xl) 0 0",
       }}
     >

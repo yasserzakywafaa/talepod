@@ -14,6 +14,7 @@ import {
 import END_POINTS from "src/application/shared/endpoints";
 import { Story } from "src/components/StoryCreator/store/state";
 import axios from "axios";
+import { honey400, twilight300 } from "src/application/shared/themes";
 
 interface StoryExportActionsProps {
   story: Story;
@@ -78,25 +79,26 @@ const StoryExportActions: FC<StoryExportActionsProps> = ({
       sx={{
         mt: "22px",
         mb: "22px",
-        background: "var(--surface)",
-        border: "1px solid var(--border)",
+        backgroundColor: "background.paper",
+        border: "1px solid",
+        borderColor: "divider",
         borderRadius: "var(--r-xl)",
         p: "20px 22px",
         boxShadow: "var(--shadow-xs)",
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, mb: 0.5 }}>
-        <AutoStoriesOutlined sx={{ color: "var(--honey-400)", fontSize: 22 }} />
+        <AutoStoriesOutlined sx={{ color: honey400, fontSize: 22 }} />
         <Typography
           component="h3"
-          sx={{ fontFamily: "var(--font-display)", fontSize: 20, color: "var(--fg)" }}
+          sx={{ fontFamily: "var(--font-display)", fontSize: 20, color: "text.primary" }}
         >
           Turn this into an eBook
         </Typography>
       </Box>
 
       <Typography
-        sx={{ mb: 2, fontSize: 14, lineHeight: 1.55, color: "var(--fg-2)" }}
+        sx={{ mb: 2, fontSize: 14, lineHeight: 1.55, color: "text.secondary" }}
       >
         Download a beautifully designed PDF storybook — a lovely keepsake to read
         again and again.
@@ -144,11 +146,11 @@ const StoryExportActions: FC<StoryExportActionsProps> = ({
             alignItems: "center",
             gap: 0.75,
             fontSize: 13,
-            color: "var(--fg-2)",
+            color: "text.secondary",
           }}
         >
-          <BrushOutlined sx={{ color: "var(--twilight-300)", fontSize: 15 }} />
-          <Typography sx={{ fontSize: 13, color: "var(--fg-2)" }}>
+          <BrushOutlined sx={{ color: twilight300, fontSize: 15 }} />
+          <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
             Illustrations are still being painted — your eBook will be ready once
             they finish.
           </Typography>

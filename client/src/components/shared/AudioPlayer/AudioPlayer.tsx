@@ -1,5 +1,6 @@
 import { Box, IconButton, Typography } from "@mui/material";
 import { PauseRounded, PlayArrowRounded } from "@mui/icons-material";
+import { gradCover, glowHoney, honey300, honey400, plum700 } from "src/application/shared/themes";
 import { useEffect, useRef, useState } from "react";
 
 export interface AudioPlayerProps {
@@ -98,10 +99,10 @@ export const AudioPlayer = ({
     <Box
       sx={{
         borderRadius: "var(--r-xl)",
-        background: "var(--plum-700)",
+        background: plum700,
         color: "#fff",
         boxShadow: "var(--shadow-lg)",
-        border: "1px solid var(--border)",
+        border: "1px solid rgba(255,255,255,0.12)",
         padding: "12px 14px",
         display: "flex",
         flexDirection: "column",
@@ -117,7 +118,7 @@ export const AudioPlayer = ({
             width: 46,
             height: 46,
             borderRadius: "12px",
-            background: "linear-gradient(160deg,#FFE6A8,#C9B6E8)",
+            background: gradCover,
             display: "flex",
             alignItems: "flex-end",
             justifyContent: "center",
@@ -177,11 +178,11 @@ export const AudioPlayer = ({
             height: 44,
             flexShrink: 0,
             borderRadius: "50%",
-            background: "var(--honey-400)",
+            background: honey400,
             color: "#fff",
-            boxShadow: "var(--glow-honey)",
+            boxShadow: glowHoney,
             "&:hover": {
-              background: "var(--honey-400)",
+              background: honey400,
               filter: "brightness(1.05)",
             },
           }}
@@ -204,7 +205,7 @@ export const AudioPlayer = ({
           sx={{
             width: `${progress}%`,
             height: "100%",
-            background: "var(--honey-300)",
+            background: honey300,
             transition: "width 120ms linear",
           }}
         />

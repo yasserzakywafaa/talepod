@@ -158,7 +158,7 @@ const ViewStoryPage: React.FC = () => {
                       mb: 2,
                       mx: "auto",
                       maxWidth: 560,
-                      aspectRatio: "5 / 4",
+                      aspectRatio: "1 / 1",
                       overflow: "hidden",
                       borderRadius: "var(--r-xl)",
                       boxShadow: "var(--shadow-md)",

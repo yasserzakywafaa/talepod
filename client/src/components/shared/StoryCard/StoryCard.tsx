@@ -65,6 +65,11 @@ const StoryCard = (props: StoryCardProps) => {
     <Box
       className="story-card"
       style={props.style}
+      sx={{
+        backgroundColor: "background.paper",
+        border: "1px solid",
+        borderColor: "divider",
+      }}
       onClick={props.isStoryLocked ? undefined : handleOnCardClick}
     >
       {props.isStoryLocked && (
@@ -115,6 +120,7 @@ const StoryCard = (props: StoryCardProps) => {
       <div className="story-card-content">
         <Typography
           className={`story-card-title ${hasDirectionRtl ? "direction-rtl" : ""}`}
+          sx={{ color: "text.primary" }}
         >
           {props.story.title}
         </Typography>
@@ -122,6 +128,7 @@ const StoryCard = (props: StoryCardProps) => {
           className={`story-card-summary ${
             hasDirectionRtl ? "direction-rtl" : ""
           }`}
+          sx={{ color: "text.secondary" }}
         >
           {props.story.summary}
         </Typography>
@@ -162,11 +169,11 @@ const StoryCard = (props: StoryCardProps) => {
           )}
           {(profileInfo.gender === ChildGenderEnum.Girl ||
             profileInfo.gender === AdultGenderEnum.Female) && (
-            <FemaleOutlined sx={{ fontSize: 18, color: "var(--primary)" }} />
+            <FemaleOutlined sx={{ fontSize: 18, color: "primary.main" }} />
           )}
           {(profileInfo.gender === ChildGenderEnum.Boy ||
             profileInfo.gender === AdultGenderEnum.Male) && (
-            <MaleOutlined sx={{ fontSize: 18, color: "var(--primary)" }} />
+            <MaleOutlined sx={{ fontSize: 18, color: "primary.main" }} />
           )}
         </div>
 

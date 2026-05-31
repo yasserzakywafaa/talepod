@@ -1,9 +1,6 @@
 import { CSSProperties } from "react";
 import { createTheme } from "@mui/material/styles";
 
-/* Custom theme tokens (TS augmentation) so plain MUI carries the V2 design:
-   a Yeseva `display` Typography variant, a `magic` gradient Button variant,
-   and a small uppercase `badge` Chip variant (replaces the old v2 kit). */
 declare module "@mui/material/styles" {
   interface TypographyVariants {
     display: CSSProperties;
@@ -28,50 +25,119 @@ declare module "@mui/material/Chip" {
   }
 }
 
-/* =========================================================================
-   TalePod V2 theme bridge.
-   The visual source of truth is assets/scss/design-system.css (CSS custom
-   properties, oklch). MUI can't reliably do color math on oklch, so this
-   file mirrors the key brand anchors as hex and feeds them to the MUI
-   palette — keeping every existing MUI-styled page on the new palette.
-   The exported constant names are preserved (widely imported) so only their
-   VALUES change: e.g. primaryColor flips from dark-goldenrod to honey gold.
-   ========================================================================= */
-
 export const white = "#FFFFFF";
 
-// Honey gold (primary) — EXACT sRGB of design oklch --honey-400 / 300 / 500 / 600
-export const honey400 = "#F0B648"; // oklch(0.81 0.14 80)  PRIMARY (light)
-export const honey300 = "#F5C66D"; // oklch(0.85 0.12 82)  PRIMARY (dark)
-export const honey500 = "#DD9812"; // oklch(0.73 0.15 76)
-export const honey600 = "#BB7400"; // oklch(0.62 0.14 70)
+const brand = {
+  honey: {
+    200: "#FADA99",
+    300: "#F5C66D", // PRIMARY (dark)
+    400: "#F0B648", // PRIMARY (light)
+    500: "#DD9812",
+    600: "#BB7400",
+    700: "#915200",
+  },
+  twilight: {
+    200: "#D0CAFD",
+    300: "#A7A0EC",
+    400: "#827CD4",
+    500: "#6664C0", // SECONDARY
+    600: "#4C4C9E",
+  },
+  plum: {
+    300: "#6D6F89",
+    400: "#464B68",
+    600: "#171C3B", // card bg (dark)
+    700: "#0A0E2B", // page bg (dark)
+    800: "#03051B",
+  },
+  parchment: {
+    100: "#FAF4EA", // page bg (light)
+    200: "#F2EADD", // card bg (light)
+    300: "#E4D9C9", // border (light)
+  },
+} as const;
 
-// Twilight purple (secondary) — EXACT sRGB of design --twilight-300 / 500 / 600
-export const twilight300 = "#A7A0EC"; // oklch(0.74 0.11 288)
-export const twilight500 = "#6664C0"; // oklch(0.55 0.14 282)
-export const twilight600 = "#4C4C9E"; // oklch(0.46 0.13 280)
+/** Semantic tokens — resolved per theme mode. */
+const semantic = {
+  light: {
+    fg: brand.plum[700],
+    fg2: brand.plum[400],
+    fg3: brand.plum[300],
+    surface: white,
+    surface2: brand.parchment[200],
+    border: brand.parchment[300],
+    borderStrong: "#C7B49C",
+    divider: "#ECE3D6",
+    bgSunken: "#F7EDDC",
+    primary: brand.honey[400],
+    accent: brand.twilight[500],
+  },
+  dark: {
+    fg: "#F9F4EE",
+    fg2: "#BEB6A9",
+    fg3: "#8A7F6C",
+    surface: brand.plum[600],
+    surface2: "#202646",
+    border: "#2A3051",
+    borderStrong: "#454A6E",
+    divider: "#212741",
+    bgSunken: brand.plum[800],
+    primary: brand.honey[300],
+    accent: brand.twilight[300],
+  },
+} as const;
 
-// Plum dark surfaces — EXACT sRGB of design --plum-600 / 700 / 800 (deep navy-indigo)
-export const plum600 = "#171C3B"; // oklch(0.24 0.06 275)  card bg dark
-export const plum700 = "#0A0E2B"; // oklch(0.18 0.06 274)  PAGE bg dark
-export const plum800 = "#03051B"; // oklch(0.13 0.05 273)
+/** Signature honey focus-glow (box-shadow). honey-400 @18% + honey-500 @30%. */
+export const glowHoney =
+  "0 0 0 6px rgba(240,182,72,0.18), 0 8px 24px rgba(221,152,18,0.3)";
+/** Twilight → warm dawn hero gradient. */
+export const bgTwilight =
+  "linear-gradient(180deg, #111034 0%, #262B65 45%, #B14F42 100%)";
+/** Decorative cover gradient (story-card / audio-thumb placeholders). */
+export const gradCover = "linear-gradient(160deg, #FFE6A8, #C9B6E8)";
+/** Empty-scene placeholder gradient (comic reader / format previews). */
+export const gradScene = "linear-gradient(170deg, #343470 0%, #B14F42 100%)";
 
-// Parchment light surfaces — EXACT sRGB of design --parchment-100 / 200 / 300
-export const parchment100 = "#FAF4EA"; // oklch(0.97 0.015 82)
-export const parchment200 = "#F2EADD"; // oklch(0.94 0.02 80)
-export const parchment300 = "#E4D9C9"; // oklch(0.89 0.025 78)
+// ── Brand anchors (named exports — widely imported) ──────────────────────
+export const honey200 = brand.honey[200];
+export const honey300 = brand.honey[300];
+export const honey400 = brand.honey[400];
+export const honey500 = brand.honey[500];
+export const honey600 = brand.honey[600];
+export const honey700 = brand.honey[700];
+export const twilight200 = brand.twilight[200];
+export const twilight300 = brand.twilight[300];
+export const twilight400 = brand.twilight[400];
+export const twilight500 = brand.twilight[500];
+export const twilight600 = brand.twilight[600];
+export const plum300 = brand.plum[300];
+export const plum400 = brand.plum[400];
+export const plum600 = brand.plum[600];
+export const plum700 = brand.plum[700];
+export const plum800 = brand.plum[800];
+export const parchment100 = brand.parchment[100];
+export const parchment200 = brand.parchment[200];
+export const parchment300 = brand.parchment[300];
 
-// ── Backwards-compatible exports (same names, new values) ────────────────
-export const lightGrey = "#464B68"; // plum-400 — secondary text on light (was #666666)
-export const charcoal = plum700; // primary text on light (was #333333)
-export const darkCharcoal = plum600; // dark surface for dialogs (was #121212)
-export const primaryColor = honey400; // was #ad932d — now honey gold
+export const fg3Dark = semantic.dark.fg3;
+export const surfaceDark = semantic.dark.surface;
+export const surface2Dark = semantic.dark.surface2;
+export const borderDark = semantic.dark.border;
+export const borderStrongDark = semantic.dark.borderStrong;
+export const borderStrongLight = semantic.light.borderStrong;
+export const bgSunkenDark = semantic.dark.bgSunken;
+
+// ── Backwards-compatible exports (same names, derived values) ─────────────
+export const lightGrey = brand.plum[400]; // secondary text on light
+export const charcoal = brand.plum[700]; // primary text on light
+export const darkCharcoal = brand.plum[600]; // dark surface for dialogs
+export const primaryColor = brand.honey[400];
 export const primaryColorOpaqueTen = "#F0B6481a"; // honey @ 10%
 export const primaryColorOpaqueThirty = "#F0B6484d"; // honey @ 30%
-export const secondaryColorForDarkTheme = twilight300; // was #00BFFF
-export const secondaryColorForLightTheme = twilight600; // was #0080ab
+export const secondaryColorForDarkTheme = brand.twilight[300];
+export const secondaryColorForLightTheme = brand.twilight[600];
 export const darkBackground =
-  "radial-gradient(ellipse at top, #14133E 0%, #0A0E2B 60%)"; // design --bg-storybook (dark): deep indigo → plum-700 navy
+  "radial-gradient(ellipse at top, #14133E 0%, #0A0E2B 60%)"; // dark page bg
 export const defaultBackDropFilterBlur = "blur(4px)";
 
 export const theme = createTheme({
@@ -91,8 +157,6 @@ export const theme = createTheme({
   },
   typography: {
     fontFamily: "'Lexend Deca', LexendDeca, system-ui, sans-serif",
-    // Yeseva display variant (use <Typography variant="display">) — the V2
-    // headline serif, applied selectively (h1–h6 stay on Lexend).
     display: {
       fontFamily: "'Yeseva One', 'Cormorant Garamond', Georgia, serif",
       fontWeight: 400,
@@ -118,7 +182,7 @@ export const theme = createTheme({
             fontWeight: 700,
             letterSpacing: "0.05em",
             textTransform: "uppercase",
-            backgroundColor: "var(--honey-400)",
+            backgroundColor: honey400,
             color: "#fff",
             "& .MuiChip-label": { padding: "3px 8px" },
           },
@@ -126,7 +190,7 @@ export const theme = createTheme({
         {
           props: { variant: "badge", color: "secondary" },
           style: {
-            backgroundColor: "var(--twilight-500)",
+            backgroundColor: twilight500,
             color: "#fff",
           },
         },
@@ -136,41 +200,41 @@ export const theme = createTheme({
     // Segmented; honey selected pill.
     MuiToggleButtonGroup: {
       styleOverrides: {
-        root: {
-          backgroundColor: "var(--surface)",
+        root: ({ theme }) => ({
+          backgroundColor: theme.palette.background.paper,
           borderRadius: 999,
           padding: 4,
-          border: "1px solid var(--border)",
+          border: `1px solid ${theme.palette.divider}`,
           gap: 4,
-        },
+        }),
       },
     },
     MuiToggleButton: {
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           border: "none",
           borderRadius: "999px !important",
           textTransform: "none",
           fontWeight: 600,
           padding: "6px 16px",
-          color: "var(--fg-2)",
+          color: theme.palette.text.secondary,
           "&.Mui-selected": {
-            backgroundColor: "var(--honey-400)",
+            backgroundColor: honey400,
             color: "#fff",
-            "&:hover": { backgroundColor: "var(--honey-400)" },
+            "&:hover": { backgroundColor: honey400 },
           },
-        },
+        }),
       },
     },
     MuiCard: {
       styleOverrides: {
-        root: {
-          backgroundColor: "var(--surface)",
+        root: ({ theme }) => ({
+          backgroundColor: theme.palette.background.paper,
           backgroundImage: "none",
-          border: "1px solid var(--border)",
+          border: `1px solid ${theme.palette.divider}`,
           borderRadius: "var(--r-lg)",
           boxShadow: "var(--shadow-sm)",
-        },
+        }),
       },
     },
     MuiAccordion: {
@@ -199,8 +263,7 @@ export const theme = createTheme({
         {
           props: { variant: "magic" },
           style: {
-            background:
-              "linear-gradient(135deg, var(--honey-400), var(--twilight-500))",
+            background: `linear-gradient(135deg, ${honey400}, ${twilight500})`,
             color: "#fff",
             borderRadius: 999,
             boxShadow: "var(--shadow-md)",
@@ -361,7 +424,7 @@ export const darkTheme = createTheme({
     mode: "dark",
     primary: {
       main: honey300, // brighter honey reads better on plum
-      light: "#FADA99", // honey-200
+      light: brand.honey[200],
       dark: honey400,
       contrastText: plum800,
     },
@@ -370,10 +433,10 @@ export const darkTheme = createTheme({
       paper: plum600, // card/dialog surface
     },
     text: {
-      primary: "#F9F4EE", // warm white (design dark --fg)
-      secondary: "#BEB6A9", // design dark --fg-2
+      primary: semantic.dark.fg, // warm white
+      secondary: semantic.dark.fg2,
     },
-    divider: "#212741", // design dark --divider
+    divider: semantic.dark.border,
   },
   components: {
     ...theme.components,

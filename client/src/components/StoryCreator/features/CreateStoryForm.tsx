@@ -319,11 +319,7 @@ const CreateStoryForm = () => {
         onSubmit={handleOnFormSubmit}
         className="story-creator-form-wrapper"
       >
-        {/* V2: choose the story format before anything else */}
         <Box sx={{ width: "100%", mb: 3 }}>
-          <div className="t-overline" style={{ marginBottom: 8 }}>
-            Story format
-          </div>
           <FormatChooser
             value={format}
             onChange={handleSetFormat}

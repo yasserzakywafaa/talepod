@@ -11,6 +11,14 @@ import characterKitten from "src/assets/images/landing_pages/dreamy_kitten.webp"
 import characterLion from "src/assets/images/landing_pages/lion_cub.webp";
 import characterOwl from "src/assets/images/landing_pages/wise_owl.webp";
 import mascotSleepingBunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
+import {
+  borderStrongDark,
+  borderStrongLight,
+  gradCover,
+  honey400,
+  parchment200,
+  surface2Dark,
+} from "src/application/shared/themes";
 
 export type StoryFormat = "comic" | "long";
 
@@ -71,17 +79,17 @@ const FormatChooser: FC<FormatChooserProps> = ({
             sx={{
               flex: 1,
               textAlign: "left",
-              background: "var(--surface)",
+              backgroundColor: "background.paper",
               borderRadius: "var(--r-lg)",
               padding: stacked ? "12px" : "14px",
-              border: sel
-                ? "1.5px solid var(--honey-400)"
-                : "1px solid var(--border)",
+              borderWidth: sel ? 1.5 : 1,
+              borderStyle: "solid",
+              borderColor: sel ? honey400 : "divider",
               boxShadow: sel
-                ? "0 0 0 4px oklch(0.81 0.14 80 / 0.18), var(--shadow-sm)"
+                ? "0 0 0 4px rgba(240,182,72,0.18), var(--shadow-sm)"
                 : "var(--shadow-xs)",
               fontFamily: "inherit",
-              color: "var(--fg)",
+              color: "text.primary",
               display: "flex",
               flexDirection: "column",
               alignItems: "stretch",
@@ -94,19 +102,23 @@ const FormatChooser: FC<FormatChooserProps> = ({
               sx={{ display: "flex", alignItems: "flex-start", gap: "10px" }}
             >
               <Box
-                sx={{
+                sx={(theme) => ({
                   width: 36,
                   height: 36,
                   borderRadius: "10px",
-                  background: sel ? "var(--honey-400)" : "var(--surface-2)",
+                  background: sel
+                    ? honey400
+                    : theme.palette.mode === "light"
+                      ? parchment200
+                      : surface2Dark,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   flexShrink: 0,
-                }}
+                })}
               >
                 <it.icon
-                  sx={{ fontSize: 20, color: sel ? "#fff" : "var(--fg)" }}
+                  sx={{ fontSize: 20, color: sel ? "#fff" : "text.primary" }}
                 />
               </Box>
               <Box sx={{ flex: 1, minWidth: 0 }}>
@@ -120,7 +132,7 @@ const FormatChooser: FC<FormatChooserProps> = ({
                     fontFamily: "var(--font-display)",
                     fontSize: 18,
                     lineHeight: 1.15,
-                    color: "var(--fg)",
+                    color: "text.primary",
                     marginTop: "4px",
                   }}
                 >
@@ -129,7 +141,7 @@ const FormatChooser: FC<FormatChooserProps> = ({
                 <Box
                   sx={{
                     fontSize: 11,
-                    color: "var(--fg-2)",
+                    color: "text.secondary",
                     marginTop: "2px",
                     lineHeight: 1.4,
                   }}
@@ -138,18 +150,24 @@ const FormatChooser: FC<FormatChooserProps> = ({
                 </Box>
               </Box>
               <Box
-                sx={{
+                sx={(theme) => ({
                   width: 22,
                   height: 22,
                   borderRadius: "50%",
-                  border: sel ? "none" : "1.5px solid var(--border-strong)",
-                  background: sel ? "var(--honey-400)" : "transparent",
+                  border: sel
+                    ? "none"
+                    : `1.5px solid ${
+                        theme.palette.mode === "light"
+                          ? borderStrongLight
+                          : borderStrongDark
+                      }`,
+                  background: sel ? honey400 : "transparent",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   flexShrink: 0,
                   marginTop: "4px",
-                }}
+                })}
               >
                 {sel && <CheckRounded sx={{ fontSize: 14, color: "#fff" }} />}
               </Box>
@@ -178,8 +196,7 @@ const FormatPreview: FC<FormatPreviewProps> = ({ kind, art, compact }) => {
         sx={{
           height: H,
           borderRadius: "var(--r-md)",
-          background:
-            "linear-gradient(160deg, oklch(0.28 0.08 280), oklch(0.38 0.11 290))",
+          background: "linear-gradient(160deg, #22224F, #433578)",
           padding: "6px",
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
@@ -237,8 +254,7 @@ const FormatPreview: FC<FormatPreviewProps> = ({ kind, art, compact }) => {
       sx={{
         height: H,
         borderRadius: "var(--r-md)",
-        background:
-          "linear-gradient(160deg, oklch(0.28 0.08 280), oklch(0.40 0.10 30))",
+        background: "linear-gradient(160deg, #22224F, #742F25)",
         padding: "8px",
         display: "flex",
         alignItems: "center",
@@ -254,7 +270,7 @@ const FormatPreview: FC<FormatPreviewProps> = ({ kind, art, compact }) => {
           width: 60,
           height: H - 16,
           borderRadius: "6px",
-          background: "linear-gradient(160deg, #FFE6A8, #C9B6E8)",
+          background: gradCover,
           display: "flex",
           alignItems: "flex-end",
           justifyContent: "center",
