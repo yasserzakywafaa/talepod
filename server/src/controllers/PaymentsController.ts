@@ -174,44 +174,46 @@ export const createCheckoutSession = async (
 
     const session = await stripe.checkout.sessions.create(sessionParams);
 
-    try {
-      // Send current session to Google Analytics
-      const timeStamp = session.created * 1000;
-      const totalAmount =
-        (session.amount_total && session.amount_total / 100) ?? 0;
-      const payload: GoogleAnalyticsPayload = {
-        timestamp_micros: timeStamp,
-        client_id: googleAnalyticsClientId || "1234567890.987654321",
-        non_personalized_ads: true,
-        events: [
-          {
-            name: "begin_checkout",
-            params: {
-              debug_mode: true,
-              value: totalAmount,
-              affiliation: undefined,
-              transaction_id: undefined,
-              currency: session.currency ?? "eur",
-              event_timestamp: timeStamp,
-              items: [
-                {
-                  item_name: subscriptionPlan, // Plan name
-                  item_id: priceId,
-                  price: totalAmount,
-                  quantity: 1,
-                  item_category: "Subscription", // Optional: Category of the product
-                },
-              ],
+    if (CONFIG.IS_PROD) {
+      try {
+        // Send current session to Google Analytics
+        const timeStamp = session.created * 1000;
+        const totalAmount =
+          (session.amount_total && session.amount_total / 100) ?? 0;
+        const payload: GoogleAnalyticsPayload = {
+          timestamp_micros: timeStamp,
+          client_id: googleAnalyticsClientId || "1234567890.987654321",
+          non_personalized_ads: true,
+          events: [
+            {
+              name: "begin_checkout",
+              params: {
+                debug_mode: true,
+                value: totalAmount,
+                affiliation: undefined,
+                transaction_id: undefined,
+                currency: session.currency ?? "eur",
+                event_timestamp: timeStamp,
+                items: [
+                  {
+                    item_name: subscriptionPlan, // Plan name
+                    item_id: priceId,
+                    price: totalAmount,
+                    quantity: 1,
+                    item_category: "Subscription", // Optional: Category of the product
+                  },
+                ],
+              },
             },
-          },
-        ],
-      };
-      await sendToGoogleAnalytics(payload);
-    } catch (error) {
-      console.error(
-        `❌  Failed to send session data to Google Analytics!`,
-        error,
-      );
+          ],
+        };
+        await sendToGoogleAnalytics(payload);
+      } catch (error) {
+        console.error(
+          `❌  Failed to send session data to Google Analytics!`,
+          error,
+        );
+      }
     }
 
     console.log("ℹ️  createCheckoutSession:>>>", { user, session });
