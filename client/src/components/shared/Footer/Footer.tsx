@@ -1,11 +1,11 @@
 import "./Footer.scss";
 
 import { Box, Grid, Link, Stack, Typography } from "@mui/material";
-import { bgSunkenDark, honey300 } from "src/application/shared/themes";
 
 import Logo from "../Logo";
 import PortugalFlag from "src/assets/images/portugal_flag.png";
 import SwitzerlandFlag from "src/assets/images/switzerland_flag.png";
+import { honey300 } from "src/application/shared/themes";
 import mascotBunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
@@ -95,8 +95,11 @@ const Footer = () => {
         mt: 6,
         px: { xs: 3, sm: 5 },
         py: { xs: 4, sm: 6 },
-        background: bgSunkenDark,
-        borderTop: "1px solid rgba(255,255,255,0.12)",
+        background: "background.default",
+        color: "text.primary",
+        border: `1px solid ${honey300}`,
+        borderBottom: "none",
+        backdropFilter: "blur(10px)",
         borderRadius: "var(--r-xl) var(--r-xl) 0 0",
       }}
     >

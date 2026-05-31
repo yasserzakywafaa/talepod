@@ -2,6 +2,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  height: 100%;
   cursor: pointer;
   overflow: hidden;
   border-radius: var(--r-lg);
@@ -35,7 +36,8 @@
 
   .story-card-cover {
     position: relative;
-    aspect-ratio: 4 / 3;
+    flex-shrink: 0;
+    aspect-ratio: 16 / 9;
     background: linear-gradient(160deg, #ffe6a8, #c9b6e8);
     overflow: hidden;
 
@@ -103,8 +105,8 @@
       line-height: 1.45;
       display: -webkit-box;
       -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      line-clamp: 2;
+      -webkit-line-clamp: 1;
+      line-clamp: 1;
       overflow: hidden;
     }
   }
@@ -115,6 +117,7 @@
     justify-content: space-between;
     gap: 8px;
     padding: 6px 12px 12px;
+    margin-top: auto;
 
     .story-card-tags {
       display: flex;

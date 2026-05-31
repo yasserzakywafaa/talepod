@@ -15,6 +15,12 @@ export interface ComicPage {
   imageUrl?: string;
 }
 
+export interface LongStoryImage {
+  index: number;
+  imagePrompt: string;
+  imageUrl?: string;
+}
+
 export interface StoryCreatorInitialState {
   isFetching: boolean;
   profileInfo: ProfileInfo;
@@ -97,6 +103,7 @@ export interface Story {
   authorProfile?: User;
   format?: StoryFormat;
   pages?: ComicPage[];
+  longStoryImages?: LongStoryImage[];
   imagesStatus?: "pending" | "ready" | "failed";
   pdfUrl?: string;
 }

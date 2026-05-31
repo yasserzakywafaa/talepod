@@ -7,11 +7,16 @@ import {
   SvgIconComponent,
 } from "@mui/icons-material";
 import { FC, useEffect, useState } from "react";
+import {
+  bgTwilight,
+  glowHoney,
+  honey300,
+  honey400,
+} from "src/application/shared/themes";
 
 import { Chip } from "@mui/material";
 import { StoryFormat } from "../store/state";
 import bunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
-import { bgTwilight, glowHoney, honey300, honey400 } from "src/application/shared/themes";
 
 /**
  * Immersive, format-aware "generating" overlay shown while a story is being
@@ -68,7 +73,7 @@ const STAGES: Record<
     },
     {
       label: "Painting the cover…",
-      sub: "One soft watercolor cover",
+      sub: "Magical story cover",
       icon: ImageOutlined,
       rail: "Cover",
     },

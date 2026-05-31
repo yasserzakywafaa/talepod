@@ -16,6 +16,13 @@ export interface ComicPage {
   imageUrl?: string;
 }
 
+/** Interior illustration slot for long-format stories (cover is separate). */
+export interface LongStoryImage {
+  index: number;
+  imagePrompt: string;
+  imageUrl?: string;
+}
+
 export interface Story {
   _id: ObjectId;
   title: string;
@@ -37,6 +44,8 @@ export interface Story {
   format?: StoryFormat;
   /** Populated for comic-format stories only. */
   pages?: ComicPage[];
+  /** Interior illustrations for long-format stories (cover is `coverImageUrl`). */
+  longStoryImages?: LongStoryImage[];
   /** Background image-generation state. Absent on pre-V2 stories (never poll). */
   imagesStatus?: ImagesStatus;
   /** Canonical visual description of the hero (+ recurring companions),

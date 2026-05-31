@@ -1,4 +1,4 @@
-import { ComicPage, Story } from "../../models/types";
+import { ComicPage, LongStoryImage, Story } from "../../models/types";
 import { DBCollectionsEnum, getDocumentFromDb } from "../../models/mongoDb";
 
 import CONFIG from "../../config";
@@ -9,12 +9,28 @@ import { updateDocument } from "../../models/mongoDb/crudOperations";
 import { uploadFileToS3 } from "../amazonS3";
 import { handleOpenRouterAIRequest } from "../../utils/openRouterClient";
 
-/** Brand-consistent illustration styles appended to generated image prompts. */
+/** Hard rule appended to every image prompt — non-English titles often leak into art. */
+const NO_TEXT_IN_ART_RULE = `
+
+CRITICAL — ABSOLUTELY NO TEXT IN THE IMAGE (any language or script):
+- Pure illustration only. Zero readable text anywhere in the artwork.
+- Forbidden in ALL languages and scripts: English, Arabic, Portuguese, Chinese, Cyrillic, Hindi, Japanese, etc.
+- Do NOT render story titles, book titles, author names, captions, labels, signs, logos, watermarks, letters, numbers, speech bubbles, or decorative typography.
+- Any title or prose in this prompt is context for you only — never paint, emboss, carve, or overlay it on the image.
+- No readable book-cover typography; the app displays all text separately from the art.`;
+
+/** Brand-consistent 3D CGI illustration style appended to every image prompt. */
+const IMAGE_STYLE_BASE =
+  " premium 3D CGI children's animation render, Pixar Disney style, smooth rounded forms, highly detailed textures, expressive large eyes, soft cinematic volumetric lighting, warm golden glow, whimsical friendly atmosphere, vibrant saturated colors, completely text-free artwork in every language.";
+
 const COVER_STYLE_SUFFIX =
-  " -- soft watercolor children's storybook illustration, warm golden bedtime light, gentle rounded shapes, cozy and dreamy, no text, no words, no letters.";
+  ` --${IMAGE_STYLE_BASE} wide 16:9 landscape cover composition, edge-to-edge cinematic framing.`;
+
+const LONG_INTERIOR_STYLE_SUFFIX =
+  ` --${IMAGE_STYLE_BASE} full-bleed 16:9 landscape scene illustration.`;
 
 const COMIC_STYLE_SUFFIX =
-  " -- premium children's comic-book illustration, hand-painted watercolor and ink, warm golden bedtime light, expressive cute characters, full-bleed 4:3 landscape scene, polished printable storybook quality, consistent art direction, completely free of any text, letters, words, or speech bubbles.";
+  ` --${IMAGE_STYLE_BASE} full-bleed 4:3 landscape scene, polished printable storybook quality, consistent art direction, completely free of any speech bubbles.`;
 
 const sanitizeFileName = (value: string): string =>
   value
@@ -321,13 +337,85 @@ const buildCoverPrompt = (
   const age = story.profileInfo?.age;
   const gender = story.profileInfo?.gender;
   const summary = story.summary || story.title || "a gentle bedtime story";
-  return `Book cover illustration for a children's bedtime story titled "${story.title}". ${summary}.
+  return `Wide landscape 3D CGI book cover art for a children's bedtime story.
+
+Visual theme (context only — do NOT render any of this as visible text):
+${summary}
+
+Composition: horizontal 16:9 landscape orientation, cinematic wide cover art in Pixar-style 3D animation that fills the frame edge to edge. Place the main character prominently in the scene with rich environmental detail. Single cohesive cover scene — not a collage, not multiple panels. Illustration only — no book title, no typography, no lettering in any language.
 
 Main character (draw exactly as described, keep on-model): ${characterSheet}
 
 The hero is ${name}${age ? `, age ${age}` : ""}${
     gender ? `, ${gender}` : ""
-  }. Keep the hero's gender and appearance visually consistent with the description above.`;
+  }. Keep the hero's gender and appearance visually consistent with the description above.${NO_TEXT_IN_ART_RULE}`;
+};
+
+/** Split prose into non-empty paragraphs for segment-based illustration prompts. */
+const splitStoryParagraphs = (mainStory: string): string[] =>
+  mainStory
+    .split(/\n\s*\n/)
+    .map((p) => p.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+
+/**
+ * Pick two story segments (~1/3 and ~2/3 through the narrative) and turn them
+ * into compact visual scene descriptions for interior illustrations.
+ */
+const deriveLongStoryImagePrompts = (
+  story: StoryWithProfile,
+  count = 2,
+): LongStoryImage[] => {
+  const paragraphs = splitStoryParagraphs(story.mainStory || "");
+  const fallbackScene = story.summary || story.title || "a gentle bedtime moment";
+
+  const pickParagraph = (ratio: number): string => {
+    if (!paragraphs.length) return fallbackScene;
+    const idx = Math.min(
+      paragraphs.length - 1,
+      Math.max(0, Math.floor(paragraphs.length * ratio)),
+    );
+    return paragraphs[idx];
+  };
+
+  const segments =
+    paragraphs.length >= 2
+      ? [pickParagraph(0.33), pickParagraph(0.66)]
+      : [pickParagraph(0), fallbackScene];
+
+  return segments.slice(0, count).map((segment, index) => ({
+    index,
+    imagePrompt: segment.slice(0, 500),
+  }));
+};
+
+const buildLongInteriorPrompt = (
+  story: StoryWithProfile,
+  slot: LongStoryImage,
+  characterSheet: string,
+  useReference = false,
+): string => {
+  const referenceGuide = useReference
+    ? "\n\nA reference image of the main character is attached. The character you draw MUST be the exact same character as in the reference image — identical face, hairstyle, hair color, skin tone, and outfit. Only the scene, pose, camera angle, and action change. Match the reference's art style as well."
+    : "";
+
+  return `Create one full-bleed 3D CGI children's storybook scene for an interior moment.
+
+Story mood (context only — do NOT render as visible text):
+${story.summary || "a gentle bedtime adventure"}
+
+Character consistency guide (CRITICAL — keep identical in every scene):
+${characterSheet}
+Use this exact character design: same face, hairstyle, hair color, skin tone, clothing and colors, body proportions, age, and gender.${referenceGuide}
+
+Scene to illustrate (visual action only — do not write this text in the image):
+${slot.imagePrompt}
+
+Composition requirements:
+- One complete scene only, not a collage or multi-panel page.
+- Full-bleed illustration. No border, frame, or caption box.
+- Completely TEXT-FREE in every language — no letters, words, numbers, captions, titles, signs, or speech bubbles.
+- Tell the story through expressions, body language, and action.${NO_TEXT_IN_ART_RULE}`;
 };
 
 const buildComicPagePrompt = (
@@ -343,28 +431,28 @@ const buildComicPagePrompt = (
     ? "\n\nA reference image of the main character is attached. The character you draw MUST be the exact same character as in the reference image — identical face, hairstyle, hair color, skin tone, and outfit. Only the scene, pose, camera angle, and action change. Match the reference's art style as well."
     : "";
 
-  return `Create one full-bleed children's comic illustration for scene ${
+  return `Create one full-bleed 3D CGI children's comic scene (scene ${
     pageIndex + 1
-  } in a ${totalPages}-scene story titled "${story.title}".
+  } of ${totalPages}).
 
-Story context:
-${story.summary || story.title}
+Story mood (context only — do NOT render as visible text):
+${story.summary || "a gentle bedtime adventure"}
 
 Character consistency guide (CRITICAL — keep identical in every scene):
 ${characterSheet}
-Use this exact character design in every scene: same face, hairstyle, hair color, skin tone, clothing and colors, body proportions, age, and gender. Do not re-imagine or restyle the character, and never depict the main character as a different gender. Treat this as one continuous printed comic with one locked character model.${referenceGuide}
+Use this exact character design in every scene: same face, hairstyle, hair color, skin tone, clothing and colors, body proportions, age, and gender. Do not re-imagine or restyle the character, and never depict the main character as a different gender. Treat this as one continuous animated picture book with one locked character model.${referenceGuide}
 
-Scene to illustrate:
+Scene to illustrate (visual action only — do not write this text in the image):
 ${scene}
 
 Composition requirements:
 - One complete scene only, not a collage, not a multi-panel page, not a poster.
 - Use the exact same 4:3 landscape canvas for every scene.
 - Full-bleed illustration from edge to edge. No internal frame, no border, no matte, no white margin, no cream outer background, and no paper page surrounding the art.
-- CRITICAL: render the scene completely TEXT-FREE — no letters, words, numbers, captions, titles, page numbers, watermarks, labels, signs, speech bubbles, or caption boxes anywhere in the image. The story text is shown to the reader separately beneath the picture, so the artwork itself must contain no writing of any kind.
-- Keep the same watercolor-and-ink style, color palette, warm moonlit lighting, camera distance, and rendering quality across all scenes.
+- CRITICAL: render the scene completely TEXT-FREE in every language — no letters, words, numbers, captions, titles, page numbers, watermarks, labels, signs, speech bubbles, or caption boxes anywhere in the image. The story text is shown to the reader separately beneath the picture.
+- Keep the same 3D CGI animation style, color palette, warm cinematic lighting, camera distance, and rendering quality across all scenes.
 - Tell the story through the characters' expressions, body language, and action so the scene reads clearly on its own without any words.
-- Use the same premium storybook-comic style as a single printed children's picture book.`;
+- Use the same premium Pixar-style 3D storybook look as a single continuous animated picture book.${NO_TEXT_IN_ART_RULE}`;
 };
 
 /** Run an async mapper over items with a max number of in-flight tasks. */
@@ -412,9 +500,8 @@ export const handleGenerateStoryImages = async (
       const refModel = CONFIG.OPENROUTER_IMAGES_REF_MODEL;
       const fallbackModel = CONFIG.OPENROUTER_IMAGES_MODEL;
 
-      // 1) Anchor — generate scene 1 first (no reference) on the reference-capable
-      //    model. Its image becomes the visual reference that locks the character
-      //    on every following page.
+      // 1) Anchor — generate scene 1 first (no reference). Its image becomes the
+      //    visual reference that locks the character on every following page.
       let comicModel = refModel;
       let anchorUrl = await generateImage(
         buildComicPagePrompt(story, pages[0], 0, pages.length, characterSheet),
@@ -422,9 +509,8 @@ export const handleGenerateStoryImages = async (
         { styleSuffix: COMIC_STYLE_SUFFIX, aspectRatio: "4:3", model: refModel },
       );
 
-      // If the reference-capable model is unavailable/misconfigured the anchor
-      // fails — degrade gracefully to the default text-to-image model for the
-      // whole comic (Phase-1 quality) rather than producing no images at all.
+      // If the primary model is unavailable, retry the anchor on the fallback
+      // model so we still get images rather than producing none at all.
       if (!anchorUrl && refModel !== fallbackModel) {
         comicModel = fallbackModel;
         anchorUrl = await generateImage(
@@ -444,9 +530,9 @@ export const handleGenerateStoryImages = async (
         await updateDocument(storyId, { pages }, DBCollectionsEnum.stories);
       }
 
-      // Only the reference-capable model can consume the anchor as an image
-      // input; on the fallback model we stay text-only (Phase-1 behavior).
-      const useReference = comicModel === refModel && Boolean(anchorUrl);
+      // Pass the anchor to every follow-up scene — both Gemini and Grok accept
+      // reference images for character consistency across scenes.
+      const useReference = Boolean(anchorUrl);
 
       // 2) Remaining scenes — parallel, conditioned on the anchor when possible.
       const restIndexes = pages.map((_, i) => i).filter((i) => i !== 0);
@@ -482,15 +568,75 @@ export const handleGenerateStoryImages = async (
         DBCollectionsEnum.stories,
       );
     } else {
-      const url = await generateImage(
+      const refModel = CONFIG.OPENROUTER_IMAGES_REF_MODEL;
+      const fallbackModel = CONFIG.OPENROUTER_IMAGES_MODEL;
+      const longImages: LongStoryImage[] = deriveLongStoryImagePrompts(story, 2);
+
+      // 1) Wide landscape cover — anchor for character consistency on interior scenes.
+      let longModel = refModel;
+      let coverUrl = await generateImage(
         buildCoverPrompt(story, characterSheet),
         `${slugBase}-cover`,
+        { aspectRatio: "16:9", model: refModel },
       );
-      const update: Partial<Story> = {
-        imagesStatus: url ? "ready" : "failed",
-      };
-      if (url) update.coverImageUrl = url;
-      await updateDocument(storyId, update, DBCollectionsEnum.stories);
+
+      if (!coverUrl && refModel !== fallbackModel) {
+        longModel = fallbackModel;
+        coverUrl = await generateImage(
+          buildCoverPrompt(story, characterSheet),
+          `${slugBase}-cover`,
+          { aspectRatio: "16:9", model: fallbackModel },
+        );
+      }
+
+      if (coverUrl) {
+        await updateDocument(
+          storyId,
+          { coverImageUrl: coverUrl },
+          DBCollectionsEnum.stories,
+        );
+      }
+
+      const useReference = Boolean(coverUrl);
+
+      // 2) Two interior illustrations from story segments.
+      await mapWithConcurrency(longImages, 2, async (slot, slotIndex) => {
+        const url = await generateImage(
+          buildLongInteriorPrompt(
+            story,
+            slot,
+            characterSheet,
+            useReference,
+          ),
+          `${slugBase}-scene-${slotIndex + 1}`,
+          {
+            styleSuffix: LONG_INTERIOR_STYLE_SUFFIX,
+            aspectRatio: "16:9",
+            model: longModel,
+            referenceImageUrls: useReference ? [coverUrl as string] : undefined,
+          },
+        );
+        if (url) {
+          longImages[slotIndex] = { ...longImages[slotIndex], imageUrl: url };
+          await updateDocument(
+            storyId,
+            { longStoryImages: [...longImages] },
+            DBCollectionsEnum.stories,
+          );
+        }
+      });
+
+      const anySucceeded =
+        Boolean(coverUrl) || longImages.some((img) => img.imageUrl);
+      await updateDocument(
+        storyId,
+        {
+          coverImageUrl: coverUrl ?? undefined,
+          longStoryImages: longImages,
+          imagesStatus: anySucceeded ? "ready" : "failed",
+        },
+        DBCollectionsEnum.stories,
+      );
     }
 
     console.log("✅ Story images generated", {

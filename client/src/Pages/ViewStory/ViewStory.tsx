@@ -1,6 +1,13 @@
 import "./ViewStory.scss";
 
-import { Card, CardContent, Container, Typography } from "@mui/material";
+import {
+  Alert,
+  Card,
+  CardContent,
+  CircularProgress,
+  Container,
+  Typography,
+} from "@mui/material";
 import {
   Notify,
   ToastTypes,
@@ -10,9 +17,9 @@ import APP_CONSTANTS from "src/application/shared/app_constants";
 import Box from "@mui/material/Box";
 import ComicReader from "./features/ComicReader";
 import { LoaderComponentNameEnum } from "src/components/shared/Loader/LoaderSpinner";
+import LongStoryBody from "./features/LongStoryBody";
 import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
-import ReactMarkdown from "react-markdown";
 import Share from "../../components/shared/Share/Share";
 import { ShareFloating } from "src/components/shared/Share/ShareFloating";
 import { Story } from "src/components/StoryCreator/store/state";
@@ -143,6 +150,21 @@ const ViewStoryPage: React.FC = () => {
           <>
             <ShareFloating />
 
+            {story.imagesStatus === "pending" && (
+              <Alert
+                severity="info"
+                icon={<CircularProgress color="primary" size={20} />}
+                variant="outlined"
+                sx={{
+                  mb: 1,
+                  borderRadius: "var(--r-lg)",
+                  alignItems: "center",
+                }}
+              >
+                Story images are on the way
+              </Alert>
+            )}
+
             <Card
               className="view-story-card"
               vocab="https://schema.org"
@@ -151,56 +173,84 @@ const ViewStoryPage: React.FC = () => {
               <Box component="div" className="bg-image-character">
                 <RandomImage />
               </Box>
+
               <CardContent className="view-story-card-content">
-                {!isComic && story.coverImageUrl && (
-                  <Box
-                    sx={{
-                      mb: 2,
-                      mx: "auto",
-                      maxWidth: 560,
-                      aspectRatio: "1 / 1",
-                      overflow: "hidden",
-                      borderRadius: "var(--r-xl)",
-                      boxShadow: "var(--shadow-md)",
-                    }}
-                  >
-                    <img
-                      src={story.coverImageUrl}
-                      alt={story.title}
-                      style={{
+                {!isComic && story.coverImageUrl ? (
+                  <Box className="view-story-hero" sx={{ mb: 2 }}>
+                    <Box
+                      sx={{
                         width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        display: "block",
+                        aspectRatio: "16 / 9",
+                        overflow: "hidden",
+                        borderRadius: "var(--r-xl)",
+                        boxShadow: "var(--shadow-md)",
+                        mb: 2,
                       }}
-                    />
+                    >
+                      <img
+                        src={story.coverImageUrl}
+                        alt={story.title}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          display: "block",
+                        }}
+                      />
+                    </Box>
+                    <Typography
+                      gutterBottom
+                      variant="h4"
+                      component="h1"
+                      color="primary"
+                      property="name"
+                      className={`view-story-card-title ${
+                        hasDirectionRtl ? "direction-rtl" : ""
+                      }`}
+                      sx={{ fontSize: { xs: "2rem", sm: "2.25rem" } }}
+                    >
+                      {story.title}
+                    </Typography>
+
+                    <Typography
+                      variant="h5"
+                      component="h2"
+                      className={`view-story-card-summary ${
+                        hasDirectionRtl ? "direction-rtl" : ""
+                      }`}
+                      sx={{ fontSize: { xs: "1.2rem", sm: "1.5rem" } }}
+                    >
+                      {story.summary}
+                    </Typography>
                   </Box>
+                ) : (
+                  <>
+                    <Typography
+                      gutterBottom
+                      variant="h4"
+                      component="h1"
+                      color="primary"
+                      property="name"
+                      className={`view-story-card-title ${
+                        hasDirectionRtl ? "direction-rtl" : ""
+                      }`}
+                      sx={{ fontSize: { xs: "2rem", sm: "2.25rem" } }}
+                    >
+                      {story.title}
+                    </Typography>
+
+                    <Typography
+                      variant="h5"
+                      component="h2"
+                      className={`view-story-card-summary ${
+                        hasDirectionRtl ? "direction-rtl" : ""
+                      }`}
+                      sx={{ fontSize: { xs: "1.2rem", sm: "1.5rem" } }}
+                    >
+                      {story.summary}
+                    </Typography>
+                  </>
                 )}
-
-                <Typography
-                  gutterBottom
-                  variant="h4"
-                  component="h1"
-                  color="primary"
-                  property="name"
-                  className={`view-story-card-title ${
-                    hasDirectionRtl ? "direction-rtl" : ""
-                  }`}
-                  sx={{ fontSize: { xs: "2rem", sm: "2.25rem" } }}
-                >
-                  {story.title}
-                </Typography>
-
-                <Typography
-                  variant="h5"
-                  component="h2"
-                  className={`view-story-card-summary ${
-                    hasDirectionRtl ? "direction-rtl" : ""
-                  }`}
-                  sx={{ fontSize: { xs: "1.2rem", sm: "1.5rem" } }}
-                >
-                  {story.summary}
-                </Typography>
 
                 {isComic ? (
                   <>
@@ -218,7 +268,13 @@ const ViewStoryPage: React.FC = () => {
                         hasDirectionRtl ? "direction-rtl" : ""
                       }`}
                     >
-                      <ReactMarkdown>{story.mainStory}</ReactMarkdown>
+                      <LongStoryBody
+                        mainStory={story.mainStory}
+                        longStoryImages={story.longStoryImages}
+                        className={
+                          hasDirectionRtl ? "direction-rtl" : undefined
+                        }
+                      />
                     </Box>
 
                     <pre
