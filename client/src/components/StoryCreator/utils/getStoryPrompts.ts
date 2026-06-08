@@ -90,10 +90,10 @@ const getLongStoryPrompt = (
   )}. ${getGenderPronounInstruction(gender)}
      - Supporting Characters: ${
        interests.length
-         ? `Friends around ${interests} (please create 2-3 friends with simple, easy-to-pronounce names and brief descriptions)`
-         : ""
-     }
-    
+         ? `Create 2-3 friendly supporting characters connected to ${interests}, with simple, easy-to-pronounce names and brief descriptions.`
+         : `Create 1-2 friendly supporting characters with simple, easy-to-pronounce names and brief descriptions.`
+     } Introduce each character when they first appear, and keep the cast consistent — do not bring in new, unexplained characters late in the story.
+
     Ensure the story is compliant for children aged 1-12, with no explicit content outside this age range.`;
 
   return fullDynamicPrompt;
@@ -117,29 +117,40 @@ export const getCreateComicPrompt = (
     gender
   )}
 
+This must read as ONE continuous, logical story — not six unrelated pictures. Plan the whole story first, then write the pages so each one follows naturally from the one before it.
+
+Story arc across the 6 pages:
+- Page 1: Introduce ${name} in the setting AND introduce every friend or companion who appears later (give them simple, easy-to-pronounce names and show how ${name} already knows them). Establish the cozy bedtime mood.
+- Pages 2-3: A gentle little problem, wish, or adventure begins and gradually builds.
+- Pages 4-5: ${name} and the friends work through it together — the heart of the story.
+- Page 6: A warm, calming, happy ending that settles down toward sleep.
+
+Continuity rules (VERY IMPORTANT — this is what makes the story make sense):
+- Introduce every character on the page they first appear. NEVER mention a friend (such as an animal companion) for the first time as if the reader already knows them.
+- Each page's caption must continue directly from the previous page: same characters, same place unless the story clearly moves them, and no sudden jumps in time or topic.
+- Keep one consistent cast. The friends introduced on page 1 are the same ones throughout; do not invent brand-new unexplained characters partway through.
+- Each page's illustration prompt must depict EXACTLY what that same page's caption describes (same characters, same action, same place) so the picture and the words always match.
+
 Output ONLY curly-bracket sections for an automated ETL process, in this EXACT order with NOTHING between them:
 {The comic title}
 {A one-sentence summary, no longer than 100 characters}
 
 Then, for EACH of the 6 pages in order, output two sections:
-{The page story caption: 2 to 4 short sentences of warm comic-book narration, including one short line of character dialogue when it fits naturally. This is the actual story text shown to the reader under the image.}
-{The page illustration prompt: one vivid paragraph describing ONE single comic scene only. Describe the characters, action, setting, emotion, and camera angle. Do not include the actual caption text in this section. Do not describe multiple panels or a collage.}
+{The page story caption: 2 to 4 short sentences of warm comic-book narration that continue the ongoing story, including one short line of character dialogue when it fits naturally. This is the actual story text shown to the reader under the image.}
+{The page illustration prompt: one vivid paragraph describing ONE single comic scene that matches this page's caption. Describe each character and their appearance, the action, setting, emotion, and camera angle. Do not include the actual caption text in this section. Do not describe multiple panels or a collage.}
 
 That is 14 curly-bracket sections total: title, summary, then 6 pairs of story caption and scene prompt. Do not number the pages or add any other text.
 
 Comic art direction for all 6 pages:
 - Make ${name} the consistent main hero in every scene.
+- Introduce 1-2 friendly supporting characters on page 1 and keep them throughout the story.
 - Each page must be a separate full-page comic scene, not a grid and not multiple panels.
-- Keep captions simple, soothing, and appropriate for children aged 1-12, but make them narratively complete enough to feel like a real short story.
+- Keep captions simple and soothing for children aged 1-12, while making the overall story feel complete and logical, with a clear beginning, middle, and end.
 - Use expressive child-friendly characters, clear emotions, cozy bedtime energy, and a strong visual action in every scene.
 ${tone.value ? `- Tone: ${tone.name}.` : ""}
 ${moral.value ? `- Value to teach: ${moral.name}.` : ""}
 ${environment.value ? `- Setting: a/an ${environment.name}.` : ""}
-${
-  interests.length
-    ? `- Weave in the child's interests: ${interests}. Introduce 1-2 friendly supporting characters with simple, easy-to-pronounce names.`
-    : ""
-}
+${interests.length ? `- Weave in the child's interests: ${interests}.` : ""}
 Ensure all content is fully appropriate for young children.`;
 };
 

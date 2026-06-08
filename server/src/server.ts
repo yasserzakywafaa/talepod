@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from "express";
 
 import CONFIG from "./config";
 import authRoutes from "./routes/authRoutes";
+import avatarRoutes from "./routes/avatarRoutes";
 import blogsRoutes from "./routes/blogsRoutes";
 import compression from "compression";
 import contactRoutes from "./routes/contactRoutes";
@@ -77,6 +78,7 @@ expressApp.use(storiesRoutes);
 expressApp.use(createRoutes);
 expressApp.use(contactRoutes);
 expressApp.use(authRoutes);
+expressApp.use(avatarRoutes);
 expressApp.use(paymentsRoutes);
 expressApp.use(blogsRoutes);
 expressApp.use(dashboardRoutes);

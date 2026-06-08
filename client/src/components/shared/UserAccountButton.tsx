@@ -3,6 +3,7 @@ import * as React from "react";
 import { Box, Divider, ListItemIcon, Typography } from "@mui/material";
 import {
   Dashboard as DashboardIcon,
+  FaceOutlined,
   LogoutOutlined,
   PersonOutlined,
   WebStoriesOutlined,
@@ -66,6 +67,11 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
 
   const handleOnMyBlogsClick = () => {
     user && navigate(routes.myStories(user._id));
+    handleCloseMenu();
+  };
+
+  const handleOnMyCharactersClick = () => {
+    navigate(routes.characters);
     handleCloseMenu();
   };
 
@@ -199,6 +205,18 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
             color={isMyBlogsPage ? primaryColor : "text.primary"}
           >
             My Stories
+          </Typography>
+        </MenuItem>
+
+        <MenuItem
+          sx={{ ...buttonHoverStylePrimary }}
+          onClick={handleOnMyCharactersClick}
+        >
+          <ListItemIcon>
+            <FaceOutlined fontSize="medium" color="secondary" sx={{ mr: 1 }} />
+          </ListItemIcon>
+          <Typography variant="body1" color="text.primary">
+            My Characters
           </Typography>
         </MenuItem>
 

@@ -65,8 +65,12 @@ const esc = (value: unknown): string =>
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 
-/** Light markdown → paragraphs for long-story prose (no full MD engine needed). */
-const proseParagraphs = (text: string): string =>
+/**
+ * Light markdown → an array of paragraph <p> strings for long-story prose (no
+ * full MD engine needed). Returning a list (not a joined string) lets the caller
+ * splice interior illustrations between paragraphs.
+ */
+const proseParagraphs = (text: string): string[] =>
   String(text || "")
     .split(/\n{2,}/)
     .map((block) => block.trim())
@@ -74,8 +78,7 @@ const proseParagraphs = (text: string): string =>
     .map((block) => {
       const clean = esc(block.replace(/^#{1,6}\s*/g, "").replace(/[*_`]+/g, ""));
       return `<p>${clean.replace(/\n/g, "<br/>")}</p>`;
-    })
-    .join("\n");
+    });
 
 /**
  * Fetch an image URL, downscale + recompress it to a JPEG, and inline it as a
@@ -168,11 +171,45 @@ const buildStoryHtml = (
           story.poem,
         )}</pre></div>`
       : "";
+
+    // Interleave the interior illustrations near the passages they were derived
+    // from (~1/3 and ~2/3 through the prose — see deriveLongStoryImagePrompts),
+    // so each picture sits beside the scene it depicts. Failed images are null.
+    const paragraphs = proseParagraphs(story.mainStory);
+    const interiors = (art.pages || []).filter(Boolean) as string[];
+    const figureHtml = (uri: string): string =>
+      `<figure class="prose-figure"><img src="${uri}" alt=""/></figure>`;
+
+    let body: string;
+    if (!paragraphs.length) {
+      body = interiors.map(figureHtml).join("\n");
+    } else {
+      const figuresByParagraph = new Map<number, string[]>();
+      interiors.forEach((uri, i) => {
+        const ratio = interiors.length === 1 ? 0.5 : i === 0 ? 0.33 : 0.66;
+        const idx = Math.min(
+          paragraphs.length - 1,
+          Math.max(0, Math.floor(paragraphs.length * ratio)),
+        );
+        figuresByParagraph.set(idx, [
+          ...(figuresByParagraph.get(idx) || []),
+          figureHtml(uri),
+        ]);
+      });
+      body = paragraphs
+        .map((paragraph, i) =>
+          figuresByParagraph.has(i)
+            ? [paragraph, ...(figuresByParagraph.get(i) as string[])].join("\n")
+            : paragraph,
+        )
+        .join("\n");
+    }
+
     bodyPages = `
       <div class="prose" dir="auto">
         <div class="prose-inner">
           <div class="prose-eyebrow">${esc(name)}'s story</div>
-          ${proseParagraphs(story.mainStory)}
+          ${body}
           ${poem}
         </div>
       </div>`;
@@ -302,6 +339,14 @@ const buildStoryHtml = (
     font-family: 'Yeseva One', serif; float: left; font-size: 64px;
     line-height: 0.82; padding: 6px 10px 0 0; color: ${C.honey500};
   }
+  .prose-figure {
+    margin: 24px 0; text-align: center;
+    break-inside: avoid; page-break-inside: avoid;
+  }
+  .prose-figure img {
+    display: block; width: 100%; height: auto; border-radius: 14px;
+    box-shadow: 0 8px 26px rgba(10,14,43,0.20);
+  }
   .poem { margin-top: 26px; padding-top: 18px; border-top: 1px solid ${C.parchment300}; text-align: center; }
   .poem-orn { color: ${C.honey400}; font-size: 20px; margin-bottom: 8px; }
   .poem pre {
@@ -346,7 +391,9 @@ export const renderStoryPdfBuffer = async (
     ),
     isComic
       ? Promise.all((story.pages || []).map((p) => toDataUri(p.imageUrl)))
-      : Promise.resolve([]),
+      : Promise.all(
+          (story.longStoryImages || []).map((img) => toDataUri(img.imageUrl)),
+        ),
   ]);
 
   const html = buildStoryHtml(story, { cover, pages });

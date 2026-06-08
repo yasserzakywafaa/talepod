@@ -45,6 +45,13 @@ const END_POINTS = {
     EMAIL_STORY_PDF: (slug: string) =>
       `${publicApiUrl}/api/v1/bedtime-story/${slug}/email-pdf`,
   },
+  AVATARS: {
+    LIST: `${publicApiUrl}/api/v1/avatars`,
+    CREATE: `${publicApiUrl}/api/v1/avatars`,
+    GET: (avatarId: string) => `${publicApiUrl}/api/v1/avatars/${avatarId}`,
+    UPDATE: (avatarId: string) => `${publicApiUrl}/api/v1/avatars/${avatarId}`,
+    DELETE: (avatarId: string) => `${publicApiUrl}/api/v1/avatars/${avatarId}`,
+  },
   CONTACT: {
     SUPPORT: `${publicApiUrl}/api/v1/contact-support`,
   },

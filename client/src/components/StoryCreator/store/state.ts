@@ -3,6 +3,7 @@ import { Language, Languages } from "src/shared/languages";
 import { Moral, Morals } from "src/shared/mockedData/Moral";
 import { Tone, Tones } from "src/shared/mockedData/Tone";
 
+import { DEFAULT_ART_STYLE_ID } from "src/shared/artStyles";
 import { User } from "src/shared/types/user";
 
 /** V2 story formats: "comic" (~6 illustrated pages) | "long" (prose + cover). */
@@ -30,6 +31,10 @@ export interface StoryCreatorInitialState {
   isStorySettingsExpanded: boolean;
   /** Chosen story format (defaults to "comic" — the V2 flagship). */
   format: StoryFormat;
+  /** Chosen illustration art style id (see src/shared/artStyles). */
+  artStyle: string;
+  /** Optional saved character (avatar) id whose look seeds the illustrations. */
+  avatarId?: string;
 }
 
 export enum ChildGenderEnum {
@@ -102,6 +107,7 @@ export interface Story {
   isFeatured: boolean;
   authorProfile?: User;
   format?: StoryFormat;
+  artStyle?: string;
   pages?: ComicPage[];
   longStoryImages?: LongStoryImage[];
   imagesStatus?: "pending" | "ready" | "failed";
@@ -203,6 +209,7 @@ export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
     isFetching: false,
     isStorySettingsExpanded: false,
     format: getInitialStoryFormat(),
+    artStyle: DEFAULT_ART_STYLE_ID,
     profileInfo: {
       name: "",
       gender: Genders[Math.floor(Math.random() * Genders.length)],

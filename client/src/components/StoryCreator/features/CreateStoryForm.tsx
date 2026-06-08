@@ -37,6 +37,8 @@ import { Tone, Tones } from "src/shared/mockedData/Tone";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
+import ArtStyleChooser from "src/components/shared/ArtStyleChooser";
+import CharacterPicker from "./CharacterPicker";
 import FormatChooser from "src/components/shared/FormatChooser";
 import GeneratingScreen from "./GeneratingScreen";
 import StorySettings from "./StorySettings";
@@ -55,18 +57,29 @@ const CreateStoryForm = () => {
   const { isDesktop } = useDeviceSize();
   const {
     store: {
-      state: { profileInfo, storyParams, isStorySettingsExpanded, format },
+      state: {
+        profileInfo,
+        storyParams,
+        isStorySettingsExpanded,
+        format,
+        artStyle,
+        avatarId,
+      },
     },
     store: storyCreatorStore,
     manager: {
       handleUpdateProfileInfo,
       handleUpdateStoryInfo,
       handleSetFormat,
+      handleSetArtStyle,
+      handleSelectAvatar,
     },
   } = useStoryCreatorContext();
 
   const [searchParams] = useSearchParams();
   const style = searchParams.get("style");
+  // Deep-link from the "My Characters" page "Create" button: preselect + prefill.
+  const preselectAvatarId = searchParams.get("avatarId") || undefined;
 
   useEffect(() => {
     if (style === "comic" || style === "long") {
@@ -160,6 +173,8 @@ const CreateStoryForm = () => {
           profileInfo,
           storyParams,
           format,
+          artStyle,
+          avatarId,
         );
 
         if (user) {
@@ -327,6 +342,35 @@ const CreateStoryForm = () => {
           />
         </Box>
 
+        <Box sx={{ width: "100%", mb: 3 }}>
+          <Box
+            sx={{
+              mb: 1,
+              fontSize: 13,
+              fontWeight: 600,
+              color: "text.secondary",
+            }}
+          >
+            Art style
+          </Box>
+          <ArtStyleChooser
+            value={artStyle}
+            onChange={handleSetArtStyle}
+            variant={isDesktop ? "row" : "stacked"}
+          />
+        </Box>
+
+        {isAuthenticated && (
+          <Box sx={{ width: "100%", mb: 3 }}>
+            <CharacterPicker
+              value={avatarId}
+              autoSelectId={preselectAvatarId}
+              onChange={(_id, avatar) => handleSelectAvatar(avatar ?? null)}
+              enabled={isAuthenticated}
+            />
+          </Box>
+        )}
+
         <TextField
           required
           id="name"
@@ -441,7 +485,7 @@ const CreateStoryForm = () => {
             profileInfo={profileInfo}
             storyParams={storyParams}
             handleFieldChange={handleFieldChange}
-            handleOnSelectChange={handleOnSelectChange}
+            handleUpdateStoryInfo={handleUpdateStoryInfo}
           />
         )}
 
@@ -468,7 +512,7 @@ const CreateStoryForm = () => {
                 profileInfo={profileInfo}
                 storyParams={storyParams}
                 handleFieldChange={handleFieldChange}
-                handleOnSelectChange={handleOnSelectChange}
+                handleUpdateStoryInfo={handleUpdateStoryInfo}
               />
             </AccordionDetails>
           </Accordion>

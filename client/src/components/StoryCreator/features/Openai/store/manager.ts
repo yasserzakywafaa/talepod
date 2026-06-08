@@ -28,7 +28,9 @@ export interface OpenaiManager {
     userPrompt: string,
     profileInfo: ProfileInfo,
     storyParams: StoryParams,
-    format?: StoryFormat
+    format?: StoryFormat,
+    artStyle?: string,
+    avatarId?: string
   ) => Promise<Story>;
   handleCreateStorySeoRequest: (
     storyId: string,

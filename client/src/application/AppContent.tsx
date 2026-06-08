@@ -21,6 +21,7 @@ const UsersStoriesPage = lazy(
   () => import("../Pages/UsersStories/UsersStories"),
 );
 const MyStoriesPage = lazy(() => import("../Pages/MyStories/MyStories"));
+const CharactersPage = lazy(() => import("../Pages/Characters/Characters"));
 
 const BlogsPage = lazy(() => import("../Pages/Blogs/Blogs"));
 const BlogPage = lazy(() => import("../Pages/Blog/Blog"));
@@ -161,6 +162,14 @@ const AppContent = () => {
               element={
                 <ProtectedRoute>
                   <MyProfilePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={routes.characters}
+              element={
+                <ProtectedRoute>
+                  <CharactersPage />
                 </ProtectedRoute>
               }
             />

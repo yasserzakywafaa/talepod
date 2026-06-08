@@ -10,6 +10,7 @@ const routes = {
   myProfile: (userId: string) => `/my-profile/${userId}`,
   myStory: (userId: string, slug: string) =>
     `/my-bedtime-stories/${userId}/${slug}`,
+  characters: `/characters`,
   blogs: `/blogs`,
   blog: (slug: string) => `/blog/${slug}`,
   contact: `/contact`,

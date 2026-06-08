@@ -42,6 +42,12 @@ export interface Story {
   authorProfile?: User;
   /** "comic" | "long". Absent on pre-V2 stories → treated as "long". */
   format?: StoryFormat;
+  /** Chosen illustration art style id (see services/create/imageStyles). Absent
+   *  on older stories → resolved to the default style at generation time. */
+  artStyle?: string;
+  /** Optional user-character ("avatar") whose locked description seeds the
+   *  story's characterSheet so the hero resembles that saved character. */
+  avatarId?: string;
   /** Populated for comic-format stories only. */
   pages?: ComicPage[];
   /** Interior illustrations for long-format stories (cover is `coverImageUrl`). */

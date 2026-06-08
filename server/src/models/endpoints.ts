@@ -30,6 +30,13 @@ const END_POINTS = {
     EMAIL_STORY_PDF: (slug: string) =>
       `/api/v1/bedtime-story/${slug}/email-pdf`,
   },
+  AVATARS: {
+    LIST: "/api/v1/avatars",
+    CREATE: "/api/v1/avatars",
+    GET: "/api/v1/avatars/:avatarId",
+    UPDATE: "/api/v1/avatars/:avatarId",
+    DELETE: "/api/v1/avatars/:avatarId",
+  },
   CONTACT: {
     SUPPORT: "/api/v1/contact-support",
   },
