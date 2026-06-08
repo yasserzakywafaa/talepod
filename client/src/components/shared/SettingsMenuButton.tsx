@@ -1,22 +1,18 @@
 import * as React from "react";
 
-import { Box, Divider, ListItemIcon, Typography } from "@mui/material";
+import { Box, ListItemIcon, Typography } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
 import {
   InstallMobileOutlined,
-  LogoutOutlined,
   ModeNightOutlined,
   RefreshOutlined,
   Settings,
   WbSunnyOutlined,
 } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
 
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { Notify } from "./Notification/Notification";
 import { primaryColor } from "src/application/shared/themes";
-import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useDetectBrowserType } from "src/shared/hooks/useDetectBrowserType";
 
@@ -26,10 +22,9 @@ export interface SettingsMenuButtonProps {
 }
 
 const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
-  const navigate = useNavigate();
   const {
     store: {
-      state: { themeMode, auth },
+      state: { themeMode },
     },
     manager: { handleToggleThemeMode },
   } = useApplicationContext();
@@ -49,11 +44,6 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
 
   const handleOnRefreshClick = () => {
     window.location.reload();
-  };
-
-  const handleOnLogoutClick = () => {
-    handleCloseMenu();
-    navigate(routes.auth.logout);
   };
 
   const buttonHoverStylePrimary = {
@@ -144,33 +134,6 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
           <RefreshOutlined fontSize="medium" color="secondary" sx={{ mr: 1 }} />
           <Typography variant="body1">Refresh App</Typography>
         </MenuItem>
-
-        {auth.isAuthenticated ? (
-          <>
-            <Divider
-              orientation="horizontal"
-              flexItem
-              sx={{ my: 1, width: "50%" }}
-            />
-
-            <MenuItem
-              sx={{ ...buttonHoverStylePrimary }}
-              onClick={handleOnLogoutClick}
-            >
-              <ListItemIcon>
-                <LogoutOutlined
-                  fontSize="medium"
-                  color="secondary"
-                  sx={{ mr: 1 }}
-                />
-              </ListItemIcon>
-
-              <Typography variant="body1">Logout</Typography>
-            </MenuItem>
-          </>
-        ) : (
-          []
-        )}
       </Menu>
     </>
   );

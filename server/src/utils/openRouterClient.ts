@@ -161,7 +161,7 @@ export const handleOpenRouterHttpRequest = async (
 
   const responseData = await response.json();
   console.log("🔗 Fetched URL Data from OpenRouter:", {
-    data: responseData.choices[0].message.content.slice(0, 50),
+    data: responseData?.choices?.[0]?.message?.content?.slice(0, 50) ?? null,
   });
   console.log("--------------------------------");
 

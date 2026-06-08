@@ -100,7 +100,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
             <MenuItem
               className={`menu-item`}
               sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
-              onClick={handleOnMenuItemClick("explore")}
+              onClick={handleOnMenuItemClick("library")}
             >
               <SearchOutlined
                 fontSize="medium"
@@ -110,9 +110,9 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
 
               <Typography
                 variant="body1"
-                color={pagesMatch.isExplorePage ? primaryColor : "text.primary"}
+                color={pagesMatch.isLibraryPage ? primaryColor : "text.primary"}
               >
-                Explore
+                Library
               </Typography>
             </MenuItem>
 

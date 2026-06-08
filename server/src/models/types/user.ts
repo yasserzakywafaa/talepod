@@ -18,6 +18,9 @@ export interface User {
   lastLogin: Date;
   stories: string[];
   storyCount: number;
+  // Pay-per-story credits: each lets the user create one story beyond their
+  // plan cap. Granted by a one-time Stripe payment, consumed at story creation.
+  storyCredits?: number;
   status: UserStatus;
   role: UserRole;
   isPaidUser: boolean;

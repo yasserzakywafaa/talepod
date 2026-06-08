@@ -24,6 +24,8 @@ import {
   primaryColorOpaqueThirty,
 } from "src/application/shared/themes";
 
+import BillingToggle from "./BillingToggle";
+import PayPerStoryCallout from "./PayPerStoryCallout";
 import PaymentWrapper from "../Payment/Payment";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
 import { useApplicationContext } from "src/application/store/Provider";
@@ -37,7 +39,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 interface PricingTableProps {}
 
 const PricingTable: React.FC<PricingTableProps> = () => {
-  const { plansForTable, getPrice, getCurrency } = usePricing();
+  const {
+    plansForTable,
+    getCurrency,
+    getDisplayPrice,
+    billingInterval,
+    setBillingInterval,
+    isYearlyAvailable,
+    getYearlySavingsPercent,
+  } = usePricing();
   const tableFeatures = Object.keys(plansForTable[0].features);
   const {
     store: {
@@ -77,6 +87,14 @@ const PricingTable: React.FC<PricingTableProps> = () => {
           </Typography>
         </Box>
 
+        {isYearlyAvailable && (
+          <BillingToggle
+            value={billingInterval}
+            onChange={setBillingInterval}
+            savingsPercent={getYearlySavingsPercent()}
+          />
+        )}
+
         <TableContainer
           component={Paper}
           sx={{
@@ -104,99 +122,115 @@ const PricingTable: React.FC<PricingTableProps> = () => {
                   />
                 </StyledTableCell>
 
-                {plansForTable.map((plan) => (
-                  <StyledTableCell
-                    key={plan.title}
-                    sx={{
-                      width: "20%",
-                      textAlign: "left",
-                      verticalAlign: "top",
-                      // backgroundColor:
-                      //   plan.title === SubscriptionPlanEnum.Premium
-                      //     ? tableBgColorOpaque
-                      //     : "transparent",
-                      backgroundColor:
-                        plan.title === SubscriptionPlanEnum.Premium
-                          ? tableBgColorOpaque
-                          : "transparent",
-                    }}
-                  >
-                    <Box display="flex">
-                      <Typography component="h3" variant="subtitle1">
-                        {plan.title}
-                      </Typography>
-                      {plan.subheader &&
-                        plan.title !== SubscriptionPlanEnum.Free && (
-                          <Chip
-                            size="small"
-                            variant="filled"
-                            label={plan.subheader}
-                            icon={<AutoAwesomeIcon />}
-                            sx={{
-                              ml: 1,
-                              backgroundColor: "primary.contrastText",
-                              "& .MuiChip-label": {
-                                color: "primary.dark",
-                              },
-                              "& .MuiChip-icon": {
-                                color: "primary.dark",
-                              },
-                            }}
-                          />
-                        )}
-                    </Box>
-                    <Box
+                {plansForTable.map((plan) => {
+                  const display = getDisplayPrice(plan.product);
+                  return (
+                    <StyledTableCell
+                      key={plan.title}
                       sx={{
-                        display: "flex",
-                        alignItems: "baseline",
+                        width: "20%",
+                        textAlign: "left",
+                        verticalAlign: "top",
+                        backgroundColor:
+                          plan.title === SubscriptionPlanEnum.Premium
+                            ? tableBgColorOpaque
+                            : "transparent",
                       }}
                     >
-                      {plan.product ? (
-                        <>
-                          <Typography
-                            component="h4"
-                            variant="h5"
-                            sx={{
-                              textDecoration: "line-through",
-                              color: "gray",
-                            }}
-                          >
-                            {getCurrency(plan.title)}
-                            {plan.product.metadata.monthly_discounted_price}
-                          </Typography>
-                          &nbsp;
-                          <Typography component="h4" variant="h5">
-                            {getCurrency(plan.title)}
-                            {getPrice(plan.product).monthly}
-                          </Typography>
-                          <Typography component="h4" variant="subtitle1">
-                            /month
-                          </Typography>
-                        </>
-                      ) : (
-                        <>
-                          <Typography component="h4" variant="h5">
-                            {getCurrency(SubscriptionPlanEnum.Premium)}0
-                          </Typography>
-                        </>
-                      )}
-                    </Box>
-                    {plan.buttonText ? (
-                      <Button
-                        variant={plan.buttonVariant}
-                        color="primary"
-                        size="small"
-                        sx={{ marginTop: "0.5rem", padding: "4px" }}
-                        disabled={!!plan.buttonDisabled}
-                        onClick={plan.buttonAction}
+                      <Box display="flex">
+                        <Typography component="h3" variant="subtitle1">
+                          {plan.title}
+                        </Typography>
+                        {plan.subheader &&
+                          plan.title !== SubscriptionPlanEnum.Free && (
+                            <Chip
+                              size="small"
+                              variant="filled"
+                              label={plan.subheader}
+                              icon={<AutoAwesomeIcon />}
+                              sx={{
+                                ml: 1,
+                                backgroundColor: "primary.contrastText",
+                                "& .MuiChip-label": {
+                                  color: "primary.dark",
+                                },
+                                "& .MuiChip-icon": {
+                                  color: "primary.dark",
+                                },
+                              }}
+                            />
+                          )}
+                      </Box>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "baseline",
+                        }}
                       >
-                        {plan.buttonText}
-                      </Button>
-                    ) : (
-                      <></>
-                    )}
-                  </StyledTableCell>
-                ))}
+                        {plan.product ? (
+                          <>
+                            {!display.billedYearly &&
+                              plan.product.metadata
+                                ?.monthly_discounted_price && (
+                                <Typography
+                                  component="h4"
+                                  variant="h5"
+                                  sx={{
+                                    textDecoration: "line-through",
+                                    color: "gray",
+                                    mr: 0.5,
+                                  }}
+                                >
+                                  {getCurrency(plan.title)}
+                                  {
+                                    plan.product.metadata
+                                      .monthly_discounted_price
+                                  }
+                                </Typography>
+                              )}
+                            <Typography component="h4" variant="h5">
+                              {getCurrency(plan.title)}
+                              {display.amount}
+                            </Typography>
+                            <Typography component="h4" variant="subtitle1">
+                              /month
+                            </Typography>
+                          </>
+                        ) : (
+                          <>
+                            <Typography component="h4" variant="h5">
+                              {getCurrency(SubscriptionPlanEnum.Premium)}0
+                            </Typography>
+                          </>
+                        )}
+                      </Box>
+                      {plan.product && display.billedYearly && (
+                        <Typography
+                          variant="caption"
+                          color="textSecondary"
+                          sx={{ display: "block" }}
+                        >
+                          billed yearly · {getCurrency(plan.title)}
+                          {display.yearlyTotal}/yr
+                        </Typography>
+                      )}
+                      {plan.buttonText ? (
+                        <Button
+                          variant={plan.buttonVariant}
+                          color="primary"
+                          size="small"
+                          sx={{ marginTop: "0.5rem", padding: "4px" }}
+                          disabled={!!plan.buttonDisabled}
+                          onClick={plan.buttonAction}
+                        >
+                          {plan.buttonText}
+                        </Button>
+                      ) : (
+                        <></>
+                      )}
+                    </StyledTableCell>
+                  );
+                })}
               </TableRow>
             </TableHead>
 
@@ -246,6 +280,8 @@ const PricingTable: React.FC<PricingTableProps> = () => {
             </TableBody>
           </Table>
         </TableContainer>
+
+        <PayPerStoryCallout />
       </Container>
     </>
   );

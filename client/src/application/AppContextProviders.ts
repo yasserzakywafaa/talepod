@@ -3,13 +3,12 @@ import { ApplicationContextProvider } from "./store/Provider";
 import { BlogContextProvider } from "src/Pages/Blog/store/Provider";
 import { BlogsContextProvider } from "src/Pages/Blogs/store/Provider";
 import { CancelSubscriptionModalContextProvider } from "src/components/Modals/CancelSubscriptionModal/store/Provider";
-import { CheckoutContextProvider } from "src/components/Checkout/store/Provider";
 import { ContactContextProvider } from "src/Pages/Contact/store/Provider";
 import { DashboardOverviewContextProvider } from "src/Pages/Dashboard/DashboardOverview/store/Provider";
 import { DashboardStoriesContextProvider } from "src/Pages/Dashboard/DashboardStories/store/Provider";
 import { DashboardUserContextProvider } from "src/Pages/Dashboard/DashboardUser/store/Provider";
 import { DashboardUsersContextProvider } from "src/Pages/Dashboard/DashboardUsers/store/Provider";
-import { ExploreContextProvider } from "src/Pages/Explore/store/Provider";
+import { LibraryContextProvider } from "src/Pages/Library/store/Provider";
 import { LoginModalContextProvider } from "src/components/Modals/LoginModal/store/Provider";
 import { MyProfileContextProvider } from "src/Pages/MyProfile/store/Provider";
 import { MyStoriesContextProvider } from "src/Pages/MyStories/store/Provider";
@@ -29,7 +28,7 @@ const contextProviders = [
   PricingModalContextProvider,
   StoryCreatorContextProvider,
   OpenaiContextProvider,
-  ExploreContextProvider,
+  LibraryContextProvider,
   PricingContextProvider,
   MyStoriesContextProvider,
   MyProfileContextProvider,
@@ -37,7 +36,6 @@ const contextProviders = [
   ContactContextProvider,
   BlogsContextProvider,
   BlogContextProvider,
-  CheckoutContextProvider,
   PaymentContextProvider,
   PaymentStatusContextProvider,
 

@@ -43,12 +43,20 @@ export const useCreateStoryAudio = (store: OpenaiStore): UseTextGeneration => {
         story.title
       ).toLowerCase()}_${name}_${getRandomString()}`;
 
-      const getStoryText = () => {
-        if (auth.user && auth.user.isPaidUser) {
-          return `${story.mainStory} ${story.poem}`;
-        } else {
-          return `This story is created by TALE-POD    ${story.mainStory} ${story.poem}   Thank you for listening to stories created by TALE-POD`;
+      // Comics have no prose body — narrate the page captions instead.
+      const getStoryBody = () => {
+        if (story.format === "comic" && story.pages?.length) {
+          return story.pages.map((page) => page.caption).join("  ");
         }
+        return `${story.mainStory} ${story.poem}`;
+      };
+
+      const getStoryText = () => {
+        const body = getStoryBody();
+        if (auth.user && auth.user.isPaidUser) {
+          return body;
+        }
+        return `This story is created by TALE-POD    ${body}   Thank you for listening to stories created by TALE-POD`;
       };
 
       const response: AxiosResponse<StoryAudioFile, StoryAudioFile> =

@@ -2,6 +2,7 @@ import {
   ProfileInfo,
   Story,
   StoryAudioFile,
+  StoryFormat,
   StoryParams,
   StorySeo,
 } from "src/components/StoryCreator/store/state";
@@ -26,7 +27,8 @@ export interface OpenaiManager {
   handleCreateStoryRequest: (
     userPrompt: string,
     profileInfo: ProfileInfo,
-    storyParams: StoryParams
+    storyParams: StoryParams,
+    format?: StoryFormat
   ) => Promise<Story>;
   handleCreateStorySeoRequest: (
     storyId: string,

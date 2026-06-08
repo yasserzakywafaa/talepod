@@ -1,6 +1,7 @@
 import END_POINTS from "../models/endpoints";
 import { Router } from "express";
 import StoriesController from "../controllers/StoriesController";
+import { authMiddleware } from "../middleware/authMiddleware";
 
 const storiesRouter = Router();
 
@@ -15,9 +16,26 @@ storiesRouter.get(
   StoriesController.getStoryBySlug
 );
 
+// eBook PDF export (public) + email delivery (authenticated)
+storiesRouter.get(
+  END_POINTS.STORIES.EXPORT_STORY_PDF(":slug"),
+  StoriesController.exportStoryPdf
+);
+
+storiesRouter.post(
+  END_POINTS.STORIES.EMAIL_STORY_PDF(":slug"),
+  authMiddleware,
+  StoriesController.emailStoryPdf
+);
+
 storiesRouter.get(
   END_POINTS.STORIES.GET_ALL_USER_STORIES,
   StoriesController.getAllUserStories
+);
+
+storiesRouter.get(
+  END_POINTS.STORIES.GET_COMMUNITY_STORIES,
+  StoriesController.getCommunityStories
 );
 
 storiesRouter.get(

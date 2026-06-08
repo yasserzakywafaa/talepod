@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const StoryNotFound: React.FC = () => {
   const navigate = useNavigate();
-  const handleOnClick = () => navigate(routes.explore);
+  const handleOnClick = () => navigate(routes.library);
 
   return (
     <>
@@ -46,7 +46,7 @@ const StoryNotFound: React.FC = () => {
               endIcon={<SearchOutlined />}
               onClick={handleOnClick}
             >
-              Explore Stories
+              Browse Library
             </Button>
           </Box>
         </Box>

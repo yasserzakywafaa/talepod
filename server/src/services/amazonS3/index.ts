@@ -12,31 +12,41 @@ const s3Client = new S3Client({
   },
 });
 
+interface UploadOptions {
+  /** MIME type for the S3 object. Defaults to audio/mp3 (back-compat). */
+  contentType?: string;
+  /** S3 key prefix (folder). Defaults to the text-to-speech audio path. */
+  keyPrefix?: string;
+}
+
 const uploadFileToS3 = async (
   fileName: string,
-  filePath: string
+  filePath: string,
+  options?: UploadOptions
 ): Promise<string> => {
+  const contentType = options?.contentType ?? "audio/mp3";
+  const keyPrefix = options?.keyPrefix ?? CONFIG.SERVER_TEXT_TO_SPEECH_PATH;
+  const bucket = CONFIG.IS_DEV
+    ? CONFIG.HOST_AWS_S3_BUCKET_NAME_DEV
+    : CONFIG.HOST_AWS_S3_BUCKET_NAME_PROD;
+
   try {
     // Read file content
     const fileContent = fs.readFileSync(filePath);
 
     // Create a command to put object to S3
     const putObjectCommand = new PutObjectCommand({
-      Bucket: CONFIG.IS_DEV
-        ? CONFIG.HOST_AWS_S3_BUCKET_NAME_DEV
-        : CONFIG.HOST_AWS_S3_BUCKET_NAME_PROD,
-      Key: `${CONFIG.SERVER_TEXT_TO_SPEECH_PATH}/${fileName}`,
+      Bucket: bucket,
+      Key: `${keyPrefix}/${fileName}`,
       Body: fileContent,
-      ContentType: "audio/mp3",
+      ContentType: contentType,
     });
 
     // Execute the command
     await s3Client.send(putObjectCommand);
 
     // Return the URL of the uploaded file
-    return CONFIG.IS_DEV
-      ? `https://${CONFIG.HOST_AWS_S3_BUCKET_NAME_DEV}.s3.${CONFIG.HOST_AWS_REGION}.amazonaws.com/${CONFIG.SERVER_TEXT_TO_SPEECH_PATH}/${fileName}`
-      : `https://${CONFIG.HOST_AWS_S3_BUCKET_NAME_PROD}.s3.${CONFIG.HOST_AWS_REGION}.amazonaws.com/${CONFIG.SERVER_TEXT_TO_SPEECH_PATH}/${fileName}`;
+    return `https://${bucket}.s3.${CONFIG.HOST_AWS_REGION}.amazonaws.com/${keyPrefix}/${fileName}`;
   } catch (error) {
     throw new Error("❌ Failed to upload file to AmazonS3!", {
       cause: error,

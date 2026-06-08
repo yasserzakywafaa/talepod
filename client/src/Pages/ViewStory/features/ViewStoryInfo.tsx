@@ -112,14 +112,17 @@ const ViewStoryInfo = (props: ViewStoryInfoParams) => {
               />
             )}
 
-            {story.storyParams.totalCharacters && (
+            {story.mainStory && (
               <Chip
                 color="secondary"
                 variant="outlined"
                 className="view-story-card-footer-info-tag"
                 label={renderChipLabel(
                   "Story Length",
-                  `${story.storyParams.totalCharacters}`
+                  `${
+                    story.storyParams.totalWords ??
+                    story.mainStory.trim().split(/\s+/).filter(Boolean).length
+                  } words`
                 )}
               />
             )}

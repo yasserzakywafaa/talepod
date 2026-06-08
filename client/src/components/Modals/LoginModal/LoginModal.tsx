@@ -15,7 +15,7 @@ export const LoginModal = () => {
 
   const onCloseModal = (
     event: {},
-    reason: "backdropClick" | "escapeKeyDown"
+    reason: "backdropClick" | "escapeKeyDown",
   ) => {
     if (reason && reason === "backdropClick") return;
 
@@ -31,7 +31,7 @@ export const LoginModal = () => {
     <>
       <Dialog
         maxWidth="sm"
-        scroll="body"
+        scroll="paper"
         fullWidth={true}
         open={state.isVisible}
         onClose={onCloseModal}

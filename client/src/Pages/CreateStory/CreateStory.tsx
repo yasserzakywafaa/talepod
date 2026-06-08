@@ -39,7 +39,6 @@ const CreateStoryPage = () => {
   const {
     store: {
       state: {
-        createStory: { isFetching: isCreateStoryFetching },
         createAudio: { isFetching: isCreateAudioFetching },
       },
     },
@@ -49,12 +48,10 @@ const CreateStoryPage = () => {
     <Page
       title="Create Bedtime Stories | TalePod"
       className="create-story-page"
-      isLoading={
-        isPageFetching || isCreateStoryFetching || isCreateAudioFetching
-      }
-      // isLoading={
-      //   !isPageFetching || !isCreateStoryFetching || !isCreateAudioFetching
-      // }
+      // The story-creation loading state renders its own immersive
+      // GeneratingScreen overlay (inside CreateStoryForm), so it is
+      // intentionally excluded here to avoid a double loader.
+      isLoading={isPageFetching || isCreateAudioFetching}
       loaderComponentName={
         !isPricingModalVisible ? LoaderComponentNameEnum.CreateStory : undefined
       }

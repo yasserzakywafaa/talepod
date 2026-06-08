@@ -1,11 +1,11 @@
-import { ExploreContent } from "../Explore/ExploreContent";
+import { LibraryContent } from "../Library/LibraryContent";
 import { useEffect } from "react";
-import { useExploreContext } from "../Explore/store/Provider";
+import { useLibraryContext } from "../Library/store/Provider";
 
 const UsersStories = (): JSX.Element => {
   const {
     manager: { setUp, handleResetFilters },
-  } = useExploreContext();
+  } = useLibraryContext();
 
   useEffect(() => {
     setUp("users");
@@ -15,7 +15,7 @@ const UsersStories = (): JSX.Element => {
     };
   }, []);
 
-  return <ExploreContent />;
+  return <LibraryContent showSourceChips={false} />;
 };
 
 export default UsersStories;

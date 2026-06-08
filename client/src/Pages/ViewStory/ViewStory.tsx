@@ -1,23 +1,11 @@
 import "./ViewStory.scss";
 
 import {
-  AdultGenderEnum,
-  Story,
-  userAudioVoiceNames,
-} from "src/components/StoryCreator/store/state";
-import {
-  Button,
+  Alert,
   Card,
   CardContent,
-  CardMedia,
-  Chip,
+  CircularProgress,
   Container,
-  FormControl,
-  InputLabel,
-  ListSubheader,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
   Typography,
 } from "@mui/material";
 import {
@@ -27,53 +15,35 @@ import {
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import Box from "@mui/material/Box";
+import ComicReader from "./features/ComicReader";
 import { LoaderComponentNameEnum } from "src/components/shared/Loader/LoaderSpinner";
-import { LyricsOutlined } from "@mui/icons-material";
+import LongStoryBody from "./features/LongStoryBody";
 import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
-import ReactMarkdown from "react-markdown";
 import Share from "../../components/shared/Share/Share";
 import { ShareFloating } from "src/components/shared/Share/ShareFloating";
+import { Story } from "src/components/StoryCreator/store/state";
+import StoryAudio from "./features/StoryAudio";
+import StoryExportActions from "./features/StoryExportActions";
 import StoryNotFound from "./features/StoryNotFound";
-import { VerifiedBadge } from "src/components/shared/VerifiedBadge";
 import ViewStoryAuthorInfo from "./features/ViewStoryAuthorInfo";
 import ViewStoryInfo from "./features/ViewStoryInfo";
 import ViewStorySEO from "./features/ViewStorySEO";
 import { getAxiosError } from "src/shared/utils/getAxiosError";
 import { useApplicationContext } from "src/application/store/Provider";
-import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useEffect } from "react";
-import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
 import { useParams } from "react-router-dom";
 import { useViewStoryContext } from "./store/Provider";
 
 const ViewStoryPage: React.FC = () => {
-  const { userId, slug } = useParams<{ userId: string; slug: string }>();
-  const { isDesktop } = useDeviceSize();
-
+  const { slug } = useParams<{ userId: string; slug: string }>();
   const {
     store: {
-      state: {
-        isFetching,
-        isCreatingAudio,
-        story,
-        storyAuthor,
-        audioFileVoice,
-      },
-      updateStory,
-      setIsCreatingAudio,
+      state: { isFetching, isCreatingAudio, story, storyAuthor },
       updateStoryAuthor,
-      updateAudioFileVoice,
     },
     manager: { setUp },
   } = useViewStoryContext();
-  const {
-    store: {
-      state: { createAudio },
-      updateState,
-    },
-    manager: { handleCreateAudio },
-  } = useOpenaiContext();
 
   const {
     store: {
@@ -83,46 +53,7 @@ const ViewStoryPage: React.FC = () => {
   } = useApplicationContext();
 
   const hasDirectionRtl = story && story.profileInfo.language.value === "ar";
-
-  const dropdownOptionsFemale = userAudioVoiceNames.filter(
-    (voice) => voice.gender === AdultGenderEnum.Female
-  );
-  const dropdownOptionsMale = userAudioVoiceNames.filter(
-    (voice) => voice.gender === AdultGenderEnum.Male
-  );
-
-  const isReadOnlyMode = () => {
-    if (!userId && auth.user?._id === story.author) return false;
-
-    if (!userId && !story.storyParams.createdByAdmin) return true;
-
-    if (auth.user?._id !== userId && !story.storyParams.createdByAdmin) {
-      return true;
-    }
-
-    return false;
-  };
-
-  const handleOnCreateAudioClick = async () => {
-    setIsCreatingAudio(true);
-    if (story.mainStory) {
-      try {
-        const audioFile = await handleCreateAudio(story);
-        if (audioFile && audioFile.url) {
-          updateStory({
-            ...story,
-            audioFile,
-          });
-        }
-      } catch (error) {
-        Notify({
-          type: ToastTypes.Error,
-          content: `❌ Failed to create audio! ${error}`,
-        });
-      }
-    }
-    setIsCreatingAudio(false);
-  };
+  const isComic = !!story && story.format === "comic" && !!story.pages?.length;
 
   const handleFetchStoryAuthorInfo = async () => {
     try {
@@ -133,21 +64,6 @@ const ViewStoryPage: React.FC = () => {
     }
   };
 
-  const handleOnAudioVoiceChange = (event: SelectChangeEvent) => {
-    const { value } = event.target;
-    const currentVoice = userAudioVoiceNames.find(
-      (voice) => voice.name === value
-    );
-
-    if (currentVoice) {
-      updateAudioFileVoice(currentVoice);
-      updateState("createAudio", {
-        ...createAudio,
-        audioFileVoice: currentVoice,
-      });
-    }
-  };
-
   const handleUpdateMetaTags = (story: Story) => {
     // Update page meta tags
     const metaTag = document
@@ -155,7 +71,7 @@ const ViewStoryPage: React.FC = () => {
       .namedItem("description");
     metaTag?.setAttribute(
       "content",
-      `Discover more bedtime stories for children and families on TalePod | ${story.summary}`
+      `Discover more bedtime stories for children and families on TalePod | ${story.summary}`,
     );
 
     // Update Open Graph meta tags
@@ -167,7 +83,7 @@ const ViewStoryPage: React.FC = () => {
     // Update Open Graph Twitter meta tags
     const twitterTitleMetaTag = document.getElementById("twitter-title");
     const twitterDescriptionMetaTag = document.getElementById(
-      "twitter-description"
+      "twitter-description",
     );
     twitterTitleMetaTag?.setAttribute("content", story.title);
     twitterDescriptionMetaTag?.setAttribute("content", story.summary);
@@ -190,7 +106,7 @@ const ViewStoryPage: React.FC = () => {
 
       const isStoryGenerated =
         window.localStorage.getItem(
-          APP_CONSTANTS.LOCAL_STORAGE.STORY_GENERATED
+          APP_CONSTANTS.LOCAL_STORAGE.STORY_GENERATED,
         ) === "true";
       if (isStoryGenerated) {
         Notify({
@@ -198,7 +114,7 @@ const ViewStoryPage: React.FC = () => {
           content: "Story created successfully.",
         });
         window.localStorage.removeItem(
-          APP_CONSTANTS.LOCAL_STORAGE.STORY_GENERATED
+          APP_CONSTANTS.LOCAL_STORAGE.STORY_GENERATED,
         );
       }
 
@@ -234,6 +150,21 @@ const ViewStoryPage: React.FC = () => {
           <>
             <ShareFloating />
 
+            {story.imagesStatus === "pending" && (
+              <Alert
+                severity="info"
+                icon={<CircularProgress color="primary" size={20} />}
+                variant="outlined"
+                sx={{
+                  mb: 1,
+                  borderRadius: "var(--r-lg)",
+                  alignItems: "center",
+                }}
+              >
+                Story images are on the way
+              </Alert>
+            )}
+
             <Card
               className="view-story-card"
               vocab="https://schema.org"
@@ -242,210 +173,126 @@ const ViewStoryPage: React.FC = () => {
               <Box component="div" className="bg-image-character">
                 <RandomImage />
               </Box>
+
               <CardContent className="view-story-card-content">
-                <Typography
-                  gutterBottom
-                  variant="h4"
-                  component="h1"
-                  color="primary"
-                  property="name"
-                  className={`view-story-card-title ${
-                    hasDirectionRtl ? "direction-rtl" : ""
-                  }`}
-                  sx={{ fontSize: { xs: "2rem", sm: "2.25rem" } }}
-                >
-                  {story.title}
-                </Typography>
-
-                <Typography
-                  variant="h5"
-                  component="h2"
-                  className={`view-story-card-summary ${
-                    hasDirectionRtl ? "direction-rtl" : ""
-                  }`}
-                  sx={{ fontSize: { xs: "1.2rem", sm: "1.5rem" } }}
-                >
-                  {story.summary}
-                </Typography>
-
-                <Card
-                  className="view-story-card-story-wrapper"
-                  sx={{
-                    textAlign: "center",
-                    mt: 1,
-                    mb: 2,
-                    py: !isReadOnlyMode() ? 1 : 0,
-                    px: 1,
-                  }}
-                >
-                  {!isReadOnlyMode() && !story.audioFile && (
-                    <>
-                      <Typography
-                        gutterBottom
-                        component="h3"
-                        sx={{
-                          fontSize: "1.25rem",
-                          color: (theme) => theme.palette.primary.main,
+                {!isComic && story.coverImageUrl ? (
+                  <Box className="view-story-hero" sx={{ mb: 2 }}>
+                    <Box
+                      sx={{
+                        width: "100%",
+                        aspectRatio: "16 / 9",
+                        overflow: "hidden",
+                        borderRadius: "var(--r-xl)",
+                        boxShadow: "var(--shadow-md)",
+                        mb: 2,
+                      }}
+                    >
+                      <img
+                        src={story.coverImageUrl}
+                        alt={story.title}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          display: "block",
                         }}
-                      >
-                        Create audio for this story
-                      </Typography>
-
-                      <Box
-                        display="flex"
-                        flexWrap="wrap"
-                        alignItems="center"
-                        justifyContent="center"
-                        flexDirection={{ xs: "column", sm: "row" }}
-                      >
-                        <FormControl
-                          sx={{
-                            margin: "1rem",
-                            width: { xs: "50%", sm: "15%" },
-                          }}
-                          className="voice-select-dropdown"
-                        >
-                          <InputLabel id="voice-select-label">Voice</InputLabel>
-                          <Select
-                            required
-                            name="voice"
-                            label="Voice"
-                            id="voice-select"
-                            variant="outlined"
-                            labelId="voice-select-label"
-                            value={audioFileVoice.name}
-                            defaultValue={audioFileVoice.name}
-                            onChange={handleOnAudioVoiceChange}
-                          >
-                            <ListSubheader>Female</ListSubheader>
-                            {dropdownOptionsFemale.map((voice, index) => {
-                              return (
-                                <MenuItem
-                                  key={index}
-                                  value={voice.name}
-                                  disabled={
-                                    !voice.isFree && !auth.user?.isPaidUser
-                                  }
-                                >
-                                  <Typography
-                                    component="span"
-                                    sx={{ marginRight: 0.5 }}
-                                  >
-                                    {voice.value}
-                                  </Typography>
-                                  {!voice.isFree && !auth.user?.isPaidUser && (
-                                    <VerifiedBadge />
-                                  )}
-                                </MenuItem>
-                              );
-                            })}
-
-                            <ListSubheader>Male</ListSubheader>
-                            {dropdownOptionsMale.map((voice, index) => {
-                              return (
-                                <MenuItem
-                                  key={index}
-                                  value={voice.name}
-                                  disabled={
-                                    !voice.isFree && !auth.user?.isPaidUser
-                                  }
-                                >
-                                  <Typography
-                                    component="span"
-                                    sx={{ marginRight: 0.5 }}
-                                  >
-                                    {voice.value}
-                                  </Typography>
-                                  {!voice.isFree && !auth.user?.isPaidUser && (
-                                    <VerifiedBadge />
-                                  )}
-                                </MenuItem>
-                              );
-                            })}
-                          </Select>
-                        </FormControl>
-
-                        <Button
-                          size="large"
-                          type="button"
-                          variant="contained"
-                          endIcon={<LyricsOutlined />}
-                          onClick={handleOnCreateAudioClick}
-                        >
-                          Create Audio
-                        </Button>
-                      </Box>
-                    </>
-                  )}
-
-                  {story.audioFile && (
-                    <Box mt={2}>
-                      <Typography
-                        variant="h6"
-                        component="h6"
-                        gutterBottom
-                        sx={{ color: (theme) => theme.palette.primary.main }}
-                      >
-                        Listen to the Story
-                      </Typography>
-
-                      <CardMedia
-                        component="audio"
-                        controls
-                        src={story.audioFile.url}
-                      />
-
-                      <Chip
-                        sx={{ mt: 2, mb: 1 }}
-                        variant="outlined"
-                        label={
-                          <span color="textSecondary">
-                            Audio created on:{" "}
-                            <span className="bold">
-                              {new Date(
-                                story.audioFile.createdAt
-                              ).toLocaleString("en-GB", {
-                                timeStyle: "short",
-                                dateStyle: "short",
-                              })}
-                            </span>
-                          </span>
-                        }
-                        color="primary"
                       />
                     </Box>
-                  )}
-                </Card>
+                    <Typography
+                      gutterBottom
+                      variant="h4"
+                      component="h1"
+                      color="primary"
+                      property="name"
+                      className={`view-story-card-title ${
+                        hasDirectionRtl ? "direction-rtl" : ""
+                      }`}
+                      sx={{ fontSize: { xs: "2rem", sm: "2.25rem" } }}
+                    >
+                      {story.title}
+                    </Typography>
 
-                {isDesktop ? (
-                  <Typography
-                    gutterBottom
-                    variant="h6"
-                    component="h6"
-                    sx={{ color: (theme) => theme.palette.primary.main }}
-                  >
-                    Story
-                  </Typography>
+                    <Typography
+                      variant="h5"
+                      component="h2"
+                      className={`view-story-card-summary ${
+                        hasDirectionRtl ? "direction-rtl" : ""
+                      }`}
+                      sx={{ fontSize: { xs: "1.2rem", sm: "1.5rem" } }}
+                    >
+                      {story.summary}
+                    </Typography>
+                  </Box>
                 ) : (
-                  <></>
+                  <>
+                    <Typography
+                      gutterBottom
+                      variant="h4"
+                      component="h1"
+                      color="primary"
+                      property="name"
+                      className={`view-story-card-title ${
+                        hasDirectionRtl ? "direction-rtl" : ""
+                      }`}
+                      sx={{ fontSize: { xs: "2rem", sm: "2.25rem" } }}
+                    >
+                      {story.title}
+                    </Typography>
+
+                    <Typography
+                      variant="h5"
+                      component="h2"
+                      className={`view-story-card-summary ${
+                        hasDirectionRtl ? "direction-rtl" : ""
+                      }`}
+                      sx={{ fontSize: { xs: "1.2rem", sm: "1.5rem" } }}
+                    >
+                      {story.summary}
+                    </Typography>
+                  </>
                 )}
 
-                <Box
-                  component="article"
-                  className={`view-story-card-main-story ${
-                    hasDirectionRtl ? "direction-rtl" : ""
-                  }`}
-                >
-                  <ReactMarkdown>{story.mainStory}</ReactMarkdown>
-                </Box>
+                {isComic ? (
+                  <>
+                    <ComicReader story={story} />
 
-                <pre
-                  className={`italics view-story-card-poem ${
-                    hasDirectionRtl ? "direction-rtl" : ""
-                  }`}
-                >
-                  {story.poem}
-                </pre>
+                    <StoryAudio />
+                  </>
+                ) : (
+                  <>
+                    <StoryAudio />
+
+                    <Box
+                      component="article"
+                      className={`view-story-card-main-story ${
+                        hasDirectionRtl ? "direction-rtl" : ""
+                      }`}
+                    >
+                      <LongStoryBody
+                        mainStory={story.mainStory}
+                        longStoryImages={story.longStoryImages}
+                        className={
+                          hasDirectionRtl ? "direction-rtl" : undefined
+                        }
+                      />
+                    </Box>
+
+                    <pre
+                      className={`italics view-story-card-poem ${
+                        hasDirectionRtl ? "direction-rtl" : ""
+                      }`}
+                    >
+                      {story.poem}
+                    </pre>
+                  </>
+                )}
+
+                <StoryExportActions
+                  story={story}
+                  canEmail={!!auth.user?.email}
+                />
+
+                <ViewStoryInfo story={story} />
 
                 {story.author && (
                   <ViewStoryAuthorInfo
@@ -454,8 +301,6 @@ const ViewStoryPage: React.FC = () => {
                     handleUpdateStoryAuthor={updateStoryAuthor}
                   />
                 )}
-
-                <ViewStoryInfo story={story} />
 
                 <Share story={story} />
               </CardContent>

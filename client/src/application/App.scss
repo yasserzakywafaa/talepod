@@ -1,5 +1,4 @@
 // MAIN
-@import "../assets/scss/grid.scss";
 
 #root {
   scroll-behavior: smooth;
@@ -22,9 +21,15 @@
 }
 
 .section {
+  max-width: 1100px;
+  margin-inline: auto;
   margin-bottom: 2rem;
   padding: 1rem 2rem;
   overflow-x: hidden;
+}
+.section h2,
+.section .section-title {
+  font-family: var(--font-display);
 }
 
 .hero-container {
@@ -54,13 +59,13 @@ hr {
 }
 
 .text-underline {
-  text-decoration: underline solid #ad932d;
+  text-decoration: underline solid #f0b648;
 }
 a:not(.MuiButtonBase-root) {
-  color: #0080ab;
+  color: #4c4c9e;
   font-weight: 400;
-  text-decoration: underline solid #ad932d !important;
+  text-decoration: underline solid #f0b648 !important;
   &:visited {
-    color: #0080ab;
+    color: #4c4c9e;
   }
 }

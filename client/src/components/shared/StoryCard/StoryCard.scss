@@ -1,71 +1,137 @@
 .story-card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: stretch;
-
+  height: 100%;
   cursor: pointer;
-  height: 180px;
-  margin-left: 1rem;
-  margin-right: 1rem;
-  position: relative;
-  background-color: transparent;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-xs);
+  transition:
+    transform var(--dur-2) var(--ease-soft),
+    box-shadow var(--dur-2);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
   .story-card-locked-overlay {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: not-allowed;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(10, 8, 20, 0.66);
+    backdrop-filter: blur(2px);
+
     .story-card-locked-overlay-verified-icon {
       position: absolute;
       top: 0.5rem;
       right: 0.5rem;
     }
   }
-  .story-card-content {
-    padding-top: 8px;
-    padding-bottom: 8px;
-    .story-card-title {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+
+  .story-card-cover {
+    position: relative;
+    flex-shrink: 0;
+    aspect-ratio: 16 / 9;
+    background: linear-gradient(160deg, #ffe6a8, #c9b6e8);
+    overflow: hidden;
+
+    .story-card-cover-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
-    .story-card-summary {
-      display: -webkit-box; /* Defines a flexible box layout model */
-      -webkit-box-orient: vertical; /* Sets the orientation of the box layout */
-      line-clamp: 2; /* Limits the text to 2 lines */
-      -webkit-line-clamp: 2;
-      overflow: hidden;
-      text-overflow: ellipsis;
+
+    .story-card-cover-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      background: linear-gradient(170deg, #343470 0%, #b14f42 100%);
+
+      img {
+        width: 44%;
+        margin-bottom: -2px;
+        filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
+      }
+    }
+
+    .story-card-cover-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+    }
+
+    .story-card-cover-audio {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(6px);
     }
   }
 
-  .story-card-tags {
-    .story-card-tags-wrapper {
+  .story-card-content {
+    padding: 12px 14px 6px;
+    flex: 1;
+
+    .story-card-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      line-height: 1.2;
+      margin-bottom: 4px;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      overflow: hidden;
+    }
+
+    .story-card-summary {
+      font-size: 0.85rem;
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+      line-clamp: 1;
+      overflow: hidden;
+    }
+  }
+
+  .story-card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 6px 12px 12px;
+    margin-top: auto;
+
+    .story-card-tags {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+
       .story-card-tags-item {
-        margin-right: 4px;
-        margin-left: 4px;
+        height: 24px;
       }
     }
   }
-}
 
-/* Tablet (11-inch) */
-@media (max-width: 1024px) {
-}
-
-/* Small tablet */
-@media (max-width: 774px) {
-}
-
-/* Big Phone */
-@media (max-width: 430px) {
-}
-
-/* Small Phone */
-@media (max-width: 320px), (max-height: 568px) {
+  .direction-rtl {
+    direction: rtl;
+  }
 }

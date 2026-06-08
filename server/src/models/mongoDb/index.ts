@@ -122,6 +122,11 @@ const createIndexes = async () => {
       await stories.createIndex({ "storyParams.moral.value": 1 });
       await stories.createIndex({ "storyParams.createdByAdmin": 1 });
       await stories.createIndex({ "storyParams.environment.value": 1 });
+      await stories.createIndex({
+        isPremium: 1,
+        "storyParams.createdByAdmin": 1,
+        createdAt: -1,
+      });
     }
 
     const users = database.collection(DBCollectionsEnum.users);

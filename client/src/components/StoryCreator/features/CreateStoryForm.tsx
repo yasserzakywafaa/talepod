@@ -34,14 +34,18 @@ import {
   UserStatus,
 } from "src/shared/types/user";
 import { Tone, Tones } from "src/shared/mockedData/Tone";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
+import FormatChooser from "src/components/shared/FormatChooser";
+import GeneratingScreen from "./GeneratingScreen";
 import StorySettings from "./StorySettings";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useOpenaiContext } from "./Openai/store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
@@ -51,11 +55,24 @@ const CreateStoryForm = () => {
   const { isDesktop } = useDeviceSize();
   const {
     store: {
-      state: { profileInfo, storyParams, isStorySettingsExpanded },
+      state: { profileInfo, storyParams, isStorySettingsExpanded, format },
     },
     store: storyCreatorStore,
-    manager: { handleUpdateProfileInfo, handleUpdateStoryInfo },
+    manager: {
+      handleUpdateProfileInfo,
+      handleUpdateStoryInfo,
+      handleSetFormat,
+    },
   } = useStoryCreatorContext();
+
+  const [searchParams] = useSearchParams();
+  const style = searchParams.get("style");
+
+  useEffect(() => {
+    if (style === "comic" || style === "long") {
+      handleSetFormat(style);
+    }
+  }, [style]);
 
   const {
     store: {
@@ -70,7 +87,18 @@ const CreateStoryForm = () => {
     store: { handleTogglePricingModal },
   } = usePricingModalContext();
 
-  const { manager: OpenaiManager } = useOpenaiContext();
+  const {
+    store: { handleToggleLoginModal },
+  } = useLoginModalContext();
+
+  const {
+    store: {
+      state: {
+        createStory: { isFetching: isCreatingStory },
+      },
+    },
+    manager: OpenaiManager,
+  } = useOpenaiContext();
   const {
     isCreateStoryFetching,
     handleCreateStoryRequest,
@@ -105,13 +133,14 @@ const CreateStoryForm = () => {
   };
 
   const handleOnFormSubmit = async (
-    event: React.FormEvent<HTMLFormElement>
+    event: React.FormEvent<HTMLFormElement>,
   ) => {
     event.preventDefault();
     event.stopPropagation();
 
     if (!isAuthenticated) {
-      navigate(routes.auth.login);
+      // navigate(routes.auth.login);
+      handleToggleLoginModal();
       return;
     }
 
@@ -129,7 +158,8 @@ const CreateStoryForm = () => {
         const story: Story = await handleCreateStoryRequest(
           createStoryPrompt,
           profileInfo,
-          storyParams
+          storyParams,
+          format,
         );
 
         if (user) {
@@ -148,7 +178,7 @@ const CreateStoryForm = () => {
             // window.localStorage.setItem("newStoryCreated", "true");
             window.localStorage.setItem(
               APP_CONSTANTS.LOCAL_STORAGE.STORY_GENERATED,
-              "true"
+              "true",
             );
           }
         }
@@ -169,7 +199,7 @@ const CreateStoryForm = () => {
 
   const handleGenderChange = (
     event: React.MouseEvent<HTMLElement>,
-    gender: string | null
+    gender: string | null,
   ) => {
     if (gender !== null) {
       handleUpdateProfileInfo("gender", gender);
@@ -205,7 +235,7 @@ const CreateStoryForm = () => {
 
       case "environment":
         const currenEnvironmentValue = Environments.find(
-          (e) => e.value === value
+          (e) => e.value === value,
         );
         handleUpdateStoryInfo(name, currenEnvironmentValue as Environment);
         break;
@@ -214,7 +244,7 @@ const CreateStoryForm = () => {
 
   const handleToggleStorySettings = (
     event: React.SyntheticEvent,
-    expanded: boolean
+    expanded: boolean,
   ) => {
     storyCreatorStore.toggleStorySettings(expanded);
   };
@@ -271,135 +301,11 @@ const CreateStoryForm = () => {
     }
   };
 
-  // const handleCreateStoryLibrary = async () => {
-  //   // Other languages popular names
-  //   const names = {
-  //     // en: { boy: "Liam", girl: "Olivia" },
-  //     // ar: { boy: "Muhammad", girl: "Sara" },
-  //     // es: { boy: "Mateo", girl: "Sofía" },
-  //     // fr: { boy: "Léo", girl: "Jade" },
-  //     // de: { boy: "Noah", girl: "Mia" },
-  //     // pt: { boy: "Miguel", girl: "Maria" },
-  //     // it: { boy: "Leonardo", girl: "Sofia" },
-  //     // ja: { boy: "Haruto", girl: "Yui" },
-  //     // ko: { boy: "Seo-jun", girl: "Seo-yeon" },
-  //     // ru: { boy: "Artyom", girl: "Anna" },
-  //     // hi: { boy: "Aarav", girl: "Aadhya" },
-  //     // "zh-Hans": { boy: "Wei", girl: "Mei" },
-  //   };
-  //   // // English popular names
-  //   // boyNames: [
-  //   //   "Noah",
-  //   //   "Oliver",
-  //   //   "William",
-  //   //   "James",
-  //   //   "Henry",
-  //   //   "Alexander",
-  //   //   "George",
-  //   //   "Harry",
-  //   //   "Jack",
-  //   //   "Oscar",
-  //   // ],
-  //   // girlNames: [
-  //   //   "Olivia",
-  //   //   "Emma",
-  //   //   "Ava",
-  //   //   "Sophia",
-  //   //   "Amelia",
-  //   //   "Isabella",
-  //   //   "Evelyn",
-  //   //   "Ivy",
-  //   //   "Lily",
-  //   //   "Rosie",
-  //   // ],
-  //   let totalCombinations = 0;
-  //   let profileInfo: ProfileInfo | undefined;
-  //   let storyParams: StoryParams | undefined;
-  //   const gender = Math.random() < 0.5 ? "Boy" : "Girl";
-
-  //   console.log(`random:>>> `, { profileInfo, storyParams });
-
-  //   // Environments.forEach((environment) => {
-  //   //   Tones.forEach((tone) => {
-  //   //     Morals.forEach((moral) => {
-  //   //       Object.keys(names).forEach(async (languageCode: string) => {
-  //   //         const name =
-  //   //           gender === "Boy"
-  //   //             ? names[languageCode as keyof {}]["boy"]
-  //   //             : names[languageCode as keyof {}]["girl"];
-
-  //   //         const language = Languages.find(
-  //   //           (lang) => lang.value === languageCode
-  //   //         ) as Language;
-
-  //   //         if (language === undefined) {
-  //   //           console.log(`language:>>> `, { language });
-  //   //         }
-
-  //   //         profileInfo = {
-  //   //           name,
-  //   //           gender:
-  //   //             gender === "Boy" ? ChildGenderEnum.Boy : ChildGenderEnum.Girl,
-  //   //           age: Math.floor(Math.random() * 18),
-  //   //           interests: "",
-  //   //           language: language,
-  //   //         };
-  //   //         storyParams = {
-  //   //           audioLength: 10,
-  //   //           minCharacters: 3900,
-  //   //           maxCharacters: 4000,
-  //   //           totalCharacters: 4000,
-  //   //           moral,
-  //   //           tone,
-  //   //           environment,
-  //   //           createdByAdmin: true,
-  //   //         };
-
-  //   //         if (profileInfo && storyParams) {
-  //   //           const createStoryPrompt = getCreateStoryPrompt({
-  //   //             ...getStoryCreatorInitialState(),
-  //   //             profileInfo,
-  //   //             storyParams,
-  //   //           });
-  //   //           isCreateStoryFetching(true);
-  //   //           try {
-  //   //             const story: Story = await handleCreateStoryRequest(
-  //   //               createStoryPrompt,
-  //   //               profileInfo,
-  //   //               storyParams
-  //   //             );
-  //   //             if (story._id && story.slug) {
-  //   //               // SEO CREATION
-  //   //               const storySEO = await handleCreateStorySeoRequest(
-  //   //                 story._id,
-  //   //                 getStorySeoPrompt(story)
-  //   //               );
-  //   //               console.log(`Story:>>>`, {
-  //   //                 storyId: story._id,
-  //   //                 storyProfileInfo: story.profileInfo,
-  //   //                 storySEO: !!storySEO && !!storySEO.content.length,
-  //   //               });
-  //   //             }
-  //   //           } catch (error) {
-  //   //             console.error("❌ Failed to create a story!", {
-  //   //               error,
-  //   //             });
-  //   //           } finally {
-  //   //             isCreateStoryFetching(false);
-  //   //           }
-  //   //         }
-
-  //   //         totalCombinations++;
-  //   //       });
-  //   //     });
-  //   //   });
-  //   // });
-
-  //   console.log(`Total number of combinations: ${totalCombinations}`);
-  // };
-
   return (
     <Box className="story-creator-form">
+      {isCreatingStory && (
+        <GeneratingScreen format={format} childName={profileInfo.name} />
+      )}
       <Box
         marginY={4}
         display="flex"
@@ -413,6 +319,14 @@ const CreateStoryForm = () => {
         onSubmit={handleOnFormSubmit}
         className="story-creator-form-wrapper"
       >
+        <Box sx={{ width: "100%", mb: 3 }}>
+          <FormatChooser
+            value={format}
+            onChange={handleSetFormat}
+            variant={isDesktop ? "row" : "stacked"}
+          />
+        </Box>
+
         <TextField
           required
           id="name"
@@ -603,7 +517,9 @@ const CreateStoryForm = () => {
               disabled={isCreateButtonDisabled()}
               endIcon={<AutoAwesomeOutlined />}
             >
-              Create
+              {`Generate ${profileInfo.name ? `${profileInfo.name}'s ` : ""}${
+                format === "comic" ? "comic" : "story"
+              }`}
             </Button>
           )}
         </Box>

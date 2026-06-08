@@ -3,17 +3,22 @@ import * as React from "react";
 import { Box, Divider, ListItemIcon, Typography } from "@mui/material";
 import {
   Dashboard as DashboardIcon,
+  LogoutOutlined,
   PersonOutlined,
   WebStoriesOutlined,
 } from "@mui/icons-material";
 
+import END_POINTS from "src/application/shared/endpoints";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { Notify } from "./Notification/Notification";
 import ProfileAvatar from "./ProfileAvatar";
 import { User } from "src/shared/types/user";
+import axios from "axios";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import { primaryColor } from "src/application/shared/themes";
 import routes from "src/application/routes";
+import { useApplicationContext } from "src/application/store/Provider";
 import { useNavigate } from "react-router-dom";
 
 interface UserAccountMenuButtonProps {
@@ -26,6 +31,9 @@ interface UserAccountMenuButtonProps {
 
 const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
   const navigate = useNavigate();
+  const {
+    manager: { handleSetAuthInfo },
+  } = useApplicationContext();
   const {
     user,
     isMyProfilePage = false,
@@ -40,7 +48,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
   const isAdmin = hasAdminRights(user);
 
   const userFullName = `${user.name.givenName} ${user.name.familyName.charAt(
-    0
+    0,
   )}.`;
 
   const isOpen = Boolean(element);
@@ -75,6 +83,29 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
         color: primaryColor,
       },
     },
+  };
+
+  const handleOnLogoutClick = async () => {
+    await axios.post(
+      END_POINTS.AUTH.LOGOUT,
+      {
+        method: "POST",
+      },
+      {
+        withCredentials: true,
+      },
+    );
+
+    handleSetAuthInfo({
+      isAuthenticated: false,
+      user: null,
+    });
+    Notify({
+      type: "info",
+      content: "Logged out",
+    });
+
+    navigate(routes.features);
   };
 
   return (
@@ -195,6 +226,29 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
                 color={isDashboardPage ? primaryColor : "text.primary"}
               >
                 Dashboard
+              </Typography>
+            </MenuItem>
+          </>
+        )}
+
+        {user && (
+          <>
+            <Divider />
+
+            <MenuItem
+              sx={{ ...buttonHoverStylePrimary }}
+              onClick={handleOnLogoutClick}
+            >
+              <ListItemIcon>
+                <LogoutOutlined
+                  fontSize="medium"
+                  color="error"
+                  sx={{ mr: 1 }}
+                />
+              </ListItemIcon>
+
+              <Typography variant="body1" color="error">
+                Logout
               </Typography>
             </MenuItem>
           </>

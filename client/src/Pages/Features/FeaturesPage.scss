@@ -5,53 +5,6 @@
 .features-page {
   position: relative;
   padding-top: 5rem;
-  color: #000000;
-  &.dark {
-    background-color: #252526;
-    .navigation-bar {
-      &.bg-color-transparent {
-        .logo {
-          svg {
-            fill: #fff;
-          }
-        }
-      }
-    }
-  }
-}
-
-.testimonials {
-  .testimonials-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-  }
-
-  .testimonial-card {
-    background-color: #f8f8f8;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    .author {
-      font-weight: bold;
-      margin-top: 10px;
-    }
-  }
-}
-
-.key-features {
-  .key-features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-  }
-
-  .feature-card {
-    background-color: #f8f8f8;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
 }
 
 .benefits {
@@ -66,24 +19,9 @@
   }
 }
 
-.story-examples {
-  .story-examples-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-  }
-
-  .story-example-card {
-    background-color: #f8f8f8;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-}
-
 .guarantee {
   padding: 20px;
-  border-radius: 8px;
+  border-radius: var(--r-lg);
   text-align: center;
 }
 

@@ -6,6 +6,7 @@ import {
 import {
   ProfileInfo,
   Story,
+  StoryFormat,
   StoryParams,
   StoryParts,
   SubscriptionPlanEnum,
@@ -16,8 +17,10 @@ import {
 
 import CONFIG from "../../config";
 import { ObjectId } from "mongodb";
-import extractStoryParts from "../../utils/extractStoryParts";
-import { getSlugFromText } from "../../utils/stringUtils";
+import extractStoryParts, {
+  extractComicParts,
+} from "../../utils/extractStoryParts";
+import { countWords, getSlugFromText } from "../../utils/stringUtils";
 import { handleOpenRouterAIRequest } from "../../utils/openRouterClient";
 import retry from "../../utils/retryFunction";
 import { updateDocument } from "../../models/mongoDb/crudOperations";
@@ -40,7 +43,7 @@ export const handleCreateStoryRequest = async (
         },
       ],
       {
-        max_tokens: CONFIG.AI_MAX_TOKENS.DEFAULT,
+        max_tokens: CONFIG.AI_MAX_TOKENS.STORY,
       },
     );
 
@@ -58,30 +61,25 @@ export const handleCreateStory = async (
   profileInfo: ProfileInfo,
   storyParams: StoryParams,
   userInfo: User,
+  format: StoryFormat = "long",
 ) => {
   const user = (await getDocumentFromDb(
     new ObjectId(userInfo._id),
     DBCollectionsEnum.users,
   )) as User;
 
-  const createAndExtractStoryParts = async (): Promise<StoryParts> => {
-    const openaiResponse = await handleCreateStoryRequest(storyPrompt);
+  // A purchased story credit lets a user create one story beyond their plan
+  // cap. When over the cap, consume a credit instead of blocking.
+  const isAdmin = user.role === UserRole.admin;
+  const overSubscriptionLimit =
+    !!user.subscription &&
+    user.storyCount >= user.subscription.maxStoriesAllowed;
+  const availableCredits = user.storyCredits ?? 0;
+  const willUseCredit = !isAdmin && overSubscriptionLimit && availableCredits > 0;
 
-    if (openaiResponse && openaiResponse.length) {
-      // Extract the parts from the story
-      return extractStoryParts(openaiResponse);
-    } else {
-      throw new Error("❌ Failed to create a story!");
-    }
-  };
-
-  if (
-    user.role !== UserRole.admin &&
-    user.subscription &&
-    user.storyCount >= user.subscription.maxStoriesAllowed
-  ) {
+  if (!isAdmin && overSubscriptionLimit && availableCredits <= 0) {
     throw new Error(
-      `You have consumed your maximum credit of ${user.subscription.maxStoriesAllowed} stories`,
+      `You have consumed your maximum credit of ${user.subscription?.maxStoriesAllowed} stories`,
     );
   }
   if (user.status !== UserStatus.active) {
@@ -90,32 +88,78 @@ export const handleCreateStory = async (
     );
   }
 
+  const baseMeta = {
+    author: user._id,
+    createdAt: new Date(),
+    isPremium:
+      user.isPaidUser && user.subscription?.type !== SubscriptionPlanEnum.Free,
+    // Background image generation kicks off after the response is sent.
+    imagesStatus: "pending" as const,
+  };
+
   let storyId: ObjectId | undefined;
-  let storyParts: StoryParts;
   try {
-    storyParts = await retry(createAndExtractStoryParts, 3, 2000);
-    const totalCharacters = (storyParts.mainStory + storyParts.poem).length;
+    // Build the format-specific story document + params, then share the save tail.
+    let storyData: Partial<Story>;
+    let updatedStoryParams: StoryParams;
+    let title: string;
 
-    // Count the total characters in the story
-    if (totalCharacters > 4000) {
-      storyParts = await retry(createAndExtractStoryParts, 3, 2000);
+    if (format === "comic") {
+      const createAndExtractComic = async () => {
+        const aiResponse = await handleCreateStoryRequest(storyPrompt);
+        if (aiResponse && aiResponse.length) {
+          return extractComicParts(aiResponse);
+        }
+        throw new Error("❌ Failed to create a comic!");
+      };
 
-      console.error(
-        `❌ The story exceeds the maximum number of characters [4,000]!`,
+      const comic = await retry(createAndExtractComic, 3, 2000);
+      // Joined captions double as the searchable/excerpt body + a graceful
+      // fallback for surfaces that only render `mainStory`.
+      const mainStory = comic.pages.map((page) => page.caption).join("\n\n");
+      title = comic.title;
+      storyData = {
+        ...baseMeta,
+        title: comic.title,
+        summary: comic.summary,
+        mainStory,
+        poem: "",
+        pages: comic.pages,
+        format: "comic",
+      };
+      updatedStoryParams = {
+        ...storyParams,
+        totalCharacters: mainStory.length,
+        totalWords: countWords(mainStory),
+      };
+    } else {
+      const createAndExtractStoryParts = async (): Promise<StoryParts> => {
+        const openaiResponse = await handleCreateStoryRequest(storyPrompt);
+        if (openaiResponse && openaiResponse.length) {
+          return extractStoryParts(openaiResponse);
+        }
+        throw new Error("❌ Failed to create a story!");
+      };
+
+      // Long stories are word-targeted now (no character cap / re-roll); the
+      // TTS pipeline chunks whatever length this produces.
+      const storyParts = await retry(createAndExtractStoryParts, 3, 2000);
+      const totalCharacters = (storyParts.mainStory + storyParts.poem).length;
+      const totalWords = countWords(
+        `${storyParts.mainStory} ${storyParts.poem}`,
       );
+      title = storyParts.title;
+      storyData = {
+        ...baseMeta,
+        ...storyParts,
+        format: "long",
+      };
+      updatedStoryParams = {
+        ...storyParams,
+        totalCharacters,
+        totalWords,
+      };
     }
-    const storyData: Partial<Story> = {
-      ...storyParts,
-      author: user._id,
-      createdAt: new Date(),
-      isPremium:
-        user.isPaidUser &&
-        user.subscription?.type !== SubscriptionPlanEnum.Free,
-    };
-    const updatedStoryParams: StoryParams = {
-      ...storyParams,
-      totalCharacters,
-    };
 
     try {
       // Save story to MongoDB Atlas
@@ -127,9 +171,7 @@ export const handleCreateStory = async (
       const storyWithSlug = (await updateDocument<Story>(
         storyId.toString(),
         {
-          slug: `${getSlugFromText(storyParts.title)}-${storyId
-            .toString()
-            .slice(-9)}`,
+          slug: `${getSlugFromText(title)}-${storyId.toString().slice(-9)}`,
         },
         DBCollectionsEnum.stories,
       )) as Story;
@@ -140,15 +182,23 @@ export const handleCreateStory = async (
       });
     }
 
-    // Update User with story
+    // Update User with story. If this story used a purchased credit (the user
+    // is over their plan cap), decrement credits and leave storyCount at the
+    // cap; otherwise count it against the plan quota as usual.
     if (storyId && user._id) {
       try {
+        const userStoryUpdate = willUseCredit
+          ? {
+              storyCredits: availableCredits - 1,
+              stories: [...user.stories, storyId.toString()],
+            }
+          : {
+              storyCount: user.storyCount + 1,
+              stories: [...user.stories, storyId.toString()],
+            };
         const updatedUser = (await updateDocument<User>(
           user._id.toString(),
-          {
-            storyCount: user.storyCount + 1,
-            stories: [...user.stories, storyId.toString()],
-          },
+          userStoryUpdate,
           DBCollectionsEnum.users,
         )) as User;
 
@@ -165,6 +215,7 @@ export const handleCreateStory = async (
 
     console.log("✅ Story Created Successfully", {
       storySlug: storyData.slug,
+      format,
       MODEL_NAME: CONFIG.OPENROUTER_DEFAULT_MODEL_NAME,
     });
 
@@ -172,7 +223,7 @@ export const handleCreateStory = async (
       ...storyData,
       _id: storyId,
       profileInfo,
-      storyParams,
+      storyParams: updatedStoryParams,
       createdAt: new Date(),
     };
   } catch (error) {

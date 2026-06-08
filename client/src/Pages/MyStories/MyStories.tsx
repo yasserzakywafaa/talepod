@@ -122,6 +122,7 @@ const MyStoriesPage: React.FC = () => {
                     <Grid
                       key={index}
                       size={{ xs: 12, sm: 6, md: 6, lg: 6, xl: 6 }}
+                      sx={{ display: "flex" }}
                     >
                       <StoryCard
                         key={index}

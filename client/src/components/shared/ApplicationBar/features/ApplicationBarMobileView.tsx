@@ -169,7 +169,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
 
                 <MenuItem
                   className={`menu-item`}
-                  onClick={handleOnMenuItemClick("explore")}
+                  onClick={handleOnMenuItemClick("library")}
                 >
                   <SearchOutlined
                     fontSize="medium"
@@ -180,10 +180,10 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                   <Typography
                     variant="h6"
                     color={
-                      pagesMatch.isExplorePage ? primaryColor : "text.primary"
+                      pagesMatch.isLibraryPage ? primaryColor : "text.primary"
                     }
                   >
-                    Explore
+                    Library
                   </Typography>
                 </MenuItem>
 

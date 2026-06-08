@@ -1,12 +1,16 @@
 import * as React from "react";
 
+import { Box } from "@mui/material";
 import TalePodLogo from "src/assets/images/sleeping_bunny_with_a_moon.webp";
 import TalePodLogoSmall from "src/assets/images/sleeping_bunny_with_a_moon.webp";
 import routes from "src/application/routes";
+import { honey300, twilight500 } from "src/application/shared/themes";
+import { useApplicationContext } from "src/application/store/Provider";
 import { useNavigate } from "react-router-dom";
 
 export interface LogoProps {
   variant?: LogoVariant;
+  isText?: boolean;
   component?: LogoComponentEnum;
   style?: React.CSSProperties;
   onClick?: () => void;
@@ -22,7 +26,13 @@ export type LogoVariant = "small" | "full";
 const Logo = (props: LogoProps) => {
   const navigate = useNavigate();
   const {
+    store: {
+      state: { themeMode },
+    },
+  } = useApplicationContext();
+  const {
     variant = "full",
+    isText = false,
     component = LogoComponentEnum.IMAGE,
     style,
     onClick,
@@ -35,6 +45,33 @@ const Logo = (props: LogoProps) => {
       navigate(routes.features);
     }
   };
+
+  if (isText) {
+    return (
+      <Box
+        sx={{
+          fontFamily: "var(--font-display)",
+          fontSize: 26,
+          lineHeight: 1,
+        }}
+      >
+        <span
+          style={{
+            color: themeMode === "dark" ? "" : twilight500,
+          }}
+        >
+          Tale
+        </span>
+        <span
+          style={{
+            color: honey300,
+          }}
+        >
+          Pod
+        </span>
+      </Box>
+    );
+  }
 
   const renderImageByVariant = (variant: LogoVariant) => {
     const logoSrc = variant === "small" ? TalePodLogoSmall : TalePodLogo;

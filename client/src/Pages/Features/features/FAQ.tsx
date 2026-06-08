@@ -28,8 +28,8 @@ export default function FAQ() {
         case "create":
           navigate(routes.create);
           break;
-        case "explore":
-          navigate(routes.explore);
+        case "library":
+          navigate(routes.library);
           break;
         case "contact":
           navigate(routes.contact);
@@ -117,10 +117,10 @@ export default function FAQ() {
               <br />
               Browse through the{" "}
               <Link
-                href={`${window.location.origin}/explore`}
-                onClick={handleLinkClick("explore")}
+                href={`${window.location.origin}${routes.library}`}
+                onClick={handleLinkClick("library")}
               >
-                Explore
+                Library
               </Link>{" "}
               page to find both text and audio versions of various bedtime
               stories.
