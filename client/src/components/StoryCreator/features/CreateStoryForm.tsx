@@ -58,8 +58,8 @@ const CreateStoryForm = () => {
   const navigate = useNavigate();
   const { isDesktop } = useDeviceSize();
   // Generating-overlay handshake (#6): once the story text is saved we flip
-  // `isGenerationComplete` so the overlay shows its "Done" step, then it calls
-  // back to navigate to `navTarget`.
+  // `isGenerationComplete` so the overlay shows its "Done" step; a page-level
+  // timer (below) then navigates to `navTarget` after a short beat.
   const [isGenerationComplete, setIsGenerationComplete] = useState(false);
   const [navTarget, setNavTarget] = useState<{
     userId: string;
@@ -197,8 +197,8 @@ const CreateStoryForm = () => {
           }
 
           if (story._id && story.slug) {
-            // Hand off to the generating overlay: keep it mounted, show the
-            // final "Done" step for a beat, then navigate from onComplete.
+            // Keep the overlay mounted and show its final "Done" step; the
+            // page-level timer effect navigates after a short beat.
             setNavTarget({ userId: user._id, slug: story.slug });
             setIsGenerationComplete(true);
             return;
@@ -215,22 +215,26 @@ const CreateStoryForm = () => {
     }
   };
 
-  // Called by GeneratingScreen ~1.8s after it shows "Done": navigate to the new
-  // story, then tear down the overlay.
-  const handleGenerationComplete = () => {
-    if (navTarget) {
+  // Once the story is saved we flip `isGenerationComplete` (overlay shows its
+  // "Done" step); this page-level timer then navigates after a short beat.
+  // Keeping the timer here — not inside GeneratingScreen — means it can't be
+  // cancelled by the overlay unmounting, which previously left users stranded on
+  // the create page with no navigation.
+  useEffect(() => {
+    if (!isGenerationComplete || !navTarget) return;
+    const timer = window.setTimeout(() => {
       window.localStorage.setItem(
         APP_CONSTANTS.LOCAL_STORAGE.STORY_GENERATED,
         "true",
       );
+      isCreateStoryFetching(false);
       navigate(routes.myStory(navTarget.userId, navTarget.slug), {
         replace: false,
       });
-    }
-    isCreateStoryFetching(false);
-    setIsGenerationComplete(false);
-    setNavTarget(null);
-  };
+    }, 2200);
+    return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isGenerationComplete, navTarget, navigate]);
 
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -343,12 +347,11 @@ const CreateStoryForm = () => {
 
   return (
     <Box className="story-creator-form">
-      {isCreatingStory && (
+      {(isCreatingStory || isGenerationComplete) && (
         <GeneratingScreen
           format={format}
           childName={profileInfo.name}
           isComplete={isGenerationComplete}
-          onComplete={handleGenerationComplete}
         />
       )}
       <Box

@@ -5,7 +5,7 @@ import {
   EditOutlined,
   SvgIconComponent,
 } from "@mui/icons-material";
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import {
   bgTwilight,
   glowHoney,
@@ -23,16 +23,14 @@ import bunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
  * (Idea → Write → Magic → Done). The rail mirrors the real *text* creation (no
  * misleading "Paint" step — images are generated later on the story page); it
  * holds on "Magic" until the request resolves, then `isComplete` advances it to
- * "Done" and, after a short beat, fires `onComplete` (the caller navigates).
- * Renders as a fixed full-viewport layer.
+ * "Done". The page owns the short "Done" hold + navigation. Renders as a fixed
+ * full-viewport layer.
  */
 export interface GeneratingScreenProps {
   format: StoryFormat;
   childName?: string;
   /** Flip true once the story is actually created → show the "Done" step. */
   isComplete?: boolean;
-  /** Called ~1.8s after "Done" is shown so the caller can navigate. */
-  onComplete?: () => void;
 }
 
 const STAGES: Record<
@@ -97,19 +95,9 @@ const GeneratingScreen: FC<GeneratingScreenProps> = ({
   format,
   childName,
   isComplete,
-  onComplete,
 }) => {
   const stages = STAGES[format];
   const [active, setActive] = useState(0);
-  const firedRef = useRef(false);
-
-  // Keep the latest onComplete in a ref so the completion effect below does NOT
-  // depend on its (per-render) identity — otherwise a parent re-render during
-  // the "Done" beat would tear down the pending timeout and it would never fire.
-  const onCompleteRef = useRef(onComplete);
-  useEffect(() => {
-    onCompleteRef.current = onComplete;
-  }, [onComplete]);
 
   // While the request is in flight, advance Idea → Write → Magic and hold on
   // "Magic" (second-to-last) — the text is all that's being generated here.
@@ -122,15 +110,11 @@ const GeneratingScreen: FC<GeneratingScreenProps> = ({
     return () => clearInterval(id);
   }, [stages.length, isComplete]);
 
-  // Once the story is actually created, jump to "Done", hold briefly so the
-  // user sees it, then hand back to the caller (which navigates). Deps are kept
-  // identity-stable so this fires exactly once per completion.
+  // Once the story is actually created, jump straight to "Done". The page keeps
+  // this overlay mounted for a short beat, then navigates — so navigation can't
+  // be cancelled by anything unmounting this component.
   useEffect(() => {
-    if (!isComplete || firedRef.current) return;
-    firedRef.current = true;
-    setActive(stages.length - 1);
-    const t = setTimeout(() => onCompleteRef.current?.(), 1800);
-    return () => clearTimeout(t);
+    if (isComplete) setActive(stages.length - 1);
   }, [isComplete, stages.length]);
 
   const honey = honey400;

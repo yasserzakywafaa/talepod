@@ -43,6 +43,35 @@ const traitSummary = (avatar: Avatar): string =>
     .filter(Boolean)
     .join(" · ");
 
+/** Traits that change how the avatar is *drawn* (mirrors the server). Editing
+ *  only name/relationship must not re-paint the portrait. */
+const AVATAR_APPEARANCE_FIELDS: (keyof AvatarInput)[] = [
+  "age",
+  "gender",
+  "skinTone",
+  "hairColor",
+  "hairStyle",
+  "eyeColor",
+  "outfit",
+  "distinguishingFeature",
+  "notes",
+];
+
+const normTrait = (value: unknown): string =>
+  value === undefined || value === null ? "" : `${value}`.trim();
+
+/** Did this edit touch a visual trait (→ a new portrait will be painted)? */
+const didAppearanceChange = (
+  before: Avatar | null,
+  after: AvatarInput,
+): boolean =>
+  !before ||
+  AVATAR_APPEARANCE_FIELDS.some(
+    (field) =>
+      normTrait((after as unknown as Record<string, unknown>)[field]) !==
+      normTrait((before as unknown as Record<string, unknown>)[field]),
+  );
+
 const AvatarCard = ({
   avatar,
   pending,
@@ -74,7 +103,7 @@ const AvatarCard = ({
   >
     <Box
       sx={{
-        height: 300,
+        height: 400,
         position: "relative",
         background: avatar.portraitUrl
           ? `center / cover no-repeat url('${avatar.portraitUrl}')`
@@ -260,6 +289,9 @@ const AvatarsPage = () => {
     const editingId = editing?._id;
     // Baseline portrait so the poll can detect a *regenerated* one on edit.
     const previousPortrait = editing?.portraitUrl;
+    // A new portrait is painted on create, or on an edit that changes the look.
+    // A name-only edit keeps the existing image — no spinner, instant update.
+    const willRepaint = !isEditing || didAppearanceChange(editing, input);
 
     // Close immediately — the portrait generates server-side in the background.
     setDialogOpen(false);
@@ -274,13 +306,23 @@ const AvatarsPage = () => {
         createdAt: new Date().toISOString(),
       } as Avatar;
       setOptimistic((prev) => [placeholder, ...prev]);
+    } else if (willRepaint && editingId) {
+      // Show the "Painting portrait…" overlay on the existing card right away —
+      // covering BOTH the description recompose and the portrait render — so the
+      // user can set it and forget it instead of waiting on the modal.
+      setPendingPortraitIds((prev) => Array.from(new Set([...prev, editingId])));
     }
 
     try {
       if (isEditing && editingId) {
         const updated = await updateAvatar(editingId, input);
         Notify({ type: ToastTypes.Success, content: "Avatar updated." });
-        pollForPortraits([{ id: updated._id, since: previousPortrait }]);
+        if (willRepaint) {
+          pollForPortraits([{ id: updated._id, since: previousPortrait }]);
+        } else {
+          // Name-only edit: nothing is repainting, so clear any spinner now.
+          setPendingPortraitIds((prev) => prev.filter((id) => id !== editingId));
+        }
       } else {
         const created = await createAvatar(input);
         setOptimistic((prev) => prev.filter((a) => a._id !== tempId));
@@ -290,6 +332,8 @@ const AvatarsPage = () => {
     } catch (error) {
       if (!isEditing) {
         setOptimistic((prev) => prev.filter((a) => a._id !== tempId));
+      } else if (editingId) {
+        setPendingPortraitIds((prev) => prev.filter((id) => id !== editingId));
       }
       Notify({ type: ToastTypes.Error, content: "Something went wrong." });
     }

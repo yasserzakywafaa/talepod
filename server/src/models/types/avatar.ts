@@ -60,3 +60,20 @@ export const AVATAR_TRAIT_FIELDS: (keyof UserAvatarInput)[] = [
   "distinguishingFeature",
   "notes",
 ];
+
+/**
+ * The subset of traits that actually change how the avatar is *drawn*. Editing
+ * only non-visual fields (name, relationship) must NOT trigger a costly portrait
+ * re-generation — the avatar still looks identical.
+ */
+export const AVATAR_APPEARANCE_FIELDS: (keyof UserAvatarInput)[] = [
+  "age",
+  "gender",
+  "skinTone",
+  "hairColor",
+  "hairStyle",
+  "eyeColor",
+  "outfit",
+  "distinguishingFeature",
+  "notes",
+];

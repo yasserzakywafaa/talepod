@@ -223,9 +223,9 @@ export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
       minCharacters: 3900,
       maxCharacters: 4000,
       totalCharacters: 4000,
-      minWords: 1200,
-      maxWords: 1800,
-      totalWords: 1500,
+      minWords: 800,
+      maxWords: 1200,
+      totalWords: 1000,
       moral: Morals[Math.floor(Math.random() * Morals.length)],
       tone: Tones[Math.floor(Math.random() * Tones.length)],
       environment:

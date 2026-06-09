@@ -10,6 +10,7 @@ import {
   updateDocument,
 } from "../models/mongoDb/crudOperations";
 import {
+  AVATAR_APPEARANCE_FIELDS,
   AVATAR_TRAIT_FIELDS,
   UserAvatar,
   UserAvatarInput,
@@ -162,16 +163,35 @@ const updateAvatar = async (request: Request, response: Response) => {
       return response.status(400).json({ message: "Avatar name is required" });
     }
 
-    // Recompose the locked description from the merged traits (any trait may
-    // have changed), then regenerate the portrait in the background.
-    const description = await composeAvatarDescription({ ...existing, ...input });
+    // Only the *visual* traits affect the portrait. If the edit just changed the
+    // name/relationship, keep the existing description + portrait — no costly
+    // re-generation, so the card updates instantly and the face stays identical.
+    const appearanceChanged = AVATAR_APPEARANCE_FIELDS.some((field) => {
+      if (!(field in input)) return false;
+      const next = `${input[field] ?? ""}`.trim();
+      const prev = `${
+        (existing as unknown as Record<string, unknown>)[field] ?? ""
+      }`.trim();
+      return next !== prev;
+    });
+
+    const description = appearanceChanged
+      ? await composeAvatarDescription({ ...existing, ...input })
+      : existing.description;
+
     const updated = (await updateDocument<UserAvatar>(
       avatarId,
-      { ...input, description, lastModified: new Date() },
+      {
+        ...input,
+        ...(description !== undefined ? { description } : {}),
+        lastModified: new Date(),
+      },
       DBCollectionsEnum.avatars,
     )) as UserAvatar | null;
 
-    generatePortraitInBackground(avatarId, description);
+    if (appearanceChanged && description) {
+      generatePortraitInBackground(avatarId, description);
+    }
 
     return response.json(updated ?? { ...existing, ...input, description });
   } catch (error) {
