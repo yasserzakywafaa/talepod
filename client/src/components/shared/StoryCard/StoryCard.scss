@@ -2,6 +2,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  width: 100%;
   height: 100%;
   cursor: pointer;
   overflow: hidden;
@@ -42,6 +43,8 @@
     overflow: hidden;
 
     .story-card-cover-img {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -49,6 +52,8 @@
     }
 
     .story-card-cover-placeholder {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
       display: flex;
@@ -98,6 +103,8 @@
       -webkit-line-clamp: 2;
       line-clamp: 2;
       overflow: hidden;
+      // Reserve two lines so single- and double-line titles keep cards equal height.
+      min-height: 2.4em;
     }
 
     .story-card-summary {

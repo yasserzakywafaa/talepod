@@ -36,6 +36,7 @@ import {
   UserStatus,
 } from "src/shared/types/user";
 import { Tone, Tones } from "src/shared/mockedData/Tone";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
@@ -48,7 +49,6 @@ import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredW
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
-import { useEffect, useState } from "react";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useOpenaiContext } from "./Openai/store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
@@ -388,15 +388,15 @@ const CreateStoryForm = () => {
           </Grid>
 
           <Grid size={{ xs: 12, md: 6 }}>
-            <Box sx={{ width: "100%", mb: 3 }}>
-              <AvatarPicker
-                value={avatarId}
-                autoSelectId={preselectAvatarId}
-                onChange={(_id, avatar) => handleSelectAvatar(avatar ?? null)}
-                enabled={isAuthenticated}
-                onRequestLogin={handleToggleLoginModal}
-              />
-            </Box>
+            {/* <Box sx={{ width: "100%", mb: 3 }}> */}
+            <AvatarPicker
+              value={avatarId}
+              autoSelectId={preselectAvatarId}
+              onChange={(_id, avatar) => handleSelectAvatar(avatar ?? null)}
+              enabled={isAuthenticated}
+              onRequestLogin={handleToggleLoginModal}
+            />
+            {/* </Box> */}
           </Grid>
         </Grid>
 

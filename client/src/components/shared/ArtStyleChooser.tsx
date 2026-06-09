@@ -22,7 +22,9 @@ const ArtStyleChooser: FC<ArtStyleChooserProps> = ({
     <Box
       sx={{
         display: "flex",
-        flexDirection: stacked ? "column" : "row",
+        flexWrap: "nowrap",
+        overflowX: "auto",
+        pb: 1,
         gap: stacked ? "10px" : "12px",
       }}
     >
@@ -34,11 +36,14 @@ const ArtStyleChooser: FC<ArtStyleChooserProps> = ({
             key={style.id}
             onClick={() => onChange(style.id)}
             sx={{
-              flex: 1,
+              flex: "0 0 auto",
+              width: 160,
               textAlign: "left",
+              minHeight: 150,
               backgroundColor: "background.paper",
+              background: style.swatch,
               borderRadius: "var(--r-lg)",
-              padding: "10px",
+              overflow: "hidden",
               borderWidth: isSelected ? 1.5 : 1,
               borderStyle: "solid",
               borderColor: isSelected ? honey400 : "divider",
@@ -46,67 +51,70 @@ const ArtStyleChooser: FC<ArtStyleChooserProps> = ({
                 ? "0 0 0 4px rgba(240,182,72,0.18), var(--shadow-sm)"
                 : "var(--shadow-xs)",
               display: "flex",
-              flexDirection: "column",
               alignItems: "stretch",
-              gap: "8px",
               position: "relative",
             }}
           >
+            {style.thumbnail && (
+              <Box
+                component="img"
+                src={style.thumbnail}
+                alt={`${style.label} sample`}
+                loading="lazy"
+                sx={{
+                  position: "absolute",
+                  inset: 0,
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              />
+            )}
+
+            {isSelected && (
+              <CheckRounded
+                sx={{
+                  color: "#fff",
+                  position: "absolute",
+                  padding: 0.25,
+                  top: 8,
+                  right: 8,
+                  width: 18,
+                  height: 18,
+                  borderRadius: "50%",
+                  background: honey400,
+                  zIndex: 1,
+                }}
+              />
+            )}
+
             <Box
               sx={{
-                height: 100,
-                borderRadius: "var(--r-md)",
-                background: style.swatch,
-                position: "relative",
-                overflow: "hidden",
-                border: "1px solid rgba(255,255,255,0.2)",
+                position: "absolute",
+                left: 0,
+                right: 0,
+                bottom: 0,
+                padding: "28px 12px 12px",
+                background:
+                  "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0) 100%)",
               }}
             >
-              {style.thumbnail && (
-                <Box
-                  component="img"
-                  src={style.thumbnail}
-                  alt={`${style.label} sample`}
-                  loading="lazy"
-                  sx={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    display: "block",
-                  }}
-                />
-              )}
-              {isSelected && (
-                <CheckRounded
-                  sx={{
-                    color: "#fff",
-                    position: "absolute",
-                    padding: 0.25,
-                    top: 6,
-                    right: 6,
-                    width: 18,
-                    height: 18,
-                    borderRadius: "50%",
-                    background: honey400,
-                  }}
-                />
-              )}
-            </Box>
-            <Box>
               <Box
                 sx={{
                   fontFamily: "var(--font-display)",
                   fontSize: 14,
                   lineHeight: 1.2,
-                  color: "text.primary",
+                  color: "#fff",
                 }}
               >
                 {style.label}
               </Box>
+
               <Box
                 sx={{
                   fontSize: 11,
-                  color: "text.secondary",
+                  color: "rgba(255,255,255,0.8)",
                   marginTop: "2px",
                   lineHeight: 1.3,
                 }}

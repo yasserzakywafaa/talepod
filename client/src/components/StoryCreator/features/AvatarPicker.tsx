@@ -25,7 +25,7 @@ export interface AvatarPickerProps {
 
 const tileSx = (selected: boolean) => ({
   flex: "0 0 auto",
-  width: 92,
+  // width: 92,
   p: 1,
   borderRadius: "var(--r-md)",
   border: "1.5px solid",
@@ -72,7 +72,6 @@ const AvatarPicker = ({
         flexWrap: "nowrap",
         alignItems: "center",
         justifyContent: "space-between",
-        mb: 1,
       }}
     >
       <Typography variant="body2" color="text.secondary" fontWeight={600}>
@@ -84,7 +83,7 @@ const AvatarPicker = ({
           to={routes.avatars}
           size="small"
           variant="text"
-          sx={{ minWidth: 0, fontSize: 12, color: honey400, fontWeight: 600 }}
+          sx={{ paddingTop: 0 }}
         >
           Manage avatars
         </Button>
@@ -197,8 +196,8 @@ const AvatarPicker = ({
               >
                 <Box
                   sx={{
-                    width: 56,
-                    height: 56,
+                    width: 110,
+                    height: 110,
                     borderRadius: "50%",
                     overflow: "hidden",
                     background: avatar.portraitUrl

@@ -101,7 +101,7 @@ const AvatarCard = ({
           <Typography
             sx={{
               position: "absolute",
-              bottom: 20,
+              bottom: "20%",
               width: "100%",
               textAlign: "center",
               color: "#fff",
@@ -229,8 +229,9 @@ const AvatarsPage = () => {
       const fresh = await fetchAvatars();
       const settledIds = wanted
         .filter((target) => {
-          const url = fresh.find((avatar) => avatar._id === target.id)
-            ?.portraitUrl;
+          const url = fresh.find(
+            (avatar) => avatar._id === target.id,
+          )?.portraitUrl;
           return Boolean(url) && url !== target.since;
         })
         .map((target) => target.id);
