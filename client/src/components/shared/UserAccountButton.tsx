@@ -70,8 +70,8 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
     handleCloseMenu();
   };
 
-  const handleOnMyCharactersClick = () => {
-    navigate(routes.characters);
+  const handleOnMyAvatarsClick = () => {
+    navigate(routes.avatars);
     handleCloseMenu();
   };
 
@@ -210,13 +210,13 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
 
         <MenuItem
           sx={{ ...buttonHoverStylePrimary }}
-          onClick={handleOnMyCharactersClick}
+          onClick={handleOnMyAvatarsClick}
         >
           <ListItemIcon>
             <FaceOutlined fontSize="medium" color="secondary" sx={{ mr: 1 }} />
           </ListItemIcon>
           <Typography variant="body1" color="text.primary">
-            My Characters
+            My Avatars
           </Typography>
         </MenuItem>
 

@@ -3,6 +3,7 @@ import {
   ChildGenderEnum,
   ProfileInfo,
   StoryFormat,
+  getStoryCreatorInitialState,
 } from "./state";
 
 import { Avatar } from "src/shared/types/avatar";
@@ -98,9 +99,17 @@ export const useStoryCreatorManager = (
   };
 
   const handleSelectAvatar = (avatar: Avatar | null) => {
-    // "None" / deselect — only clear the avatar link, keep typed form values.
+    // "None" / deselect — reset the whole form (name, interests, custom
+    // moral/tone/environment, age, gender) back to its default state, keeping
+    // only the user's non-avatar choices (chosen format + art style).
     if (!avatar) {
-      updateState({ ...store.state, avatarId: "" });
+      const fresh = getStoryCreatorInitialState();
+      updateState({
+        ...fresh,
+        format: store.state.format,
+        artStyle: store.state.artStyle,
+        avatarId: "",
+      });
       return;
     }
 

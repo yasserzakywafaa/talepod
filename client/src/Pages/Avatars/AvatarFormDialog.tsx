@@ -162,7 +162,7 @@ const AvatarFormDialog = ({
           Cancel
         </Button>
         <Button variant="contained" onClick={handleSubmit} disabled={!canSave}>
-          {isSaving ? "Saving…" : "Save character"}
+          {isSaving ? "Saving…" : "Save avatar"}
         </Button>
       </DialogActions>
     </Dialog>

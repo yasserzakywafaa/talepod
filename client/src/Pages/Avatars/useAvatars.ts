@@ -5,7 +5,7 @@ import END_POINTS from "src/application/shared/endpoints";
 import axios from "axios";
 
 /**
- * CRUD hook for the user's saved characters (avatars). Auth is cookie-based
+ * CRUD hook for the user's saved avatars. Auth is cookie-based
  * (axios sends credentials globally), so all calls are user-scoped server-side.
  * Portraits are generated server-side in the background; `refetch` (e.g. on a
  * short delay after a mutation) surfaces them once ready.
@@ -15,13 +15,16 @@ export const useAvatars = (enabled = true) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  const fetchAvatars = useCallback(async () => {
+  const fetchAvatars = useCallback(async (): Promise<Avatar[]> => {
     setIsLoading(true);
     try {
       const { data } = await axios.get<Avatar[]>(END_POINTS.AVATARS.LIST);
-      setAvatars(Array.isArray(data) ? data : []);
+      const list = Array.isArray(data) ? data : [];
+      setAvatars(list);
+      return list;
     } catch (error) {
-      console.error("❌ Failed to load characters", error);
+      console.error("❌ Failed to load avatars", error);
+      return [];
     } finally {
       setIsLoading(false);
     }

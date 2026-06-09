@@ -65,7 +65,7 @@ const createAvatar = async (request: Request, response: Response) => {
 
     const input = pickAvatarInput(request.body);
     if (!input.name) {
-      return response.status(400).json({ message: "Character name is required" });
+      return response.status(400).json({ message: "Avatar name is required" });
     }
 
     const description = await composeAvatarDescription(input);
@@ -82,7 +82,7 @@ const createAvatar = async (request: Request, response: Response) => {
     return response.status(201).json({ ...avatar, _id: avatarId });
   } catch (error) {
     console.error("❌ createAvatar failed", error);
-    return response.status(500).json({ message: "Failed to create character" });
+    return response.status(500).json({ message: "Failed to create avatar" });
   }
 };
 
@@ -106,7 +106,7 @@ const listAvatars = async (request: Request, response: Response) => {
     return response.json(avatars);
   } catch (error) {
     console.error("❌ listAvatars failed", error);
-    return response.status(500).json({ message: "Failed to load characters" });
+    return response.status(500).json({ message: "Failed to load avatars" });
   }
 };
 
@@ -135,12 +135,12 @@ const getAvatar = async (request: Request, response: Response) => {
       String(user._id),
     );
     if (!avatar) {
-      return response.status(404).json({ message: "Character not found" });
+      return response.status(404).json({ message: "Avatar not found" });
     }
     return response.json(avatar);
   } catch (error) {
     console.error("❌ getAvatar failed", error);
-    return response.status(500).json({ message: "Failed to load character" });
+    return response.status(500).json({ message: "Failed to load avatar" });
   }
 };
 
@@ -154,12 +154,12 @@ const updateAvatar = async (request: Request, response: Response) => {
     const { avatarId } = request.params;
     const existing = await findOwnedAvatar(avatarId, String(user._id));
     if (!existing) {
-      return response.status(404).json({ message: "Character not found" });
+      return response.status(404).json({ message: "Avatar not found" });
     }
 
     const input = pickAvatarInput(request.body);
     if (!input.name) {
-      return response.status(400).json({ message: "Character name is required" });
+      return response.status(400).json({ message: "Avatar name is required" });
     }
 
     // Recompose the locked description from the merged traits (any trait may
@@ -176,7 +176,7 @@ const updateAvatar = async (request: Request, response: Response) => {
     return response.json(updated ?? { ...existing, ...input, description });
   } catch (error) {
     console.error("❌ updateAvatar failed", error);
-    return response.status(500).json({ message: "Failed to update character" });
+    return response.status(500).json({ message: "Failed to update avatar" });
   }
 };
 
@@ -190,14 +190,14 @@ const deleteAvatar = async (request: Request, response: Response) => {
     const { avatarId } = request.params;
     const existing = await findOwnedAvatar(avatarId, String(user._id));
     if (!existing) {
-      return response.status(404).json({ message: "Character not found" });
+      return response.status(404).json({ message: "Avatar not found" });
     }
 
     const success = await deleteDocument(avatarId, DBCollectionsEnum.avatars);
     return response.json({ success });
   } catch (error) {
     console.error("❌ deleteAvatar failed", error);
-    return response.status(500).json({ message: "Failed to delete character" });
+    return response.status(500).json({ message: "Failed to delete avatar" });
   }
 };
 

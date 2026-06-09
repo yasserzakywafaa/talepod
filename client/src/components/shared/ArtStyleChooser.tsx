@@ -1,9 +1,9 @@
 import { Box, ButtonBase } from "@mui/material";
+
+import { ArtStyles } from "src/shared/artStyles";
 import { CheckRounded } from "@mui/icons-material";
 import { FC } from "react";
-
 import { honey400 } from "src/application/shared/themes";
-import { ArtStyles } from "src/shared/artStyles";
 
 export interface ArtStyleChooserProps {
   value: string;
@@ -27,7 +27,8 @@ const ArtStyleChooser: FC<ArtStyleChooserProps> = ({
       }}
     >
       {ArtStyles.map((style) => {
-        const sel = value === style.id;
+        const isSelected = value === style.id;
+
         return (
           <ButtonBase
             key={style.id}
@@ -38,10 +39,10 @@ const ArtStyleChooser: FC<ArtStyleChooserProps> = ({
               backgroundColor: "background.paper",
               borderRadius: "var(--r-lg)",
               padding: "10px",
-              borderWidth: sel ? 1.5 : 1,
+              borderWidth: isSelected ? 1.5 : 1,
               borderStyle: "solid",
-              borderColor: sel ? honey400 : "divider",
-              boxShadow: sel
+              borderColor: isSelected ? honey400 : "divider",
+              boxShadow: isSelected
                 ? "0 0 0 4px rgba(240,182,72,0.18), var(--shadow-sm)"
                 : "var(--shadow-xs)",
               display: "flex",
@@ -53,7 +54,7 @@ const ArtStyleChooser: FC<ArtStyleChooserProps> = ({
           >
             <Box
               sx={{
-                height: 64,
+                height: 100,
                 borderRadius: "var(--r-md)",
                 background: style.swatch,
                 position: "relative",
@@ -61,23 +62,34 @@ const ArtStyleChooser: FC<ArtStyleChooserProps> = ({
                 border: "1px solid rgba(255,255,255,0.2)",
               }}
             >
-              {sel && (
+              {style.thumbnail && (
                 <Box
+                  component="img"
+                  src={style.thumbnail}
+                  alt={`${style.label} sample`}
+                  loading="lazy"
                   sx={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    display: "block",
+                  }}
+                />
+              )}
+              {isSelected && (
+                <CheckRounded
+                  sx={{
+                    color: "#fff",
                     position: "absolute",
+                    padding: 0.25,
                     top: 6,
                     right: 6,
-                    width: 20,
-                    height: 20,
+                    width: 18,
+                    height: 18,
                     borderRadius: "50%",
                     background: honey400,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
                   }}
-                >
-                  <CheckRounded sx={{ fontSize: 13, color: "#fff" }} />
-                </Box>
+                />
               )}
             </Box>
             <Box>

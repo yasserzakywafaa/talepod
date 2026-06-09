@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   FormControl,
+  Grid,
   InputLabel,
   MenuItem,
   Select,
@@ -13,6 +14,7 @@ import {
   TextField,
   ToggleButton,
   ToggleButtonGroup,
+  Typography,
 } from "@mui/material";
 import {
   AdultGenderEnum,
@@ -38,7 +40,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import ArtStyleChooser from "src/components/shared/ArtStyleChooser";
-import CharacterPicker from "./CharacterPicker";
+import AvatarPicker from "./AvatarPicker";
 import FormatChooser from "src/components/shared/FormatChooser";
 import GeneratingScreen from "./GeneratingScreen";
 import StorySettings from "./StorySettings";
@@ -46,7 +48,7 @@ import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredW
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useOpenaiContext } from "./Openai/store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
@@ -55,6 +57,14 @@ import { useStoryCreatorContext } from "../store/Provider";
 const CreateStoryForm = () => {
   const navigate = useNavigate();
   const { isDesktop } = useDeviceSize();
+  // Generating-overlay handshake (#6): once the story text is saved we flip
+  // `isGenerationComplete` so the overlay shows its "Done" step, then it calls
+  // back to navigate to `navTarget`.
+  const [isGenerationComplete, setIsGenerationComplete] = useState(false);
+  const [navTarget, setNavTarget] = useState<{
+    userId: string;
+    slug: string;
+  } | null>(null);
   const {
     store: {
       state: {
@@ -78,7 +88,7 @@ const CreateStoryForm = () => {
 
   const [searchParams] = useSearchParams();
   const style = searchParams.get("style");
-  // Deep-link from the "My Characters" page "Create" button: preselect + prefill.
+  // Deep-link from the "My Avatars" page "Create" button: preselect + prefill.
   const preselectAvatarId = searchParams.get("avatarId") || undefined;
 
   useEffect(() => {
@@ -187,24 +197,39 @@ const CreateStoryForm = () => {
           }
 
           if (story._id && story.slug) {
-            navigate(routes.myStory(user._id, story.slug), {
-              replace: false,
-            });
-            // window.localStorage.setItem("newStoryCreated", "true");
-            window.localStorage.setItem(
-              APP_CONSTANTS.LOCAL_STORAGE.STORY_GENERATED,
-              "true",
-            );
+            // Hand off to the generating overlay: keep it mounted, show the
+            // final "Done" step for a beat, then navigate from onComplete.
+            setNavTarget({ userId: user._id, slug: story.slug });
+            setIsGenerationComplete(true);
+            return;
           }
         }
+        // No navigable story → stop the overlay.
+        isCreateStoryFetching(false);
       } catch (error) {
         console.error("❌ Failed to create a story!", {
           error,
         });
-      } finally {
         isCreateStoryFetching(false);
       }
     }
+  };
+
+  // Called by GeneratingScreen ~1.8s after it shows "Done": navigate to the new
+  // story, then tear down the overlay.
+  const handleGenerationComplete = () => {
+    if (navTarget) {
+      window.localStorage.setItem(
+        APP_CONSTANTS.LOCAL_STORAGE.STORY_GENERATED,
+        "true",
+      );
+      navigate(routes.myStory(navTarget.userId, navTarget.slug), {
+        replace: false,
+      });
+    }
+    isCreateStoryFetching(false);
+    setIsGenerationComplete(false);
+    setNavTarget(null);
   };
 
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -319,7 +344,12 @@ const CreateStoryForm = () => {
   return (
     <Box className="story-creator-form">
       {isCreatingStory && (
-        <GeneratingScreen format={format} childName={profileInfo.name} />
+        <GeneratingScreen
+          format={format}
+          childName={profileInfo.name}
+          isComplete={isGenerationComplete}
+          onComplete={handleGenerationComplete}
+        />
       )}
       <Box
         marginY={4}
@@ -342,34 +372,33 @@ const CreateStoryForm = () => {
           />
         </Box>
 
-        <Box sx={{ width: "100%", mb: 3 }}>
-          <Box
-            sx={{
-              mb: 1,
-              fontSize: 13,
-              fontWeight: 600,
-              color: "text.secondary",
-            }}
-          >
-            Art style
-          </Box>
-          <ArtStyleChooser
-            value={artStyle}
-            onChange={handleSetArtStyle}
-            variant={isDesktop ? "row" : "stacked"}
-          />
-        </Box>
+        <Grid container spacing={4} width="100%" marginY={4}>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Box sx={{ width: "100%", mb: 3 }}>
+              <Typography variant="body2" color="text.secondary" mb={1}>
+                Art style
+              </Typography>
 
-        {isAuthenticated && (
-          <Box sx={{ width: "100%", mb: 3 }}>
-            <CharacterPicker
-              value={avatarId}
-              autoSelectId={preselectAvatarId}
-              onChange={(_id, avatar) => handleSelectAvatar(avatar ?? null)}
-              enabled={isAuthenticated}
-            />
-          </Box>
-        )}
+              <ArtStyleChooser
+                value={artStyle}
+                onChange={handleSetArtStyle}
+                variant={isDesktop ? "row" : "stacked"}
+              />
+            </Box>
+          </Grid>
+
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Box sx={{ width: "100%", mb: 3 }}>
+              <AvatarPicker
+                value={avatarId}
+                autoSelectId={preselectAvatarId}
+                onChange={(_id, avatar) => handleSelectAvatar(avatar ?? null)}
+                enabled={isAuthenticated}
+                onRequestLogin={handleToggleLoginModal}
+              />
+            </Box>
+          </Grid>
+        </Grid>
 
         <TextField
           required

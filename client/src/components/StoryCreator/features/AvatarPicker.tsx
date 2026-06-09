@@ -1,24 +1,26 @@
-import { Box, ButtonBase, Typography } from "@mui/material";
-import { AddRounded, CheckRounded } from "@mui/icons-material";
+import { AddRounded, CheckRounded, LoginRounded } from "@mui/icons-material";
+import { Box, Button, ButtonBase, Typography } from "@mui/material";
 import { useEffect, useRef } from "react";
 
 import { Avatar } from "src/shared/types/avatar";
 import { Link } from "react-router-dom";
 import { honey400 } from "src/application/shared/themes";
 import routes from "src/application/routes";
-import { useAvatars } from "src/Pages/Characters/useAvatars";
+import { useAvatars } from "src/Pages/Avatars/useAvatars";
 
-export interface CharacterPickerProps {
+export interface AvatarPickerProps {
   value?: string;
   /** Receives the avatar id and (when one is picked) the full avatar object. */
   onChange: (avatarId: string, avatar?: Avatar) => void;
   /** Only fetch/show when the user is authenticated (avatars are user-scoped). */
   enabled?: boolean;
   /**
-   * When set (e.g. deep-linked from the My Characters "Create" button via
-   * `?avatarId=…`), auto-select that character once the list loads.
+   * When set (e.g. deep-linked from the My Avatars "Create" button via
+   * `?avatarId=…`), auto-select that avatar once the list loads.
    */
   autoSelectId?: string;
+  /** Logged-out CTA — opens the login modal from the placeholder. */
+  onRequestLogin?: () => void;
 }
 
 const tileSx = (selected: boolean) => ({
@@ -38,18 +40,20 @@ const tileSx = (selected: boolean) => ({
 });
 
 /**
- * Inline picker shown in the create form: choose a saved character (avatar) so
- * the story's hero resembles them, or "None". Links to the full management page.
+ * Inline picker shown in the create form: choose a saved avatar so the story's
+ * hero resembles them, or "None". Links to the full management page. When the
+ * user is logged out, shows a friendly login CTA instead of an empty space.
  */
-const CharacterPicker = ({
+const AvatarPicker = ({
   value,
   onChange,
   enabled = true,
   autoSelectId,
-}: CharacterPickerProps) => {
+  onRequestLogin,
+}: AvatarPickerProps) => {
   const { avatars, isLoading } = useAvatars(enabled);
 
-  // One-shot: when a character is deep-linked, select it (and pre-fill the form)
+  // One-shot: when an avatar is deep-linked, select it (and pre-fill the form)
   // as soon as the list resolves.
   const autoFiredRef = useRef(false);
   useEffect(() => {
@@ -61,28 +65,72 @@ const CharacterPicker = ({
     }
   }, [enabled, autoSelectId, avatars, onChange]);
 
-  if (!enabled) return null;
+  const Header = (
+    <Box
+      sx={{
+        display: "flex",
+        flexWrap: "nowrap",
+        alignItems: "center",
+        justifyContent: "space-between",
+        mb: 1,
+      }}
+    >
+      <Typography variant="body2" color="text.secondary" fontWeight={600}>
+        Avatar (optional)
+      </Typography>
+      {enabled && (
+        <Button
+          component={Link}
+          to={routes.avatars}
+          size="small"
+          variant="text"
+          sx={{ minWidth: 0, fontSize: 12, color: honey400, fontWeight: 600 }}
+        >
+          Manage avatars
+        </Button>
+      )}
+    </Box>
+  );
+
+  // Logged out: avatars are user-scoped, so invite the user to sign in rather
+  // than leaving a blank gap in the form.
+  if (!enabled) {
+    return (
+      <Box sx={{ width: "100%" }}>
+        {Header}
+        <Box
+          sx={{
+            border: "1px dashed",
+            borderColor: "divider",
+            borderRadius: "var(--r-md)",
+            backgroundColor: "background.paper",
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: 1.25,
+          }}
+        >
+          <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
+            ✨ Want the hero to look like your child? Log in to create reusable
+            avatars and star them in every story.
+          </Typography>
+          <Button
+            size="small"
+            variant="contained"
+            startIcon={<LoginRounded />}
+            onClick={onRequestLogin}
+          >
+            Log in
+          </Button>
+        </Box>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          mb: 1,
-        }}
-      >
-        <Box sx={{ fontSize: 13, fontWeight: 600, color: "text.secondary" }}>
-          Character (optional)
-        </Box>
-        <Link
-          to={routes.characters}
-          style={{ fontSize: 12, color: honey400, fontWeight: 600 }}
-        >
-          Manage characters
-        </Link>
-      </Box>
+      {Header}
 
       {!isLoading && avatars.length === 0 ? (
         <Box
@@ -95,8 +143,11 @@ const CharacterPicker = ({
             p: 1.5,
           }}
         >
-          Create a character to make the hero look like your child or family.{" "}
-          <Link to={routes.characters} style={{ color: honey400, fontWeight: 600 }}>
+          Create an avatar to make the hero look like your child or family.{" "}
+          <Link
+            to={routes.avatars}
+            style={{ color: honey400, fontWeight: 600 }}
+          >
             Add one →
           </Link>
         </Box>
@@ -113,7 +164,7 @@ const CharacterPicker = ({
           <ButtonBase
             onClick={() => onChange("")}
             sx={tileSx(!value)}
-            aria-label="No character"
+            aria-label="No avatar"
           >
             <Box
               sx={{
@@ -161,7 +212,8 @@ const CharacterPicker = ({
                     fontSize: 22,
                   }}
                 >
-                  {!avatar.portraitUrl && (avatar.name?.[0]?.toUpperCase() ?? "?")}
+                  {!avatar.portraitUrl &&
+                    (avatar.name?.[0]?.toUpperCase() ?? "?")}
                 </Box>
                 <Typography
                   sx={{
@@ -176,22 +228,19 @@ const CharacterPicker = ({
                   {avatar.name}
                 </Typography>
                 {selected && (
-                  <Box
+                  <CheckRounded
                     sx={{
+                      color: "#fff",
                       position: "absolute",
-                      top: 4,
-                      right: 4,
+                      padding: 0.25,
+                      top: 6,
+                      right: 6,
                       width: 18,
                       height: 18,
                       borderRadius: "50%",
                       background: honey400,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
                     }}
-                  >
-                    <CheckRounded sx={{ fontSize: 12, color: "#fff" }} />
-                  </Box>
+                  />
                 )}
               </ButtonBase>
             );
@@ -202,4 +251,4 @@ const CharacterPicker = ({
   );
 };
 
-export default CharacterPicker;
+export default AvatarPicker;
