@@ -61,6 +61,9 @@ export interface Story {
   /** Cached S3 URL of the exported eBook PDF (screen layout). Regenerated
    *  while images are still filling in so it never caches a placeholder. */
   pdfUrl?: string;
+  /** Renderer version the cached `pdfUrl` was built with. Bumping the renderer
+   *  forces a one-time re-render so old stories pick up PDF layout/perf fixes. */
+  pdfVersion?: number;
 }
 
 export type ImagesStatus = "pending" | "ready" | "failed";

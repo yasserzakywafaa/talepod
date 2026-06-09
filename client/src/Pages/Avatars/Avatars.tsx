@@ -18,10 +18,6 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import {
-  Notify,
-  ToastTypes,
-} from "src/components/shared/Notification/Notification";
 
 import AvatarFormDialog from "./AvatarFormDialog";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
@@ -43,35 +39,6 @@ const traitSummary = (avatar: Avatar): string =>
     .filter(Boolean)
     .join(" · ");
 
-/** Traits that change how the avatar is *drawn* (mirrors the server). Editing
- *  only name/relationship must not re-paint the portrait. */
-const AVATAR_APPEARANCE_FIELDS: (keyof AvatarInput)[] = [
-  "age",
-  "gender",
-  "skinTone",
-  "hairColor",
-  "hairStyle",
-  "eyeColor",
-  "outfit",
-  "distinguishingFeature",
-  "notes",
-];
-
-const normTrait = (value: unknown): string =>
-  value === undefined || value === null ? "" : `${value}`.trim();
-
-/** Did this edit touch a visual trait (→ a new portrait will be painted)? */
-const didAppearanceChange = (
-  before: Avatar | null,
-  after: AvatarInput,
-): boolean =>
-  !before ||
-  AVATAR_APPEARANCE_FIELDS.some(
-    (field) =>
-      normTrait((after as unknown as Record<string, unknown>)[field]) !==
-      normTrait((before as unknown as Record<string, unknown>)[field]),
-  );
-
 const AvatarCard = ({
   avatar,
   pending,
@@ -83,7 +50,7 @@ const AvatarCard = ({
   avatar: Avatar;
   /** Portrait is still being generated → overlay a spinner on the image. */
   pending?: boolean;
-  /** Not yet persisted (optimistic placeholder) → disable row actions. */
+  /** A mutation is in flight for this avatar → disable its row actions. */
   disabled?: boolean;
   onCreate: () => void;
   onEdit: () => void;
@@ -209,24 +176,22 @@ const AvatarCard = ({
 
 const AvatarsPage = () => {
   const navigate = useNavigate();
+  // All the heavy lifting (optimistic cards, portrait polling, create/update/
+  // delete flows + toasts, per-card pending/busy state) lives in the hook; the
+  // page only owns which dialog is open.
   const {
-    avatars,
+    cards,
     isLoading,
     isSaving,
-    fetchAvatars,
-    createAvatar,
-    updateAvatar,
-    deleteAvatar,
+    isPortraitPending,
+    isBusy,
+    saveAvatar,
+    removeAvatar,
   } = useAvatars();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<Avatar | null>(null);
   const [pendingDelete, setPendingDelete] = useState<Avatar | null>(null);
-  // Optimistic placeholder cards shown while a create POST is still in flight
-  // (no real id yet) so the modal can close immediately ("set & forget").
-  const [optimistic, setOptimistic] = useState<Avatar[]>([]);
-  // Saved avatars whose portrait is still generating in the background.
-  const [pendingPortraitIds, setPendingPortraitIds] = useState<string[]>([]);
 
   const openCreate = () => {
     setEditing(null);
@@ -238,127 +203,25 @@ const AvatarsPage = () => {
     setDialogOpen(true);
   };
 
-  /**
-   * Poll for background-generated portraits: refresh every 4s (≤6 tries) until
-   * each target has a portrait that *differs* from the one it started with
-   * (so this works for both a brand-new portrait and a regenerated one on edit),
-   * then stop. Any stragglers are dropped so the card stops spinning and falls
-   * back to its current image / initial letter instead of spinning forever.
-   */
-  const pollForPortraits = (targets: { id: string; since?: string }[]) => {
-    const wanted = targets.filter((target) => target.id);
-    if (!wanted.length) return;
-    setPendingPortraitIds((prev) =>
-      Array.from(new Set([...prev, ...wanted.map((target) => target.id)])),
-    );
-
-    let attempts = 0;
-    const tick = async () => {
-      attempts += 1;
-      const fresh = await fetchAvatars();
-      const settledIds = wanted
-        .filter((target) => {
-          const url = fresh.find(
-            (avatar) => avatar._id === target.id,
-          )?.portraitUrl;
-          return Boolean(url) && url !== target.since;
-        })
-        .map((target) => target.id);
-      const remaining = wanted.filter(
-        (target) => !settledIds.includes(target.id),
-      );
-      if (settledIds.length) {
-        setPendingPortraitIds((prev) =>
-          prev.filter((id) => !settledIds.includes(id)),
-        );
-      }
-      if (remaining.length && attempts < 6) {
-        window.setTimeout(tick, 4000);
-      } else if (remaining.length) {
-        const remainingIds = remaining.map((target) => target.id);
-        setPendingPortraitIds((prev) =>
-          prev.filter((id) => !remainingIds.includes(id)),
-        );
-      }
-    };
-    window.setTimeout(tick, 4000);
-  };
-
-  const handleSubmit = async (input: AvatarInput) => {
-    const isEditing = Boolean(editing);
-    const editingId = editing?._id;
-    // Baseline portrait so the poll can detect a *regenerated* one on edit.
-    const previousPortrait = editing?.portraitUrl;
-    // A new portrait is painted on create, or on an edit that changes the look.
-    // A name-only edit keeps the existing image — no spinner, instant update.
-    const willRepaint = !isEditing || didAppearanceChange(editing, input);
-
-    // Close immediately — the portrait generates server-side in the background.
+  const handleSubmit = (input: AvatarInput) => {
+    const target = editing;
+    // Close immediately — the hook shows the optimistic card / painting overlay
+    // and runs the request in the background.
     setDialogOpen(false);
     setEditing(null);
-
-    const tempId = `temp-${Date.now()}`;
-    if (!isEditing) {
-      const placeholder = {
-        ...input,
-        _id: tempId,
-        userId: "",
-        createdAt: new Date().toISOString(),
-      } as Avatar;
-      setOptimistic((prev) => [placeholder, ...prev]);
-    } else if (willRepaint && editingId) {
-      // Show the "Painting portrait…" overlay on the existing card right away —
-      // covering BOTH the description recompose and the portrait render — so the
-      // user can set it and forget it instead of waiting on the modal.
-      setPendingPortraitIds((prev) => Array.from(new Set([...prev, editingId])));
-    }
-
-    try {
-      if (isEditing && editingId) {
-        const updated = await updateAvatar(editingId, input);
-        Notify({ type: ToastTypes.Success, content: "Avatar updated." });
-        if (willRepaint) {
-          pollForPortraits([{ id: updated._id, since: previousPortrait }]);
-        } else {
-          // Name-only edit: nothing is repainting, so clear any spinner now.
-          setPendingPortraitIds((prev) => prev.filter((id) => id !== editingId));
-        }
-      } else {
-        const created = await createAvatar(input);
-        setOptimistic((prev) => prev.filter((a) => a._id !== tempId));
-        Notify({ type: ToastTypes.Success, content: "Avatar created." });
-        pollForPortraits([{ id: created._id }]);
-      }
-    } catch (error) {
-      if (!isEditing) {
-        setOptimistic((prev) => prev.filter((a) => a._id !== tempId));
-      } else if (editingId) {
-        setPendingPortraitIds((prev) => prev.filter((id) => id !== editingId));
-      }
-      Notify({ type: ToastTypes.Error, content: "Something went wrong." });
-    }
+    void saveAvatar(input, target);
   };
 
-  const handleConfirmDelete = async () => {
-    if (!pendingDelete) return;
-    try {
-      await deleteAvatar(pendingDelete._id);
-      Notify({ type: ToastTypes.Success, content: "Avatar deleted." });
-    } catch (error) {
-      Notify({
-        type: ToastTypes.Error,
-        content: "Failed to delete avatar.",
-      });
-    } finally {
-      setPendingDelete(null);
-    }
+  const handleConfirmDelete = () => {
+    const target = pendingDelete;
+    setPendingDelete(null);
+    if (target) void removeAvatar(target);
   };
 
-  const cards = [...optimistic, ...avatars];
   const showEmpty = !isLoading && !cards.length;
 
   return (
-    <Page title="My Avatars" isLoading={isLoading && !avatars.length}>
+    <Page title="My Avatars" isLoading={isLoading && !cards.length}>
       <Container>
         <Box sx={{ maxWidth: 1100, mx: "auto", width: "100%", py: 3 }}>
           <Box
@@ -420,24 +283,19 @@ const AvatarsPage = () => {
                 mt: 2,
               }}
             >
-              {cards.map((avatar) => {
-                const isOptimistic = avatar._id.startsWith("temp-");
-                const pending =
-                  isOptimistic || pendingPortraitIds.includes(avatar._id);
-                return (
-                  <AvatarCard
-                    key={avatar._id}
-                    avatar={avatar}
-                    pending={pending}
-                    disabled={isOptimistic}
-                    onCreate={() =>
-                      navigate(`${routes.create}?avatarId=${avatar._id}`)
-                    }
-                    onEdit={() => openEdit(avatar)}
-                    onDelete={() => setPendingDelete(avatar)}
-                  />
-                );
-              })}
+              {cards.map((avatar) => (
+                <AvatarCard
+                  key={avatar._id}
+                  avatar={avatar}
+                  pending={isPortraitPending(avatar._id)}
+                  disabled={isBusy(avatar._id)}
+                  onCreate={() =>
+                    navigate(`${routes.create}?avatarId=${avatar._id}`)
+                  }
+                  onEdit={() => openEdit(avatar)}
+                  onDelete={() => setPendingDelete(avatar)}
+                />
+              ))}
             </Box>
           )}
         </Box>
