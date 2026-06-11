@@ -34,7 +34,7 @@ export const PricingModal = () => {
         onClose={onCloseModal}
       >
         <DialogContent>
-          <Pricing />
+          {state.isVisible && <Pricing />}
         </DialogContent>
 
         <DialogActions>

@@ -15,6 +15,7 @@ import { SubscriptionPlanEnum } from "src/shared/types/user";
 import Typography from "@mui/material/Typography";
 import characterLion from "src/assets/images/landing_pages/lion_cub.webp";
 import mascotPuppy from "src/assets/images/cute_puppy_with_sparkling_eyes.webp";
+import { usePaymentCatalog } from "../Payment/usePaymentCatalog";
 import { usePricing } from "./usePricing";
 import { honey400, honey500 } from "src/application/shared/themes";
 
@@ -22,6 +23,8 @@ const planMascot = (title: SubscriptionPlanEnum) =>
   title === SubscriptionPlanEnum.Free ? mascotPuppy : characterLion;
 
 export const Pricing = () => {
+  usePaymentCatalog();
+
   const {
     plans,
     prices,
