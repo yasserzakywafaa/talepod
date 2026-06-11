@@ -26,7 +26,6 @@ import {
 
 import BillingToggle from "./BillingToggle";
 import PayPerStoryCallout from "./PayPerStoryCallout";
-import PaymentWrapper from "../Payment/Payment";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
 import { useApplicationContext } from "src/application/store/Provider";
 import { usePricing } from "./usePricing";
@@ -58,10 +57,7 @@ const PricingTable: React.FC<PricingTableProps> = () => {
     themeMode === "light" ? primaryColorOpaqueTen : primaryColorOpaqueThirty;
 
   return (
-    <>
-      <PaymentWrapper />
-
-      <Container
+    <Container
         id="pricing-table"
         sx={{
           pt: { xs: 2, sm: 4 },
@@ -282,8 +278,7 @@ const PricingTable: React.FC<PricingTableProps> = () => {
         </TableContainer>
 
         <PayPerStoryCallout />
-      </Container>
-    </>
+    </Container>
   );
 };
 
