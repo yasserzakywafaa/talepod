@@ -74,7 +74,12 @@ const AvatarPicker = ({
         justifyContent: "space-between",
       }}
     >
-      <Typography variant="body2" color="text.secondary" fontWeight={600}>
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        fontWeight={600}
+        mb={1}
+      >
         Avatar (optional)
       </Typography>
       {enabled && (
