@@ -17,9 +17,10 @@ import {
 import { NextFunction, Request, Response } from "express";
 
 import { AuthenticatedRequest } from "../middleware/authMiddleware";
+import CONFIG from "../config";
 import { ObjectId } from "mongodb";
-import { getStoryPdfUrl } from "../services/create/pdf";
 import { getQuery } from "../models/mongoDb/query";
+import { getStoryPdfUrl } from "../services/create/pdf";
 import { sendEmail } from "../utils/sendEmail";
 
 export const getAllStories = async (
@@ -370,7 +371,9 @@ export const getCommunityStories = async (
       (request.query.filters as string) || "{}",
     );
     const { pageNumber = 1, pageSize = 20 } = filters;
-    const filtersMatchStage = hasActiveFilters ? [{ $match: getQuery(filters) }] : [];
+    const filtersMatchStage = hasActiveFilters
+      ? [{ $match: getQuery(filters) }]
+      : [];
 
     const pipeline = [
       {
@@ -618,12 +621,13 @@ export const emailStoryPdf = async (
       try {
         // Reuse the single cached/generated PDF, then pull its bytes to attach.
         const url = await getStoryPdfUrl(story);
-        const pdfResponse = await (
-          globalThis as { fetch: typeof fetch }
-        ).fetch(url);
+        const pdfResponse = await (globalThis as { fetch: typeof fetch }).fetch(
+          url,
+        );
         const buffer = Buffer.from(await pdfResponse.arrayBuffer());
         const title = story.title || "your bedtime story";
         await sendEmail({
+          from: `Yasser from "TalePod" <${CONFIG.EMAIL}>`,
           to: user.email,
           subject: `Your TalePod eBook: ${title}`,
           html: buildEbookEmailHtml(title, url),

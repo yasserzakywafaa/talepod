@@ -6,25 +6,25 @@ import {
 } from "@mui/icons-material";
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
-import Dinosaur from "../../assets/images/landing_pages/dinosaur.webp";
-import Hero from "./features/Hero";
-import Page from "src/components/shared/Page/Page";
-import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
-import { Pricing } from "src/components/shared/Pricing/Pricing";
-import RandomImage from "src/components/shared/RandomImage/RandomImage";
-import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.webp";
-import { useApplicationContext } from "src/application/store/Provider";
-import { ParticlesComponent } from "src/components/shared/ParticlesComponent";
-import PricingTable from "src/components/shared/Pricing/PricingTable";
-import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import Benefits from "../Features/features/Benefits";
+import CallToAction from "../Features/features/CallToAction";
+import Dinosaur from "../../assets/images/landing_pages/dinosaur.webp";
 import FAQ from "../Features/features/FAQ";
 import Guarantee from "../Features/features/Guarantee";
+import Hero from "./features/Hero";
 import HowItWorks from "../Features/features/HowItWorks";
 import KeyFeatures from "../Features/features/KeyFeatures";
+import Page from "src/components/shared/Page/Page";
+import { ParticlesComponent } from "src/components/shared/ParticlesComponent";
+import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
+import { Pricing } from "src/components/shared/Pricing/Pricing";
+import PricingTable from "src/components/shared/Pricing/PricingTable";
+import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import StoryExamples from "../Features/features/StoryExamples";
 import Testimonials from "../Features/features/Testimonials";
-import CallToAction from "../Features/features/CallToAction";
+import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.webp";
+import { useApplicationContext } from "src/application/store/Provider";
+import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
 const BestBedtimeStories = () => {
   const {
@@ -136,7 +136,6 @@ const BestBedtimeStories = () => {
       <div className="section">
         <FAQ />
       </div>
-      <Pricing />
     </Page>
   );
 };

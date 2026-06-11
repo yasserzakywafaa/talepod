@@ -97,7 +97,9 @@ const proseParagraphs = (text: string): string[] =>
     .map((block) => block.trim())
     .filter(Boolean)
     .map((block) => {
-      const clean = esc(block.replace(/^#{1,6}\s*/g, "").replace(/[*_`]+/g, ""));
+      const clean = esc(
+        block.replace(/^#{1,6}\s*/g, "").replace(/[*_`]+/g, ""),
+      );
       return `<p>${clean.replace(/\n/g, "<br/>")}</p>`;
     });
 
@@ -178,7 +180,6 @@ export const buildStoryHtml = (
         return `
         <section class="page scene" style="background-image:${sceneBg}">
           <div class="caption">
-            <div class="cap-eyebrow">Page ${i + 1}</div>
             <div class="cap-text" dir="auto">${esc(page.caption)}</div>
           </div>
           <div class="page-no">${i + 1} / ${pages.length}</div>
@@ -394,8 +395,7 @@ export const renderStoryPdfBuffer = async (
 
   const [cover, pages] = await Promise.all([
     toDataUri(
-      story.coverImageUrl ||
-        (isComic ? story.pages?.[0]?.imageUrl : undefined),
+      story.coverImageUrl || (isComic ? story.pages?.[0]?.imageUrl : undefined),
     ),
     isComic
       ? Promise.all((story.pages || []).map((p) => toDataUri(p.imageUrl)))
@@ -445,7 +445,7 @@ const uploadStoryPdf = async (
     story.slug || story.title || String(story._id),
   )}.pdf`;
   const filePath = `${dir}/${fileName}`;
-  await fs.promises.writeFile(filePath, buffer);
+  await fs.promises.writeFile(filePath, buffer as unknown as string);
 
   const url = await uploadFileToS3(fileName, filePath, {
     contentType: "application/pdf",
