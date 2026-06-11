@@ -240,7 +240,7 @@ export const handleCreateStory = async (
     // character was used (avatarMeta set). Fire-and-forget — never delays or
     // fails story creation; it dedups by name and composes the portrait async.
     if (!avatarMeta && user?._id) {
-      void autoSaveAvatarFromProfile(String(user._id), {
+      autoSaveAvatarFromProfile(String(user._id), {
         name: profileInfo.name,
         age: profileInfo.age,
         gender: profileInfo.gender,

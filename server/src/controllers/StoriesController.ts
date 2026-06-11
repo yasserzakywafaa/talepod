@@ -563,6 +563,43 @@ const buildEbookEmailHtml = (title: string, url: string): string => `
     </div>
   </div>`;
 
+const deliverStoryPdfByEmail = async (
+  story: Story,
+  email: string,
+): Promise<void> => {
+  const slug = story.slug;
+  const url = await getStoryPdfUrl(story);
+  const pdfResponse = await (globalThis as { fetch: typeof fetch }).fetch(url);
+  const buffer = Buffer.from(await pdfResponse.arrayBuffer());
+  const title = story.title || "your bedtime story";
+  await sendEmail({
+    from: `Yasser from "TalePod" <${CONFIG.EMAIL}>`,
+    to: email,
+    subject: `Your TalePod eBook: ${title}`,
+    html: buildEbookEmailHtml(title, url),
+    text: `Your TalePod eBook "${title}" is ready.\n\nDownload it here: ${url}\n\nSweet dreams,\nTalePod`,
+    attachments: [
+      {
+        filename: safeFileLabel(title),
+        content: buffer,
+        contentType: "application/pdf",
+      },
+    ],
+  });
+  console.log("✅ Story eBook emailed", { slug, to: email });
+};
+
+const deliverStoryPdfByEmailInBackground = async (
+  story: Story,
+  email: string,
+): Promise<void> => {
+  try {
+    await deliverStoryPdfByEmail(story, email);
+  } catch (error) {
+    console.error("❌ Failed to email story eBook", { slug: story.slug, error });
+  }
+};
+
 /**
  * GET /api/v1/bedtime-story/:slug/pdf
  * Export the story as an eBook PDF and return its hosted URL. The PDF is
@@ -617,34 +654,7 @@ export const emailStoryPdf = async (
     // Respond right away — generation + delivery happen in the background.
     response.status(202).json({ message: "We'll email your eBook shortly." });
 
-    void (async () => {
-      try {
-        // Reuse the single cached/generated PDF, then pull its bytes to attach.
-        const url = await getStoryPdfUrl(story);
-        const pdfResponse = await (globalThis as { fetch: typeof fetch }).fetch(
-          url,
-        );
-        const buffer = Buffer.from(await pdfResponse.arrayBuffer());
-        const title = story.title || "your bedtime story";
-        await sendEmail({
-          from: `Yasser from "TalePod" <${CONFIG.EMAIL}>`,
-          to: user.email,
-          subject: `Your TalePod eBook: ${title}`,
-          html: buildEbookEmailHtml(title, url),
-          text: `Your TalePod eBook "${title}" is ready.\n\nDownload it here: ${url}\n\nSweet dreams,\nTalePod`,
-          attachments: [
-            {
-              filename: safeFileLabel(title),
-              content: buffer,
-              contentType: "application/pdf",
-            },
-          ],
-        });
-        console.log("✅ Story eBook emailed", { slug, to: user.email });
-      } catch (err) {
-        console.error("❌ Failed to email story eBook", { slug, err });
-      }
-    })();
+    deliverStoryPdfByEmailInBackground(story, user.email);
   } catch (error) {
     console.error("❌ Failed to start story eBook email!", { slug, error });
     next(error);

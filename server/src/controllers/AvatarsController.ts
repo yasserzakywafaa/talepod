@@ -17,7 +17,7 @@ import {
 } from "../models/types";
 import {
   composeAvatarDescription,
-  generateAvatarPortrait,
+  generatePortraitInBackground,
 } from "../services/create/avatar";
 
 import { AuthenticatedRequest } from "../middleware/authMiddleware";
@@ -37,24 +37,6 @@ const pickAvatarInput = (body: Record<string, unknown>): UserAvatarInput => {
     }
   }
   return input as unknown as UserAvatarInput;
-};
-
-/** Best-effort background portrait → patch the avatar doc once it's ready. */
-const generatePortraitInBackground = (avatarId: string, description: string) => {
-  void (async () => {
-    try {
-      const portraitUrl = await generateAvatarPortrait(description, avatarId);
-      if (portraitUrl) {
-        await updateDocument(
-          avatarId,
-          { portraitUrl },
-          DBCollectionsEnum.avatars,
-        );
-      }
-    } catch (error) {
-      console.error("⚠️ Avatar portrait generation failed", { avatarId, error });
-    }
-  })();
 };
 
 const createAvatar = async (request: Request, response: Response) => {

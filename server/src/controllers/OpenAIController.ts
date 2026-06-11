@@ -80,7 +80,7 @@ export const createStory = async (
     // Generate + persist illustrations in the background (best-effort).
     // The client reader polls the story until `imagesStatus` flips off "pending".
     if (story?._id) {
-      void handleGenerateStoryImages(String(story._id));
+      handleGenerateStoryImages(String(story._id));
     }
   } catch (error) {
     next(`❌ ${error}`);

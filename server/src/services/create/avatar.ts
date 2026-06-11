@@ -113,22 +113,26 @@ Character (draw exactly as described): ${description}`;
   return generateImage(prompt, `avatar-${fileBase}`, { aspectRatio: "1:1" });
 };
 
-/** Best-effort background portrait → patch the avatar doc once it's ready. */
-const generatePortraitInBackground = (avatarId: string, description: string) => {
-  void (async () => {
-    try {
-      const portraitUrl = await generateAvatarPortrait(description, avatarId);
-      if (portraitUrl) {
-        await updateDocument(
-          avatarId,
-          { portraitUrl },
-          DBCollectionsEnum.avatars,
-        );
-      }
-    } catch (error) {
-      console.error("⚠️ Auto-saved avatar portrait failed", { avatarId, error });
+const patchAvatarPortraitInBackground = async (
+  avatarId: string,
+  description: string,
+): Promise<void> => {
+  try {
+    const portraitUrl = await generateAvatarPortrait(description, avatarId);
+    if (portraitUrl) {
+      await updateDocument(avatarId, { portraitUrl }, DBCollectionsEnum.avatars);
     }
-  })();
+  } catch (error) {
+    console.error("⚠️ Avatar portrait generation failed", { avatarId, error });
+  }
+};
+
+/** Best-effort background portrait → patch the avatar doc once it's ready. */
+export const generatePortraitInBackground = (
+  avatarId: string,
+  description: string,
+): void => {
+  patchAvatarPortraitInBackground(avatarId, description);
 };
 
 /**
