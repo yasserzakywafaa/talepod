@@ -38,10 +38,16 @@ export const createStory = async (
   const userInfo = request.body.userInfo as User;
   // Absent on pre-V2 clients → defaults to "long" for back-compat.
   const format = (request.body.format as StoryFormat) ?? "long";
+  // Chosen illustration style id; resolved to the default style if absent.
+  const artStyle = request.body.artStyle as string | undefined;
+  // Optional saved character whose description seeds the story's characterSheet.
+  const avatarId = request.body.avatarId as string | undefined;
 
   console.log("⌛︎  Creating Story...", {
     request: request.path,
     format,
+    artStyle,
+    avatarId,
   });
 
   try {
@@ -51,6 +57,8 @@ export const createStory = async (
       storyParams,
       userInfo,
       format,
+      artStyle,
+      avatarId,
     );
 
     if (story) {
@@ -72,7 +80,7 @@ export const createStory = async (
     // Generate + persist illustrations in the background (best-effort).
     // The client reader polls the story until `imagesStatus` flips off "pending".
     if (story?._id) {
-      void handleGenerateStoryImages(String(story._id));
+      handleGenerateStoryImages(String(story._id));
     }
   } catch (error) {
     next(`❌ ${error}`);

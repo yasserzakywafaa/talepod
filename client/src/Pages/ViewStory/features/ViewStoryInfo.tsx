@@ -1,10 +1,17 @@
 import { Box, Card, CardContent, Chip } from "@mui/material";
 
+import { ArtStyles } from "src/shared/artStyles";
 import { Story } from "src/components/StoryCreator/store/state";
 
 interface ViewStoryInfoParams {
   story: Story;
 }
+
+const artStyleLabel = (id?: string): string =>
+  ArtStyles.find((style) => style.id === id)?.label ?? id ?? "";
+
+const formatLabel = (format?: string): string =>
+  format === "comic" ? "Comic" : format === "long" ? "Long Story" : "";
 
 const ViewStoryInfo = (props: ViewStoryInfoParams) => {
   const { story } = props;
@@ -123,6 +130,27 @@ const ViewStoryInfo = (props: ViewStoryInfoParams) => {
                     story.storyParams.totalWords ??
                     story.mainStory.trim().split(/\s+/).filter(Boolean).length
                   } words`
+                )}
+              />
+            )}
+
+            {story.format && (
+              <Chip
+                color="secondary"
+                variant="outlined"
+                className="view-story-card-footer-info-tag"
+                label={renderChipLabel("Format", formatLabel(story.format))}
+              />
+            )}
+
+            {story.artStyle && (
+              <Chip
+                color="secondary"
+                variant="outlined"
+                className="view-story-card-footer-info-tag"
+                label={renderChipLabel(
+                  "Art Style",
+                  artStyleLabel(story.artStyle)
                 )}
               />
             )}

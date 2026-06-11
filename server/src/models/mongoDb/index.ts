@@ -45,6 +45,7 @@ export enum DBCollectionsEnum {
   stories_library_backup = "stories_library_backup",
   users = "users",
   blogs = "blogs",
+  avatars = "avatars",
 }
 
 const getMongoDbUri = (): string => {
@@ -128,6 +129,10 @@ const createIndexes = async () => {
         createdAt: -1,
       });
     }
+
+    const avatars = database.collection(DBCollectionsEnum.avatars);
+    await avatars.createIndex({ userId: 1 });
+    await avatars.createIndex({ createdAt: -1 });
 
     const users = database.collection(DBCollectionsEnum.users);
     await users.createIndex({ _id: 1 });

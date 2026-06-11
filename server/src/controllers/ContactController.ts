@@ -7,19 +7,21 @@ import { sendEmail } from "../utils/sendEmail";
 export const contactSupport = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const { name, email, subject, message } = request.body as ContactFormState;
 
   try {
     // Notify the admin of the new submission.
     await sendEmail({
+      from: `Yasser from "TalePod" <${CONFIG.EMAIL}>`,
       to: CONFIG.EMAIL ?? "",
       subject: `New Contact Form Submission: ${subject}`,
       text: `You have received a new message from ${name} | (${email}):\n\n${message}`,
     });
     // Send a confirmation email to the user.
     await sendEmail({
+      from: `Yasser from "TalePod" <${CONFIG.EMAIL}>`,
       to: email,
       subject: "Thank you for contacting us!",
       text: `Hello ${name},\n\nThank you for reaching out. We have received your message:\n\n${message}\n\nBest regards,\nTalepod`,

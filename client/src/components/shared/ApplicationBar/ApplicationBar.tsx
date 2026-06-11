@@ -3,7 +3,6 @@ import { useMatch, useNavigate } from "react-router-dom";
 
 import ApplicationBarDesktopView from "./features/ApplicationBarDesktopView";
 import ApplicationBarMobileView from "./features/ApplicationBarMobileView";
-import { CancelSubscriptionModal } from "src/components/Modals/CancelSubscriptionModal/CancelSubscriptionModal";
 import { InstallAppModal } from "src/components/Modals/InstallAppModal/InstallAppModal";
 import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
 import { PricingModal } from "src/components/Modals/PricingModal/PricingModal";
@@ -168,7 +167,6 @@ const ApplicationBar = () => {
         setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
       />
       <PricingModal />
-      <CancelSubscriptionModal />
     </>
   );
 };

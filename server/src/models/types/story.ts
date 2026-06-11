@@ -42,6 +42,12 @@ export interface Story {
   authorProfile?: User;
   /** "comic" | "long". Absent on pre-V2 stories → treated as "long". */
   format?: StoryFormat;
+  /** Chosen illustration art style id (see services/create/imageStyles). Absent
+   *  on older stories → resolved to the default style at generation time. */
+  artStyle?: string;
+  /** Optional user-character ("avatar") whose locked description seeds the
+   *  story's characterSheet so the hero resembles that saved character. */
+  avatarId?: string;
   /** Populated for comic-format stories only. */
   pages?: ComicPage[];
   /** Interior illustrations for long-format stories (cover is `coverImageUrl`). */
@@ -55,6 +61,9 @@ export interface Story {
   /** Cached S3 URL of the exported eBook PDF (screen layout). Regenerated
    *  while images are still filling in so it never caches a placeholder. */
   pdfUrl?: string;
+  /** Renderer version the cached `pdfUrl` was built with. Bumping the renderer
+   *  forces a one-time re-render so old stories pick up PDF layout/perf fixes. */
+  pdfVersion?: number;
 }
 
 export type ImagesStatus = "pending" | "ready" | "failed";

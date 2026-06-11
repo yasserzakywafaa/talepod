@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   FormControl,
+  Grid,
   InputLabel,
   MenuItem,
   Select,
@@ -13,6 +14,7 @@ import {
   TextField,
   ToggleButton,
   ToggleButtonGroup,
+  Typography,
 } from "@mui/material";
 import {
   AdultGenderEnum,
@@ -34,9 +36,12 @@ import {
   UserStatus,
 } from "src/shared/types/user";
 import { Tone, Tones } from "src/shared/mockedData/Tone";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
+import ArtStyleChooser from "src/components/shared/ArtStyleChooser";
+import AvatarPicker from "./AvatarPicker";
 import FormatChooser from "src/components/shared/FormatChooser";
 import GeneratingScreen from "./GeneratingScreen";
 import StorySettings from "./StorySettings";
@@ -44,7 +49,6 @@ import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredW
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
-import { useEffect } from "react";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useOpenaiContext } from "./Openai/store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
@@ -53,20 +57,39 @@ import { useStoryCreatorContext } from "../store/Provider";
 const CreateStoryForm = () => {
   const navigate = useNavigate();
   const { isDesktop } = useDeviceSize();
+  // Generating-overlay handshake (#6): once the story text is saved we flip
+  // `isGenerationComplete` so the overlay shows its "Done" step; a page-level
+  // timer (below) then navigates to `navTarget` after a short beat.
+  const [isGenerationComplete, setIsGenerationComplete] = useState(false);
+  const [navTarget, setNavTarget] = useState<{
+    userId: string;
+    slug: string;
+  } | null>(null);
   const {
     store: {
-      state: { profileInfo, storyParams, isStorySettingsExpanded, format },
+      state: {
+        profileInfo,
+        storyParams,
+        isStorySettingsExpanded,
+        format,
+        artStyle,
+        avatarId,
+      },
     },
     store: storyCreatorStore,
     manager: {
       handleUpdateProfileInfo,
       handleUpdateStoryInfo,
       handleSetFormat,
+      handleSetArtStyle,
+      handleSelectAvatar,
     },
   } = useStoryCreatorContext();
 
   const [searchParams] = useSearchParams();
   const style = searchParams.get("style");
+  // Deep-link from the "My Avatars" page "Create" button: preselect + prefill.
+  const preselectAvatarId = searchParams.get("avatarId") || undefined;
 
   useEffect(() => {
     if (style === "comic" || style === "long") {
@@ -160,6 +183,8 @@ const CreateStoryForm = () => {
           profileInfo,
           storyParams,
           format,
+          artStyle,
+          avatarId,
         );
 
         if (user) {
@@ -172,25 +197,44 @@ const CreateStoryForm = () => {
           }
 
           if (story._id && story.slug) {
-            navigate(routes.myStory(user._id, story.slug), {
-              replace: false,
-            });
-            // window.localStorage.setItem("newStoryCreated", "true");
-            window.localStorage.setItem(
-              APP_CONSTANTS.LOCAL_STORAGE.STORY_GENERATED,
-              "true",
-            );
+            // Keep the overlay mounted and show its final "Done" step; the
+            // page-level timer effect navigates after a short beat.
+            setNavTarget({ userId: user._id, slug: story.slug });
+            setIsGenerationComplete(true);
+            return;
           }
         }
+        // No navigable story → stop the overlay.
+        isCreateStoryFetching(false);
       } catch (error) {
         console.error("❌ Failed to create a story!", {
           error,
         });
-      } finally {
         isCreateStoryFetching(false);
       }
     }
   };
+
+  // Once the story is saved we flip `isGenerationComplete` (overlay shows its
+  // "Done" step); this page-level timer then navigates after a short beat.
+  // Keeping the timer here — not inside GeneratingScreen — means it can't be
+  // cancelled by the overlay unmounting, which previously left users stranded on
+  // the create page with no navigation.
+  useEffect(() => {
+    if (!isGenerationComplete || !navTarget) return;
+    const timer = window.setTimeout(() => {
+      window.localStorage.setItem(
+        APP_CONSTANTS.LOCAL_STORAGE.STORY_GENERATED,
+        "true",
+      );
+      isCreateStoryFetching(false);
+      navigate(routes.myStory(navTarget.userId, navTarget.slug), {
+        replace: false,
+      });
+    }, 2200);
+    return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isGenerationComplete, navTarget, navigate]);
 
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -303,8 +347,12 @@ const CreateStoryForm = () => {
 
   return (
     <Box className="story-creator-form">
-      {isCreatingStory && (
-        <GeneratingScreen format={format} childName={profileInfo.name} />
+      {(isCreatingStory || isGenerationComplete) && (
+        <GeneratingScreen
+          format={format}
+          childName={profileInfo.name}
+          isComplete={isGenerationComplete}
+        />
       )}
       <Box
         marginY={4}
@@ -326,6 +374,34 @@ const CreateStoryForm = () => {
             variant={isDesktop ? "row" : "stacked"}
           />
         </Box>
+
+        <Grid container spacing={4} width="100%" marginY={4}>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Box sx={{ width: "100%", mb: 3 }}>
+              <Typography variant="body2" color="text.secondary" mb={1}>
+                Art style
+              </Typography>
+
+              <ArtStyleChooser
+                value={artStyle}
+                onChange={handleSetArtStyle}
+                variant={isDesktop ? "row" : "stacked"}
+              />
+            </Box>
+          </Grid>
+
+          <Grid size={{ xs: 12, md: 6 }}>
+            {/* <Box sx={{ width: "100%", mb: 3 }}> */}
+            <AvatarPicker
+              value={avatarId}
+              autoSelectId={preselectAvatarId}
+              onChange={(_id, avatar) => handleSelectAvatar(avatar ?? null)}
+              enabled={isAuthenticated}
+              onRequestLogin={handleToggleLoginModal}
+            />
+            {/* </Box> */}
+          </Grid>
+        </Grid>
 
         <TextField
           required
@@ -441,7 +517,7 @@ const CreateStoryForm = () => {
             profileInfo={profileInfo}
             storyParams={storyParams}
             handleFieldChange={handleFieldChange}
-            handleOnSelectChange={handleOnSelectChange}
+            handleUpdateStoryInfo={handleUpdateStoryInfo}
           />
         )}
 
@@ -468,7 +544,7 @@ const CreateStoryForm = () => {
                 profileInfo={profileInfo}
                 storyParams={storyParams}
                 handleFieldChange={handleFieldChange}
-                handleOnSelectChange={handleOnSelectChange}
+                handleUpdateStoryInfo={handleUpdateStoryInfo}
               />
             </AccordionDetails>
           </Accordion>

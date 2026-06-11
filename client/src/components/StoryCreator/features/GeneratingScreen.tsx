@@ -1,9 +1,8 @@
 import {
   AutoAwesomeOutlined,
+  AutoFixHighOutlined,
   DoneAllOutlined,
   EditOutlined,
-  ImageOutlined,
-  PaletteOutlined,
   SvgIconComponent,
 } from "@mui/icons-material";
 import { FC, useEffect, useState } from "react";
@@ -21,11 +20,17 @@ import bunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
 /**
  * Immersive, format-aware "generating" overlay shown while a story is being
  * created. Twilight gradient + sleeping-bunny mascot + a 4-stage progress rail
- * (Idea → Write → Paint → Done). Renders as a fixed full-viewport layer.
+ * (Idea → Write → Magic → Done). The rail mirrors the real *text* creation (no
+ * misleading "Paint" step — images are generated later on the story page); it
+ * holds on "Magic" until the request resolves, then `isComplete` advances it to
+ * "Done". The page owns the short "Done" hold + navigation. Renders as a fixed
+ * full-viewport layer.
  */
 export interface GeneratingScreenProps {
   format: StoryFormat;
   childName?: string;
+  /** Flip true once the story is actually created → show the "Done" step. */
+  isComplete?: boolean;
 }
 
 const STAGES: Record<
@@ -35,25 +40,25 @@ const STAGES: Record<
   comic: [
     {
       label: "Imagining…",
-      sub: "Picking the scenes for tonight",
+      sub: "Picking tonight's adventure",
       icon: AutoAwesomeOutlined,
       rail: "Idea",
     },
     {
-      label: "Writing captions…",
+      label: "Writing the story…",
       sub: "Short, comic-panel lines",
       icon: EditOutlined,
       rail: "Write",
     },
     {
-      label: "Painting the scenes…",
-      sub: "Each page gets its own watercolor",
-      icon: PaletteOutlined,
-      rail: "Paint",
+      label: "Sprinkling magic…",
+      sub: "Bringing it all together",
+      icon: AutoFixHighOutlined,
+      rail: "Magic",
     },
     {
-      label: "Almost ready…",
-      sub: "Bundling the comic",
+      label: "All done!",
+      sub: "Opening your comic",
       icon: DoneAllOutlined,
       rail: "Done",
     },
@@ -72,33 +77,45 @@ const STAGES: Record<
       rail: "Write",
     },
     {
-      label: "Painting the cover…",
-      sub: "Magical story cover",
-      icon: ImageOutlined,
-      rail: "Cover",
+      label: "Sprinkling magic…",
+      sub: "Bringing it all together",
+      icon: AutoFixHighOutlined,
+      rail: "Magic",
     },
     {
-      label: "Almost ready…",
-      sub: "Tucking it into the library",
+      label: "All done!",
+      sub: "Opening your story",
       icon: DoneAllOutlined,
       rail: "Done",
     },
   ],
 };
 
-const GeneratingScreen: FC<GeneratingScreenProps> = ({ format, childName }) => {
+const GeneratingScreen: FC<GeneratingScreenProps> = ({
+  format,
+  childName,
+  isComplete,
+}) => {
   const stages = STAGES[format];
-  // Advance through the stages on a timer, holding on the "Paint" step until
-  // the real request resolves (this overlay unmounts when fetching ends).
   const [active, setActive] = useState(0);
 
+  // While the request is in flight, advance Idea → Write → Magic and hold on
+  // "Magic" (second-to-last) — the text is all that's being generated here.
   useEffect(() => {
-    const holdAt = stages.length - 2; // hold on "Paint/Cover"
+    if (isComplete) return;
+    const holdAt = stages.length - 2; // hold on "Magic"
     const id = setInterval(() => {
       setActive((a) => (a >= holdAt ? holdAt : a + 1));
-    }, 3200);
+    }, 3000);
     return () => clearInterval(id);
-  }, [stages.length]);
+  }, [stages.length, isComplete]);
+
+  // Once the story is actually created, jump straight to "Done". The page keeps
+  // this overlay mounted for a short beat, then navigates — so navigation can't
+  // be cancelled by anything unmounting this component.
+  useEffect(() => {
+    if (isComplete) setActive(stages.length - 1);
+  }, [isComplete, stages.length]);
 
   const honey = honey400;
   const stage = stages[active];

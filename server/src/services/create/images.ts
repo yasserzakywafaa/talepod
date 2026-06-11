@@ -8,6 +8,11 @@ import { optimizeToJpeg } from "../../utils/imageOptimize";
 import { updateDocument } from "../../models/mongoDb/crudOperations";
 import { uploadFileToS3 } from "../amazonS3";
 import { handleOpenRouterAIRequest } from "../../utils/openRouterClient";
+import {
+  DEFAULT_STYLE_SUFFIXES,
+  getStyleSuffixes,
+  resolveArtStyle,
+} from "./imageStyles";
 
 /** Hard rule appended to every image prompt — non-English titles often leak into art. */
 const NO_TEXT_IN_ART_RULE = `
@@ -18,19 +23,6 @@ CRITICAL — ABSOLUTELY NO TEXT IN THE IMAGE (any language or script):
 - Do NOT render story titles, book titles, author names, captions, labels, signs, logos, watermarks, letters, numbers, speech bubbles, or decorative typography.
 - Any title or prose in this prompt is context for you only — never paint, emboss, carve, or overlay it on the image.
 - No readable book-cover typography; the app displays all text separately from the art.`;
-
-/** Brand-consistent 3D CGI illustration style appended to every image prompt. */
-const IMAGE_STYLE_BASE =
-  " premium 3D CGI children's animation render, Pixar Disney style, smooth rounded forms, highly detailed textures, expressive large eyes, soft cinematic volumetric lighting, warm golden glow, whimsical friendly atmosphere, vibrant saturated colors, completely text-free artwork in every language.";
-
-const COVER_STYLE_SUFFIX =
-  ` --${IMAGE_STYLE_BASE} wide 16:9 landscape cover composition, edge-to-edge cinematic framing.`;
-
-const LONG_INTERIOR_STYLE_SUFFIX =
-  ` --${IMAGE_STYLE_BASE} full-bleed 16:9 landscape scene illustration.`;
-
-const COMIC_STYLE_SUFFIX =
-  ` --${IMAGE_STYLE_BASE} full-bleed 4:3 landscape scene, polished printable storybook quality, consistent art direction, completely free of any speech bubbles.`;
 
 const sanitizeFileName = (value: string): string =>
   value
@@ -205,7 +197,7 @@ export const generateImage = async (
 ): Promise<string | null> => {
   try {
     const sourceUrl = await generateImageUrl(
-      `${prompt}${options.styleSuffix ?? COVER_STYLE_SUFFIX}`,
+      `${prompt}${options.styleSuffix ?? DEFAULT_STYLE_SUFFIXES.cover}`,
       {
         aspectRatio: options.aspectRatio,
         model: options.model,
@@ -332,17 +324,18 @@ const ensureCharacterSheet = async (
 const buildCoverPrompt = (
   story: StoryWithProfile,
   characterSheet: string,
+  medium: string,
 ): string => {
   const name = story.profileInfo?.name || "a child";
   const age = story.profileInfo?.age;
   const gender = story.profileInfo?.gender;
   const summary = story.summary || story.title || "a gentle bedtime story";
-  return `Wide landscape 3D CGI book cover art for a children's bedtime story.
+  return `Wide landscape ${medium} book cover art for a children's bedtime story.
 
 Visual theme (context only — do NOT render any of this as visible text):
 ${summary}
 
-Composition: horizontal 16:9 landscape orientation, cinematic wide cover art in Pixar-style 3D animation that fills the frame edge to edge. Place the main character prominently in the scene with rich environmental detail. Single cohesive cover scene — not a collage, not multiple panels. Illustration only — no book title, no typography, no lettering in any language.
+Composition: horizontal 16:9 landscape orientation, cinematic wide cover art in a ${medium} style that fills the frame edge to edge. Place the main character prominently in the scene with rich environmental detail. Single cohesive cover scene — not a collage, not multiple panels. Illustration only — no book title, no typography, no lettering in any language.
 
 Main character (draw exactly as described, keep on-model): ${characterSheet}
 
@@ -393,13 +386,14 @@ const buildLongInteriorPrompt = (
   story: StoryWithProfile,
   slot: LongStoryImage,
   characterSheet: string,
+  medium: string,
   useReference = false,
 ): string => {
   const referenceGuide = useReference
     ? "\n\nA reference image of the main character is attached. The character you draw MUST be the exact same character as in the reference image — identical face, hairstyle, hair color, skin tone, and outfit. Only the scene, pose, camera angle, and action change. Match the reference's art style as well."
     : "";
 
-  return `Create one full-bleed 3D CGI children's storybook scene for an interior moment.
+  return `Create one full-bleed ${medium} children's storybook scene for an interior moment.
 
 Story mood (context only — do NOT render as visible text):
 ${story.summary || "a gentle bedtime adventure"}
@@ -424,6 +418,7 @@ const buildComicPagePrompt = (
   pageIndex: number,
   totalPages: number,
   characterSheet: string,
+  medium: string,
   useReference = false,
 ): string => {
   const scene = page.imagePrompt || page.caption;
@@ -431,7 +426,7 @@ const buildComicPagePrompt = (
     ? "\n\nA reference image of the main character is attached. The character you draw MUST be the exact same character as in the reference image — identical face, hairstyle, hair color, skin tone, and outfit. Only the scene, pose, camera angle, and action change. Match the reference's art style as well."
     : "";
 
-  return `Create one full-bleed 3D CGI children's comic scene (scene ${
+  return `Create one full-bleed ${medium} children's comic scene (scene ${
     pageIndex + 1
   } of ${totalPages}).
 
@@ -450,9 +445,9 @@ Composition requirements:
 - Use the exact same 4:3 landscape canvas for every scene.
 - Full-bleed illustration from edge to edge. No internal frame, no border, no matte, no white margin, no cream outer background, and no paper page surrounding the art.
 - CRITICAL: render the scene completely TEXT-FREE in every language — no letters, words, numbers, captions, titles, page numbers, watermarks, labels, signs, speech bubbles, or caption boxes anywhere in the image. The story text is shown to the reader separately beneath the picture.
-- Keep the same 3D CGI animation style, color palette, warm cinematic lighting, camera distance, and rendering quality across all scenes.
+- Keep the same ${medium} art style, color palette, warm cinematic lighting, camera distance, and rendering quality across all scenes.
 - Tell the story through the characters' expressions, body language, and action so the scene reads clearly on its own without any words.
-- Use the same premium Pixar-style 3D storybook look as a single continuous animated picture book.${NO_TEXT_IN_ART_RULE}`;
+- Use the same ${medium} storybook look as a single continuous picture book.${NO_TEXT_IN_ART_RULE}`;
 };
 
 /** Run an async mapper over items with a max number of in-flight tasks. */
@@ -491,6 +486,12 @@ export const handleGenerateStoryImages = async (
     const slugBase = sanitizeFileName(story.slug || story.title || storyId);
     const characterSheet = await ensureCharacterSheet(story, storyId);
 
+    // Resolve the user-chosen art style (defaults to oil2d) → drives both the
+    // per-format style suffix and the "medium" wording inside each prompt.
+    const artStyle = resolveArtStyle(story.artStyle);
+    const styleSuffixes = getStyleSuffixes(artStyle);
+    const { medium } = artStyle;
+
     if (
       story.format === "comic" &&
       Array.isArray(story.pages) &&
@@ -504,9 +505,20 @@ export const handleGenerateStoryImages = async (
       //    visual reference that locks the character on every following page.
       let comicModel = refModel;
       let anchorUrl = await generateImage(
-        buildComicPagePrompt(story, pages[0], 0, pages.length, characterSheet),
+        buildComicPagePrompt(
+          story,
+          pages[0],
+          0,
+          pages.length,
+          characterSheet,
+          medium,
+        ),
         `${slugBase}-p1`,
-        { styleSuffix: COMIC_STYLE_SUFFIX, aspectRatio: "4:3", model: refModel },
+        {
+          styleSuffix: styleSuffixes.comic,
+          aspectRatio: "4:3",
+          model: refModel,
+        },
       );
 
       // If the primary model is unavailable, retry the anchor on the fallback
@@ -514,10 +526,17 @@ export const handleGenerateStoryImages = async (
       if (!anchorUrl && refModel !== fallbackModel) {
         comicModel = fallbackModel;
         anchorUrl = await generateImage(
-          buildComicPagePrompt(story, pages[0], 0, pages.length, characterSheet),
+          buildComicPagePrompt(
+            story,
+            pages[0],
+            0,
+            pages.length,
+            characterSheet,
+            medium,
+          ),
           `${slugBase}-p1`,
           {
-            styleSuffix: COMIC_STYLE_SUFFIX,
+            styleSuffix: styleSuffixes.comic,
             aspectRatio: "4:3",
             model: fallbackModel,
           },
@@ -544,11 +563,12 @@ export const handleGenerateStoryImages = async (
             pageIndex,
             pages.length,
             characterSheet,
+            medium,
             useReference,
           ),
           `${slugBase}-p${pageIndex + 1}`,
           {
-            styleSuffix: COMIC_STYLE_SUFFIX,
+            styleSuffix: styleSuffixes.comic,
             aspectRatio: "4:3",
             model: comicModel,
             referenceImageUrls: useReference ? [anchorUrl as string] : undefined,
@@ -575,17 +595,25 @@ export const handleGenerateStoryImages = async (
       // 1) Wide landscape cover — anchor for character consistency on interior scenes.
       let longModel = refModel;
       let coverUrl = await generateImage(
-        buildCoverPrompt(story, characterSheet),
+        buildCoverPrompt(story, characterSheet, medium),
         `${slugBase}-cover`,
-        { aspectRatio: "16:9", model: refModel },
+        {
+          styleSuffix: styleSuffixes.cover,
+          aspectRatio: "16:9",
+          model: refModel,
+        },
       );
 
       if (!coverUrl && refModel !== fallbackModel) {
         longModel = fallbackModel;
         coverUrl = await generateImage(
-          buildCoverPrompt(story, characterSheet),
+          buildCoverPrompt(story, characterSheet, medium),
           `${slugBase}-cover`,
-          { aspectRatio: "16:9", model: fallbackModel },
+          {
+            styleSuffix: styleSuffixes.cover,
+            aspectRatio: "16:9",
+            model: fallbackModel,
+          },
         );
       }
 
@@ -606,11 +634,12 @@ export const handleGenerateStoryImages = async (
             story,
             slot,
             characterSheet,
+            medium,
             useReference,
           ),
           `${slugBase}-scene-${slotIndex + 1}`,
           {
-            styleSuffix: LONG_INTERIOR_STYLE_SUFFIX,
+            styleSuffix: styleSuffixes.longInterior,
             aspectRatio: "16:9",
             model: longModel,
             referenceImageUrls: useReference ? [coverUrl as string] : undefined,

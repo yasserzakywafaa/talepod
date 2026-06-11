@@ -23,7 +23,9 @@ export interface UseTextGeneration {
     storyPrompt: string,
     profileInfo: ProfileInfo,
     storyParams: StoryParams,
-    format?: StoryFormat
+    format?: StoryFormat,
+    artStyle?: string,
+    avatarId?: string
   ) => Promise<Story>;
   handleCreateStorySeoRequest: (
     storyId: string,
@@ -56,13 +58,17 @@ export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
     storyPrompt: string,
     profileInfo: ProfileInfo,
     storyParams: StoryParams,
-    format: StoryFormat = "long"
+    format: StoryFormat = "long",
+    artStyle?: string,
+    avatarId?: string
   ): Promise<Story> => {
     const PAYLOAD = {
       storyPrompt,
       profileInfo,
       storyParams,
       format,
+      artStyle,
+      avatarId: avatarId || undefined,
       userInfo: auth.user as User,
     };
 

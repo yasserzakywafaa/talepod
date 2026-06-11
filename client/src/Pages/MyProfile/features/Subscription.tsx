@@ -3,6 +3,7 @@ import { AutoAwesomeOutlined, HeartBrokenOutlined } from "@mui/icons-material";
 
 import { SubscriptionPlanEnum } from "src/shared/types/user";
 import { useApplicationContext } from "src/application/store/Provider";
+import { CancelSubscriptionModal } from "src/components/Modals/CancelSubscriptionModal/CancelSubscriptionModal";
 import { useCancelSubscriptionModalContext } from "src/components/Modals/CancelSubscriptionModal/store/Provider";
 import { useMyProfileContext } from "../store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
@@ -45,7 +46,9 @@ const SubscriptionSection = () => {
   const handleOnSubscribeClick = () => handleTogglePricingModal();
 
   return (
-    <Box id="subscription">
+    <>
+      <CancelSubscriptionModal />
+      <Box id="subscription">
       <Card elevation={3} sx={{ padding: 3 }}>
         <Typography variant="h5">Subscription</Typography>
         <Grid container spacing={2} sx={{ marginTop: 2 }}>
@@ -184,6 +187,7 @@ const SubscriptionSection = () => {
         </Grid>
       </Card>
     </Box>
+    </>
   );
 };
 

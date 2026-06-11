@@ -36,7 +36,7 @@ export const authMiddleware = async (
     (req as AuthenticatedRequest).user = user;
     return next();
   } catch (error) {
-    console.error("❌ OAuth2 auth middleware error:", error);
-    return res.status(401).json({ message: "Invalid access token" });
+    console.error("❌ OAuth2 auth middleware error:", (error as Error).message);
+    return res.status(401).json({ message: (error as Error).message });
   }
 };

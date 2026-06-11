@@ -11,12 +11,14 @@ import {
   StoryParts,
   SubscriptionPlanEnum,
   User,
+  UserAvatar,
   UserRole,
   UserStatus,
 } from "../../models/types";
 
 import CONFIG from "../../config";
 import { ObjectId } from "mongodb";
+import { autoSaveAvatarFromProfile } from "./avatar";
 import extractStoryParts, {
   extractComicParts,
 } from "../../utils/extractStoryParts";
@@ -62,11 +64,27 @@ export const handleCreateStory = async (
   storyParams: StoryParams,
   userInfo: User,
   format: StoryFormat = "long",
+  artStyle?: string,
+  avatarId?: string,
 ) => {
   const user = (await getDocumentFromDb(
     new ObjectId(userInfo._id),
     DBCollectionsEnum.users,
   )) as User;
+
+  // If a saved character was chosen, seed the story's characterSheet from its
+  // locked description so the hero resembles it (ensureCharacterSheet then
+  // reuses this instead of generating a fresh one). Owner-scoped for safety.
+  let avatarMeta: { avatarId: string; characterSheet?: string } | undefined;
+  if (avatarId && ObjectId.isValid(avatarId)) {
+    const avatar = (await getDocumentFromDb(
+      new ObjectId(avatarId),
+      DBCollectionsEnum.avatars,
+    )) as UserAvatar | null;
+    if (avatar && avatar.userId === String(user._id)) {
+      avatarMeta = { avatarId, characterSheet: avatar.description };
+    }
+  }
 
   // A purchased story credit lets a user create one story beyond their plan
   // cap. When over the cap, consume a credit instead of blocking.
@@ -95,6 +113,10 @@ export const handleCreateStory = async (
       user.isPaidUser && user.subscription?.type !== SubscriptionPlanEnum.Free,
     // Background image generation kicks off after the response is sent.
     imagesStatus: "pending" as const,
+    // Chosen illustration style id (resolved to the default if undefined).
+    ...(artStyle ? { artStyle } : {}),
+    // Chosen saved character → seeds characterSheet (see above).
+    ...(avatarMeta ?? {}),
   };
 
   let storyId: ObjectId | undefined;
@@ -211,6 +233,18 @@ export const handleCreateStory = async (
           cause: error,
         });
       }
+    }
+
+    // Auto-save a brand-new story character (name/age/gender) as a reusable
+    // avatar so it can be picked next time. Skipped when an existing saved
+    // character was used (avatarMeta set). Fire-and-forget — never delays or
+    // fails story creation; it dedups by name and composes the portrait async.
+    if (!avatarMeta && user?._id) {
+      autoSaveAvatarFromProfile(String(user._id), {
+        name: profileInfo.name,
+        age: profileInfo.age,
+        gender: profileInfo.gender,
+      });
     }
 
     console.log("✅ Story Created Successfully", {
