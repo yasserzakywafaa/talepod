@@ -6,12 +6,30 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import SocialRegister from "./features/SocialRegister/SocialRegister";
+import { useApplicationContext } from "src/application/store/Provider";
+import { useEffect } from "react";
 import { useRegisterModalContext } from "./store/Provider";
 
 export const RegisterModal = () => {
   const {
     store: { state, handleIsFetching, handleToggleRegisterModal },
   } = useRegisterModalContext();
+  const {
+    store: {
+      state: {
+        auth: { isAuthenticated },
+      },
+    },
+  } = useApplicationContext();
+
+  // Close once the user authenticates in place (e.g. phone OTP). Google auth
+  // full-page-redirects, so this is a no-op there.
+  useEffect(() => {
+    if (isAuthenticated && state.isVisible) {
+      handleIsFetching(false);
+      handleToggleRegisterModal();
+    }
+  }, [isAuthenticated]);
 
   const onCloseModal = (
     event: {},

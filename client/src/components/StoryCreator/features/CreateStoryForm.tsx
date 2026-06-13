@@ -46,6 +46,7 @@ import FormatChooser from "src/components/shared/FormatChooser";
 import GeneratingScreen from "./GeneratingScreen";
 import StorySettings from "./StorySettings";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
+import { saveCreateDraft } from "src/shared/utils/authReturn";
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
@@ -155,6 +156,14 @@ const CreateStoryForm = () => {
     );
   };
 
+  // Persist the in-progress form before sending the user off to authenticate,
+  // then open the login modal. After a Google redirect the draft is restored
+  // when /create remounts; for in-place phone OTP the live form is kept.
+  const openLoginModal = () => {
+    saveCreateDraft({ profileInfo, storyParams, format, artStyle, avatarId });
+    handleToggleLoginModal();
+  };
+
   const handleOnFormSubmit = async (
     event: React.FormEvent<HTMLFormElement>,
   ) => {
@@ -162,8 +171,7 @@ const CreateStoryForm = () => {
     event.stopPropagation();
 
     if (!isAuthenticated) {
-      // navigate(routes.auth.login);
-      handleToggleLoginModal();
+      openLoginModal();
       return;
     }
 
@@ -397,7 +405,7 @@ const CreateStoryForm = () => {
               autoSelectId={preselectAvatarId}
               onChange={(_id, avatar) => handleSelectAvatar(avatar ?? null)}
               enabled={isAuthenticated}
-              onRequestLogin={handleToggleLoginModal}
+              onRequestLogin={openLoginModal}
             />
             {/* </Box> */}
           </Grid>

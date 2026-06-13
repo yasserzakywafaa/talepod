@@ -18,6 +18,7 @@ import SwipeToRefresh from "./features/SwipeToRefresh/SwipeToRefresh";
 import classNames from "classnames";
 import END_POINTS from "src/application/shared/endpoints";
 import routes from "src/application/routes";
+import { popReturnUrl, saveReturnUrl } from "src/shared/utils/authReturn";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -85,6 +86,14 @@ const Page = (params: PageProps) => {
     };
   }, []);
 
+  // Single source of truth for "where to send the user after auth": remember
+  // the last real page they were on (auth/error routes and the OAuth callback
+  // are skipped). Survives the Google redirect via sessionStorage.
+  useEffect(() => {
+    if (new URLSearchParams(location.search).get("authStatus")) return;
+    saveReturnUrl(location.pathname + location.search);
+  }, [location.pathname, location.search]);
+
   useEffect(() => {
     document.title = title;
   }, [title]);
@@ -126,7 +135,9 @@ const Page = (params: PageProps) => {
           isAuthenticated: true,
           user: data,
         });
-        navigate(routes.myProfile(data._id), { replace: true });
+        navigate(popReturnUrl() ?? routes.myProfile(data._id), {
+          replace: true,
+        });
       } catch {
         if (cancelled) return;
         navigate(routes.auth.login, { replace: true });
