@@ -6,12 +6,30 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import SocialLogin from "./features/SocialLogin/SocialLogin";
+import { useApplicationContext } from "src/application/store/Provider";
+import { useEffect } from "react";
 import { useLoginModalContext } from "./store/Provider";
 
 export const LoginModal = () => {
   const {
     store: { state, handleIsFetching, handleToggleLoginModal },
   } = useLoginModalContext();
+  const {
+    store: {
+      state: {
+        auth: { isAuthenticated },
+      },
+    },
+  } = useApplicationContext();
+
+  // Close once the user authenticates in place (e.g. phone OTP, which doesn't
+  // navigate away). Google auth full-page-redirects, so this is a no-op there.
+  useEffect(() => {
+    if (isAuthenticated && state.isVisible) {
+      handleIsFetching(false);
+      handleToggleLoginModal();
+    }
+  }, [isAuthenticated]);
 
   const onCloseModal = (
     event: {},

@@ -38,6 +38,11 @@ const APP_CONSTANTS = {
     AUTHENTICATED: "isAuthenticated",
     STORY_GENERATED: "isBlogGenerated",
   },
+  SESSION_STORAGE: {
+    RETURN_URL: "talepod:returnUrl",
+    CREATE_DRAFT: "talepod:createDraft",
+    MINI_STORY: "talepod:miniStory",
+  },
   APP_THEME_CLASS: {
     DARK: "dark",
     LIGHT: "light",

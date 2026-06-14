@@ -18,7 +18,11 @@ import { getAxiosError } from "src/shared/utils/getAxiosError";
 import { parsePhoneNumber } from "libphonenumber-js";
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  consumeCreateDraft,
+  consumeReturnUrl,
+} from "src/shared/utils/authReturn";
 
 type PhoneAuthType = "register" | "login";
 
@@ -54,6 +58,7 @@ const PhoneOtpAuthForm = ({
 }: PhoneOtpAuthFormProps): JSX.Element => {
   const isRegister = authType === "register";
   const navigate = useNavigate();
+  const location = useLocation();
   const {
     manager: { handleSetAuthInfo },
   } = useApplicationContext();
@@ -170,9 +175,21 @@ const PhoneOtpAuthForm = ({
         type: ToastTypes.Success,
       });
 
+      const returnUrl = consumeReturnUrl();
+      const currentUrl = location.pathname + location.search;
+
       onWaitingForOtp?.(false);
       onAuthSuccess?.();
-      navigate(routes.myProfile(response.data.user._id), { replace: true });
+
+      if (returnUrl && returnUrl === currentUrl) {
+        // In-place auth (login modal on /create): the form is still mounted
+        // with the user's data, so stay put and discard the saved draft.
+        consumeCreateDraft();
+      } else {
+        navigate(returnUrl ?? routes.myProfile(response.data.user._id), {
+          replace: true,
+        });
+      }
     } catch (error) {
       getAxiosError(error);
     } finally {

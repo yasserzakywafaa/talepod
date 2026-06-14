@@ -24,6 +24,10 @@ import Page from "src/components/shared/Page/Page";
 import ProfileAvatar from "src/components/shared/ProfileAvatar";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import SubscriptionSection from "./features/Subscription";
+import {
+  getUserContact,
+  getUserContactLabel,
+} from "src/shared/utils/getUserContact";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useMyProfileContext } from "./store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
@@ -184,9 +188,9 @@ const MyProfilePage = () => {
                       component="p"
                       className="text-underline"
                     >
-                      Email
+                      {getUserContactLabel(user)}
                     </Typography>
-                    <span className="bold">{`${user.email}`}</span>
+                    <span className="bold">{getUserContact(user)}</span>
                   </Grid>
 
                   <Grid size={{ xs: 12, md: 6 }}>
