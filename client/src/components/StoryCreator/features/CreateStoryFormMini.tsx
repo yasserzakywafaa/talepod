@@ -17,7 +17,7 @@ import {
   savePendingMiniStory,
 } from "src/shared/utils/authReturn";
 import { useApplicationContext } from "src/application/store/Provider";
-import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
+import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useNavigate } from "react-router-dom";
 import { useOpenaiContext } from "./Openai/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
@@ -43,10 +43,10 @@ const CreateStoryFormMini = () => {
 
   const {
     store: {
-      state: { isVisible: isLoginModalVisible },
-      handleToggleLoginModal,
+      state: { isVisible: isRegisterModalVisible },
+      handleToggleRegisterModal,
     },
-  } = useLoginModalContext();
+  } = useRegisterModalContext();
 
   const { manager: OpenaiManager } = useOpenaiContext();
   const { isCreateStoryFetching, handleCreateStoryRequest } = OpenaiManager;
@@ -144,7 +144,7 @@ const CreateStoryFormMini = () => {
       // Carry the typed name + "generate after auth" intent across the login
       // round-trip and open the modal instead of leaving the page.
       savePendingMiniStory(profileInfo.name);
-      handleToggleLoginModal();
+      handleToggleRegisterModal();
       return;
     }
 
@@ -177,19 +177,19 @@ const CreateStoryFormMini = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, user]);
 
-  // If the user closes the login modal without authenticating, drop the pending
-  // intent so a later unrelated login can't trigger a surprise generation.
-  const prevLoginModalVisibleRef = useRef(false);
+  // If the user closes the register modal without authenticating, drop the
+  // pending intent so a later unrelated login can't trigger a surprise story.
+  const prevRegisterModalVisibleRef = useRef(false);
   useEffect(() => {
     if (
-      prevLoginModalVisibleRef.current &&
-      !isLoginModalVisible &&
+      prevRegisterModalVisibleRef.current &&
+      !isRegisterModalVisible &&
       !isAuthenticated
     ) {
       consumePendingMiniStory();
     }
-    prevLoginModalVisibleRef.current = isLoginModalVisible;
-  }, [isLoginModalVisible, isAuthenticated]);
+    prevRegisterModalVisibleRef.current = isRegisterModalVisible;
+  }, [isRegisterModalVisible, isAuthenticated]);
 
   return (
     <Box className="story-creator-form mini" width="100%">
