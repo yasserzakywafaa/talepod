@@ -11,8 +11,11 @@ import APP_CONSTANTS from "src/application/shared/app_constants";
  * value left over from a previous flow.
  */
 
-const { RETURN_URL: RETURN_URL_KEY, CREATE_DRAFT: DRAFT_KEY } =
-  APP_CONSTANTS.SESSION_STORAGE;
+const {
+  RETURN_URL: RETURN_URL_KEY,
+  CREATE_DRAFT: DRAFT_KEY,
+  MINI_STORY: MINI_STORY_KEY,
+} = APP_CONSTANTS.SESSION_STORAGE;
 const DRAFT_VERSION = 1;
 
 // Never return the user to an auth/error route — that would loop or be useless.
@@ -61,6 +64,37 @@ export const consumeCreateDraft = (): Record<string, unknown> | null => {
     if (!raw) return null;
     const draft = JSON.parse(raw);
     return draft?.version === DRAFT_VERSION ? draft : null;
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * Homepage mini form: remember the typed name AND a "generate after auth"
+ * intent, so that once the user authenticates we can prefill the name and kick
+ * off generation without a second click. Separate key from CREATE_DRAFT so the
+ * two flows never interfere.
+ */
+export const savePendingMiniStory = (name: string): void => {
+  try {
+    sessionStorage.setItem(
+      MINI_STORY_KEY,
+      JSON.stringify({ version: DRAFT_VERSION, name }),
+    );
+  } catch {
+    /* storage unavailable — skip */
+  }
+};
+
+export const consumePendingMiniStory = (): { name: string } | null => {
+  try {
+    const raw = sessionStorage.getItem(MINI_STORY_KEY);
+    sessionStorage.removeItem(MINI_STORY_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed?.version === DRAFT_VERSION && typeof parsed.name === "string"
+      ? { name: parsed.name }
+      : null;
   } catch {
     return null;
   }

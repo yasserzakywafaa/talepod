@@ -5,12 +5,19 @@ import {
 import { Box, Button, TextField } from "@mui/material";
 import { ProfileInfo, Story } from "../store/state";
 import { UserRole, UserStatus } from "src/shared/types/user";
+import { useEffect, useRef } from "react";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import { SupportedLanguages } from "src/shared/languages";
+import { getCreateStoryPrompt } from "../utils/getStoryPrompts";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 import routes from "src/application/routes";
+import {
+  consumePendingMiniStory,
+  savePendingMiniStory,
+} from "src/shared/utils/authReturn";
 import { useApplicationContext } from "src/application/store/Provider";
+import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useNavigate } from "react-router-dom";
 import { useOpenaiContext } from "./Openai/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
@@ -33,6 +40,13 @@ const CreateStoryFormMini = () => {
     },
     manager: { handleSetAuthInfo, handleFetchUserInfo },
   } = useApplicationContext();
+
+  const {
+    store: {
+      state: { isVisible: isLoginModalVisible },
+      handleToggleLoginModal,
+    },
+  } = useLoginModalContext();
 
   const { manager: OpenaiManager } = useOpenaiContext();
   const { isCreateStoryFetching, handleCreateStoryRequest } = OpenaiManager;
@@ -68,16 +82,57 @@ const CreateStoryFormMini = () => {
     navigate(routes.create);
   };
 
+  const generateStory = async (overrideName?: string) => {
+    const profile: ProfileInfo = {
+      ...profileInfo,
+      ...(overrideName !== undefined ? { name: overrideName } : {}),
+      // The mini form only collects a name; stories are always English here.
+      language: { name: "English", value: SupportedLanguages.en },
+    };
+
+    // Compute the prompt from the (possibly just-restored) name directly rather
+    // than the store-derived one, which may not have recomputed yet.
+    const createStoryPrompt = getCreateStoryPrompt({
+      ...storyCreatorStore.state,
+      profileInfo: profile,
+    });
+    if (!createStoryPrompt) return;
+
+    isCreateStoryFetching(true);
+    try {
+      const story: Story = await handleCreateStoryRequest(
+        createStoryPrompt,
+        profile,
+        storyParams,
+      );
+
+      const refreshedUser = await handleFetchUserInfo();
+      if (refreshedUser) {
+        handleSetAuthInfo({ isAuthenticated: true, user: refreshedUser });
+      }
+
+      const userId = refreshedUser?._id ?? user?._id;
+      if (userId && story._id && story.slug) {
+        navigate(routes.myStory(userId, story.slug), { replace: false });
+        window.localStorage.setItem(
+          APP_CONSTANTS.LOCAL_STORAGE.STORY_GENERATED,
+          "true",
+        );
+      }
+    } catch (error) {
+      console.error("❌ Failed to create a story!", {
+        error,
+      });
+    } finally {
+      isCreateStoryFetching(false);
+    }
+  };
+
   const handleOnFormSubmit = async (
     event: React.FormEvent<HTMLFormElement>,
   ) => {
     event.preventDefault();
     event.stopPropagation();
-
-    if (!isAuthenticated) {
-      navigate(routes.auth.login);
-      return;
-    }
 
     const form = event.currentTarget;
     if (!form.checkValidity() || hasCensoredWords(profileInfo.name)) {
@@ -85,51 +140,56 @@ const CreateStoryFormMini = () => {
       return;
     }
 
-    const { createStoryPrompt } = storyCreatorStore.state.createStory;
-
-    if (createStoryPrompt) {
-      isCreateStoryFetching(true);
-      try {
-        const story: Story = await handleCreateStoryRequest(
-          createStoryPrompt,
-          {
-            ...profileInfo,
-            language: {
-              name: "English",
-              value: SupportedLanguages.en,
-            },
-          },
-          storyParams,
-        );
-
-        if (user) {
-          const refreshedUser = await handleFetchUserInfo();
-          if (refreshedUser) {
-            handleSetAuthInfo({
-              isAuthenticated: true,
-              user: refreshedUser,
-            });
-          }
-
-          if (story._id && story.slug) {
-            navigate(routes.myStory(user._id, story.slug), {
-              replace: false,
-            });
-            window.localStorage.setItem(
-              APP_CONSTANTS.LOCAL_STORAGE.STORY_GENERATED,
-              "true",
-            );
-          }
-        }
-      } catch (error) {
-        console.error("❌ Failed to create a story!", {
-          error,
-        });
-      } finally {
-        isCreateStoryFetching(false);
-      }
+    if (!isAuthenticated) {
+      // Carry the typed name + "generate after auth" intent across the login
+      // round-trip and open the modal instead of leaving the page.
+      savePendingMiniStory(profileInfo.name);
+      handleToggleLoginModal();
+      return;
     }
+
+    void generateStory();
   };
+
+  // After authenticating from the mini form, prefill the saved name and auto-
+  // generate — but only when the account can actually create right now, so we
+  // never silently consume a credit on a blocked account. Covers both the
+  // Google redirect (form remounts) and in-place phone OTP (form stays mounted).
+  const autoGenerateHandledRef = useRef(false);
+  useEffect(() => {
+    if (autoGenerateHandledRef.current) return;
+    if (!isAuthenticated || !user) return;
+
+    const pending = consumePendingMiniStory();
+    if (!pending) return;
+    autoGenerateHandledRef.current = true;
+
+    handleUpdateProfileInfo("name", pending.name);
+
+    const canGenerate =
+      !hasMaxStoriesLimit &&
+      !!isUserActive &&
+      !hasCensoredWords(pending.name) &&
+      !hasCensoredWords(profileInfo.interests);
+    if (canGenerate) {
+      void generateStory(pending.name);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, user]);
+
+  // If the user closes the login modal without authenticating, drop the pending
+  // intent so a later unrelated login can't trigger a surprise generation.
+  const prevLoginModalVisibleRef = useRef(false);
+  useEffect(() => {
+    if (
+      prevLoginModalVisibleRef.current &&
+      !isLoginModalVisible &&
+      !isAuthenticated
+    ) {
+      consumePendingMiniStory();
+    }
+    prevLoginModalVisibleRef.current = isLoginModalVisible;
+  }, [isLoginModalVisible, isAuthenticated]);
 
   return (
     <Box className="story-creator-form mini" width="100%">
