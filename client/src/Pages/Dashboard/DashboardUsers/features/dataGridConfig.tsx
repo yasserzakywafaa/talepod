@@ -4,11 +4,12 @@ import { User, UserRole, UserStatus } from "src/shared/types/user";
 import DataGridRowActionsMenu from "./dataGridRowActionsMenu";
 import { GridColDef } from "@mui/x-data-grid";
 import ProfileAvatar from "src/components/shared/ProfileAvatar";
+import { getUserContact } from "src/shared/utils/getUserContact";
 
 export interface DashboardUsersGridFields {
   id: string;
   user: User;
-  email: string;
+  contact: string;
   type: UserRole;
   stories: number;
   joinDate: string;
@@ -69,7 +70,7 @@ export const getDashboardUsersDataGridConfig = (
     return {
       id: user._id || "",
       user: user,
-      email: user.email || "",
+      contact: getUserContact(user),
       type: user.role || UserRole.user,
       stories: user.storyCount || 0,
       joinDate: new Date(user.createdAt || new Date()).toLocaleDateString(
@@ -135,16 +136,16 @@ export const getDashboardUsersDataGridConfig = (
       },
     },
     {
-      field: "email",
-      headerName: "EMAIL",
+      field: "contact",
+      headerName: "CONTACT",
       editable: false,
       sortable: true,
       minWidth: 200,
       flex: 1,
       display: "flex",
-      description: "User email address",
+      description: "User email or phone number",
       renderCell: (params) => (
-        <Typography variant="body2">{params.row.email}</Typography>
+        <Typography variant="body2">{params.row.contact}</Typography>
       ),
     },
     {
