@@ -2,6 +2,7 @@ import { Box, Card, CardContent, Chip, Grid, Typography } from "@mui/material";
 import { User, UserStatus } from "src/shared/types/user";
 
 import ProfileAvatar from "src/components/shared/ProfileAvatar";
+import { getUserContact } from "src/shared/utils/getUserContact";
 
 interface UserInfoCardProps {
   user: User | null;
@@ -63,7 +64,7 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
                 />
               </Box>
               <Typography variant="body2" fontWeight="bold">
-                {user.email}
+                {getUserContact(user)}
               </Typography>
             </Box>
           </Box>
