@@ -61,7 +61,16 @@ const Page = (params: PageProps) => {
   const navigate = useNavigate();
   const oauthReturnHandledRef = useRef(false);
 
-  const isPageLoading = isLoading || isFetching;
+  // While the Google OAuth callback is being processed (the server lands us on
+  // "/" with ?authStatus=success before we redirect to the saved return URL),
+  // show the full-screen loader so the home page never flashes by. Mirrors the
+  // handler's condition below so the spinner always clears once it navigates.
+  const oauthParams = new URLSearchParams(location.search);
+  const isHandlingOAuthReturn =
+    oauthParams.get("authStatus") === "success" &&
+    !!oauthParams.get("provider");
+
+  const isPageLoading = isLoading || isFetching || isHandlingOAuthReturn;
 
   const pageClassNames = classNames({
     container: true,
