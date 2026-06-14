@@ -8,7 +8,7 @@ import {
 
 import { useState } from "react";
 import routes from "src/application/routes";
-import { popCreateDraft } from "src/shared/utils/authReturn";
+import { consumeCreateDraft } from "src/shared/utils/authReturn";
 
 export interface StoryCreatorStore {
   state: StoryCreatorInitialState;
@@ -29,14 +29,14 @@ const useStoryCreatorStore = (): StoryCreatorStore => {
     const initial = getStoryCreatorInitialState();
     // Only the page-scoped provider on /create restores a saved draft; the
     // app-global provider also mounts on "/" (where OAuth lands) and would
-    // otherwise consume it first. popCreateDraft() removes it once read.
+    // otherwise consume it first. consumeCreateDraft() removes it once read.
     if (
       typeof window === "undefined" ||
       window.location.pathname !== routes.create
     ) {
       return initial;
     }
-    const draft = popCreateDraft() as CreateDraft | null;
+    const draft = consumeCreateDraft() as CreateDraft | null;
     if (!draft) return initial;
     return {
       ...initial,

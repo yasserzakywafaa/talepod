@@ -1,12 +1,18 @@
+import APP_CONSTANTS from "src/application/shared/app_constants";
+
 /**
  * Tiny sessionStorage helpers so a return URL and an in-progress Create-form
  * draft survive the Google OAuth round-trip (a full-page redirect that wipes
  * in-memory React state). sessionStorage is per-tab and stays in the same tab
  * across the redirect, so no server changes are needed.
+ *
+ * The `consume*` helpers read-and-clear in one call (the value is only ever
+ * needed once, right after auth), so callers can't accidentally act on a stale
+ * value left over from a previous flow.
  */
 
-const RETURN_URL_KEY = "talepod:returnUrl";
-const DRAFT_KEY = "talepod:createDraft";
+const { RETURN_URL: RETURN_URL_KEY, CREATE_DRAFT: DRAFT_KEY } =
+  APP_CONSTANTS.SESSION_STORAGE;
 const DRAFT_VERSION = 1;
 
 // Never return the user to an auth/error route — that would loop or be useless.
@@ -27,7 +33,7 @@ export const saveReturnUrl = (url: string): void => {
   }
 };
 
-export const popReturnUrl = (): string | null => {
+export const consumeReturnUrl = (): string | null => {
   try {
     const url = sessionStorage.getItem(RETURN_URL_KEY);
     sessionStorage.removeItem(RETURN_URL_KEY);
@@ -48,7 +54,7 @@ export const saveCreateDraft = (draft: object): void => {
   }
 };
 
-export const popCreateDraft = (): Record<string, unknown> | null => {
+export const consumeCreateDraft = (): Record<string, unknown> | null => {
   try {
     const raw = sessionStorage.getItem(DRAFT_KEY);
     sessionStorage.removeItem(DRAFT_KEY);

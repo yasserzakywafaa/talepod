@@ -19,7 +19,10 @@ import { parsePhoneNumber } from "libphonenumber-js";
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useLocation, useNavigate } from "react-router-dom";
-import { popCreateDraft, popReturnUrl } from "src/shared/utils/authReturn";
+import {
+  consumeCreateDraft,
+  consumeReturnUrl,
+} from "src/shared/utils/authReturn";
 
 type PhoneAuthType = "register" | "login";
 
@@ -172,7 +175,7 @@ const PhoneOtpAuthForm = ({
         type: ToastTypes.Success,
       });
 
-      const returnUrl = popReturnUrl();
+      const returnUrl = consumeReturnUrl();
       const currentUrl = location.pathname + location.search;
 
       onWaitingForOtp?.(false);
@@ -181,7 +184,7 @@ const PhoneOtpAuthForm = ({
       if (returnUrl && returnUrl === currentUrl) {
         // In-place auth (login modal on /create): the form is still mounted
         // with the user's data, so stay put and discard the saved draft.
-        popCreateDraft();
+        consumeCreateDraft();
       } else {
         navigate(returnUrl ?? routes.myProfile(response.data.user._id), {
           replace: true,

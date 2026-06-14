@@ -18,7 +18,7 @@ import SwipeToRefresh from "./features/SwipeToRefresh/SwipeToRefresh";
 import classNames from "classnames";
 import END_POINTS from "src/application/shared/endpoints";
 import routes from "src/application/routes";
-import { popReturnUrl, saveReturnUrl } from "src/shared/utils/authReturn";
+import { consumeReturnUrl, saveReturnUrl } from "src/shared/utils/authReturn";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -135,7 +135,7 @@ const Page = (params: PageProps) => {
           isAuthenticated: true,
           user: data,
         });
-        navigate(popReturnUrl() ?? routes.myProfile(data._id), {
+        navigate(consumeReturnUrl() ?? routes.myProfile(data._id), {
           replace: true,
         });
       } catch {
