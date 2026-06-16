@@ -37,6 +37,12 @@ const APP_CONSTANTS = {
     USER: "user",
     AUTHENTICATED: "isAuthenticated",
     STORY_GENERATED: "isBlogGenerated",
+    ACTIVE_GENERATION: "talepod:activeGeneration",
+  },
+  SESSION_STORAGE: {
+    RETURN_URL: "talepod:returnUrl",
+    CREATE_DRAFT: "talepod:createDraft",
+    MINI_STORY: "talepod:miniStory",
   },
   APP_THEME_CLASS: {
     DARK: "dark",

@@ -20,6 +20,12 @@ mountCreate(
   END_POINTS.CREATE.BLOG,
 );
 
+// Lightweight status poll for the docked generation chip (GET, keyed by id).
+createRouter.get(
+  END_POINTS.CREATE.STORY_STATUS(":storyId"),
+  OpenAIController.getStoryGenerationStatus,
+);
+
 mountCreate(
   END_POINTS.LEGACY_OPENAI.STORY,
   END_POINTS.LEGACY_OPENAI.STORY_SEO,

@@ -58,7 +58,7 @@ export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
     storyPrompt: string,
     profileInfo: ProfileInfo,
     storyParams: StoryParams,
-    format: StoryFormat = "long",
+    format: StoryFormat = "comic",
     artStyle?: string,
     avatarId?: string
   ): Promise<Story> => {

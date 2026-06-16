@@ -18,6 +18,7 @@ import SwipeToRefresh from "./features/SwipeToRefresh/SwipeToRefresh";
 import classNames from "classnames";
 import END_POINTS from "src/application/shared/endpoints";
 import routes from "src/application/routes";
+import { consumeReturnUrl, saveReturnUrl } from "src/shared/utils/authReturn";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -60,7 +61,16 @@ const Page = (params: PageProps) => {
   const navigate = useNavigate();
   const oauthReturnHandledRef = useRef(false);
 
-  const isPageLoading = isLoading || isFetching;
+  // While the Google OAuth callback is being processed (the server lands us on
+  // "/" with ?authStatus=success before we redirect to the saved return URL),
+  // show the full-screen loader so the home page never flashes by. Mirrors the
+  // handler's condition below so the spinner always clears once it navigates.
+  const oauthParams = new URLSearchParams(location.search);
+  const isHandlingOAuthReturn =
+    oauthParams.get("authStatus") === "success" &&
+    !!oauthParams.get("provider");
+
+  const isPageLoading = isLoading || isFetching || isHandlingOAuthReturn;
 
   const pageClassNames = classNames({
     container: true,
@@ -84,6 +94,14 @@ const Page = (params: PageProps) => {
       setPreviousUrl(location.pathname);
     };
   }, []);
+
+  // Single source of truth for "where to send the user after auth": remember
+  // the last real page they were on (auth/error routes and the OAuth callback
+  // are skipped). Survives the Google redirect via sessionStorage.
+  useEffect(() => {
+    if (new URLSearchParams(location.search).get("authStatus")) return;
+    saveReturnUrl(location.pathname + location.search);
+  }, [location.pathname, location.search]);
 
   useEffect(() => {
     document.title = title;
@@ -126,7 +144,9 @@ const Page = (params: PageProps) => {
           isAuthenticated: true,
           user: data,
         });
-        navigate(routes.myProfile(data._id), { replace: true });
+        navigate(consumeReturnUrl() ?? routes.myProfile(data._id), {
+          replace: true,
+        });
       } catch {
         if (cancelled) return;
         navigate(routes.auth.login, { replace: true });

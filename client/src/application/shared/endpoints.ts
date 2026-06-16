@@ -26,6 +26,8 @@ const END_POINTS = {
   CREATE: {
     GENERATE: {
       STORY: `${publicApiUrl}/api/v1/create/story`,
+      STORY_STATUS: (storyId: string) =>
+        `${publicApiUrl}/api/v1/create/story/${storyId}/status`,
       STORY_SEO: `${publicApiUrl}/api/v1/create/story-seo`,
       STORY_AUDIO: `${publicApiUrl}/api/v1/create/story-audio`,
       IMAGES: `${publicApiUrl}/api/v1/create/images`,

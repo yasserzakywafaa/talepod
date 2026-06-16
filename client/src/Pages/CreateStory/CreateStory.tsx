@@ -48,9 +48,9 @@ const CreateStoryPage = () => {
     <Page
       title="Create Bedtime Stories | TalePod"
       className="create-story-page"
-      // The story-creation loading state renders its own immersive
-      // GeneratingScreen overlay (inside CreateStoryForm), so it is
-      // intentionally excluded here to avoid a double loader.
+      // Story-text creation is async and surfaced by the global, non-blocking
+      // GenerationProgressChip, so it is intentionally excluded from this
+      // page-level loader (only general page + audio fetches block here).
       isLoading={isPageFetching || isCreateAudioFetching}
       loaderComponentName={
         !isPricingModalVisible ? LoaderComponentNameEnum.CreateStory : undefined

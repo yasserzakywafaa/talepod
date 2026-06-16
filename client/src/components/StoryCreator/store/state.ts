@@ -111,6 +111,7 @@ export interface Story {
   pages?: ComicPage[];
   longStoryImages?: LongStoryImage[];
   imagesStatus?: "pending" | "ready" | "failed";
+  textStatus?: "pending" | "ready" | "failed";
   pdfUrl?: string;
 }
 

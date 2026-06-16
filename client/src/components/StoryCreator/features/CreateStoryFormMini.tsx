@@ -3,25 +3,31 @@ import {
   AutoAwesomeOutlined,
 } from "@mui/icons-material";
 import { Box, Button, TextField } from "@mui/material";
-import { ProfileInfo, Story } from "../store/state";
+import { ProfileInfo } from "../store/state";
 import { UserRole, UserStatus } from "src/shared/types/user";
+import { useEffect, useRef } from "react";
 
-import APP_CONSTANTS from "src/application/shared/app_constants";
 import { SupportedLanguages } from "src/shared/languages";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 import routes from "src/application/routes";
+import {
+  consumePendingMiniStory,
+  savePendingMiniStory,
+} from "src/shared/utils/authReturn";
 import { useApplicationContext } from "src/application/store/Provider";
+import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useNavigate } from "react-router-dom";
-import { useOpenaiContext } from "./Openai/store/Provider";
+import { useGenerateStory } from "../hooks/useGenerateStory";
 import { useStoryCreatorContext } from "../store/Provider";
+
+const MINI_ENGLISH = { name: "English", value: SupportedLanguages.en };
 
 const CreateStoryFormMini = () => {
   const navigate = useNavigate();
   const {
     store: {
-      state: { profileInfo, storyParams },
+      state: { profileInfo },
     },
-    store: storyCreatorStore,
     manager: { handleUpdateProfileInfo },
   } = useStoryCreatorContext();
 
@@ -31,11 +37,16 @@ const CreateStoryFormMini = () => {
         auth: { isAuthenticated, user },
       },
     },
-    manager: { handleSetAuthInfo, handleFetchUserInfo },
   } = useApplicationContext();
 
-  const { manager: OpenaiManager } = useOpenaiContext();
-  const { isCreateStoryFetching, handleCreateStoryRequest } = OpenaiManager;
+  const {
+    store: {
+      state: { isVisible: isRegisterModalVisible },
+      handleToggleRegisterModal,
+    },
+  } = useRegisterModalContext();
+
+  const { isGenerating, generateStory } = useGenerateStory();
 
   const isUserActive = user && user.status === UserStatus.active;
   const hasMaxStoriesLimit =
@@ -46,6 +57,7 @@ const CreateStoryFormMini = () => {
 
   const isCreateButtonDisabled = (): boolean => {
     if (
+      isGenerating ||
       hasMaxStoriesLimit ||
       (isAuthenticated && !isUserActive) ||
       hasCensoredWords(profileInfo.name) ||
@@ -68,16 +80,21 @@ const CreateStoryFormMini = () => {
     navigate(routes.create);
   };
 
+  const runMiniGenerate = (name?: string) => {
+    const resolvedName = name ?? profileInfo.name;
+    void generateStory({
+      profileOverride: {
+        name: resolvedName,
+        language: MINI_ENGLISH,
+      },
+    });
+  };
+
   const handleOnFormSubmit = async (
     event: React.FormEvent<HTMLFormElement>,
   ) => {
     event.preventDefault();
     event.stopPropagation();
-
-    if (!isAuthenticated) {
-      navigate(routes.auth.login);
-      return;
-    }
 
     const form = event.currentTarget;
     if (!form.checkValidity() || hasCensoredWords(profileInfo.name)) {
@@ -85,51 +102,56 @@ const CreateStoryFormMini = () => {
       return;
     }
 
-    const { createStoryPrompt } = storyCreatorStore.state.createStory;
-
-    if (createStoryPrompt) {
-      isCreateStoryFetching(true);
-      try {
-        const story: Story = await handleCreateStoryRequest(
-          createStoryPrompt,
-          {
-            ...profileInfo,
-            language: {
-              name: "English",
-              value: SupportedLanguages.en,
-            },
-          },
-          storyParams,
-        );
-
-        if (user) {
-          const refreshedUser = await handleFetchUserInfo();
-          if (refreshedUser) {
-            handleSetAuthInfo({
-              isAuthenticated: true,
-              user: refreshedUser,
-            });
-          }
-
-          if (story._id && story.slug) {
-            navigate(routes.myStory(user._id, story.slug), {
-              replace: false,
-            });
-            window.localStorage.setItem(
-              APP_CONSTANTS.LOCAL_STORAGE.STORY_GENERATED,
-              "true",
-            );
-          }
-        }
-      } catch (error) {
-        console.error("❌ Failed to create a story!", {
-          error,
-        });
-      } finally {
-        isCreateStoryFetching(false);
-      }
+    if (!isAuthenticated) {
+      // Carry the typed name + "generate after auth" intent across the login
+      // round-trip and open the modal instead of leaving the page.
+      savePendingMiniStory(profileInfo.name);
+      handleToggleRegisterModal();
+      return;
     }
+
+    runMiniGenerate();
   };
+
+  // After authenticating from the mini form, prefill the saved name and auto-
+  // generate — but only when the account can actually create right now, so we
+  // never silently consume a credit on a blocked account. Covers both the
+  // Google redirect (form remounts) and in-place phone OTP (form stays mounted).
+  const autoGenerateHandledRef = useRef(false);
+  useEffect(() => {
+    if (autoGenerateHandledRef.current) return;
+    if (!isAuthenticated || !user) return;
+
+    const pending = consumePendingMiniStory();
+    if (!pending) return;
+    autoGenerateHandledRef.current = true;
+
+    handleUpdateProfileInfo("name", pending.name);
+
+    const canGenerate =
+      !hasMaxStoriesLimit &&
+      !!isUserActive &&
+      !hasCensoredWords(pending.name) &&
+      !hasCensoredWords(profileInfo.interests);
+    if (canGenerate) {
+      runMiniGenerate(pending.name);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, user]);
+
+  // If the user closes the register modal without authenticating, drop the
+  // pending intent so a later unrelated login can't trigger a surprise story.
+  const prevRegisterModalVisibleRef = useRef(false);
+  useEffect(() => {
+    if (
+      prevRegisterModalVisibleRef.current &&
+      !isRegisterModalVisible &&
+      !isAuthenticated
+    ) {
+      consumePendingMiniStory();
+    }
+    prevRegisterModalVisibleRef.current = isRegisterModalVisible;
+  }, [isRegisterModalVisible, isAuthenticated]);
 
   return (
     <Box className="story-creator-form mini" width="100%">
@@ -155,6 +177,7 @@ const CreateStoryFormMini = () => {
           className="form-item"
           label="Name"
           value={profileInfo.name}
+          disabled={isGenerating}
           placeholder="Emily, Noah, etc."
           InputLabelProps={{ shrink: true }}
           sx={{ width: { xs: "70%", sm: "50%" } }}

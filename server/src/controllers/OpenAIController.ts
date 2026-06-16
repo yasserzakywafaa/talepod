@@ -15,13 +15,23 @@ import { saveFileDataToDb, saveStorySeoToDb } from "../models/mongoDb";
 
 import CONFIG from "../config";
 import fs from "fs";
+import { ObjectId } from "mongodb";
+import {
+  DBCollectionsEnum,
+  getDocumentFromDb,
+} from "../models/mongoDb";
+import { Story } from "../models/types";
 import { handleCreateBlogRequest } from "../services/create/blog";
-import { handleCreateStory } from "../services/create/story";
+import {
+  createStoryPlaceholder,
+  generateStoryText,
+  resolveAvatarMeta,
+  validateUserCanCreate,
+} from "../services/create/story";
 import {
   generateImage,
   handleGenerateStoryImages,
 } from "../services/create/images";
-import { handleTriggerWebhookN8n } from "../services/webhooks/n8n";
 import { uploadFileToS3 } from "../services/amazonS3";
 import { chunkTextForTts } from "../utils/ttsChunk";
 
@@ -51,39 +61,83 @@ export const createStory = async (
   });
 
   try {
-    const story = await handleCreateStory(
+    const user = (await getDocumentFromDb(
+      new ObjectId(userInfo._id),
+      DBCollectionsEnum.users,
+    )) as User;
+
+    // Synchronous gate (throws → handled below) so blocked/over-limit accounts
+    // never create a placeholder. Resolve the chosen saved character once.
+    const { willUseCredit, availableCredits } = validateUserCanCreate(user);
+    const avatarMeta = await resolveAvatarMeta(user, avatarId);
+
+    const input = {
       storyPrompt,
       profileInfo,
       storyParams,
-      userInfo,
+      user,
       format,
       artStyle,
       avatarId,
-    );
+    };
 
-    if (story) {
-      await handleTriggerWebhookN8n({
-        eventName: "New Story Added",
-        data: {
-          id: `${story._id}`,
-          title: `${story.title}`,
-          url: `${CONFIG.APP_URL}/bedtime-story/${story.slug}`,
-          user: userInfo,
-          isDev: CONFIG.IS_DEV,
-          isProd: CONFIG.IS_PROD,
-        },
-      });
-    }
+    // Create + return a "pending" placeholder instantly; the client starts a
+    // progress chip and polls the status endpoint until the text lands.
+    const placeholder = await createStoryPlaceholder(input, avatarMeta);
+    response.json(placeholder);
 
-    response.json(story);
-
-    // Generate + persist illustrations in the background (best-effort).
-    // The client reader polls the story until `imagesStatus` flips off "pending".
-    if (story?._id) {
-      handleGenerateStoryImages(String(story._id));
-    }
+    // Background, best-effort: generate the text, then (only on success) chain
+    // illustration generation. The client polls `textStatus` then `imagesStatus`.
+    const storyId = String(placeholder._id);
+    void generateStoryText(
+      input,
+      storyId,
+      willUseCredit,
+      availableCredits,
+      avatarMeta,
+    ).then((ok) => {
+      if (ok) handleGenerateStoryImages(storyId);
+    });
   } catch (error) {
     next(`❌ ${error}`);
+  }
+};
+
+/**
+ * Lightweight polling endpoint for the docked generation chip. Keyed by story
+ * id (stable — the slug changes once the title is generated). Returns just the
+ * fields the chip needs to show progress and build the "View story" link.
+ */
+export const getStoryGenerationStatus = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  const { storyId } = request.params;
+  if (!storyId || !ObjectId.isValid(storyId)) {
+    response.status(400).json({ message: "❌ Invalid story id" });
+    return;
+  }
+
+  try {
+    const story = (await getDocumentFromDb(
+      new ObjectId(storyId),
+      DBCollectionsEnum.stories,
+    )) as Story | null;
+
+    if (!story) {
+      response.status(404).json({ message: "❌ Story not found!" });
+      return;
+    }
+
+    response.json({
+      textStatus: story.textStatus,
+      imagesStatus: story.imagesStatus,
+      slug: story.slug,
+      title: story.title,
+    });
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -286,6 +340,7 @@ export const createBlog = async (
 
 const OpenAIController = {
   createStory,
+  getStoryGenerationStatus,
   createStorySeo,
   createStoryAudio,
   createImages,

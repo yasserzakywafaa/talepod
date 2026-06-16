@@ -6,6 +6,7 @@ const END_POINTS = {
   },
   CREATE: {
     STORY: "/api/v1/create/story",
+    STORY_STATUS: (storyId: string) => `/api/v1/create/story/${storyId}/status`,
     STORY_SEO: "/api/v1/create/story-seo",
     STORY_AUDIO: "/api/v1/create/story-audio",
     IMAGES: "/api/v1/create/images",
