@@ -54,6 +54,10 @@ export interface Story {
   longStoryImages?: LongStoryImage[];
   /** Background image-generation state. Absent on pre-V2 stories (never poll). */
   imagesStatus?: ImagesStatus;
+  /** Background story-text generation state. A freshly-created placeholder is
+   *  "pending" until the AI text lands ("ready") or generation fails. Absent on
+   *  pre-async stories (treated as already-ready everywhere). */
+  textStatus?: TextStatus;
   /** Canonical visual description of the hero (+ recurring companions),
    *  generated once and reused across the cover + every comic page so the
    *  character stays on-model across independent image generations. */
@@ -67,6 +71,8 @@ export interface Story {
 }
 
 export type ImagesStatus = "pending" | "ready" | "failed";
+
+export type TextStatus = "pending" | "ready" | "failed";
 
 export interface StoryData extends Partial<Story> {
   profileInfo: ProfileInfo;

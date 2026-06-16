@@ -41,7 +41,6 @@ import { useSearchParams } from "react-router-dom";
 import ArtStyleChooser from "src/components/shared/ArtStyleChooser";
 import AvatarPicker from "./AvatarPicker";
 import FormatChooser from "src/components/shared/FormatChooser";
-import GeneratingScreen from "./GeneratingScreen";
 import StorySettings from "./StorySettings";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 import { saveCreateDraft } from "src/shared/utils/authReturn";
@@ -75,11 +74,7 @@ const CreateStoryForm = () => {
     },
   } = useStoryCreatorContext();
 
-  const {
-    isCreatingStory,
-    isGenerationComplete,
-    generateStory,
-  } = useGenerateStory();
+  const { isGenerating, generateStory } = useGenerateStory();
 
   const [searchParams] = useSearchParams();
   const style = searchParams.get("style");
@@ -117,6 +112,7 @@ const CreateStoryForm = () => {
 
   const isCreateButtonDisabled = (): boolean => {
     if (
+      isGenerating ||
       hasMaxStoriesLimit ||
       (isAuthenticated && !isUserActive) ||
       hasCensoredWords(profileInfo.name) ||
@@ -274,13 +270,6 @@ const CreateStoryForm = () => {
 
   return (
     <Box className="story-creator-form">
-      {(isCreatingStory || isGenerationComplete) && (
-        <GeneratingScreen
-          format={format}
-          childName={profileInfo.name}
-          isComplete={isGenerationComplete}
-        />
-      )}
       <Box
         marginY={4}
         display="flex"

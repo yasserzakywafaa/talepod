@@ -19,7 +19,6 @@ import { useRegisterModalContext } from "src/components/Modals/RegisterModal/sto
 import { useNavigate } from "react-router-dom";
 import { useGenerateStory } from "../hooks/useGenerateStory";
 import { useStoryCreatorContext } from "../store/Provider";
-import GeneratingScreen from "./GeneratingScreen";
 
 const MINI_ENGLISH = { name: "English", value: SupportedLanguages.en };
 
@@ -47,13 +46,7 @@ const CreateStoryFormMini = () => {
     },
   } = useRegisterModalContext();
 
-  const {
-    isCreatingStory,
-    isGenerationComplete,
-    format,
-    childName,
-    generateStory,
-  } = useGenerateStory();
+  const { isGenerating, generateStory } = useGenerateStory();
 
   const isUserActive = user && user.status === UserStatus.active;
   const hasMaxStoriesLimit =
@@ -64,6 +57,7 @@ const CreateStoryFormMini = () => {
 
   const isCreateButtonDisabled = (): boolean => {
     if (
+      isGenerating ||
       hasMaxStoriesLimit ||
       (isAuthenticated && !isUserActive) ||
       hasCensoredWords(profileInfo.name) ||
@@ -161,13 +155,6 @@ const CreateStoryFormMini = () => {
 
   return (
     <Box className="story-creator-form mini" width="100%">
-      {(isCreatingStory || isGenerationComplete) && (
-        <GeneratingScreen
-          format={format}
-          childName={childName}
-          isComplete={isGenerationComplete}
-        />
-      )}
       <Box
         marginTop={4}
         marginBottom={1}
@@ -190,6 +177,7 @@ const CreateStoryFormMini = () => {
           className="form-item"
           label="Name"
           value={profileInfo.name}
+          disabled={isGenerating}
           placeholder="Emily, Noah, etc."
           InputLabelProps={{ shrink: true }}
           sx={{ width: { xs: "70%", sm: "50%" } }}

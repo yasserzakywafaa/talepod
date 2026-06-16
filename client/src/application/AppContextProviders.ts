@@ -4,6 +4,7 @@ import { BlogContextProvider } from "src/Pages/Blog/store/Provider";
 import { BlogsContextProvider } from "src/Pages/Blogs/store/Provider";
 import { CancelSubscriptionModalContextProvider } from "src/components/Modals/CancelSubscriptionModal/store/Provider";
 import { ContactContextProvider } from "src/Pages/Contact/store/Provider";
+import { GenerationContextProvider } from "src/components/StoryCreator/generation/Provider";
 import { DashboardOverviewContextProvider } from "src/Pages/Dashboard/DashboardOverview/store/Provider";
 import { DashboardStoriesContextProvider } from "src/Pages/Dashboard/DashboardStories/store/Provider";
 import { DashboardUserContextProvider } from "src/Pages/Dashboard/DashboardUser/store/Provider";
@@ -28,6 +29,7 @@ const contextProviders = [
   PricingModalContextProvider,
   StoryCreatorContextProvider,
   OpenaiContextProvider,
+  GenerationContextProvider,
   LibraryContextProvider,
   PricingContextProvider,
   MyStoriesContextProvider,

@@ -5,6 +5,7 @@ import { darkTheme, lightTheme } from "./shared/themes";
 import { lazy, useEffect } from "react";
 
 import { CssBaseline } from "@mui/material";
+import GenerationProgressChip from "src/components/StoryCreator/generation/GenerationProgressChip";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import NotFoundPage from "../Pages/NotFound/NotFound";
 import ProtectedRoute from "./ProtectedRoute";
@@ -267,6 +268,10 @@ const AppContent = () => {
             {/* Fallback route for 404 errors */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
+
+          {/* Global, non-blocking story-generation progress chip (persists
+              across routes and survives refresh). */}
+          <GenerationProgressChip />
         </BrowserRouter>
       )}
     </ThemeProvider>
