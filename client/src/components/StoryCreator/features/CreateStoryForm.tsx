@@ -20,7 +20,6 @@ import {
   AdultGenderEnum,
   ChildGenderEnum,
   ProfileInfo,
-  Story,
 } from "../store/state";
 import {
   AutoAwesomeOutlined,
@@ -36,10 +35,9 @@ import {
   UserStatus,
 } from "src/shared/types/user";
 import { Tone, Tones } from "src/shared/mockedData/Tone";
-import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
-import APP_CONSTANTS from "src/application/shared/app_constants";
 import ArtStyleChooser from "src/components/shared/ArtStyleChooser";
 import AvatarPicker from "./AvatarPicker";
 import FormatChooser from "src/components/shared/FormatChooser";
@@ -47,25 +45,15 @@ import GeneratingScreen from "./GeneratingScreen";
 import StorySettings from "./StorySettings";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 import { saveCreateDraft } from "src/shared/utils/authReturn";
-import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
+import { useGenerateStory } from "../hooks/useGenerateStory";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
-import { useOpenaiContext } from "./Openai/store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
 
 const CreateStoryForm = () => {
-  const navigate = useNavigate();
   const { isDesktop } = useDeviceSize();
-  // Generating-overlay handshake (#6): once the story text is saved we flip
-  // `isGenerationComplete` so the overlay shows its "Done" step; a page-level
-  // timer (below) then navigates to `navTarget` after a short beat.
-  const [isGenerationComplete, setIsGenerationComplete] = useState(false);
-  const [navTarget, setNavTarget] = useState<{
-    userId: string;
-    slug: string;
-  } | null>(null);
   const {
     store: {
       state: {
@@ -87,6 +75,12 @@ const CreateStoryForm = () => {
     },
   } = useStoryCreatorContext();
 
+  const {
+    isCreatingStory,
+    isGenerationComplete,
+    generateStory,
+  } = useGenerateStory();
+
   const [searchParams] = useSearchParams();
   const style = searchParams.get("style");
   // Deep-link from the "My Avatars" page "Create" button: preselect + prefill.
@@ -104,7 +98,6 @@ const CreateStoryForm = () => {
         auth: { isAuthenticated, user },
       },
     },
-    manager: { handleSetAuthInfo, handleFetchUserInfo },
   } = useApplicationContext();
 
   const {
@@ -114,20 +107,6 @@ const CreateStoryForm = () => {
   const {
     store: { handleToggleLoginModal },
   } = useLoginModalContext();
-
-  const {
-    store: {
-      state: {
-        createStory: { isFetching: isCreatingStory },
-      },
-    },
-    manager: OpenaiManager,
-  } = useOpenaiContext();
-  const {
-    isCreateStoryFetching,
-    handleCreateStoryRequest,
-    // handleCreateStorySeoRequest,
-  } = OpenaiManager;
 
   const isUserActive = user && user.status === UserStatus.active;
   const hasMaxStoriesLimit =
@@ -181,68 +160,8 @@ const CreateStoryForm = () => {
       return;
     }
 
-    const { createStoryPrompt } = storyCreatorStore.state.createStory;
-
-    if (createStoryPrompt) {
-      isCreateStoryFetching(true);
-      try {
-        const story: Story = await handleCreateStoryRequest(
-          createStoryPrompt,
-          profileInfo,
-          storyParams,
-          format,
-          artStyle,
-          avatarId,
-        );
-
-        if (user) {
-          const refreshedUser = await handleFetchUserInfo();
-          if (refreshedUser) {
-            handleSetAuthInfo({
-              isAuthenticated: true,
-              user: refreshedUser,
-            });
-          }
-
-          if (story._id && story.slug) {
-            // Keep the overlay mounted and show its final "Done" step; the
-            // page-level timer effect navigates after a short beat.
-            setNavTarget({ userId: user._id, slug: story.slug });
-            setIsGenerationComplete(true);
-            return;
-          }
-        }
-        // No navigable story → stop the overlay.
-        isCreateStoryFetching(false);
-      } catch (error) {
-        console.error("❌ Failed to create a story!", {
-          error,
-        });
-        isCreateStoryFetching(false);
-      }
-    }
+    void generateStory();
   };
-
-  // Once the story is saved we flip `isGenerationComplete` (overlay shows its
-  // "Done" step); this page-level timer then navigates after a short beat.
-  // Keeping the timer here — not inside GeneratingScreen — means it can't be
-  // cancelled by the overlay unmounting, which previously left users stranded on
-  // the create page with no navigation.
-  useEffect(() => {
-    if (!isGenerationComplete || !navTarget) return;
-    const timer = window.setTimeout(() => {
-      window.localStorage.setItem(
-        APP_CONSTANTS.LOCAL_STORAGE.STORY_GENERATED,
-        "true",
-      );
-      isCreateStoryFetching(false);
-      navigate(routes.myStory(navTarget.userId, navTarget.slug), {
-        replace: false,
-      });
-    }, 2200);
-    return () => window.clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isGenerationComplete, navTarget, navigate]);
 
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;

@@ -3,13 +3,11 @@ import {
   AutoAwesomeOutlined,
 } from "@mui/icons-material";
 import { Box, Button, TextField } from "@mui/material";
-import { ProfileInfo, Story } from "../store/state";
+import { ProfileInfo } from "../store/state";
 import { UserRole, UserStatus } from "src/shared/types/user";
 import { useEffect, useRef } from "react";
 
-import APP_CONSTANTS from "src/application/shared/app_constants";
 import { SupportedLanguages } from "src/shared/languages";
-import { getCreateStoryPrompt } from "../utils/getStoryPrompts";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 import routes from "src/application/routes";
 import {
@@ -19,16 +17,18 @@ import {
 import { useApplicationContext } from "src/application/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useNavigate } from "react-router-dom";
-import { useOpenaiContext } from "./Openai/store/Provider";
+import { useGenerateStory } from "../hooks/useGenerateStory";
 import { useStoryCreatorContext } from "../store/Provider";
+import GeneratingScreen from "./GeneratingScreen";
+
+const MINI_ENGLISH = { name: "English", value: SupportedLanguages.en };
 
 const CreateStoryFormMini = () => {
   const navigate = useNavigate();
   const {
     store: {
-      state: { profileInfo, storyParams },
+      state: { profileInfo },
     },
-    store: storyCreatorStore,
     manager: { handleUpdateProfileInfo },
   } = useStoryCreatorContext();
 
@@ -38,7 +38,6 @@ const CreateStoryFormMini = () => {
         auth: { isAuthenticated, user },
       },
     },
-    manager: { handleSetAuthInfo, handleFetchUserInfo },
   } = useApplicationContext();
 
   const {
@@ -48,8 +47,13 @@ const CreateStoryFormMini = () => {
     },
   } = useRegisterModalContext();
 
-  const { manager: OpenaiManager } = useOpenaiContext();
-  const { isCreateStoryFetching, handleCreateStoryRequest } = OpenaiManager;
+  const {
+    isCreatingStory,
+    isGenerationComplete,
+    format,
+    childName,
+    generateStory,
+  } = useGenerateStory();
 
   const isUserActive = user && user.status === UserStatus.active;
   const hasMaxStoriesLimit =
@@ -82,50 +86,14 @@ const CreateStoryFormMini = () => {
     navigate(routes.create);
   };
 
-  const generateStory = async (overrideName?: string) => {
-    const profile: ProfileInfo = {
-      ...profileInfo,
-      ...(overrideName !== undefined ? { name: overrideName } : {}),
-      // The mini form only collects a name; stories are always English here.
-      language: { name: "English", value: SupportedLanguages.en },
-    };
-
-    // Compute the prompt from the (possibly just-restored) name directly rather
-    // than the store-derived one, which may not have recomputed yet.
-    const createStoryPrompt = getCreateStoryPrompt({
-      ...storyCreatorStore.state,
-      profileInfo: profile,
+  const runMiniGenerate = (name?: string) => {
+    const resolvedName = name ?? profileInfo.name;
+    void generateStory({
+      profileOverride: {
+        name: resolvedName,
+        language: MINI_ENGLISH,
+      },
     });
-    if (!createStoryPrompt) return;
-
-    isCreateStoryFetching(true);
-    try {
-      const story: Story = await handleCreateStoryRequest(
-        createStoryPrompt,
-        profile,
-        storyParams,
-      );
-
-      const refreshedUser = await handleFetchUserInfo();
-      if (refreshedUser) {
-        handleSetAuthInfo({ isAuthenticated: true, user: refreshedUser });
-      }
-
-      const userId = refreshedUser?._id ?? user?._id;
-      if (userId && story._id && story.slug) {
-        navigate(routes.myStory(userId, story.slug), { replace: false });
-        window.localStorage.setItem(
-          APP_CONSTANTS.LOCAL_STORAGE.STORY_GENERATED,
-          "true",
-        );
-      }
-    } catch (error) {
-      console.error("❌ Failed to create a story!", {
-        error,
-      });
-    } finally {
-      isCreateStoryFetching(false);
-    }
   };
 
   const handleOnFormSubmit = async (
@@ -148,7 +116,7 @@ const CreateStoryFormMini = () => {
       return;
     }
 
-    void generateStory();
+    runMiniGenerate();
   };
 
   // After authenticating from the mini form, prefill the saved name and auto-
@@ -172,7 +140,7 @@ const CreateStoryFormMini = () => {
       !hasCensoredWords(pending.name) &&
       !hasCensoredWords(profileInfo.interests);
     if (canGenerate) {
-      void generateStory(pending.name);
+      runMiniGenerate(pending.name);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, user]);
@@ -193,6 +161,13 @@ const CreateStoryFormMini = () => {
 
   return (
     <Box className="story-creator-form mini" width="100%">
+      {(isCreatingStory || isGenerationComplete) && (
+        <GeneratingScreen
+          format={format}
+          childName={childName}
+          isComplete={isGenerationComplete}
+        />
+      )}
       <Box
         marginTop={4}
         marginBottom={1}

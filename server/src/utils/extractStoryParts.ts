@@ -6,7 +6,9 @@ const clean = (s: string): string => s.replace(/[{}]/g, "").trim();
 const extractStoryParts = (story: string): StoryParts => {
   const parts = story.match(/{([^}]*)}/g);
 
-  if (parts && parts.length === 4) {
+  // Lenient: accept >= 4 sections and use the first four (title, summary,
+  // mainStory, poem). A stray extra {} in the prose must not 500 the request.
+  if (parts && parts.length >= 4) {
     return {
       title: clean(parts[0]),
       summary: clean(parts[1]),
