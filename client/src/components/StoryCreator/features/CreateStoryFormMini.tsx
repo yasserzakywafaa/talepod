@@ -2,25 +2,35 @@ import {
   ArrowRightAltOutlined,
   AutoAwesomeOutlined,
 } from "@mui/icons-material";
-import { Box, Button, TextField } from "@mui/material";
-import { ProfileInfo } from "../store/state";
+import {
+  Box,
+  Button,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+} from "@mui/material";
+import { ChildGenderEnum, ProfileInfo } from "../store/state";
 import { UserRole, UserStatus } from "src/shared/types/user";
+import {
+  consumePendingMiniStory,
+  savePendingMiniStory,
+} from "src/shared/utils/authReturn";
 import { useEffect, useRef } from "react";
 
 import { SupportedLanguages } from "src/shared/languages";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 import routes from "src/application/routes";
-import {
-  consumePendingMiniStory,
-  savePendingMiniStory,
-} from "src/shared/utils/authReturn";
 import { useApplicationContext } from "src/application/store/Provider";
-import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
-import { useNavigate } from "react-router-dom";
 import { useGenerateStory } from "../hooks/useGenerateStory";
+import { useNavigate } from "react-router-dom";
+import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
 
 const MINI_ENGLISH = { name: "English", value: SupportedLanguages.en };
+
+// Bedtime landing page targets toddlers, so mini-form stories generate at a
+// fixed child age (keeps pronouns and illustration prompts age-appropriate).
+const MINI_DEFAULT_AGE = 3;
 
 const CreateStoryFormMini = () => {
   const navigate = useNavigate();
@@ -76,15 +86,28 @@ const CreateStoryFormMini = () => {
     handleUpdateProfileInfo(name as keyof ProfileInfo, value);
   };
 
+  const handleGenderChange = (
+    _event: React.MouseEvent<HTMLElement>,
+    gender: string | null,
+  ) => {
+    if (gender !== null) {
+      handleUpdateProfileInfo("gender", gender);
+    }
+  };
+
   const handleOnAdvancedClick = () => {
     navigate(routes.create);
   };
 
-  const runMiniGenerate = (name?: string) => {
-    const resolvedName = name ?? profileInfo.name;
+  const runMiniGenerate = (overrides?: {
+    name?: string;
+    gender?: ChildGenderEnum;
+  }) => {
     void generateStory({
       profileOverride: {
-        name: resolvedName,
+        name: overrides?.name ?? profileInfo.name,
+        gender: overrides?.gender ?? profileInfo.gender,
+        age: MINI_DEFAULT_AGE,
         language: MINI_ENGLISH,
       },
     });
@@ -103,9 +126,13 @@ const CreateStoryFormMini = () => {
     }
 
     if (!isAuthenticated) {
-      // Carry the typed name + "generate after auth" intent across the login
-      // round-trip and open the modal instead of leaving the page.
-      savePendingMiniStory(profileInfo.name);
+      // Carry the typed name + chosen gender + "generate after auth" intent
+      // across the login round-trip and open the modal instead of leaving the
+      // page.
+      savePendingMiniStory({
+        name: profileInfo.name,
+        gender: profileInfo.gender as ChildGenderEnum,
+      });
       handleToggleRegisterModal();
       return;
     }
@@ -127,6 +154,7 @@ const CreateStoryFormMini = () => {
     autoGenerateHandledRef.current = true;
 
     handleUpdateProfileInfo("name", pending.name);
+    handleUpdateProfileInfo("gender", pending.gender);
 
     const canGenerate =
       !hasMaxStoriesLimit &&
@@ -134,7 +162,7 @@ const CreateStoryFormMini = () => {
       !hasCensoredWords(pending.name) &&
       !hasCensoredWords(profileInfo.interests);
     if (canGenerate) {
-      runMiniGenerate(pending.name);
+      runMiniGenerate({ name: pending.name, gender: pending.gender });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, user]);
@@ -169,24 +197,73 @@ const CreateStoryFormMini = () => {
         onSubmit={handleOnFormSubmit}
         className="story-creator-form-wrapper"
       >
-        <TextField
-          required
-          id="name"
-          name="name"
-          type="text"
-          className="form-item"
-          label="Name"
-          value={profileInfo.name}
-          disabled={isGenerating}
-          placeholder="Emily, Noah, etc."
-          InputLabelProps={{ shrink: true }}
-          sx={{ width: { xs: "70%", sm: "50%" } }}
-          error={hasCensoredWords(profileInfo.name)}
-          helperText={
-            hasCensoredWords(profileInfo.name) && "Not Appropriate 🙈"
-          }
-          onChange={handleOnFieldChangeForMini}
-        />
+        <Box
+          display="flex"
+          alignItems="flex-start"
+          sx={{ width: { xs: "90%", sm: "50%" }, gap: 1 }}
+        >
+          <TextField
+            required
+            id="name"
+            name="name"
+            type="text"
+            label="Name"
+            value={profileInfo.name}
+            disabled={isGenerating}
+            placeholder="Emily, Noah, etc."
+            InputLabelProps={{ shrink: true }}
+            sx={{ flex: "1 1 65%", minWidth: 0 }}
+            error={hasCensoredWords(profileInfo.name)}
+            helperText={
+              hasCensoredWords(profileInfo.name) && "Not Appropriate 🙈"
+            }
+            onChange={handleOnFieldChangeForMini}
+          />
+
+          <ToggleButtonGroup
+            exclusive
+            size="small"
+            value={profileInfo.gender}
+            aria-labelledby="gender-toggle"
+            disabled={isGenerating}
+            onChange={handleGenderChange}
+            sx={{ flex: "0 0 35%" }}
+          >
+            <ToggleButton
+              value={ChildGenderEnum.Boy}
+              sx={{
+                flex: 1,
+                color: (theme) => theme.palette.text.primary,
+                "&.Mui-selected": {
+                  backgroundColor: (theme) => theme.palette.primary.main,
+                  color: (theme) => theme.palette.text.primary,
+                },
+                "&.Mui-selected:hover": {
+                  backgroundColor: (theme) => theme.palette.primary.main,
+                },
+              }}
+            >
+              {ChildGenderEnum.Boy}
+            </ToggleButton>
+
+            <ToggleButton
+              value={ChildGenderEnum.Girl}
+              sx={{
+                flex: 1,
+                color: (theme) => theme.palette.text.primary,
+                "&.Mui-selected": {
+                  backgroundColor: (theme) => theme.palette.primary.main,
+                  color: (theme) => theme.palette.text.primary,
+                },
+                "&.Mui-selected:hover": {
+                  backgroundColor: (theme) => theme.palette.primary.main,
+                },
+              }}
+            >
+              {ChildGenderEnum.Girl}
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
 
         <Box
           marginX={2}

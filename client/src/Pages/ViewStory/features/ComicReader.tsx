@@ -11,6 +11,12 @@ import {
 import { FC, useState } from "react";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import {
+  glowHoney,
+  gradScene,
+  honey300,
+  honey400,
+} from "src/application/shared/themes";
 
 import { Story } from "src/components/StoryCreator/store/state";
 import type { Swiper as SwiperClass } from "swiper";
@@ -20,7 +26,6 @@ import characterMonkey from "src/assets/images/landing_pages/monkey_holding_bana
 import characterOwl from "src/assets/images/landing_pages/wise_owl.webp";
 import mascotFox from "src/assets/images/dreaming_fox_with_a_pillow.webp";
 import mascotSleepingBunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
-import { glowHoney, gradScene, honey300, honey400 } from "src/application/shared/themes";
 
 /**
  * Paged comic-book reader (ebook style): swipeable full-bleed scenes with a
@@ -44,6 +49,8 @@ const STARS =
 
 const artFor = (index: number, imageUrl?: string) =>
   imageUrl || PLACEHOLDER_ART[index % PLACEHOLDER_ART.length];
+
+const GRID_CAPTION_MAX_LENGTH = 100;
 
 export interface ComicReaderProps {
   story: Story;
@@ -78,9 +85,7 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
               color: "text.secondary",
             }}
           >
-            <ViewCarouselOutlined
-              sx={{ fontSize: 16, color: honey400 }}
-            />
+            <ViewCarouselOutlined sx={{ fontSize: 16, color: honey400 }} />
             Comic · {total} pages · tap a page to jump
           </Box>
           <IconButton
@@ -94,7 +99,7 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
             gap: "12px",
           }}
         >
@@ -103,6 +108,7 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
             const hasGeneratedArt = !!p.imageUrl;
             return (
               <ButtonBase
+                component="div"
                 key={i}
                 onClick={() => {
                   setActiveIndex(i);
@@ -166,8 +172,9 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
                   </Box>
                 </Box>
                 <Box
-                  className="tp-clamp-2"
+                  component="p"
                   sx={{
+                    margin: 0,
                     padding: "8px 10px",
                     fontSize: 11,
                     lineHeight: 1.3,
@@ -175,7 +182,7 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
                     fontWeight: 500,
                   }}
                 >
-                  {p.caption}
+                  {p.caption.slice(0, GRID_CAPTION_MAX_LENGTH).trim() + "…"}
                 </Box>
               </ButtonBase>
             );

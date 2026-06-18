@@ -108,6 +108,7 @@ export interface Story {
   authorProfile?: User;
   format?: StoryFormat;
   artStyle?: string;
+  avatarId?: string;
   pages?: ComicPage[];
   longStoryImages?: LongStoryImage[];
   imagesStatus?: "pending" | "ready" | "failed";
@@ -214,7 +215,7 @@ export const getStoryCreatorInitialState = (): StoryCreatorInitialState => {
     profileInfo: {
       name: "",
       gender: Genders[Math.floor(Math.random() * Genders.length)],
-      age: Math.floor(Math.random() * 50),
+      age: Math.floor(Math.random() * 10),
       interests: "",
       // language: Languages[Math.floor(Math.random() * Languages.length)],
       language: Languages[0],

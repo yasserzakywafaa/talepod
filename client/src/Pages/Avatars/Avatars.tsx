@@ -1,178 +1,27 @@
 import {
-  AutoStoriesOutlined,
-  DeleteOutlineRounded,
-  EditOutlined,
   PersonAddAlt1Rounded,
 } from "@mui/icons-material";
 import { Avatar, AvatarInput, avatarToInput } from "src/shared/types/avatar";
 import {
   Box,
   Button,
-  Chip,
   Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  IconButton,
   Typography,
 } from "@mui/material";
 
+import AvatarCard from "src/components/shared/AvatarCard/AvatarCard";
 import AvatarFormDialog from "./AvatarFormDialog";
-import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import Page from "src/components/shared/Page/Page";
 import { honey400 } from "src/application/shared/themes";
 import routes from "src/application/routes";
 import { useAvatars } from "./useAvatars";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-
-/** Short one-line trait summary shown under the avatar's name. */
-const traitSummary = (avatar: Avatar): string =>
-  [
-    avatar.age !== undefined ? `${avatar.age} yrs` : "",
-    avatar.gender,
-    avatar.hairColor && `${avatar.hairColor} hair`,
-    avatar.eyeColor && `${avatar.eyeColor} eyes`,
-  ]
-    .filter(Boolean)
-    .join(" · ");
-
-const AvatarCard = ({
-  avatar,
-  pending,
-  disabled,
-  onCreate,
-  onEdit,
-  onDelete,
-}: {
-  avatar: Avatar;
-  /** Portrait is still being generated → overlay a spinner on the image. */
-  pending?: boolean;
-  /** A mutation is in flight for this avatar → disable its row actions. */
-  disabled?: boolean;
-  onCreate: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
-}) => (
-  <Box
-    sx={{
-      backgroundColor: "background.paper",
-      borderRadius: "var(--r-lg)",
-      border: "1px solid",
-      borderColor: "divider",
-      boxShadow: "var(--shadow-xs)",
-      overflow: "hidden",
-      display: "flex",
-      flexDirection: "column",
-    }}
-  >
-    <Box
-      sx={{
-        height: 400,
-        position: "relative",
-        background: avatar.portraitUrl
-          ? `center / cover no-repeat url('${avatar.portraitUrl}')`
-          : "linear-gradient(160deg,#F0B648,#C9622F)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      {!avatar.portraitUrl && !pending && (
-        <Typography
-          sx={{
-            fontFamily: "var(--font-display)",
-            fontSize: 48,
-            color: "#fff",
-          }}
-        >
-          {avatar.name?.[0]?.toUpperCase() ?? "?"}
-        </Typography>
-      )}
-      {pending && (
-        <>
-          <LoaderSpinner position="absolute" />
-          <Typography
-            sx={{
-              position: "absolute",
-              bottom: "20%",
-              width: "100%",
-              textAlign: "center",
-              color: "#fff",
-              fontSize: 13,
-              zIndex: 1351,
-            }}
-          >
-            Painting portrait…
-          </Typography>
-        </>
-      )}
-    </Box>
-    <Box sx={{ p: 2, flex: 1, display: "flex", flexDirection: "column" }}>
-      <Box
-        sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}
-      >
-        <Typography
-          variant="h6"
-          color="text.primary"
-          textTransform="uppercase"
-          sx={{ fontFamily: "var(--font-display)", flex: 1, fontWeight: 600 }}
-        >
-          {avatar.name}
-        </Typography>
-        {avatar.relationship && (
-          <Chip variant="badge" color="secondary" label={avatar.relationship} />
-        )}
-      </Box>
-      <Typography
-        variant="body2"
-        sx={{ color: "text.secondary", mt: 0.5, minHeight: 20 }}
-      >
-        {traitSummary(avatar)}
-      </Typography>
-      <Box
-        sx={{
-          display: "flex",
-          gap: 1,
-          mt: "auto",
-          pt: 1.5,
-          alignItems: "center",
-        }}
-      >
-        <Button
-          size="small"
-          variant="contained"
-          startIcon={<AutoStoriesOutlined />}
-          onClick={onCreate}
-          disabled={disabled}
-          sx={{ flex: 1 }}
-        >
-          Create
-        </Button>
-        <Button
-          size="small"
-          variant="outlined"
-          color="secondary"
-          startIcon={<EditOutlined />}
-          onClick={onEdit}
-          disabled={disabled}
-        >
-          Edit
-        </Button>
-        <IconButton
-          aria-label="delete avatar"
-          color="error"
-          onClick={onDelete}
-          disabled={disabled}
-        >
-          <DeleteOutlineRounded />
-        </IconButton>
-      </Box>
-    </Box>
-  </Box>
-);
 
 const AvatarsPage = () => {
   const navigate = useNavigate();

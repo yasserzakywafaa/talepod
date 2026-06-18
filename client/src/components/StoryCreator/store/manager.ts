@@ -18,11 +18,11 @@ import { useEffect } from "react";
 export interface StoryCreatorManager {
   handleUpdateProfileInfo: (
     name: keyof ProfileInfo,
-    value: string | number | Country
+    value: string | number | Country,
   ) => void;
   handleUpdateStoryInfo: (
     name: string,
-    value: Tone | Moral | Environment | number
+    value: Tone | Moral | Environment | number,
   ) => void;
   handleSetFormat: (format: StoryFormat) => void;
   handleSetArtStyle: (artStyle: string) => void;
@@ -37,23 +37,24 @@ export interface StoryCreatorManager {
  */
 const resolveAvatarGender = (
   rawGender: string | undefined,
-  age: number
+  age: number,
 ): ChildGenderEnum | AdultGenderEnum => {
   const g = (rawGender ?? "").trim().toLowerCase();
   const isFemale =
     g.startsWith("f") || g.includes("girl") || g.includes("woman");
-  if (age >= 19) return isFemale ? AdultGenderEnum.Female : AdultGenderEnum.Male;
+  if (age >= 19)
+    return isFemale ? AdultGenderEnum.Female : AdultGenderEnum.Male;
   return isFemale ? ChildGenderEnum.Girl : ChildGenderEnum.Boy;
 };
 
 export const useStoryCreatorManager = (
-  store: StoryCreatorStore
+  store: StoryCreatorStore,
 ): StoryCreatorManager => {
   const { state, updateState } = store;
 
   const handleUpdateProfileInfo = (
     name: string,
-    value: string | number | Country
+    value: string | number | Country,
   ) => {
     updateState({
       ...store.state,
@@ -66,7 +67,7 @@ export const useStoryCreatorManager = (
 
   const handleUpdateStoryInfo = (
     name: string,
-    value: Environment | Moral | Tone
+    value: Environment | Moral | Tone,
   ) => {
     updateState({
       ...store.state,

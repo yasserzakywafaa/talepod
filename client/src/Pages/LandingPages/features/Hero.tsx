@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
 import CreateStoryFormMini from "src/components/StoryCreator/features/CreateStoryFormMini";
+import Typography from "@mui/material/Typography";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
 interface HeroProps {

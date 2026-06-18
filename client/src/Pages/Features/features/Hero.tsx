@@ -1,11 +1,12 @@
+import { CheckCircleOutlined, PlayArrowRounded } from "@mui/icons-material";
+import { bgTwilight, honey300, honey400 } from "src/application/shared/themes";
+
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import CreateStoryFormMini from "src/components/StoryCreator/features/CreateStoryFormMini";
-import { CheckCircleOutlined, PlayArrowRounded } from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
 import bunny from "../../../assets/images/sleeping_bunny_with_a_moon.webp";
 import penguin from "../../../assets/images/cute_penguin_with_a_fish.webp";
-import { bgTwilight, honey300, honey400 } from "src/application/shared/themes";
 
 // Decorative twinkling-stars layer (faithful to design MHero).
 const STAR_FIELD =
@@ -73,7 +74,13 @@ const Hero = () => {
                 color: "#fff",
               }}
             >
-              Bedtime stories,
+              <Box
+                component="span"
+                sx={{ fontSize: "inherit", whiteSpace: "nowrap" }}
+              >
+                Bedtime stories,
+              </Box>
+
               <br />
               <Box
                 component="span"
@@ -135,9 +142,7 @@ const Hero = () => {
                     gap: 0.75,
                   }}
                 >
-                  <CheckCircleOutlined
-                    sx={{ fontSize: 14, color: honey300 }}
-                  />
+                  <CheckCircleOutlined sx={{ fontSize: 14, color: honey300 }} />
                   {t}
                 </Box>
               ))}
