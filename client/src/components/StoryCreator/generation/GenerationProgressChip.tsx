@@ -144,8 +144,11 @@ const GenerationProgressChip = () => {
       // A pending generation never auto-hides; ready/failed are dismissed by
       // the user (or by clicking "View story").
       sx={{
+        bottom: "1rem",
+        left: "1rem",
         maxWidth: 360,
-        width: { xs: "calc(100% - 24px)", sm: 360 },
+        width: { xs: "75%", sm: 360 },
+        "& .MuiPaper-root": { padding: "0.5rem" },
         "& .MuiSnackbarContent-root": {
           backgroundColor: "primary.contrastText",
           color: "primary.main",
@@ -154,7 +157,9 @@ const GenerationProgressChip = () => {
     >
       <SnackbarContent
         message={renderContent()}
-        sx={{ "& .MuiSnackbarContent-message": { width: "100%" } }}
+        sx={{
+          "& .MuiSnackbarContent-message": { width: "100%" },
+        }}
       />
     </Snackbar>
   );

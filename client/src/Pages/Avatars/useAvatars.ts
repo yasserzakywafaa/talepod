@@ -280,3 +280,38 @@ export const useAvatars = (enabled = true) => {
     removeAvatar,
   };
 };
+
+/** Fetch a single avatar by id (e.g. from a story's `avatarId`). */
+export const useAvatar = (avatarId?: string) => {
+  const [avatar, setAvatar] = useState<Avatar | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!avatarId) {
+      setAvatar(null);
+      return;
+    }
+
+    let cancelled = false;
+    setIsLoading(true);
+
+    axios
+      .get<Avatar>(END_POINTS.AVATARS.GET(avatarId))
+      .then(({ data }) => {
+        if (!cancelled) setAvatar(data);
+      })
+      .catch((error) => {
+        if (!cancelled) setAvatar(null);
+        console.error("❌ Failed to load avatar", error);
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [avatarId]);
+
+  return { avatar, isLoading };
+};

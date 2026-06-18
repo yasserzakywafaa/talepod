@@ -16,11 +16,7 @@ avatarRouter.post(
   authMiddleware,
   AvatarsController.createAvatar,
 );
-avatarRouter.get(
-  END_POINTS.AVATARS.GET,
-  authMiddleware,
-  AvatarsController.getAvatar,
-);
+avatarRouter.get(END_POINTS.AVATARS.GET, AvatarsController.getAvatar);
 avatarRouter.put(
   END_POINTS.AVATARS.UPDATE,
   authMiddleware,

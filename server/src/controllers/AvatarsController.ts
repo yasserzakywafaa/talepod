@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import {
   DBCollectionsEnum,
+  database,
   getDocumentFromDb,
   getDocumentsByQueryFromDb,
 } from "../models/mongoDb";
@@ -12,6 +13,7 @@ import {
 import {
   AVATAR_APPEARANCE_FIELDS,
   AVATAR_TRAIT_FIELDS,
+  User,
   UserAvatar,
   UserAvatarInput,
 } from "../models/types";
@@ -22,6 +24,7 @@ import {
 
 import { AuthenticatedRequest } from "../middleware/authMiddleware";
 import { ObjectId } from "mongodb";
+import { TokenService } from "../services/tokenService";
 
 /** Whitelist incoming body fields → only known avatar traits are persisted. */
 const pickAvatarInput = (body: Record<string, unknown>): UserAvatarInput => {
@@ -107,20 +110,62 @@ const findOwnedAvatar = async (
   return doc;
 };
 
+const tryGetRequestUser = async (
+  request: Request,
+): Promise<User | undefined> => {
+  try {
+    const { accessToken } = TokenService.extractTokenFromCookies(request);
+    if (!accessToken) return undefined;
+    const decoded = TokenService.verifyAccessToken(accessToken);
+    return (await getDocumentFromDb(
+      new ObjectId(decoded.userId),
+      DBCollectionsEnum.users,
+    )) as User | undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+/** Avatars linked to a published story can be read without owning them. */
+const isAvatarLinkedToStory = async (avatarId: string): Promise<boolean> => {
+  const filter = { avatarId };
+  const inStories = await database
+    .collection(DBCollectionsEnum.stories)
+    .findOne(filter, { projection: { _id: 1 } });
+  if (inStories) return true;
+  const inLibrary = await database
+    .collection(DBCollectionsEnum.stories_library)
+    .findOne(filter, { projection: { _id: 1 } });
+  return Boolean(inLibrary);
+};
+
 const getAvatar = async (request: Request, response: Response) => {
   try {
-    const user = (request as AuthenticatedRequest).user;
-    if (!user?._id) {
-      return response.status(401).json({ message: "Unauthorized" });
+    const { avatarId } = request.params;
+    if (!ObjectId.isValid(avatarId)) {
+      return response.status(404).json({ message: "Avatar not found" });
     }
-    const avatar = await findOwnedAvatar(
-      request.params.avatarId,
-      String(user._id),
-    );
+
+    const avatar = (await getDocumentFromDb(
+      new ObjectId(avatarId),
+      DBCollectionsEnum.avatars,
+    )) as UserAvatar | null;
     if (!avatar) {
       return response.status(404).json({ message: "Avatar not found" });
     }
-    return response.json(avatar);
+
+    const user = await tryGetRequestUser(request);
+    if (user?._id && avatar.userId === String(user._id)) {
+      return response.json(avatar);
+    }
+
+    const isPublic = await isAvatarLinkedToStory(avatarId);
+    if (!isPublic) {
+      return response.status(404).json({ message: "Avatar not found" });
+    }
+
+    const { description: _description, ...publicAvatar } = avatar;
+    return response.json(publicAvatar);
   } catch (error) {
     console.error("❌ getAvatar failed", error);
     return response.status(500).json({ message: "Failed to load avatar" });

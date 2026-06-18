@@ -1,4 +1,5 @@
 import APP_CONSTANTS from "src/application/shared/app_constants";
+import { ChildGenderEnum } from "src/components/StoryCreator/store/state";
 
 /**
  * Tiny sessionStorage helpers so a return URL and an in-progress Create-form
@@ -69,32 +70,45 @@ export const consumeCreateDraft = (): Record<string, unknown> | null => {
   }
 };
 
+export type PendingMiniStory = {
+  name: string;
+  gender: ChildGenderEnum;
+};
+
 /**
- * Homepage mini form: remember the typed name AND a "generate after auth"
- * intent, so that once the user authenticates we can prefill the name and kick
- * off generation without a second click. Separate key from CREATE_DRAFT so the
- * two flows never interfere.
+ * Homepage mini form: remember the typed name + chosen gender AND a "generate
+ * after auth" intent, so that once the user authenticates we can prefill the
+ * profile and kick off generation without a second click. Separate key from
+ * CREATE_DRAFT so the two flows never interfere.
  */
-export const savePendingMiniStory = (name: string): void => {
+export const savePendingMiniStory = (payload: PendingMiniStory): void => {
   try {
     sessionStorage.setItem(
       MINI_STORY_KEY,
-      JSON.stringify({ version: DRAFT_VERSION, name }),
+      JSON.stringify({ version: DRAFT_VERSION, ...payload }),
     );
   } catch {
     /* storage unavailable — skip */
   }
 };
 
-export const consumePendingMiniStory = (): { name: string } | null => {
+export const consumePendingMiniStory = (): PendingMiniStory | null => {
   try {
     const raw = sessionStorage.getItem(MINI_STORY_KEY);
     sessionStorage.removeItem(MINI_STORY_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
-    return parsed?.version === DRAFT_VERSION && typeof parsed.name === "string"
-      ? { name: parsed.name }
-      : null;
+    if (parsed?.version !== DRAFT_VERSION || typeof parsed.name !== "string") {
+      return null;
+    }
+    // Tolerate older blobs that only stored a name (pre-gender flows still in
+    // flight across the redirect) by defaulting to Boy.
+    const gender =
+      parsed.gender === ChildGenderEnum.Boy ||
+      parsed.gender === ChildGenderEnum.Girl
+        ? parsed.gender
+        : ChildGenderEnum.Boy;
+    return { name: parsed.name, gender };
   } catch {
     return null;
   }
