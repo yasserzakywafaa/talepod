@@ -53,7 +53,7 @@ export const handleCreateStoryRequest = async (
         {
           role: "system",
           content:
-            "You are a friendly and expressive storyteller that is an expert on storytelling. Your stories should sound natural and conversational.",
+            "You are a friendly and expressive storyteller that is an expert on storytelling. Your stories should sound natural and conversational, with very short sentences and simple words for young children.",
         },
         {
           role: "user",

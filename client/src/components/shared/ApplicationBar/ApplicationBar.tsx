@@ -13,6 +13,7 @@ import { useApplicationContext } from "src/application/store/Provider";
 import useDetectScroll from "src/shared/hooks/useDetectScroll";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useState } from "react";
+import { trackGtmEvent } from "src/shared/utils/gtm";
 
 export interface PagesMatch {
   isFeaturesPage: boolean;
@@ -70,6 +71,22 @@ const ApplicationBar = () => {
   };
 
   const handleOnMenuItemClick = (sectionId: string) => () => {
+    const navLinkNames: Record<string, string> = {
+      features: "home",
+      create: "create",
+      library: "library",
+      pricing: "pricing",
+      contact: "contact",
+      "original-stories": "library",
+      "my-stories": "my_stories",
+      install: "install",
+    };
+
+    const linkName = navLinkNames[sectionId];
+    if (linkName) {
+      trackGtmEvent("nav_click", { link_name: linkName });
+    }
+
     switch (sectionId) {
       case "features":
         navigate(routes.features);

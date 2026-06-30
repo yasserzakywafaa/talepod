@@ -43,7 +43,7 @@ const SubscriptionSection = () => {
     handleToggleCancelSubscriptionModal();
   };
 
-  const handleOnSubscribeClick = () => handleTogglePricingModal();
+  const handleOnSubscribeClick = () => handleTogglePricingModal("profile");
 
   return (
     <>

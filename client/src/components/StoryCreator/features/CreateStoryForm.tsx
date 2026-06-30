@@ -16,11 +16,7 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import {
-  AdultGenderEnum,
-  ChildGenderEnum,
-  ProfileInfo,
-} from "../store/state";
+import { AdultGenderEnum, ChildGenderEnum, ProfileInfo } from "../store/state";
 import {
   AutoAwesomeOutlined,
   ExpandMoreOutlined,
@@ -35,8 +31,6 @@ import {
   UserStatus,
 } from "src/shared/types/user";
 import { Tone, Tones } from "src/shared/mockedData/Tone";
-import { useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
 
 import ArtStyleChooser from "src/components/shared/ArtStyleChooser";
 import AvatarPicker from "./AvatarPicker";
@@ -46,9 +40,11 @@ import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredW
 import { saveCreateDraft } from "src/shared/utils/authReturn";
 import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
+import { useEffect } from "react";
 import { useGenerateStory } from "../hooks/useGenerateStory";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
+import { useSearchParams } from "react-router-dom";
 import { useStoryCreatorContext } from "../store/Provider";
 
 const CreateStoryForm = () => {
@@ -156,7 +152,7 @@ const CreateStoryForm = () => {
       return;
     }
 
-    void generateStory();
+    void generateStory({ source: "create_form" });
   };
 
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -497,7 +493,7 @@ const CreateStoryForm = () => {
               variant="contained"
               title="subscribe-button"
               endIcon={<LoyaltyOutlined />}
-              onClick={handleTogglePricingModal}
+              onClick={() => handleTogglePricingModal("create_form")}
             >
               Subscribe
             </Button>

@@ -49,8 +49,8 @@ export const getViewStoryInitialState = (): ViewStoryInitialState => {
         minCharacters: 3900,
         maxCharacters: 4000,
         totalCharacters: 4000,
-        minWords: 1200,
-        maxWords: 1800,
+        minWords: 400,
+        maxWords: 600,
         totalWords: 0,
         moral: {
           name: "",

@@ -27,6 +27,7 @@ import { Morals } from "src/shared/mockedData/Moral";
 import { Tones } from "src/shared/mockedData/Tone";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 import { useLibraryContext } from "../../store/Provider";
+import { trackGtmEvent } from "src/shared/utils/gtm";
 
 const FiltersPanel: React.FC = (): JSX.Element => {
   const {
@@ -86,6 +87,9 @@ const FiltersPanel: React.FC = (): JSX.Element => {
   };
 
   const handleOnApplyFiltersClick = () => {
+    trackGtmEvent("library_filter_apply", {
+      active_filter_count: Object.values(filters).filter(Boolean).length,
+    });
     handleFilterStories();
     handleOnPanelClose();
   };

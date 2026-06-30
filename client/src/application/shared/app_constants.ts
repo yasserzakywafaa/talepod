@@ -17,6 +17,10 @@ const APP_CONSTANTS = {
   // Auth
   GOOGLE_OAUTH_CLIENT_ID: import.meta.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID,
 
+  // Analytics
+  GOOGLE_ANALYTICS_ID: import.meta.env.REACT_APP_GOOGLE_ANALYTICS_ID,
+  GOOGLE_TAG_MANAGER_ID: import.meta.env.REACT_APP_GOOGLE_TAG_MANAGER_ID,
+
   // Censored Words
   CENSORED_WORDS_FETCH_URLS: {
     EN: "https://raw.githubusercontent.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/master/en",

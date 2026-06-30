@@ -3,10 +3,12 @@ import { getCreateStoryPrompt } from "../utils/getStoryPrompts";
 import { useGenerationContext } from "../generation/Provider";
 import { useOpenaiContext } from "../features/Openai/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
+import { trackGtmEvent } from "src/shared/utils/gtm";
 
 export interface GenerateStoryOptions {
   /** Mini form: override name and force English without mutating the store. */
   profileOverride?: Partial<ProfileInfo>;
+  source?: "hero_mini" | "create_form";
 }
 
 export interface UseGenerateStory {
@@ -58,6 +60,13 @@ export const useGenerateStory = (): UseGenerateStory => {
       profileInfo: resolvedProfile,
     });
     if (!prompt) return;
+
+    trackGtmEvent("create_story", {
+      format,
+      art_style: artStyle,
+      has_avatar: Boolean(avatarId),
+      source: options?.source ?? "create_form",
+    });
 
     isCreateStoryFetching(true);
     try {
