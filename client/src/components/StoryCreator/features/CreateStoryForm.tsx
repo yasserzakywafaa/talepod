@@ -152,7 +152,7 @@ const CreateStoryForm = () => {
       return;
     }
 
-    void generateStory();
+    void generateStory({ source: "create_form" });
   };
 
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -493,7 +493,7 @@ const CreateStoryForm = () => {
               variant="contained"
               title="subscribe-button"
               endIcon={<LoyaltyOutlined />}
-              onClick={handleTogglePricingModal}
+              onClick={() => handleTogglePricingModal("create_form")}
             >
               Subscribe
             </Button>

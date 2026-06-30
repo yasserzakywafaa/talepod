@@ -19,6 +19,7 @@ import { Languages } from "src/shared/languages";
 import routes from "src/application/routes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useNavigate } from "react-router-dom";
+import { trackGtmEvent } from "src/shared/utils/gtm";
 
 interface BlogCard {
   blog: Blog;
@@ -36,6 +37,7 @@ const StoryCard = (props: BlogCard) => {
   const hasDirectionRtl = props.blog.language === "ar";
 
   const handleOnCardClick = () => {
+    trackGtmEvent("blog_card_click", { blog_slug: props.blog.slug });
     navigate(routes.blog(props.blog.slug), { replace: false });
   };
 

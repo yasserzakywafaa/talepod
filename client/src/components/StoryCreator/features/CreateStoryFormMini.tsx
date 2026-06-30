@@ -110,6 +110,7 @@ const CreateStoryFormMini = () => {
         age: MINI_DEFAULT_AGE,
         language: MINI_ENGLISH,
       },
+      source: "hero_mini",
     });
   };
 

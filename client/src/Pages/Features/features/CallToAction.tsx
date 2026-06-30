@@ -5,6 +5,7 @@ import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useNavigate } from "react-router-dom";
+import { trackGtmEvent } from "src/shared/utils/gtm";
 
 const CallToAction = () => {
   const navigate = useNavigate();
@@ -24,6 +25,12 @@ const CallToAction = () => {
     (route: string) =>
     (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
       event.preventDefault();
+
+      trackGtmEvent("cta_click", {
+        cta_name: isAuthenticated ? "start_creating" : "get_started_free",
+        destination: route,
+        is_authenticated: isAuthenticated,
+      });
 
       if (isAuthenticated) {
         navigate(route);

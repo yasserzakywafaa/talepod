@@ -19,6 +19,7 @@ import Share from "src/components/shared/Share/Share";
 import StoryCard from "src/components/shared/StoryCard/StoryCard";
 import { useLibraryContext } from "./store/Provider";
 import { useNavigate } from "react-router-dom";
+import { trackGtmEvent } from "src/shared/utils/gtm";
 
 interface LibraryPageContentProps {
   showSourceChips?: boolean;
@@ -44,6 +45,13 @@ export const LibraryContent = (props: LibraryPageContentProps): JSX.Element => {
       handleToggleFiltersPanel,
     },
   } = useLibraryContext();
+
+  const handleSetStoriesSourceWithTracking = (
+    source: "community" | "talepod",
+  ) => {
+    trackGtmEvent("library_source_change", { source });
+    handleSetStoriesSource(source);
+  };
 
   const handleOnCreateClick = () => {
     navigate("/create");
@@ -89,14 +97,14 @@ export const LibraryContent = (props: LibraryPageContentProps): JSX.Element => {
                     label="Community"
                     color="primary"
                     variant={storiesSource === "community" ? "filled" : "outlined"}
-                    onClick={() => handleSetStoriesSource("community")}
+                    onClick={() => handleSetStoriesSourceWithTracking("community")}
                   />
                   <Chip
                     clickable
                     label="by TalePod"
                     color="primary"
                     variant={storiesSource === "talepod" ? "filled" : "outlined"}
-                    onClick={() => handleSetStoriesSource("talepod")}
+                    onClick={() => handleSetStoriesSourceWithTracking("talepod")}
                   />
                 </Stack>
               )}

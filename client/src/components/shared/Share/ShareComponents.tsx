@@ -6,10 +6,15 @@ import {
   WhatsApp,
   X,
 } from "@mui/icons-material";
+import { trackGtmEvent } from "src/shared/utils/gtm";
 
 interface ShareButtonProps {
   url: string;
 }
+
+const trackShareClick = (platform: string) => {
+  trackGtmEvent("share", { platform });
+};
 
 export const WhatsAppShareButton = (props: ShareButtonProps) => {
   const { url } = props;
@@ -22,6 +27,7 @@ export const WhatsAppShareButton = (props: ShareButtonProps) => {
         target="_blank"
         rel="noopener noreferrer"
         color="primary"
+        onClick={() => trackShareClick("whatsapp")}
       >
         <WhatsApp />
       </IconButton>
@@ -42,6 +48,7 @@ export const FacebookShareButton = (props: ShareButtonProps) => {
         target="_blank"
         rel="noopener noreferrer"
         color="primary"
+        onClick={() => trackShareClick("facebook")}
       >
         <Facebook />
       </IconButton>
@@ -60,6 +67,7 @@ export const InstagramShareButton = (props: ShareButtonProps) => {
         target="_blank"
         rel="noopener noreferrer"
         color="primary"
+        onClick={() => trackShareClick("instagram")}
       >
         <Instagram />
       </IconButton>
@@ -78,6 +86,7 @@ export const TwitterShareButton = (props: ShareButtonProps) => {
         target="_blank"
         rel="noopener noreferrer"
         color="primary"
+        onClick={() => trackShareClick("twitter")}
       >
         <X />
       </IconButton>
@@ -96,6 +105,7 @@ export const TelegramShareButton = (props: ShareButtonProps) => {
         target="_blank"
         rel="noopener noreferrer"
         color="primary"
+        onClick={() => trackShareClick("telegram")}
       >
         <Telegram />
       </IconButton>

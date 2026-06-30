@@ -7,6 +7,7 @@ import { ContactFormState } from "./state";
 import { ContactStore } from "./store";
 import END_POINTS from "src/application/shared/endpoints";
 import axios from "axios";
+import { trackGtmEvent } from "src/shared/utils/gtm";
 
 export interface ContactManager {
   handleUpdateContactForm: (key: string, value: string) => void;
@@ -39,6 +40,8 @@ export const useContactManager = (store: ContactStore): ContactManager => {
         content: "Email sent successfully",
         type: ToastTypes.Success,
       });
+
+      trackGtmEvent("contact_submit");
 
       store.resetFormState();
     } catch (error) {

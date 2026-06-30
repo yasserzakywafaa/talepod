@@ -10,6 +10,7 @@ import { usePaymentContext } from "../Payment/store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useState } from "react";
+import { trackGtmEvent } from "src/shared/utils/gtm";
 
 export type BillingInterval = "month" | "year";
 
@@ -233,6 +234,10 @@ export const usePricing = () => {
     }
     if (!oneTimePrice) return;
 
+    trackGtmEvent("buy_story_click", {
+      source: isPricingModalVisible ? "pricing_modal" : "pricing_page",
+    });
+
     try {
       handleIsFetching(true);
       await handleCreateCheckoutSession(
@@ -258,6 +263,12 @@ export const usePricing = () => {
       handleToggleRegisterModal();
       return;
     }
+
+    trackGtmEvent("subscribe_click", {
+      plan: subscriptionPlan,
+      billing_interval: billingInterval,
+      source: isPricingModalVisible ? "pricing_modal" : "pricing_page",
+    });
 
     switch (subscriptionPlan) {
       case SubscriptionPlanEnum.Free:

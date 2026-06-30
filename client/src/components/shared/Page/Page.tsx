@@ -21,6 +21,7 @@ import routes from "src/application/routes";
 import { consumeReturnUrl, saveReturnUrl } from "src/shared/utils/authReturn";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useLocation, useNavigate } from "react-router-dom";
+import { trackGtmEvent } from "src/shared/utils/gtm";
 
 export interface PageProps {
   title: string;
@@ -144,6 +145,7 @@ const Page = (params: PageProps) => {
           isAuthenticated: true,
           user: data,
         });
+        trackGtmEvent("login", { method: provider });
         navigate(consumeReturnUrl() ?? routes.myProfile(data._id), {
           replace: true,
         });

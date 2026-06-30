@@ -328,7 +328,7 @@ const MyProfilePage = () => {
                     variant="contained"
                     fullWidth
                     startIcon={<WorkspacePremiumOutlined />}
-                    onClick={handleTogglePricingModal}
+                    onClick={() => handleTogglePricingModal("profile")}
                   >
                     Upgrade to Premium
                   </Button>

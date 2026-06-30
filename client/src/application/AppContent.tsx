@@ -6,6 +6,8 @@ import { lazy, useEffect } from "react";
 
 import { CssBaseline } from "@mui/material";
 import GenerationProgressChip from "src/components/StoryCreator/generation/GenerationProgressChip";
+import Ga4PageView from "src/components/analytics/Ga4PageView";
+import GtmScrollDepth from "src/components/analytics/GtmScrollDepth";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import NotFoundPage from "../Pages/NotFound/NotFound";
 import ProtectedRoute from "./ProtectedRoute";
@@ -116,6 +118,8 @@ const AppContent = () => {
 
       {!state.isFetchingUserInfo && (
         <BrowserRouter>
+          <Ga4PageView />
+          <GtmScrollDepth />
           <Routes>
             {/* Public Routes */}
             <Route index path={routes.features} element={<FeaturesPage />} />

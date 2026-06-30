@@ -21,6 +21,7 @@ import routes from "src/application/routes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useNavigate } from "react-router-dom";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
+import { trackGtmEvent } from "src/shared/utils/gtm";
 
 interface StoryCardProps {
   story: Story;
@@ -52,6 +53,15 @@ const StoryCard = (props: StoryCardProps) => {
   } = usePricingModalContext();
 
   const handleOnCardClick = () => {
+    const sourcePage =
+      props.page === "my-stories" ? "my_stories" : "library";
+
+    trackGtmEvent("story_card_click", {
+      story_slug: props.story.slug,
+      story_format: props.story.format,
+      source_page: sourcePage,
+    });
+
     if (props.page && props.page === "my-stories" && props.story.author) {
       navigate(routes.myStory(props.story.author, props.story.slug), {
         replace: false,
@@ -85,7 +95,10 @@ const StoryCard = (props: StoryCardProps) => {
             variant="contained"
             onClick={(e) => {
               e.stopPropagation();
-              handleTogglePricingModal();
+              trackGtmEvent("story_upgrade_click", {
+                story_slug: props.story.slug,
+              });
+              handleTogglePricingModal("locked_story");
             }}
           >
             Upgrade

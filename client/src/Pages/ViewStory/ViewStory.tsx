@@ -31,9 +31,10 @@ import ViewStoryInfo from "./features/ViewStoryInfo";
 import ViewStorySEO from "./features/ViewStorySEO";
 import { getAxiosError } from "src/shared/utils/getAxiosError";
 import { useApplicationContext } from "src/application/store/Provider";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useViewStoryContext } from "./store/Provider";
+import { trackGtmEvent } from "src/shared/utils/gtm";
 
 const ViewStoryPage: React.FC = () => {
   const { slug } = useParams<{ userId: string; slug: string }>();
@@ -54,6 +55,7 @@ const ViewStoryPage: React.FC = () => {
 
   const hasDirectionRtl = story && story.profileInfo.language.value === "ar";
   const isComic = !!story && story.format === "comic" && !!story.pages?.length;
+  const trackedStorySlugRef = useRef<string | null>(null);
 
   const handleFetchStoryAuthorInfo = async () => {
     try {
@@ -90,7 +92,10 @@ const ViewStoryPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (slug) setUp(slug);
+    if (slug) {
+      trackedStorySlugRef.current = null;
+      setUp(slug);
+    }
   }, [slug]);
 
   useEffect(() => {
@@ -101,7 +106,15 @@ const ViewStoryPage: React.FC = () => {
   }, [auth]);
 
   useEffect(() => {
-    if (story && story._id) {
+    if (story && story._id && story.slug !== trackedStorySlugRef.current) {
+      trackedStorySlugRef.current = story.slug;
+      trackGtmEvent("story_view", {
+        story_slug: story.slug,
+        story_format: story.format,
+        has_audio: Boolean(story.audioFile?.url),
+        is_comic: story.format === "comic",
+      });
+
       handleUpdateMetaTags(story);
 
       const isStoryGenerated =
