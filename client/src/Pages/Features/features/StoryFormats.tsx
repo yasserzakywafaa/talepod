@@ -336,7 +336,7 @@ const StoryFormats: React.FC = () => {
           desc="A cover illustration and rich, vivid prose underneath. For readers who want to curl up and disappear into a longer story."
           features={[
             "One painted cover, no mid-story art",
-            "7, 12 or 18-minute reading lengths",
+            "~4–6 minute cozy read",
             "Add narration whenever you want",
             "Save and resume across devices",
           ]}
