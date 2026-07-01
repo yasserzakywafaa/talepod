@@ -34,7 +34,7 @@ import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useViewStoryContext } from "./store/Provider";
-import { trackGtmEvent } from "src/shared/utils/gtm";
+import { trackEvent } from "src/shared/utils/ga4";
 
 const ViewStoryPage: React.FC = () => {
   const { slug } = useParams<{ userId: string; slug: string }>();
@@ -108,7 +108,7 @@ const ViewStoryPage: React.FC = () => {
   useEffect(() => {
     if (story && story._id && story.slug !== trackedStorySlugRef.current) {
       trackedStorySlugRef.current = story.slug;
-      trackGtmEvent("story_view", {
+      trackEvent("story_view", {
         story_slug: story.slug,
         story_format: story.format,
         has_audio: Boolean(story.audioFile?.url),

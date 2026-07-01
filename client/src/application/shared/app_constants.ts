@@ -19,7 +19,6 @@ const APP_CONSTANTS = {
 
   // Analytics
   GOOGLE_ANALYTICS_ID: import.meta.env.REACT_APP_GOOGLE_ANALYTICS_ID,
-  GOOGLE_TAG_MANAGER_ID: import.meta.env.REACT_APP_GOOGLE_TAG_MANAGER_ID,
 
   // Censored Words
   CENSORED_WORDS_FETCH_URLS: {
@@ -42,6 +41,7 @@ const APP_CONSTANTS = {
     AUTHENTICATED: "isAuthenticated",
     STORY_GENERATED: "isBlogGenerated",
     ACTIVE_GENERATION: "talepod:activeGeneration",
+    COOKIE_CONSENT: "cookieConsent",
   },
   SESSION_STORAGE: {
     RETURN_URL: "talepod:returnUrl",

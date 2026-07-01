@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import { trackGtmEvent } from "src/shared/utils/gtm";
+import { trackEvent } from "src/shared/utils/ga4";
 
 const SCROLL_MILESTONES = [25, 50, 75, 100] as const;
 
-const GtmScrollDepth = () => {
+const Ga4ScrollDepth = () => {
   const location = useLocation();
   const firedMilestones = useRef<Set<number>>(new Set());
 
@@ -30,7 +30,7 @@ const GtmScrollDepth = () => {
           !firedMilestones.current.has(milestone)
         ) {
           firedMilestones.current.add(milestone);
-          trackGtmEvent("scroll_depth", {
+          trackEvent("scroll_depth", {
             percent: milestone,
             page_path: location.pathname + location.search,
           });
@@ -49,4 +49,4 @@ const GtmScrollDepth = () => {
   return null;
 };
 
-export default GtmScrollDepth;
+export default Ga4ScrollDepth;

@@ -3,7 +3,7 @@ import { getCreateStoryPrompt } from "../utils/getStoryPrompts";
 import { useGenerationContext } from "../generation/Provider";
 import { useOpenaiContext } from "../features/Openai/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
-import { trackGtmEvent } from "src/shared/utils/gtm";
+import { trackEvent } from "src/shared/utils/ga4";
 
 export interface GenerateStoryOptions {
   /** Mini form: override name and force English without mutating the store. */
@@ -61,7 +61,7 @@ export const useGenerateStory = (): UseGenerateStory => {
     });
     if (!prompt) return;
 
-    trackGtmEvent("create_story", {
+    trackEvent("create_story", {
       format,
       art_style: artStyle,
       has_avatar: Boolean(avatarId),

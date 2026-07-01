@@ -19,7 +19,7 @@ import Share from "src/components/shared/Share/Share";
 import StoryCard from "src/components/shared/StoryCard/StoryCard";
 import { useLibraryContext } from "./store/Provider";
 import { useNavigate } from "react-router-dom";
-import { trackGtmEvent } from "src/shared/utils/gtm";
+import { trackEvent } from "src/shared/utils/ga4";
 
 interface LibraryPageContentProps {
   showSourceChips?: boolean;
@@ -49,7 +49,7 @@ export const LibraryContent = (props: LibraryPageContentProps): JSX.Element => {
   const handleSetStoriesSourceWithTracking = (
     source: "community" | "talepod",
   ) => {
-    trackGtmEvent("library_source_change", { source });
+    trackEvent("library_source_change", { source });
     handleSetStoriesSource(source);
   };
 

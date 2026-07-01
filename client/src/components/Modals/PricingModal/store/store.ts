@@ -1,7 +1,7 @@
 import { PricingModalInitialState, getPricingModalInitialState } from "./state";
 
 import { useState } from "react";
-import { trackGtmEvent } from "src/shared/utils/gtm";
+import { trackEvent } from "src/shared/utils/ga4";
 
 export type PricingModalTrigger =
   | "locked_story"
@@ -22,7 +22,7 @@ const usePricingModalStore = (): PricingModalStore => {
     setState((prevState) => {
       const willOpen = !prevState.isVisible;
       if (willOpen) {
-        trackGtmEvent("pricing_modal_open", { trigger });
+        trackEvent("pricing_modal_open", { trigger });
       }
       return {
         ...prevState,

@@ -10,7 +10,7 @@ import { usePaymentContext } from "../Payment/store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useState } from "react";
-import { trackGtmEvent } from "src/shared/utils/gtm";
+import { trackEvent } from "src/shared/utils/ga4";
 
 export type BillingInterval = "month" | "year";
 
@@ -234,7 +234,7 @@ export const usePricing = () => {
     }
     if (!oneTimePrice) return;
 
-    trackGtmEvent("buy_story_click", {
+    trackEvent("buy_story_click", {
       source: isPricingModalVisible ? "pricing_modal" : "pricing_page",
     });
 
@@ -264,7 +264,7 @@ export const usePricing = () => {
       return;
     }
 
-    trackGtmEvent("subscribe_click", {
+    trackEvent("subscribe_click", {
       plan: subscriptionPlan,
       billing_interval: billingInterval,
       source: isPricingModalVisible ? "pricing_modal" : "pricing_page",
