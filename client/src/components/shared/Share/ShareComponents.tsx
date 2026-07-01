@@ -6,14 +6,14 @@ import {
   WhatsApp,
   X,
 } from "@mui/icons-material";
-import { trackGtmEvent } from "src/shared/utils/gtm";
+import { trackEvent } from "src/shared/utils/ga4";
 
 interface ShareButtonProps {
   url: string;
 }
 
 const trackShareClick = (platform: string) => {
-  trackGtmEvent("share", { platform });
+  trackEvent("share", { platform });
 };
 
 export const WhatsAppShareButton = (props: ShareButtonProps) => {

@@ -23,7 +23,7 @@ import {
   consumeCreateDraft,
   consumeReturnUrl,
 } from "src/shared/utils/authReturn";
-import { trackGtmEvent } from "src/shared/utils/gtm";
+import { trackEvent } from "src/shared/utils/ga4";
 
 type PhoneAuthType = "register" | "login";
 
@@ -167,7 +167,7 @@ const PhoneOtpAuthForm = ({
         user: response.data.user,
       });
 
-      trackGtmEvent(isRegister ? "sign_up" : "login", { method: "phone" });
+      trackEvent(isRegister ? "sign_up" : "login", { method: "phone" });
 
       Notify({
         content:

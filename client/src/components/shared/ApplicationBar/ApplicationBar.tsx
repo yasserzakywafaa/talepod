@@ -13,7 +13,7 @@ import { useApplicationContext } from "src/application/store/Provider";
 import useDetectScroll from "src/shared/hooks/useDetectScroll";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useState } from "react";
-import { trackGtmEvent } from "src/shared/utils/gtm";
+import { trackEvent } from "src/shared/utils/ga4";
 
 export interface PagesMatch {
   isFeaturesPage: boolean;
@@ -84,7 +84,7 @@ const ApplicationBar = () => {
 
     const linkName = navLinkNames[sectionId];
     if (linkName) {
-      trackGtmEvent("nav_click", { link_name: linkName });
+      trackEvent("nav_click", { link_name: linkName });
     }
 
     switch (sectionId) {

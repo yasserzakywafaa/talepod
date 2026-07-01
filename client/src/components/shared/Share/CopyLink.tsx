@@ -7,7 +7,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useState } from "react";
-import { trackGtmEvent } from "src/shared/utils/gtm";
+import { trackEvent } from "src/shared/utils/ga4";
 
 export interface CopyLinkProps {
   url: string;
@@ -18,7 +18,7 @@ export const CopyLink = (props: CopyLinkProps) => {
   const [isUrlCopied, setIsUrlCopied] = useState(false);
 
   const handleCopyUrlToClipboard = () => {
-    trackGtmEvent("share", { platform: "copy_link" });
+    trackEvent("share", { platform: "copy_link" });
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(url).then(() => setIsUrlCopied(true));

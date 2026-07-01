@@ -5,7 +5,7 @@ import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useNavigate } from "react-router-dom";
-import { trackGtmEvent } from "src/shared/utils/gtm";
+import { trackEvent } from "src/shared/utils/ga4";
 
 const Guarantee = () => {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const Guarantee = () => {
     (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
       event.preventDefault();
 
-      trackGtmEvent("cta_click", {
+      trackEvent("cta_click", {
         cta_name: isAuthenticated ? "guarantee_start_creating" : "guarantee_try_risk_free",
         destination: route,
         is_authenticated: isAuthenticated,
