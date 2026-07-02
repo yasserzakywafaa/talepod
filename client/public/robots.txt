@@ -28,3 +28,5 @@ Allow: /educational-bedtime-stories/
 Allow: /baby-bedtime-stories/
 Allow: /best-bedtime-stories/
 Allow: /quick-bedtime-stories/
+Allow: /alternatives/
+Allow: /personalized-bedtime-story-generator/

@@ -7,6 +7,7 @@ import PortugalFlag from "src/assets/images/portugal_flag.png";
 import SwitzerlandFlag from "src/assets/images/switzerland_flag.png";
 import { honey300 } from "src/application/shared/themes";
 import mascotBunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
+import APP_CONSTANTS from "src/application/shared/app_constants";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 
@@ -56,11 +57,20 @@ const Footer = () => {
     },
   ];
 
-  const productLinks = [
+  const productLinks: Array<{
+    text: string;
+    href: string;
+    external?: boolean;
+  }> = [
     { text: "Create a story", href: routes.create },
     { text: "Library", href: routes.library },
     { text: "Pricing", href: routes.pricing },
-    { text: "Blog", href: routes.blogs },
+    { text: "Alternatives", href: routes.landingPages.alternatives },
+    {
+      text: "Story generator",
+      href: routes.landingPages.personalizedBedtimeStoryGenerator,
+    },
+    { text: "Blog", href: APP_CONSTANTS.BLOG_URL, external: true },
     { text: "Contact", href: routes.contact },
   ];
 
@@ -139,7 +149,14 @@ const Footer = () => {
           <Typography sx={headingSx}>Product</Typography>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
             {productLinks.map((l) => (
-              <Link key={l.text} href={l.href} onClick={go(l.href)} sx={linkSx}>
+              <Link
+                key={l.text}
+                href={l.href}
+                onClick={l.external ? undefined : go(l.href)}
+                target={l.external ? "_blank" : undefined}
+                rel={l.external ? "noopener noreferrer" : undefined}
+                sx={linkSx}
+              >
                 {l.text}
               </Link>
             ))}

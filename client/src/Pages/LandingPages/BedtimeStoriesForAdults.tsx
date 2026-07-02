@@ -23,6 +23,9 @@ import HowItWorks from "../Features/features/HowItWorks";
 import KeyFeatures from "../Features/features/KeyFeatures";
 import StoryExamples from "../Features/features/StoryExamples";
 import CallToAction from "../Features/features/CallToAction";
+import { landingPageSeo } from "./landingPageSeo";
+import { landingPageSeoProps } from "./landingPageSeoProps";
+import routes from "src/application/routes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import Testimonials from "../Features/features/Testimonials";
 
@@ -80,7 +83,9 @@ const BedtimeStoriesForAdults = () => {
 
   return (
     <Page
-      title="Bedtime Stories for Adults | TalePod"
+      {...landingPageSeoProps(
+        landingPageSeo[routes.landingPages.bedtimeStoriesForAdults],
+      )}
       className="bedtime-stories-for-adults-page"
       isLoading={isFetching}
     >

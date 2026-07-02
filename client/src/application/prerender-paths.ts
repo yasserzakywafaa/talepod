@@ -8,7 +8,6 @@ export const prerenderPaths: string[] = [
   "/pricing",
   "/bedtime-stories",
   "/users-bedtime-stories",
-  "/blogs",
   "/contact",
   "/privacy-policy",
   "/terms-and-conditions",
@@ -26,4 +25,6 @@ export const prerenderPaths: string[] = [
   "/baby-bedtime-stories",
   "/best-bedtime-stories",
   "/quick-bedtime-stories",
+  "/alternatives",
+  "/personalized-bedtime-story-generator",
 ];
