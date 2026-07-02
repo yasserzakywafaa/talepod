@@ -2,7 +2,7 @@ import "./FeaturesPage.scss";
 
 import Benefits from "./features/Benefits"; // Import Benefits
 import CallToAction from "./features/CallToAction";
-import { Divider } from "@mui/material";
+import { Divider, Link as MuiLink } from "@mui/material";
 import FAQ from "./features/FAQ";
 import Guarantee from "./features/Guarantee"; // Import Guarantee
 import Hero from "./features/Hero";
@@ -10,6 +10,18 @@ import HowItWorks from "./features/HowItWorks";
 import KeyFeatures from "./features/KeyFeatures"; // Import KeyFeatures
 import { LoaderComponentNameEnum } from "src/components/shared/Loader/LoaderSpinner";
 import Page from "src/components/shared/Page/Page";
+import { homepageSeo } from "../LandingPages/landingPageSeo";
+import { landingPageSeoProps } from "../LandingPages/landingPageSeoProps";
+import {
+  homepageFaqItems,
+  safetyFaqItems,
+} from "src/shared/content/faqContent";
+import {
+  createFAQPageSchema,
+  createOrganizationSchemaForSite,
+  createSoftwareApplicationSchema,
+  useSchemaOrg,
+} from "src/shared/utils/schemaOrg";
 import { ParticlesComponent } from "src/components/shared/ParticlesComponent";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
 import { Pricing } from "src/components/shared/Pricing/Pricing";
@@ -20,6 +32,9 @@ import Testimonials from "./features/Testimonials"; // Import Testimonials
 import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
+import routes from "src/application/routes";
+import { Link } from "react-router-dom";
+import { useMemo } from "react";
 
 const FeaturesPage = () => {
   const {
@@ -37,9 +52,30 @@ const FeaturesPage = () => {
     },
   } = useOpenaiContext();
 
+  const organizationSchema = useMemo(
+    () => createOrganizationSchemaForSite(),
+    [],
+  );
+  const softwareApplicationSchema = useMemo(
+    () => createSoftwareApplicationSchema(),
+    [],
+  );
+  const faqSchema = useMemo(
+    () =>
+      createFAQPageSchema(
+        [...homepageFaqItems, ...safetyFaqItems],
+        routes.features,
+      ),
+    [],
+  );
+
+  useSchemaOrg(organizationSchema, "organization-schema");
+  useSchemaOrg(softwareApplicationSchema, "software-application-schema");
+  useSchemaOrg(faqSchema, "faq-page-schema");
+
   return (
     <Page
-      title="TalePod: AI-powered Bedtime Stories Creator"
+      {...landingPageSeoProps(homepageSeo)}
       className="features-page"
       isLoading={isFetching || isCreateStoryFetching}
       loaderComponentName={
@@ -51,6 +87,19 @@ const FeaturesPage = () => {
       </div>
 
       <Hero />
+
+      <MuiLink
+        component={Link}
+        to={routes.landingPages.personalizedBedtimeStoryGenerator}
+        sx={{
+          display: "block",
+          textAlign: "center",
+          mb: 2,
+          fontSize: 14,
+        }}
+      >
+        Try our personalized bedtime story generator
+      </MuiLink>
 
       <div className="section">
         <StoryFormats />

@@ -8,6 +8,9 @@ import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
 import Benefits from "../Features/features/Benefits";
 import CallToAction from "../Features/features/CallToAction";
+import { landingPageSeo } from "./landingPageSeo";
+import { landingPageSeoProps } from "./landingPageSeoProps";
+import routes from "src/application/routes";
 import Dinosaur from "../../assets/images/landing_pages/dinosaur.webp";
 import FAQ from "../Features/features/FAQ";
 import Guarantee from "../Features/features/Guarantee";
@@ -80,7 +83,9 @@ const BestBedtimeStories = () => {
 
   return (
     <Page
-      title="Best Bedtime Stories | TalePod"
+      {...landingPageSeoProps(
+        landingPageSeo[routes.landingPages.bestBedtimeStories],
+      )}
       className="best-bedtime-stories-page"
       isLoading={isFetching}
     >

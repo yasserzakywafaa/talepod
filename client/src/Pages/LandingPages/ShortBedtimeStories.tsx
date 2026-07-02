@@ -25,6 +25,9 @@ import KeyFeatures from "../Features/features/KeyFeatures";
 import StoryExamples from "../Features/features/StoryExamples";
 import Testimonials from "../Features/features/Testimonials";
 import CallToAction from "../Features/features/CallToAction";
+import { landingPageSeo } from "./landingPageSeo";
+import { landingPageSeoProps } from "./landingPageSeoProps";
+import routes from "src/application/routes";
 
 const ShortBedtimeStories = () => {
   const {
@@ -80,7 +83,9 @@ const ShortBedtimeStories = () => {
 
   return (
     <Page
-      title="Quick Bedtime Stories | TalePod"
+      {...landingPageSeoProps(
+        landingPageSeo[routes.landingPages.shortBedtimeStories],
+      )}
       className="short-bedtime-stories-page"
       isLoading={isFetching}
     >

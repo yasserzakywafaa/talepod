@@ -25,6 +25,9 @@ import KeyFeatures from "../Features/features/KeyFeatures";
 import StoryExamples from "../Features/features/StoryExamples";
 import Testimonials from "../Features/features/Testimonials";
 import CallToAction from "../Features/features/CallToAction";
+import { landingPageSeo } from "./landingPageSeo";
+import { landingPageSeoProps } from "./landingPageSeoProps";
+import routes from "src/application/routes";
 
 const BedtimeStoriesForKids = () => {
   const {
@@ -80,7 +83,9 @@ const BedtimeStoriesForKids = () => {
 
   return (
     <Page
-      title="Bedtime Stories for Kids | TalePod"
+      {...landingPageSeoProps(
+        landingPageSeo[routes.landingPages.bedtimeStoriesForKids],
+      )}
       className="home-page"
       isLoading={isFetching}
     >

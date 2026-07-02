@@ -36,6 +36,9 @@ const routes = {
     babyBedtimeStories: "/baby-bedtime-stories",
     bestBedtimeStories: "/best-bedtime-stories",
     quickBedtimeStories: "/quick-bedtime-stories",
+    alternatives: "/alternatives",
+    personalizedBedtimeStoryGenerator:
+      "/personalized-bedtime-story-generator",
   },
   // Dashboard (Admin)
   dashboard: {
