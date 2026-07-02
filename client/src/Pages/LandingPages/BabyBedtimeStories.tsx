@@ -26,8 +26,11 @@ import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import FAQ from "../Features/features/FAQ";
 import Testimonials from "../Features/features/Testimonials";
 import CallToAction from "../Features/features/CallToAction";
+import { landingPageSeo } from "./landingPageSeo";
+import { landingPageSeoProps } from "./landingPageSeoProps";
+import routes from "src/application/routes";
 
-const EducationalBedtimeStories = () => {
+const BabyBedtimeStories = () => {
   const {
     store: {
       state: { isFetching },
@@ -81,7 +84,9 @@ const EducationalBedtimeStories = () => {
 
   return (
     <Page
-      title="Bedtime Stories for Babies | TalePod"
+      {...landingPageSeoProps(
+        landingPageSeo[routes.landingPages.babyBedtimeStories],
+      )}
       className="baby-bedtime-stories-page"
       isLoading={isFetching}
     >
@@ -144,4 +149,4 @@ const EducationalBedtimeStories = () => {
   );
 };
 
-export default EducationalBedtimeStories;
+export default BabyBedtimeStories;

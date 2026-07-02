@@ -80,6 +80,10 @@ const BestBedtimeStories = lazy(
 const QuickBedtimeStories = lazy(
   () => import("../Pages/LandingPages/QuickBedtimeStories"),
 );
+const Alternatives = lazy(() => import("../Pages/LandingPages/Alternatives"));
+const PersonalizedBedtimeStoryGenerator = lazy(
+  () => import("../Pages/LandingPages/PersonalizedBedtimeStoryGenerator"),
+);
 
 // Dashboard Layout and Pages
 const DashboardLayout = lazy(
@@ -268,6 +272,14 @@ const AppContent = () => {
             <Route
               path={routes.landingPages.quickBedtimeStories}
               element={<QuickBedtimeStories />}
+            />
+            <Route
+              path={routes.landingPages.alternatives}
+              element={<Alternatives />}
+            />
+            <Route
+              path={routes.landingPages.personalizedBedtimeStoryGenerator}
+              element={<PersonalizedBedtimeStoryGenerator />}
             />
 
             {/* Fallback route for 404 errors */}

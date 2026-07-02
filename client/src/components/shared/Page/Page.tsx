@@ -22,9 +22,16 @@ import { consumeReturnUrl, saveReturnUrl } from "src/shared/utils/authReturn";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useLocation, useNavigate } from "react-router-dom";
 import { trackEvent } from "src/shared/utils/ga4";
+import { applyPageSeoMeta } from "src/shared/utils/seoMeta";
+import StructuredData from "../StructuredData/StructuredData";
+import { organizationSchema } from "src/shared/utils/structuredDataSchemas";
 
 export interface PageProps {
   title: string;
+  description?: string;
+  canonicalPath?: string;
+  ogTitle?: string;
+  ogDescription?: string;
   className?: string;
   isLoading?: boolean;
   noIndex?: boolean;
@@ -40,6 +47,10 @@ export interface PageProps {
 const Page = (params: PageProps) => {
   const {
     title,
+    description,
+    canonicalPath,
+    ogTitle,
+    ogDescription,
     style,
     children,
     isLoading,
@@ -105,8 +116,14 @@ const Page = (params: PageProps) => {
   }, [location.pathname, location.search]);
 
   useEffect(() => {
-    document.title = title;
-  }, [title]);
+    applyPageSeoMeta({
+      title,
+      description,
+      canonicalPath,
+      ogTitle,
+      ogDescription,
+    });
+  }, [title, description, canonicalPath, ogTitle, ogDescription]);
 
   useEffect(() => {
     let robotsMeta = document.querySelector(
@@ -169,6 +186,7 @@ const Page = (params: PageProps) => {
 
   return (
     <>
+      <StructuredData data={organizationSchema} />
       <div
         className="gradient-background"
         style={{

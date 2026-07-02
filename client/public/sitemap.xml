@@ -37,67 +37,85 @@
       <changefreq>yearly</changefreq>
       <priority>0.7</priority>
    </url>
+   <url>
+      <loc>https://www.talepod.com/blogs</loc>
+      <lastmod>2026-07-02</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.7</priority>
+   </url>
    <!-- End of Main Pages -->
 
    <!-- Landing Pages -->
    <url>
       <loc>https://www.talepod.com/bedtime-stories-for-kids</loc>
-      <lastmod>2024-08-07</lastmod>
+      <lastmod>2026-07-02</lastmod>
       <changefreq>always</changefreq>
       <priority>0.9</priority>
    </url>
    <url>
       <loc>https://www.talepod.com/bedtime-stories-for-adults</loc>
-      <lastmod>2024-08-07</lastmod>
+      <lastmod>2026-07-02</lastmod>
       <changefreq>always</changefreq>
       <priority>0.9</priority>
    </url>
    <url>
       <loc>https://www.talepod.com/short-bedtime-stories</loc>
-      <lastmod>2024-08-07</lastmod>
+      <lastmod>2026-07-02</lastmod>
       <changefreq>always</changefreq>
       <priority>0.9</priority>
    </url>
    <url>
       <loc>https://www.talepod.com/christmas-bedtime-stories</loc>
-      <lastmod>2024-08-07</lastmod>
+      <lastmod>2026-07-02</lastmod>
       <changefreq>always</changefreq>
       <priority>0.9</priority>
    </url>
    <url>
       <loc>https://www.talepod.com/bedtime-stories-for-girlfriend</loc>
-      <lastmod>2024-08-07</lastmod>
+      <lastmod>2026-07-02</lastmod>
       <changefreq>always</changefreq>
       <priority>0.9</priority>
    </url>
    <url>
       <loc>https://www.talepod.com/bedtime-stories-for-toddlers</loc>
-      <lastmod>2024-08-07</lastmod>
+      <lastmod>2026-07-02</lastmod>
       <changefreq>always</changefreq>
       <priority>0.9</priority>
    </url>
    <url>
       <loc>https://www.talepod.com/educational-bedtime-stories</loc>
-      <lastmod>2024-08-07</lastmod>
+      <lastmod>2026-07-02</lastmod>
       <changefreq>always</changefreq>
       <priority>0.9</priority>
    </url>
    <url>
       <loc>https://www.talepod.com/baby-bedtime-stories</loc>
-      <lastmod>2024-08-07</lastmod>
+      <lastmod>2026-07-02</lastmod>
       <changefreq>always</changefreq>
       <priority>0.9</priority>
    </url>
    <url>
       <loc>https://www.talepod.com/best-bedtime-stories</loc>
-      <lastmod>2024-08-07</lastmod>
+      <lastmod>2026-07-02</lastmod>
       <changefreq>always</changefreq>
       <priority>0.9</priority>
    </url>
    <url>
       <loc>https://www.talepod.com/quick-bedtime-stories</loc>
-      <lastmod>2024-08-07</lastmod>
+      <lastmod>2026-07-02</lastmod>
       <changefreq>always</changefreq>
+      <priority>0.9</priority>
+   </url>
+   <url>
+      <loc>https://www.talepod.com/alternatives</loc>
+      <lastmod>2026-07-02</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.9</priority>
+   </url>
+   <url>
+      <loc>https://www.talepod.com/personalized-bedtime-story-generator</loc>
+      <lastmod>2026-07-02</lastmod>
+      <changefreq>monthly</changefreq>
       <priority>0.9</priority>
    </url>
    <!-- End of Landing Pages -->

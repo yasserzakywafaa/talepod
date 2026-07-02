@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import SafetyFaqAccordions from "./SafetyFaqAccordions";
 
 export default function FAQ() {
   const navigate = useNavigate();
@@ -236,6 +237,8 @@ export default function FAQ() {
             </Typography>
           </AccordionDetails>
         </Accordion>
+
+        <SafetyFaqAccordions />
       </Card>
     </Container>
   );

@@ -1,35 +1,37 @@
 import {
-  BedOutlined,
+  ChildCareOutlined,
   DevicesOutlined,
-  EditOutlined,
-  FaceOutlined,
+  EmojiObjectsOutlined,
+  LocalLibraryOutlined,
 } from "@mui/icons-material";
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
-import FestiveReindeer from "../../assets/images/landing_pages/festive_reindeer.webp";
 import Hero from "./features/Hero";
 import Page from "src/components/shared/Page/Page";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
 import { Pricing } from "src/components/shared/Pricing/Pricing";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.webp";
+import PlayfulBunny from "../../assets/images/landing_pages/playful_bunny.webp";
 import { useApplicationContext } from "src/application/store/Provider";
 import { ParticlesComponent } from "src/components/shared/ParticlesComponent";
 import PricingTable from "src/components/shared/Pricing/PricingTable";
+import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import Benefits from "../Features/features/Benefits";
-import FAQ from "../Features/features/FAQ";
 import Guarantee from "../Features/features/Guarantee";
 import HowItWorks from "../Features/features/HowItWorks";
 import KeyFeatures from "../Features/features/KeyFeatures";
 import StoryExamples from "../Features/features/StoryExamples";
 import Testimonials from "../Features/features/Testimonials";
-import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import CallToAction from "../Features/features/CallToAction";
+import GeneratorFaq from "./features/GeneratorFaq";
 import { landingPageSeo } from "./landingPageSeo";
 import { landingPageSeoProps } from "./landingPageSeoProps";
 import routes from "src/application/routes";
+import StructuredData from "src/components/shared/StructuredData/StructuredData";
+import { generatorFaqSchema } from "src/shared/utils/structuredDataSchemas";
 
-const ChristmasBedtimeStories = () => {
+const PersonalizedBedtimeStoryGenerator = () => {
   const {
     store: {
       state: { isFetching },
@@ -41,21 +43,21 @@ const ChristmasBedtimeStories = () => {
     <List>
       <ListItem>
         <ListItemIcon>
-          <FaceOutlined fontSize="large" color="secondary" />
+          <ChildCareOutlined fontSize="large" color="secondary" />
         </ListItemIcon>
         <ListItemText
-          primary="Tailored to Your Relaxation Needs"
-          secondary="With TalePod, you can choose themes, tones, and characters that match your current mood."
+          primary="Name, age & interests built in"
+          secondary="Our personalized bedtime story generator uses your child's details to craft a unique tale every time."
         />
       </ListItem>
 
       <ListItem>
         <ListItemIcon>
-          <BedOutlined fontSize="large" color="secondary" />
+          <EmojiObjectsOutlined fontSize="large" color="secondary" />
         </ListItemIcon>
         <ListItemText
-          primary="Promotes Better Sleep"
-          secondary="Calm and personalized stories can help you ease into sleep and relaxation."
+          primary="Narration & watercolor art"
+          secondary="Every generated story includes warm AI narration and soft watercolor illustrations — ready in under a minute."
         />
       </ListItem>
 
@@ -64,18 +66,18 @@ const ChristmasBedtimeStories = () => {
           <DevicesOutlined fontSize="large" color="secondary" />
         </ListItemIcon>
         <ListItemText
-          primary="Easy to Use"
-          secondary="TalePod's user-friendly interface makes it simple to create and customize stories, even for those who are not tech-savvy."
+          primary="11 languages, kid-safe"
+          secondary="Create stories in 11 languages with kid-safe defaults designed for young audiences."
         />
       </ListItem>
 
       <ListItem>
         <ListItemIcon>
-          <EditOutlined fontSize="large" color="secondary" />
+          <LocalLibraryOutlined fontSize="large" color="secondary" />
         </ListItemIcon>
         <ListItemText
-          primary="Customizable"
-          secondary="TalePod is designed to meet the needs of both adults and children."
+          primary="Comic or long formats"
+          secondary="Choose illustrated comic pages or a longer prose story with a cover image."
         />
       </ListItem>
     </List>
@@ -84,31 +86,39 @@ const ChristmasBedtimeStories = () => {
   return (
     <Page
       {...landingPageSeoProps(
-        landingPageSeo[routes.landingPages.christmasBedtimeStories],
+        landingPageSeo[routes.landingPages.personalizedBedtimeStoryGenerator],
       )}
-      className="christmas-bedtime-stories-page"
+      className="personalized-bedtime-story-generator-page"
       isLoading={isFetching}
     >
+      <StructuredData
+        id="generator-faq-schema"
+        data={generatorFaqSchema}
+      />
+
       <div style={{ position: "absolute", zIndex: "-1" }}>
         <ParticlesComponent />
       </div>
+
       <Hero
-        heroImage={FestiveReindeer}
-        pageTitleWhite="Magical Christmas"
-        pageTitleColored="Bedtime Stories"
-        pageHeader="Celebrate the holiday season with heartwarming personalized stories."
+        heroImage={PlayfulBunny}
+        pageTitleWhite="Personalized Bedtime Story"
+        pageTitleColored="Generator"
+        pageHeader="Enter your child's name, age, and interests — get a narrated, illustrated bedtime story in seconds."
       />
 
       <div className="section">
         <Testimonials />
       </div>
+
       <PersonalizedBedtimeStoryText
-        whyPersonalizeBedtimeStories="create the magic of the holiday season and provide the perfect way to wind down during the festivities."
-        introducingTalePod="TalePod offers Christmas-themed bedtime stories, allowing you to share the holiday spirit through engaging and customized tales."
+        introducingTalePod="TalePod's personalized bedtime story generator turns a few details about your child into a complete story with narration and watercolor illustrations."
+        whyPersonalizeBedtimeStories="help children feel seen and engaged at bedtime. A generator that uses their name, age, and favorite themes makes every story feel made just for them."
         personalizeImage={Unicorn}
         benefitsList={benefitsList}
         benefitsImage={<RandomImage />}
       />
+
       <div className="section">
         <KeyFeatures />
       </div>
@@ -139,10 +149,10 @@ const ChristmasBedtimeStories = () => {
       </div>
 
       <div className="section">
-        <FAQ />
+        <GeneratorFaq />
       </div>
     </Page>
   );
 };
 
-export default ChristmasBedtimeStories;
+export default PersonalizedBedtimeStoryGenerator;

@@ -26,4 +26,6 @@ export const prerenderPaths: string[] = [
   "/baby-bedtime-stories",
   "/best-bedtime-stories",
   "/quick-bedtime-stories",
+  "/alternatives",
+  "/personalized-bedtime-story-generator",
 ];

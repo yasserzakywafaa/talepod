@@ -60,6 +60,11 @@ const Footer = () => {
     { text: "Create a story", href: routes.create },
     { text: "Library", href: routes.library },
     { text: "Pricing", href: routes.pricing },
+    { text: "Alternatives", href: routes.landingPages.alternatives },
+    {
+      text: "Story generator",
+      href: routes.landingPages.personalizedBedtimeStoryGenerator,
+    },
     { text: "Blog", href: routes.blogs },
     { text: "Contact", href: routes.contact },
   ];

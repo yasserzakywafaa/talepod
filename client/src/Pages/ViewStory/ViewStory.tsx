@@ -30,6 +30,7 @@ import ViewStoryAuthorInfo from "./features/ViewStoryAuthorInfo";
 import ViewStoryInfo from "./features/ViewStoryInfo";
 import ViewStorySEO from "./features/ViewStorySEO";
 import { getAxiosError } from "src/shared/utils/getAxiosError";
+import { buildStoryMetaDescription } from "src/shared/utils/storyMetaDescription";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
@@ -67,28 +68,24 @@ const ViewStoryPage: React.FC = () => {
   };
 
   const handleUpdateMetaTags = (story: Story) => {
-    // Update page meta tags
+    const description = buildStoryMetaDescription(story);
+
     const metaTag = document
       .getElementsByTagName("meta")
       .namedItem("description");
-    metaTag?.setAttribute(
-      "content",
-      `Discover more bedtime stories for children and families on TalePod | ${story.summary}`,
-    );
+    metaTag?.setAttribute("content", description);
 
-    // Update Open Graph meta tags
     const ogTitleMetaTag = document.getElementById("og-title");
     const ogDescriptionMetaTag = document.getElementById("og-description");
     ogTitleMetaTag?.setAttribute("content", story.title);
-    ogDescriptionMetaTag?.setAttribute("content", story.summary);
+    ogDescriptionMetaTag?.setAttribute("content", description);
 
-    // Update Open Graph Twitter meta tags
     const twitterTitleMetaTag = document.getElementById("twitter-title");
     const twitterDescriptionMetaTag = document.getElementById(
       "twitter-description",
     );
     twitterTitleMetaTag?.setAttribute("content", story.title);
-    twitterDescriptionMetaTag?.setAttribute("content", story.summary);
+    twitterDescriptionMetaTag?.setAttribute("content", description);
   };
 
   useEffect(() => {
@@ -106,6 +103,20 @@ const ViewStoryPage: React.FC = () => {
   }, [auth]);
 
   useEffect(() => {
+    if (story && story._id) {
+      handleUpdateMetaTags(story);
+    }
+  }, [
+    story?._id,
+    story?.slug,
+    story?.title,
+    story?.summary,
+    story?.mainStory,
+    story?.profileInfo?.name,
+    story?.storyParams?.environment?.name,
+  ]);
+
+  useEffect(() => {
     if (story && story._id && story.slug !== trackedStorySlugRef.current) {
       trackedStorySlugRef.current = story.slug;
       trackEvent("story_view", {
@@ -114,8 +125,6 @@ const ViewStoryPage: React.FC = () => {
         has_audio: Boolean(story.audioFile?.url),
         is_comic: story.format === "comic",
       });
-
-      handleUpdateMetaTags(story);
 
       const isStoryGenerated =
         window.localStorage.getItem(
