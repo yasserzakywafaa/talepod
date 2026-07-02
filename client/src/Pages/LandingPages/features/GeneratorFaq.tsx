@@ -5,7 +5,7 @@ import { Card } from "@mui/material";
 import Container from "@mui/material/Container";
 import { ExpandMoreOutlined } from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
-import { generatorFaqItems } from "src/shared/utils/structuredDataSchemas";
+import { generatorFaqItems } from "src/shared/content/faqContent";
 
 export default function GeneratorFaq() {
   return (

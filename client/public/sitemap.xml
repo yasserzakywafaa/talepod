@@ -37,12 +37,6 @@
       <changefreq>yearly</changefreq>
       <priority>0.7</priority>
    </url>
-   <url>
-      <loc>https://www.talepod.com/blogs</loc>
-      <lastmod>2026-07-02</lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>0.7</priority>
-   </url>
    <!-- End of Main Pages -->
 
    <!-- Landing Pages -->

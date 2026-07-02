@@ -23,8 +23,6 @@ import { useApplicationContext } from "src/application/store/Provider";
 import { useLocation, useNavigate } from "react-router-dom";
 import { trackEvent } from "src/shared/utils/ga4";
 import { applyPageSeoMeta } from "src/shared/utils/seoMeta";
-import StructuredData from "../StructuredData/StructuredData";
-import { organizationSchema } from "src/shared/utils/structuredDataSchemas";
 
 export interface PageProps {
   title: string;
@@ -186,7 +184,6 @@ const Page = (params: PageProps) => {
 
   return (
     <>
-      <StructuredData data={organizationSchema} />
       <div
         className="gradient-background"
         style={{

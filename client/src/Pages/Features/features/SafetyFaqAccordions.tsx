@@ -3,7 +3,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import { ExpandMoreOutlined } from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
-import { safetyFaqItems } from "src/shared/utils/structuredDataSchemas";
+import { safetyFaqItems } from "src/shared/content/faqContent";
 
 interface SafetyFaqAccordionsProps {
   panelIdPrefix?: string;

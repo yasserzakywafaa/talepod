@@ -12,11 +12,16 @@ import { LoaderComponentNameEnum } from "src/components/shared/Loader/LoaderSpin
 import Page from "src/components/shared/Page/Page";
 import { homepageSeo } from "../LandingPages/landingPageSeo";
 import { landingPageSeoProps } from "../LandingPages/landingPageSeoProps";
-import StructuredData from "src/components/shared/StructuredData/StructuredData";
 import {
-  homepageFaqSchema,
-  softwareApplicationSchema,
-} from "src/shared/utils/structuredDataSchemas";
+  homepageFaqItems,
+  safetyFaqItems,
+} from "src/shared/content/faqContent";
+import {
+  createFAQPageSchema,
+  createOrganizationSchemaForSite,
+  createSoftwareApplicationSchema,
+  useSchemaOrg,
+} from "src/shared/utils/schemaOrg";
 import { ParticlesComponent } from "src/components/shared/ParticlesComponent";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
 import { Pricing } from "src/components/shared/Pricing/Pricing";
@@ -29,6 +34,7 @@ import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
 import routes from "src/application/routes";
 import { Link } from "react-router-dom";
+import { useMemo } from "react";
 
 const FeaturesPage = () => {
   const {
@@ -46,6 +52,27 @@ const FeaturesPage = () => {
     },
   } = useOpenaiContext();
 
+  const organizationSchema = useMemo(
+    () => createOrganizationSchemaForSite(),
+    [],
+  );
+  const softwareApplicationSchema = useMemo(
+    () => createSoftwareApplicationSchema(),
+    [],
+  );
+  const faqSchema = useMemo(
+    () =>
+      createFAQPageSchema(
+        [...homepageFaqItems, ...safetyFaqItems],
+        routes.features,
+      ),
+    [],
+  );
+
+  useSchemaOrg(organizationSchema, "organization-schema");
+  useSchemaOrg(softwareApplicationSchema, "software-application-schema");
+  useSchemaOrg(faqSchema, "faq-page-schema");
+
   return (
     <Page
       {...landingPageSeoProps(homepageSeo)}
@@ -55,14 +82,6 @@ const FeaturesPage = () => {
         isCreateStoryFetching ? LoaderComponentNameEnum.CreateStory : undefined
       }
     >
-      <StructuredData
-        id="software-application-schema"
-        data={softwareApplicationSchema}
-      />
-      <StructuredData
-        id="homepage-faq-schema"
-        data={homepageFaqSchema}
-      />
       <div style={{ position: "absolute", zIndex: "-1" }}>
         <ParticlesComponent />
       </div>

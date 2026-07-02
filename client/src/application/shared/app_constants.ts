@@ -61,6 +61,7 @@ const APP_CONSTANTS = {
     import.meta.env.REACT_APP_ENV === "development"
       ? "https://dev.talepod.com"
       : "https://www.talepod.com",
+  BLOG_URL: "https://blog.talepod.com",
 };
 
 export default APP_CONSTANTS;

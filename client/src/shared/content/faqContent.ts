@@ -1,52 +1,6 @@
-import { absoluteUrl } from "./seoMeta";
+import { FAQItem } from "src/shared/utils/schemaOrg";
 
-export const organizationSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "TalePod",
-  url: absoluteUrl("/"),
-  logo: absoluteUrl("/icons/icon_512x512.png"),
-  sameAs: [],
-};
-
-export const softwareApplicationSchema = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  name: "TalePod",
-  applicationCategory: "EntertainmentApplication",
-  operatingSystem: "Web",
-  url: absoluteUrl("/"),
-  description:
-    "AI-powered personalized bedtime story generator with narration and watercolor illustrations for children and families.",
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "USD",
-    description: "Free tier available with paid plans for additional stories.",
-  },
-};
-
-export interface FaqItem {
-  question: string;
-  answer: string;
-}
-
-export function buildFaqPageSchema(items: FaqItem[]) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: items.map((item) => ({
-      "@type": "Question",
-      name: item.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: item.answer,
-      },
-    })),
-  };
-}
-
-export const homepageFaqItems: FaqItem[] = [
+export const homepageFaqItems: FAQItem[] = [
   {
     question: "How do I create a bedtime story on your platform?",
     answer:
@@ -79,7 +33,7 @@ export const homepageFaqItems: FaqItem[] = [
 ];
 
 // TODO: legal review — safety/COPPA FAQ copy below is draft only.
-export const safetyFaqItems: FaqItem[] = [
+export const safetyFaqItems: FAQItem[] = [
   {
     question: "How does TalePod handle my child's data?",
     answer:
@@ -102,12 +56,7 @@ export const safetyFaqItems: FaqItem[] = [
   },
 ];
 
-export const homepageFaqSchema = buildFaqPageSchema([
-  ...homepageFaqItems,
-  ...safetyFaqItems,
-]);
-
-export const generatorFaqItems: FaqItem[] = [
+export const generatorFaqItems: FAQItem[] = [
   {
     question: "What is a personalized bedtime story generator?",
     answer:
@@ -130,5 +79,3 @@ export const generatorFaqItems: FaqItem[] = [
   },
   ...safetyFaqItems,
 ];
-
-export const generatorFaqSchema = buildFaqPageSchema(generatorFaqItems);

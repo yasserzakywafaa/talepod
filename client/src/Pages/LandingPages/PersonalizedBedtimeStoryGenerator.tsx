@@ -28,8 +28,9 @@ import GeneratorFaq from "./features/GeneratorFaq";
 import { landingPageSeo } from "./landingPageSeo";
 import { landingPageSeoProps } from "./landingPageSeoProps";
 import routes from "src/application/routes";
-import StructuredData from "src/components/shared/StructuredData/StructuredData";
-import { generatorFaqSchema } from "src/shared/utils/structuredDataSchemas";
+import { generatorFaqItems } from "src/shared/content/faqContent";
+import { createFAQPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
+import { useMemo } from "react";
 
 const PersonalizedBedtimeStoryGenerator = () => {
   const {
@@ -38,6 +39,17 @@ const PersonalizedBedtimeStoryGenerator = () => {
     },
   } = useApplicationContext();
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
+
+  const faqSchema = useMemo(
+    () =>
+      createFAQPageSchema(
+        generatorFaqItems,
+        routes.landingPages.personalizedBedtimeStoryGenerator,
+      ),
+    [],
+  );
+
+  useSchemaOrg(faqSchema, "faq-page-schema");
 
   const benefitsList = (
     <List>
@@ -91,11 +103,6 @@ const PersonalizedBedtimeStoryGenerator = () => {
       className="personalized-bedtime-story-generator-page"
       isLoading={isFetching}
     >
-      <StructuredData
-        id="generator-faq-schema"
-        data={generatorFaqSchema}
-      />
-
       <div style={{ position: "absolute", zIndex: "-1" }}>
         <ParticlesComponent />
       </div>

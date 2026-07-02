@@ -1,10 +1,8 @@
 import {
-  Box,
   Button,
   Card,
   CardContent,
   Container,
-  Link,
   Table,
   TableBody,
   TableCell,
@@ -90,14 +88,6 @@ const comparisonRows: ComparisonRow[] = [
   },
 ];
 
-const competitorLinks = [
-  { name: "StoryFox", url: "https://www.storyfox.net/" },
-  { name: "Bedtimestory.ai", url: "https://www.bedtimestory.ai/" },
-  { name: "Storywish", url: "https://storywish.ai/" },
-  { name: "Bairn", url: "https://bairn.ai/" },
-  { name: "DreamPages", url: "https://dreampages.ai/" },
-];
-
 const Alternatives = () => {
   const navigate = useNavigate();
 
@@ -166,36 +156,27 @@ const Alternatives = () => {
           </Table>
         </TableContainer>
 
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          textAlign="center"
+          sx={{ maxWidth: 720, mx: "auto", mb: 4 }}
+        >
+          We compared TalePod against popular apps in this category.
+        </Typography>
+
         <Card sx={{ mb: 4 }}>
           <CardContent>
             <Typography variant="h5" gutterBottom>
-              About these alternatives
-            </Typography>
-            <Typography variant="body2" paragraph>
-              Each app above offers a different take on AI bedtime stories.
-              StoryFox emphasizes narration and voice options; Bedtimestory.ai
-              focuses on instant personalized tales with art styles; Storywish
-              adds photo-based characters and printed keepsakes; Bairn is an
-              app-first experience with co-creation; DreamPages positions itself
-              as a broader storybook generator with moderation tools.
+              Why choose TalePod
             </Typography>
             <Typography variant="body2" paragraph>
               TalePod combines personalized stories with watercolor
               illustrations, warm AI narration, 11 languages, and comic or long
               story formats — designed for a calm, parent-led bedtime routine.
+              Kid-safe defaults and parent-led creation help keep every story
+              age-appropriate for your child.
             </Typography>
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mb: 2 }}>
-              {competitorLinks.map((c) => (
-                <Link
-                  key={c.url}
-                  href={c.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {c.name}
-                </Link>
-              ))}
-            </Box>
             <Button
               variant="contained"
               color="primary"
