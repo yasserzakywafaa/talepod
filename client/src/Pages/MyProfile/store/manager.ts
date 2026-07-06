@@ -12,6 +12,7 @@ export interface MyProfileManager {
   handleUpdateUserInfo: (userInfoToUpdate: Partial<User>) => Promise<void>;
   handleGetSubscriptionDetails: () => Promise<UserSubscription | undefined>;
   handleCancelSubscription: () => Promise<void>;
+  handleDeleteAccount: (confirmationPhrase: string) => Promise<boolean>;
 }
 
 export const useMyProfileManager = (
@@ -131,10 +132,53 @@ export const useMyProfileManager = (
     }
   };
 
+  const handleDeleteAccount = async (
+    confirmationPhrase: string,
+  ): Promise<boolean> => {
+    if (!auth.user) return false;
+
+    try {
+      store.setIsDeletingAccount(true);
+
+      await axios.delete(END_POINTS.AUTH.DELETE_ACCOUNT, {
+        data: { confirmationPhrase },
+        withCredentials: true,
+      });
+
+      const { USER, AUTHENTICATED } = APP_CONSTANTS.LOCAL_STORAGE;
+      localStorage.removeItem(USER);
+      localStorage.removeItem(AUTHENTICATED);
+
+      handleSetAuthInfo({
+        isAuthenticated: false,
+        user: null,
+      });
+
+      Notify({
+        type: "success",
+        content: "Your account has been deleted",
+      });
+
+      return true;
+    } catch (error: any) {
+      console.error("Error:", error);
+      const message =
+        error?.response?.data?.message ?? "Failed to delete account";
+      Notify({
+        type: "error",
+        content: message,
+      });
+      return false;
+    } finally {
+      store.setIsDeletingAccount(false);
+    }
+  };
+
   return {
     handleIsFetching,
     handleUpdateUserInfo,
     handleGetSubscriptionDetails,
     handleCancelSubscription,
+    handleDeleteAccount,
   };
 };

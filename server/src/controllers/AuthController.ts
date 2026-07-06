@@ -1,5 +1,8 @@
-import { AuthProviderEnum, User, getInitialUserData } from "../models/types";
+import { AuthProviderEnum, User, UserRole, getInitialUserData } from "../models/types";
 import { NextFunction, Request, Response } from "express";
+import { AuthenticatedRequest } from "../middleware/authMiddleware";
+import { deleteUserAccount } from "../services/userDeletionService";
+import { DELETE_ACCOUNT_CONFIRMATION_PHRASE } from "../constants/deleteAccount";
 import {
   getDocumentByFieldFromDb,
   getDocumentFromDb,
@@ -629,6 +632,69 @@ const updateUserInfo = async (
   }
 };
 
+const deleteAccount = async (
+  request: AuthenticatedRequest,
+  response: Response,
+  next: NextFunction,
+) => {
+  const { confirmationPhrase } = request.body ?? {};
+  const user = request.user;
+
+  if (!user?._id) {
+    response.status(401).json({ message: "❌ Authentication required" });
+    return;
+  }
+
+  if (
+    user.role === UserRole.admin ||
+    user.role === UserRole.super_admin
+  ) {
+    response.status(403).json({
+      message: "❌ Admin accounts cannot be deleted via self-service",
+    });
+    return;
+  }
+
+  if (!confirmationPhrase || typeof confirmationPhrase !== "string") {
+    response.status(400).json({
+      message: "❌ Confirmation phrase is required",
+    });
+    return;
+  }
+
+  if (
+    confirmationPhrase.trim() !== DELETE_ACCOUNT_CONFIRMATION_PHRASE
+  ) {
+    response.status(400).json({
+      message: `❌ Please type "${DELETE_ACCOUNT_CONFIRMATION_PHRASE}" to confirm`,
+    });
+    return;
+  }
+
+  try {
+    const result = await deleteUserAccount(user._id.toString(), {
+      blockAdminSelfDelete: true,
+    });
+
+    TokenService.clearTokenCookies(response);
+
+    response.status(200).json({
+      message: "✅ Account deleted successfully",
+      deleted: result.deleted,
+      warnings: result.warnings,
+    });
+  } catch (error) {
+    console.error("❌ Failed to delete account:", error);
+
+    if (error instanceof Error && error.message === "User not found") {
+      response.status(404).json({ message: "❌ User not found" });
+      return;
+    }
+
+    response.status(500).json({ message: "❌ Failed to delete account" });
+  }
+};
+
 const AuthController = {
   oauth2Google,
   oauth2GoogleCallback,
@@ -641,6 +707,7 @@ const AuthController = {
   getPublicUserProfile,
   getAuthUserInfo,
   updateUserInfo,
+  deleteAccount,
 };
 
 export default AuthController;

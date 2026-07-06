@@ -1,4 +1,4 @@
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 import CONFIG from "../../config";
 import fs from "fs";
@@ -54,4 +54,38 @@ const uploadFileToS3 = async (
   }
 };
 
-export { uploadFileToS3 };
+const getBucket = (): string =>
+  CONFIG.IS_DEV
+    ? (CONFIG.HOST_AWS_S3_BUCKET_NAME_DEV ?? "")
+    : (CONFIG.HOST_AWS_S3_BUCKET_NAME_PROD ?? "");
+
+const extractS3KeyFromUrl = (url: string): string | null => {
+  try {
+    const parsed = new URL(url);
+    const bucket = getBucket();
+    if (!bucket || !parsed.hostname.includes(bucket)) {
+      return null;
+    }
+    return decodeURIComponent(parsed.pathname.replace(/^\//, ""));
+  } catch {
+    return null;
+  }
+};
+
+const deleteObjectByUrl = async (url: string): Promise<void> => {
+  const key = extractS3KeyFromUrl(url);
+  if (!key) return;
+
+  try {
+    await s3Client.send(
+      new DeleteObjectCommand({
+        Bucket: getBucket(),
+        Key: key,
+      }),
+    );
+  } catch (error) {
+    console.error("❌ Failed to delete S3 object:", { url, error });
+  }
+};
+
+export { uploadFileToS3, deleteObjectByUrl };

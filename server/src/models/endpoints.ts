@@ -53,6 +53,7 @@ const END_POINTS = {
     PHONE_REGISTER_VERIFY_OTP: `/api/v1/auth/phone/register/verify-otp`,
     PHONE_LOGIN_SEND_OTP: `/api/v1/auth/phone/login/send-otp`,
     PHONE_LOGIN_VERIFY_OTP: `/api/v1/auth/phone/login/verify-otp`,
+    DELETE_ACCOUNT: `/api/v1/auth/delete-account`,
   },
   PAYMENTS: {
     CONFIG: `/api/v1/payments/config`,

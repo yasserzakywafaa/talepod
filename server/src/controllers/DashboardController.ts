@@ -10,6 +10,7 @@ import { User, UserRole, UserStatus } from "../models/types/user";
 
 import { ObjectId } from "mongodb";
 import { getDocumentFromDb } from "../models/mongoDb";
+import { deleteUserAccount } from "../services/userDeletionService";
 
 export const getUsersCount = async (
   request: Request,
@@ -198,21 +199,23 @@ export const deleteUser = async (
   }
 
   try {
-    const collection = database.collection(DBCollectionsEnum.users);
-    const result = await collection.deleteOne({ _id: new ObjectId(userId) });
+    const result = await deleteUserAccount(userId);
 
-    if (result.deletedCount === 0) {
+    console.log("✅ User deleted successfully:", { userId, result });
+
+    response.status(200).json({
+      message: "✅ User deleted successfully",
+      deleted: result.deleted,
+      warnings: result.warnings,
+    });
+  } catch (error) {
+    console.error("❌ Failed to delete user:", error);
+
+    if (error instanceof Error && error.message === "User not found") {
       response.status(404).json({ message: "❌ User not found" });
       return;
     }
 
-    console.log("✅ User deleted successfully:", { userId });
-
-    response.status(200).json({
-      message: "✅ User deleted successfully",
-    });
-  } catch (error) {
-    console.error("❌ Failed to delete user:", error);
     next(error);
   }
 };

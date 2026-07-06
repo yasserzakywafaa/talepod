@@ -6,6 +6,7 @@ import { useState } from "react";
 export interface MyProfileStore {
   state: MyProfileState;
   setIsFetching: (isFetching: boolean) => void;
+  setIsDeletingAccount: (isDeletingAccount: boolean) => void;
   setSubscriptionDetails: (subscription: UserSubscription) => void;
 }
 
@@ -20,6 +21,13 @@ const useMyProfileStore = (): MyProfileStore => {
     }));
   };
 
+  const setIsDeletingAccount = (isDeletingAccount: boolean) => {
+    setState((prev) => ({
+      ...prev,
+      isDeletingAccount,
+    }));
+  };
+
   const setSubscriptionDetails = (subscription: UserSubscription) => {
     setState((prev) => ({
       ...prev,
@@ -30,6 +38,7 @@ const useMyProfileStore = (): MyProfileStore => {
   return {
     state,
     setIsFetching,
+    setIsDeletingAccount,
     setSubscriptionDetails,
   };
 };
