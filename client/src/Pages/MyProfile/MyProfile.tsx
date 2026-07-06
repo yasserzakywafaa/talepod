@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import {
   CreditCardOutlined,
+  DeleteOutlined,
   LocalActivityOutlined,
   PersonOutlined,
   SvgIconComponent,
@@ -23,6 +24,7 @@ import { useEffect, useState } from "react";
 import Page from "src/components/shared/Page/Page";
 import ProfileAvatar from "src/components/shared/ProfileAvatar";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
+import DeleteAccountDialog from "./features/DeleteAccountDialog";
 import SubscriptionSection from "./features/Subscription";
 import {
   getUserContact,
@@ -31,6 +33,9 @@ import {
 import { useApplicationContext } from "src/application/store/Provider";
 import { useMyProfileContext } from "./store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
+import { hasAdminRights } from "src/shared/utils/getUserRoles";
+import routes from "src/application/routes";
+import { useNavigate } from "react-router-dom";
 import { honey300, honey400, honey700 } from "src/application/shared/themes";
 
 type ProfileTab = "profile" | "billing";
@@ -41,6 +46,9 @@ const TABS: [ProfileTab, string, SvgIconComponent][] = [
 ];
 
 const MyProfilePage = () => {
+  const navigate = useNavigate();
+  const [isDeleteAccountDialogOpen, setIsDeleteAccountDialogOpen] =
+    useState(false);
   const {
     store: {
       state: {
@@ -52,9 +60,13 @@ const MyProfilePage = () => {
   } = useApplicationContext();
   const {
     store: {
-      state: { isFetching },
+      state: { isFetching, isDeletingAccount },
     },
-    manager: { handleGetSubscriptionDetails, handleUpdateUserInfo },
+    manager: {
+      handleGetSubscriptionDetails,
+      handleUpdateUserInfo,
+      handleDeleteAccount,
+    },
   } = useMyProfileContext();
   const {
     store: { handleTogglePricingModal },
@@ -69,6 +81,8 @@ const MyProfilePage = () => {
   }, [user]);
 
   if (!isAuthenticated || !user) return <></>;
+
+  const showDeleteAccount = !hasAdminRights(user);
 
   const handleOnDarkModeSwitchChange = async () => {
     await handleUpdateUserInfo({
@@ -226,6 +240,35 @@ const MyProfilePage = () => {
               </Card>
             )}
 
+            {tab === "profile" && showDeleteAccount && (
+              <Card
+                elevation={3}
+                sx={{
+                  padding: 3,
+                  mt: 3,
+                  border: "1px solid",
+                  borderColor: "error.main",
+                }}
+              >
+                <Typography variant="h5" color="error" sx={{ mb: 1 }}>
+                  Danger Zone
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  Permanently delete your account and all associated stories,
+                  avatars, story credits, and subscription data. If you have an
+                  active subscription, billing will be cancelled immediately.
+                </Typography>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  startIcon={<DeleteOutlined />}
+                  onClick={() => setIsDeleteAccountDialogOpen(true)}
+                >
+                  Delete Account
+                </Button>
+              </Card>
+            )}
+
             {tab === "billing" && <SubscriptionSection />}
           </Grid>
 
@@ -338,6 +381,25 @@ const MyProfilePage = () => {
           </Grid>
         </Grid>
       </Container>
+
+      <DeleteAccountDialog
+        isOpen={isDeleteAccountDialogOpen}
+        isDeleting={isDeletingAccount}
+        impactItems={[
+          `${user.storyCount} stor${user.storyCount === 1 ? "y" : "ies"}`,
+          "Avatars and story credits",
+          "Subscription and billing data",
+        ]}
+        warningMessage="Stories published to the community library will not be removed automatically."
+        onClose={() => setIsDeleteAccountDialogOpen(false)}
+        onConfirm={async (confirmationPhrase) => {
+          const deleted = await handleDeleteAccount(confirmationPhrase);
+          if (deleted) {
+            setIsDeleteAccountDialogOpen(false);
+            navigate(routes.features);
+          }
+        }}
+      />
     </Page>
   );
 };
