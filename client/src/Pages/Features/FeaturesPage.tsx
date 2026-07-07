@@ -22,7 +22,6 @@ import {
   createSoftwareApplicationSchema,
   useSchemaOrg,
 } from "src/shared/utils/schemaOrg";
-import { ParticlesComponent } from "src/components/shared/ParticlesComponent";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
 import { Pricing } from "src/components/shared/Pricing/Pricing";
 import PricingTable from "src/components/shared/Pricing/PricingTable";
@@ -82,9 +81,6 @@ const FeaturesPage = () => {
         isCreateStoryFetching ? LoaderComponentNameEnum.CreateStory : undefined
       }
     >
-      <div style={{ position: "absolute", zIndex: "-1" }}>
-        <ParticlesComponent />
-      </div>
 
       <Hero />
 

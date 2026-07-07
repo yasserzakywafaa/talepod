@@ -18,7 +18,6 @@ import Hero from "./features/Hero";
 import HowItWorks from "../Features/features/HowItWorks";
 import KeyFeatures from "../Features/features/KeyFeatures";
 import Page from "src/components/shared/Page/Page";
-import { ParticlesComponent } from "src/components/shared/ParticlesComponent";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
 import { Pricing } from "src/components/shared/Pricing/Pricing";
 import PricingTable from "src/components/shared/Pricing/PricingTable";
@@ -89,9 +88,6 @@ const BestBedtimeStories = () => {
       className="best-bedtime-stories-page"
       isLoading={isFetching}
     >
-      <div style={{ position: "absolute", zIndex: "-1" }}>
-        <ParticlesComponent />
-      </div>
       <Hero
         heroImage={Dinosaur}
         pageTitleWhite="Best Bedtime Stories"

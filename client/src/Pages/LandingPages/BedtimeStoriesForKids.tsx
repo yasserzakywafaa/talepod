@@ -14,7 +14,6 @@ import { Pricing } from "src/components/shared/Pricing/Pricing";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.webp";
 import { useApplicationContext } from "src/application/store/Provider";
-import { ParticlesComponent } from "src/components/shared/ParticlesComponent";
 import PricingTable from "src/components/shared/Pricing/PricingTable";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import Benefits from "../Features/features/Benefits";
@@ -89,9 +88,6 @@ const BedtimeStoriesForKids = () => {
       className="home-page"
       isLoading={isFetching}
     >
-      <div style={{ position: "absolute", zIndex: "-1" }}>
-        <ParticlesComponent />
-      </div>
 
       <Hero
         heroImage={PlayfulBunny}

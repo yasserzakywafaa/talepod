@@ -12,7 +12,6 @@ import {
   Typography,
 } from "@mui/material";
 import Page from "src/components/shared/Page/Page";
-import { ParticlesComponent } from "src/components/shared/ParticlesComponent";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 import { landingPageSeo } from "./landingPageSeo";
@@ -96,9 +95,6 @@ const Alternatives = () => {
       {...landingPageSeoProps(landingPageSeo[routes.landingPages.alternatives])}
       className="alternatives-page"
     >
-      <div style={{ position: "absolute", zIndex: "-1" }}>
-        <ParticlesComponent />
-      </div>
       <Container sx={{ py: { xs: 4, sm: 8 } }}>
         <Typography
           component="h1"
