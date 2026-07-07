@@ -51,7 +51,9 @@ const TermsAndConditions = () => {
           Service.
         </Typography>
 
-        <Box my={2}>
+        <Box sx={{
+          my: 2
+        }}>
           <Typography variant="h5" color="primary" gutterBottom>
             Interpretation and Definitions
           </Typography>
@@ -120,7 +122,9 @@ const TermsAndConditions = () => {
           </List>
         </Box>
 
-        <Box my={2}>
+        <Box sx={{
+          my: 2
+        }}>
           <Typography variant="h5" color="primary" gutterBottom>
             Acknowledgment
           </Typography>
@@ -159,7 +163,9 @@ const TermsAndConditions = () => {
           </Typography>
         </Box>
 
-        <Box my={2}>
+        <Box sx={{
+          my: 2
+        }}>
           <Typography variant="h5" color="primary" gutterBottom>
             Sharing personal information
           </Typography>
@@ -191,7 +197,9 @@ const TermsAndConditions = () => {
           </Typography>
         </Box>
 
-        <Box my={2}>
+        <Box sx={{
+          my: 2
+        }}>
           <Typography variant="h5" color="primary" gutterBottom>
             Links to Other Websites
           </Typography>
@@ -214,7 +222,9 @@ const TermsAndConditions = () => {
           </Typography>
         </Box>
 
-        <Box my={2}>
+        <Box sx={{
+          my: 2
+        }}>
           <Typography variant="h5" color="primary" gutterBottom>
             Termination
           </Typography>
@@ -229,7 +239,9 @@ const TermsAndConditions = () => {
           </Typography>
         </Box>
 
-        <Box my={2}>
+        <Box sx={{
+          my: 2
+        }}>
           <Typography variant="h5" color="primary" gutterBottom>
             Limitation of Liability
           </Typography>
@@ -263,7 +275,9 @@ const TermsAndConditions = () => {
           </Typography>
         </Box>
 
-        <Box my={2}>
+        <Box sx={{
+          my: 2
+        }}>
           <Typography variant="h5" color="primary" gutterBottom>
             "AS IS" and "AS AVAILABLE" Disclaimer
           </Typography>
@@ -308,7 +322,9 @@ const TermsAndConditions = () => {
           </Typography>
         </Box>
 
-        <Box my={2}>
+        <Box sx={{
+          my: 2
+        }}>
           <Typography variant="h5" color="primary" gutterBottom>
             Governing Law
           </Typography>
@@ -320,7 +336,9 @@ const TermsAndConditions = () => {
           </Typography>
         </Box>
 
-        <Box my={2}>
+        <Box sx={{
+          my: 2
+        }}>
           <Typography variant="h5" color="primary" gutterBottom>
             Disputes Resolution
           </Typography>
@@ -338,7 +356,9 @@ const TermsAndConditions = () => {
           </Typography>
         </Box>
 
-        <Box my={2}>
+        <Box sx={{
+          my: 2
+        }}>
           <Typography variant="h5" color="primary" gutterBottom>
             For European Union (EU) Users
           </Typography>
@@ -349,7 +369,9 @@ const TermsAndConditions = () => {
           </Typography>
         </Box>
 
-        <Box my={2}>
+        <Box sx={{
+          my: 2
+        }}>
           <Typography variant="h5" color="primary" gutterBottom>
             United States Legal Compliance
           </Typography>
@@ -362,7 +384,9 @@ const TermsAndConditions = () => {
           </Typography>
         </Box>
 
-        <Box my={2}>
+        <Box sx={{
+          my: 2
+        }}>
           <Typography variant="h5" color="primary" gutterBottom>
             Severability and Waiver
           </Typography>
@@ -390,7 +414,9 @@ const TermsAndConditions = () => {
           </Typography>
         </Box>
 
-        <Box my={2}>
+        <Box sx={{
+          my: 2
+        }}>
           <Typography variant="h5" color="primary" gutterBottom>
             Translation Interpretation
           </Typography>
@@ -401,7 +427,9 @@ const TermsAndConditions = () => {
           </Typography>
         </Box>
 
-        <Box my={2}>
+        <Box sx={{
+          my: 2
+        }}>
           <Typography variant="h5" color="primary" gutterBottom>
             Changes to These Terms and Conditions
           </Typography>
@@ -420,7 +448,9 @@ const TermsAndConditions = () => {
           </Typography>
         </Box>
 
-        <Box my={2}>
+        <Box sx={{
+          my: 2
+        }}>
           <Typography variant="h5" color="primary" gutterBottom>
             Contact Us
           </Typography>

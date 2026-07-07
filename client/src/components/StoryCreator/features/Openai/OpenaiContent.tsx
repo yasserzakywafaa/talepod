@@ -4,19 +4,21 @@ import CreateStory from "./features/CreateStory/CreateStory";
 const OpenaiContent = () => {
   return (
     <Box
-      paddingY="1rem"
-      display="flex"
       component="div"
-      flexDirection="column"
-      position="relative"
       className="openai-wrapper"
-      justifyContent="space-around"
-    >
-      <Box className="openai-text-generation" marginBottom="1rem">
+      sx={{
+        paddingY: "1rem",
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+        justifyContent: "space-around"
+      }}>
+      <Box className="openai-text-generation" sx={{
+        marginBottom: "1rem"
+      }}>
         {/* <Typography variant="h4">Openai Chat-GPT Text Generation</Typography> */}
         <CreateStory />
       </Box>
-
       {/* <Box className="openai-text-generation" marginTop="1rem">
         <Typography variant="h4">Openai Chat-GPT Image Generation</Typography>
 

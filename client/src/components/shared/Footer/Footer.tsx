@@ -128,7 +128,12 @@ const Footer = () => {
       >
         {/* Brand */}
         <Grid container>
-          <Stack alignItems="center" gap={1.25} mb={1.5}>
+          <Stack
+            sx={{
+              alignItems: "center",
+              gap: 1.25,
+              mb: 1.5
+            }}>
             <img src={mascotBunny} alt="" width={40} height={40} />
             <Logo isText />
           </Stack>
@@ -182,7 +187,6 @@ const Footer = () => {
           </Box>
         </Box>
       </Box>
-
       {/* Bottom bar */}
       <Box
         sx={{

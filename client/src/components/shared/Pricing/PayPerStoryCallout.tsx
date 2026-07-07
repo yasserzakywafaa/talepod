@@ -58,7 +58,9 @@ const PayPerStoryCallout: React.FC = () => {
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.75 }}>
             <Chip variant="badge" color="secondary" label="No subscription" />
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{
+              color: "text.secondary"
+            }}>
               For occasional bedtimes
             </Typography>
           </Box>
@@ -75,9 +77,10 @@ const PayPerStoryCallout: React.FC = () => {
           </Typography>
           <Typography
             variant="body2"
-            color="text.secondary"
-            sx={{ maxWidth: 560 }}
-          >
+            sx={{
+              color: "text.secondary",
+              maxWidth: 560
+            }}>
             Buy a single bedtime story for <b>{priceLabel}</b> — includes audio,
             illustrations, and a keep-forever spot in your library. No recurring
             charge, no commitment.
@@ -104,7 +107,9 @@ const PayPerStoryCallout: React.FC = () => {
             >
               {priceLabel}
             </Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{
+              color: "text.secondary"
+            }}>
               / story
             </Typography>
           </Box>

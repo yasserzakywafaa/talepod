@@ -55,7 +55,13 @@ const RegisterPage = () => {
           </Typography>
         </Box>
 
-        <Box display="flex" flexDirection="column" gap={2} maxWidth={400}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            maxWidth: 400
+          }}>
           <SocialRegister authType="register" />
         </Box>
       </Container>

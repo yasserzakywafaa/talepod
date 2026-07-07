@@ -80,8 +80,9 @@ const GenerationProgressChip = () => {
 
             <ErrorOutlineOutlined color="error" />
           </Box>
-
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant="caption" sx={{
+            color: "text.secondary"
+          }}>
             Please try again from the create form.
           </Typography>
         </>
@@ -107,8 +108,9 @@ const GenerationProgressChip = () => {
 
           <CircularProgress size={24} color="primary" />
         </Box>
-
-        <Typography variant="caption" color="text.secondary">
+        <Typography variant="caption" sx={{
+          color: "text.secondary"
+        }}>
           Visit our
           <Button
             size="small"

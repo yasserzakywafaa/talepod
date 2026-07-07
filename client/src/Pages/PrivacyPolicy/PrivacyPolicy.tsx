@@ -59,7 +59,9 @@ const PrivacyPolicyPage = () => {
           accordance with this Privacy Policy.
         </Typography>
 
-        <Box my={4}>
+        <Box sx={{
+          my: 4
+        }}>
           <Typography variant="h5" color="primary" gutterBottom>
             Interpretation and Definitions
           </Typography>
@@ -154,7 +156,9 @@ const PrivacyPolicyPage = () => {
           </List>
         </Box>
 
-        <Box my={4}>
+        <Box sx={{
+          my: 4
+        }}>
           <Typography variant="h5" color="primary" gutterBottom>
             Collecting and Using your Personal Data
           </Typography>

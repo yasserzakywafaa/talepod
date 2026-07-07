@@ -83,35 +83,36 @@ const StoryCard = (props: BlogCard) => {
 
           <Typography
             variant="body2"
-            color="text.secondary"
             className={`blog-card-summary ${
               hasDirectionRtl ? "direction-rtl" : ""
             }`}
+            sx={{
+              color: "text.secondary"
+            }}
           >
             {props.blog.introduction}
           </Typography>
         </Box>
       </CardContent>
-
       <CardActions>
         <Box
-          display="flex"
           className="blog-card-tags"
-          justifyContent="space-between"
-          alignItems="center"
           sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
             pl: 1,
             pr: 1,
             width: "100%",
-            color: (theme) => theme.palette.secondary.main,
-          }}
-        >
+            color: (theme) => theme.palette.secondary.main
+          }}>
           <Box
-            display="flex"
             className="story-card-tags-wrapper"
-            justifyContent="space-between"
-            sx={{ mr: 2 }}
-          >
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              mr: 2
+            }}>
             {props.blog.language && (
               <Chip
                 size="small"

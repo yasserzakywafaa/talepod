@@ -183,26 +183,31 @@ const CreateStoryFormMini = () => {
   }, [isRegisterModalVisible, isAuthenticated]);
 
   return (
-    <Box className="story-creator-form mini" width="100%">
+    <Box className="story-creator-form mini" sx={{
+      width: "100%"
+    }}>
       <Box
-        marginTop={4}
-        marginBottom={1}
-        display="flex"
-        width="100%"
-        flexWrap="wrap"
         component="form"
         autoComplete="off"
-        flexDirection="column"
-        alignItems={{ xs: "center", md: "flex-start" }}
-        justifyContent={{ xs: "center", md: "flex-start" }}
         onSubmit={handleOnFormSubmit}
         className="story-creator-form-wrapper"
-      >
+        sx={{
+          marginTop: 4,
+          marginBottom: 1,
+          display: "flex",
+          width: "100%",
+          flexWrap: "wrap",
+          flexDirection: "column",
+          alignItems: { xs: "center", md: "flex-start" },
+          justifyContent: { xs: "center", md: "flex-start" }
+        }}>
         <Box
-          display="flex"
-          alignItems="flex-start"
-          sx={{ width: { xs: "90%", sm: "50%" }, gap: 1 }}
-        >
+          sx={{
+            display: "flex",
+            alignItems: "flex-start",
+            width: { xs: "90%", sm: "50%" },
+            gap: 1
+          }}>
           <TextField
             required
             id="name"
@@ -267,13 +272,14 @@ const CreateStoryFormMini = () => {
         </Box>
 
         <Box
-          marginX={2}
-          display="flex"
           component="div"
-          alignItems="flex-start"
-          flexDirection="column"
           className="blog-creator-form-wrapper-button"
-        >
+          sx={{
+            marginX: 2,
+            display: "flex",
+            alignItems: "flex-start",
+            flexDirection: "column"
+          }}>
           <Button
             size="small"
             color="info"

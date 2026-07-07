@@ -68,7 +68,12 @@ const CookiePolicy = () => {
           for more information.
         </Typography>
 
-        <Box mt={2} sx={{ position: "relative", zIndex: 2 }}>
+        <Box
+          sx={{
+            mt: 2,
+            position: "relative",
+            zIndex: 2
+          }}>
           <Button
             variant="contained"
             color="primary"

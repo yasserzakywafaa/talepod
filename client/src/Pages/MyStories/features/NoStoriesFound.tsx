@@ -13,8 +13,13 @@ const NoStoriesFound = (props: NoStoriesFoundProps) => {
   return (
     <>
       <NoResultsFound />
-
-      <Box width="100%" margin="auto" display="flex" justifyContent="center">
+      <Box
+        sx={{
+          width: "100%",
+          margin: "auto",
+          display: "flex",
+          justifyContent: "center"
+        }}>
         <Button
           size="large"
           color="secondary"

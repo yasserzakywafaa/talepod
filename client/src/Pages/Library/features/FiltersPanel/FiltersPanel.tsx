@@ -110,19 +110,23 @@ const FiltersPanel: React.FC = (): JSX.Element => {
       className="filters-panel-container"
       onClose={handleOnPanelClose}
     >
-      <Box textAlign="center" mt="1rem">
+      <Box
+        sx={{
+          textAlign: "center",
+          mt: "1rem"
+        }}>
         <Typography variant="h5" color="primary">
           Filter Stories
         </Typography>
       </Box>
-
       <Box
-        height="100%"
-        display="flex"
-        alignItems="center"
-        flexDirection="column"
-        justifyContent="space-between"
-      >
+        sx={{
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "column",
+          justifyContent: "space-between"
+        }}>
         <Box className="filters-form">
           <TextField
             label="Name"
@@ -239,13 +243,14 @@ const FiltersPanel: React.FC = (): JSX.Element => {
           </ToggleButtonGroup>
 
           <Box
-            width="100%"
-            display="flex"
             className="filters-form-item"
-            justifyContent="space-between"
-            alignItems={{ xs: "start", sm: "center" }}
-            flexDirection={{ xs: "column", sm: "row" }}
-          >
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: { xs: "start", sm: "center" },
+              flexDirection: { xs: "column", sm: "row" }
+            }}>
             <FormGroup>
               <FormControlLabel
                 name="audio"
@@ -345,15 +350,14 @@ const FiltersPanel: React.FC = (): JSX.Element => {
         </Box>
 
         <Box
-          width="100%"
-          display="flex"
-          alignItems="center"
-          justifyContent="space-between"
           className="filters-form-footer"
           sx={{
-            borderTop: (theme) => `1px solid ${theme.palette.text.primary}`,
-          }}
-        >
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            borderTop: (theme) => `1px solid ${theme.palette.text.primary}`
+          }}>
           <Button
             size="small"
             variant="text"
@@ -364,10 +368,11 @@ const FiltersPanel: React.FC = (): JSX.Element => {
           </Button>
 
           <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-          >
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between"
+            }}>
             <Button
               sx={{ mr: 1 }}
               size="small"

@@ -109,7 +109,6 @@ const MyProfilePage = () => {
       <Box component="div" className="bg-image-character">
         <RandomImage />
       </Box>
-
       <Container className="view-story-container" sx={{ pt: 4, pb: 4 }}>
         <Typography
           variant="h4"
@@ -120,13 +119,20 @@ const MyProfilePage = () => {
           My Profile
         </Typography>
 
-        <Box display="flex" alignItems="center" sx={{ mb: 4 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            mb: 4
+          }}>
           <ProfileAvatar
             user={auth.user as User}
             verifiedBadgeSize={32}
             avatarSize={{ width: 100, height: 100 }}
           />
-          <Typography variant="h5" component="h5" marginLeft={2}>
+          <Typography variant="h5" component="h5" sx={{
+            marginLeft: 2
+          }}>
             Hi {user?.name.givenName} 👋🏻
           </Typography>
         </Box>
@@ -175,7 +181,9 @@ const MyProfilePage = () => {
           })}
         </Box>
 
-        <Grid container spacing={3} alignItems="flex-start">
+        <Grid container spacing={3} sx={{
+          alignItems: "flex-start"
+        }}>
           {/* Active tab panel */}
           <Grid size={{ xs: 12, md: 8 }}>
             {tab === "profile" && (
@@ -253,7 +261,12 @@ const MyProfilePage = () => {
                 <Typography variant="h5" color="error" sx={{ mb: 1 }}>
                   Danger Zone
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "text.secondary",
+                    mb: 2
+                  }}>
                   Permanently delete your account and all associated stories,
                   avatars, story credits, and subscription data. If you have an
                   active subscription, billing will be cancelled immediately.
@@ -381,7 +394,6 @@ const MyProfilePage = () => {
           </Grid>
         </Grid>
       </Container>
-
       <DeleteAccountDialog
         isOpen={isDeleteAccountDialogOpen}
         isDeleting={isDeletingAccount}

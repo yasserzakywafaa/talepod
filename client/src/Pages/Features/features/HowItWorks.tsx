@@ -38,11 +38,12 @@ const HowItWorks = () => {
   return (
     <Container sx={{ py: 4 }}>
       <Box
-        display="flex"
-        flexWrap="wrap"
-        justifyContent="space-between"
-        alignItems="center"
-      >
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}>
         {isDesktop && (
           <img
             style={{
@@ -57,17 +58,20 @@ const HowItWorks = () => {
         )}
 
         <Box
-          display="flex"
-          flexDirection="column"
-          flexWrap="wrap"
-          justifyContent={{
-            md: "center",
-            lg: "flex-start",
-          }}
-          alignItems="center"
-          width={{ xs: "100%", sm: "100%", md: "100%", lg: "50%" }}
-          mb="2rem"
-        >
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            flexWrap: "wrap",
+
+            justifyContent: {
+              md: "center",
+              lg: "flex-start",
+            },
+
+            alignItems: "center",
+            width: { xs: "100%", sm: "100%", md: "100%", lg: "50%" },
+            mb: "2rem"
+          }}>
           <Typography variant="h4" align="center" color="primary" gutterBottom>
             Create Magical Bedtime Stories in 3 Easy Steps
           </Typography>
@@ -96,7 +100,11 @@ const HowItWorks = () => {
                   backgroundColor: "transparent",
                 }}
               >
-                <Box display="flex" justifyContent="center">
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center"
+                  }}>
                   <Create color="primary" fontSize="large" />
                 </Box>
                 <Typography variant="h6" gutterBottom>
@@ -117,7 +125,11 @@ const HowItWorks = () => {
                   backgroundColor: "transparent",
                 }}
               >
-                <Box display="flex" justifyContent="center">
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center"
+                  }}>
                   <AutoAwesome color="primary" fontSize="large" />
                 </Box>
                 <Typography variant="h6" gutterBottom>
@@ -138,7 +150,11 @@ const HowItWorks = () => {
                   backgroundColor: "transparent",
                 }}
               >
-                <Box display="flex" justifyContent="center">
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center"
+                  }}>
                   <MenuBook color="primary" fontSize="large" />
                 </Box>
                 <Typography variant="h6" gutterBottom>
@@ -153,7 +169,11 @@ const HowItWorks = () => {
           </Grid>
         </Box>
 
-        <Box width="100%" textAlign="center">
+        <Box
+          sx={{
+            width: "100%",
+            textAlign: "center"
+          }}>
           <Button
             size="large"
             color="primary"

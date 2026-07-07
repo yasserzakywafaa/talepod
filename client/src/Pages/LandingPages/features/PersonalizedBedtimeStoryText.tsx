@@ -42,18 +42,16 @@ const PersonalizedBedtimeStoryText = (
       }}
     >
       <Typography
-        mb={4}
         gutterBottom
         variant="h3"
         color="primary"
-        textAlign="center"
         sx={{
-          fontSize: { xs: "1.75rem", sm: "2rem" },
-        }}
-      >
+          mb: 4,
+          textAlign: "center",
+          fontSize: { xs: "1.75rem", sm: "2rem" }
+        }}>
         How to Create a New Personalized Bedtime Story
       </Typography>
-
       <Card sx={{ mb: "2rem" }}>
         <CardContent
           sx={{
@@ -62,22 +60,24 @@ const PersonalizedBedtimeStoryText = (
           }}
         >
           <Box
-            width={{ sm: "50%" }}
-            display={{ sm: "flex" }}
-            flexDirection={{ sm: "column" }}
-            justifyContent="center"
-          >
+            sx={{
+              width: { sm: "50%" },
+              display: { sm: "flex" },
+              flexDirection: { sm: "column" },
+              justifyContent: "center"
+            }}>
             <Typography variant="h5" gutterBottom>
               Why Personalize Bedtime Stories?
             </Typography>
 
             <Typography variant="body1" paragraph>
               <Link
-                sx={{ pr: "5px" }}
-                color="text.secondary"
                 href={routes.termsAndConditions}
                 onClick={handleFooterLinkItemClick(routes.library)}
-              >
+                sx={{
+                  color: "text.secondary",
+                  pr: "5px"
+                }}>
                 Personalized bedtime stories
               </Link>
               {props.whyPersonalizeBedtimeStories}
@@ -89,11 +89,12 @@ const PersonalizedBedtimeStoryText = (
             <Typography variant="body1" paragraph>
               TalePod is a revolutionary app designed to help you
               <Link
-                sx={{ px: "5px" }}
-                color="text.secondary"
                 href={routes.termsAndConditions}
                 onClick={handleFooterLinkItemClick(routes.create)}
-              >
+                sx={{
+                  color: "text.secondary",
+                  px: "5px"
+                }}>
                 create personalized bedtime stories
               </Link>
               effortlessly. {props.introducingTalePod}
@@ -110,7 +111,6 @@ const PersonalizedBedtimeStoryText = (
           </Box>
         </CardContent>
       </Card>
-
       <Card sx={{ mb: "2rem" }}>
         <CardContent
           sx={{
@@ -119,11 +119,12 @@ const PersonalizedBedtimeStoryText = (
           }}
         >
           <Box
-            width={{ sm: "50%" }}
-            display={{ sm: "flex" }}
-            flexDirection={{ sm: "column" }}
-            justifyContent="center"
-          >
+            sx={{
+              width: { sm: "50%" },
+              display: { sm: "flex" },
+              flexDirection: { sm: "column" },
+              justifyContent: "center"
+            }}>
             <Typography variant="h5" gutterBottom>
               Benefits of Using TalePod
             </Typography>
@@ -135,41 +136,46 @@ const PersonalizedBedtimeStoryText = (
           </Box>
         </CardContent>
       </Card>
-
       <Typography variant="body1" paragraph>
         TalePod transforms bedtime into a magical experience by offering{" "}
         <Link
-          sx={{ pr: "5px" }}
-          color="text.secondary"
           href={routes.library}
           onClick={handleFooterLinkItemClick(routes.library)}
-        >
+          sx={{
+            color: "text.secondary",
+            pr: "5px"
+          }}>
           personalized bedtime stories
         </Link>{" "}
         that cater to your child's unique preferences. By using TalePod, you can{" "}
         <Link
-          sx={{ pr: "5px" }}
-          color="text.secondary"
           href={routes.create}
           onClick={handleFooterLinkItemClick(routes.create)}
-        >
+          sx={{
+            color: "text.secondary",
+            pr: "5px"
+          }}>
           create memorable bedtime moments
         </Link>{" "}
         that nurture the imagination and foster a love for storytelling. Start
         crafting the perfect bedtime story. For more information, please read
         our{" "}
         <Link
-          sx={{ pr: "5px" }}
-          color="text.secondary"
           href={routes.privacyPolicy}
           onClick={handleFooterLinkItemClick(routes.privacyPolicy)}
-        >
+          sx={{
+            color: "text.secondary",
+            pr: "5px"
+          }}>
           Privacy Policy
         </Link>
         .
       </Typography>
-
-      <Box width="100%" textAlign="center">
+      <Box
+        sx={{
+          width: "100%",
+          textAlign: "center"
+        }}>
         <Button
           size="large"
           color="primary"

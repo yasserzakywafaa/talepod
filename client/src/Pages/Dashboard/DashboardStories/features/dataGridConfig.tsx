@@ -129,7 +129,12 @@ export const getDashboardStoriesDataGridConfig = (
 
         if (!author) {
           return (
-            <Box display="flex" alignItems="center" sx={{ height: "100%" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                height: "100%"
+              }}>
               <Typography variant="body2">Unknown</Typography>
             </Box>
           );
@@ -137,13 +142,19 @@ export const getDashboardStoriesDataGridConfig = (
 
         return (
           <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="flex-start"
-            gap={1.5}
-            sx={{ height: "100%" }}
-          >
-            <Box display="flex" alignItems="center" justifyContent="center">
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              gap: 1.5,
+              height: "100%"
+            }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}>
               <ProfileAvatar
                 user={author}
                 avatarSize={{ width: 32, height: 32 }}
@@ -151,12 +162,15 @@ export const getDashboardStoriesDataGridConfig = (
               />
             </Box>
             <Box
-              display="flex"
-              flexDirection="column"
-              justifyContent="center"
-              sx={{ height: "100%" }}
-            >
-              <Typography variant="body2" fontWeight="medium">
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                height: "100%"
+              }}>
+              <Typography variant="body2" sx={{
+                fontWeight: "medium"
+              }}>
                 {author.name.givenName} {author.name.familyName}
               </Typography>
             </Box>

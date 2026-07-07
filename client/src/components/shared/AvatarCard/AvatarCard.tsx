@@ -54,151 +54,150 @@ const AvatarCard = ({
   const isCompact = size === "compact" || isMini;
 
   return (
-  <Box
-    sx={{
-      backgroundColor: "background.paper",
-      borderRadius: isMini ? "var(--r-md)" : "var(--r-lg)",
-      border: "1px solid",
-      borderColor: "divider",
-      boxShadow: "var(--shadow-xs)",
-      overflow: "hidden",
-      display: "flex",
-      flexDirection: "column",
-    }}
-  >
     <Box
       sx={{
-        height: portraitHeight(size),
-        position: "relative",
-        background: avatar.portraitUrl
-          ? `center / cover no-repeat url('${avatar.portraitUrl}')`
-          : "linear-gradient(160deg,#F0B648,#C9622F)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      {!avatar.portraitUrl && !pending && (
-        <Typography
-          sx={{
-            fontFamily: "var(--font-display)",
-            fontSize: isMini ? 28 : isCompact ? 36 : 48,
-            color: "#fff",
-          }}
-        >
-          {avatar.name?.[0]?.toUpperCase() ?? "?"}
-        </Typography>
-      )}
-      {pending && (
-        <>
-          <LoaderSpinner position="absolute" />
-          <Typography
-            sx={{
-              position: "absolute",
-              bottom: isMini ? "8%" : isCompact ? "12%" : "20%",
-              width: "100%",
-              textAlign: "center",
-              color: "#fff",
-              fontSize: isMini ? 11 : 13,
-              zIndex: 1351,
-            }}
-          >
-            Painting portrait…
-          </Typography>
-        </>
-      )}
-    </Box>
-    <Box
-      sx={{
-        p: isMini ? 1 : isCompact ? 1.5 : 2,
-        flex: 1,
+        backgroundColor: "background.paper",
+        borderRadius: isMini ? "var(--r-md)" : "var(--r-lg)",
+        border: "1px solid",
+        borderColor: "divider",
+        boxShadow: "var(--shadow-xs)",
+        overflow: "hidden",
         display: "flex",
         flexDirection: "column",
       }}
     >
       <Box
-        sx={{ display: "flex", alignItems: "center", gap: 0.75, flexWrap: "wrap" }}
-      >
-        <Typography
-          variant={isMini ? "body2" : isCompact ? "subtitle1" : "h6"}
-          color="text.primary"
-          textTransform="uppercase"
-          sx={{
-            fontFamily: "var(--font-display)",
-            flex: 1,
-            fontWeight: 600,
-            fontSize: isMini ? "0.8rem" : isCompact ? "0.95rem" : undefined,
-            lineHeight: 1.2,
-          }}
-        >
-          {avatar.name}
-        </Typography>
-        {avatar.relationship && (
-          <Chip
-            variant="badge"
-            color="secondary"
-            label={avatar.relationship}
-            size={isMini ? "small" : "medium"}
-          />
-        )}
-      </Box>
-      <Typography
-        variant="body2"
         sx={{
-          color: "text.secondary",
-          mt: 0.25,
-          minHeight: isMini ? 0 : 20,
-          fontSize: isMini ? 11 : undefined,
-          lineHeight: 1.35,
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: isMini ? "nowrap" : "normal",
+          height: portraitHeight(size),
+          position: "relative",
+          background: avatar.portraitUrl
+            ? `center / cover no-repeat url('${avatar.portraitUrl}')`
+            : "linear-gradient(160deg,#F0B648,#C9622F)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        {traitSummary(avatar)}
-      </Typography>
-      {!readOnly && (
+        {!avatar.portraitUrl && !pending && (
+          <Typography
+            sx={{
+              fontFamily: "var(--font-display)",
+              fontSize: isMini ? 28 : isCompact ? 36 : 48,
+              color: "#fff",
+            }}
+          >
+            {avatar.name?.[0]?.toUpperCase() ?? "?"}
+          </Typography>
+        )}
+        {pending && (
+          <>
+            <LoaderSpinner position="absolute" />
+            <Typography
+              sx={{
+                position: "absolute",
+                bottom: isMini ? "8%" : isCompact ? "12%" : "20%",
+                width: "100%",
+                textAlign: "center",
+                color: "#fff",
+                fontSize: isMini ? 11 : 13,
+                zIndex: 1351,
+              }}
+            >
+              Painting portrait…
+            </Typography>
+          </>
+        )}
+      </Box>
+      <Box
+        sx={{
+          p: isMini ? 1 : isCompact ? 1.5 : 2,
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         <Box
+          sx={{ display: "flex", alignItems: "center", gap: 0.75, flexWrap: "wrap" }}
+        >
+          <Typography
+            variant={isMini ? "body2" : isCompact ? "subtitle1" : "h6"}
+            sx={{
+              color: "text.primary",
+              textTransform: "uppercase",
+              fontFamily: "var(--font-display)",
+              flex: 1,
+              fontWeight: 600,
+              fontSize: isMini ? "0.8rem" : isCompact ? "0.95rem" : undefined,
+              lineHeight: 1.2
+            }}>
+            {avatar.name}
+          </Typography>
+          {avatar.relationship && (
+            <Chip
+              variant="badge"
+              color="secondary"
+              label={avatar.relationship}
+              size={isMini ? "small" : "medium"}
+            />
+          )}
+        </Box>
+        <Typography
+          variant="body2"
           sx={{
-            display: "flex",
-            gap: 1,
-            mt: "auto",
-            pt: 1.5,
-            alignItems: "center",
+            color: "text.secondary",
+            mt: 0.25,
+            minHeight: isMini ? 0 : 20,
+            fontSize: isMini ? 11 : undefined,
+            lineHeight: 1.35,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: isMini ? "nowrap" : "normal",
           }}
         >
-          <Button
-            size="small"
-            variant="contained"
-            startIcon={<AutoStoriesOutlined />}
-            onClick={onCreate}
-            disabled={disabled}
-            sx={{ flex: 1 }}
+          {traitSummary(avatar)}
+        </Typography>
+        {!readOnly && (
+          <Box
+            sx={{
+              display: "flex",
+              gap: 1,
+              mt: "auto",
+              pt: 1.5,
+              alignItems: "center",
+            }}
           >
-            Create
-          </Button>
-          <Button
-            size="small"
-            variant="outlined"
-            color="secondary"
-            startIcon={<EditOutlined />}
-            onClick={onEdit}
-            disabled={disabled}
-          >
-            Edit
-          </Button>
-          <IconButton
-            aria-label="delete avatar"
-            color="error"
-            onClick={onDelete}
-            disabled={disabled}
-          >
-            <DeleteOutlineRounded />
-          </IconButton>
-        </Box>
-      )}
+            <Button
+              size="small"
+              variant="contained"
+              startIcon={<AutoStoriesOutlined />}
+              onClick={onCreate}
+              disabled={disabled}
+              sx={{ flex: 1 }}
+            >
+              Create
+            </Button>
+            <Button
+              size="small"
+              variant="outlined"
+              color="secondary"
+              startIcon={<EditOutlined />}
+              onClick={onEdit}
+              disabled={disabled}
+            >
+              Edit
+            </Button>
+            <IconButton
+              aria-label="delete avatar"
+              color="error"
+              onClick={onDelete}
+              disabled={disabled}
+            >
+              <DeleteOutlineRounded />
+            </IconButton>
+          </Box>
+        )}
+      </Box>
     </Box>
-  </Box>
   );
 };
 

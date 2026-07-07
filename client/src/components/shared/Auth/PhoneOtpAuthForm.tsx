@@ -219,13 +219,19 @@ const PhoneOtpAuthForm = ({
   return (
     <Box
       component="form"
-      display="flex"
-      flexDirection="column"
-      gap={2}
       onSubmit={handleSubmit}
-    >
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 2
+      }}>
       {isRegister && (
-        <Box display="flex" flexDirection="column" gap={2}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2
+          }}>
           <TextField
             required
             fullWidth
@@ -245,7 +251,6 @@ const PhoneOtpAuthForm = ({
           />
         </Box>
       )}
-
       <MuiTelInput
         value={phoneNumber}
         onChange={(value) => setPhoneNumber(value)}
@@ -254,7 +259,6 @@ const PhoneOtpAuthForm = ({
         disabled={isOtpSent}
         defaultCountry="US"
       />
-
       {isOtpSent && (
         <>
           <TextField
@@ -266,12 +270,13 @@ const PhoneOtpAuthForm = ({
             onChange={(event) => setOtpCode(event.target.value)}
             autoComplete="one-time-code"
           />
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             OTP sent to {submittedPhoneNumber}
           </Typography>
         </>
       )}
-
       {!isOtpSent ? (
         <Button
           type="submit"
@@ -282,7 +287,12 @@ const PhoneOtpAuthForm = ({
           {isSubmitting ? "Sending OTP..." : "Send OTP"}
         </Button>
       ) : (
-        <Box display="flex" flexWrap="wrap" gap={1.5}>
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 1.5
+          }}>
           <Button
             type="button"
             fullWidth

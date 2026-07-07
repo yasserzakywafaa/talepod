@@ -34,19 +34,25 @@ const OpenAiGPTImageGeneration = () => {
   };
 
   return (
-    <Box position="relative" sx={{ marginY: "1rem" }}>
+    <Box
+      sx={{
+        position: "relative",
+        marginY: "1rem"
+      }}>
       {isFetching && <LoaderSpinner style={{ position: "absolute" }} />}
-
       <Box
         noValidate
-        display="flex"
         component="form"
         autoComplete="off"
-        position="relative"
-        flexDirection="column"
         onSubmit={handleOnFormSubmit}
-      >
-        <Stack spacing={2} flexGrow={1}>
+        sx={{
+          display: "flex",
+          position: "relative",
+          flexDirection: "column"
+        }}>
+        <Stack spacing={2} sx={{
+          flexGrow: 1
+        }}>
           <TextField
             multiline
             label="User Prompt"
@@ -64,7 +70,6 @@ const OpenAiGPTImageGeneration = () => {
           </Button>
         </Stack>
       </Box>
-
       {image && image.content && (
         <>
           <Divider style={{ margin: "2rem 0" }}>

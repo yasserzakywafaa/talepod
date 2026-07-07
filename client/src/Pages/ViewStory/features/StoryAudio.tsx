@@ -141,12 +141,13 @@ const StoryAudio: FC = () => {
           </Typography>
 
           <Box
-            display="flex"
-            flexWrap="wrap"
-            alignItems="center"
-            justifyContent="center"
-            flexDirection={{ xs: "column", sm: "row" }}
-          >
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: { xs: "column", sm: "row" }
+            }}>
             <FormControl
               sx={{ margin: "1rem", width: { xs: "50%", sm: "15%" } }}
               className="voice-select-dropdown"
@@ -205,9 +206,10 @@ const StoryAudio: FC = () => {
           </Box>
         </>
       )}
-
       {story.audioFile && (
-        <Box mt={2}>
+        <Box sx={{
+          mt: 2
+        }}>
           <Typography
             variant="h6"
             component="h6"

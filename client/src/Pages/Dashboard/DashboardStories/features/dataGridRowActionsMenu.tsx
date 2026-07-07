@@ -69,7 +69,13 @@ const DataGridRowActionsMenu = (params: GridRenderCellParams) => {
   };
 
   return (
-    <Box display="flex" justifyContent="flex-end" alignItems="center" gap={1}>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "flex-end",
+        alignItems: "center",
+        gap: 1
+      }}>
       <IconButton
         size="small"
         color="primary"
@@ -84,7 +90,6 @@ const DataGridRowActionsMenu = (params: GridRenderCellParams) => {
       >
         <MoreVert />
       </IconButton>
-
       <Menu
         id="row-actions-menu"
         anchorEl={anchorEl}
@@ -119,7 +124,6 @@ const DataGridRowActionsMenu = (params: GridRenderCellParams) => {
           </Typography>
         </MenuItem>
       </Menu>
-
       {storyToDelete && (
         <DeleteStoryDialog
           isOpen={isDeleteDialogOpen}

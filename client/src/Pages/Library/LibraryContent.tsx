@@ -82,13 +82,14 @@ export const LibraryContent = (props: LibraryPageContentProps): JSX.Element => {
 
         {!isFetching && (
           <Box
-            mb={1}
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-            mt={{ xs: 0, sm: 2 }}
             className="library-top-bar"
-          >
+            sx={{
+              mb: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              mt: { xs: 0, sm: 2 }
+            }}>
             <Box>
               {showSourceChips && storiesSource !== "users" && (
                 <Stack direction="row" spacing={1}>

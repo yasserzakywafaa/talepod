@@ -24,12 +24,11 @@ export default function GeneratorFaq() {
       <Typography
         component="h2"
         variant="h5"
-        color="text.primary"
         sx={{
+          color: "text.primary",
           width: { sm: "100%", md: "60%" },
-          textAlign: { sm: "left", md: "center" },
-        }}
-      >
+          textAlign: { sm: "left", md: "center" }
+        }}>
         Personalized bedtime story generator — FAQ
       </Typography>
       <Card sx={{ width: "100%" }}>

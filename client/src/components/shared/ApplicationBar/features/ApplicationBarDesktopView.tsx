@@ -178,7 +178,9 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                     sx={{ mr: 1 }}
                   />
 
-                  <Typography variant="body1" color="text.primary">
+                  <Typography variant="body1" sx={{
+                    color: "text.primary"
+                  }}>
                     Register
                   </Typography>
                 </MenuItem>
@@ -193,7 +195,9 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                     sx={{ mr: 1 }}
                   />
 
-                  <Typography variant="body1" color="text.primary">
+                  <Typography variant="body1" sx={{
+                    color: "text.primary"
+                  }}>
                     Login
                   </Typography>
                 </MenuItem>

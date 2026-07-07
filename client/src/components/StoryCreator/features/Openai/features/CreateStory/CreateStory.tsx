@@ -27,19 +27,24 @@ const CreateStory = () => {
   // };
 
   return (
-    <Box position="relative" sx={{ marginY: "1rem" }}>
+    <Box
+      sx={{
+        position: "relative",
+        marginY: "1rem"
+      }}>
       {isFetching && <LoaderSpinner style={{ position: "absolute" }} />}
-
       <Box
         noValidate
-        display="flex"
         component="form"
         autoComplete="off"
-        position="relative"
-        flexDirection="column"
-        // onSubmit={handleOnFormSubmit}
-      >
-        <Stack spacing={2} flexGrow={1}>
+        sx={{
+          display: "flex",
+          position: "relative",
+          flexDirection: "column"
+        }}>
+        <Stack spacing={2} sx={{
+          flexGrow: 1
+        }}>
           <TextField
             disabled
             multiline
@@ -58,7 +63,6 @@ const CreateStory = () => {
           </Button> */}
         </Stack>
       </Box>
-
       {/* {story && story.mainStory && (
         <>
           <Divider style={{ margin: "2rem 0" }}>

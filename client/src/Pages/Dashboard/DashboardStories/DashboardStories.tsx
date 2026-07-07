@@ -34,12 +34,16 @@ const DashboardStories = () => {
       <Typography variant="h4" component="h1" color="primary" gutterBottom>
         Stories
       </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+      <Typography
+        variant="body1"
+        sx={{
+          color: "text.secondary",
+          mb: 3
+        }}>
         {paging.totalCount
           ? `${paging.totalCount} total`
           : "Manage and view all platform stories."}
       </Typography>
-
       <Box sx={{ overflowX: "auto", position: "relative", width: "100%" }}>
         <DataGrid
           rows={config.rows}

@@ -80,11 +80,13 @@ const BlogPage = () => {
                 <ShareFloating />
 
                 <Box
-                  marginY={5}
                   component="article"
                   className={`view-blog-card-main-blog ${
                     hasDirectionRtl ? "direction-rtl" : ""
                   }`}
+                  sx={{
+                    marginY: 5
+                  }}
                 >
                   <ReactMarkdown>{blog.mainBlog}</ReactMarkdown>
                 </Box>
@@ -99,11 +101,13 @@ const BlogPage = () => {
                 </Box>
 
                 <Box
-                  marginY={5}
                   component="article"
                   className={`bold view-blog-card-callToAction ${
                     hasDirectionRtl ? "direction-rtl" : ""
                   }`}
+                  sx={{
+                    marginY: 5
+                  }}
                 >
                   <ReactMarkdown>{blog.callToAction}</ReactMarkdown>
                 </Box>

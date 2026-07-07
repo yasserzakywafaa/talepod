@@ -31,30 +31,40 @@ const SwipeToRefresh = (params: SwipeToRefreshProps) => {
     >
       {swipeDistance >= swipeDownThreshold ? (
         <>
-          <Box display="flex" justifyContent="center" alignItems="center">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center"
+            }}>
             <ArrowUpwardOutlined
               color="primary"
               fontSize="medium"
               sx={{ mr: 1 }}
             />
-            <Typography color="text.primary">Release to refresh</Typography>
+            <Typography sx={{
+              color: "text.primary"
+            }}>Release to refresh</Typography>
             <RefreshOutlined color="primary" fontSize="medium" sx={{ ml: 1 }} />
           </Box>
         </>
       ) : (
         <>
           <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            color="primary"
-          >
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              color: "primary"
+            }}>
             <ArrowDownwardOutlined
               color="primary"
               fontSize="medium"
               sx={{ mr: 1 }}
             />
-            <Typography color="text.primary">Pull to refresh</Typography>
+            <Typography sx={{
+              color: "text.primary"
+            }}>Pull to refresh</Typography>
             <RefreshOutlined color="primary" fontSize="medium" sx={{ ml: 1 }} />
           </Box>
         </>

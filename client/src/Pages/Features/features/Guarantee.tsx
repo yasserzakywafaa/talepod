@@ -43,12 +43,13 @@ const Guarantee = () => {
     <Container sx={{ py: 4 }}>
       <Box
         className="guarantee"
-        bgcolor="primary.light"
-        color="primary.contrastText"
-        p={4}
-        borderRadius={2}
-        textAlign="center"
-      >
+        sx={{
+          bgcolor: "primary.light",
+          color: "primary.contrastText",
+          p: 4,
+          borderRadius: 2,
+          textAlign: "center"
+        }}>
         <VerifiedUser sx={{ fontSize: 60, mb: 2 }} />
         <Typography variant="h4" component="h2" gutterBottom>
           Our Ironclad Guarantee

@@ -12,15 +12,17 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         marginTop: 4,
       }}
     >
-      <Typography variant="h5" marginBottom={2}>
+      <Typography variant="h5" sx={{
+        marginBottom: 2
+      }}>
         Revolutionizing Bedtime Stories with Personalized, Magical Adventures
       </Typography>
-
       <Typography variant="h6" className="text-underline">
         The Challenge of Bedtime
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         Bedtime is often a cherished part of the day for families, providing the
         perfect opportunity to wind down and spend quality time together. But
         after a long day, finding the energy to read a bedtime story can
@@ -32,8 +34,9 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         child can lead to stress and exhaustion, turning what should be a moment
         of bonding into a nightly struggle.
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         At the heart of bedtime storytelling lies an undeniable importance: the
         benefits it provides to a child's emotional, cognitive, and imaginative
         development. These stories help to expand a child’s vocabulary, foster
@@ -43,8 +46,9 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         to consistently craft personalized and engaging stories can feel
         impossible.
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         Many parents rely on a collection of storybooks or online tales, but
         over time, even these resources can lose their charm. Children often
         crave novelty, asking for new and exciting adventures that tap into
@@ -56,19 +60,20 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         superheroes—can make it expensive and impractical to constantly update a
         physical library of books.
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         This creates a common bedtime dilemma: how can parents consistently
         provide exciting, personalized, and immersive stories that keep their
         children engaged and make bedtime a joyful, rather than stressful,
         experience?
       </Typography>
-
       <Typography variant="h6" className="text-underline">
         The Solution: TalePod
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         <span className="bold">TalePod</span> was created to address these
         challenges by offering parents a simple yet powerful tool to make
         bedtime storytelling stress-free, fun, and personalized.{" "}
@@ -76,8 +81,9 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         bedtime into a magical adventure that their children will eagerly look
         forward to every night.
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         With <span className="bold">TalePod</span>, parents can quickly generate
         custom bedtime stories that are tailored to their child's unique
         preferences, whether it's their favorite characters, themes, or even
@@ -89,8 +95,9 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         bedtime stories are the same, and the customization possibilities are
         endless.
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         At <span className="bold">TalePod</span>, we understand the pressures
         that parents face in balancing work, home life, and spending quality
         time with their children. Our platform is designed to alleviate this
@@ -101,12 +108,12 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         child's bedtime experience, <span className="bold">TalePod</span> offers
         a perfect balance of convenience and creativity.
       </Typography>
-
       <Typography variant="h6" className="text-underline">
         Personalized Storytelling: The Magic of TalePod
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         <span className="bold">TalePod</span>'s platform is designed with one
         key mission in mind: to
         <span className="bold">personalize storytelling</span> in a way that
@@ -119,8 +126,9 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         adventurous, or educational narratives, ensuring that every night offers
         a new and exciting bedtime experience.
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         Additionally, <span className="bold">TalePod</span> offers a feature to
         customize the length of stories, allowing parents to choose whether they
         want a short, simple tale for those busy evenings or a longer, more
@@ -130,18 +138,19 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         sound of ocean waves while reading about a daring underwater explorer,
         or the gentle rustle of leaves during a story set in a magical forest.
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         This feature not only heightens a child's engagement but also adds a
         layer of relaxation, helping children drift off to sleep with the
         soothing sounds of nature or magical worlds.
       </Typography>
-
       <Typography variant="h6" className="text-underline">
         A Shared Experience for Parents and Children
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         The joy of <span className="bold">TalePod</span> goes beyond just
         reading a story to your child; it's about creating shared moments of
         wonder and connection. <span className="bold">TalePod</span>
@@ -153,8 +162,9 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         provide opportunities for parents to be active participants in their
         child's imagination.
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         For parents, <span className="bold">TalePod</span> offers more than just
         a solution to the common bedtime struggles—it provides a tool for
         enhancing family time in a meaningful way. After a story is created,
@@ -163,12 +173,12 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         <span className="bold">TalePod</span>, storytelling becomes a shared
         journey that both children and parents look forward to each night.
       </Typography>
-
       <Typography variant="h6" className="text-underline">
         Growing Imagination and Expanding Horizons
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         One of the greatest benefits of bedtime storytelling is how it nurtures
         a child's creativity and curiosity. For parents,{" "}
         <span className="bold">TalePod</span> stories are designed to not only
@@ -177,8 +187,9 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         adventures, children are introduced to new concepts and diverse
         experiences that spark their imaginations.
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         By catering stories to a child's individual preferences and interests,{" "}
         <span className="bold">TalePod</span> allows children to see themselves
         in the characters and adventures they read about. This empowerment
@@ -188,8 +199,9 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         <span className="bold">TalePod</span> can create stories that inspire
         their imaginations.
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         Moreover, <span className="bold">TalePod</span>'s rich collection of
         story themes introduces children to different cultures, historical
         events, and educational topics, helping them build a wider understanding
@@ -198,12 +210,12 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         diverse stories not only expand children's horizons but also contribute
         to their intellectual and emotional development.
       </Typography>
-
       <Typography variant="h6" className="text-underline">
         Incorporating Montessori Principles in Bedtime Stories
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         At <span className="bold">TalePod</span>, we believe that every story is
         an opportunity not only to entertain but also to educate and inspire.
         This philosophy closely mirrors the{" "}
@@ -217,12 +229,12 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         learning and imagination while strengthening the bond between parent and
         child.
       </Typography>
-
       <Typography variant="h6" className="text-underline">
         Montessori's Focus on Individual Interests
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         A core principle of <span className="bold">Montessori</span> education
         is the belief that children learn best when they are engaged with topics
         that interest them. <span className="bold">TalePod</span>
@@ -237,8 +249,9 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         <span className="bold">Montessori</span>
         encourages children to pursue subjects they are passionate about.
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         Moreover, the <span className="bold">Montessori</span> method places
         great importance on hands-on learning and experiential engagement.
         Similarly, <span className="bold">TalePod</span> gives children a more
@@ -251,12 +264,12 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         learning, where children are encouraged to interact directly with their
         environment to better understand the world around them.
       </Typography>
-
       <Typography variant="h6" className="text-underline">
         Fostering Independence and Choice
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         One of the key aims of the <span className="bold">Montessori</span>{" "}
         method is to cultivate a sense of independence in children, allowing
         them to make choices and direct their own learning.{" "}
@@ -268,8 +281,9 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         also promotes decision-making skills, encouraging children to take
         ownership of their bedtime routine.
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         For instance, children can choose whether they want a short story on a
         busy weekday night or a longer adventure on the weekends. They can
         decide if their story will take place in a magical forest or in the
@@ -281,12 +295,12 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         confidence and autonomy—key goals of{" "}
         <span className="bold">Montessori</span> education.
       </Typography>
-
       <Typography variant="h6" className="text-underline">
         Encouraging Creativity and Critical Thinking
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         The <span className="bold">Montessori</span> method also emphasizes
         nurturing creativity and critical thinking in children from an early
         age. By allowing children to play an active role in shaping their
@@ -299,8 +313,9 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         brave explorer one night, a wizard the next, or even the captain of a
         spaceship—each scenario helping to expand their imaginative horizons.
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         In addition, <span className="bold">TalePod</span> stories often present
         moral lessons or thought-provoking challenges that stimulate a child's
         problem-solving abilities, echoing the{" "}
@@ -312,12 +327,12 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         <span className="bold">Montessori</span>'s belief in educating the whole
         child—mind, body, and spirit.
       </Typography>
-
       <Typography variant="h6" className="text-underline">
         A Learning Experience Beyond the Classroom
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         Another key feature of <span className="bold">Montessori</span>{" "}
         education is that it extends beyond the traditional classroom setting.
         In the <span className="bold">Montessori</span> method, learning happens
@@ -330,8 +345,9 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         concepts, cultures, or historical events—sparking curiosity and
         inspiring them to ask questions and learn more.
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         For example, a <span className="bold">TalePod</span> story might take a
         child on an exciting journey through ancient Egypt, teaching them about
         the pyramids, pharaohs, and hieroglyphics. Another night, the same child
@@ -342,12 +358,12 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         or a quiet forest, adds another layer of sensory engagement that
         enhances learning and promotes relaxation.
       </Typography>
-
       <Typography variant="h6" className="text-underline">
         Building Confidence and Emotional Intelligence
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         Montessori education is not just about intellectual growth; it also
         focuses on developing a child's emotional intelligence and confidence.
         Similarly, <span className="bold">TalePod</span> offers stories that
@@ -358,8 +374,9 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         listener but an active participant, navigating the challenges and
         triumphs of their chosen story.
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         Through these personalized narratives, children learn to empathize with
         different characters, understand various perspectives, and reflect on
         their own emotions—all of which contribute to their emotional
@@ -368,12 +385,12 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         develop emotional resilience and social awareness, qualities that are
         crucial for navigating the world around them.
       </Typography>
-
       <Typography variant="h6" className="text-underline">
         A New Era of Bedtime Stories
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         By blending the timeless tradition of storytelling with modern
         technology, <span className="bold">TalePod</span> offers a{" "}
         <span className="bold">Montessori</span>-inspired approach to bedtime
@@ -384,12 +401,12 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         foster your child's development, <span className="bold">TalePod</span>{" "}
         offers the perfect solution.
       </Typography>
-
       <Typography variant="h6" className="text-underline">
         Building Memories and Traditions
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         <span className="bold">TalePod</span> is not just about providing
         stories—it's about building lasting memories. The bedtime routine is a
         time when parents and children come together, free from distractions, to
@@ -399,8 +416,9 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         older, these bedtime memories remain a cherished part of their
         upbringing.
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         The personalization features within{" "}
         <span className="bold">TalePod</span> allow parents to revisit
         characters and settings from previous stories, creating continuity and
@@ -408,12 +426,12 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         become like old friends, comforting children as they settle in for the
         night.
       </Typography>
-
       <Typography variant="h6" className="text-underline">
         Join the TalePod Journey
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         <span className="bold">TalePod</span> is more than just a storytelling
         platform; it's a movement to revolutionize the way families experience
         bedtime. Parents no longer need to scramble for new stories or worry
@@ -421,8 +439,9 @@ const ViewStoryStaticSEO = (props: ViewStorySeoParams): JSX.Element => {
         <span className="bold">TalePod</span> delivers high-quality,
         personalized stories that captivate children and bring joy to parents.
       </Typography>
-
-      <Typography variant="body1" marginY={3}>
+      <Typography variant="body1" sx={{
+        marginY: 3
+      }}>
         Whether you're looking to strengthen your bedtime routine, create
         magical memories, or help your child explore their imagination,{" "}
         <span className="bold">TalePod</span> is here to help. Join us on this

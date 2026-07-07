@@ -99,25 +99,28 @@ const Alternatives = () => {
       <div style={{ position: "absolute", zIndex: "-1" }}>
         <ParticlesComponent />
       </div>
-
       <Container sx={{ py: { xs: 4, sm: 8 } }}>
         <Typography
           component="h1"
           variant="h3"
           color="primary"
-          textAlign="center"
           gutterBottom
-          sx={{ fontSize: { xs: "1.75rem", sm: "2.5rem" } }}
-        >
+          sx={{
+            textAlign: "center",
+            fontSize: { xs: "1.75rem", sm: "2.5rem" }
+          }}>
           TalePod Alternatives — Best Personalized Bedtime Story Apps
         </Typography>
 
         <Typography
           variant="body1"
-          color="text.secondary"
-          textAlign="center"
-          sx={{ maxWidth: 720, mx: "auto", mb: 4 }}
-        >
+          sx={{
+            color: "text.secondary",
+            textAlign: "center",
+            maxWidth: 720,
+            mx: "auto",
+            mb: 4
+          }}>
           Looking for TalePod alternatives? Below is an honest comparison of
           popular personalized bedtime story apps for parents. Feature details are
           based on each product&apos;s public website as of 2026.
@@ -158,10 +161,13 @@ const Alternatives = () => {
 
         <Typography
           variant="body2"
-          color="text.secondary"
-          textAlign="center"
-          sx={{ maxWidth: 720, mx: "auto", mb: 4 }}
-        >
+          sx={{
+            color: "text.secondary",
+            textAlign: "center",
+            maxWidth: 720,
+            mx: "auto",
+            mb: 4
+          }}>
           We compared TalePod against popular apps in this category.
         </Typography>
 
@@ -187,7 +193,6 @@ const Alternatives = () => {
           </CardContent>
         </Card>
       </Container>
-
       <CallToAction />
       <FAQ />
     </Page>

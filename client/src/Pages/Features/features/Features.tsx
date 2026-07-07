@@ -59,14 +59,17 @@ export default function Features() {
       <Grid container spacing={6}>
         <Grid size={{ xs: 12, md: 6 }}>
           <div>
-            <Typography component="h2" variant="h4" color="text.primary">
+            <Typography component="h2" variant="h4" sx={{
+              color: "text.primary"
+            }}>
               Product features
             </Typography>
             <Typography
               variant="body1"
-              color="text.secondary"
-              sx={{ mb: { xs: 2, sm: 4 } }}
-            >
+              sx={{
+                color: "text.secondary",
+                mb: { xs: 2, sm: 4 }
+              }}>
               Here you can provide a brief overview of the key features of the
               product. For example, you could list the number of features, the
               types of features, add-ons, or the benefits of the features.
@@ -75,9 +78,10 @@ export default function Features() {
           <Grid
             container
             size={{ xs: 12, md: 6 }}
-            gap={1}
-            sx={{ display: { xs: "auto", sm: "none" } }}
-          >
+            sx={{
+              gap: 1,
+              display: { xs: "auto", sm: "none" }
+            }}>
             {items.map(({ title }, index) => (
               <Chip
                 key={index}
@@ -127,30 +131,31 @@ export default function Features() {
             />
             <Box sx={{ px: 2, pb: 2 }}>
               <Typography
-                color="text.primary"
                 variant="body2"
-                fontWeight="bold"
-              >
+                sx={{
+                  color: "text.primary",
+                  fontWeight: "bold"
+                }}>
                 {selectedFeature.title}
               </Typography>
               <Typography
-                color="text.secondary"
                 variant="body2"
-                sx={{ my: 0.5 }}
-              >
+                sx={{
+                  color: "text.secondary",
+                  my: 0.5
+                }}>
                 {selectedFeature.description}
               </Typography>
               <Link
                 color="primary"
                 variant="body2"
-                fontWeight="bold"
                 sx={{
+                  fontWeight: "bold",
                   display: "inline-flex",
                   alignItems: "center",
                   "& > svg": { transition: "0.2s" },
-                  "&:hover > svg": { transform: "translateX(2px)" },
-                }}
-              >
+                  "&:hover > svg": { transform: "translateX(2px)" }
+                }}>
                 <span>Learn more</span>
                 <ChevronRightRoundedIcon
                   fontSize="small"
@@ -162,12 +167,14 @@ export default function Features() {
 
           <Stack
             direction="column"
-            justifyContent="center"
-            alignItems="flex-start"
             spacing={2}
             useFlexGap
-            sx={{ width: "100%", display: { xs: "none", sm: "flex" } }}
-          >
+            sx={{
+              justifyContent: "center",
+              alignItems: "flex-start",
+              width: "100%",
+              display: { xs: "none", sm: "flex" }
+            }}>
             {items.map(({ icon, title, description }, index) => (
               <Card
                 key={index}
@@ -221,33 +228,34 @@ export default function Features() {
                   </Box>
                   <Box sx={{ textTransform: "none" }}>
                     <Typography
-                      color="text.primary"
                       variant="body2"
-                      fontWeight="bold"
-                    >
+                      sx={{
+                        color: "text.primary",
+                        fontWeight: "bold"
+                      }}>
                       {title}
                     </Typography>
                     <Typography
-                      color="text.secondary"
                       variant="body2"
-                      sx={{ my: 0.5 }}
-                    >
+                      sx={{
+                        color: "text.secondary",
+                        my: 0.5
+                      }}>
                       {description}
                     </Typography>
                     <Link
                       color="primary"
                       variant="body2"
-                      fontWeight="bold"
-                      sx={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        "& > svg": { transition: "0.2s" },
-                        "&:hover > svg": { transform: "translateX(2px)" },
-                      }}
                       onClick={(event) => {
                         event.stopPropagation();
                       }}
-                    >
+                      sx={{
+                        fontWeight: "bold",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        "& > svg": { transition: "0.2s" },
+                        "&:hover > svg": { transform: "translateX(2px)" }
+                      }}>
                       <span>Learn more</span>
                       <ChevronRightRoundedIcon
                         fontSize="small"

@@ -85,7 +85,9 @@ const StoryExportActions: FC<StoryExportActionsProps> = ({
         boxShadow: "var(--shadow-xs)",
       }}
     >
-      <Grid container spacing={{ xs: 2.5, md: 3 }} alignItems="flex-start">
+      <Grid container spacing={{ xs: 2.5, md: 3 }} sx={{
+        alignItems: "flex-start"
+      }}>
         <Grid size={{ xs: 12, md: hasAvatar ? 8 : 12 }}>
           <Box
             sx={{

@@ -54,12 +54,11 @@ export default function FAQ() {
       <Typography
         component="h5"
         variant="h5"
-        color="text.primary"
         sx={{
+          color: "text.primary",
           width: { sm: "100%", md: "60%" },
-          textAlign: { sm: "left", md: "center" },
-        }}
-      >
+          textAlign: { sm: "left", md: "center" }
+        }}>
         Frequently asked questions
       </Typography>
       <Card sx={{ width: "100%" }}>

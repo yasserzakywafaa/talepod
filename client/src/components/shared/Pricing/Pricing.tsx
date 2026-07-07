@@ -49,138 +49,127 @@ export const Pricing = () => {
           gap: { xs: 3, sm: 6 },
         }}
       >
-        <Box
-          sx={{
-            width: { sm: "100%", md: "60%" },
-            textAlign: "center",
-          }}
+      <Box
+        sx={{
+          width: { sm: "100%", md: "60%" },
+          textAlign: "center",
+        }}
+      >
+        <Typography
+          component="h2"
+          variant="h4"
+          color="primary"
+          sx={{ fontFamily: "var(--font-display)" }}
         >
-          <Typography
-            component="h2"
-            variant="h4"
-            color="primary"
-            sx={{ fontFamily: "var(--font-display)" }}
-          >
-            One price for unlimited bedtimes
-          </Typography>
-          <Typography variant="subtitle1" color="textSecondary">
-            Start free. Upgrade when bedtime becomes the best part of the day.
-          </Typography>
-        </Box>
+          One price for unlimited bedtimes
+        </Typography>
+        <Typography variant="subtitle1" color="textSecondary">
+          Start free. Upgrade when bedtime becomes the best part of the day.
+        </Typography>
+      </Box>
+      {isYearlyAvailable && (
+        <BillingToggle
+          value={billingInterval}
+          onChange={setBillingInterval}
+          savingsPercent={getYearlySavingsPercent()}
+        />
+      )}
+      <Grid
+        container
+        spacing={3}
+        sx={{
+          alignItems: "stretch",
+          justifyContent: "center",
+          width: "100%"
+        }}>
+        {!prices.length && <LoaderSpinner position="absolute" />}
 
-        {isYearlyAvailable && (
-          <BillingToggle
-            value={billingInterval}
-            onChange={setBillingInterval}
-            savingsPercent={getYearlySavingsPercent()}
-          />
-        )}
+        {plans.map((plan) => {
+          const isPremium = plan.title === SubscriptionPlanEnum.Premium;
+          const display = getDisplayPrice(plan.product);
 
-        <Grid
-          container
-          spacing={3}
-          alignItems="stretch"
-          justifyContent="center"
-          sx={{ width: "100%" }}
-        >
-          {!prices.length && <LoaderSpinner position="absolute" />}
-
-          {plans.map((plan) => {
-            const isPremium = plan.title === SubscriptionPlanEnum.Premium;
-            const display = getDisplayPrice(plan.product);
-
-            return (
-              <Grid
-                size={{ xs: 12, md: plans.length >= 3 ? 4 : 6 }}
-                key={plan.title}
+          return (
+            <Grid
+              size={{ xs: 12, md: plans.length >= 3 ? 4 : 6 }}
+              key={plan.title}
+            >
+              <Card
+                sx={{
+                  height: "100%",
+                  minHeight: { xs: "", sm: "500px" },
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  p: { xs: 2, sm: 3 },
+                  position: "relative",
+                  overflow: "hidden",
+                  border: isPremium ? "2px solid" : "1px solid",
+                  borderColor: isPremium ? "primary.main" : "divider",
+                  boxShadow: isPremium
+                    ? "var(--shadow-lg)"
+                    : "var(--shadow-sm)",
+                }}
               >
-                <Card
-                  sx={{
-                    height: "100%",
-                    minHeight: { xs: "", sm: "500px" },
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    p: { xs: 2, sm: 3 },
-                    position: "relative",
-                    overflow: "hidden",
-                    border: isPremium ? "2px solid" : "1px solid",
-                    borderColor: isPremium ? "primary.main" : "divider",
-                    boxShadow: isPremium
-                      ? "var(--shadow-lg)"
-                      : "var(--shadow-sm)",
-                  }}
-                >
-                  <CardContent sx={{ p: 0 }}>
-                    <Box
-                      display="flex"
-                      justifyContent="space-between"
-                      alignItems="center"
-                      gap={1.25}
-                      mb={2}
-                    >
-                      <Box display="flex" alignItems="center" gap={1.25}>
-                        <Box
-                          component="img"
-                          src={planMascot(plan.title)}
-                          alt=""
-                          sx={{ width: "15%", height: "auto", margin: 0 }}
-                        />
-                        <Typography
-                          component="h3"
-                          variant="h4"
-                          sx={{ fontFamily: "var(--font-display)" }}
-                        >
-                          {plan.title}
-                        </Typography>
-                      </Box>
-
-                      {isPremium && (
-                        <Box sx={{ mb: 1.5 }}>
-                          <Chip variant="badge" label="Most popular" />
-                        </Box>
-                      )}
-                    </Box>
+                <CardContent sx={{ p: 0 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      gap: 1.25,
+                      mb: 2
+                    }}>
                     <Box
                       sx={{
                         display: "flex",
-                        alignItems: "baseline",
-                        gap: 0.5,
-                      }}
-                    >
-                      {plan.product ? (
-                        <>
-                          {!display.billedYearly &&
-                            plan.product.metadata?.monthly_discounted_price && (
-                              <Typography
-                                component="span"
-                                variant="h6"
-                                sx={{
-                                  textDecoration: "line-through",
-                                  color: "text.secondary",
-                                  mr: 0.5,
-                                }}
-                              >
-                                {getCurrency(plan.title)}
-                                {plan.product.metadata.monthly_discounted_price}
-                              </Typography>
-                            )}
-                          <Typography
-                            component="span"
-                            sx={{
-                              fontFamily: "var(--font-display)",
-                              fontSize: { xs: 40, sm: 48 },
-                              lineHeight: 1,
-                            }}
-                          >
-                            {getCurrency(plan.title)}
-                            {display.amount}
-                          </Typography>
-                          <Typography component="span" variant="subtitle1">
-                            /month
-                          </Typography>
-                        </>
-                      ) : (
+                        alignItems: "center",
+                        gap: 1.25
+                      }}>
+                      <Box
+                        component="img"
+                        src={planMascot(plan.title)}
+                        alt=""
+                        sx={{ width: "15%", height: "auto", margin: 0 }}
+                      />
+                      <Typography
+                        component="h3"
+                        variant="h4"
+                        sx={{ fontFamily: "var(--font-display)" }}
+                      >
+                        {plan.title}
+                      </Typography>
+                    </Box>
+
+                    {isPremium && (
+                      <Box sx={{ mb: 1.5 }}>
+                        <Chip variant="badge" label="Most popular" />
+                      </Box>
+                    )}
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "baseline",
+                      gap: 0.5,
+                    }}
+                  >
+                    {plan.product ? (
+                      <>
+                        {!display.billedYearly &&
+                          plan.product.metadata?.monthly_discounted_price && (
+                            <Typography
+                              component="span"
+                              variant="h6"
+                              sx={{
+                                textDecoration: "line-through",
+                                color: "text.secondary",
+                                mr: 0.5,
+                              }}
+                            >
+                              {getCurrency(plan.title)}
+                              {plan.product.metadata.monthly_discounted_price}
+                            </Typography>
+                          )}
                         <Typography
                           component="span"
                           sx={{
@@ -189,74 +178,90 @@ export const Pricing = () => {
                             lineHeight: 1,
                           }}
                         >
-                          {getCurrency(SubscriptionPlanEnum.Premium)}0
+                          {getCurrency(plan.title)}
+                          {display.amount}
                         </Typography>
-                      )}
-                    </Box>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      sx={{ mt: 0.5 }}
-                    >
-                      {!plan.product
-                        ? "free forever"
-                        : display.billedYearly
-                          ? `billed yearly · ${getCurrency(plan.title)}${
-                              display.yearlyTotal
-                            }/yr`
-                          : "billed monthly"}
-                    </Typography>
-
-                    <Divider
-                      sx={{ my: 2, opacity: 0.2, borderColor: "grey.500" }}
-                    />
-
-                    {plan.features.map((feature) => (
-                      <Box
-                        key={feature}
+                        <Typography component="span" variant="subtitle1">
+                          /month
+                        </Typography>
+                      </>
+                    ) : (
+                      <Typography
+                        component="span"
                         sx={{
-                          gap: 1.25,
-                          py: 1,
-                          display: "flex",
-                          alignItems: "flex-start",
+                          fontFamily: "var(--font-display)",
+                          fontSize: { xs: 40, sm: 48 },
+                          lineHeight: 1,
                         }}
                       >
-                        <CheckCircleOutlined
-                          sx={{
-                            fontSize: 18,
-                            color: isPremium
-                              ? honey400
-                              : honey500,
-                          }}
-                        />
-                        <Typography component="span" variant="subtitle2">
-                          {feature}
-                        </Typography>
-                      </Box>
-                    ))}
-                  </CardContent>
-
-                  <CardActions sx={{ p: 0, mt: 2 }}>
-                    {plan.buttonAction && plan.buttonText && (
-                      <Button
-                        fullWidth
-                        size="large"
-                        component="button"
-                        disabled={!!plan.buttonDisabled}
-                        variant={plan.buttonVariant}
-                        onClick={plan.buttonAction}
-                      >
-                        {plan.buttonText}
-                      </Button>
+                        {getCurrency(SubscriptionPlanEnum.Premium)}0
+                      </Typography>
                     )}
-                  </CardActions>
-                </Card>
-              </Grid>
-            );
-          })}
-        </Grid>
+                  </Box>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: "text.secondary",
+                      mt: 0.5
+                    }}>
+                    {!plan.product
+                      ? "free forever"
+                      : display.billedYearly
+                        ? `billed yearly · ${getCurrency(plan.title)}${
+                            display.yearlyTotal
+                          }/yr`
+                        : "billed monthly"}
+                  </Typography>
 
-        <PayPerStoryCallout />
+                  <Divider
+                    sx={{ my: 2, opacity: 0.2, borderColor: "grey.500" }}
+                  />
+
+                  {plan.features.map((feature) => (
+                    <Box
+                      key={feature}
+                      sx={{
+                        gap: 1.25,
+                        py: 1,
+                        display: "flex",
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      <CheckCircleOutlined
+                        sx={{
+                          fontSize: 18,
+                          color: isPremium
+                            ? honey400
+                            : honey500,
+                        }}
+                      />
+                      <Typography component="span" variant="subtitle2">
+                        {feature}
+                      </Typography>
+                    </Box>
+                  ))}
+                </CardContent>
+
+                <CardActions sx={{ p: 0, mt: 2 }}>
+                  {plan.buttonAction && plan.buttonText && (
+                    <Button
+                      fullWidth
+                      size="large"
+                      component="button"
+                      disabled={!!plan.buttonDisabled}
+                      variant={plan.buttonVariant}
+                      onClick={plan.buttonAction}
+                    >
+                      {plan.buttonText}
+                    </Button>
+                  )}
+                </CardActions>
+              </Card>
+            </Grid>
+          );
+        })}
+      </Grid>
+      <PayPerStoryCallout />
     </Container>
   );
 };

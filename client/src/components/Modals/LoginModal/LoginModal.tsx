@@ -80,24 +80,22 @@ export const LoginModal = () => {
           </Box>
 
           <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            sx={{
-              width: "100%",
-            }}
             className="login-form-wrapper"
-          >
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%"
+            }}>
             <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              sx={{
-                marginTop: 4,
-              }}
               className="social-login-wrapper"
-            >
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: 4
+              }}>
               <SocialLogin authType="login" />
             </Box>
           </Box>

@@ -43,12 +43,13 @@ const CallToAction = () => {
     <Container sx={{ py: 4 }}>
       <Box
         className="call-to-action"
-        bgcolor="secondary.main"
-        color="secondary.contrastText"
-        p={4}
-        borderRadius={2}
-        textAlign="center"
-      >
+        sx={{
+          bgcolor: "secondary.main",
+          color: "secondary.contrastText",
+          p: 4,
+          borderRadius: 2,
+          textAlign: "center"
+        }}>
         <Typography variant="h4" component="h2" gutterBottom>
           Ready to Create Magical Bedtime Stories?
         </Typography>
@@ -68,7 +69,12 @@ const CallToAction = () => {
           {isAuthenticated ? "Start Creating Now!" : "Get Started for FREE!"}
           <ArrowForward sx={{ ml: 1 }} />
         </Button>
-        <Typography variant="body2" color="inherit" sx={{ mt: 1 }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "inherit",
+            mt: 1
+          }}>
           **No Credit Card Required
         </Typography>
       </Box>

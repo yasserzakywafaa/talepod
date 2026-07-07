@@ -208,7 +208,12 @@ const Testimonials = () => {
                   boxShadow: `-1px -1px 1px ${secondaryColorForDarkTheme}, 1px 1px 1px ${primaryColor}`,
                 }}
               >
-                <Box display="flex" alignItems="center" mb={2}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    mb: 2
+                  }}>
                   <Avatar sx={{ mr: 2 }} src={testimonial.image}>
                     {!testimonial.image && <AccountCircle />}
                   </Avatar>

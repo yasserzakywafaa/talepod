@@ -58,7 +58,12 @@ const RoleSelector = ({ user, onRoleChange }: RoleSelectorProps) => {
   return (
     <Card>
       <CardContent>
-        <Box display="flex" alignItems="center" mb={2}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            mb: 2
+          }}>
           <AdminPanelSettingsIcon color="primary" sx={{ mr: 1 }} />
           <Typography variant="h6">User Role</Typography>
         </Box>
@@ -79,7 +84,12 @@ const RoleSelector = ({ user, onRoleChange }: RoleSelectorProps) => {
             ))}
           </Select>
         </FormControl>
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.secondary",
+            mt: 1
+          }}>
           Change the user's role to control their permissions and access level.
         </Typography>
       </CardContent>

@@ -32,24 +32,26 @@ const Unauthorized = () => {
   return (
     <Page title="Unauthorized | TalePod" className="unauthorized-page">
       <Box
-        display="flex"
         component="div"
-        alignItems="center"
-        flexDirection="column"
-        justifyContent="center"
-      >
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "column",
+          justifyContent: "center"
+        }}>
         <Box component="div" className="unauthorized-image">
           <img src={BunnySurprised} alt="unauthorized-image" width="100%" />
         </Box>
 
         <Box
-          display="flex"
           component="div"
-          alignItems="center"
-          flexDirection="column"
-          justifyContent="center"
           className="unauthorized-card-wrapper"
-        >
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+            justifyContent: "center"
+          }}>
           <Typography variant="h4">Unauthorized</Typography>
 
           <Alert severity="error" component="h5">
@@ -57,7 +59,9 @@ const Unauthorized = () => {
             magical bedtime stories.
           </Alert>
 
-          <Box display="flex">
+          <Box sx={{
+            display: "flex"
+          }}>
             <Button
               size="small"
               type="button"

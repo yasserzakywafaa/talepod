@@ -76,10 +76,11 @@ const AvatarPicker = ({
     >
       <Typography
         variant="body2"
-        color="text.secondary"
-        fontWeight={600}
-        mb={1}
-      >
+        sx={{
+          color: "text.secondary",
+          fontWeight: 600,
+          mb: 1
+        }}>
         Avatar (optional)
       </Typography>
       {enabled && (

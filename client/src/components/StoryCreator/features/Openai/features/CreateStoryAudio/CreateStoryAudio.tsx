@@ -25,12 +25,17 @@ const OpenAiGPTTextToSpeechGeneration = () => {
   };
 
   return (
-    <Box position="relative" sx={{ marginY: "1rem" }}>
+    <Box
+      sx={{
+        position: "relative",
+        marginY: "1rem"
+      }}>
       {textToSpeechGeneration.isFetching && (
         <LoaderSpinner style={{ position: "absolute" }} />
       )}
-
-      <Stack spacing={2} flexGrow={1}>
+      <Stack spacing={2} sx={{
+        flexGrow: 1
+      }}>
         <Button
           type="submit"
           title="submit-button"
@@ -42,7 +47,6 @@ const OpenAiGPTTextToSpeechGeneration = () => {
           Create Audio
         </Button>
       </Stack>
-
       {textToSpeechGeneration.story &&
         textToSpeechGeneration.story.mainStory && (
           <>

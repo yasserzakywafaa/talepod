@@ -35,13 +35,14 @@ const Share = (props: ShareStory) => {
 
   return (
     <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      flexWrap="wrap"
-      my={2}
-      gap={1}
-    >
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexWrap: "wrap",
+        my: 2,
+        gap: 1
+      }}>
       <CopyLink url={url} />
       <WhatsAppShareButton url={url} />
       <FacebookShareButton url={url} />

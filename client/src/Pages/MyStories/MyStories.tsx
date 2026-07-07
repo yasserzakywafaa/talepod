@@ -77,13 +77,14 @@ const MyStoriesPage: React.FC = () => {
         {/* Filters */}
         {!isFetching && (
           <Box
-            mb={1}
-            display="flex"
-            alignItems="center"
-            justifyContent="end"
-            mt={{ xs: 0, sm: 2 }}
             className="my-stories-top-bar"
-          >
+            sx={{
+              mb: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "end",
+              mt: { xs: 0, sm: 2 }
+            }}>
             <Button variant="text" onClick={handleFilterButtonClick}>
               Filters
               {activeFiltersCount ? (

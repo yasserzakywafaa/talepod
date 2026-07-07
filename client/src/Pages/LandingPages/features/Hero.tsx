@@ -41,15 +41,14 @@ const Hero = (props: HeroProps) => {
           >
             <Typography
               variant="h1"
-              color="text.primary"
               sx={{
+                color: "text.primary",
                 flexDirection: { xs: "column", md: "row" },
                 alignSelf: "center",
                 textAlign: "center",
                 fontSize: { xs: "2rem", sm: "2.75rem" },
-                textWrap: "nowrap",
-              }}
-            >
+                textWrap: "nowrap"
+              }}>
               <Typography component="span" sx={{ fontSize: "inherit" }}>
                 {props.pageTitleWhite}&nbsp; <br />
               </Typography>
@@ -70,14 +69,13 @@ const Hero = (props: HeroProps) => {
 
             <Typography
               variant="h2"
-              textAlign="center"
-              color="text.secondary"
               sx={{
+                textAlign: "center",
+                color: "text.secondary",
                 my: 2,
                 alignSelf: "center",
-                fontSize: { xs: "1.5rem", sm: "2rem" },
-              }}
-            >
+                fontSize: { xs: "1.5rem", sm: "2rem" }
+              }}>
               {props.pageHeader}
             </Typography>
 

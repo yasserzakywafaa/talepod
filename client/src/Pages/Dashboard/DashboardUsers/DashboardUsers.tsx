@@ -34,12 +34,16 @@ const DashboardUsers = () => {
       <Typography variant="h4" component="h1" color="primary" gutterBottom>
         Users
       </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+      <Typography
+        variant="body1"
+        sx={{
+          color: "text.secondary",
+          mb: 3
+        }}>
         {paging.totalCount
           ? `${paging.totalCount} total`
           : "Manage users, roles, and permissions from here."}
       </Typography>
-
       <Box sx={{ overflowX: "auto", position: "relative", width: "100%" }}>
         <DataGrid
           rows={config.rows}

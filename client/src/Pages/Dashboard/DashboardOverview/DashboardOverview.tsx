@@ -38,7 +38,6 @@ const DashboardOverview = () => {
           Welcome back, {user?.name.givenName} {user?.name.familyName}!
         </Typography>
       </Box>
-
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Card
@@ -46,14 +45,21 @@ const DashboardOverview = () => {
             sx={{ cursor: "pointer" }}
           >
             <CardContent>
-              <Box display="flex" alignItems="center" mb={2}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  mb: 2
+                }}>
                 <DashboardIcon color="primary" sx={{ mr: 1 }} />
                 <Typography variant="h6">Total Users</Typography>
               </Box>
               <Typography variant="h4" color="primary">
                 {usersCount !== null ? usersCount : "--"}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Active users on the platform
               </Typography>
             </CardContent>
@@ -66,14 +72,21 @@ const DashboardOverview = () => {
             sx={{ cursor: "pointer" }}
           >
             <CardContent>
-              <Box display="flex" alignItems="center" mb={2}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  mb: 2
+                }}>
                 <DashboardIcon color="primary" sx={{ mr: 1 }} />
                 <Typography variant="h6">Total Stories</Typography>
               </Box>
               <Typography variant="h4" color="primary">
                 {storiesCount !== null ? storiesCount : "--"}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Stories created
               </Typography>
             </CardContent>

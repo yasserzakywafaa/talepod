@@ -83,12 +83,16 @@ const UserStoriesPage = () => {
       <Typography variant="h4" component="h1" color="primary" gutterBottom>
         {user?.name.givenName} {user?.name.familyName}'s Stories
       </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+      <Typography
+        variant="body1"
+        sx={{
+          color: "text.secondary",
+          mb: 3
+        }}>
         {paging.totalCount
           ? `${paging.totalCount} total stories`
           : "No stories found for this user."}
       </Typography>
-
       <Box sx={{ overflowX: "auto", position: "relative", width: "100%" }}>
         <DataGrid
           rows={config.rows}

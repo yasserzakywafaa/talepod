@@ -192,7 +192,12 @@ const StoryExamples = () => {
                   maxWidth: { xs: "400px", sm: "500px" },
                 }}
               >
-                <Box display="flex" alignItems="center" mb={2}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    mb: 2
+                  }}>
                   <Box>
                     <Typography variant="subtitle1">
                       {storyExample.title}

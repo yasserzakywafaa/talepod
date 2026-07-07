@@ -129,6 +129,7 @@ const ApplicationBar = () => {
             boxShadow: 0,
             bgcolor: "transparent",
             backgroundImage: "none",
+            zIndex: (theme) => theme.zIndex.appBar,
           }}
         >
           <Container maxWidth="lg" className="application-bar-container">
@@ -139,8 +140,10 @@ const ApplicationBar = () => {
                 alignItems: "center",
                 justifyContent: "space-between",
                 flexShrink: 0,
+                width: "100%",
+                minHeight: { xs: 56, md: 64 },
+                py: 1,
                 backdropFilter: "blur(24px)",
-                maxHeight: 40,
                 borderColor: "divider",
                 borderRadius: "var(--r-xl) var(--r-xl)",
                 boxShadow: isDesktop
@@ -151,26 +154,28 @@ const ApplicationBar = () => {
                   : undefined,
               }}
             >
-              <ApplicationBarDesktopView
-                auth={auth}
-                pagesMatch={pagesMatch}
-                handleToggleLoginModal={goToLogin}
-                handleToggleRegisterModal={goToRegister}
-                setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
-                handleOnMenuItemClick={handleOnMenuItemClick}
-              />
-
-              <ApplicationBarMobileView
-                auth={auth}
-                pagesMatch={pagesMatch}
-                isDrawerOpen={isDrawerOpen}
-                isScrolledFromTop={isScrolledFromTop}
-                handleSetDrawer={handleSetDrawer}
-                handleToggleLoginModal={goToLogin}
-                handleToggleRegisterModal={goToRegister}
-                setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
-                handleOnMenuItemClick={handleOnMenuItemClick}
-              />
+              {isDesktop ? (
+                <ApplicationBarDesktopView
+                  auth={auth}
+                  pagesMatch={pagesMatch}
+                  handleToggleLoginModal={goToLogin}
+                  handleToggleRegisterModal={goToRegister}
+                  setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
+                  handleOnMenuItemClick={handleOnMenuItemClick}
+                />
+              ) : (
+                <ApplicationBarMobileView
+                  auth={auth}
+                  pagesMatch={pagesMatch}
+                  isDrawerOpen={isDrawerOpen}
+                  isScrolledFromTop={isScrolledFromTop}
+                  handleSetDrawer={handleSetDrawer}
+                  handleToggleLoginModal={goToLogin}
+                  handleToggleRegisterModal={goToRegister}
+                  setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
+                  handleOnMenuItemClick={handleOnMenuItemClick}
+                />
+              )}
             </Toolbar>
           </Container>
         </AppBar>

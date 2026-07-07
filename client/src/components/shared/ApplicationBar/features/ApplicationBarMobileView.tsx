@@ -57,13 +57,14 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
       {/* Mobile */}
       {(isTablet || isMobile) && !isDesktop && (
         <Box
-          display="flex"
           component="div"
-          flexDirection="row"
-          justifyContent="space-between"
-          alignItems="center"
-          width="100%"
-        >
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%"
+          }}>
           {pagesMatch.isFeaturesPage ? (
             !isScrolledFromTop ? (
               <Box sx={{ width: "80px" }}>
@@ -233,7 +234,9 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                 </MenuItem>
               </Box>
 
-              <Box marginBottom="1rem">
+              <Box sx={{
+                marginBottom: "1rem"
+              }}>
                 {auth.isAuthenticated ? (
                   <MenuItem>
                     <UserAccountMenuButton

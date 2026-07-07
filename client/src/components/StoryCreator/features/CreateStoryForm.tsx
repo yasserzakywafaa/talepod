@@ -267,18 +267,19 @@ const CreateStoryForm = () => {
   return (
     <Box className="story-creator-form">
       <Box
-        marginY={4}
-        display="flex"
-        width="100%"
-        flexWrap="wrap"
         component="form"
         autoComplete="off"
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="center"
         onSubmit={handleOnFormSubmit}
         className="story-creator-form-wrapper"
-      >
+        sx={{
+          marginY: 4,
+          display: "flex",
+          width: "100%",
+          flexWrap: "wrap",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center"
+        }}>
         <Box sx={{ width: "100%", mb: 3 }}>
           <FormatChooser
             value={format}
@@ -287,10 +288,21 @@ const CreateStoryForm = () => {
           />
         </Box>
 
-        <Grid container spacing={4} width="100%" marginY={4}>
+        <Grid
+          container
+          spacing={4}
+          sx={{
+            width: "100%",
+            marginY: 4
+          }}>
           <Grid size={{ xs: 12, md: 6 }}>
             <Box sx={{ width: "100%", mb: 3 }}>
-              <Typography variant="body2" color="text.secondary" mb={1}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                  mb: 1
+                }}>
                 Art style
               </Typography>
 
@@ -477,15 +489,16 @@ const CreateStoryForm = () => {
         </Box>
 
         <Box
-          display="flex"
-          marginX={2}
-          marginY={1}
-          width="100%"
           component="div"
-          alignItems="center"
-          justifyContent="center"
           className="story-creator-form-wrapper-button"
-        >
+          sx={{
+            display: "flex",
+            marginX: 2,
+            marginY: 1,
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "center"
+          }}>
           {isAuthenticated && isUserActive && hasMaxStoriesLimit ? (
             <Button
               type="button"
