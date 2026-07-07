@@ -46,7 +46,7 @@ const TermsAndConditions = () => {
             })}
           </span>
         </Typography>
-        <Typography paragraph>
+        <Typography sx={{ mb: 2 }}>
           Please read these terms and conditions carefully before using Our
           Service.
         </Typography>
@@ -60,7 +60,7 @@ const TermsAndConditions = () => {
           <Typography variant="h6" color="secondary" gutterBottom>
             Interpretation
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             The words of which the initial letter is capitalized have meanings
             defined under the following conditions. The following definitions
             shall have the same meaning regardless of whether they appear in
@@ -128,24 +128,24 @@ const TermsAndConditions = () => {
           <Typography variant="h5" color="primary" gutterBottom>
             Acknowledgment
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             These are the Terms and Conditions governing the use of this Service
             and the agreement that operates between You and the Company. These
             Terms and Conditions set out the rights and obligations of all users
             regarding the use of the Service.
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             Your access to and use of the Service is conditioned on Your
             acceptance of and compliance with these Terms and Conditions. These
             Terms and Conditions apply to all visitors, users and others who
             access or use the Service.
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             By accessing or using the Service You agree to be bound by these
             Terms and Conditions. If You disagree with any part of these Terms
             and Conditions then You may not access the Service.
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             Your access to and use of the Service is also conditioned on Your
             acceptance of and compliance with the{" "}
             <Link
@@ -169,7 +169,7 @@ const TermsAndConditions = () => {
           <Typography variant="h5" color="primary" gutterBottom>
             Sharing personal information
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             Talepod uses personal information according to the Terms of Service
             and this{" "}
             <Link
@@ -182,7 +182,7 @@ const TermsAndConditions = () => {
             . Talepod may disclose your personal information to third parties,
             including marketing, advertising and analytics providers.
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             We may also disclose information or allow third parties to directly
             collect information using third party cookies and related tracking
             technologies (such as pixels and web beacons) via our website, such
@@ -190,7 +190,7 @@ const TermsAndConditions = () => {
             provide analytics (including ad tracking and reporting), security
             providers and others that help us to deliver our services.
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             We only employ such third party tools based on your consent, opt-out
             preferences, or other appropriate legal requirements mandated by
             applicable laws and regulations.
@@ -203,11 +203,11 @@ const TermsAndConditions = () => {
           <Typography variant="h5" color="primary" gutterBottom>
             Links to Other Websites
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             Our Service may contain links to third-party web sites or services
             that are not owned or controlled by the Company.
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             The Company has no control over, and assumes no responsibility for,
             the content, privacy policies, or practices of any third party web
             sites or services. You further acknowledge and agree that the
@@ -216,7 +216,7 @@ const TermsAndConditions = () => {
             connection with the use of or reliance on any such content, goods or
             services available on or through any such web sites or services.
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             We strongly advise You to read the terms and conditions and privacy
             policies of any third-party web sites or services that You visit.
           </Typography>
@@ -228,12 +228,12 @@ const TermsAndConditions = () => {
           <Typography variant="h5" color="primary" gutterBottom>
             Termination
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             We may terminate or suspend Your access immediately, without prior
             notice or liability, for any reason whatsoever, including without
             limitation if You breach these Terms and Conditions.
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             Upon termination, Your right to use the Service will cease
             immediately.
           </Typography>
@@ -245,7 +245,7 @@ const TermsAndConditions = () => {
           <Typography variant="h5" color="primary" gutterBottom>
             Limitation of Liability
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             Notwithstanding any damages that You might incur, the entire
             liability of the Company and any of its suppliers under any
             provision of this Terms and Your exclusive remedy for all of the
@@ -253,7 +253,7 @@ const TermsAndConditions = () => {
             through the Service or 100 USD if You haven't purchased anything
             through the Service.
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             To the maximum extent permitted by applicable law, in no event shall
             the Company or its suppliers be liable for any special, incidental,
             indirect, or consequential damages whatsoever (including, but not
@@ -266,7 +266,7 @@ const TermsAndConditions = () => {
             any supplier has been advised of the possibility of such damages and
             even if the remedy fails of its essential purpose.
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             Some states do not allow the exclusion of implied warranties or
             limitation of liability for incidental or consequential damages,
             which means that some of the above limitations may not apply. In
@@ -281,7 +281,7 @@ const TermsAndConditions = () => {
           <Typography variant="h5" color="primary" gutterBottom>
             "AS IS" and "AS AVAILABLE" Disclaimer
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             The Service is provided to You "AS IS" and "AS AVAILABLE" and with
             all faults and defects without warranty of any kind. To the maximum
             extent permitted under applicable law, the Company, on its own
@@ -300,7 +300,7 @@ const TermsAndConditions = () => {
             or be error free or that any errors or defects can or will be
             corrected.
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             Without limiting the foregoing, neither the Company nor any of the
             company's provider makes any representation or warranty of any kind,
             express or implied: (i) as to the operation or availability of the
@@ -312,7 +312,7 @@ const TermsAndConditions = () => {
             on behalf of the Company are free of viruses, scripts, trojan
             horses, worms, malware, timebombs or other harmful components.
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             Some jurisdictions do not allow the exclusion of certain types of
             warranties or limitations on applicable statutory rights of a
             consumer, so some or all of the above exclusions and limitations may
@@ -328,7 +328,7 @@ const TermsAndConditions = () => {
           <Typography variant="h5" color="primary" gutterBottom>
             Governing Law
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             The laws of the Country, excluding its conflicts of law rules, shall
             govern this Terms and Your use of the Service. Your use of the
             Application may also be subject to other local, state, national, or
@@ -342,7 +342,7 @@ const TermsAndConditions = () => {
           <Typography variant="h5" color="primary" gutterBottom>
             Disputes Resolution
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             If You have any concern or dispute about the Service, You agree to
             first try to resolve the dispute informally by{" "}
             <Link
@@ -362,7 +362,7 @@ const TermsAndConditions = () => {
           <Typography variant="h5" color="primary" gutterBottom>
             For European Union (EU) Users
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             If You are a European Union consumer, you will benefit from any
             mandatory provisions of the law of the country in which You are
             resident.
@@ -375,7 +375,7 @@ const TermsAndConditions = () => {
           <Typography variant="h5" color="primary" gutterBottom>
             United States Legal Compliance
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             You represent and warrant that (i) You are not located in a country
             that is subject to the United States government embargo, or that has
             been designated by the United States government as a "terrorist
@@ -394,7 +394,7 @@ const TermsAndConditions = () => {
           <Typography variant="h6" color="secondary" gutterBottom>
             Severability
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             If any provision of these Terms is held to be unenforceable or
             invalid, such provision will be changed and interpreted to
             accomplish the objectives of such provision to the greatest extent
@@ -405,7 +405,7 @@ const TermsAndConditions = () => {
           <Typography variant="h6" color="secondary" gutterBottom>
             Waiver
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             Except as provided herein, the failure to exercise a right or to
             require performance of an obligation under these Terms shall not
             affect a party's ability to exercise such right or require such
@@ -420,7 +420,7 @@ const TermsAndConditions = () => {
           <Typography variant="h5" color="primary" gutterBottom>
             Translation Interpretation
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             These Terms and Conditions may have been translated if We have made
             them available to You on our Service. You agree that the original
             English text shall prevail in the case of a dispute.
@@ -433,14 +433,14 @@ const TermsAndConditions = () => {
           <Typography variant="h5" color="primary" gutterBottom>
             Changes to These Terms and Conditions
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             We reserve the right, at Our sole discretion, to modify or replace
             these Terms at any time. If a revision is material We will make
             reasonable efforts to provide at least 30 days' notice prior to any
             new terms taking effect. What constitutes a material change will be
             determined at Our sole discretion.
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             By continuing to access or use Our Service after those revisions
             become effective, You agree to be bound by the revised terms. If You
             do not agree to the new terms, in whole or in part, please stop
@@ -454,7 +454,7 @@ const TermsAndConditions = () => {
           <Typography variant="h5" color="primary" gutterBottom>
             Contact Us
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             If you have any questions about these Terms and Conditions, You can
             contact us:
           </Typography>

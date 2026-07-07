@@ -72,7 +72,7 @@ const PersonalizedBedtimeStoryText = () => {
               Why Personalize Bedtime Stories?
             </Typography>
 
-            <Typography variant="body1" paragraph>
+            <Typography variant="body1" sx={{ mb: 2 }}>
               <Link
                 href={routes.termsAndConditions}
                 onClick={handleFooterLinkItemClick(routes.library)}
@@ -92,7 +92,7 @@ const PersonalizedBedtimeStoryText = () => {
             <Typography variant="h5" gutterBottom>
               Introducing TalePod
             </Typography>
-            <Typography variant="body1" paragraph>
+            <Typography variant="body1" sx={{ mb: 2 }}>
               TalePod is a revolutionary app designed to help you
               <Link
                 href={routes.termsAndConditions}
@@ -184,7 +184,7 @@ const PersonalizedBedtimeStoryText = () => {
           </Box>
         </CardContent>
       </Card>
-      <Typography variant="body1" paragraph>
+      <Typography variant="body1" sx={{ mb: 2 }}>
         TalePod transforms bedtime into a magical experience by offering{" "}
         <Link
           href={routes.library}

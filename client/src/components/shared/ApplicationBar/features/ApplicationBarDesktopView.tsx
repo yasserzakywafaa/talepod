@@ -6,7 +6,7 @@ import {
   SearchOutlined,
   VpnKeyOutlined,
 } from "@mui/icons-material";
-import { Box, MenuItem, Typography } from "@mui/material";
+import { Box, Button, MenuItem, MenuList, Typography } from "@mui/material";
 import Logo, { LogoComponentEnum } from "../../Logo";
 import {
   primaryColor,
@@ -38,7 +38,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
     setIsInstallAppDialogOpen,
     handleOnMenuItemClick,
   } = props;
-  const { isTablet } = useDeviceSize();
+  const { isDesktop } = useDeviceSize();
 
   const buttonHoverStylePrimary = {
     "&:hover": {
@@ -51,167 +51,145 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
     },
   };
 
-  const buttonHoverStyleSecondary = {
-    "&:hover": {
-      "& .MuiTypography-root": {
-        color: primaryColor,
-      },
-      "& .MuiSvgIcon-root": {
-        color: primaryColor,
-      },
-    },
-  };
+  if (!isDesktop) return null;
 
   return (
     <>
-      {!isTablet && (
-        <>
-          <Box role="menu" sx={{ display: { xs: "none", md: "flex" } }}>
-            <MenuItem
-              className={`menu-item`}
-              sx={{ ...buttonHoverStylePrimary }}
-              onClick={handleOnMenuItemClick("features")}
-            >
-              <Logo
-                variant="small"
-                component={LogoComponentEnum.ANCHOR}
-                style={{ width: "50px", height: "50px" }}
-              />
-            </MenuItem>
-
-            <MenuItem
-              className={`menu-item`}
-              sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
-              onClick={handleOnMenuItemClick("create")}
-            >
-              <AutoFixHighOutlined
-                fontSize="medium"
-                color="primary"
-                sx={{ mr: 1 }}
-              />
-              <Typography
-                variant="body1"
-                color={pagesMatch.isCreatePage ? primaryColor : "text.primary"}
-              >
-                Create Story
-              </Typography>
-            </MenuItem>
-
-            <MenuItem
-              className={`menu-item`}
-              sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
-              onClick={handleOnMenuItemClick("library")}
-            >
-              <SearchOutlined
-                fontSize="medium"
-                color="primary"
-                sx={{ mr: 1 }}
-              />
-
-              <Typography
-                variant="body1"
-                color={pagesMatch.isLibraryPage ? primaryColor : "text.primary"}
-              >
-                Library
-              </Typography>
-            </MenuItem>
-
-            <MenuItem
-              className={`menu-item`}
-              sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
-              onClick={handleOnMenuItemClick("pricing")}
-            >
-              <AttachMoneyOutlined
-                fontSize="medium"
-                color="primary"
-                sx={{ mr: 0.5 }}
-              />
-
-              <Typography
-                variant="body1"
-                color={pagesMatch.isPricingPage ? primaryColor : "text.primary"}
-              >
-                Pricing
-              </Typography>
-            </MenuItem>
-
-            <MenuItem
-              className={`menu-item`}
-              sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
-              onClick={handleOnMenuItemClick("contact")}
-            >
-              <AlternateEmailOutlined
-                fontSize="medium"
-                color="primary"
-                sx={{ mr: 1 }}
-              />
-              <Typography
-                variant="body1"
-                color={pagesMatch.isContactPage ? primaryColor : "text.primary"}
-              >
-                Contact Us
-              </Typography>
-            </MenuItem>
-          </Box>
-
-          <Box
-            sx={{
-              gap: 0.5,
-              alignItems: "center",
-              display: { xs: "none", md: "flex" },
-            }}
+      <Box role="menu" sx={{ display: { xs: "none", md: "flex" } }}>
+        <MenuList
+          disablePadding
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 0.5,
+            flexWrap: "wrap",
+          }}
+        >
+          <MenuItem
+            className="menu-item"
+            sx={{ ...buttonHoverStylePrimary }}
+            onClick={handleOnMenuItemClick("features")}
           >
-            {auth.isAuthenticated ? (
-              <UserAccountMenuButton
-                user={auth.user as User}
-                isMyProfilePage={pagesMatch.isMyProfilePage}
+            <Logo
+              variant="small"
+              component={LogoComponentEnum.ANCHOR}
+              style={{ width: "50px", height: "50px" }}
+            />
+          </MenuItem>
+
+          <MenuItem
+            className="menu-item"
+            sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
+            onClick={handleOnMenuItemClick("create")}
+          >
+            <AutoFixHighOutlined
+              fontSize="medium"
+              color="primary"
+              sx={{ mr: 1 }}
+            />
+            <Typography
+              variant="body1"
+              color={pagesMatch.isCreatePage ? primaryColor : "text.primary"}
+            >
+              Create Story
+            </Typography>
+          </MenuItem>
+
+          <MenuItem
+            className="menu-item"
+            sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
+            onClick={handleOnMenuItemClick("library")}
+          >
+            <SearchOutlined fontSize="medium" color="primary" sx={{ mr: 1 }} />
+            <Typography
+              variant="body1"
+              color={pagesMatch.isLibraryPage ? primaryColor : "text.primary"}
+            >
+              Library
+            </Typography>
+          </MenuItem>
+
+          <MenuItem
+            className="menu-item"
+            sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
+            onClick={handleOnMenuItemClick("pricing")}
+          >
+            <AttachMoneyOutlined
+              fontSize="medium"
+              color="primary"
+              sx={{ mr: 0.5 }}
+            />
+            <Typography
+              variant="body1"
+              color={pagesMatch.isPricingPage ? primaryColor : "text.primary"}
+            >
+              Pricing
+            </Typography>
+          </MenuItem>
+
+          <MenuItem
+            className="menu-item"
+            sx={{ py: "6px", px: "12px", ...buttonHoverStylePrimary }}
+            onClick={handleOnMenuItemClick("contact")}
+          >
+            <AlternateEmailOutlined
+              fontSize="medium"
+              color="primary"
+              sx={{ mr: 1 }}
+            />
+            <Typography
+              variant="body1"
+              color={pagesMatch.isContactPage ? primaryColor : "text.primary"}
+            >
+              Contact Us
+            </Typography>
+          </MenuItem>
+        </MenuList>
+      </Box>
+
+      <Box
+        sx={{
+          gap: 0.5,
+          alignItems: "center",
+          display: { xs: "none", md: "flex" },
+        }}
+      >
+        {auth.isAuthenticated ? (
+          <UserAccountMenuButton
+            user={auth.user as User}
+            isMyProfilePage={pagesMatch.isMyProfilePage}
+          />
+        ) : (
+          <>
+            <Button variant="text" onClick={handleToggleRegisterModal}>
+              <LockOpenOutlined
+                fontSize="medium"
+                color="secondary"
+                sx={{ mr: 1 }}
               />
-            ) : (
-              <>
-                <MenuItem
-                  sx={{ ...buttonHoverStyleSecondary }}
-                  onClick={handleToggleRegisterModal}
-                >
-                  <LockOpenOutlined
-                    fontSize="medium"
-                    color="secondary"
-                    sx={{ mr: 1 }}
-                  />
+              <Typography variant="body1" sx={{ color: "text.primary" }}>
+                Register
+              </Typography>
+            </Button>
 
-                  <Typography variant="body1" sx={{
-                    color: "text.primary"
-                  }}>
-                    Register
-                  </Typography>
-                </MenuItem>
-
-                <MenuItem
-                  sx={{ ...buttonHoverStyleSecondary }}
-                  onClick={handleToggleLoginModal}
-                >
-                  <VpnKeyOutlined
-                    fontSize="medium"
-                    color="secondary"
-                    sx={{ mr: 1 }}
-                  />
-
-                  <Typography variant="body1" sx={{
-                    color: "text.primary"
-                  }}>
-                    Login
-                  </Typography>
-                </MenuItem>
-              </>
-            )}
-
-            <MenuItem sx={{ ...buttonHoverStyleSecondary }}>
-              <SettingsMenuButton
-                setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
+            <Button variant="text" onClick={handleToggleLoginModal}>
+              <VpnKeyOutlined
+                fontSize="medium"
+                color="secondary"
+                sx={{ mr: 1 }}
               />
-            </MenuItem>
-          </Box>
-        </>
-      )}
+              <Typography variant="body1" sx={{ color: "text.primary" }}>
+                Login
+              </Typography>
+            </Button>
+          </>
+        )}
+
+        <SettingsMenuButton
+          setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
+        />
+      </Box>
     </>
   );
 };

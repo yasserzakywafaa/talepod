@@ -93,7 +93,7 @@ const AvatarFormDialog = ({
             label="Age"
             value={form.age ?? ""}
             onChange={setField("age")}
-            inputProps={{ min: 0, max: 120 }}
+            slotProps={{ htmlInput: { min: 0, max: 120 } }}
           />
           <TextField
             select

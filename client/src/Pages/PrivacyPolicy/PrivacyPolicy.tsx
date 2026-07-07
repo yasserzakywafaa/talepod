@@ -47,13 +47,13 @@ const PrivacyPolicyPage = () => {
             })}
           </span>
         </Typography>
-        <Typography paragraph>
+        <Typography sx={{ mb: 2 }}>
           This Privacy Policy describes Our policies and procedures on the
           collection, use, and disclosure of your information when you use the
           Service and tells you about your privacy rights and how the law
           protects you.
         </Typography>
-        <Typography paragraph>
+        <Typography sx={{ mb: 2 }}>
           We use your Personal data to provide and improve the Service. By using
           the Service, you agree to the collection and use of information in
           accordance with this Privacy Policy.
@@ -69,7 +69,7 @@ const PrivacyPolicyPage = () => {
           <Typography variant="h6" color="secondary">
             Interpretation
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             The words of which the initial letter is capitalized have meanings
             defined under the following conditions. The following definitions
             shall have the same meaning regardless of whether they appear in
@@ -167,7 +167,7 @@ const PrivacyPolicyPage = () => {
             Types of Data Collected
           </Typography>
           <Typography variant="subtitle1">Personal Data</Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             While using Our Service, We may ask you to provide Us with certain
             personally identifiable information that can be used to contact or
             identify you. Personally identifiable information may include, but
@@ -183,17 +183,17 @@ const PrivacyPolicyPage = () => {
           </List>
 
           <Typography variant="subtitle1">Usage Data</Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             Usage Data is collected automatically when using the Service.
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             Usage Data may include information such as your Device's Internet
             Protocol address (e.g. IP address), browser type, browser version,
             the pages of Our Service that you visit, the time and date of your
             visit, the time spent on those pages, unique device identifiers and
             other diagnostic data.
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             When you access the Service by or through a mobile device, We may
             collect certain information automatically, including, but not
             limited to, the type of mobile device you use, your mobile device
@@ -201,7 +201,7 @@ const PrivacyPolicyPage = () => {
             operating system, the type of mobile Internet browser you use,
             unique device identifiers and other diagnostic data.
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             We may also collect information that your browser sends whenever you
             visit Our Service or when you access the Service by or through a
             mobile device.
@@ -210,7 +210,7 @@ const PrivacyPolicyPage = () => {
           <Typography variant="subtitle1">
             Tracking Technologies and Cookies
           </Typography>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             We use Cookies and similar tracking technologies to track the
             activity on Our Service and store certain information. Tracking
             technologies used are beacons, tags, and scripts to collect and
@@ -231,7 +231,7 @@ const PrivacyPolicyPage = () => {
               />
             </ListItem>
           </List>
-          <Typography paragraph>
+          <Typography sx={{ mb: 2 }}>
             Cookies can be "Persistent" or "Session" Cookies. Persistent Cookies
             remain on your personal computer or mobile device when you go
             offline, while Session Cookies are deleted as soon as you close your

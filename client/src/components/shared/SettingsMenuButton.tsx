@@ -81,8 +81,10 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
         anchorEl={element}
         disableScrollLock
         id="user-account-menu"
-        MenuListProps={{
-          "aria-labelledby": "settings-account-button",
+        slotProps={{
+          list: {
+            "aria-labelledby": "settings-account-button",
+          },
         }}
         variant="menu"
         onClose={handleCloseMenu}

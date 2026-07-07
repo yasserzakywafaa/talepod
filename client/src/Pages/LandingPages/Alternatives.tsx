@@ -176,7 +176,7 @@ const Alternatives = () => {
             <Typography variant="h5" gutterBottom>
               Why choose TalePod
             </Typography>
-            <Typography variant="body2" paragraph>
+            <Typography variant="body2" sx={{ mb: 2 }}>
               TalePod combines personalized stories with watercolor
               illustrations, warm AI narration, 11 languages, and comic or long
               story formats — designed for a calm, parent-led bedtime routine.

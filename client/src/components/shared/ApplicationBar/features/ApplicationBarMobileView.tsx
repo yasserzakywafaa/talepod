@@ -14,6 +14,7 @@ import {
   Divider,
   Drawer,
   MenuItem,
+  MenuList,
   Typography,
 } from "@mui/material";
 import Logo, { LogoComponentEnum } from "../../Logo";
@@ -24,7 +25,6 @@ import SettingsMenuButton from "../../SettingsMenuButton";
 import { User } from "src/shared/types/user";
 import UserAccountMenuButton from "../../UserAccountButton";
 import { primaryColor } from "src/application/shared/themes";
-import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
 interface ApplicationBarMobileViewParams {
   auth: Authentication;
@@ -50,237 +50,227 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
     setIsInstallAppDialogOpen,
     handleOnMenuItemClick,
   } = props;
-  const { isDesktop, isTablet, isMobile } = useDeviceSize();
 
   return (
-    <>
-      {/* Mobile */}
-      {(isTablet || isMobile) && !isDesktop && (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        width: "100%",
+        flex: 1,
+        minWidth: 0,
+      }}
+    >
+      {pagesMatch.isFeaturesPage ? (
+        !isScrolledFromTop ? (
+          <Box sx={{ width: "80px" }}>
+            <Logo
+              variant="small"
+              component={LogoComponentEnum.ANCHOR}
+              style={{ width: "100%", height: "100%", maxWidth: "60px" }}
+            />
+          </Box>
+        ) : (
+          <Button
+            size="medium"
+            color="primary"
+            variant="contained"
+            onClick={handleOnMenuItemClick("create")}
+          >
+            Create Story
+          </Button>
+        )
+      ) : (
+        <Button
+          size="medium"
+          color="primary"
+          variant="contained"
+          onClick={handleOnMenuItemClick("create")}
+        >
+          Create Story
+        </Button>
+      )}
+
+      <Button
+        variant="outlined"
+        color="primary"
+        aria-label="menu"
+        onClick={handleSetDrawer(true)}
+        sx={{ minWidth: "30px", p: "4px" }}
+      >
+        <MenuOutlined fontSize="medium" />
+      </Button>
+
+      <Drawer
+        anchor="right"
+        open={isDrawerOpen}
+        onClose={handleSetDrawer(false)}
+      >
         <Box
-          component="div"
+          role="menu"
           sx={{
+            p: 1,
+            pt: 2,
             display: "flex",
-            flexDirection: "row",
+            flexDirection: "column",
             justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%"
-          }}>
-          {pagesMatch.isFeaturesPage ? (
-            !isScrolledFromTop ? (
-              <Box sx={{ width: "80px" }}>
-                <Logo
-                  variant="small"
-                  component={LogoComponentEnum.ANCHOR}
-                  style={{ width: "100%", height: "100%", maxWidth: "60px" }}
+            flexGrow: 1,
+            minWidth: "50dvw",
+            backgroundColor: "background.paper",
+          }}
+        >
+          <MenuList disablePadding>
+            <MenuItem
+              className="menu-item"
+              onClick={handleOnMenuItemClick("features")}
+            >
+              <EarbudsOutlined
+                fontSize="medium"
+                color="primary"
+                sx={{ mr: 1 }}
+              />
+              <Typography
+                variant="h6"
+                color={
+                  pagesMatch.isFeaturesPage ? primaryColor : "text.primary"
+                }
+              >
+                Features
+              </Typography>
+            </MenuItem>
+
+            <MenuItem
+              className="menu-item"
+              onClick={handleOnMenuItemClick("create")}
+            >
+              <AutoFixHighOutlined
+                fontSize="medium"
+                color="primary"
+                sx={{ mr: 1 }}
+              />
+              <Typography
+                variant="h6"
+                color={pagesMatch.isCreatePage ? primaryColor : "text.primary"}
+              >
+                Create Story
+              </Typography>
+            </MenuItem>
+
+            <Divider
+              orientation="horizontal"
+              flexItem
+              sx={{ my: 1, width: "30%", mx: "2rem" }}
+            />
+
+            <MenuItem
+              className="menu-item"
+              onClick={handleOnMenuItemClick("library")}
+            >
+              <SearchOutlined
+                fontSize="medium"
+                color="primary"
+                sx={{ mr: 1 }}
+              />
+              <Typography
+                variant="h6"
+                color={
+                  pagesMatch.isLibraryPage ? primaryColor : "text.primary"
+                }
+              >
+                Library
+              </Typography>
+            </MenuItem>
+
+            <MenuItem
+              className="menu-item"
+              onClick={handleOnMenuItemClick("pricing")}
+            >
+              <AttachMoneyOutlined
+                fontSize="medium"
+                color="primary"
+                sx={{ mr: 1 }}
+              />
+              <Typography
+                variant="h6"
+                color={
+                  pagesMatch.isPricingPage ? primaryColor : "text.primary"
+                }
+              >
+                Pricing
+              </Typography>
+            </MenuItem>
+
+            <Divider
+              orientation="horizontal"
+              flexItem
+              sx={{ my: 1, width: "30%", mx: "2rem" }}
+            />
+
+            <MenuItem
+              className="menu-item"
+              onClick={handleOnMenuItemClick("contact")}
+            >
+              <AlternateEmailOutlined
+                fontSize="medium"
+                color="primary"
+                sx={{ mr: 1 }}
+              />
+              <Typography
+                variant="h6"
+                color={
+                  pagesMatch.isContactPage ? primaryColor : "text.primary"
+                }
+              >
+                Contact Us
+              </Typography>
+            </MenuItem>
+          </MenuList>
+
+          <MenuList disablePadding sx={{ mb: 2 }}>
+            {auth.isAuthenticated ? (
+              <Box sx={{ px: 2, py: 1 }}>
+                <UserAccountMenuButton
+                  user={auth.user as User}
+                  isMyProfilePage={pagesMatch.isMyProfilePage}
                 />
               </Box>
             ) : (
-              <Button
-                size="medium"
-                color="primary"
-                variant="contained"
-                onClick={handleOnMenuItemClick("create")}
+              <>
+                <MenuItem onClick={handleToggleRegisterModal}>
+                  <LockOpenOutlined
+                    fontSize="medium"
+                    color="secondary"
+                    sx={{ mr: 1 }}
+                  />
+                  <Typography variant="h6">Register</Typography>
+                </MenuItem>
+
+                <MenuItem onClick={handleToggleLoginModal}>
+                  <VpnKeyOutlined
+                    fontSize="medium"
+                    color="secondary"
+                    sx={{ mr: 1 }}
+                  />
+                  <Typography variant="h6">Log in</Typography>
+                </MenuItem>
+              </>
+            )}
+
+            <Box sx={{ px: 2, py: 1 }}>
+              <SettingsMenuButton
+                setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
               >
-                Create Story
-              </Button>
-            )
-          ) : (
-            <Button
-              size="medium"
-              color="primary"
-              variant="contained"
-              onClick={handleOnMenuItemClick("create")}
-            >
-              Create Story
-            </Button>
-          )}
-
-          <Button
-            variant="text"
-            color="primary"
-            aria-label="menu"
-            onClick={handleSetDrawer(true)}
-            sx={{ minWidth: "30px", p: "4px" }}
-          >
-            <MenuOutlined fontSize="medium" />
-          </Button>
-
-          <Drawer
-            anchor="right"
-            open={isDrawerOpen}
-            onClose={handleSetDrawer(false)}
-          >
-            <Box
-              role="menu"
-              sx={{
-                p: 1,
-                pt: 2,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                flexGrow: 1,
-                minWidth: "50dvw",
-                backgroundColor: "background.paper",
-              }}
-            >
-              <Box>
-                <MenuItem
-                  className={`menu-item`}
-                  onClick={handleOnMenuItemClick("features")}
-                >
-                  <EarbudsOutlined
-                    fontSize="medium"
-                    color="primary"
-                    sx={{ mr: 1 }}
-                  />
-                  <Typography
-                    variant="h6"
-                    color={
-                      pagesMatch.isFeaturesPage ? primaryColor : "text.primary"
-                    }
-                  >
-                    Features
-                  </Typography>
-                </MenuItem>
-
-                <MenuItem
-                  className={`menu-item`}
-                  onClick={handleOnMenuItemClick("create")}
-                >
-                  <AutoFixHighOutlined
-                    fontSize="medium"
-                    color="primary"
-                    sx={{ mr: 1 }}
-                  />
-                  <Typography
-                    variant="h6"
-                    color={
-                      pagesMatch.isCreatePage ? primaryColor : "text.primary"
-                    }
-                  >
-                    Create Story
-                  </Typography>
-                </MenuItem>
-
-                <Divider
-                  orientation="horizontal"
-                  flexItem
-                  sx={{ my: 1, width: "30%", mx: "2rem" }}
-                />
-
-                <MenuItem
-                  className={`menu-item`}
-                  onClick={handleOnMenuItemClick("library")}
-                >
-                  <SearchOutlined
-                    fontSize="medium"
-                    color="primary"
-                    sx={{ mr: 1 }}
-                  />
-
-                  <Typography
-                    variant="h6"
-                    color={
-                      pagesMatch.isLibraryPage ? primaryColor : "text.primary"
-                    }
-                  >
-                    Library
-                  </Typography>
-                </MenuItem>
-
-                <MenuItem
-                  className={`menu-item`}
-                  onClick={handleOnMenuItemClick("pricing")}
-                >
-                  <AttachMoneyOutlined
-                    fontSize="medium"
-                    color="primary"
-                    sx={{ mr: 1 }}
-                  />
-
-                  <Typography
-                    variant="h6"
-                    color={
-                      pagesMatch.isPricingPage ? primaryColor : "text.primary"
-                    }
-                  >
-                    Pricing
-                  </Typography>
-                </MenuItem>
-
-                <Divider
-                  orientation="horizontal"
-                  flexItem
-                  sx={{ my: 1, width: "30%", mx: "2rem" }}
-                />
-
-                <MenuItem
-                  className={`menu-item`}
-                  onClick={handleOnMenuItemClick("contact")}
-                >
-                  <AlternateEmailOutlined
-                    fontSize="medium"
-                    color="primary"
-                    sx={{ mr: 1 }}
-                  />
-                  <Typography
-                    variant="h6"
-                    color={
-                      pagesMatch.isContactPage ? primaryColor : "text.primary"
-                    }
-                  >
-                    Contact Us
-                  </Typography>
-                </MenuItem>
-              </Box>
-
-              <Box sx={{
-                marginBottom: "1rem"
-              }}>
-                {auth.isAuthenticated ? (
-                  <MenuItem>
-                    <UserAccountMenuButton
-                      user={auth.user as User}
-                      isMyProfilePage={pagesMatch.isMyProfilePage}
-                    />
-                  </MenuItem>
-                ) : (
-                  <>
-                    <MenuItem onClick={handleToggleRegisterModal}>
-                      <LockOpenOutlined
-                        fontSize="medium"
-                        color="secondary"
-                        sx={{ mr: 1 }}
-                      />
-                      <Typography variant="h6">Register</Typography>
-                    </MenuItem>
-
-                    <MenuItem onClick={handleToggleLoginModal}>
-                      <VpnKeyOutlined
-                        fontSize="medium"
-                        color="secondary"
-                        sx={{ mr: 1 }}
-                      />
-                      <Typography variant="h6">Log in</Typography>
-                    </MenuItem>
-                  </>
-                )}
-
-                <MenuItem>
-                  <SettingsMenuButton
-                    setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
-                  >
-                    <Typography variant="h6" sx={{ ml: 1 }}>
-                      Settings
-                    </Typography>
-                  </SettingsMenuButton>
-                </MenuItem>
-              </Box>
+                <Typography variant="h6" sx={{ ml: 1 }}>
+                  Settings
+                </Typography>
+              </SettingsMenuButton>
             </Box>
-          </Drawer>
+          </MenuList>
         </Box>
-      )}
-    </>
+      </Drawer>
+    </Box>
   );
 };
 

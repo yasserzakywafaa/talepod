@@ -217,7 +217,7 @@ const CreateStoryFormMini = () => {
             value={profileInfo.name}
             disabled={isGenerating}
             placeholder="Emily, Noah, etc."
-            InputLabelProps={{ shrink: true }}
+            slotProps={{ inputLabel: { shrink: true } }}
             sx={{ flex: "1 1 65%", minWidth: 0 }}
             error={hasCensoredWords(profileInfo.name)}
             helperText={

@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import { CSSProperties, useEffect, useState } from "react";
 
 import Elephant from "../../../assets/images/happy_elephant_with_water_bottle.webp";
@@ -22,6 +23,15 @@ const RandomImage = (props: RandomImageProps) => {
   useEffect(() => {
     setRandomImage(shuffleImages(images));
   }, []);
+
+  if (!randomImage) {
+    return (
+      <Box
+        sx={{ width: "100%", height: "100%" }}
+        style={props.style}
+      />
+    );
+  }
 
   return (
     <img
