@@ -1,18 +1,18 @@
-import Particles, { initParticlesEngine } from "@tsparticles/react";
+import Particles, {
+  ParticlesProvider,
+  useParticlesProvider,
+} from "@tsparticles/react";
 import {
   primaryColor,
   secondaryColorForLightTheme,
   white,
 } from "src/application/shared/themes";
-import { useEffect, useState } from "react";
-
-import { Engine } from "@tsparticles/engine";
-import { loadSlim } from "@tsparticles/slim";
 import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
+import { loadSlim } from "@tsparticles/slim";
 
-export const ParticlesComponent = () => {
-  const [init, setInit] = useState(false);
+const ParticlesInner = () => {
+  const { loaded } = useParticlesProvider();
 
   const {
     store: {
@@ -21,23 +21,10 @@ export const ParticlesComponent = () => {
   } = useApplicationContext();
   const { isMobile } = useDeviceSize();
 
-  useEffect(() => {
-    initParticlesEngine(async (engine: Engine) => {
-      await loadSlim(engine);
-    }).then(() => {
-      setInit(true);
-    });
-  }, []);
-
-  //   const particlesLoaded = async (container: Container): Promise<void> => {
-  //     console.log("container:>>>", container);
-  //   };
-
   return (
-    init && (
+    loaded && (
       <Particles
         id="tsparticles"
-        // particlesLoaded={particlesLoaded}
         options={{
           fullScreen: true,
           background: {
@@ -97,14 +84,6 @@ export const ParticlesComponent = () => {
             },
             shape: {
               type: "star",
-              // type: "image",
-              // options: {
-              //   image: {
-              //     src: logo,
-              //     // width: 300,
-              //     // height: 300,
-              //   },
-              // },
             },
             size: {
               value: { min: 1, max: 3 },
@@ -116,3 +95,9 @@ export const ParticlesComponent = () => {
     )
   );
 };
+
+export const ParticlesComponent = () => (
+  <ParticlesProvider init={async (engine) => loadSlim(engine)}>
+    <ParticlesInner />
+  </ParticlesProvider>
+);
