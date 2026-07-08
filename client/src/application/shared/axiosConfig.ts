@@ -5,6 +5,17 @@ import routes from "../routes";
 
 axios.defaults.withCredentials = true;
 
+axios.interceptors.request.use((config) => {
+  if (window.location.hostname.includes(".vercel.app")) {
+    const previewSecret = import.meta.env.REACT_APP_PREVIEW_SECRET;
+    if (previewSecret) {
+      config.headers = config.headers ?? {};
+      config.headers["X-Preview-Secret"] = previewSecret;
+    }
+  }
+  return config;
+});
+
 let isRefreshing = false;
 const refreshQueue: Array<() => void> = [];
 let isLoggingOut = false;
