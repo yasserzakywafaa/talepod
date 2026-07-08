@@ -1,10 +1,14 @@
 import { defineConfig, loadEnv } from "vite";
 
+import { createRequire } from "node:module";
 import fs from "node:fs";
 import path from "path";
 import prerender from "vite-plugin-prerender";
 import { prerenderPaths } from "./src/application/prerender-paths";
 import react from "@vitejs/plugin-react";
+
+const require = createRequire(import.meta.url);
+const { sanitizePrerenderedHtml } = require("./scripts/sanitize-prerender-html.js");
 
 /**
  * vite-plugin-prerender depends on puppeteer@1.x; we override puppeteer to
@@ -94,6 +98,7 @@ export default defineConfig(async ({ mode }) => {
             /http:\/\/localhost:\d+\//g,
             "/",
           );
+          renderedRoute.html = sanitizePrerenderedHtml(renderedRoute.html);
           return renderedRoute;
         },
       }),

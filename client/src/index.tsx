@@ -12,11 +12,15 @@ if (!nonce) {
   console.warn("CSP Nonce meta tag not found. MUI styles might be blocked.");
 }
 
+const isPrerendering =
+  typeof window !== "undefined" &&
+  Boolean(window.__PRERENDER_INJECTED?.isPrerendering);
+
 const cache = createCache({
   key: "css",
   prepend: true,
   nonce: nonce,
-  speedy: false,
+  speedy: !isPrerendering,
 });
 
 const rootElement = document.getElementById("root");
