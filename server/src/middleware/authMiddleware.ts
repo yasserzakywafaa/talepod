@@ -1,42 +1,42 @@
 import { DBCollectionsEnum, getDocumentFromDb } from "../models/mongoDb";
-import { NextFunction, Request, Response } from "express";
+import { Request, RequestHandler } from "express";
 
 import { ObjectId } from "mongodb";
 import { TokenService } from "../services/tokenService";
 import { User } from "../models/types";
+import {
+  createCookieAuthMiddleware,
+  TokenPayload,
+} from "@yasserzakywafaa/server-core";
 
 export interface AuthenticatedRequest extends Request {
   user?: User;
 }
 
-export const authMiddleware = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const { accessToken } = TokenService.extractTokenFromCookies(req);
-
-    if (!accessToken) {
-      TokenService.clearTokenCookies(res);
-      return res.status(401).json({ message: "No access token provided" });
-    }
-
-    const decoded = TokenService.verifyAccessToken(accessToken);
-
-    const user = (await getDocumentFromDb(
+const coreAuthMiddleware = createCookieAuthMiddleware<User, TokenPayload>({
+  tokenService: TokenService,
+  resolveUser: async (decoded) =>
+    (await getDocumentFromDb(
       new ObjectId(decoded.userId),
       DBCollectionsEnum.users,
-    )) as User;
+    )) as User,
+  messages: {
+    missingToken: "No access token provided",
+    invalidToken: "Invalid access token",
+    userNotFound: "User not found",
+  },
+  clearCookiesOnFailure: false,
+  resolverErrors: "unauthorized",
+});
 
-    if (!user) {
-      return res.status(401).json({ message: "User not found" });
-    }
+export const authMiddleware: RequestHandler = (request, response, next) => {
+  const { accessToken } = TokenService.extractTokenFromCookies(request);
 
-    (req as AuthenticatedRequest).user = user;
-    return next();
-  } catch (error) {
-    console.error("❌ OAuth2 auth middleware error:", (error as Error).message);
-    return res.status(401).json({ message: (error as Error).message });
+  if (!accessToken) {
+    TokenService.clearTokenCookies(response);
+    response.status(401).json({ message: "No access token provided" });
+    return;
   }
+
+  coreAuthMiddleware(request, response, next);
 };
