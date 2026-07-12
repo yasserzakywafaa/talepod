@@ -5,7 +5,7 @@ import axios, { AxiosResponse } from "axios";
 import END_POINTS from "src/application/shared/endpoints";
 import { PaymentStore } from "./store";
 import { getAxiosError } from "src/shared/utils/getAxiosError";
-import { loadStripe } from "@stripe/stripe-js";
+import { redirectToStripeCheckout } from "@yasserzakywafaa/client-core/web";
 import { isPrerendering } from "src/shared/utils/prerender";
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
@@ -116,10 +116,11 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
     if (isPrerendering()) return;
 
     try {
-      // Create a Checkout Session on the server and get the sessionId
-      const response: AxiosResponse<{ sessionId: string }> = await axios.post(
-        END_POINTS.PAYMENTS.CREATE_CHECKOUT_SESSION,
-        {
+      // Create a Checkout Session on the server and redirect to the hosted URL.
+      // Stripe.js is no longer used on the client — the server returns the
+      // Checkout URL and we navigate to it (see redirectToStripeCheckout).
+      const response: AxiosResponse<{ sessionId: string; url: string }> =
+        await axios.post(END_POINTS.PAYMENTS.CREATE_CHECKOUT_SESSION, {
           metadata: {
             priceId,
             priceObject,
@@ -137,24 +138,11 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
             "Content-Type": "application/json",
             "X-Custom-Header": new Date().toISOString(),
           },
-        },
-      );
-      const { sessionId } = response.data;
-
-      // Load Stripe only when the user actually starts checkout
-      const publishableKey = store.state.publishableKey;
-      if (!publishableKey) return;
-
-      const stripe = await loadStripe(publishableKey);
-      if (!stripe) return;
-
-      const { error } = await stripe.redirectToCheckout({ sessionId });
+        });
 
       handleIsFetching(false);
 
-      if (error) {
-        console.error("Error redirecting to Stripe:", error);
-      }
+      redirectToStripeCheckout(response.data.url);
     } catch (error) {
       console.error("Error:", error);
     } finally {

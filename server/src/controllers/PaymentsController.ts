@@ -218,7 +218,9 @@ export const createCheckoutSession = async (
 
     console.log("ℹ️  createCheckoutSession:>>>", { user, session });
 
-    response.json({ sessionId: session.id });
+    // Return the hosted Checkout URL so the client can redirect without the
+    // Stripe.js SDK (see client Payment manager → redirectToStripeCheckout).
+    response.json({ sessionId: session.id, url: session.url });
   } catch (error) {
     console.error(`❌  Failed to Create Checkout Session!`, { error });
     const errorAny = error as any;

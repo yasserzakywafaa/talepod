@@ -590,17 +590,6 @@
   dependencies:
     tar-fs "^3.1.2"
 
-"@stripe/react-stripe-js@^6.7.0":
-  version "6.7.0"
-  resolved "https://registry.yarnpkg.com/@stripe/react-stripe-js/-/react-stripe-js-6.7.0.tgz#efbd56919a8ac93fc2e42d09fda4ca854aaecdcf"
-  integrity sha512-KSWTQHcDlAOlxcOz+uq0pTA/k9G4+IBF/X8mtSFkkBX+nb74buMTIFcCUCHWNhjuPqfD+yJm7NWDan1EaxSyzQ==
-  dependencies:
-    prop-types "^15.7.2"
-
-"@stripe/stripe-js@^9.9.0":
-  version "9.9.0"
-  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-9.9.0.tgz#47cbf1cab003e52b3fe2acfecc703090fcd00bda"
-  integrity sha512-Vwqe6Q5cU4i82tPyAv2BpaW/fQSNdOSO4/J8EeDLPp5/oIZiMmdB+Hgh863zFH+rtoxpuWGvD1L7QPh8k1Rdvw==
 
 "@tootallnate/quickjs-emscripten@^0.23.0":
   version "0.23.0"
