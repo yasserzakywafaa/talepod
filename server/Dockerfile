@@ -6,7 +6,11 @@ WORKDIR /app
 # skip its download and use the distro's Chromium at runtime instead.
 ENV PUPPETEER_SKIP_DOWNLOAD=true
 
-COPY package.json yarn.lock ./
+# GitHub Packages auth for the private @yasserzakywafaa/* core packages.
+ARG GITHUB_PACKAGES_TOKEN
+ENV GITHUB_PACKAGES_TOKEN=${GITHUB_PACKAGES_TOKEN}
+
+COPY package.json yarn.lock .npmrc ./
 RUN yarn install --frozen-lockfile
 
 COPY . .
@@ -30,8 +34,15 @@ ENV PUPPETEER_SKIP_DOWNLOAD=true \
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
+# GitHub Packages auth for the private @yasserzakywafaa/* core packages.
+ARG GITHUB_PACKAGES_TOKEN
+ENV GITHUB_PACKAGES_TOKEN=${GITHUB_PACKAGES_TOKEN}
+
+COPY package.json yarn.lock .npmrc ./
 RUN yarn install --frozen-lockfile --production && yarn cache clean
+
+# Ensure the build token doesn't leak into the final runtime image.
+ENV GITHUB_PACKAGES_TOKEN=
 
 COPY --from=build /app/build ./build
 
