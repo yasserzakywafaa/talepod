@@ -8,6 +8,7 @@ const APP_CONSTANTS = {
   DEV_SERVER_PORT: import.meta.env.REACT_APP_SERVER_PORT,
   DEV_API_URL: import.meta.env.REACT_APP_DEV_API_URL,
   PROD_API_URL: import.meta.env.REACT_APP_PROD_API_URL,
+  PREVIEW_SECRET: import.meta.env.REACT_APP_PREVIEW_SECRET,
 
   // Environment
   IS_LOCAL: import.meta.env.REACT_APP_ENV === "local",

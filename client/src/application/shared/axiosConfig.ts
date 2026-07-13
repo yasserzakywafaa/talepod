@@ -19,7 +19,7 @@ setupAuthAxios({
     },
   },
   preview: {
-    secret: import.meta.env.REACT_APP_PREVIEW_SECRET,
+    secret: APP_CONSTANTS.PREVIEW_SECRET,
   },
 });
 

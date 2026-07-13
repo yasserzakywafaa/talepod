@@ -590,7 +590,6 @@
   dependencies:
     tar-fs "^3.1.2"
 
-
 "@tootallnate/quickjs-emscripten@^0.23.0":
   version "0.23.0"
   resolved "https://registry.yarnpkg.com/@tootallnate/quickjs-emscripten/-/quickjs-emscripten-0.23.0.tgz#db4ecfd499a9765ab24002c3b696d02e6d32a12c"
@@ -725,6 +724,11 @@
   integrity sha512-vmFvco5/QuC2f9Oj+wTk0+9XeDFkHxSamwZKYc7MxYwKICfvUvlMhqKI0VuICPltGqh1neqBKDvO4kes1ya8vg==
   dependencies:
     "@rolldown/pluginutils" "^1.0.1"
+
+"@yasserzakywafaa/client-core@0.4.1":
+  version "0.4.1"
+  resolved "https://npm.pkg.github.com/download/@yasserzakywafaa/client-core/0.4.1/3b2cd4fd5ede07d6964908161fd10ee149944ac6#3b2cd4fd5ede07d6964908161fd10ee149944ac6"
+  integrity sha512-+Qs6oIF0AjU6uueYL0XRnvm9HTu9QKxJkdes5OCRihOYwWgESO0xyEb4484fEDlxDaenpIc2H3F+o+GSb3hzxQ==
 
 "@zeit/schemas@2.36.0":
   version "2.36.0"
@@ -3286,7 +3290,7 @@ promise-limit@^2.5.0:
   resolved "https://registry.yarnpkg.com/promise-limit/-/promise-limit-2.7.0.tgz#eb5737c33342a030eaeaecea9b3d3a93cb592b26"
   integrity sha512-7nJ6v5lnJsXwGprnGXga4wx6d1POjvi5Qmf1ivTRxTjH4Z/9Czja/UCMLVmB9N93GeWOU93XaFaEt6jbuoagNw==
 
-prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
+prop-types@^15.6.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -4366,8 +4370,3 @@ zwitch@^2.0.0:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/zwitch/-/zwitch-2.0.4.tgz#c827d4b0acb76fc3e685a4c6ec2902d51070e9d7"
   integrity sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==
-
-"@yasserzakywafaa/client-core@0.4.1":
-  version "0.4.1"
-  resolved "https://npm.pkg.github.com/download/@yasserzakywafaa/client-core/0.4.1/3b2cd4fd5ede07d6964908161fd10ee149944ac6#3b2cd4fd5ede07d6964908161fd10ee149944ac6"
-  integrity sha512-+Qs6oIF0AjU6uueYL0XRnvm9HTu9QKxJkdes5OCRihOYwWgESO0xyEb4484fEDlxDaenpIc2H3F+o+GSb3hzxQ==
