@@ -11,6 +11,7 @@ import {
   Sort,
   WithId,
 } from "mongodb";
+import { MongoDatabase, createMongoDatabase } from "@yasserzakywafaa/server-core";
 import {
   ProfileInfo,
   Story,
@@ -31,6 +32,7 @@ import CONFIG from "../../config";
 
 let dbClient: MongoClient;
 let database: Db;
+let mongoDatabase: MongoDatabase<DBCollectionsEnum>;
 const { IS_DEV, MONGODB_URI_DEV, IS_PROD, MONGODB_URI_PROD, MONGODB_URI } =
   CONFIG;
 
@@ -65,38 +67,27 @@ const getDatabaseName = (): string => {
 };
 
 const databaseInit = async () => {
-  const uri = getMongoDbUri();
-  dbClient = new MongoClient(uri);
+  // Connection, collection bootstrap, and lifecycle are handled by the shared
+  // createMongoDatabase factory (server-core). TalePod keeps its domain-specific
+  // index creation via the onConnected hook.
+  mongoDatabase = createMongoDatabase<DBCollectionsEnum>({
+    uri: getMongoDbUri(),
+    dbName: getDatabaseName(),
+    collections: Object.values(DBCollectionsEnum) as DBCollectionsEnum[],
+    onConnected: async ({ client, db }) => {
+      dbClient = client as MongoClient;
+      database = db;
+      await createIndexes();
+    },
+  });
 
   try {
-    await dbClient.connect();
-    // // FOR DEVELOPMENT USE ONLY
-    // await copyDocumentsFromDatabaseToAnotherDatabase();
-    const dbName = getDatabaseName();
-    database = dbClient.db(dbName);
-
-    console.info("✅ Connected to MongoDB Atlas", { dbName });
-
-    await createCollections();
-    await createIndexes();
+    await mongoDatabase.connect();
+    console.info("✅ Connected to MongoDB Atlas", {
+      dbName: getDatabaseName(),
+    });
   } catch (error) {
     console.error("❌ Failed to connect to MongoDB Atlas", error);
-  }
-};
-
-const createCollections = async () => {
-  const collections = Object.keys(DBCollectionsEnum);
-
-  for (const collectionName of collections) {
-    const collection = await database
-      .listCollections({ name: collectionName })
-      .toArray();
-    if (collection.length === 0) {
-      await database.createCollection(collectionName);
-      console.info(`✅ Collection '${collectionName}' created`);
-    } else {
-      console.info(`-- ℹ️  Collection '${collectionName}' already exists`);
-    }
   }
 };
 
@@ -159,8 +150,8 @@ const createIndexes = async () => {
 };
 
 const closeDatabase = async () => {
-  if (dbClient) {
-    await dbClient.close();
+  if (mongoDatabase) {
+    await mongoDatabase.close();
     console.info("✅ Database connection closed");
   }
 };
@@ -497,6 +488,7 @@ const getPaginatedDocuments = async <T extends Document = Document>(
 export {
   dbClient,
   database,
+  mongoDatabase,
   databaseInit,
   getMongoDbUri,
   closeDatabase,
