@@ -1,17 +1,4 @@
-import { useMediaQuery, useTheme } from "@mui/material";
-
-const useDeviceSize = () => {
-  const theme = useTheme();
-
-  const isDesktop = useMediaQuery(theme.breakpoints.up("lg"));
-  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "lg"));
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
-  return {
-    isDesktop,
-    isTablet,
-    isMobile,
-  };
-};
+// Re-exported from @yasserzakywafaa/client-core/web (shared core package).
+import { useDeviceSize } from "@yasserzakywafaa/client-core/web";
 
 export default useDeviceSize;

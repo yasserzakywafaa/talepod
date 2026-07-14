@@ -1,21 +1,12 @@
+// URL/schema helpers are provided by @yasserzakywafaa/client-core/web,
+// configured with TalePod's site origin.
+import { createSchemaHelpers } from "@yasserzakywafaa/client-core/web";
 import APP_CONSTANTS from "src/application/shared/app_constants";
 
-export const getBaseUrl = (): string => {
-  return APP_CONSTANTS.APP_URL || "https://www.talepod.com";
-};
+const helpers = createSchemaHelpers(
+  APP_CONSTANTS.APP_URL || "https://www.talepod.com",
+);
 
-export const getAbsoluteUrl = (path: string): string => {
-  const baseUrl = getBaseUrl();
-  const cleanPath = path.startsWith("/") ? path : `/${path}`;
-  return `${baseUrl}${cleanPath}`;
-};
-
-export const getImageUrl = (
-  imagePath: string | undefined,
-): string | undefined => {
-  if (!imagePath) return undefined;
-  if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
-    return imagePath;
-  }
-  return getAbsoluteUrl(imagePath);
-};
+export const getBaseUrl = helpers.getBaseUrl;
+export const getAbsoluteUrl = helpers.getAbsoluteUrl;
+export const getImageUrl = helpers.getImageUrl;

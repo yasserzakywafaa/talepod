@@ -1,40 +1,32 @@
-import { DBCollectionsEnum, database } from ".";
+import { DBCollectionsEnum, mongoDatabase } from ".";
+import { Document, Filter, ObjectId } from "mongodb";
 
-import { ObjectId } from "mongodb";
+// Generic CRUD now delegates to the shared createMongoDatabase (server-core).
+// These thin adapters preserve TalePod's existing call signatures — collection
+// name last, string ids converted to ObjectId, and the default createdAt sort on
+// query reads — so the domain helpers and call sites stay unchanged.
 
 // Create a new document
 export const createDocument = async (
   data: any,
   collectionName: DBCollectionsEnum
-) => {
-  const collection = database.collection(collectionName);
-  const result = await collection.insertOne(data);
-
-  return result.insertedId;
-};
+) => mongoDatabase.createDocument<Document>(collectionName, data);
 
 // Read a document by ID
 export const readDocument = async (
   documentId: any,
   collectionName: DBCollectionsEnum
-) => {
-  const collection = database.collection(collectionName);
-  const document = await collection.findOne({ _id: documentId });
-
-  return document;
-};
+) => mongoDatabase.readDocument<Document>(collectionName, documentId);
 
 // Read a document by Field
 export const readDocumentByField = async (
   field: string,
   value: string,
   collectionName: DBCollectionsEnum
-) => {
-  const collection = database.collection(collectionName);
-  const document = await collection.findOne({ [field]: value });
-
-  return document;
-};
+) =>
+  mongoDatabase.readDocumentByQuery<Document>(collectionName, {
+    [field]: value,
+  } as Filter<Document>);
 
 // Read a document by query
 export const readDocumentByQuery = async (
@@ -42,12 +34,11 @@ export const readDocumentByQuery = async (
   collectionName: DBCollectionsEnum
 ) => {
   try {
-    const documents = database.collection(collectionName);
-    const document = await documents.findOne(query, {
-      sort: { createdAt: -1 },
-    });
-
-    return document;
+    return await mongoDatabase.readDocumentByQuery<Document>(
+      collectionName,
+      query as Filter<Document>,
+      { sort: { createdAt: -1 } }
+    );
   } catch (error) {
     throw new Error("❌ Failed to get document by query!", { cause: error });
   }
@@ -61,11 +52,10 @@ export const updateDocument = async <T>(
 ) => {
   console.log("🧮 Updating Document in Database 🧮");
   try {
-    const documents = database.collection(collectionName);
-    const results = await documents.findOneAndUpdate(
-      { _id: new ObjectId(documentId) },
-      { $set: fieldsToUpdate },
-      { returnDocument: "after" }
+    const results = await mongoDatabase.updateDocument<Document>(
+      collectionName,
+      new ObjectId(documentId),
+      fieldsToUpdate as Partial<Document>
     );
     console.log(`✅ Document updated in collection: ${collectionName}.`);
 
@@ -81,14 +71,14 @@ export const deleteDocument = async (
   documentId: string,
   collectionName: DBCollectionsEnum
 ) => {
-  const collection = database.collection(collectionName);
   try {
-    const result = await collection.deleteOne({
-      _id: new ObjectId(documentId),
-    });
+    const result = await mongoDatabase.deleteDocument<Document>(
+      collectionName,
+      new ObjectId(documentId)
+    );
     console.log("✅ Document deleted successfully.");
 
-    return result.deletedCount === 1;
+    return result;
   } catch (error) {
     throw new Error("❌ Failed to delete document!", { cause: error });
   }
@@ -100,10 +90,10 @@ export const createBulkDocuments = async (
   collectionName: DBCollectionsEnum
 ) => {
   try {
-    const collection = database.collection(collectionName);
-    const results = await collection.insertMany(documents);
-
-    return results;
+    return await mongoDatabase.createBulkDocuments<Document>(
+      collectionName,
+      documents
+    );
   } catch (error) {
     throw new Error("❌ Error saving blogs in bulk:", { cause: error });
   }

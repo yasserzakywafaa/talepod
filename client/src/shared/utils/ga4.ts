@@ -1,5 +1,6 @@
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import { isPrerendering } from "src/shared/utils/prerender";
+import { createGa4Tracker } from "@yasserzakywafaa/client-core/web";
 
 export interface Ga4PageViewParams {
   page_path: string;
@@ -50,26 +51,20 @@ export const isGa4Enabled = (): boolean =>
   Boolean(APP_CONSTANTS.GOOGLE_ANALYTICS_ID) &&
   !isPrerendering();
 
-export const trackGa4PageView = (params: Ga4PageViewParams): void => {
-  if (!isGa4Enabled() || typeof window.gtag !== "function") return;
+// gtag dispatch (enablement gate + window.gtag call) is provided by client-core.
+const tracker = createGa4Tracker({ isEnabled: isGa4Enabled });
 
-  window.gtag("event", "page_view", { ...params });
-};
+export const trackGa4PageView = (params: Ga4PageViewParams): void =>
+  tracker.trackGa4PageView(params);
 
 /** Custom interaction events (clicks, conversions) — sent directly to GA4 via gtag. */
 export const trackGa4Event = (
   eventName: string,
-  params: GtagEventParams = {},
-): void => {
-  if (!isGa4Enabled() || typeof window.gtag !== "function") return;
-
-  window.gtag("event", eventName, params);
-};
+  params: AnalyticsEventParams = {},
+): void => tracker.trackGa4Event(eventName, params);
 
 /** Typed wrapper for custom GA4 events. Page views use trackGa4PageView separately. */
 export const trackEvent = (
   event: AnalyticsEventName,
   params: AnalyticsEventParams = {},
-): void => {
-  trackGa4Event(event, params);
-};
+): void => tracker.trackGa4Event(event, params);

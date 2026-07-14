@@ -2712,3 +2712,8 @@ zod@^3.24.1:
   version "3.25.76"
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.25.76.tgz#26841c3f6fd22a6a2760e7ccb719179768471e34"
   integrity sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==
+
+"@yasserzakywafaa/server-core@0.2.0":
+  version "0.2.0"
+  resolved "https://npm.pkg.github.com/download/@yasserzakywafaa/server-core/0.2.0/7448b3bf669a35e40133e53738779ad4f3fdb5ae#7448b3bf669a35e40133e53738779ad4f3fdb5ae"
+  integrity sha512-yHbGoyWww+eJXfQNea3fdBmqFG3qzkwswfEMhZJPDLsWucbrXB+40Ezig9k4pccsXB0KytEwADky4uuE+uqy7Q==

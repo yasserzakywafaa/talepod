@@ -400,7 +400,7 @@ export const lightTheme = createTheme({
     },
     MuiAlert: {
       styleOverrides: {
-        standardInfo: {
+        standard: {
           border: `1px solid ${secondaryColorForLightTheme}`,
         },
       },
@@ -476,7 +476,7 @@ export const darkTheme = createTheme({
     },
     MuiAlert: {
       styleOverrides: {
-        standardInfo: {
+        standard: {
           border: `1px solid ${secondaryColorForDarkTheme}`,
         },
       },

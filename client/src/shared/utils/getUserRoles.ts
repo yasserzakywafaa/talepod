@@ -1,7 +1,7 @@
+import { hasAdminRights as hasAdminRightsCore } from "@yasserzakywafaa/client-core";
 import { User, UserRole } from "../types/user";
 
-export const hasAdminRights = (user: User | null): boolean => {
-  if (!user) return false;
+const ADMIN_ROLES = [UserRole.super_admin, UserRole.admin] as const;
 
-  return user.role === UserRole.super_admin || user.role === UserRole.admin;
-};
+export const hasAdminRights = (user: User | null): boolean =>
+  hasAdminRightsCore(user, ADMIN_ROLES);

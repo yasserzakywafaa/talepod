@@ -1,16 +1,2 @@
-export const getClientIdFromGoogleAnalyticsCookie = () => {
-  const gaCookie = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("_ga="));
-
-  if (gaCookie) {
-    const cookieParts = gaCookie.split(".");
-    const clientId = `${cookieParts[2]}.${cookieParts[3]}`; // Extract the Client ID
-
-    return clientId;
-  } else {
-    console.log("_ga cookie not found.");
-
-    return null;
-  }
-};
+// Re-exported from @yasserzakywafaa/client-core/web (shared core package).
+export { getClientIdFromGoogleAnalyticsCookie } from "@yasserzakywafaa/client-core/web";

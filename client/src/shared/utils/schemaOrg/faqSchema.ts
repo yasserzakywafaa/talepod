@@ -1,24 +1,12 @@
+// FAQPage JSON-LD builder from @yasserzakywafaa/client-core/web, wrapped to keep
+// TalePod's (faqs, url) signature by injecting the local getAbsoluteUrl helper.
+import {
+  createFAQPageSchema as createFAQPageSchemaCore,
+  type FAQItem,
+} from "@yasserzakywafaa/client-core/web";
 import { getAbsoluteUrl } from "./schemaGenerators";
 
-export interface FAQItem {
-  question: string;
-  answer: string;
-}
+export type { FAQItem } from "@yasserzakywafaa/client-core/web";
 
-export const createFAQPageSchema = (faqs: FAQItem[], url?: string): object => {
-  const mainEntity = faqs.map((faq) => ({
-    "@type": "Question",
-    name: faq.question,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: faq.answer,
-    },
-  }));
-
-  return {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity,
-    ...(url && { url: getAbsoluteUrl(url) }),
-  };
-};
+export const createFAQPageSchema = (faqs: FAQItem[], url?: string): object =>
+  createFAQPageSchemaCore({ getAbsoluteUrl }, faqs, url);

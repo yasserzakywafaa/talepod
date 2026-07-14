@@ -1,12 +1,2 @@
-export const getCurrencySymbol = (currency: string | undefined) => {
-    switch (currency) {
-        case "eur":
-          return "€";
-        case "usd":
-          return "$";
-        case "CHF":
-          return "₣";
-        default:
-          return "€";
-      }
-}
+// Re-exported from @yasserzakywafaa/client-core (shared core package).
+export { getCurrencySymbol } from "@yasserzakywafaa/client-core";
