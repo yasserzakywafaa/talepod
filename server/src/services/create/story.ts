@@ -23,10 +23,11 @@ import { autoSaveAvatarFromProfile } from "./avatar";
 import extractStoryParts, {
   extractComicParts,
 } from "../../utils/extractStoryParts";
-import { countWords, getSlugFromText } from "../../utils/stringUtils";
+import { countWords } from "../../utils/stringUtils";
+import { getSlugFromText } from "@yasserzakywafaa/server-core";
 import { handleOpenRouterAIRequest } from "../../utils/openRouterClient";
 import { handleTriggerWebhookN8n } from "../webhooks/n8n";
-import retry from "../../utils/retryFunction";
+import { retry } from "@yasserzakywafaa/server-core";
 import { updateDocument } from "../../models/mongoDb/crudOperations";
 
 /** Resolved avatar metadata seeded into a story so the hero stays on-model. */

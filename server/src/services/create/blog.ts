@@ -16,7 +16,7 @@ import { handleOpenRouterAIRequest } from "../../utils/openRouterClient";
 // import { handleUpdateSitemapInGitLab } from "../gitlab";
 // import path from "path";
 // import readline from "readline";
-import retry from "../../utils/retryFunction";
+import { retry } from "@yasserzakywafaa/server-core";
 
 // import { getRandomString, getSlugFromText } from "../../utils/stringUtils";
 

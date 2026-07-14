@@ -30,17 +30,35 @@ export const ShareFloating = (props: ShareFloatingStory) => {
         size: "small",
       }}
     >
-      <SpeedDialAction icon={CopyLink({ url })} />
+      <SpeedDialAction
+        icon={CopyLink({ url })}
+        slotProps={{ fab: { component: "span" } }}
+      />
 
-      <SpeedDialAction icon={WhatsAppShareButton({ url })} />
+      <SpeedDialAction
+        icon={WhatsAppShareButton({ url })}
+        slotProps={{ fab: { component: "span" } }}
+      />
 
-      <SpeedDialAction icon={FacebookShareButton({ url })} />
+      <SpeedDialAction
+        icon={FacebookShareButton({ url })}
+        slotProps={{ fab: { component: "span" } }}
+      />
 
-      <SpeedDialAction icon={InstagramShareButton({ url })} />
+      <SpeedDialAction
+        icon={InstagramShareButton({ url })}
+        slotProps={{ fab: { component: "span" } }}
+      />
 
-      <SpeedDialAction icon={TwitterShareButton({ url })} />
+      <SpeedDialAction
+        icon={TwitterShareButton({ url })}
+        slotProps={{ fab: { component: "span" } }}
+      />
 
-      <SpeedDialAction icon={TelegramShareButton({ url })} />
+      <SpeedDialAction
+        icon={TelegramShareButton({ url })}
+        slotProps={{ fab: { component: "span" } }}
+      />
     </SpeedDial>
   );
 };

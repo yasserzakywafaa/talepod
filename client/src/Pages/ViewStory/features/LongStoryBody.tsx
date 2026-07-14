@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import ReactMarkdown from "react-markdown";
 import { LongStoryImage } from "src/components/StoryCreator/store/state";
+import ReactMarkdown from "react-markdown";
 
 interface LongStoryBodyProps {
   mainStory: string;
@@ -40,7 +40,7 @@ const LongStoryBody: React.FC<LongStoryBodyProps> = ({
     .sort((a, b) => a.index - b.index);
 
   if (!interiorImages.length) {
-    return <ReactMarkdown className={className}>{mainStory}</ReactMarkdown>;
+    return <ReactMarkdown>{mainStory}</ReactMarkdown>;
   }
 
   const paragraphs = splitParagraphs(mainStory);
