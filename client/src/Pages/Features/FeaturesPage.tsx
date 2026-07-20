@@ -1,13 +1,13 @@
 import "./FeaturesPage.scss";
 
-import Benefits from "./features/Benefits"; // Import Benefits
+import Benefits from "./features/Benefits";
 import CallToAction from "./features/CallToAction";
 import { Divider, Link as MuiLink } from "@mui/material";
 import FAQ from "./features/FAQ";
-import Guarantee from "./features/Guarantee"; // Import Guarantee
+import Guarantee from "./features/Guarantee";
 import Hero from "./features/Hero";
 import HowItWorks from "./features/HowItWorks";
-import KeyFeatures from "./features/KeyFeatures"; // Import KeyFeatures
+import KeyFeatures from "./features/KeyFeatures";
 import { LoaderComponentNameEnum } from "src/components/shared/Loader/LoaderSpinner";
 import Page from "src/components/shared/Page/Page";
 import { homepageSeo } from "../LandingPages/landingPageSeo";
@@ -25,17 +25,19 @@ import {
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
 import { Pricing } from "src/components/shared/Pricing/Pricing";
 import PricingTable from "src/components/shared/Pricing/PricingTable";
-import StoryExamples from "./features/StoryExamples"; // Import StoryExamples
+import StoryExamples from "./features/StoryExamples";
 import StoryFormats from "./features/StoryFormats";
-import Testimonials from "./features/Testimonials"; // Import Testimonials
+import Testimonials from "./features/Testimonials";
 import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
 import routes from "src/application/routes";
 import { Link } from "react-router-dom";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 const FeaturesPage = () => {
+  const { t } = useTranslation("landing");
   const {
     store: {
       state: { isFetching },
@@ -75,13 +77,13 @@ const FeaturesPage = () => {
   return (
     <Page
       {...landingPageSeoProps(homepageSeo)}
+      title={t("features.pageTitle")}
       className="features-page"
       isLoading={isFetching || isCreateStoryFetching}
       loaderComponentName={
         isCreateStoryFetching ? LoaderComponentNameEnum.CreateStory : undefined
       }
     >
-
       <Hero />
 
       <MuiLink
@@ -94,7 +96,7 @@ const FeaturesPage = () => {
           fontSize: 14,
         }}
       >
-        Try our personalized bedtime story generator
+        {t("features.generatorLink")}
       </MuiLink>
 
       <div className="section">

@@ -1,11 +1,3 @@
-import {
-  BedOutlined,
-  DevicesOutlined,
-  EditOutlined,
-  LocalFloristOutlined,
-} from "@mui/icons-material";
-import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
-
 import DreamyKitten from "../../assets/images/landing_pages/dreamy_kitten.webp";
 import Hero from "./features/Hero";
 import Page from "src/components/shared/Page/Page";
@@ -24,11 +16,12 @@ import KeyFeatures from "../Features/features/KeyFeatures";
 import StoryExamples from "../Features/features/StoryExamples";
 import Testimonials from "../Features/features/Testimonials";
 import CallToAction from "../Features/features/CallToAction";
-import { landingPageSeo } from "./landingPageSeo";
-import { landingPageSeoProps } from "./landingPageSeoProps";
-import routes from "src/application/routes";
+import { useLandingPageSeo } from "src/shared/i18n/useLandingPageSeo";
+import { useTranslation } from "react-i18next";
 
 const BedtimeStoriesForGirlfriend = () => {
+  const { t } = useTranslation("landing");
+  const seoProps = useLandingPageSeo("girlfriend");
   const {
     store: {
       state: { isFetching },
@@ -36,64 +29,13 @@ const BedtimeStoriesForGirlfriend = () => {
   } = useApplicationContext();
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
 
-  const benefitsList = (
-    <List>
-      <ListItem>
-        <ListItemIcon>
-          <LocalFloristOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Tailored to Your Romantic Needs"
-          secondary="With TalePod, you can choose themes, tones, and characters that match your current mood."
-        />
-      </ListItem>
-
-      <ListItem>
-        <ListItemIcon>
-          <BedOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Promotes Better Sleep"
-          secondary="Calm and personalized stories can help you ease into sleep and relaxation."
-        />
-      </ListItem>
-
-      <ListItem>
-        <ListItemIcon>
-          <DevicesOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Easy to Use"
-          secondary="TalePod's user-friendly interface makes it simple to create and customize stories, even for those who are not tech-savvy."
-        />
-      </ListItem>
-
-      <ListItem>
-        <ListItemIcon>
-          <EditOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Customizable"
-          secondary="TalePod is designed to meet the needs of both adults and children."
-        />
-      </ListItem>
-    </List>
-  );
-
   return (
-    <Page
-      {...landingPageSeoProps(
-        landingPageSeo[routes.landingPages.bedtimeStoriesForGirlfriend],
-      )}
-      className="bedtime-stories-for-girlfriend-page"
-      isLoading={isFetching}
-    >
-
+    <Page {...seoProps} className="home-page" isLoading={isFetching}>
       <Hero
         heroImage={DreamyKitten}
-        pageTitleWhite="Heartfelt Bedtime Stories"
-        pageTitleColored="for Your Girlfriend"
-        pageHeader="Create romantic and personalized stories to share with your loved one."
+        pageTitleWhite={t("pages.girlfriend.heroWhite")}
+        pageTitleColored={t("pages.girlfriend.heroColored")}
+        pageHeader={t("pages.girlfriend.heroHeader")}
       />
 
       <div className="section">
@@ -101,10 +43,8 @@ const BedtimeStoriesForGirlfriend = () => {
       </div>
 
       <PersonalizedBedtimeStoryText
-        whyPersonalizeBedtimeStories="can strengthen your bond by adding a personal touch to your shared moments."
-        introducingTalePod="TalePod lets you craft romantic bedtime stories to surprise and delight your partner, making each night together even more special.."
+        pageKey="girlfriend"
         personalizeImage={Unicorn}
-        benefitsList={benefitsList}
         benefitsImage={<RandomImage />}
       />
 

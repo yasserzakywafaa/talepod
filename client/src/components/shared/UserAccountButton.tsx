@@ -21,6 +21,7 @@ import { primaryColor } from "src/application/shared/themes";
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface UserAccountMenuButtonProps {
   user: User;
@@ -31,6 +32,7 @@ interface UserAccountMenuButtonProps {
 }
 
 const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
+  const { t } = useTranslation("common");
   const navigate = useNavigate();
   const {
     manager: { handleSetAuthInfo },
@@ -108,7 +110,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
     });
     Notify({
       type: "info",
-      content: "Logged out",
+      content: t("loggedOut"),
     });
 
     navigate(routes.features);
@@ -186,7 +188,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
             variant="body1"
             color={isMyProfilePage ? primaryColor : "text.primary"}
           >
-            Profile
+            {t("settings.profile")}
           </Typography>
         </MenuItem>
 
@@ -205,7 +207,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
             variant="body1"
             color={isMyBlogsPage ? primaryColor : "text.primary"}
           >
-            My Stories
+            {t("nav.myStories")}
           </Typography>
         </MenuItem>
 
@@ -219,7 +221,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
           <Typography variant="body1" sx={{
             color: "text.primary"
           }}>
-            My Avatars
+            {t("settings.myAvatars")}
           </Typography>
         </MenuItem>
 
@@ -246,7 +248,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
                 variant="body1"
                 color={isDashboardPage ? primaryColor : "text.primary"}
               >
-                Dashboard
+                {t("settings.dashboard")}
               </Typography>
             </MenuItem>
           </>
@@ -269,7 +271,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
               </ListItemIcon>
 
               <Typography variant="body1" color="error">
-                Logout
+                {t("settings.logout")}
               </Typography>
             </MenuItem>
           </>

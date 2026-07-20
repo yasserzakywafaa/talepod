@@ -10,11 +10,14 @@ import {
   WbSunnyOutlined,
 } from "@mui/icons-material";
 
+import { LanguageSwitcher } from "@yasserzakywafaa/client-core/web/i18n";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { SupportedLang } from "@yasserzakywafaa/client-core";
 import { primaryColor } from "src/application/shared/themes";
 import { useApplicationContext } from "src/application/store/Provider";
-import { useDetectBrowserType } from "src/shared/hooks/useDetectBrowserType";
+import { useDetectBrowserType } from "@yasserzakywafaa/client-core/web";
+import { useTranslation } from "react-i18next";
 
 export interface SettingsMenuButtonProps {
   children?: JSX.Element;
@@ -22,16 +25,18 @@ export interface SettingsMenuButtonProps {
 }
 
 const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
+  const { t } = useTranslation("common");
   const {
     store: {
-      state: { themeMode },
+      state: { themeMode, auth },
     },
-    manager: { handleToggleThemeMode },
+    manager: { handleToggleThemeMode, handleUpdateUserInfoInApplication },
   } = useApplicationContext();
   const { isInStandaloneMode } = useDetectBrowserType();
   const [element, setElement] = React.useState<null | HTMLElement>(null);
 
   const isOpen = Boolean(element);
+
   const handleMenuButtonClick = (event: React.MouseEvent<HTMLElement>) => {
     setElement(event.currentTarget);
   };
@@ -44,6 +49,15 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
 
   const handleOnRefreshClick = () => {
     window.location.reload();
+  };
+
+  const handleOnLanguageChange = async (lang: SupportedLang) => {
+    const user = auth.user;
+    if (user) {
+      await handleUpdateUserInfoInApplication({
+        preferences: { ...user.preferences, languagePreference: lang },
+      });
+    }
   };
 
   const buttonHoverStylePrimary = {
@@ -60,7 +74,7 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
   return (
     <>
       <Box
-        id="user-account-button"
+        id="settings-button"
         aria-haspopup="true"
         aria-expanded={isOpen ? "true" : undefined}
         aria-controls={isOpen ? "settings-button" : undefined}
@@ -80,15 +94,16 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
         open={isOpen}
         anchorEl={element}
         disableScrollLock
-        id="user-account-menu"
-        slotProps={{
-          list: {
-            "aria-labelledby": "settings-account-button",
-          },
-        }}
+        id="settings-menu"
+        slotProps={{ list: { "aria-labelledby": "settings-button" } }}
         variant="menu"
         onClose={handleCloseMenu}
       >
+        <LanguageSwitcher
+          styles={{ ...buttonHoverStylePrimary }}
+          onLanguageChange={handleOnLanguageChange}
+        />
+
         <MenuItem
           sx={{ ...buttonHoverStylePrimary }}
           onClick={handleToggleThemeMode}
@@ -109,7 +124,7 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
             )}
           </ListItemIcon>
 
-          <Typography variant="body1">Theme</Typography>
+          <Typography variant="body1">{t("settings.theme")}</Typography>
         </MenuItem>
 
         {!isInStandaloneMode && (
@@ -125,7 +140,7 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
               />
             </ListItemIcon>
 
-            <Typography variant="body1">Install </Typography>
+            <Typography variant="body1">{t("settings.install")}</Typography>
           </MenuItem>
         )}
 
@@ -134,7 +149,7 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
           onClick={handleOnRefreshClick}
         >
           <RefreshOutlined fontSize="medium" color="secondary" sx={{ mr: 1 }} />
-          <Typography variant="body1">Refresh App</Typography>
+          <Typography variant="body1">{t("settings.refreshApp")}</Typography>
         </MenuItem>
       </Menu>
     </>

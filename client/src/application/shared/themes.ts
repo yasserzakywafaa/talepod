@@ -1,5 +1,5 @@
 import { CSSProperties } from "react";
-import { createTheme } from "@mui/material/styles";
+import { PaletteMode, createTheme } from "@mui/material/styles";
 
 declare module "@mui/material/styles" {
   interface TypographyVariants {
@@ -492,3 +492,11 @@ export const darkTheme = createTheme({
     },
   },
 });
+
+export function getThemedTheme(
+  mode: PaletteMode,
+  direction: "ltr" | "rtl" = "ltr",
+) {
+  const base = mode === "light" ? lightTheme : darkTheme;
+  return createTheme({ ...base, direction });
+}

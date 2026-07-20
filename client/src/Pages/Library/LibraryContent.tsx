@@ -20,12 +20,14 @@ import StoryCard from "src/components/shared/StoryCard/StoryCard";
 import { useLibraryContext } from "./store/Provider";
 import { useNavigate } from "react-router-dom";
 import { trackEvent } from "src/shared/utils/ga4";
+import { useTranslation } from "react-i18next";
 
 interface LibraryPageContentProps {
   showSourceChips?: boolean;
 }
 
 export const LibraryContent = (props: LibraryPageContentProps): JSX.Element => {
+  const { t } = useTranslation("library");
   const { showSourceChips = true } = props;
   const navigate = useNavigate();
   const {
@@ -74,7 +76,7 @@ export const LibraryContent = (props: LibraryPageContentProps): JSX.Element => {
     <Page
       isLoading={isFetching || (isFetching && !stories.length)}
       className="library-page"
-      title="Library of Bedtime Stories on TalePod"
+      title={t("page.libraryTitle")}
       loaderComponentName={LoaderComponentNameEnum.BedtimeStories}
     >
       <Container className="library-container">
@@ -95,14 +97,14 @@ export const LibraryContent = (props: LibraryPageContentProps): JSX.Element => {
                 <Stack direction="row" spacing={1}>
                   <Chip
                     clickable
-                    label="Community"
+                    label={t("page.sourceCommunity")}
                     color="primary"
                     variant={storiesSource === "community" ? "filled" : "outlined"}
                     onClick={() => handleSetStoriesSourceWithTracking("community")}
                   />
                   <Chip
                     clickable
-                    label="by TalePod"
+                    label={t("page.sourceTalepod")}
                     color="primary"
                     variant={storiesSource === "talepod" ? "filled" : "outlined"}
                     onClick={() => handleSetStoriesSourceWithTracking("talepod")}
@@ -112,7 +114,7 @@ export const LibraryContent = (props: LibraryPageContentProps): JSX.Element => {
             </Box>
 
             <Button variant="text" onClick={handleFilterButtonClick}>
-              Filters
+              {t("page.filters")}
               {activeFiltersCount ? (
                 <Badge badgeContent={activeFiltersCount} color="secondary">
                   <FilterAltOutlined color="primary" />

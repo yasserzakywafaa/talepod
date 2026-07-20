@@ -10,6 +10,7 @@ import { AddRounded } from "@mui/icons-material";
 import { useState } from "react";
 
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
+import { useTranslation } from "react-i18next";
 
 /** Shape shared by the curated dropdown option lists (Moral/Tone/Environment). */
 export interface SelectableOption {
@@ -48,6 +49,7 @@ const CustomizableSelect = ({
   options,
   onChange,
 }: CustomizableSelectProps) => {
+  const { t } = useTranslation("story");
   const isCustom = value?.value === CUSTOM_OPTION_VALUE;
   const [showCustomInput, setShowCustomInput] = useState(isCustom);
   const [customText, setCustomText] = useState(isCustom ? value.name : "");
@@ -93,7 +95,7 @@ const CustomizableSelect = ({
         onChange={handleSelect}
         renderValue={(selected) =>
           selected === CUSTOM_OPTION_VALUE
-            ? customText.trim() || "Custom"
+            ? customText.trim() || t("form.customSelect.custom")
             : options.find((o) => o.value === selected)?.name ?? ""
         }
       >
@@ -104,7 +106,7 @@ const CustomizableSelect = ({
         ))}
         <MenuItem value={CUSTOM_OPTION_VALUE}>
           <AddRounded fontSize="small" sx={{ mr: 1 }} />
-          Add custom…
+          {t("form.customSelect.addCustom")}
         </MenuItem>
       </Select>
 
@@ -114,9 +116,9 @@ const CustomizableSelect = ({
           size="small"
           sx={{ mt: 1 }}
           value={customText}
-          placeholder={`Your own ${label.toLowerCase()}`}
+          placeholder={t("form.customSelect.placeholder", { label: label.toLowerCase() })}
           error={invalid}
-          helperText={invalid ? "Not Appropriate 🙈" : " "}
+          helperText={invalid ? t("form.notAppropriate") : " "}
           onChange={(event) => handleCustomTextChange(event.target.value)}
         />
       )}

@@ -11,6 +11,7 @@ import { ErrorOutlineOutlined, MenuBookOutlined } from "@mui/icons-material";
 import routes from "src/application/routes";
 import { useGenerationContext } from "./Provider";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 /**
  * App-global, non-blocking progress chip for the active story generation. Uses
@@ -20,13 +21,17 @@ import { useNavigate } from "react-router-dom";
  * the router.
  */
 const GenerationProgressChip = () => {
+  const { t } = useTranslation("story");
   const navigate = useNavigate();
   const {
     store: { job },
     manager: { dismissGeneration },
   } = useGenerationContext();
 
-  const formatLabel = job?.format === "comic" ? "comic" : "story";
+  const formatLabel =
+    job?.format === "comic"
+      ? t("generating.chip.formatComic")
+      : t("generating.chip.formatStory");
 
   const handleView = () => {
     if (job?.navUrl) navigate(job.navUrl);
@@ -47,8 +52,12 @@ const GenerationProgressChip = () => {
           }}
         >
           <Typography variant="subtitle2" noWrap>
-            {job.childName ? `${job.childName}'s ${formatLabel}` : "Your story"}{" "}
-            is ready
+            {job.childName
+              ? t("generating.chip.readyNamed", {
+                  name: job.childName,
+                  format: formatLabel,
+                })
+              : t("generating.chip.readyGeneric")}
           </Typography>
 
           <Button
@@ -57,7 +66,7 @@ const GenerationProgressChip = () => {
             onClick={handleView}
             endIcon={<MenuBookOutlined />}
           >
-            View story
+            {t("generating.chip.viewStory")}
           </Button>
         </Box>
       );
@@ -75,7 +84,7 @@ const GenerationProgressChip = () => {
             }}
           >
             <Typography variant="subtitle2">
-              Couldn't create your story
+              {t("generating.chip.failedTitle")}
             </Typography>
 
             <ErrorOutlineOutlined color="error" />
@@ -83,7 +92,7 @@ const GenerationProgressChip = () => {
           <Typography variant="caption" sx={{
             color: "text.secondary"
           }}>
-            Please try again from the create form.
+            {t("generating.chip.failedHint")}
           </Typography>
         </>
       );
@@ -100,10 +109,12 @@ const GenerationProgressChip = () => {
           }}
         >
           <Typography variant="subtitle2" noWrap>
-            Creating{" "}
             {job.childName
-              ? `${job.childName}'s ${formatLabel}`
-              : `your ${formatLabel}`}
+              ? t("generating.chip.creatingNamed", {
+                  name: job.childName,
+                  format: formatLabel,
+                })
+              : t("generating.chip.creatingGeneric", { format: formatLabel })}
           </Typography>
 
           <CircularProgress size={24} color="primary" />
@@ -111,7 +122,7 @@ const GenerationProgressChip = () => {
         <Typography variant="caption" sx={{
           color: "text.secondary"
         }}>
-          Visit our
+          {t("generating.chip.visitLibrary")}
           <Button
             size="small"
             component="a"
@@ -130,9 +141,9 @@ const GenerationProgressChip = () => {
               textTransform: "none",
             }}
           >
-            library
+            {t("generating.chip.libraryLink")}
           </Button>{" "}
-          while we work on your story.
+          {t("generating.chip.visitLibrarySuffix")}
         </Typography>
       </>
     );

@@ -10,49 +10,51 @@ import mascotBunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
+  const { t } = useTranslation("common");
   const navigate = useNavigate();
 
   const landingLinks = [
     {
-      text: "Bedtime stories for kids",
+      text: t("footer.landingLinks.bedtimeStoriesForKids"),
       href: routes.landingPages.bedtimeStoriesForKids,
     },
     {
-      text: "Bedtime stories for adults",
+      text: t("footer.landingLinks.bedtimeStoriesForAdults"),
       href: routes.landingPages.bedtimeStoriesForAdults,
     },
     {
-      text: "Short bedtime stories",
+      text: t("footer.landingLinks.shortBedtimeStories"),
       href: routes.landingPages.shortBedtimeStories,
     },
     {
-      text: "Christmas bedtime stories",
+      text: t("footer.landingLinks.christmasBedtimeStories"),
       href: routes.landingPages.christmasBedtimeStories,
     },
     {
-      text: "Bedtime stories for girlfriend",
+      text: t("footer.landingLinks.bedtimeStoriesForGirlfriend"),
       href: routes.landingPages.bedtimeStoriesForGirlfriend,
     },
     {
-      text: "Bedtime stories for toddlers",
+      text: t("footer.landingLinks.bedtimeStoriesForToddlers"),
       href: routes.landingPages.bedtimeStoriesForToddlers,
     },
     {
-      text: "Educational bedtime stories",
+      text: t("footer.landingLinks.educationalBedtimeStories"),
       href: routes.landingPages.educationalBedtimeStories,
     },
     {
-      text: "Baby bedtime stories",
+      text: t("footer.landingLinks.babyBedtimeStories"),
       href: routes.landingPages.babyBedtimeStories,
     },
     {
-      text: "Best bedtime stories",
+      text: t("footer.landingLinks.bestBedtimeStories"),
       href: routes.landingPages.bestBedtimeStories,
     },
     {
-      text: "Quick bedtime stories",
+      text: t("footer.landingLinks.quickBedtimeStories"),
       href: routes.landingPages.quickBedtimeStories,
     },
   ];
@@ -62,16 +64,19 @@ const Footer = () => {
     href: string;
     external?: boolean;
   }> = [
-    { text: "Create a story", href: routes.create },
-    { text: "Library", href: routes.library },
-    { text: "Pricing", href: routes.pricing },
-    { text: "Alternatives", href: routes.landingPages.alternatives },
+    { text: t("footer.productLinks.createStory"), href: routes.create },
+    { text: t("footer.productLinks.library"), href: routes.library },
+    { text: t("footer.productLinks.pricing"), href: routes.pricing },
     {
-      text: "Story generator",
+      text: t("footer.productLinks.alternatives"),
+      href: routes.landingPages.alternatives,
+    },
+    {
+      text: t("footer.productLinks.storyGenerator"),
       href: routes.landingPages.personalizedBedtimeStoryGenerator,
     },
-    { text: "Blog", href: APP_CONSTANTS.BLOG_URL, external: true },
-    { text: "Contact", href: routes.contact },
+    { text: t("footer.productLinks.blog"), href: APP_CONSTANTS.BLOG_URL, external: true },
+    { text: t("footer.productLinks.contact"), href: routes.contact },
   ];
 
   const go =
@@ -126,14 +131,14 @@ const Footer = () => {
           mx: "auto",
         }}
       >
-        {/* Brand */}
         <Grid container>
           <Stack
             sx={{
               alignItems: "center",
               gap: 1.25,
-              mb: 1.5
-            }}>
+              mb: 1.5,
+            }}
+          >
             <img src={mascotBunny} alt="" width={40} height={40} />
             <Logo isText />
           </Stack>
@@ -143,19 +148,16 @@ const Footer = () => {
               maxWidth: 300,
             }}
           >
-            Personalized bedtime stories — gently written and illustrated by AI,
-            crafted with the Montessori spirit of curiosity, for the children
-            you love most.
+            {t("footer.tagline")}
           </Typography>
         </Grid>
 
-        {/* Product */}
         <Box>
-          <Typography sx={headingSx}>Product</Typography>
+          <Typography sx={headingSx}>{t("footer.product")}</Typography>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
             {productLinks.map((l) => (
               <Link
-                key={l.text}
+                key={l.href}
                 href={l.href}
                 onClick={l.external ? undefined : go(l.href)}
                 target={l.external ? "_blank" : undefined}
@@ -168,9 +170,8 @@ const Footer = () => {
           </Box>
         </Box>
 
-        {/* Bedtime stories for */}
         <Box>
-          <Typography sx={headingSx}>Bedtime stories for</Typography>
+          <Typography sx={headingSx}>{t("footer.landingSectionTitle")}</Typography>
           <Box
             sx={{
               display: "grid",
@@ -180,14 +181,13 @@ const Footer = () => {
             className="footer-landing-pages-links"
           >
             {landingLinks.map((l) => (
-              <Link key={l.text} href={l.href} sx={linkSx}>
+              <Link key={l.href} href={l.href} sx={linkSx}>
                 {l.text}
               </Link>
             ))}
           </Box>
         </Box>
       </Box>
-      {/* Bottom bar */}
       <Box
         sx={{
           maxWidth: 1200,
@@ -209,7 +209,7 @@ const Footer = () => {
           onClick={go(routes.privacyPolicy)}
           sx={linkSx}
         >
-          Privacy
+          {t("footer.privacyShort")}
         </Link>
         <span>·</span>
         <Link
@@ -217,11 +217,11 @@ const Footer = () => {
           onClick={go(routes.termsAndConditions)}
           sx={linkSx}
         >
-          Terms
+          {t("footer.termsShort")}
         </Link>
         <Box sx={{ flex: 1 }} />
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
-          Made in Switzerland &amp; Portugal
+          {t("footer.madeIn")}
           <img
             src={SwitzerlandFlag}
             alt="Switzerland"

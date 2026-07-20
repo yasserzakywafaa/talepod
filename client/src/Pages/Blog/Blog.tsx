@@ -10,8 +10,10 @@ import { ShareFloating } from "src/components/shared/Share/ShareFloating";
 import { useBlogContext } from "./store/Provider";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const BlogPage = () => {
+  const { t } = useTranslation("blog");
   const { slug } = useParams<{ slug: string }>();
   const {
     store: {
@@ -28,7 +30,7 @@ const BlogPage = () => {
 
   return (
     <Page
-      title={`${blog && blog.title} | TalePod`}
+      title={blog ? t("page.detailTitle", { title: blog.title }) : undefined}
       className="contact-page"
       isLoading={isFetching}
     >

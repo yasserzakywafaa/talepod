@@ -1,0 +1,72 @@
+{
+  "close": "إغلاق",
+  "cancel": "إلغاء",
+  "delete": "حذف",
+  "emailSentSuccess": "تم إرسال البريد بنجاح",
+  "noResults": "لا توجد نتائج",
+  "noStoriesFound": "لم يتم العثور على قصص",
+  "loggedOut": "تم تسجيل الخروج",
+  "nav": {
+    "features": "الميزات",
+    "howItWorks": "كيف يعمل",
+    "pricing": "الأسعار",
+    "contact": "اتصل بنا",
+    "register": "التسجيل",
+    "login": "تسجيل الدخول",
+    "createProject": "إنشاء قصة",
+    "library": "المكتبة",
+    "myStories": "قصصي",
+    "blog": "المدونة"
+  },
+  "settings": {
+    "menu": "الإعدادات",
+    "profile": "الملف الشخصي",
+    "dashboard": "لوحة التحكم",
+    "logout": "تسجيل الخروج",
+    "theme": "المظهر",
+    "themeToggle": "زر تبديل المظهر",
+    "install": "تثبيت",
+    "refreshApp": "تحديث التطبيق",
+    "myAvatars": "صوري الرمزية"
+  },
+  "footer": {
+    "taglineIntro": "في <brand>TalePod</brand>، نساعد الآباء ومقدمي الرعاية على إنشاء قصص ما قبل النوم سحرية ومخصصة في دقائق — مع رسوم توضيحية مولّدة بالذكاء الاصطناعي، وسرد صوتي، وقصص مصممة لطفلك.",
+    "taglineAudience": "مثالية للآباء المشغولين الذين يريدون قصصًا فريدة باسم طفلهم واهتماماته وقيمه — بصيغة قصص مصورة أو طويلة، جاهزة للقراءة أو الاستماع عند النوم.",
+    "taglineScale": "تصفح مكتبة المجتمع، واحفظ المفضلة لديك، وأنشئ حكايات مخصصة غير محدودة تنمو مع عائلتك.",
+    "product": "المنتج",
+    "company": "الشركة",
+    "privacyPolicy": "سياسة الخصوصية",
+    "termsAndConditions": "الشروط والأحكام",
+    "copyright": "حقوق النشر ©",
+    "tagline": "قصص ما قبل النوم مخصصة — مكتوبة ومرسومة بلطف بالذكاء الاصطناعي، مستوحاة من روح مونتيسوري للفضول، للأطفال الذين تحبهم.",
+    "landingSectionTitle": "قصص ما قبل النوم لـ",
+    "privacyShort": "الخصوصية",
+    "termsShort": "الشروط",
+    "madeIn": "صُنع في سويسرا والبرتغال",
+    "productLinks": {
+      "createStory": "إنشاء قصة",
+      "library": "المكتبة",
+      "pricing": "الأسعار",
+      "alternatives": "البدائل",
+      "storyGenerator": "مولّد القصص",
+      "blog": "المدونة",
+      "contact": "اتصل بنا"
+    },
+    "landingLinks": {
+      "bedtimeStoriesForKids": "قصص ما قبل النوم للأطفال",
+      "bedtimeStoriesForAdults": "قصص ما قبل النوم للبالغين",
+      "shortBedtimeStories": "قصص ما قبل النوم القصيرة",
+      "christmasBedtimeStories": "قصص ما قبل النوم لعيد الميلاد",
+      "bedtimeStoriesForGirlfriend": "قصص ما قبل النوم للحبيبة",
+      "bedtimeStoriesForToddlers": "قصص ما قبل النوم للأطفال الصغار",
+      "educationalBedtimeStories": "قصص ما قبل النوم التعليمية",
+      "babyBedtimeStories": "قصص ما قبل النوم للرضع",
+      "bestBedtimeStories": "أفضل قصص ما قبل النوم",
+      "quickBedtimeStories": "قصص ما قبل النوم السريعة"
+    }
+  },
+  "cookiePolicy": {
+    "message": "بمتابعة استخدام هذا الموقع، فإنك توافق على استخدامنا لملفات تعريف الارتباط لتحسين تجربتك وتحليل حركة المرور. راجع <privacyLink>سياسة الخصوصية</privacyLink> لمزيد من المعلومات.",
+    "ok": "موافق"
+  }
+}

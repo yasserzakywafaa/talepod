@@ -9,8 +9,11 @@ import SocialLogin from "./features/SocialLogin/SocialLogin";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 import { useLoginModalContext } from "./store/Provider";
+import { useTranslation } from "react-i18next";
 
 export const LoginModal = () => {
+  const { t } = useTranslation("auth");
+  const { t: tCommon } = useTranslation("common");
   const {
     store: { state, handleIsFetching, handleToggleLoginModal },
   } = useLoginModalContext();
@@ -75,7 +78,7 @@ export const LoginModal = () => {
               <LockOpenOutlined color="primary" />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Login to your account
+              {t("modalLoginHeading")}
             </Typography>
           </Box>
 
@@ -111,7 +114,7 @@ export const LoginModal = () => {
             startIcon={<Close />}
             onClick={handleCloseModal}
           >
-            Close
+            {tCommon("close")}
           </Button>
         </DialogActions>
       </Dialog>

@@ -1,0 +1,270 @@
+{
+  "form": {
+    "artStyleLabel": "Style artistique",
+    "nameLabel": "Nom",
+    "languageLabel": "Langue",
+    "ageLabel": "Âge",
+    "notAppropriate": "Pas approprié 🙈",
+    "moreSettings": "Plus de paramètres d'histoire (optionnel)",
+    "subscribe": "S'abonner",
+    "generateComic": "Créer la bande dessinée de {{name}}",
+    "generateStory": "Créer l'histoire de {{name}}",
+    "generateComicAnonymous": "Créer une BD",
+    "generateStoryAnonymous": "Créer une histoire",
+    "alerts": {
+      "accountInactive": "Votre compte n'est pas actif et ne peut pas créer d'histoires !",
+      "adminUnlimited": "En tant qu'admin, vous pouvez créer ♾️ histoires 😎",
+      "storiesRemaining": "Il vous reste {{remaining}} histoires sur {{max}}",
+      "limitReached": "Vous avez atteint votre limite de {{max}} histoires"
+    },
+    "settings": {
+      "moral": "Morale",
+      "tone": "Ton",
+      "environment": "Environnement",
+      "interests": "Autres intérêts"
+    },
+    "mini": {
+      "namePlaceholder": "Émilie, Noah, etc.",
+      "moreOptions": "Plus d'options d'histoire",
+      "generate": "Créer une histoire"
+    },
+    "customSelect": {
+      "custom": "Personnalisé",
+      "addCustom": "Ajouter personnalisé…",
+      "placeholder": "Votre propre {{label}}"
+    },
+    "format": {
+      "comic": {
+        "badge": "Histoire illustrée",
+        "title": "Bande dessinée",
+        "sub": "~6 pages illustrées · idéal pour les plus jeunes",
+        "previewPages": "6 pages"
+      },
+      "long": {
+        "badge": "Livre chapitre",
+        "title": "Longue histoire",
+        "sub": "Couverture illustrée · texte riche · audio plus tard"
+      }
+    }
+  },
+  "createPage": {
+    "title": "Créer des histoires du soir | TalePod",
+    "heading": "Définissez votre histoire",
+    "subheading": "Personnalisez votre histoire du soir en remplissant le champ « Nom » requis pour votre enfant.",
+    "tipsHeading": "Conseils pour une histoire du soir parfaite",
+    "tips": {
+      "familiar": {
+        "title": "Inclure des éléments familiers",
+        "body": "Intégrez des éléments du quotidien de votre enfant pour rendre l'histoire plus proche."
+      },
+      "moral": {
+        "title": "Ajouter une leçon morale",
+        "body": "Transmettez des valeurs importantes à travers l'histoire."
+      },
+      "interactive": {
+        "title": "Rendre l'histoire interactive",
+        "body": "Encouragez votre enfant à participer pour le garder engagé."
+      }
+    }
+  },
+  "generating": {
+    "stages": {
+      "comic": {
+        "imagine": {
+          "label": "Imaginer…",
+          "sub": "Choisir l'aventure du soir",
+          "rail": "Idée"
+        },
+        "write": {
+          "label": "Écrire l'histoire…",
+          "sub": "Courtes bulles de BD",
+          "rail": "Écrire"
+        },
+        "magic": {
+          "label": "Saupoudrer de magie…",
+          "sub": "Tout assembler",
+          "rail": "Magie"
+        },
+        "done": {
+          "label": "Terminé !",
+          "sub": "Ouverture de votre BD",
+          "rail": "Fini"
+        }
+      },
+      "long": {
+        "imagine": {
+          "label": "Imaginer…",
+          "sub": "Poser la scène",
+          "rail": "Idée"
+        },
+        "write": {
+          "label": "Écrire votre histoire…",
+          "sub": "Prose chaleureuse du soir",
+          "rail": "Écrire"
+        },
+        "magic": {
+          "label": "Saupoudrer de magie…",
+          "sub": "Tout assembler",
+          "rail": "Magie"
+        },
+        "done": {
+          "label": "Terminé !",
+          "sub": "Ouverture de votre histoire",
+          "rail": "Fini"
+        }
+      }
+    },
+    "imageAlt": "histoire en cours de création pour {{name}}",
+    "imageAltDefault": "histoire en cours de création pour l'enfant",
+    "formatChip": {
+      "comic": "BD · ~6 pages",
+      "long": "Longue histoire"
+    },
+    "forName": "Pour {{name}}",
+    "duration": {
+      "comic": "En général 40–60 secondes.",
+      "long": "En général 25–45 secondes."
+    },
+    "chip": {
+      "readyNamed": "La {{format}} de {{name}} est prête",
+      "readyGeneric": "Votre histoire est prête",
+      "viewStory": "Voir l'histoire",
+      "failedTitle": "Impossible de créer votre histoire",
+      "failedHint": "Veuillez réessayer depuis le formulaire de création.",
+      "creatingNamed": "Création de la {{format}} de {{name}}",
+      "creatingGeneric": "Création de votre {{format}}",
+      "visitLibrary": "Visitez notre",
+      "libraryLink": "bibliothèque",
+      "visitLibrarySuffix": "pendant que nous travaillons sur votre histoire.",
+      "formatComic": "bande dessinée",
+      "formatStory": "histoire"
+    }
+  },
+  "avatars": {
+    "picker": {
+      "title": "Avatar (optionnel)",
+      "manage": "Gérer les avatars",
+      "loginPrompt": "✨ Vous voulez que le héros ressemble à votre enfant ? Connectez-vous pour créer des avatars réutilisables.",
+      "login": "Se connecter",
+      "empty": "Créez un avatar pour que le héros ressemble à votre enfant ou votre famille.",
+      "addOne": "En ajouter un →",
+      "noneAria": "Pas d'avatar",
+      "none": "Aucun",
+      "useAria": "Utiliser {{name}}"
+    },
+    "page": {
+      "title": "Mes avatars",
+      "subtitle": "Créez des avatars pour que les histoires mettent en scène votre famille.",
+      "new": "Nouvel avatar",
+      "empty": "Pas encore d'avatars. Créez le premier !",
+      "editTitle": "Modifier l'avatar",
+      "newTitle": "Nouvel avatar"
+    },
+    "delete": {
+      "title": "Supprimer l'avatar ?",
+      "body": "Supprimer <strong>{{name}}</strong> ? Action irréversible. Les histoires existantes ne sont pas affectées.",
+      "cancel": "Annuler",
+      "confirm": "Supprimer"
+    },
+    "form": {
+      "name": "Nom",
+      "relationship": "Relation",
+      "relationshipPlaceholder": "fils, fille, épouse…",
+      "age": "Âge",
+      "gender": "Genre",
+      "genderUnspecified": "Non précisé",
+      "skinTone": "Teint",
+      "skinTonePlaceholder": "clair, olive, brun…",
+      "eyeColor": "Couleur des yeux",
+      "eyeColorPlaceholder": "marron, bleu…",
+      "hairColor": "Couleur des cheveux",
+      "hairColorPlaceholder": "noir, blond…",
+      "hairStyle": "Coiffure",
+      "hairStylePlaceholder": "bouclé, court, queue…",
+      "outfit": "Tenue",
+      "outfitPlaceholder": "robe rouge, pyjama bleu…",
+      "feature": "Trait distinctif",
+      "featurePlaceholder": "taches de rousseur, lunettes…",
+      "notes": "Notes",
+      "notesPlaceholder": "Tout ce qui aide l'illustration",
+      "notAppropriate": "Pas approprié 🙈",
+      "cancel": "Annuler",
+      "saving": "Enregistrement…",
+      "save": "Enregistrer l'avatar"
+    },
+    "toast": {
+      "updated": "Avatar mis à jour.",
+      "created": "Avatar créé.",
+      "deleted": "Avatar supprimé.",
+      "error": "Une erreur s'est produite.",
+      "deleteError": "Échec de la suppression de l'avatar."
+    }
+  },
+  "reader": {
+    "pageTitle": "{{title}} | Histoire du soir sur TalePod",
+    "toastCreated": "Histoire créée avec succès.",
+    "imagesPending": "Les images de l'histoire arrivent",
+    "notFound": "Nous n'avons pas trouvé l'histoire recherchée",
+    "browseLibrary": "Parcourir la bibliothèque",
+    "author": {
+      "createdBy": "Créé par :",
+      "avatarAlt": "Photo utilisateur"
+    },
+    "meta": {
+      "createdOn": "Histoire créée le",
+      "name": "Nom",
+      "gender": "Genre",
+      "age": "Âge",
+      "language": "Langue",
+      "interests": "Intérêts",
+      "environment": "Environnement",
+      "moral": "Morale",
+      "tone": "Ton",
+      "storyLength": "Longueur",
+      "format": "Format",
+      "artStyle": "Style artistique",
+      "ageSuffix": "{{age}} ans",
+      "wordCount": "{{count}} mots",
+      "formatComic": "BD",
+      "formatLong": "Longue histoire"
+    },
+    "export": {
+      "heading": "Transformer en eBook",
+      "description": "Téléchargez un livre PDF soigneusement conçu — un beau souvenir à relire.",
+      "preparing": "Préparation…",
+      "download": "Télécharger l'eBook",
+      "sending": "Envoi…",
+      "email": "M'envoyer l'eBook par e-mail",
+      "imagesPending": "Les illustrations sont encore en cours — votre eBook sera prêt ensuite.",
+      "toastReady": "Votre eBook est prêt.",
+      "toastPdfError": "❌ Impossible de créer le PDF. Veuillez réessayer.",
+      "toastEmailSent": "Nous vous enverrons votre eBook par e-mail. 📩",
+      "toastEmailError": "❌ Impossible d'envoyer l'eBook par e-mail."
+    },
+    "audio": {
+      "createHeading": "Créer l'audio pour cette histoire",
+      "voiceLabel": "Voix",
+      "female": "Féminin",
+      "male": "Masculin",
+      "createButton": "Créer l'audio",
+      "listenHeading": "Écouter l'histoire",
+      "createdOn": "Audio créé le :",
+      "error": "❌ Échec de la création audio ! {{error}}"
+    },
+    "comic": {
+      "gridHint": "BD · {{total}} pages · touchez une page pour sauter",
+      "closeAria": "fermer",
+      "allPagesAria": "Toutes les pages",
+      "pageOf": "Page {{current}} sur {{total}}"
+    }
+  },
+  "card": {
+    "upgrade": "Mettre à niveau",
+    "upgradeAria": "mettre à niveau",
+    "badgeComic": "BD",
+    "badgeStory": "Histoire",
+    "hasNarration": "Avec narration",
+    "tagOriginal": "Original",
+    "authorAvatarAlt": "Photo utilisateur"
+  }
+}

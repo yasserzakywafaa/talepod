@@ -11,18 +11,20 @@ import {
 import { AutoFixHighOutlined } from "@mui/icons-material";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { LandingPageContentKey } from "src/shared/i18n/useLandingPageSeo";
+import LandingPageBenefitsList from "./LandingPageBenefitsList";
 
 interface LandingPagePersonalizedBedtimeStoryText {
-  introducingTalePod: string;
-  whyPersonalizeBedtimeStories: string;
+  pageKey: LandingPageContentKey;
   personalizeImage: string;
-  benefitsList: JSX.Element;
   benefitsImage: JSX.Element;
 }
 
 const PersonalizedBedtimeStoryText = (
-  props: LandingPagePersonalizedBedtimeStoryText
+  props: LandingPagePersonalizedBedtimeStoryText,
 ) => {
+  const { t } = useTranslation("landing");
   const navigate = useNavigate();
 
   const handleFooterLinkItemClick =
@@ -50,7 +52,7 @@ const PersonalizedBedtimeStoryText = (
           textAlign: "center",
           fontSize: { xs: "1.75rem", sm: "2rem" }
         }}>
-        How to Create a New Personalized Bedtime Story
+        {t("shared.howToHeading")}
       </Typography>
       <Card sx={{ mb: "2rem" }}>
         <CardContent
@@ -67,7 +69,7 @@ const PersonalizedBedtimeStoryText = (
               justifyContent: "center"
             }}>
             <Typography variant="h5" gutterBottom>
-              Why Personalize Bedtime Stories?
+              {t("shared.whyHeading")}
             </Typography>
 
             <Typography variant="body1" sx={{ mb: 2 }}>
@@ -78,16 +80,16 @@ const PersonalizedBedtimeStoryText = (
                   color: "text.secondary",
                   pr: "5px"
                 }}>
-                Personalized bedtime stories
+                {t("shared.whyLink")}
               </Link>
-              {props.whyPersonalizeBedtimeStories}
+              {t(`pages.${props.pageKey}.whyPersonalize`)}
             </Typography>
 
             <Typography variant="h5" gutterBottom>
-              Introducing TalePod
+              {t("shared.introHeading")}
             </Typography>
             <Typography variant="body1" sx={{ mb: 2 }}>
-              TalePod is a revolutionary app designed to help you
+              {t("shared.introPrefix")}
               <Link
                 href={routes.termsAndConditions}
                 onClick={handleFooterLinkItemClick(routes.create)}
@@ -95,16 +97,16 @@ const PersonalizedBedtimeStoryText = (
                   color: "text.secondary",
                   px: "5px"
                 }}>
-                create personalized bedtime stories
+                {t("shared.introLink")}
               </Link>
-              effortlessly. {props.introducingTalePod}
+              {t("shared.introSuffix")} {t(`pages.${props.pageKey}.introducing`)}
             </Typography>
           </Box>
 
           <Box sx={{ maxWidth: { sm: "50%" }, margin: "auto" }}>
             <img
               src={props.personalizeImage}
-              alt="unicorn with a magic wand and a book"
+              alt={t("shared.imageAlt")}
               width="100%"
               height="100%"
             />
@@ -126,9 +128,9 @@ const PersonalizedBedtimeStoryText = (
               justifyContent: "center"
             }}>
             <Typography variant="h5" gutterBottom>
-              Benefits of Using TalePod
+              {t("shared.benefitsHeading")}
             </Typography>
-            {props.benefitsList}
+            <LandingPageBenefitsList pageKey={props.pageKey} />
           </Box>
 
           <Box sx={{ maxWidth: { sm: "50%" }, margin: "auto" }}>
@@ -137,7 +139,7 @@ const PersonalizedBedtimeStoryText = (
         </CardContent>
       </Card>
       <Typography variant="body1" sx={{ mb: 2 }}>
-        TalePod transforms bedtime into a magical experience by offering{" "}
+        {t("shared.footerPrefix")}{" "}
         <Link
           href={routes.library}
           onClick={handleFooterLinkItemClick(routes.library)}
@@ -145,9 +147,9 @@ const PersonalizedBedtimeStoryText = (
             color: "text.secondary",
             pr: "5px"
           }}>
-          personalized bedtime stories
+          {t("shared.footerLibraryLink")}
         </Link>{" "}
-        that cater to your child's unique preferences. By using TalePod, you can{" "}
+        {t("shared.footerMiddle")}{" "}
         <Link
           href={routes.create}
           onClick={handleFooterLinkItemClick(routes.create)}
@@ -155,11 +157,9 @@ const PersonalizedBedtimeStoryText = (
             color: "text.secondary",
             pr: "5px"
           }}>
-          create memorable bedtime moments
+          {t("shared.footerCreateLink")}
         </Link>{" "}
-        that nurture the imagination and foster a love for storytelling. Start
-        crafting the perfect bedtime story. For more information, please read
-        our{" "}
+        {t("shared.footerSuffix")}{" "}
         <Link
           href={routes.privacyPolicy}
           onClick={handleFooterLinkItemClick(routes.privacyPolicy)}
@@ -167,7 +167,7 @@ const PersonalizedBedtimeStoryText = (
             color: "text.secondary",
             pr: "5px"
           }}>
-          Privacy Policy
+          {t("shared.privacyLink")}
         </Link>
         .
       </Typography>
@@ -186,7 +186,7 @@ const PersonalizedBedtimeStoryText = (
           endIcon={<AutoFixHighOutlined />}
           onClick={handleFooterLinkItemClick(routes.create)}
         >
-          Get Started for Free
+          {t("shared.cta")}
         </Button>
       </Box>
     </Container>

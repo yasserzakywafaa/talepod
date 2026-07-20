@@ -25,6 +25,7 @@ import { useGenerateStory } from "../hooks/useGenerateStory";
 import { useNavigate } from "react-router-dom";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
+import { useTranslation } from "react-i18next";
 
 const MINI_ENGLISH = { name: "English", value: SupportedLanguages.en };
 
@@ -33,6 +34,7 @@ const MINI_ENGLISH = { name: "English", value: SupportedLanguages.en };
 const MINI_DEFAULT_AGE = 3;
 
 const CreateStoryFormMini = () => {
+  const { t } = useTranslation("story");
   const navigate = useNavigate();
   const {
     store: {
@@ -213,15 +215,15 @@ const CreateStoryFormMini = () => {
             id="name"
             name="name"
             type="text"
-            label="Name"
+            label={t("form.nameLabel")}
             value={profileInfo.name}
             disabled={isGenerating}
-            placeholder="Emily, Noah, etc."
+            placeholder={t("form.mini.namePlaceholder")}
             slotProps={{ inputLabel: { shrink: true } }}
             sx={{ flex: "1 1 65%", minWidth: 0 }}
             error={hasCensoredWords(profileInfo.name)}
             helperText={
-              hasCensoredWords(profileInfo.name) && "Not Appropriate 🙈"
+              hasCensoredWords(profileInfo.name) && t("form.notAppropriate")
             }
             onChange={handleOnFieldChangeForMini}
           />
@@ -290,7 +292,7 @@ const CreateStoryFormMini = () => {
             endIcon={<ArrowRightAltOutlined />}
             onClick={handleOnAdvancedClick}
           >
-            More story options available
+            {t("form.mini.moreOptions")}
           </Button>
 
           <Button
@@ -301,7 +303,7 @@ const CreateStoryFormMini = () => {
             disabled={isCreateButtonDisabled()}
             endIcon={<AutoAwesomeOutlined />}
           >
-            Generate Story
+            {t("form.mini.generate")}
           </Button>
         </Box>
       </Box>

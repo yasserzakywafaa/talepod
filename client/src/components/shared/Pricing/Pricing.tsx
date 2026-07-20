@@ -17,12 +17,14 @@ import characterLion from "src/assets/images/landing_pages/lion_cub.webp";
 import mascotPuppy from "src/assets/images/cute_puppy_with_sparkling_eyes.webp";
 import { usePaymentCatalog } from "../Payment/usePaymentCatalog";
 import { usePricing } from "./usePricing";
+import { useTranslation } from "react-i18next";
 import { honey400, honey500 } from "src/application/shared/themes";
 
 const planMascot = (title: SubscriptionPlanEnum) =>
   title === SubscriptionPlanEnum.Free ? mascotPuppy : characterLion;
 
 export const Pricing = () => {
+  const { t } = useTranslation("page");
   usePaymentCatalog();
 
   const {
@@ -61,10 +63,10 @@ export const Pricing = () => {
           color="primary"
           sx={{ fontFamily: "var(--font-display)" }}
         >
-          One price for unlimited bedtimes
+          {t("pricing.heroTitle")}
         </Typography>
         <Typography variant="subtitle1" color="textSecondary">
-          Start free. Upgrade when bedtime becomes the best part of the day.
+          {t("pricing.heroSubtitle")}
         </Typography>
       </Box>
       {isYearlyAvailable && (
@@ -142,7 +144,7 @@ export const Pricing = () => {
 
                     {isPremium && (
                       <Box sx={{ mb: 1.5 }}>
-                        <Chip variant="badge" label="Most popular" />
+                        <Chip variant="badge" label={t("pricing.mostPopular")} />
                       </Box>
                     )}
                   </Box>
@@ -182,7 +184,7 @@ export const Pricing = () => {
                           {display.amount}
                         </Typography>
                         <Typography component="span" variant="subtitle1">
-                          /month
+                          {t("pricing.perMonth")}
                         </Typography>
                       </>
                     ) : (
@@ -205,12 +207,13 @@ export const Pricing = () => {
                       mt: 0.5
                     }}>
                     {!plan.product
-                      ? "free forever"
+                      ? t("pricing.freeForever")
                       : display.billedYearly
-                        ? `billed yearly · ${getCurrency(plan.title)}${
-                            display.yearlyTotal
-                          }/yr`
-                        : "billed monthly"}
+                        ? t("pricing.billedYearly", {
+                            currency: getCurrency(plan.title),
+                            total: display.yearlyTotal,
+                          })
+                        : t("pricing.billedMonthly")}
                   </Typography>
 
                   <Divider

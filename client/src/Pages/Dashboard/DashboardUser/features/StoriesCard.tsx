@@ -6,6 +6,7 @@ import { Box, Button, Card, CardContent, Typography } from "@mui/material";
 
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface StoriesCardProps {
   storiesCount: number;
@@ -13,6 +14,7 @@ interface StoriesCardProps {
 }
 
 const StoriesCard = ({ storiesCount, userId }: StoriesCardProps) => {
+  const { t } = useTranslation("dashboard");
   const navigate = useNavigate();
 
   const handleViewStories = () => {
@@ -42,7 +44,7 @@ const StoriesCard = ({ storiesCount, userId }: StoriesCardProps) => {
             mb: 2
           }}>
           <ArticleIcon color="primary" sx={{ mr: 1, fontSize: 32 }} />
-          <Typography variant="h6">Blogs</Typography>
+          <Typography variant="h6">{t("stories.title")}</Typography>
         </Box>
         <Box
           sx={{
@@ -65,7 +67,7 @@ const StoriesCard = ({ storiesCount, userId }: StoriesCardProps) => {
             mb: 2,
             textAlign: "center"
           }}>
-          {storiesCount === 1 ? "Story Created" : "Stories Created"}
+          {t("admin.user.storiesCreated", { count: storiesCount })}
         </Typography>
         <Button
           variant="contained"
@@ -74,7 +76,7 @@ const StoriesCard = ({ storiesCount, userId }: StoriesCardProps) => {
           onClick={handleViewStories}
           disabled={storiesCount === 0}
         >
-          View Stories
+          {t("admin.user.viewStories")}
         </Button>
       </CardContent>
     </Card>

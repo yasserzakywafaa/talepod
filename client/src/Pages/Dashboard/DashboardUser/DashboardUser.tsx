@@ -6,8 +6,10 @@ import UserInfoCard from "./features/UserInfoCard";
 import { useDashboardUserContext } from "./store/Provider";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const DashboardUser = () => {
+  const { t } = useTranslation("dashboard");
   const { userId } = useParams<{ userId: string }>();
   const {
     store: {
@@ -40,12 +42,12 @@ const DashboardUser = () => {
     return (
       <Box>
         <Typography variant="h4" component="h1" color="primary" gutterBottom>
-          User Not Found
+          {t("admin.user.notFoundTitle")}
         </Typography>
         <Typography variant="body1" sx={{
           color: "text.secondary"
         }}>
-          The user you're looking for doesn't exist or has been deleted.
+          {t("admin.user.notFoundDescription")}
         </Typography>
       </Box>
     );
@@ -54,7 +56,7 @@ const DashboardUser = () => {
   return (
     <Box sx={{ marginY: 3 }}>
       <Typography variant="h4" component="h1" color="primary" gutterBottom>
-        User Details
+        {t("admin.user.title")}
       </Typography>
       <Typography
         variant="body1"
@@ -62,7 +64,7 @@ const DashboardUser = () => {
           color: "text.secondary",
           mb: 3
         }}>
-        View and manage user information, blogs, campaigns, and permissions.
+        {t("admin.user.subtitle")}
       </Typography>
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 6 }}>

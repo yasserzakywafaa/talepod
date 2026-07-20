@@ -46,8 +46,10 @@ import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Pro
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 import { useSearchParams } from "react-router-dom";
 import { useStoryCreatorContext } from "../store/Provider";
+import { useTranslation } from "react-i18next";
 
 const CreateStoryForm = () => {
+  const { t } = useTranslation("story");
   const { isDesktop } = useDeviceSize();
   const {
     store: {
@@ -231,7 +233,7 @@ const CreateStoryForm = () => {
     if (!isUserActive) {
       return (
         <Alert severity="error" variant="outlined">
-          {"Your account is not active and not allowed to create stories!"}
+          {t("form.alerts.accountInactive")}
         </Alert>
       );
     }
@@ -239,7 +241,7 @@ const CreateStoryForm = () => {
     if (user && user.role === UserRole.admin) {
       return (
         <Alert severity="info" variant="outlined">
-          {`As an admin, you can create ♾️ number of stories 😎`}
+          {t("form.alerts.adminUnlimited")}
         </Alert>
       );
     }
@@ -248,9 +250,10 @@ const CreateStoryForm = () => {
       if (isFreeSubs || isProSubs || isAdvancedSubs) {
         return (
           <Alert severity="info" variant="outlined">
-            {`You have ${
-              user.subscription.maxStoriesAllowed - user.storyCount
-            } stories left out of ${user.subscription.maxStoriesAllowed}`}
+            {t("form.alerts.storiesRemaining", {
+              remaining: user.subscription.maxStoriesAllowed - user.storyCount,
+              max: user.subscription.maxStoriesAllowed,
+            })}
           </Alert>
         );
       }
@@ -258,7 +261,9 @@ const CreateStoryForm = () => {
     } else {
       return (
         <Alert severity="warning" variant="outlined">
-          {`You have consumed your maximum credit of ${user.subscription.maxStoriesAllowed} stories`}
+          {t("form.alerts.limitReached", {
+            max: user.subscription.maxStoriesAllowed,
+          })}
         </Alert>
       );
     }
@@ -303,7 +308,7 @@ const CreateStoryForm = () => {
                   color: "text.secondary",
                   mb: 1
                 }}>
-                Art style
+                {t("form.artStyleLabel")}
               </Typography>
 
               <ArtStyleChooser
@@ -331,24 +336,26 @@ const CreateStoryForm = () => {
           required
           id="name"
           name="name"
-          label="Name"
+          label={t("form.nameLabel")}
           type="text"
           value={profileInfo.name}
           className="form-item"
           error={hasCensoredWords(profileInfo.name)}
           helperText={
-            hasCensoredWords(profileInfo.name) && "Not Appropriate 🙈"
+            hasCensoredWords(profileInfo.name) && t("form.notAppropriate")
           }
           onChange={handleFieldChange}
         />
 
         <FormControl className="form-item">
-          <InputLabel id="language-select-label">Language</InputLabel>
+          <InputLabel id="language-select-label">
+            {t("form.languageLabel")}
+          </InputLabel>
           <Select
             required
             name="language"
             variant="outlined"
-            label="Language"
+            label={t("form.languageLabel")}
             id="language-select"
             value={profileInfo.language.value}
             labelId="language-select-label"
@@ -365,10 +372,10 @@ const CreateStoryForm = () => {
         </FormControl>
 
         <FormControl className="form-item">
-          <InputLabel id="age-select-label">Age</InputLabel>
+          <InputLabel id="age-select-label">{t("form.ageLabel")}</InputLabel>
           <Select
             name="age"
-            label="Age"
+            label={t("form.ageLabel")}
             variant="outlined"
             id="age-select"
             value={profileInfo.age.toString()}
@@ -457,7 +464,7 @@ const CreateStoryForm = () => {
               className="story-settings-form-accordion-summary"
               aria-controls="story-settings-form-accordion-summary"
             >
-              More story settings (optional)
+              {t("form.moreSettings")}
             </AccordionSummary>
             <AccordionDetails
               id="story-settings-form-accordion-details"
@@ -508,7 +515,7 @@ const CreateStoryForm = () => {
               endIcon={<LoyaltyOutlined />}
               onClick={() => handleTogglePricingModal("create_form")}
             >
-              Subscribe
+              {t("form.subscribe")}
             </Button>
           ) : (
             <Button
@@ -518,9 +525,18 @@ const CreateStoryForm = () => {
               disabled={isCreateButtonDisabled()}
               endIcon={<AutoAwesomeOutlined />}
             >
-              {`Generate ${profileInfo.name ? `${profileInfo.name}'s ` : ""}${
-                format === "comic" ? "comic" : "story"
-              }`}
+              {profileInfo.name
+                ? t(
+                    format === "comic"
+                      ? "form.generateComic"
+                      : "form.generateStory",
+                    { name: profileInfo.name },
+                  )
+                : t(
+                    format === "comic"
+                      ? "form.generateComicAnonymous"
+                      : "form.generateStoryAnonymous",
+                  )}
             </Button>
           )}
         </Box>

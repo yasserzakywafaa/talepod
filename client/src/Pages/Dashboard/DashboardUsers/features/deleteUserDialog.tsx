@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 
 import { DeleteOutlined } from "@mui/icons-material";
+import { Trans, useTranslation } from "react-i18next";
 
 const DeleteUserDialog = ({
   isOpen,
@@ -21,6 +22,9 @@ const DeleteUserDialog = ({
   onConfirm: () => void;
   userName: string;
 }) => {
+  const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
+
   return (
     <Dialog open={isOpen} onClose={onClose} maxWidth="sm" fullWidth={true}>
       <DialogTitle>
@@ -31,19 +35,25 @@ const DeleteUserDialog = ({
             gap: 1
           }}>
           <DeleteOutlined color="error" fontSize="large" />
-          <Typography variant="h5">Delete User</Typography>
+          <Typography variant="h5">{t("admin.users.deleteUserTitle")}</Typography>
         </Box>
       </DialogTitle>
       <DialogContent>
         <Typography variant="body2">
-          Are you sure you want to delete the user{" "}
-          <strong className="text-underline-secondary">"{userName}"</strong>?
-          <br /> This action cannot be undone.
+          <Trans
+            t={t}
+            i18nKey="admin.users.deleteUserConfirm"
+            values={{ name: userName }}
+            components={{
+              br: <br />,
+              strong: <strong className="text-underline-secondary" />,
+            }}
+          />
         </Typography>
       </DialogContent>
       <DialogActions>
         <Button variant="outlined" color="primary" onClick={onClose}>
-          Cancel
+          {tCommon("cancel")}
         </Button>
         <Button
           variant="contained"
@@ -51,7 +61,7 @@ const DeleteUserDialog = ({
           onClick={onConfirm}
           startIcon={<DeleteOutlined />}
         >
-          Delete
+          {tCommon("delete")}
         </Button>
       </DialogActions>
     </Dialog>
@@ -59,4 +69,3 @@ const DeleteUserDialog = ({
 };
 
 export default DeleteUserDialog;
-

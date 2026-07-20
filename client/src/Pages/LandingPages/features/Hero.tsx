@@ -3,6 +3,7 @@ import Container from "@mui/material/Container";
 import CreateStoryFormMini from "src/components/StoryCreator/features/CreateStoryFormMini";
 import Typography from "@mui/material/Typography";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
+import { useTranslation } from "react-i18next";
 
 interface HeroProps {
   heroImage: string;
@@ -12,6 +13,7 @@ interface HeroProps {
 }
 
 const Hero = (props: HeroProps) => {
+  const { t } = useTranslation("landing");
   const { isMobile } = useDeviceSize();
 
   return (
@@ -82,7 +84,7 @@ const Hero = (props: HeroProps) => {
             <CreateStoryFormMini />
 
             <Typography variant="body2" color="secondary">
-              **No Credit Card Required
+              {t("hero.noCreditCard")}
             </Typography>
           </Box>
 
@@ -98,8 +100,8 @@ const Hero = (props: HeroProps) => {
                 width="100%"
                 height="100%"
                 src={props.heroImage}
-                alt="home-page-image"
-                aria-label="rabbit-sleeping-on-a-pillow"
+                alt={t("hero.imageAlt")}
+                aria-label={t("hero.imageAria")}
               />
             </picture>
           </Box>

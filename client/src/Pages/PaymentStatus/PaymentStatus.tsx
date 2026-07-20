@@ -13,13 +13,20 @@ import { useNavigate, useParams } from "react-router-dom";
 import BunnyMoney from "src/assets/images/bunny_holding_money_bag.webp";
 import Confetti from "src/assets/images/confetti.gif";
 import Page from "src/components/shared/Page/Page";
-import { getCurrencySymbol } from "src/shared/utils/getCurrencySymbol";
+import {
+  formatLocalizedDate,
+  getCurrencySymbol,
+  localeFromLanguage,
+} from "@yasserzakywafaa/client-core";
+import { Trans, useTranslation } from "react-i18next";
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 import { usePaymentStatusContext } from "./store/Provider";
 
 const PaymentStatusPage = () => {
+  const { t, i18n } = useTranslation("page");
+  const locale = localeFromLanguage(i18n.language);
   const navigate = useNavigate();
   const { sessionId } = useParams();
   const {
@@ -53,6 +60,7 @@ const PaymentStatusPage = () => {
   };
 
   const isStoryCredit = sessionData.mode === "payment";
+  const storyCredits = auth.user.storyCredits ?? 1;
 
   const handleOnCreateClick = () => navigate(routes.create);
   const handleOnMyProfileClick = () =>
@@ -78,7 +86,7 @@ const PaymentStatusPage = () => {
 
   return (
     <Page
-      title="Payment Success | TalePod"
+      title={t("paymentStatus.pageTitle")}
       className={`payment-status-page ${
         showPaymentSuccess ? "payment-success" : ""
       }`}
@@ -92,13 +100,17 @@ const PaymentStatusPage = () => {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
-                alignItems: "center"
-              }}>
+                alignItems: "center",
+              }}
+            >
               <CircularProgress color="primary" size="10rem" />
-              <Typography variant="h4" sx={{
-                marginTop: 8
-              }}>
-                Please wait while we securely process your payment...
+              <Typography
+                variant="h4"
+                sx={{
+                  marginTop: 8,
+                }}
+              >
+                {t("paymentStatus.processing")}
               </Typography>
             </Box>
           </Container>
@@ -125,8 +137,9 @@ const PaymentStatusPage = () => {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
-                alignItems: "center"
-              }}>
+                alignItems: "center",
+              }}
+            >
               <img
                 src={BunnyMoney}
                 width="100%"
@@ -138,12 +151,17 @@ const PaymentStatusPage = () => {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  marginY: 1
-                }}>
-                <Typography variant="h4" component="h2" sx={{
-                  color: "#2e7d32"
-                }}>
-                  Payment Successful
+                  marginY: 1,
+                }}
+              >
+                <Typography
+                  variant="h4"
+                  component="h2"
+                  sx={{
+                    color: "#2e7d32",
+                  }}
+                >
+                  {t("paymentStatus.successTitle")}
                 </Typography>
               </Box>
             </Box>
@@ -155,19 +173,28 @@ const PaymentStatusPage = () => {
                 display: "flex",
                 alignItems: "center",
                 flexDirection: "column",
-                justifyContent: "center"
-              }}>
+                justifyContent: "center",
+              }}
+            >
               <Typography
                 variant="h5"
                 sx={{
                   marginY: 1,
-                  textAlign: "center"
-                }}>
-                Hooray, {auth.user.name.givenName}! 🎉 <br />
-                Your payment process of{" "}
-                {/* <span className="bold">{totalAmount}</span> has been completed */}
-                <span className="bold">{getTotalAmount()}</span> has been
-                completed successfully!
+                  textAlign: "center",
+                }}
+              >
+                <Trans
+                  t={t}
+                  i18nKey="paymentStatus.successMessage"
+                  values={{
+                    name: auth.user.name.givenName,
+                    amount: getTotalAmount(),
+                  }}
+                  components={{
+                    br: <br />,
+                    bold: <span className="bold" />,
+                  }}
+                />
               </Typography>
 
               {isStoryCredit ? (
@@ -175,12 +202,16 @@ const PaymentStatusPage = () => {
                   variant="h6"
                   sx={{
                     marginY: 1,
-                    textAlign: "center"
-                  }}>
-                  A story credit has been added to your account 🎉 You now have{" "}
-                  <b>{auth.user.storyCredits ?? 1}</b> credit
-                  {(auth.user.storyCredits ?? 1) === 1 ? "" : "s"} to use anytime
-                  — even beyond your plan’s limit.
+                    textAlign: "center",
+                  }}
+                >
+                  <Trans
+                    t={t}
+                    i18nKey="paymentStatus.storyCreditAdded"
+                    count={storyCredits}
+                    values={{ count: storyCredits }}
+                    components={{ b: <b /> }}
+                  />
                 </Typography>
               ) : (
                 <>
@@ -190,8 +221,9 @@ const PaymentStatusPage = () => {
                     className="bold"
                     sx={{
                       marginY: 1,
-                      textAlign: "center"
-                    }}>
+                      textAlign: "center",
+                    }}
+                  >
                     {sessionData.subscription?.plan.nickname}
                   </Typography>
 
@@ -199,17 +231,21 @@ const PaymentStatusPage = () => {
                     variant="h6"
                     sx={{
                       marginY: 1,
-                      textAlign: "center"
-                    }}>
-                    Your subscription will end on{" "}
-                    <b>
-                      {new Date(
-                        auth.user.subscription.endDate || ""
-                      ).toLocaleString("en-GB", {
-                        dateStyle: "short",
-                      })}
-                    </b>
-                    .
+                      textAlign: "center",
+                    }}
+                  >
+                    <Trans
+                      t={t}
+                      i18nKey="paymentStatus.subscriptionEnd"
+                      values={{
+                        date: formatLocalizedDate(
+                          new Date(auth.user.subscription.endDate || ""),
+                          locale,
+                          { dateStyle: "short" },
+                        ),
+                      }}
+                      components={{ b: <b /> }}
+                    />
                   </Typography>
                 </>
               )}
@@ -220,8 +256,9 @@ const PaymentStatusPage = () => {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  flexDirection: { xs: "column", sm: "row" }
-                }}>
+                  flexDirection: { xs: "column", sm: "row" },
+                }}
+              >
                 <Button
                   sx={{ margin: "0.5rem" }}
                   size="large"
@@ -231,7 +268,7 @@ const PaymentStatusPage = () => {
                   endIcon={<PersonOutlined />}
                   onClick={handleOnMyProfileClick}
                 >
-                  Go to Profile
+                  {t("paymentStatus.goToProfile")}
                 </Button>
 
                 <Button
@@ -242,7 +279,9 @@ const PaymentStatusPage = () => {
                   endIcon={<AutoFixHighOutlined />}
                   onClick={handleOnCreateClick}
                 >
-                  {isStoryCredit ? "Create a Story" : "Create Premium Stories"}
+                  {isStoryCredit
+                    ? t("paymentStatus.createStory")
+                    : t("paymentStatus.createPremiumStories")}
                 </Button>
               </Box>
             </Box>

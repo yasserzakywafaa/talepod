@@ -8,6 +8,7 @@ import { ContactStore } from "./store";
 import END_POINTS from "src/application/shared/endpoints";
 import axios from "axios";
 import { trackEvent } from "src/shared/utils/ga4";
+import { useTranslation } from "react-i18next";
 
 export interface ContactManager {
   handleUpdateContactForm: (key: string, value: string) => void;
@@ -15,6 +16,7 @@ export interface ContactManager {
 }
 
 export const useContactManager = (store: ContactStore): ContactManager => {
+  const { t } = useTranslation("common");
   const handleUpdateContactForm = (key: string, value: string): void => {
     store.updateContactForm(key, value);
   };
@@ -37,7 +39,7 @@ export const useContactManager = (store: ContactStore): ContactManager => {
       );
 
       Notify({
-        content: "Email sent successfully",
+        content: t("emailSentSuccess"),
         type: ToastTypes.Success,
       });
 

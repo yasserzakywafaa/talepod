@@ -1,0 +1,508 @@
+{
+  "features": {
+    "pageTitle": "Talepod: AI-Powered Tendering & BOQ Platform for Teams",
+    "heroTitle": "Smart Tendering & BOQ for",
+    "heroTitleHighlight": "Construction Companies",
+    "heroSubtitle": "Generate accurate Bill of Quantities (BOQ) in minutes with AI-powered logic and streamline your tendering process.",
+    "heroCta": "Try For free",
+    "heroNote": "No credit card required.",
+    "badge": "KI-gestützte Ausschreibungsplattform",
+    "heroHeadline": "Von Zeichnungen zum <highlight>ausschreibungsfertigen BOQ</highlight> mit Ihrem Team",
+    "heroSubheadline": "Laden Sie DWG-Zeichnungen hoch, lassen Sie die KI Mengen extrahieren und Beschreibungen generieren, und exportieren Sie professionelle BOQs. Alles in einem Arbeitsbereich, auf den Ihr gesamtes Team zugreifen kann.",
+    "getStartedFree": "Kostenlos starten",
+    "seeHowItWorks": "So funktioniert es",
+    "heroTrustNote": "Keine Kreditkarte erforderlich. Laden Sie Ihr Team mit einem <joinCode>einfachen Beitrittscode</joinCode> ein.",
+    "trustBadges": {
+      "dwgDxf": "DWG & DXF",
+      "drawingFormats": "Unterstützte Zeichnungsformate",
+      "teams": "Teams",
+      "workspaceCollaboration": "Gemeinsame Arbeitsbereich-Zusammenarbeit",
+      "minutes": "Minuten",
+      "uploadToBoq": "Vom Upload zum ausschreibungsfertigen BOQ"
+    },
+    "problemSolution": {
+      "title": "Schluss mit zeitaufwändigen manuellen Aufmaßen",
+      "subtitle": "Sehen Sie, wie Talepod Ihren Mengenermittlungs- und Ausschreibungsprozess transformiert",
+      "oldWay": "Der alte Weg",
+      "meterzWay": "Der Talepod-Weg",
+      "problems": [
+        "Manuelle BOQ-Erstellung erfordert tagelange mühsame Arbeit",
+        "SMM-Beschreibungen von Grund auf zu schreiben ist langsam und fehleranfällig",
+        "Die Preisfindung für jede Position erfordert stundenlange Recherche",
+        "Teammitglieder arbeiten isoliert ohne gemeinsamen Projektzugriff"
+      ],
+      "solutions": [
+        "KI extrahiert Mengen aus DWG-Zeichnungen in Minuten",
+        "KI generiert automatisch SMM-konforme Beschreibungen",
+        "KI füllt Einheitspreise anhand konfigurierter Preisquellen",
+        "Gemeinsamer Arbeitsbereich ermöglicht die Zusammenarbeit Ihres gesamten Teams an Projekten"
+      ]
+    },
+    "howItWorks": {
+      "title": "Vier Schritte zum ausschreibungsfertigen BOQ",
+      "subtitle": "Vom Zeichnungs-Upload zu professionellen Ausschreibungsunterlagen in Minuten",
+      "startFirstProject": "Erstes Projekt starten",
+      "steps": [
+        {
+          "title": "Zeichnungen hochladen",
+          "description": "Laden Sie Ihre DWG- oder DXF-Dateien hoch — einzeln oder als ZIP-Archiv. Talepod verarbeitet sie und extrahiert automatisch Mengen."
+        },
+        {
+          "title": "KI erstellt Ihren BOQ",
+          "description": "Die KI schreibt SMM-konforme Beschreibungen für jede Position und füllt Einheitspreise anhand Ihrer konfigurierten Preisquellen."
+        },
+        {
+          "title": "Prüfen & verfeinern",
+          "description": "Prüfen Sie den generierten BOQ in einer bearbeitbaren Tabelle. Akzeptieren, bearbeiten oder ablehnen Sie KI-Vorschläge. Verfolgen Sie Budget und Abweichung in Echtzeit."
+        },
+        {
+          "title": "Exportieren & einreichen",
+          "description": "Exportieren Sie Ihren finalen BOQ als Excel, Tender Pack oder PDF — bereit für die Ausschreibung oder Kostenschätzung."
+        }
+      ]
+    },
+    "grid": {
+      "title": "Alles, was Sie für schnellere Ausschreibungen brauchen",
+      "subtitle": "Leistungsstarke Funktionen für Quantity Surveyors und Bauteams",
+      "items": [
+        {
+          "title": "DWG- & DXF-Unterstützung",
+          "description": "Laden Sie AutoCAD-DWG- und DXF-Dateien direkt hoch. Verarbeiten Sie einzelne Dateien oder ZIP-Archive mit mehreren Zeichnungen für Massenextraktion."
+        },
+        {
+          "title": "KI-generierte Beschreibungen",
+          "description": "Die KI schreibt SMM-konforme Beschreibungen für jede BOQ-Position anhand Ihres Projektkontexts — Standort, Gewerk und Messstandard."
+        },
+        {
+          "title": "KI-Preisausfüllung",
+          "description": "Füllen Sie automatisch Einheitspreise für Ihre BOQ-Positionen anhand konfigurierter Preisquellen und Ihrer Ressourcenbibliothek. Prüfen und anpassen Sie vor der Finalisierung."
+        },
+        {
+          "title": "Massenverarbeitung",
+          "description": "Verarbeiten Sie Hunderte von Zeichnungen auf einmal. Laden Sie ein ZIP-Archiv hoch und Talepod aggregiert Mengen aller Dateien in einem umfassenden BOQ."
+        },
+        {
+          "title": "Team-Arbeitsbereiche",
+          "description": "Erstellen Sie einen Arbeitsbereich für Ihr Unternehmen. Laden Sie Kollegen mit einem einfachen Beitrittscode ein. Alle sehen und bearbeiten dieselben Projekte."
+        },
+        {
+          "title": "Bearbeitbare BOQ-Tabelle",
+          "description": "Bearbeiten Sie Mengen, Beschreibungen und Preise direkt in der Tabelle. Fügen Sie Zeilen hinzu oder entfernen Sie sie. Verfolgen Sie ungespeicherte Änderungen mit Echtzeit-Budget- und Abweichungsindikatoren."
+        },
+        {
+          "title": "Mehrwährung & Budgetverfolgung",
+          "description": "Legen Sie Ihre Projektwährung fest (EGP, USD, EUR, GBP). Definieren Sie Budgets und verfolgen Sie Abweichungen mit Pareto-Analyse der wichtigsten Kostenpositionen."
+        },
+        {
+          "title": "Professionelle Exporte",
+          "description": "Exportieren Sie als Excel-Tabelle, detailliertes Tender Pack oder PDF. Jedes Format ist bereit für die Ausschreibung oder Kundenprüfung."
+        }
+      ]
+    },
+    "testimonials": {
+      "title": "Vertraut von Bauteams",
+      "subtitle": "Erfahren Sie, wie Quantity Surveyors und Ingenieure Talepod nutzen, um Ausschreibungen zu optimieren"
+    },
+    "faq": {
+      "title": "Häufig gestellte Fragen",
+      "subtitle": "Alles, was Sie über Talepod wissen müssen",
+      "items": [
+        {
+          "question": "Welche Dateiformate unterstützt Talepod?",
+          "answer": "Talepod unterstützt AutoCAD-DWG- und DXF-Dateien. Sie können einzelne Dateien oder ZIP-Archive mit mehreren Zeichnungen hochladen. Das System verarbeitet sie und extrahiert Mengen für Beton, Stahl und andere Materialien."
+        },
+        {
+          "question": "Was macht die KI genau?",
+          "answer": "Talepod nutzt KI für zwei zentrale Aufgaben: die Generierung SMM-konformer Beschreibungen für Ihre BOQ-Positionen und das Ausfüllen von Einheitspreisen anhand Ihrer konfigurierten Preisquellen und Ressourcenbibliothek. Sie prüfen und akzeptieren jeden Vorschlag, bevor er angewendet wird."
+        },
+        {
+          "question": "Wie funktioniert der Team-Arbeitsbereich?",
+          "answer": "Bei der Registrierung erstellen Sie einen Arbeitsbereich für Ihr Unternehmen oder Team. Sie erhalten einen Beitrittscode, den Sie mit Kollegen teilen können — sie geben den Code ein, um Ihrem Arbeitsbereich beizutreten. Alle im Arbeitsbereich sehen dieselben Projekte und können an BOQs zusammenarbeiten."
+        },
+        {
+          "question": "Kann ich mehrere Zeichnungen gleichzeitig verarbeiten?",
+          "answer": "Ja. Laden Sie ein ZIP-Archiv hoch oder wählen Sie mehrere DWG/DXF-Dateien aus, und Talepod verarbeitet alle und aggregiert Mengen aller Zeichnungen in einem einzigen BOQ. Sie können den Fortschritt mit Echtzeit-Verarbeitungsprotokollen verfolgen."
+        },
+        {
+          "question": "Welche Exportformate sind verfügbar?",
+          "answer": "Talepod bietet drei Exportoptionen: eine Standard-Excel-Tabelle, ein detailliertes Tender Pack mit erweiterten Informationen und ein professionelles PDF. Alle Formate enthalten aufgeschlüsselte Mengen, Beschreibungen, Preise und Beträge — bereit für die Ausschreibung."
+        },
+        {
+          "question": "Welche Währungen und Messstandards werden unterstützt?",
+          "answer": "Sie können Ihre Projektwährung auf EGP, USD, EUR oder GBP setzen. Für KI-Beschreibungen können Sie zwischen SMM-Standards wie NRM2 oder CESMM4 wählen. Das System nutzt Land, Region und Gewerk Ihres Projekts für kontextbezogene Ausgaben."
+        }
+      ]
+    },
+    "finalCta": {
+      "title": "Bereit, Ihre Ausschreibungen zu optimieren?",
+      "subtitle": "Erstellen Sie einen Arbeitsbereich, laden Sie Ihr Team ein und lassen Sie die KI die schwere Arbeit erledigen — von der Mengenextraktion bis zu ausschreibungsfertigen BOQs.",
+      "noCreditCard": "Keine Kreditkarte erforderlich.",
+      "freeToStart": "Kostenlos starten, gesamtes Team einladen"
+    }
+  },
+  "contact": {
+    "pageTitle": "Kontakt | TalePod",
+    "title": "Kontakt",
+    "name": "Name",
+    "email": "E-Mail",
+    "subject": "Betreff",
+    "message": "Nachricht",
+    "sendMessage": "Nachricht senden",
+    "breadcrumbHome": "Startseite",
+    "breadcrumbContact": "Kontakt"
+  },
+  "pricing": {
+    "pageTitle": "Preise | TalePod",
+    "title": "Preise",
+    "subtitle": "Wir bieten eine breite Palette an Paketen zur Auswahl",
+    "plans": "Tarife",
+    "popular": "Beliebt",
+    "mostPopular": "Am beliebtesten",
+    "perMonth": "/Monat",
+    "freeForever": "für immer kostenlos",
+    "billedMonthly": "monatliche Abrechnung",
+    "billedYearly": "jährliche Abrechnung · {{currency}}{{total}}/Jahr",
+    "heroTitle": "Ein Preis für unbegrenzte Schlafenszeiten",
+    "heroSubtitle": "Starten Sie kostenlos. Upgraden Sie, wenn die Schlafenszeit zum besten Teil des Tages wird.",
+    "tableAriaLabel": "Preistabelle",
+    "bestValue": "Bestes Preis-Leistungs-Verhältnis",
+    "breadcrumbHome": "Startseite",
+    "breadcrumbPricing": "Preise",
+    "cta": {
+      "createStories": "Geschichten erstellen",
+      "registerSubscribe": "Registrieren & Abonnieren",
+      "upgrade": "Upgrade",
+      "currentPlan": "Aktueller Tarif"
+    },
+    "features": {
+      "standardSupport": "Standard-Kundensupport",
+      "createUpToFree_one": "Bis zu {{count}} Gute-Nacht-Geschichte erstellen",
+      "createUpToFree_other": "Bis zu {{count}} Gute-Nacht-Geschichten erstellen",
+      "basicTts": "Einfache Text-zu-Sprache-Umwandlung",
+      "limitedLibrary": "Zugang zu einer begrenzten Geschichtenbibliothek",
+      "prioritySupport": "Prioritäts-Kundensupport",
+      "customizableParams": "Anpassbare Geschichtenparameter",
+      "highQualityTts": "Hochwertige Text-zu-Sprache-Umwandlung",
+      "createUpToMonthly_one": "Bis zu {{count}} Gute-Nacht-Geschichte pro Monat erstellen",
+      "createUpToMonthly_other": "Bis zu {{count}} Gute-Nacht-Geschichten pro Monat erstellen",
+      "accessPremiumStories": "Zugang zu Ihren Premium-Geschichten",
+      "everythingInPremium": "Alles aus Premium",
+      "unlimitedStories": "Unbegrenzte Gute-Nacht-Geschichten",
+      "priorityGeneration": "Priorisierte Geschichtengenerierung",
+      "allVoices": "Alle Erzählerstimmen",
+      "unlimitedLibrary": "Unbegrenzt Geschichten in Ihrer Bibliothek speichern"
+    },
+    "table": {
+      "rowNumberOfStories": "Anzahl der Geschichten",
+      "rowStoryCustomization": "Geschichtenanpassung",
+      "rowVisibility": "Sichtbarkeit der Geschichten",
+      "rowCustomizableParams": "Anpassbare Geschichtenparameter",
+      "rowHighQualityTts": "Hochwertige Text-zu-Sprache-Umwandlung",
+      "rowAccessPremiumStories": "Zugang zu Ihren Premium-Geschichten",
+      "rowCustomerSupport": "Kundensupport",
+      "valueUnlimited": "Unbegrenzt",
+      "valueStandard": "Standard",
+      "valuePriority": "Priorität",
+      "valuePublic": "Öffentlich"
+    }
+  },
+  "notFound": {
+    "pageTitle": "Nicht gefunden | TalePod",
+    "title": "Seite nicht gefunden",
+    "goToMain": "Zur Startseite"
+  },
+  "unauthorized": {
+    "pageTitle": "Nicht autorisiert | TalePod",
+    "title": "Nicht autorisiert",
+    "message": "Bitte melden Sie sich in Ihrem Konto an oder erstellen Sie ein Konto, um private magische Gutenachtgeschichten zu genießen.",
+    "createFreeAccount": "Kostenloses Konto erstellen",
+    "loginToAccount": "In Ihr Konto einloggen"
+  },
+  "legal": {
+    "privacyPageTitle": "Datenschutzerklärung | TalePod",
+    "privacyTitle": "Datenschutzerklärung",
+    "termsPageTitle": "Allgemeine Geschäftsbedingungen | TalePod",
+    "termsTitle": "Allgemeine Geschäftsbedingungen für TalePod",
+    "lastUpdated": "Zuletzt aktualisiert:"
+  },
+  "paymentStatus": {
+    "pageTitle": "Zahlung erfolgreich | TalePod",
+    "processing": "Bitte warten Sie, während wir Ihre Zahlung sicher verarbeiten...",
+    "successTitle": "Zahlung erfolgreich",
+    "successMessage": "Hurra, {{name}}! 🎉 <br />Ihre Zahlung über <bold>{{amount}}</bold> wurde erfolgreich abgeschlossen!",
+    "subscriptionEnd": "Ihr Abonnement endet am <b>{{date}}</b>.",
+    "storyCreditAdded_one": "Ein Story-Guthaben wurde Ihrem Konto hinzugefügt 🎉 Sie haben jetzt <b>{{count}}</b> Guthaben, das Sie jederzeit nutzen können — auch über Ihr Planlimit hinaus.",
+    "storyCreditAdded_other": "Ein Story-Guthaben wurde Ihrem Konto hinzugefügt 🎉 Sie haben jetzt <b>{{count}}</b> Guthaben, die Sie jederzeit nutzen können — auch über Ihr Planlimit hinaus.",
+    "goToProfile": "Zum Profil",
+    "createStory": "Geschichte erstellen",
+    "createPremiumStories": "Premium-Geschichten erstellen"
+  },
+  "installApp": {
+    "fromBrowser": "Im",
+    "browserWord": "Browser",
+    "tapIconAndThen": "tippen Sie einfach auf das",
+    "clickIconAndThen": "klicken Sie einfach auf das",
+    "iconAndThen": "Symbol und dann",
+    "iosDescription": "Installieren Sie diese App auf Ihrem iPhone oder iPad und nutzen Sie die mobile Anwendung.",
+    "iosStep1": "Safari",
+    "iosStep2": "Zum Home-Bildschirm",
+    "androidDescription": "Installieren Sie diese App auf Ihrem Gerät und nutzen Sie die native Anwendungsfunktionalität",
+    "androidButton": "App installieren",
+    "macDescription": "Installieren Sie diese App auf Ihrem Mac und nutzen Sie die native Anwendungsfunktionalität.",
+    "macStep1": "Safari",
+    "macStep2": "Zum Dock hinzufügen",
+    "windowsDescription": "Installieren Sie diese App auf Ihrem Windows-Computer und nutzen Sie die Desktop-Anwendung.",
+    "windowsStep1": "Chrome",
+    "windowsFromChrome": "oben neben der URL,",
+    "windowsButton": "Installieren"
+  },
+  "howItWorks": {
+    "pageTitle": "How It Works | Talepod",
+    "tabs": {
+      "overview": "Übersicht",
+      "projectSetup": "Projekteinrichtung",
+      "quantityTakeoff": "Mengenermittlung",
+      "smartMapper": "Smart Mapper",
+      "pricing": "Preisfindung",
+      "analysisExport": "Analyse & Export",
+      "tipsFaq": "Tipps & FAQ"
+    },
+    "overview": {
+      "title": "So funktioniert Talepod",
+      "subtitle": "Von Zeichnungen zum ausschreibungsfertigen BOQ in 8 Schritten",
+      "description": "Talepod automatisiert den Bill-of-Quantities-Workflow. Laden Sie Ihre CAD-Zeichnungen hoch, und die KI übernimmt Beschreibungen, Preisfindung und Analyse — für einen ausschreibungsfertigen BOQ in Minuten statt Tagen.",
+      "proTip": "Traditionelle BOQ-Erstellung dauert 3–5 Tage manuelle Messung und Dateneingabe. Mit Talepod geht ein typisches Projekt von DWG-Dateien zu einem bepreisten, exportierbaren Tender Pack in unter 30 Minuten.",
+      "startFirstProject": "Erstes Projekt starten",
+      "steps": [
+        "Projekt erstellen",
+        "Einstellungen konfigurieren",
+        "Ressourcen einrichten",
+        "Zeichnungen hochladen",
+        "Smart Mapper",
+        "Preisfindung",
+        "Financial Advisor",
+        "Export"
+      ]
+    },
+    "projectSetup": {
+      "title": "Projekt einrichten",
+      "subtitle": "Erstellen Sie Ihr Projekt und konfigurieren Sie den Kontext für KI und Preisfindung",
+      "steps": [
+        {
+          "title": "Projekt erstellen",
+          "description": "Geben Sie Ihrem Projekt einen Namen, legen Sie Start- und Enddatum fest und fügen Sie optional eine Beschreibung hinzu. Dies ist die Identität Ihres Projekts im gesamten Workflow."
+        },
+        {
+          "title": "Einstellungen konfigurieren",
+          "description": "Legen Sie Standort (Land/Region), Währung, Projekttyp, Budgetziel, Risikoprofil und SMM-Standard (NRM2 oder CESMM4) fest."
+        },
+        {
+          "title": "Ressourcen einrichten",
+          "description": "Definieren Sie Ihre Ressourcenbibliothek: Materialien (Beton, Stahl, Ziegel), Lohnsätze und Gerätekosten. Jede Ressource hat einen Namen, Typ, Einheit und optional eine Preis-URL."
+        }
+      ],
+      "concepts": {
+        "smm": {
+          "title": "Was ist ein SMM-Standard?",
+          "body": "SMM (Standard Method of Measurement) definiert, wie Bauleistungen in einem BOQ beschrieben und gemessen werden. Talepod unterstützt <strong>NRM2</strong> (New Rules of Measurement 2, im UK verwendet) und <strong>CESMM4</strong> (Civil Engineering Standard Method of Measurement 4). Ihre Wahl bestimmt Stil und Struktur der KI-generierten Beschreibungen."
+        },
+        "priceUrls": {
+          "title": "Was sind Preisquellen-URLs?",
+          "body": "Dies sind Webseiten mit aktuellen Material- oder Lohnpreisen (z. B. eine Lieferantenpreisliste, ein behördlicher Tarifplan). Talepod ruft diese Seiten ab und nutzt KI, um relevante Preise beim automatischen Ausfüllen Ihrer BOQ-Preise zu extrahieren."
+        },
+        "riskProfile": {
+          "title": "Was ist ein Risikoprofil?",
+          "body": "Ihr Risikoprofil (Niedrig, Mittel, Hoch) bestimmt den automatisch auf Preise angewendeten Risikozuschlag. Niedrig = ~5 %, Mittel = ~10 %, Hoch = ~15 %. Dies berücksichtigt Preisunsicherheiten und stellt sicher, dass Ihre Schätzungen angemessene Puffer enthalten."
+        }
+      },
+      "proTip": "Legen Sie Währung und Standort fest, bevor Sie Zeichnungen hochladen. Die KI nutzt diese für kontextbezogene Beschreibungen und regionsspezifische Preisfindung.",
+      "warning": "Das Überspringen der Ressourceneinrichtung ist einer der häufigsten Fehler. Ohne Ressourcen hat die Preisengine nichts, womit BOQ-Positionen verknüpft werden können. Fügen Sie mindestens Ihre wichtigsten Materialien (Beton, Stahl, Ziegel) hinzu, bevor Sie Fill Rates ausführen."
+    },
+    "quantityTakeoff": {
+      "title": "Mengenermittlung: Von Zeichnungen zu Daten",
+      "subtitle": "Laden Sie DWG/DXF-Dateien hoch und lassen Sie Talepod Mengen automatisch extrahieren",
+      "dwgTitle": "DWG- & DXF-Dateien",
+      "dwgDescription": "Laden Sie einzelne AutoCAD-Zeichnungsdateien hoch. Talepod verarbeitet jede Datei und extrahiert Mengen aus Layern, Blöcken und Textobjekten.",
+      "zipTitle": "ZIP-Archive",
+      "zipDescription": "Laden Sie ein ZIP mit mehreren DWG/DXF-Dateien hoch. Talepod extrahiert und verarbeitet jede Zeichnung und aggregiert die Ergebnisse in einem einzigen BOQ.",
+      "howToUpload": "Hochladen & verarbeiten",
+      "uploadSteps": [
+        "Öffnen Sie Ihr Projekt und gehen Sie zum Tab Mengenermittlung",
+        "(Optional) Füllen Sie das Ausschreibungsformular aus: Referenz-ID, Abgabefrist, Gewerk",
+        "Dateien per Drag-and-Drop ablegen oder zum Auswählen klicken (bis zu 30 Dateien gleichzeitig)",
+        "Staged-Dateien prüfen — unerwünschte Dateien vor der Verarbeitung entfernen",
+        "Auf Verarbeitung starten klicken und Live-Fortschrittsprotokolle beobachten",
+        "Aggregierte Ergebnisse prüfen: BOQ-Tabelle + Beton/Stahl-Zusammenfassungskarten",
+        "Auf In Projekt speichern klicken, um den BOQ-Tab zu befüllen"
+      ],
+      "whatGetsExtracted": "Was extrahiert wird",
+      "table": {
+        "material": "Material",
+        "detected": "Was erkannt wird",
+        "units": "Einheiten",
+        "concrete": "Beton",
+        "concreteDetected": "Decken, Wände, Fundamente aus Layernamen (z. B. CONC-SLAB, CONC-WALL, FOUNDATION)",
+        "concreteUnits": "Volumen (m³), Fläche (m²), Gewicht (Tonnen)",
+        "steel": "Stahl / Bewehrung",
+        "steelDetected": "Bewehrung aus Layernamen (REBAR, STEEL), Textzählungen (z. B. \"20-T16\", \"T12@200\")",
+        "steelUnits": "Länge (m), Gewicht (Tonnen)"
+      },
+      "mergeNote": "Beim Hochladen mehrerer Dateien führt Talepod identische Positionen (gleiche Beschreibung + Einheit) aller Zeichnungen zusammen und summiert Mengen in einem einzigen BOQ. Positionsnummern werden automatisch neu nummeriert.",
+      "layerDetection": {
+        "title": "Wie funktioniert die Layer-Erkennung?",
+        "body": "Talepod liest AutoCAD-Layernamen, um Materialtypen zu identifizieren. Layer mit Schlüsselwörtern wie CONC-SLAB, FOUNDATION, REBAR werden automatisch klassifiziert. Die Dicke wird aus Layernamen gelesen (z. B. SLAB-150 = 150 mm). Beschriftungen, Bemaßungen, Rasterlinien und Schalungslayer werden ausgeschlossen, um den BOQ sauber zu halten."
+      },
+      "proTip": "Benennen Sie Ihre CAD-Layer nach Standardkonventionen (z. B. CONC-SLAB-150, REBAR-T16). Je konsistenter Ihre Layernamen, desto genauer die Extraktion.",
+      "warning": "Das Hochladen von Dateien mit nicht standardisierten Einheiten kann Probleme verursachen. Talepod erkennt Einheiten automatisch aus dem DWG-Header (mm, cm, m, Zoll, Fuß) und normalisiert auf Meter. Bei benutzerdefinierten Maßstäben prüfen Sie die extrahierten Mengen sorgfältig."
+    },
+    "smartMapper": {
+      "title": "Smart Mapper: KI-generierte Beschreibungen",
+      "subtitle": "Verwandeln Sie Rohdaten der Extraktion in professionelle, SMM-konforme BOQ-Beschreibungen",
+      "beforeLabel": "Vorher — Roh-QTO",
+      "beforeExample": "Betonarbeiten (Wände, Decken, Fundamente) — m³ — 245,50",
+      "afterLabel": "Nachher — Smart Mapper",
+      "afterExample": "Ortbeton bewehrt; Güte C30/37; in Wänden; Dicke 200–350 mm; einschl. Schalung beidseitig — m³ — 245,50",
+      "howToUse": "So verwenden Sie es",
+      "usageSteps": [
+        "Gehen Sie zum BOQ-Tab, nachdem Mengenermittlungsdaten gespeichert wurden",
+        "Klicken Sie auf \"Beschreibungen generieren\"",
+        "Die KI verarbeitet jede Position anhand Ihres SMM-Standards und Projektkontexts (Standort, Gewerk, Projekttyp)",
+        "Prüfen Sie die Vorschlagstabelle mit Aktuelle Beschreibung vs. Vorgeschlagene Beschreibung",
+        "Akzeptieren, bearbeiten oder ablehnen Sie jeden Vorschlag einzeln — oder nutzen Sie Alle anwenden",
+        "Beschreibungen werden aktualisiert und in Ihrem Projekt-BOQ gespeichert"
+      ],
+      "nrmVsCesmm": {
+        "title": "NRM2 vs CESMM4 — Was soll ich wählen?",
+        "body": "<strong>NRM2</strong> (New Rules of Measurement 2) ist der UK-Standard für detaillierte Aufmaß von Bauwerken. Verwenden Sie ihn für Bauprojekte (Wohn-, Gewerbe-, Hochhausbau). <strong>CESMM4</strong> (Civil Engineering Standard Method of Measurement 4) ist für Tiefbauarbeiten (Straßen, Brücken, Tunnel). Wählen Sie nach Projekttyp. Im Zweifel ist NRM2 die häufigste Wahl."
+      },
+      "proTip": "Die KI nutzt Land, Region, Gewerk und SMM-Standard Ihres Projekts für Beschreibungen. Je vollständiger Ihre Projekteinstellungen, desto besser die Beschreibungen.",
+      "note": "Sie haben immer das letzte Wort. Jeder KI-Vorschlag muss geprüft und akzeptiert werden, bevor er auf Ihren BOQ angewendet wird. Sie können Vorschläge inline bearbeiten, bevor Sie sie akzeptieren."
+    },
+    "pricing": {
+      "title": "Preisfindung: Automatisierte Preiszusammensetzung",
+      "subtitle": "Preise ausfüllen mit Live-Preisen, Ihrer Ressourcenbibliothek und intelligenten Preisformeln",
+      "materialRate": "Materialpreis",
+      "laborRate": "Lohnsatz",
+      "plantRate": "Gerätesatz",
+      "contingency": "Risikozuschlag %",
+      "unitRate": "Einheitspreis",
+      "howPricingWorks": "So funktioniert die Preisfindung",
+      "steps": [
+        "Gehen Sie zum BOQ-Tab in Ihrem Projekt",
+        "Klicken Sie auf \"Preise aus Preisquellen ausfüllen\"",
+        "Talepod ruft Inhalte Ihrer konfigurierten Preisquellen-URLs ab",
+        "KI extrahiert relevante Preise aus den abgerufenen Seiten",
+        "BOQ-Positionen werden anhand von Beschreibung und Einheit Ihren Ressourcen zugeordnet",
+        "Preise werden mit Risikozuschlag basierend auf Ihrem Risikoprofil berechnet",
+        "Die Tabelle wird mit ausgefüllten Preisen und Beträgen aktualisiert"
+      ],
+      "rateBuildup": {
+        "title": "Was ist eine Preiszusammensetzung?",
+        "body": "Eine Preiszusammensetzung (Rate Buildup) ist die Bauindustrie-Methode zur Berechnung eines Einheitspreises für eine BOQ-Position durch Summierung aller Eingangskosten: Materialien, Arbeit und Geräte/Ausrüstung. In Talepod erledigt dies die Preisengine automatisch durch Zuordnung von BOQ-Positionen zu Ihrer Ressourcenbibliothek und Anwendung des Risikozuschlags aus Ihrem Risikoprofil."
+      },
+      "livePricing": {
+        "title": "Wie funktioniert Live-Preisfindung?",
+        "body": "Sie geben URLs zu Webseiten mit aktuellen Preisen an (z. B. ein Lieferantenkatalog, ein behördlicher Tarifplan). Wenn Sie Fill Rates klicken, ruft Talepod diese Seiten ab, nutzt KI zur Preisextraktion und ordnet sie Ihren BOQ-Positionen zu. So spiegeln Ihre Preise aktuelle Marktbedingungen wider statt veralteter historischer Daten."
+      },
+      "warning": "Fill Rates ohne konfigurierte Preisquellen-URLs auszuführen ist ein häufiger Fehler. Die Preisengine benötigt URLs zum Abrufen von Preisen. Fügen Sie sie im Tab Einstellungen oder in Ihren Ressourcen hinzu, bevor Sie die Preisfindung ausführen."
+    },
+    "analysisExport": {
+      "title": "Analyse & Export",
+      "subtitle": "Analysieren Sie Ihren BOQ gegen Budgetziele und exportieren Sie professionelle Ausschreibungsunterlagen",
+      "financialAdvisor": "Financial Advisor",
+      "financialAdvisorIntro": "Sobald Ihr BOQ bepreist ist, liefert der Financial Advisor sofortige Budget-Intelligenz:",
+      "financialSummary": "Finanzübersicht",
+      "financialSummaryDesc": "Gesamtkosten, Budgetziel, Abweichung (Betrag und Prozent) und eine klare Anzeige Innerhalb Budget / Über Budget.",
+      "paretoAnalysis": "Pareto-Analyse",
+      "paretoAnalysisDesc": "Eine Rangliste Ihrer wichtigsten kostentreibenden Positionen mit kumulativen Prozenten, die zeigt, welche 20 % der Positionen 80 % der Kosten ausmachen.",
+      "paretoExplainer": {
+        "title": "Was ist Pareto-Analyse (80/20-Regel)?",
+        "body": "Die Pareto-Analyse identifiziert die wenigen wichtigen Positionen, die den Großteil der Kosten ausmachen. Typischerweise repräsentieren 20 % der BOQ-Positionen 80 % der Gesamtkosten. Diese Verteilung zu verstehen hilft, Prüfaufwand auf die budgetrelevantesten Positionen zu konzentrieren."
+      },
+      "exportFormats": "Exportformate",
+      "excelTitle": "Excel (Standard)",
+      "excelDescription": "Einblatt-Excel-Tabelle mit allen BOQ-Positionen: Positionsnummer, Beschreibung, Menge, Einheit, Preis und Betrag. Bereit zur weiteren Bearbeitung oder Weitergabe.",
+      "tenderPackTitle": "Tender Pack",
+      "tenderPackDescription": "Mehrblatt-XLSX mit professioneller Formatierung: Deckblatt, Zusammenfassungsblatt und detailliertes BOQ-Blatt. Bereit für formelle Ausschreibung.",
+      "pdfTitle": "PDF",
+      "pdfDescription": "Einzeldokument-PDF mit formatierter BOQ-Tabelle. Ideal für Kundenprüfung, Druck oder Archivierung abgeschlossener Schätzungen.",
+      "proTip": "Nutzen Sie den Tender-Pack-Export für formelle Einreichungen. Er enthält ein Deckblatt mit Projektdetails und Ausschreibungsreferenz und spart Ihnen die Zeit der Formatierung eines Präsentationsdokuments."
+    },
+    "tipsFaq": {
+      "title": "Tipps, Tricks & FAQ",
+      "subtitle": "Das Beste aus Talepod mit diesen Expertenempfehlungen",
+      "proTips": "Profi-Tipps",
+      "proTipsList": [
+        "Vervollständigen Sie Ihre Projekteinstellungen vor dem Hochladen von Zeichnungen. Die KI nutzt Standort, Währung, Projekttyp und SMM-Standard für bessere Beschreibungen und Preisfindung.",
+        "Verwenden Sie konsistente CAD-Layer-Benennungskonventionen (z. B. CONC-SLAB-150, REBAR-T16). Die Extraktionsengine stützt sich auf Layernamen zur Materialklassifizierung und Mengenberechnung.",
+        "Fügen Sie öffentlich zugängliche Preisquellen-URLs mit tabellarischen Preisdaten hinzu. Behördliche Tarifpläne und große Lieferantenkataloge funktionieren am besten.",
+        "Führen Sie den Financial Advisor nach der Preisfindung aus, um Ihre wichtigsten Kostentreiber zu identifizieren. Konzentrieren Sie Ihre Prüfung auf die Top-5-Positionen — dort liegt der größte Budgeteinfluss.",
+        "Nutzen Sie das Tender-Pack-Format für formelle Einreichungen. Für interne Schätzungen ist der Standard-Excel-Export schneller zu bearbeiten.",
+        "Laden Sie Ihr Team mit dem Arbeitsbereich-Beitrittscode ein. Alle sehen dieselben Projekte — kein Dateiaustausch oder Versionsverwirrung nötig."
+      ],
+      "commonMistakes": "Häufige Fehler vermeiden",
+      "commonMistakesList": [
+        "Ressourceneinrichtung überspringen — Die Preisengine kann keine Preise ausfüllen ohne Ressourcen zur Zuordnung.",
+        "Zeichnungen mit benutzerdefinierten Maßstäben hochladen ohne anschließende Prüfung der extrahierten Mengen.",
+        "KI-Vorschläge nicht prüfen vor dem Anwenden — Prüfen Sie immer, ob Beschreibungen und Preise Ihren Anforderungen entsprechen.",
+        "Fill Rates ohne konfigurierte Preisquellen-URLs in Einstellungen oder Ressourcen ausführen.",
+        "Vergessen auf \"In Projekt speichern\" nach QTO-Verarbeitung zu klicken — Ihr BOQ-Tab bleibt leer, bis Sie explizit speichern."
+      ],
+      "faqTitle": "Häufig gestellte Fragen",
+      "faqItems": [
+        {
+          "question": "Wie ändere ich den SMM-Standard nach der Projekterstellung?",
+          "answer": "Gehen Sie zum Tab Einstellungen Ihres Projekts, ändern Sie das Dropdown SMM-Standard und speichern Sie. Führen Sie dann Beschreibungen generieren im BOQ-Tab erneut aus, um Beschreibungen im neuen Standard zu erhalten."
+        },
+        {
+          "question": "Kann ich Mengen nach der Extraktion bearbeiten?",
+          "answer": "Ja. Die BOQ-Tabelle ist vollständig bearbeitbar. Klicken Sie auf eine Zelle, um Mengen, Beschreibungen oder Preise zu ändern. Änderungen werden beim Aktualisieren des Projekts gespeichert."
+        },
+        {
+          "question": "Was passiert, wenn eine Zeichnung nicht verarbeitet werden kann?",
+          "answer": "Fehlgeschlagene Dateien werden in den Verarbeitungsergebnissen markiert. Erfolgreiche Dateien werden weiterhin in den BOQ aggregiert. Sie können fehlgeschlagene Dateien nach der Korrektur in AutoCAD einzeln erneut hochladen."
+        },
+        {
+          "question": "Wie genau ist die KI-Beschreibungsgenerierung?",
+          "answer": "Die KI generiert SMM-konforme Beschreibungen basierend auf Ihrem Projektkontext. Die Genauigkeit hängt von der Qualität Ihrer Projekteinstellungen (Standort, Gewerk, SMM-Standard) ab. Prüfen Sie Vorschläge immer vor dem Anwenden."
+        },
+        {
+          "question": "Kann ich Talepod für Tiefbauprojekte nutzen?",
+          "answer": "Ja. Setzen Sie Ihren SMM-Standard auf CESMM4 für Tiefbauprojekte. Die KI generiert Beschreibungen nach Tiefbaumesskonventionen."
+        },
+        {
+          "question": "Wie teile ich ein Projekt mit meinem Team?",
+          "answer": "Projekte sind auf Arbeitsbereichsebene. Jeder in Ihrem Arbeitsbereich sieht alle Projekte. Um Teammitglieder hinzuzufügen, gehen Sie zur Arbeitsbereich-Seite in der Seitenleiste und teilen Sie den Beitrittscode."
+        },
+        {
+          "question": "Was, wenn ich keine Preisquellen-URLs habe?",
+          "answer": "Sie können Talepod trotzdem nutzen. Überspringen Sie die automatische Preisfindung und füllen Sie Preise manuell in der BOQ-Tabelle. Oder fügen Sie URLs später hinzu und führen Sie Fill Rates jederzeit erneut aus."
+        },
+        {
+          "question": "Sind meine Daten sicher?",
+          "answer": "Ja. Alle Daten werden bei der Übertragung und im Ruhezustand verschlüsselt. Ihre Zeichnungen und BOQ-Daten sind auf Ihren Arbeitsbereich isoliert und nur für Arbeitsbereichsmitglieder zugänglich."
+        }
+      ]
+    }
+  },
+  "onboarding": {
+    "pageTitle": "Arbeitsbereich einrichten | Talepod",
+    "welcome": "Willkommen bei Talepod",
+    "subtitle": "Erstellen Sie einen Arbeitsbereich für Ihr Team oder treten Sie mit einem Code einem bestehenden bei.",
+    "createTitle": "Arbeitsbereich erstellen",
+    "workspaceName": "Name des Arbeitsbereichs",
+    "workspaceNamePlaceholder": "z. B. Acme Corp",
+    "createButton": "Arbeitsbereich erstellen",
+    "or": "oder",
+    "joinTitle": "Arbeitsbereich beitreten",
+    "joinCode": "Beitrittscode",
+    "joinCodePlaceholder": "z. B. A3X9K2M7",
+    "joinButton": "Arbeitsbereich beitreten",
+    "toasts": {
+      "created": "Arbeitsbereich erstellt!",
+      "joined": "Arbeitsbereich beigetreten!",
+      "createFailed": "Arbeitsbereich konnte nicht erstellt werden",
+      "invalidJoinCode": "Ungültiger Beitrittscode"
+    }
+  }
+}

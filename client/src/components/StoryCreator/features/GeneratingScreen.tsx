@@ -5,7 +5,7 @@ import {
   EditOutlined,
   SvgIconComponent,
 } from "@mui/icons-material";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import {
   bgTwilight,
   glowHoney,
@@ -16,6 +16,7 @@ import {
 import { Chip } from "@mui/material";
 import { StoryFormat } from "../store/state";
 import bunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
+import { useTranslation } from "react-i18next";
 
 /**
  * Immersive, format-aware "generating" overlay shown while a story is being
@@ -33,70 +34,31 @@ export interface GeneratingScreenProps {
   isComplete?: boolean;
 }
 
-const STAGES: Record<
-  StoryFormat,
-  { label: string; sub: string; icon: SvgIconComponent; rail: string }[]
-> = {
-  comic: [
-    {
-      label: "Imagining…",
-      sub: "Picking tonight's adventure",
-      icon: AutoAwesomeOutlined,
-      rail: "Idea",
-    },
-    {
-      label: "Writing the story…",
-      sub: "Short, comic-panel lines",
-      icon: EditOutlined,
-      rail: "Write",
-    },
-    {
-      label: "Sprinkling magic…",
-      sub: "Bringing it all together",
-      icon: AutoFixHighOutlined,
-      rail: "Magic",
-    },
-    {
-      label: "All done!",
-      sub: "Opening your comic",
-      icon: DoneAllOutlined,
-      rail: "Done",
-    },
-  ],
-  long: [
-    {
-      label: "Imagining…",
-      sub: "Setting the scene",
-      icon: AutoAwesomeOutlined,
-      rail: "Idea",
-    },
-    {
-      label: "Writing your story…",
-      sub: "Warm, rich bedtime prose",
-      icon: EditOutlined,
-      rail: "Write",
-    },
-    {
-      label: "Sprinkling magic…",
-      sub: "Bringing it all together",
-      icon: AutoFixHighOutlined,
-      rail: "Magic",
-    },
-    {
-      label: "All done!",
-      sub: "Opening your story",
-      icon: DoneAllOutlined,
-      rail: "Done",
-    },
-  ],
-};
+const STAGE_ICONS: SvgIconComponent[] = [
+  AutoAwesomeOutlined,
+  EditOutlined,
+  AutoFixHighOutlined,
+  DoneAllOutlined,
+];
+
+const STAGE_KEYS = ["imagine", "write", "magic", "done"] as const;
 
 const GeneratingScreen: FC<GeneratingScreenProps> = ({
   format,
   childName,
   isComplete,
 }) => {
-  const stages = STAGES[format];
+  const { t } = useTranslation("story");
+  const stages = useMemo(
+    () =>
+      STAGE_KEYS.map((key, index) => ({
+        label: t(`generating.stages.${format}.${key}.label`),
+        sub: t(`generating.stages.${format}.${key}.sub`),
+        icon: STAGE_ICONS[index],
+        rail: t(`generating.stages.${format}.${key}.rail`),
+      })),
+    [format, t],
+  );
   const [active, setActive] = useState(0);
 
   // While the request is in flight, advance Idea → Write → Magic and hold on
@@ -153,8 +115,16 @@ const GeneratingScreen: FC<GeneratingScreenProps> = ({
 
       <img
         src={bunny}
-        alt={`story is being generated for ${childName ?? "the child"}`}
-        title={`story is being generated for ${childName ?? "the child"}`}
+        alt={
+          childName
+            ? t("generating.imageAlt", { name: childName })
+            : t("generating.imageAltDefault")
+        }
+        title={
+          childName
+            ? t("generating.imageAlt", { name: childName })
+            : t("generating.imageAltDefault")
+        }
         style={{
           width: 184,
           height: 184,
@@ -169,7 +139,11 @@ const GeneratingScreen: FC<GeneratingScreenProps> = ({
         <Chip
           variant="badge"
           color={format === "comic" ? "primary" : "secondary"}
-          label={format === "comic" ? "Comic · ~6 pages" : "Long story"}
+          label={
+            format === "comic"
+              ? t("generating.formatChip.comic")
+              : t("generating.formatChip.long")
+          }
         />
       </div>
 
@@ -183,7 +157,7 @@ const GeneratingScreen: FC<GeneratingScreenProps> = ({
             position: "relative",
           }}
         >
-          For {childName}
+          {t("generating.forName", { name: childName })}
         </div>
       )}
 
@@ -265,8 +239,8 @@ const GeneratingScreen: FC<GeneratingScreenProps> = ({
         style={{ position: "absolute", bottom: 32, fontSize: 11, opacity: 0.6 }}
       >
         {format === "comic"
-          ? "Usually 40–60 seconds."
-          : "Usually 25–45 seconds."}
+          ? t("generating.duration.comic")
+          : t("generating.duration.long")}
       </p>
 
       <style>{`

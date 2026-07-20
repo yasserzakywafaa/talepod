@@ -9,74 +9,14 @@ import {
 import { useApplicationContext } from "src/application/store/Provider";
 import { useAutoScroll } from "src/shared/hooks/useAutoScroll";
 import { useRef } from "react";
-
-interface StoryExample {
-  title: string;
-  description: string;
-  image?: string;
-}
-
-const storyExamples: StoryExample[] = [
-  {
-    title: "The Brave Little Astronaut",
-    description: "A story about a child who goes on an adventure to Mars.",
-    image: "",
-  },
-  {
-    title: "The Magical Forest Friends",
-    description: "A tale of woodland creatures who learn to work together.",
-    image: "",
-  },
-  {
-    title: "The Time-Traveling Explorer",
-    description: "A journey through different historical periods.",
-    image: "",
-  },
-  {
-    title: "The Underwater Kingdom",
-    description:
-      "A story about a child who discovers a hidden underwater world.",
-    image: "",
-  },
-  {
-    title: "The Mystery of the Missing Toy",
-    description:
-      "A detective story where a child solves the case of a lost toy.",
-    image: "",
-  },
-  {
-    title: "The Day the Animals Talked",
-    description:
-      "A whimsical story where animals can suddenly talk to each other.",
-    image: "",
-  },
-  {
-    title: "The Magical Treehouse",
-    description:
-      "A child discovers a treehouse that can travel to different places.",
-    image: "",
-  },
-  {
-    title: "The Friendly Dragon",
-    description:
-      "A story about a dragon who is afraid of fire and makes friends with a child.",
-    image: "",
-  },
-  {
-    title: "The Night the Stars Fell",
-    description:
-      "A magical night where the stars fall from the sky and children catch them.",
-    image: "",
-  },
-  {
-    title: "The Secret Garden",
-    description:
-      "A child discovers a hidden garden that has magical properties.",
-    image: "",
-  },
-];
+import { useTranslation } from "react-i18next";
 
 const StoryExamples = () => {
+  const { t } = useTranslation("landing");
+  const storyExamples = t("features.storyExamples.items", {
+    returnObjects: true,
+  }) as Array<{ title: string; description: string }>;
+
   const {
     store: {
       state: { themeMode },
@@ -93,26 +33,12 @@ const StoryExamples = () => {
     loop: true,
   });
 
-  const handleOnChevronLeftClick = () => {
-    handleInteraction(scrollPrev);
-  };
-
-  const handleOnChevronRightClick = () => {
-    handleInteraction(scrollNext);
-  };
-
   return (
     <Container sx={{ py: 4 }}>
       <Typography variant="h4" align="center" color="primary" gutterBottom>
-        Examples of Stories You Can Create
+        {t("features.storyExamples.title")}
       </Typography>
-      <Box
-        sx={{
-          position: "relative",
-          marginTop: 4,
-          width: "100%",
-        }}
-      >
+      <Box sx={{ position: "relative", marginTop: 4, width: "100%" }}>
         <Button
           color="primary"
           variant="outlined"
@@ -131,7 +57,7 @@ const StoryExamples = () => {
                 : secondaryColorForDarkTheme,
             backgroundColor: primaryColor,
           }}
-          onClick={handleOnChevronLeftClick}
+          onClick={() => handleInteraction(scrollPrev)}
         >
           <ChevronLeftOutlined />
         </Button>
@@ -154,7 +80,7 @@ const StoryExamples = () => {
                 : secondaryColorForDarkTheme,
             backgroundColor: primaryColor,
           }}
-          onClick={handleOnChevronRightClick}
+          onClick={() => handleInteraction(scrollNext)}
         >
           <ChevronRightOutlined />
         </Button>
@@ -192,12 +118,7 @@ const StoryExamples = () => {
                   maxWidth: { xs: "400px", sm: "500px" },
                 }}
               >
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    mb: 2
-                  }}>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                   <Box>
                     <Typography variant="subtitle1">
                       {storyExample.title}

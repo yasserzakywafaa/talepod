@@ -6,8 +6,10 @@ import { useApplicationContext } from "src/application/store/Provider";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useNavigate } from "react-router-dom";
 import { trackEvent } from "src/shared/utils/ga4";
+import { useTranslation } from "react-i18next";
 
 const CallToAction = () => {
+  const { t } = useTranslation("landing");
   const navigate = useNavigate();
   const {
     store: {
@@ -48,14 +50,14 @@ const CallToAction = () => {
           color: "secondary.contrastText",
           p: 4,
           borderRadius: 2,
-          textAlign: "center"
-        }}>
+          textAlign: "center",
+        }}
+      >
         <Typography variant="h4" component="h2" gutterBottom>
-          Ready to Create Magical Bedtime Stories?
+          {t("features.callToAction.title")}
         </Typography>
         <Typography variant="body1" gutterBottom>
-          Join TalePod today and start crafting personalized stories that your
-          children will cherish forever.
+          {t("features.callToAction.body")}
         </Typography>
         <Button
           size="large"
@@ -66,16 +68,13 @@ const CallToAction = () => {
           href={routes.create}
           onClick={handleOnButtonClick(routes.create)}
         >
-          {isAuthenticated ? "Start Creating Now!" : "Get Started for FREE!"}
+          {isAuthenticated
+            ? t("features.callToAction.ctaAuthenticated")
+            : t("features.callToAction.ctaGuest")}
           <ArrowForward sx={{ ml: 1 }} />
         </Button>
-        <Typography
-          variant="body2"
-          sx={{
-            color: "inherit",
-            mt: 1
-          }}>
-          **No Credit Card Required
+        <Typography variant="body2" sx={{ color: "inherit", mt: 1 }}>
+          {t("features.callToAction.noCreditCard")}
         </Typography>
       </Box>
     </Container>

@@ -4,6 +4,7 @@ import { User, UserRole, UserStatus } from "src/shared/types/user";
 import DataGridRowActionsMenu from "./dataGridRowActionsMenu";
 import { GridColDef } from "@mui/x-data-grid";
 import ProfileAvatar from "src/components/shared/ProfileAvatar";
+import { formatLocalizedDate } from "@yasserzakywafaa/client-core";
 import { getUserContact } from "src/shared/utils/getUserContact";
 
 export interface DashboardUsersGridFields {
@@ -33,14 +34,17 @@ export const getUserTypeColor = (role: UserRole) => {
   }
 };
 
-export const getUserTypeLabel = (role: UserRole) => {
+export const getUserTypeLabel = (
+  role: UserRole,
+  t: (key: string) => string,
+) => {
   switch (role) {
     case UserRole.super_admin:
-      return "Super Admin";
+      return t("admin.users.roleSuperAdmin");
     case UserRole.admin:
-      return "Admin";
+      return t("admin.users.roleAdmin");
     case UserRole.user:
-      return "Regular";
+      return t("admin.users.roleRegular");
     default:
       return role;
   }
@@ -62,9 +66,11 @@ export const getUserStatusColor = (status: UserStatus) => {
 };
 
 export const getDashboardUsersDataGridConfig = (
-  users: User[]
+  users: User[],
+  t: (key: string) => string,
+  locale: string,
 ): DashboardUsersGridResult => {
-  if (users.length === 0) return { rows: [], columns: [] };
+  if (!users || users.length === 0) return { rows: [], columns: [] };
 
   const rows: DashboardUsersGridFields[] = users.map((user) => {
     return {
@@ -73,14 +79,11 @@ export const getDashboardUsersDataGridConfig = (
       contact: getUserContact(user),
       type: user.role || UserRole.user,
       stories: user.storyCount || 0,
-      joinDate: new Date(user.createdAt || new Date()).toLocaleDateString(
-        "en-GB",
-        {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        }
-      ),
+      joinDate: formatLocalizedDate(user.createdAt || new Date(), locale, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }),
       status: user.status || UserStatus.inactive,
     };
   });
@@ -88,16 +91,19 @@ export const getDashboardUsersDataGridConfig = (
   const columns: GridColDef<(typeof rows)[number]>[] = [
     {
       field: "user",
-      headerName: "USER",
+      headerName: t("admin.users.columnUser"),
       editable: false,
       sortable: true,
       minWidth: 250,
       flex: 1,
-      description: "User information",
+      description: t("admin.users.columnUserDescription"),
+      valueGetter: (value, row) => {
+        const { givenName = "", familyName = "" } = row.user.name;
+        return `${givenName} ${familyName}`.trim();
+      },
       renderCell: (params) => {
         const user = params.row.user;
         const userId = user.userId || user._id || "";
-        // Format user ID for display (e.g., USR-001)
         const displayId =
           userId.length > 8
             ? `#${userId.slice(-6).toUpperCase()}`
@@ -139,7 +145,7 @@ export const getDashboardUsersDataGridConfig = (
               <Typography variant="caption" sx={{
                 color: "text.secondary"
               }}>
-                ID {displayId}
+                {t("stories.idLabel")} {displayId}
               </Typography>
             </Box>
           </Box>
@@ -148,29 +154,29 @@ export const getDashboardUsersDataGridConfig = (
     },
     {
       field: "contact",
-      headerName: "CONTACT",
+      headerName: t("admin.users.columnContact"),
       editable: false,
       sortable: true,
       minWidth: 200,
       flex: 1,
       display: "flex",
-      description: "User email or phone number",
+      description: t("admin.users.columnContactDescription"),
       renderCell: (params) => (
         <Typography variant="body2">{params.row.contact}</Typography>
       ),
     },
     {
       field: "type",
-      headerName: "TYPE",
+      headerName: t("admin.users.columnType"),
       editable: false,
       sortable: true,
       minWidth: 120,
       flex: 1,
       display: "flex",
-      description: "User account type",
+      description: t("admin.users.columnTypeDescription"),
       renderCell: (params) => (
         <Chip
-          label={getUserTypeLabel(params.row.type)}
+          label={getUserTypeLabel(params.row.type, t)}
           color={getUserTypeColor(params.row.type) as any}
           size="small"
         />
@@ -178,39 +184,36 @@ export const getDashboardUsersDataGridConfig = (
     },
     {
       field: "stories",
-      headerName: "STORIES",
+      headerName: t("admin.users.columnStories"),
       editable: false,
       sortable: true,
       minWidth: 100,
       flex: 1,
       display: "flex",
-      description: "Number of stories",
+      description: t("admin.users.columnStoriesDescription"),
     },
     {
       field: "joinDate",
-      headerName: "JOIN DATE",
+      headerName: t("admin.users.columnJoinDate"),
       editable: false,
       sortable: true,
       minWidth: 120,
       flex: 1,
       display: "flex",
-      description: "Date user joined",
+      description: t("admin.users.columnJoinDateDescription"),
     },
     {
       field: "status",
-      headerName: "STATUS",
+      headerName: t("admin.users.columnStatus"),
       editable: false,
       sortable: true,
       minWidth: 120,
       flex: 1,
       display: "flex",
-      description: "User account status",
+      description: t("admin.users.columnStatusDescription"),
       renderCell: (params) => (
         <Chip
-          label={
-            params.row.status.charAt(0).toUpperCase() +
-            params.row.status.slice(1)
-          }
+          label={t(`admin.users.statusValues.${params.row.status}`)}
           color={getUserStatusColor(params.row.status) as any}
           size="small"
         />
@@ -220,7 +223,7 @@ export const getDashboardUsersDataGridConfig = (
       field: "action",
       align: "right",
       type: "actions",
-      headerName: "ACTIONS",
+      headerName: t("admin.users.columnActions"),
       headerAlign: "right",
       flex: 1,
       minWidth: 100,

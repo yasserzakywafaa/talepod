@@ -8,6 +8,7 @@ import { ApiResponseWithPaging } from "src/shared/types/types";
 import { DashboardUsersStore } from "./store";
 import END_POINTS from "src/application/shared/endpoints";
 import { User } from "src/shared/types/user";
+import i18n from "src/i18n/init";
 
 export interface DashboardUsersManager {
   setUp: () => Promise<void>;
@@ -72,7 +73,7 @@ export const useDashboardUsersManager = (
       await axios.post(END_POINTS.DASHBOARD.USERS.BLOCK_USER(userId));
 
       Notify({
-        content: "User blocked successfully",
+        content: i18n.t("dashboard:toasts.userBlocked"),
         type: ToastTypes.Success,
       });
 
@@ -94,7 +95,7 @@ export const useDashboardUsersManager = (
       await axios.delete(END_POINTS.DASHBOARD.USERS.DELETE_USER(userId));
 
       Notify({
-        content: "User deleted successfully",
+        content: i18n.t("dashboard:toasts.userDeleted"),
         type: ToastTypes.Success,
       });
 

@@ -9,8 +9,10 @@ import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { consumeReturnUrl } from "src/shared/utils/authReturn";
+import { useTranslation } from "react-i18next";
 
 const LoginPage = () => {
+  const { t } = useTranslation("auth");
   const navigate = useNavigate();
   const {
     store: {
@@ -53,7 +55,7 @@ const LoginPage = () => {
   }
 
   return (
-    <Page title="Login | TalePod" noIndex>
+    <Page title={t("loginPageTitle")} noIndex>
       <Container
         sx={{
           display: "flex",
@@ -74,7 +76,7 @@ const LoginPage = () => {
           <LockOpenOutlined color="primary" sx={{ m: 1 }} />
 
           <Typography component="h1" variant="h5">
-            Login to your account
+            {t("loginHeading")}
           </Typography>
         </Box>
 

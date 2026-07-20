@@ -1,0 +1,72 @@
+{
+  "close": "Schließen",
+  "cancel": "Abbrechen",
+  "delete": "Löschen",
+  "emailSentSuccess": "E-Mail erfolgreich gesendet",
+  "noResults": "Keine Ergebnisse gefunden",
+  "noStoriesFound": "Keine Geschichten gefunden",
+  "loggedOut": "Abgemeldet",
+  "nav": {
+    "features": "Funktionen",
+    "howItWorks": "So funktioniert's",
+    "pricing": "Preise",
+    "contact": "Kontakt",
+    "register": "Registrieren",
+    "login": "Anmelden",
+    "createProject": "Geschichte erstellen",
+    "library": "Bibliothek",
+    "myStories": "Meine Geschichten",
+    "blog": "Blog"
+  },
+  "settings": {
+    "menu": "Einstellungen",
+    "profile": "Profil",
+    "dashboard": "Dashboard",
+    "logout": "Abmelden",
+    "theme": "Design",
+    "themeToggle": "Design-Umschalter",
+    "install": "Installieren",
+    "refreshApp": "App aktualisieren",
+    "myAvatars": "Meine Avatare"
+  },
+  "footer": {
+    "taglineIntro": "Bei <brand>TalePod</brand> helfen wir Eltern und Betreuern, in wenigen Minuten magische, personalisierte Gute-Nacht-Geschichten zu erstellen — mit KI-generierten Illustrationen, Audio-Erzählung und Geschichten, die auf Ihr Kind zugeschnitten sind.",
+    "taglineAudience": "Perfekt für vielbeschäftigte Eltern, die einzigartige Geschichten mit dem Namen, den Interessen und Werten ihres Kindes wollen — als Comic oder Langform, bereit zum Lesen oder Anhören zur Schlafenszeit.",
+    "taglineScale": "Durchstöbern Sie die Community-Bibliothek, speichern Sie Favoriten und erstellen Sie unbegrenzt personalisierte Geschichten, die mit Ihrer Familie wachsen.",
+    "product": "Produkt",
+    "company": "Unternehmen",
+    "privacyPolicy": "Datenschutzerklärung",
+    "termsAndConditions": "AGB",
+    "copyright": "Copyright ©",
+    "tagline": "Personalisierte Gute-Nacht-Geschichten — sanft geschrieben und von KI illustriert, im Montessori-Geist der Neugier, für die Kinder, die Sie am meisten lieben.",
+    "landingSectionTitle": "Gute-Nacht-Geschichten für",
+    "privacyShort": "Datenschutz",
+    "termsShort": "AGB",
+    "madeIn": "Hergestellt in der Schweiz & Portugal",
+    "productLinks": {
+      "createStory": "Geschichte erstellen",
+      "library": "Bibliothek",
+      "pricing": "Preise",
+      "alternatives": "Alternativen",
+      "storyGenerator": "Geschichtengenerator",
+      "blog": "Blog",
+      "contact": "Kontakt"
+    },
+    "landingLinks": {
+      "bedtimeStoriesForKids": "Gute-Nacht-Geschichten für Kinder",
+      "bedtimeStoriesForAdults": "Gute-Nacht-Geschichten für Erwachsene",
+      "shortBedtimeStories": "Kurze Gute-Nacht-Geschichten",
+      "christmasBedtimeStories": "Weihnachts-Gute-Nacht-Geschichten",
+      "bedtimeStoriesForGirlfriend": "Gute-Nacht-Geschichten für die Freundin",
+      "bedtimeStoriesForToddlers": "Gute-Nacht-Geschichten für Kleinkinder",
+      "educationalBedtimeStories": "Lehrreiche Gute-Nacht-Geschichten",
+      "babyBedtimeStories": "Gute-Nacht-Geschichten für Babys",
+      "bestBedtimeStories": "Die besten Gute-Nacht-Geschichten",
+      "quickBedtimeStories": "Schnelle Gute-Nacht-Geschichten"
+    }
+  },
+  "cookiePolicy": {
+    "message": "Durch die weitere Nutzung dieser Website stimmen Sie der Verwendung von Cookies zu, um Ihre Erfahrung zu verbessern und den Website-Verkehr zu analysieren. Weitere Informationen finden Sie in unserer <privacyLink>Datenschutzerklärung</privacyLink>.",
+    "ok": "OK"
+  }
+}

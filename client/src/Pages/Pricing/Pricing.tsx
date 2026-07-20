@@ -6,8 +6,10 @@ import { Pricing } from "src/components/shared/Pricing/Pricing";
 import PricingTable from "src/components/shared/Pricing/PricingTable";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { usePricingContext } from "./store/Provider";
+import { useTranslation } from "react-i18next";
 
 const PricingPage = () => {
+  const { t } = useTranslation("page");
   const {
     store: {
       state: { isFetching },
@@ -18,7 +20,7 @@ const PricingPage = () => {
 
   return (
     <Page
-      title="Pricing | TalePod"
+      title={t("pricing.pageTitle")}
       className="pricing-page"
       isLoading={isFetching}
     >

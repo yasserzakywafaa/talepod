@@ -1,0 +1,270 @@
+{
+  "form": {
+    "artStyleLabel": "Art style",
+    "nameLabel": "Name",
+    "languageLabel": "Language",
+    "ageLabel": "Age",
+    "notAppropriate": "Not Appropriate 🙈",
+    "moreSettings": "More story settings (optional)",
+    "subscribe": "Subscribe",
+    "generateComic": "Generate {{name}}'s comic",
+    "generateStory": "Generate {{name}}'s story",
+    "generateComicAnonymous": "Generate comic",
+    "generateStoryAnonymous": "Generate story",
+    "alerts": {
+      "accountInactive": "Your account is not active and not allowed to create stories!",
+      "adminUnlimited": "As an admin, you can create ♾️ number of stories 😎",
+      "storiesRemaining": "You have {{remaining}} stories left out of {{max}}",
+      "limitReached": "You have consumed your maximum credit of {{max}} stories"
+    },
+    "settings": {
+      "moral": "Moral",
+      "tone": "Tone",
+      "environment": "Environment",
+      "interests": "Other Interests"
+    },
+    "mini": {
+      "namePlaceholder": "Emily, Noah, etc.",
+      "moreOptions": "More story options available",
+      "generate": "Generate Story"
+    },
+    "customSelect": {
+      "custom": "Custom",
+      "addCustom": "Add custom…",
+      "placeholder": "Your own {{label}}"
+    },
+    "format": {
+      "comic": {
+        "badge": "Picture story",
+        "title": "Comic book",
+        "sub": "~6 illustrated pages · best for younger kids",
+        "previewPages": "6 pages"
+      },
+      "long": {
+        "badge": "Chapter book",
+        "title": "Long story",
+        "sub": "Cover illustration · rich text · narration later"
+      }
+    }
+  },
+  "createPage": {
+    "title": "Create Bedtime Stories | TalePod",
+    "heading": "Define your story",
+    "subheading": "Personalize your bedtime story by filling in the required \"Name\" for your child.",
+    "tipsHeading": "Tips for Crafting the Perfect Bedtime Story",
+    "tips": {
+      "familiar": {
+        "title": "Include Familiar Elements",
+        "body": "Incorporate elements from your child's daily life to make the story more relatable."
+      },
+      "moral": {
+        "title": "Add a Moral Lesson",
+        "body": "Teach valuable lessons through the story to instill good values and behaviors."
+      },
+      "interactive": {
+        "title": "Keep It Interactive",
+        "body": "Encourage your child to participate in the story to keep them engaged."
+      }
+    }
+  },
+  "generating": {
+    "stages": {
+      "comic": {
+        "imagine": {
+          "label": "Imagining…",
+          "sub": "Picking tonight's adventure",
+          "rail": "Idea"
+        },
+        "write": {
+          "label": "Writing the story…",
+          "sub": "Short, comic-panel lines",
+          "rail": "Write"
+        },
+        "magic": {
+          "label": "Sprinkling magic…",
+          "sub": "Bringing it all together",
+          "rail": "Magic"
+        },
+        "done": {
+          "label": "All done!",
+          "sub": "Opening your comic",
+          "rail": "Done"
+        }
+      },
+      "long": {
+        "imagine": {
+          "label": "Imagining…",
+          "sub": "Setting the scene",
+          "rail": "Idea"
+        },
+        "write": {
+          "label": "Writing your story…",
+          "sub": "Warm, rich bedtime prose",
+          "rail": "Write"
+        },
+        "magic": {
+          "label": "Sprinkling magic…",
+          "sub": "Bringing it all together",
+          "rail": "Magic"
+        },
+        "done": {
+          "label": "All done!",
+          "sub": "Opening your story",
+          "rail": "Done"
+        }
+      }
+    },
+    "imageAlt": "story is being generated for {{name}}",
+    "imageAltDefault": "story is being generated for the child",
+    "formatChip": {
+      "comic": "Comic · ~6 pages",
+      "long": "Long story"
+    },
+    "forName": "For {{name}}",
+    "duration": {
+      "comic": "Usually 40–60 seconds.",
+      "long": "Usually 25–45 seconds."
+    },
+    "chip": {
+      "readyNamed": "{{name}}'s {{format}} is ready",
+      "readyGeneric": "Your story is ready",
+      "viewStory": "View story",
+      "failedTitle": "Couldn't create your story",
+      "failedHint": "Please try again from the create form.",
+      "creatingNamed": "Creating {{name}}'s {{format}}",
+      "creatingGeneric": "Creating your {{format}}",
+      "visitLibrary": "Visit our",
+      "libraryLink": "library",
+      "visitLibrarySuffix": "while we work on your story.",
+      "formatComic": "comic",
+      "formatStory": "story"
+    }
+  },
+  "avatars": {
+    "picker": {
+      "title": "Avatar (optional)",
+      "manage": "Manage avatars",
+      "loginPrompt": "✨ Want the hero to look like your child? Log in to create reusable avatars and star them in every story.",
+      "login": "Log in",
+      "empty": "Create an avatar to make the hero look like your child or family.",
+      "addOne": "Add one →",
+      "noneAria": "No avatar",
+      "none": "None",
+      "useAria": "Use {{name}}"
+    },
+    "page": {
+      "title": "My Avatars",
+      "subtitle": "Create avatars so stories star people who look like your family.",
+      "new": "New avatar",
+      "empty": "No avatars yet. Create your first one!",
+      "editTitle": "Edit avatar",
+      "newTitle": "New avatar"
+    },
+    "delete": {
+      "title": "Delete avatar?",
+      "body": "Delete <strong>{{name}}</strong>? This can't be undone. Existing stories are not affected.",
+      "cancel": "Cancel",
+      "confirm": "Delete"
+    },
+    "form": {
+      "name": "Name",
+      "relationship": "Relationship",
+      "relationshipPlaceholder": "son, daughter, wife…",
+      "age": "Age",
+      "gender": "Gender",
+      "genderUnspecified": "Unspecified",
+      "skinTone": "Skin tone",
+      "skinTonePlaceholder": "fair, olive, brown…",
+      "eyeColor": "Eye color",
+      "eyeColorPlaceholder": "brown, blue…",
+      "hairColor": "Hair color",
+      "hairColorPlaceholder": "black, blonde…",
+      "hairStyle": "Hair style",
+      "hairStylePlaceholder": "curly, short, ponytail…",
+      "outfit": "Outfit",
+      "outfitPlaceholder": "red dress, blue pyjamas…",
+      "feature": "Distinguishing feature",
+      "featurePlaceholder": "freckles, glasses…",
+      "notes": "Notes",
+      "notesPlaceholder": "Anything else that helps the illustration look right",
+      "notAppropriate": "Not Appropriate 🙈",
+      "cancel": "Cancel",
+      "saving": "Saving…",
+      "save": "Save avatar"
+    },
+    "toast": {
+      "updated": "Avatar updated.",
+      "created": "Avatar created.",
+      "deleted": "Avatar deleted.",
+      "error": "Something went wrong.",
+      "deleteError": "Failed to delete avatar."
+    }
+  },
+  "reader": {
+    "pageTitle": "{{title}} | Bedtime story on TalePod",
+    "toastCreated": "Story created successfully.",
+    "imagesPending": "Story images are on the way",
+    "notFound": "We could not find the story you are looking for",
+    "browseLibrary": "Browse Library",
+    "author": {
+      "createdBy": "Created by:",
+      "avatarAlt": "User Picture"
+    },
+    "meta": {
+      "createdOn": "Story created on",
+      "name": "Name",
+      "gender": "Gender",
+      "age": "Age",
+      "language": "Language",
+      "interests": "Interests",
+      "environment": "Environment",
+      "moral": "Moral",
+      "tone": "Tone",
+      "storyLength": "Story Length",
+      "format": "Format",
+      "artStyle": "Art Style",
+      "ageSuffix": "{{age}}-years-old",
+      "wordCount": "{{count}} words",
+      "formatComic": "Comic",
+      "formatLong": "Long Story"
+    },
+    "export": {
+      "heading": "Turn this into an eBook",
+      "description": "Download a beautifully designed PDF storybook — a lovely keepsake to read again and again.",
+      "preparing": "Preparing…",
+      "download": "Download eBook",
+      "sending": "Sending…",
+      "email": "Email me the eBook",
+      "imagesPending": "Illustrations are still being painted — your eBook will be ready once they finish.",
+      "toastReady": "Your eBook is ready.",
+      "toastPdfError": "❌ Couldn't build the PDF. Please try again.",
+      "toastEmailSent": "We'll email your eBook shortly. 📩",
+      "toastEmailError": "❌ Couldn't email your eBook. Please try again."
+    },
+    "audio": {
+      "createHeading": "Create audio for this story",
+      "voiceLabel": "Voice",
+      "female": "Female",
+      "male": "Male",
+      "createButton": "Create Audio",
+      "listenHeading": "Listen to the Story",
+      "createdOn": "Audio created on:",
+      "error": "❌ Failed to create audio! {{error}}"
+    },
+    "comic": {
+      "gridHint": "Comic · {{total}} pages · tap a page to jump",
+      "closeAria": "close",
+      "allPagesAria": "All pages",
+      "pageOf": "Page {{current}} of {{total}}"
+    }
+  },
+  "card": {
+    "upgrade": "Upgrade",
+    "upgradeAria": "upgrade",
+    "badgeComic": "Comic",
+    "badgeStory": "Story",
+    "hasNarration": "Has narration",
+    "tagOriginal": "Original",
+    "authorAvatarAlt": "User Picture"
+  }
+}

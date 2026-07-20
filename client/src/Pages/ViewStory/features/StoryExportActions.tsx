@@ -17,6 +17,7 @@ import END_POINTS from "src/application/shared/endpoints";
 import { Story } from "src/components/StoryCreator/store/state";
 import axios from "axios";
 import { useAvatar } from "src/Pages/Avatars/useAvatars";
+import { useTranslation } from "react-i18next";
 
 interface StoryExportActionsProps {
   story: Story;
@@ -27,6 +28,7 @@ const StoryExportActions: FC<StoryExportActionsProps> = ({
   story,
   canEmail,
 }) => {
+  const { t } = useTranslation("story");
   const [downloading, setDownloading] = useState(false);
   const [emailing, setEmailing] = useState(false);
   const { avatar, isLoading: isAvatarLoading } = useAvatar(story.avatarId);
@@ -41,11 +43,11 @@ const StoryExportActions: FC<StoryExportActionsProps> = ({
         END_POINTS.STORIES.EXPORT_STORY_PDF(story.slug),
       );
       window.open(data.url, "_blank", "noopener");
-      Notify({ type: ToastTypes.Success, content: "Your eBook is ready." });
+      Notify({ type: ToastTypes.Success, content: t("reader.export.toastReady") });
     } catch (error) {
       Notify({
         type: ToastTypes.Error,
-        content: "❌ Couldn't build the PDF. Please try again.",
+        content: t("reader.export.toastPdfError"),
       });
       console.error("❌ Failed to export story PDF", error);
     } finally {
@@ -59,12 +61,12 @@ const StoryExportActions: FC<StoryExportActionsProps> = ({
       await axios.post(END_POINTS.STORIES.EMAIL_STORY_PDF(story.slug));
       Notify({
         type: ToastTypes.Success,
-        content: "We'll email your eBook shortly. 📩",
+        content: t("reader.export.toastEmailSent"),
       });
     } catch (error) {
       Notify({
         type: ToastTypes.Error,
-        content: "❌ Couldn't email your eBook. Please try again.",
+        content: t("reader.export.toastEmailError"),
       });
       console.error("❌ Failed to email story PDF", error);
     } finally {
@@ -106,7 +108,7 @@ const StoryExportActions: FC<StoryExportActionsProps> = ({
                 color: "text.primary",
               }}
             >
-              Turn this into an eBook
+              {t("reader.export.heading")}
             </Typography>
           </Box>
 
@@ -118,8 +120,7 @@ const StoryExportActions: FC<StoryExportActionsProps> = ({
               color: "text.secondary",
             }}
           >
-            Download a beautifully designed PDF storybook — a lovely keepsake to
-            read again and again.
+            {t("reader.export.description")}
           </Typography>
 
           <Box
@@ -143,7 +144,7 @@ const StoryExportActions: FC<StoryExportActionsProps> = ({
               }
               sx={{ width: { xs: "100%", sm: "auto" } }}
             >
-              {downloading ? "Preparing…" : "Download eBook"}
+              {downloading ? t("reader.export.preparing") : t("reader.export.download")}
             </Button>
 
             {canEmail && (
@@ -160,7 +161,7 @@ const StoryExportActions: FC<StoryExportActionsProps> = ({
                 }
                 sx={{ width: { xs: "100%", sm: "auto" } }}
               >
-                {emailing ? "Sending…" : "Email me the eBook"}
+                {emailing ? t("reader.export.sending") : t("reader.export.email")}
               </Button>
             )}
           </Box>
@@ -178,8 +179,7 @@ const StoryExportActions: FC<StoryExportActionsProps> = ({
                 sx={{ color: twilight300, fontSize: 15, mt: "2px" }}
               />
               <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
-                Illustrations are still being painted — your eBook will be ready
-                once they finish.
+                {t("reader.export.imagesPending")}
               </Typography>
             </Box>
           )}

@@ -1,10 +1,27 @@
 import routes from "src/application/routes";
+import type { LandingPageSeoKey } from "src/shared/i18n/useLandingPageSeo";
 
 export interface LandingPageSeo {
   title: string;
   description: string;
   canonicalPath: string;
 }
+
+/** Maps app route paths to `useLandingPageSeo` keys. */
+export const landingPageRouteKeys: Record<string, LandingPageSeoKey> = {
+  [routes.landingPages.bedtimeStoriesForKids]: "kids",
+  [routes.landingPages.bedtimeStoriesForAdults]: "adults",
+  [routes.landingPages.shortBedtimeStories]: "short",
+  [routes.landingPages.christmasBedtimeStories]: "christmas",
+  [routes.landingPages.bedtimeStoriesForGirlfriend]: "girlfriend",
+  [routes.landingPages.bedtimeStoriesForToddlers]: "toddlers",
+  [routes.landingPages.educationalBedtimeStories]: "educational",
+  [routes.landingPages.babyBedtimeStories]: "baby",
+  [routes.landingPages.bestBedtimeStories]: "best",
+  [routes.landingPages.quickBedtimeStories]: "quick",
+  [routes.landingPages.alternatives]: "alternatives",
+  [routes.landingPages.personalizedBedtimeStoryGenerator]: "generator",
+};
 
 export const landingPageSeo: Record<string, LandingPageSeo> = {
   [routes.landingPages.bedtimeStoriesForKids]: {

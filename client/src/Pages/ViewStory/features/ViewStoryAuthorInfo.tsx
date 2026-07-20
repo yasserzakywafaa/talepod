@@ -2,6 +2,7 @@ import { Alert, Avatar, Box, Typography } from "@mui/material";
 
 import { Story } from "src/components/StoryCreator/store/state";
 import { User } from "src/shared/types/user";
+import { useTranslation } from "react-i18next";
 
 interface ViewStoryAuthorInfoParams {
   story: Story;
@@ -10,6 +11,7 @@ interface ViewStoryAuthorInfoParams {
 }
 
 const ViewStoryAuthorInfo = (props: ViewStoryAuthorInfoParams): JSX.Element => {
+  const { t } = useTranslation("story");
   const { storyAuthor } = props;
 
   if (!storyAuthor) return <></>;
@@ -22,13 +24,13 @@ const ViewStoryAuthorInfo = (props: ViewStoryAuthorInfoParams): JSX.Element => {
     >
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <Typography sx={{ mr: 1 }}>
-          <span>Created by:</span>
+          <span>{t("reader.author.createdBy")}</span>
           <span className="bold">{` ${storyAuthor.name.givenName} ${storyAuthor.name.familyName}`}</span>
         </Typography>
 
         {storyAuthor.picture ? (
           <Avatar
-            alt="User Picture"
+            alt={t("reader.author.avatarAlt")}
             src={storyAuthor.picture}
             sx={{ mr: 1, width: 20, height: 20 }}
           />

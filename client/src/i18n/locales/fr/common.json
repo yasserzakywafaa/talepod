@@ -1,0 +1,72 @@
+{
+  "close": "Fermer",
+  "cancel": "Annuler",
+  "delete": "Supprimer",
+  "emailSentSuccess": "E-mail envoyé avec succès",
+  "noResults": "Aucun résultat trouvé",
+  "noStoriesFound": "Aucune histoire trouvée",
+  "loggedOut": "Déconnecté",
+  "nav": {
+    "features": "Fonctionnalités",
+    "howItWorks": "Comment ça marche",
+    "pricing": "Tarifs",
+    "contact": "Nous contacter",
+    "register": "S'inscrire",
+    "login": "Se connecter",
+    "createProject": "Créer une histoire",
+    "library": "Bibliothèque",
+    "myStories": "Mes histoires",
+    "blog": "Blog"
+  },
+  "settings": {
+    "menu": "Paramètres",
+    "profile": "Profil",
+    "dashboard": "Tableau de bord",
+    "logout": "Déconnexion",
+    "theme": "Thème",
+    "themeToggle": "Bouton de changement de thème",
+    "install": "Installer",
+    "refreshApp": "Actualiser l'application",
+    "myAvatars": "Mes avatars"
+  },
+  "footer": {
+    "taglineIntro": "Chez <brand>TalePod</brand>, nous aidons les parents et les proches à créer des histoires du soir magiques et personnalisées en quelques minutes — avec des illustrations générées par IA, une narration audio et des histoires adaptées à votre enfant.",
+    "taglineAudience": "Parfait pour les parents occupés qui veulent des histoires uniques avec le nom, les intérêts et les valeurs de leur enfant — en format bande dessinée ou long, prêtes à lire ou écouter au coucher.",
+    "taglineScale": "Parcourez la bibliothèque communautaire, enregistrez vos favoris et créez des contes personnalisés illimités qui grandissent avec votre famille.",
+    "product": "Produit",
+    "company": "Entreprise",
+    "privacyPolicy": "Politique de confidentialité",
+    "termsAndConditions": "Conditions générales",
+    "copyright": "Copyright ©",
+    "tagline": "Histoires du soir personnalisées — doucement écrites et illustrées par l'IA, dans l'esprit Montessori de la curiosité, pour les enfants que vous aimez le plus.",
+    "landingSectionTitle": "Histoires du soir pour",
+    "privacyShort": "Confidentialité",
+    "termsShort": "Conditions",
+    "madeIn": "Fabriqué en Suisse et au Portugal",
+    "productLinks": {
+      "createStory": "Créer une histoire",
+      "library": "Bibliothèque",
+      "pricing": "Tarifs",
+      "alternatives": "Alternatives",
+      "storyGenerator": "Générateur d'histoires",
+      "blog": "Blog",
+      "contact": "Contact"
+    },
+    "landingLinks": {
+      "bedtimeStoriesForKids": "Histoires du soir pour enfants",
+      "bedtimeStoriesForAdults": "Histoires du soir pour adultes",
+      "shortBedtimeStories": "Courtes histoires du soir",
+      "christmasBedtimeStories": "Histoires du soir de Noël",
+      "bedtimeStoriesForGirlfriend": "Histoires du soir pour sa copine",
+      "bedtimeStoriesForToddlers": "Histoires du soir pour tout-petits",
+      "educationalBedtimeStories": "Histoires du soir éducatives",
+      "babyBedtimeStories": "Histoires du soir pour bébés",
+      "bestBedtimeStories": "Meilleures histoires du soir",
+      "quickBedtimeStories": "Histoires du soir rapides"
+    }
+  },
+  "cookiePolicy": {
+    "message": "En continuant à utiliser ce site, vous acceptez l'utilisation de cookies pour améliorer votre expérience et analyser le trafic. Consultez notre <privacyLink>politique de confidentialité</privacyLink> pour plus d'informations.",
+    "ok": "OK"
+  }
+}

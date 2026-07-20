@@ -1,11 +1,3 @@
-import {
-  BedOutlined,
-  DevicesOutlined,
-  EditOutlined,
-  FaceOutlined,
-} from "@mui/icons-material";
-import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
-
 import FestiveReindeer from "../../assets/images/landing_pages/festive_reindeer.webp";
 import Hero from "./features/Hero";
 import Page from "src/components/shared/Page/Page";
@@ -24,11 +16,12 @@ import StoryExamples from "../Features/features/StoryExamples";
 import Testimonials from "../Features/features/Testimonials";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import CallToAction from "../Features/features/CallToAction";
-import { landingPageSeo } from "./landingPageSeo";
-import { landingPageSeoProps } from "./landingPageSeoProps";
-import routes from "src/application/routes";
+import { useLandingPageSeo } from "src/shared/i18n/useLandingPageSeo";
+import { useTranslation } from "react-i18next";
 
 const ChristmasBedtimeStories = () => {
+  const { t } = useTranslation("landing");
+  const seoProps = useLandingPageSeo("christmas");
   const {
     store: {
       state: { isFetching },
@@ -36,75 +29,25 @@ const ChristmasBedtimeStories = () => {
   } = useApplicationContext();
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
 
-  const benefitsList = (
-    <List>
-      <ListItem>
-        <ListItemIcon>
-          <FaceOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Tailored to Your Relaxation Needs"
-          secondary="With TalePod, you can choose themes, tones, and characters that match your current mood."
-        />
-      </ListItem>
-
-      <ListItem>
-        <ListItemIcon>
-          <BedOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Promotes Better Sleep"
-          secondary="Calm and personalized stories can help you ease into sleep and relaxation."
-        />
-      </ListItem>
-
-      <ListItem>
-        <ListItemIcon>
-          <DevicesOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Easy to Use"
-          secondary="TalePod's user-friendly interface makes it simple to create and customize stories, even for those who are not tech-savvy."
-        />
-      </ListItem>
-
-      <ListItem>
-        <ListItemIcon>
-          <EditOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Customizable"
-          secondary="TalePod is designed to meet the needs of both adults and children."
-        />
-      </ListItem>
-    </List>
-  );
-
   return (
-    <Page
-      {...landingPageSeoProps(
-        landingPageSeo[routes.landingPages.christmasBedtimeStories],
-      )}
-      className="christmas-bedtime-stories-page"
-      isLoading={isFetching}
-    >
+    <Page {...seoProps} className="home-page" isLoading={isFetching}>
       <Hero
         heroImage={FestiveReindeer}
-        pageTitleWhite="Magical Christmas"
-        pageTitleColored="Bedtime Stories"
-        pageHeader="Celebrate the holiday season with heartwarming personalized stories."
+        pageTitleWhite={t("pages.christmas.heroWhite")}
+        pageTitleColored={t("pages.christmas.heroColored")}
+        pageHeader={t("pages.christmas.heroHeader")}
       />
 
       <div className="section">
         <Testimonials />
       </div>
+
       <PersonalizedBedtimeStoryText
-        whyPersonalizeBedtimeStories="create the magic of the holiday season and provide the perfect way to wind down during the festivities."
-        introducingTalePod="TalePod offers Christmas-themed bedtime stories, allowing you to share the holiday spirit through engaging and customized tales."
+        pageKey="christmas"
         personalizeImage={Unicorn}
-        benefitsList={benefitsList}
         benefitsImage={<RandomImage />}
       />
+
       <div className="section">
         <KeyFeatures />
       </div>

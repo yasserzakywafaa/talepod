@@ -10,6 +10,7 @@ import { usePaymentContext } from "../Payment/store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { trackEvent } from "src/shared/utils/ga4";
 
 export type BillingInterval = "month" | "year";
@@ -37,6 +38,7 @@ interface SubscriptionPlanTableProps {
 }
 
 export const usePricing = () => {
+  const { t } = useTranslation("page");
   const navigate = useNavigate();
   const [billingInterval, setBillingInterval] =
     useState<BillingInterval>("month");
@@ -320,22 +322,22 @@ export const usePricing = () => {
   const getButtonText = (plan: SubscriptionPlanEnum) => {
     switch (plan) {
       case SubscriptionPlanEnum.Free:
-        if (!isAuthenticated) return "Create Stories";
-        if (currentUserPackage.isFree) return "Create Stories";
+        if (!isAuthenticated) return t("pricing.cta.createStories");
+        if (currentUserPackage.isFree) return t("pricing.cta.createStories");
         else return "";
 
       case SubscriptionPlanEnum.Premium:
-        if (!isAuthenticated) return "Register & Subscribe";
-        if (!currentUserPackage.isPremium) return "Upgrade";
-        else return "Current Plan";
+        if (!isAuthenticated) return t("pricing.cta.registerSubscribe");
+        if (!currentUserPackage.isPremium) return t("pricing.cta.upgrade");
+        else return t("pricing.cta.currentPlan");
 
       case SubscriptionPlanEnum.Advanced:
-        if (!isAuthenticated) return "Register & Subscribe";
-        if (!currentUserPackage.isAdvanced) return "Upgrade";
-        else return "Current Plan";
+        if (!isAuthenticated) return t("pricing.cta.registerSubscribe");
+        if (!currentUserPackage.isAdvanced) return t("pricing.cta.upgrade");
+        else return t("pricing.cta.currentPlan");
 
       default:
-        return "Upgrade";
+        return t("pricing.cta.upgrade");
     }
   };
 
@@ -344,10 +346,12 @@ export const usePricing = () => {
       title: SubscriptionPlanEnum.Free,
       product: undefined,
       features: [
-        "Standard customer support",
-        "Create up to 4 bedtime stories",
-        "Basic text-to-speech conversion",
-        "Access to a limited story library",
+        t("pricing.features.standardSupport"),
+        t("pricing.features.createUpToFree", {
+          count: APP_CONSTANTS.MAX_STORIES_LIMIT_FREE,
+        }),
+        t("pricing.features.basicTts"),
+        t("pricing.features.limitedLibrary"),
       ],
       buttonDisabled: false,
       buttonText: getButtonText(SubscriptionPlanEnum.Free),
@@ -359,11 +363,13 @@ export const usePricing = () => {
       // subheader: "Recommended",
       product: getPlanProduct(SubscriptionPlanEnum.Premium),
       features: [
-        "Priority customer support",
-        "Customizable story parameters",
-        "High-quality text-to-speech conversion",
-        "Create up to 50 bedtime stories per month",
-        "Access your Premium created stories",
+        t("pricing.features.prioritySupport"),
+        t("pricing.features.customizableParams"),
+        t("pricing.features.highQualityTts"),
+        t("pricing.features.createUpToMonthly", {
+          count: APP_CONSTANTS.MAX_STORIES_LIMIT_PREMIUM,
+        }),
+        t("pricing.features.accessPremiumStories"),
       ],
       buttonDisabled: currentUserPackage.isPremium,
       buttonText: getButtonText(SubscriptionPlanEnum.Premium),
@@ -374,14 +380,14 @@ export const usePricing = () => {
       ? [
           {
             title: SubscriptionPlanEnum.Advanced,
-            subheader: "Best value",
+            subheader: t("pricing.bestValue"),
             product: getPlanProduct(SubscriptionPlanEnum.Advanced),
             features: [
-              "Everything in Premium",
-              "Unlimited bedtime stories",
-              "Priority story generation",
-              "All storyteller voices",
-              "Save unlimited stories in your library",
+              t("pricing.features.everythingInPremium"),
+              t("pricing.features.unlimitedStories"),
+              t("pricing.features.priorityGeneration"),
+              t("pricing.features.allVoices"),
+              t("pricing.features.unlimitedLibrary"),
             ],
             buttonDisabled: currentUserPackage.isAdvanced,
             buttonText: getButtonText(SubscriptionPlanEnum.Advanced),
@@ -400,13 +406,15 @@ export const usePricing = () => {
       title: SubscriptionPlanEnum.Free,
       product: undefined,
       features: {
-        "Number of stories": APP_CONSTANTS.MAX_STORIES_LIMIT_FREE,
-        "Story customization": false,
-        "Visibility of Stories": "Public",
-        "Customizable story parameters": false,
-        "High-quality text-to-speech conversion": false,
-        "Access your Premium created stories": false,
-        "Customer support": "Standard",
+        [t("pricing.table.rowNumberOfStories")]:
+          APP_CONSTANTS.MAX_STORIES_LIMIT_FREE,
+        [t("pricing.table.rowStoryCustomization")]: false,
+        [t("pricing.table.rowVisibility")]: t("pricing.table.valuePublic"),
+        [t("pricing.table.rowCustomizableParams")]: false,
+        [t("pricing.table.rowHighQualityTts")]: false,
+        [t("pricing.table.rowAccessPremiumStories")]: false,
+        [t("pricing.table.rowCustomerSupport")]:
+          t("pricing.table.valueStandard"),
       },
       buttonDisabled: false,
       buttonText: getButtonText(SubscriptionPlanEnum.Free),
@@ -418,13 +426,15 @@ export const usePricing = () => {
       subheader: "",
       product: getPlanProduct(SubscriptionPlanEnum.Premium),
       features: {
-        "Number of stories": APP_CONSTANTS.MAX_STORIES_LIMIT_PREMIUM,
-        "Story customization": true,
-        "Visibility of Stories": "Public",
-        "Customizable story parameters": true,
-        "High-quality text-to-speech conversion": true,
-        "Access your Premium created stories": true,
-        "Customer support": "Priority",
+        [t("pricing.table.rowNumberOfStories")]:
+          APP_CONSTANTS.MAX_STORIES_LIMIT_PREMIUM,
+        [t("pricing.table.rowStoryCustomization")]: true,
+        [t("pricing.table.rowVisibility")]: t("pricing.table.valuePublic"),
+        [t("pricing.table.rowCustomizableParams")]: true,
+        [t("pricing.table.rowHighQualityTts")]: true,
+        [t("pricing.table.rowAccessPremiumStories")]: true,
+        [t("pricing.table.rowCustomerSupport")]:
+          t("pricing.table.valuePriority"),
       },
       buttonDisabled: isPremiumUser,
       buttonText: getButtonText(SubscriptionPlanEnum.Premium),
@@ -438,13 +448,15 @@ export const usePricing = () => {
             subheader: "",
             product: getPlanProduct(SubscriptionPlanEnum.Advanced),
             features: {
-              "Number of stories": "Unlimited",
-              "Story customization": true,
-              "Visibility of Stories": "Public",
-              "Customizable story parameters": true,
-              "High-quality text-to-speech conversion": true,
-              "Access your Premium created stories": true,
-              "Customer support": "Priority",
+              [t("pricing.table.rowNumberOfStories")]:
+                t("pricing.table.valueUnlimited"),
+              [t("pricing.table.rowStoryCustomization")]: true,
+              [t("pricing.table.rowVisibility")]: t("pricing.table.valuePublic"),
+              [t("pricing.table.rowCustomizableParams")]: true,
+              [t("pricing.table.rowHighQualityTts")]: true,
+              [t("pricing.table.rowAccessPremiumStories")]: true,
+              [t("pricing.table.rowCustomerSupport")]:
+                t("pricing.table.valuePriority"),
             },
             buttonDisabled: currentUserPackage.isAdvanced,
             buttonText: getButtonText(SubscriptionPlanEnum.Advanced),

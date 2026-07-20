@@ -1,34 +1,27 @@
-import {
-  BedOutlined,
-  ChildCareOutlined,
-  DevicesOutlined,
-  EditOutlined,
-} from "@mui/icons-material";
-import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
-
-import Benefits from "../Features/features/Benefits";
-import CallToAction from "../Features/features/CallToAction";
-import { landingPageSeo } from "./landingPageSeo";
-import { landingPageSeoProps } from "./landingPageSeoProps";
-import routes from "src/application/routes";
 import Dinosaur from "../../assets/images/landing_pages/dinosaur.webp";
-import FAQ from "../Features/features/FAQ";
-import Guarantee from "../Features/features/Guarantee";
 import Hero from "./features/Hero";
-import HowItWorks from "../Features/features/HowItWorks";
-import KeyFeatures from "../Features/features/KeyFeatures";
 import Page from "src/components/shared/Page/Page";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
 import { Pricing } from "src/components/shared/Pricing/Pricing";
-import PricingTable from "src/components/shared/Pricing/PricingTable";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
-import StoryExamples from "../Features/features/StoryExamples";
-import Testimonials from "../Features/features/Testimonials";
 import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.webp";
 import { useApplicationContext } from "src/application/store/Provider";
+import PricingTable from "src/components/shared/Pricing/PricingTable";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
+import Benefits from "../Features/features/Benefits";
+import FAQ from "../Features/features/FAQ";
+import Guarantee from "../Features/features/Guarantee";
+import HowItWorks from "../Features/features/HowItWorks";
+import KeyFeatures from "../Features/features/KeyFeatures";
+import StoryExamples from "../Features/features/StoryExamples";
+import Testimonials from "../Features/features/Testimonials";
+import CallToAction from "../Features/features/CallToAction";
+import { useLandingPageSeo } from "src/shared/i18n/useLandingPageSeo";
+import { useTranslation } from "react-i18next";
 
 const BestBedtimeStories = () => {
+  const { t } = useTranslation("landing");
+  const seoProps = useLandingPageSeo("best");
   const {
     store: {
       state: { isFetching },
@@ -36,75 +29,25 @@ const BestBedtimeStories = () => {
   } = useApplicationContext();
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
 
-  const benefitsList = (
-    <List>
-      <ListItem>
-        <ListItemIcon>
-          <ChildCareOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Tailored to Your Child's Interests"
-          secondary="With TalePod, you can customize stories based on your child's favorite characters, themes, and settings, making each story relevant and captivating."
-        />
-      </ListItem>
-
-      <ListItem>
-        <ListItemIcon>
-          <BedOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Promotes Better Sleep"
-          secondary="Calm and personalized stories can help you ease into sleep and relaxation."
-        />
-      </ListItem>
-
-      <ListItem>
-        <ListItemIcon>
-          <DevicesOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Easy to Use"
-          secondary="TalePod's user-friendly interface makes it simple to create and customize stories, even for those who are not tech-savvy."
-        />
-      </ListItem>
-
-      <ListItem>
-        <ListItemIcon>
-          <EditOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Customizable"
-          secondary="TalePod is designed to meet the needs of both adults and children."
-        />
-      </ListItem>
-    </List>
-  );
-
   return (
-    <Page
-      {...landingPageSeoProps(
-        landingPageSeo[routes.landingPages.bestBedtimeStories],
-      )}
-      className="best-bedtime-stories-page"
-      isLoading={isFetching}
-    >
+    <Page {...seoProps} className="home-page" isLoading={isFetching}>
       <Hero
         heroImage={Dinosaur}
-        pageTitleWhite="Best Bedtime Stories"
-        pageTitleColored="with TalePod"
-        pageHeader="Explore a selection of the most popular bedtime stories tailored to your preferences."
+        pageTitleWhite={t("pages.best.heroWhite")}
+        pageTitleColored={t("pages.best.heroColored")}
+        pageHeader={t("pages.best.heroHeader")}
       />
+
       <div className="section">
         <Testimonials />
       </div>
 
       <PersonalizedBedtimeStoryText
-        whyPersonalizeBedtimeStories="are handpicked for their engaging and relaxing qualities."
-        introducingTalePod="TalePod's best bedtime stories offer a mix of adventure, magic, and calm, ensuring a story that fits your every mood."
+        pageKey="best"
         personalizeImage={Unicorn}
-        benefitsList={benefitsList}
         benefitsImage={<RandomImage />}
       />
+
       <div className="section">
         <KeyFeatures />
       </div>

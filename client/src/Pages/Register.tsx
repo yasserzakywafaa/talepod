@@ -8,8 +8,10 @@ import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { consumeReturnUrl } from "src/shared/utils/authReturn";
+import { useTranslation } from "react-i18next";
 
 const RegisterPage = () => {
+  const { t } = useTranslation("auth");
   const navigate = useNavigate();
   const {
     store: {
@@ -30,7 +32,7 @@ const RegisterPage = () => {
   }
 
   return (
-    <Page title="Register | TalePod" noIndex>
+    <Page title={t("registerPageTitle")} noIndex>
       <Container
         sx={{
           display: "flex",
@@ -51,7 +53,7 @@ const RegisterPage = () => {
           <LockOutlined color="primary" sx={{ m: 1 }} />
 
           <Typography component="h1" variant="h5">
-            Create a new account
+            {t("registerHeading")}
           </Typography>
         </Box>
 

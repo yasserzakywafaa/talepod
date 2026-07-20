@@ -25,6 +25,8 @@ import SettingsMenuButton from "../../SettingsMenuButton";
 import { User } from "src/shared/types/user";
 import UserAccountMenuButton from "../../UserAccountButton";
 import { primaryColor } from "src/application/shared/themes";
+import { useDeviceSize } from "@yasserzakywafaa/client-core/web";
+import { useTranslation } from "react-i18next";
 
 interface ApplicationBarMobileViewParams {
   auth: Authentication;
@@ -50,6 +52,10 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
     setIsInstallAppDialogOpen,
     handleOnMenuItemClick,
   } = props;
+  const { t } = useTranslation("common");
+  const { isDesktop, isTablet, isMobile } = useDeviceSize();
+
+  if (isDesktop || (!isTablet && !isMobile)) return null;
 
   return (
     <Box
@@ -79,7 +85,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
             variant="contained"
             onClick={handleOnMenuItemClick("create")}
           >
-            Create Story
+            {t("nav.createProject")}
           </Button>
         )
       ) : (
@@ -89,7 +95,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
           variant="contained"
           onClick={handleOnMenuItemClick("create")}
         >
-          Create Story
+          {t("nav.createProject")}
         </Button>
       )}
 
@@ -137,7 +143,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                   pagesMatch.isFeaturesPage ? primaryColor : "text.primary"
                 }
               >
-                Features
+                {t("nav.features")}
               </Typography>
             </MenuItem>
 
@@ -154,7 +160,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                 variant="h6"
                 color={pagesMatch.isCreatePage ? primaryColor : "text.primary"}
               >
-                Create Story
+                {t("nav.createProject")}
               </Typography>
             </MenuItem>
 
@@ -179,7 +185,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                   pagesMatch.isLibraryPage ? primaryColor : "text.primary"
                 }
               >
-                Library
+                {t("nav.library")}
               </Typography>
             </MenuItem>
 
@@ -198,7 +204,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                   pagesMatch.isPricingPage ? primaryColor : "text.primary"
                 }
               >
-                Pricing
+                {t("nav.pricing")}
               </Typography>
             </MenuItem>
 
@@ -223,7 +229,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                   pagesMatch.isContactPage ? primaryColor : "text.primary"
                 }
               >
-                Contact Us
+                {t("nav.contact")}
               </Typography>
             </MenuItem>
           </MenuList>
@@ -244,7 +250,9 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                     color="secondary"
                     sx={{ mr: 1 }}
                   />
-                  <Typography variant="h6">Register</Typography>
+                  <Typography variant="h6" sx={{ whiteSpace: "nowrap" }}>
+                    {t("nav.register")}
+                  </Typography>
                 </MenuItem>
 
                 <MenuItem onClick={handleToggleLoginModal}>
@@ -253,7 +261,9 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                     color="secondary"
                     sx={{ mr: 1 }}
                   />
-                  <Typography variant="h6">Log in</Typography>
+                  <Typography variant="h6" sx={{ whiteSpace: "nowrap" }}>
+                    {t("nav.login")}
+                  </Typography>
                 </MenuItem>
               </>
             )}
@@ -263,7 +273,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                 setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
               >
                 <Typography variant="h6" sx={{ ml: 1 }}>
-                  Settings
+                  {t("settings.menu")}
                 </Typography>
               </SettingsMenuButton>
             </Box>

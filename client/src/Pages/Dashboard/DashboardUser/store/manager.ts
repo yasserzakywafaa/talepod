@@ -7,6 +7,7 @@ import axios, { AxiosResponse } from "axios";
 
 import { DashboardUserStore } from "./store";
 import END_POINTS from "src/application/shared/endpoints";
+import i18n from "src/i18n/init";
 
 export interface DashboardUserManager {
   setUp: (userId: string) => Promise<void>;
@@ -72,7 +73,7 @@ export const useDashboardUserManager = (
       store.setUser(response.data.user);
 
       Notify({
-        content: "User role updated successfully",
+        content: i18n.t("dashboard:toasts.userRoleUpdated"),
         type: ToastTypes.Success,
       });
     } catch (error) {

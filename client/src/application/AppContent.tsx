@@ -1,7 +1,6 @@
 import "./App.scss";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { darkTheme, lightTheme } from "./shared/themes";
 import { lazy, useEffect } from "react";
 
 import { CssBaseline } from "@mui/material";
@@ -12,10 +11,12 @@ import CookiePolicy from "src/components/shared/CookiePolicy/CookiePolicy";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import NotFoundPage from "../Pages/NotFound/NotFound";
 import ProtectedRoute from "./ProtectedRoute";
-import { ThemeProvider } from "@emotion/react";
+import { ThemeProvider } from "@mui/material/styles";
+import { getThemedTheme } from "./shared/themes";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import routes from "./routes";
 import { useApplicationContext } from "./store/Provider";
+import { useAppDirection } from "@yasserzakywafaa/client-core/web/i18n";
 
 const FeaturesPage = lazy(() => import("../Pages/Features/FeaturesPage"));
 const PricingPage = lazy(() => import("../Pages/Pricing/Pricing"));
@@ -110,13 +111,15 @@ const AppContent = () => {
     store: { state },
     manager: { handleInitialAuthentication },
   } = useApplicationContext();
+  const direction = useAppDirection();
+  const theme = getThemedTheme(state.themeMode, direction);
 
   useEffect(() => {
     handleInitialAuthentication();
   }, []);
 
   return (
-    <ThemeProvider theme={state.themeMode === "light" ? lightTheme : darkTheme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
 
       {state.isFetchingUserInfo && <LoaderSpinner />}

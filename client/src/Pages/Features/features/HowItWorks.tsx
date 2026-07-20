@@ -7,8 +7,12 @@ import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
+const stepIcons = [Create, AutoAwesome, MenuBook];
 
 const HowItWorks = () => {
+  const { t } = useTranslation("landing");
   const navigate = useNavigate();
   const { isMobile, isTablet, isDesktop } = useDeviceSize();
   const {
@@ -22,6 +26,10 @@ const HowItWorks = () => {
   const {
     store: { handleToggleLoginModal },
   } = useLoginModalContext();
+
+  const steps = t("features.howItWorks.steps", {
+    returnObjects: true,
+  }) as Array<{ title: string; description: string }>;
 
   const handleOnButtonClick =
     (route: string) =>
@@ -42,18 +50,17 @@ const HowItWorks = () => {
           display: "flex",
           flexWrap: "wrap",
           justifyContent: "space-between",
-          alignItems: "center"
-        }}>
+          alignItems: "center",
+        }}
+      >
         {isDesktop && (
           <img
-            style={{
-              maxWidth: "400px",
-            }}
+            style={{ maxWidth: "400px" }}
             width="100%"
             height="100%"
             src={BedtimeStory}
-            alt="bedtime-story"
-            aria-label="bedtime-story"
+            alt={t("features.howItWorks.imageAlt")}
+            aria-label={t("features.howItWorks.imageAlt")}
           />
         )}
 
@@ -62,22 +69,17 @@ const HowItWorks = () => {
             display: "flex",
             flexDirection: "column",
             flexWrap: "wrap",
-
-            justifyContent: {
-              md: "center",
-              lg: "flex-start",
-            },
-
+            justifyContent: { md: "center", lg: "flex-start" },
             alignItems: "center",
             width: { xs: "100%", sm: "100%", md: "100%", lg: "50%" },
-            mb: "2rem"
-          }}>
+            mb: "2rem",
+          }}
+        >
           <Typography variant="h4" align="center" color="primary" gutterBottom>
-            Create Magical Bedtime Stories in 3 Easy Steps
+            {t("features.howItWorks.title")}
           </Typography>
           <Typography variant="subtitle1" align="center" color="textSecondary">
-            Bring your child's imagination to life with TalePod's simple story
-            creation process.
+            {t("features.howItWorks.subtitle")}
           </Typography>
 
           <Grid container wrap="wrap" spacing={1} sx={{ mt: 2 }}>
@@ -86,94 +88,38 @@ const HowItWorks = () => {
                 width="100%"
                 height="100%"
                 src={BedtimeStory}
-                alt="bedtime-story"
-                aria-label="bedtime-story"
+                alt={t("features.howItWorks.imageAlt")}
+                aria-label={t("features.howItWorks.imageAlt")}
               />
             )}
 
-            <Grid size={{ xs: 12, md: 12 }}>
-              <Paper
-                elevation={3}
-                sx={{
-                  p: 3,
-                  textAlign: "center",
-                  backgroundColor: "transparent",
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center"
-                  }}>
-                  <Create color="primary" fontSize="large" />
-                </Box>
-                <Typography variant="h6" gutterBottom>
-                  1. Imagine the Adventure
-                </Typography>
-                <Typography>
-                  Start with a character, setting, or theme - let your
-                  imagination run wild!
-                </Typography>
-              </Paper>
-            </Grid>
-            <Grid size={{ xs: 12, md: 12 }}>
-              <Paper
-                elevation={3}
-                sx={{
-                  p: 3,
-                  textAlign: "center",
-                  backgroundColor: "transparent",
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center"
-                  }}>
-                  <AutoAwesome color="primary" fontSize="large" />
-                </Box>
-                <Typography variant="h6" gutterBottom>
-                  2. Customize Your Story
-                </Typography>
-                <Typography>
-                  Add details, choose the tone, and tailor the story to your
-                  child's preferences.
-                </Typography>
-              </Paper>
-            </Grid>
-            <Grid size={{ xs: 12, md: 12 }}>
-              <Paper
-                elevation={3}
-                sx={{
-                  p: 3,
-                  textAlign: "center",
-                  backgroundColor: "transparent",
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center"
-                  }}>
-                  <MenuBook color="primary" fontSize="large" />
-                </Box>
-                <Typography variant="h6" gutterBottom>
-                  3. Share the Magic
-                </Typography>
-                <Typography>
-                  Read your personalized story aloud and create a magical
-                  bedtime experience.
-                </Typography>
-              </Paper>
-            </Grid>
+            {steps.map((step, index) => {
+              const Icon = stepIcons[index];
+              return (
+                <Grid key={step.title} size={{ xs: 12, md: 12 }}>
+                  <Paper
+                    elevation={3}
+                    sx={{
+                      p: 3,
+                      textAlign: "center",
+                      backgroundColor: "transparent",
+                    }}
+                  >
+                    <Box sx={{ display: "flex", justifyContent: "center" }}>
+                      <Icon color="primary" fontSize="large" />
+                    </Box>
+                    <Typography variant="h6" gutterBottom>
+                      {step.title}
+                    </Typography>
+                    <Typography>{step.description}</Typography>
+                  </Paper>
+                </Grid>
+              );
+            })}
           </Grid>
         </Box>
 
-        <Box
-          sx={{
-            width: "100%",
-            textAlign: "center"
-          }}>
+        <Box sx={{ width: "100%", textAlign: "center" }}>
           <Button
             size="large"
             color="primary"
@@ -183,10 +129,12 @@ const HowItWorks = () => {
             href={routes.create}
             onClick={handleOnButtonClick(routes.create)}
           >
-            {isAuthenticated ? "Start Creating Now!" : "Start Your Free Trial!"}
+            {isAuthenticated
+              ? t("features.howItWorks.ctaAuthenticated")
+              : t("features.howItWorks.ctaGuest")}
           </Button>
           <Typography variant="body2" color="secondary" sx={{ mt: 1 }}>
-            **No Credit Card Required
+            {t("features.howItWorks.noCreditCard")}
           </Typography>
         </Box>
       </Box>

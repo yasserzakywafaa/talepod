@@ -9,8 +9,11 @@ import SocialRegister from "./features/SocialRegister/SocialRegister";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 import { useRegisterModalContext } from "./store/Provider";
+import { useTranslation } from "react-i18next";
 
 export const RegisterModal = () => {
+  const { t } = useTranslation("auth");
+  const { t: tCommon } = useTranslation("common");
   const {
     store: { state, handleIsFetching, handleToggleRegisterModal },
   } = useRegisterModalContext();
@@ -75,7 +78,7 @@ export const RegisterModal = () => {
               <LockOutlined color="primary" />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Create a new account
+              {t("modalRegisterHeading")}
             </Typography>
           </Box>
 
@@ -111,7 +114,7 @@ export const RegisterModal = () => {
             startIcon={<Close />}
             onClick={handleCloseModal}
           >
-            Close
+            {tCommon("close")}
           </Button>
         </DialogActions>
       </Dialog>

@@ -19,6 +19,7 @@ import { parsePhoneNumber } from "libphonenumber-js";
 import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   consumeCreateDraft,
   consumeReturnUrl,
@@ -57,6 +58,7 @@ const PhoneOtpAuthForm = ({
   onAuthSuccess,
   onWaitingForOtp,
 }: PhoneOtpAuthFormProps): JSX.Element => {
+  const { t } = useTranslation("auth");
   const isRegister = authType === "register";
   const navigate = useNavigate();
   const location = useLocation();
@@ -92,7 +94,7 @@ const PhoneOtpAuthForm = ({
     const normalizedPhoneNumber = validatePhoneNumber(phoneNumber);
     if (!normalizedPhoneNumber) {
       Notify({
-        content: "Please enter a valid phone number with country code.",
+        content: t("validationPhoneRequired"),
         type: ToastTypes.Error,
       });
       return;
@@ -100,7 +102,7 @@ const PhoneOtpAuthForm = ({
 
     if (isRegister && !firstName.trim()) {
       Notify({
-        content: "First name is required for registration.",
+        content: t("validationFirstNameRequired"),
         type: ToastTypes.Error,
       });
       return;
@@ -121,7 +123,7 @@ const PhoneOtpAuthForm = ({
       onWaitingForOtp?.(true);
 
       Notify({
-        content: response.data.message || "OTP sent successfully.",
+        content: response.data.message || t("otpSentSuccess"),
         type: ToastTypes.Success,
       });
     } catch (error) {
@@ -136,7 +138,7 @@ const PhoneOtpAuthForm = ({
 
     if (!OTP_CODE_REGEX.test(otpCode.trim())) {
       Notify({
-        content: "Please enter a valid OTP code.",
+        content: t("validationOtpRequired"),
         type: ToastTypes.Error,
       });
       return;
@@ -172,9 +174,7 @@ const PhoneOtpAuthForm = ({
       Notify({
         content:
           response.data.message ||
-          (isRegister
-            ? "Phone verified and account created."
-            : "Logged in successfully."),
+          (isRegister ? t("phoneVerifiedCreated") : t("loggedInSuccess")),
         type: ToastTypes.Success,
       });
 
@@ -235,7 +235,7 @@ const PhoneOtpAuthForm = ({
           <TextField
             required
             fullWidth
-            label="First Name"
+            label={t("firstName")}
             value={firstName}
             onChange={(event) => setFirstName(event.target.value)}
             disabled={isOtpSent}
@@ -243,7 +243,7 @@ const PhoneOtpAuthForm = ({
           />
           <TextField
             fullWidth
-            label="Last Name"
+            label={t("lastName")}
             value={lastName}
             onChange={(event) => setLastName(event.target.value)}
             disabled={isOtpSent}
@@ -254,7 +254,7 @@ const PhoneOtpAuthForm = ({
       <MuiTelInput
         value={phoneNumber}
         onChange={(value) => setPhoneNumber(value)}
-        label="Phone Number"
+        label={t("phoneNumber")}
         required
         disabled={isOtpSent}
         defaultCountry="US"
@@ -264,8 +264,8 @@ const PhoneOtpAuthForm = ({
           <TextField
             required
             fullWidth
-            label="OTP Code"
-            placeholder="Enter the code sent by SMS"
+            label={t("otpCode")}
+            placeholder={t("otpPlaceholder")}
             value={otpCode}
             onChange={(event) => setOtpCode(event.target.value)}
             autoComplete="one-time-code"
@@ -273,7 +273,7 @@ const PhoneOtpAuthForm = ({
           <Typography variant="body2" sx={{
             color: "text.secondary"
           }}>
-            OTP sent to {submittedPhoneNumber}
+            {t("otpSentTo", { number: submittedPhoneNumber })}
           </Typography>
         </>
       )}
@@ -284,7 +284,7 @@ const PhoneOtpAuthForm = ({
           variant="contained"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Sending OTP..." : "Send OTP"}
+          {isSubmitting ? t("sendingOtp") : t("sendOtp")}
         </Button>
       ) : (
         <Box
@@ -300,7 +300,7 @@ const PhoneOtpAuthForm = ({
             onClick={handleChangePhoneNumber}
             disabled={isSubmitting}
           >
-            Change Number
+            {t("changeNumber")}
           </Button>
           <Button
             type="submit"
@@ -309,10 +309,10 @@ const PhoneOtpAuthForm = ({
             disabled={isSubmitting}
           >
             {isSubmitting
-              ? "Verifying..."
+              ? t("verifying")
               : isRegister
-                ? "Verify & Register"
-                : "Verify & Login"}
+                ? t("verifyAndRegister")
+                : t("verifyAndLogin")}
           </Button>
         </Box>
       )}

@@ -2,8 +2,10 @@ import { Box, Button, Grid, TextField } from "@mui/material";
 
 import { SendOutlined } from "@mui/icons-material";
 import { useContactContext } from "../store/Provider";
+import { useTranslation } from "react-i18next";
 
 const ContactForm = () => {
+  const { t } = useTranslation("page");
   const {
     store: { state },
     manager: { handleUpdateContactForm, handleSubmitContactForm },
@@ -27,7 +29,7 @@ const ContactForm = () => {
             required
             fullWidth
             name="name"
-            label="Name"
+            label={t("contact.name")}
             value={state.contactForm.name}
             onChange={handleOnFieldChange}
           />
@@ -37,7 +39,7 @@ const ContactForm = () => {
             required
             fullWidth
             type="email"
-            label="Email"
+            label={t("contact.email")}
             name="email"
             value={state.contactForm.email}
             onChange={handleOnFieldChange}
@@ -48,7 +50,7 @@ const ContactForm = () => {
             required
             fullWidth
             name="subject"
-            label="Subject"
+            label={t("contact.subject")}
             value={state.contactForm.subject}
             onChange={handleOnFieldChange}
           />
@@ -60,14 +62,14 @@ const ContactForm = () => {
             fullWidth
             rows={4}
             name="message"
-            label="Message"
+            label={t("contact.message")}
             value={state.contactForm.message}
             onChange={handleOnFieldChange}
           />
         </Grid>
         <Grid size={{ xs: 12 }}>
           <Button type="submit" variant="contained" endIcon={<SendOutlined />}>
-            Send Message
+            {t("contact.sendMessage")}
           </Button>
         </Grid>
       </Grid>

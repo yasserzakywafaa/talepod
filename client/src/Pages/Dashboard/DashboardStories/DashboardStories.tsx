@@ -8,8 +8,12 @@ import {
 import { getDashboardStoriesDataGridConfig } from "./features/dataGridConfig";
 import { useDashboardStoriesContext } from "./store/Provider";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { localeFromLanguage } from "@yasserzakywafaa/client-core";
 
 const DashboardStories = () => {
+  const { t, i18n } = useTranslation("dashboard");
+  const locale = localeFromLanguage(i18n.language);
   const {
     store: {
       state: { isFetching, stories, paging },
@@ -17,7 +21,7 @@ const DashboardStories = () => {
     manager: { setUp, handleGetStoriesByPage },
   } = useDashboardStoriesContext();
 
-  const config = getDashboardStoriesDataGridConfig(stories);
+  const config = getDashboardStoriesDataGridConfig(stories, t, locale);
 
   const handlePaginationModelChange = (model: GridPaginationModel) => {
     const pageNumber = model.page + 1;
@@ -32,7 +36,7 @@ const DashboardStories = () => {
   return (
     <Box>
       <Typography variant="h4" component="h1" color="primary" gutterBottom>
-        Stories
+        {t("stories.title")}
       </Typography>
       <Typography
         variant="body1"
@@ -41,8 +45,8 @@ const DashboardStories = () => {
           mb: 3
         }}>
         {paging.totalCount
-          ? `${paging.totalCount} total`
-          : "Manage and view all platform stories."}
+          ? t("stories.totalCount", { count: paging.totalCount })
+          : t("stories.subtitle")}
       </Typography>
       <Box sx={{ overflowX: "auto", position: "relative", width: "100%" }}>
         <DataGrid

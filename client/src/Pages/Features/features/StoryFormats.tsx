@@ -14,8 +14,8 @@ import {
   honey600,
   twilight500,
 } from "src/application/shared/themes";
+import { useTranslation } from "react-i18next";
 
-// Empty-scene placeholder fill — single source in themes.ts (--grad-scene).
 const PREVIEW_SKY = gradScene;
 
 const COMIC_STARFIELD =
@@ -29,21 +29,15 @@ const LONG_STARFIELD =
 
 const COMIC_PAGES = [mascotSleepingBunny, characterKitten, characterOwl];
 
-const overlineStyle: React.CSSProperties = {
-  fontSize: 12,
-  fontWeight: 700,
-  letterSpacing: "0.08em",
-  textTransform: "uppercase",
-  color: honey600,
-};
-
 interface FormatPanelProps {
   tone: "honey" | "twilight";
   badge: string;
   title: string;
   desc: string;
   features: string[];
+  tryCta: string;
   previewKind: "comic" | "long";
+  comicPagesLabel: string;
   onTry: () => void;
 }
 
@@ -53,7 +47,9 @@ const FormatPanel: React.FC<FormatPanelProps> = ({
   title,
   desc,
   features,
+  tryCta,
   previewKind,
+  comicPagesLabel,
   onTry,
 }) => {
   const isHoney = tone === "honey";
@@ -72,7 +68,6 @@ const FormatPanel: React.FC<FormatPanelProps> = ({
         gap: "18px",
       }}
     >
-      {/* Preview */}
       <div style={{ borderRadius: "var(--r-lg)", overflow: "hidden" }}>
         {previewKind === "comic" ? (
           <div
@@ -129,7 +124,7 @@ const FormatPanel: React.FC<FormatPanelProps> = ({
                 borderRadius: 999,
               }}
             >
-              6 pages
+              {comicPagesLabel}
             </div>
           </div>
         ) : (
@@ -194,7 +189,6 @@ const FormatPanel: React.FC<FormatPanelProps> = ({
         )}
       </div>
 
-      {/* Copy */}
       <div>
         <Chip
           variant="badge"
@@ -265,7 +259,7 @@ const FormatPanel: React.FC<FormatPanelProps> = ({
           startIcon={<AutoFixHighOutlined />}
           onClick={onTry}
         >
-          Try {title.toLowerCase()}
+          {tryCta}
         </Button>
       </div>
     </Box>
@@ -273,14 +267,33 @@ const FormatPanel: React.FC<FormatPanelProps> = ({
 };
 
 const StoryFormats: React.FC = () => {
+  const { t } = useTranslation("landing");
   const navigate = useNavigate();
   const goCreate = (style: "comic" | "long") =>
     navigate(`${routes.create}?style=${style}`);
 
+  const comicFeatures = t("features.storyFormats.comic.features", {
+    returnObjects: true,
+  }) as string[];
+  const longFeatures = t("features.storyFormats.long.features", {
+    returnObjects: true,
+  }) as string[];
+
   return (
     <Box component="section" sx={{ width: "100%" }}>
       <Box sx={{ textAlign: "center", mb: 5 }}>
-        <div style={overlineStyle}>Two story formats</div>
+        <Box
+          component="div"
+          sx={{
+            fontSize: 12,
+            fontWeight: 700,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: honey600,
+          }}
+        >
+          {t("features.storyFormats.overline")}
+        </Box>
         <Box
           component="h2"
           sx={{
@@ -291,7 +304,7 @@ const StoryFormats: React.FC = () => {
             color: "text.primary",
           }}
         >
-          Bedtime, told two ways.
+          {t("features.storyFormats.title")}
         </Box>
         <Box
           component="p"
@@ -303,8 +316,7 @@ const StoryFormats: React.FC = () => {
             lineHeight: 1.5,
           }}
         >
-          Pick a comic book of six painted pages for younger kids, or a long,
-          vivid chapter story for the readers who never want bedtime to end.
+          {t("features.storyFormats.subtitle")}
         </Box>
       </Box>
 
@@ -317,30 +329,24 @@ const StoryFormats: React.FC = () => {
       >
         <FormatPanel
           tone="honey"
-          badge="New · Picture story"
-          title="Comic book"
-          desc="Six full-page painted scenes with short captions and the occasional speech bubble. Swipe through them like a picture book — perfect for ages 3–7."
-          features={[
-            "~6 illustrated pages, one scene each",
-            "Tap or swipe to turn the page",
-            "Classic or speech-bubble panels",
-            "5–7 minutes of bedtime",
-          ]}
+          badge={t("features.storyFormats.comic.badge")}
+          title={t("features.storyFormats.comic.title")}
+          desc={t("features.storyFormats.comic.description")}
+          features={comicFeatures}
+          tryCta={t("features.storyFormats.comic.tryCta")}
           previewKind="comic"
+          comicPagesLabel={t("features.storyFormats.comicPages")}
           onTry={() => goCreate("comic")}
         />
         <FormatPanel
           tone="twilight"
-          badge="Chapter book"
-          title="Long story"
-          desc="A cover illustration and rich, vivid prose underneath. For readers who want to curl up and disappear into a longer story."
-          features={[
-            "One painted cover, no mid-story art",
-            "~4–6 minute cozy read",
-            "Add narration whenever you want",
-            "Save and resume across devices",
-          ]}
+          badge={t("features.storyFormats.long.badge")}
+          title={t("features.storyFormats.long.title")}
+          desc={t("features.storyFormats.long.description")}
+          features={longFeatures}
+          tryCta={t("features.storyFormats.long.tryCta")}
           previewKind="long"
+          comicPagesLabel={t("features.storyFormats.comicPages")}
           onTry={() => goCreate("long")}
         />
       </Box>
