@@ -14,8 +14,15 @@ import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import {
+  formatLocalizedDate,
+  localeFromLanguage,
+} from "@yasserzakywafaa/client-core";
 
 const PrivacyPolicyPage = () => {
+  const { t, i18n } = useTranslation("page");
+  const locale = localeFromLanguage(i18n.language);
   const navigate = useNavigate();
 
   const handleLinkClick =
@@ -27,7 +34,7 @@ const PrivacyPolicyPage = () => {
 
   return (
     <Page
-      title="Privacy Policy | TalePod"
+      title={t("legal.privacyPageTitle")}
       className="privacy-policy-page"
       isLoading={false}
       noIndex
@@ -37,12 +44,12 @@ const PrivacyPolicyPage = () => {
           <RandomImage />
         </Box>
         <Typography variant="h4" gutterBottom>
-          Privacy Policy
+          {t("legal.privacyTitle")}
         </Typography>
         <Typography variant="subtitle1" color="primary" gutterBottom>
-          Last updated:{" "}
+          {t("legal.lastUpdated")}{" "}
           <span className="bold">
-            {new Date("01/07/2024").toLocaleDateString("en-GB", {
+            {formatLocalizedDate(new Date("01/07/2024"), locale, {
               dateStyle: "short",
             })}
           </span>

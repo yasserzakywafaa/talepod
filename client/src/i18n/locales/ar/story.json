@@ -1,0 +1,270 @@
+{
+  "form": {
+    "artStyleLabel": "نمط الفن",
+    "nameLabel": "الاسم",
+    "languageLabel": "اللغة",
+    "ageLabel": "العمر",
+    "notAppropriate": "غير مناسب 🙈",
+    "moreSettings": "إعدادات إضافية للقصة (اختياري)",
+    "subscribe": "اشترك",
+    "generateComic": "أنشئ قصة مصورة لـ {{name}}",
+    "generateStory": "أنشئ قصة لـ {{name}}",
+    "generateComicAnonymous": "أنشئ قصة مصورة",
+    "generateStoryAnonymous": "أنشئ قصة",
+    "alerts": {
+      "accountInactive": "حسابك غير نشط وغير مسموح لك بإنشاء قصص!",
+      "adminUnlimited": "بصفتك مسؤولاً، يمكنك إنشاء عدد ♾️ من القصص 😎",
+      "storiesRemaining": "تبقى لديك {{remaining}} قصة من أصل {{max}}",
+      "limitReached": "لقد استنفدت الحد الأقصى البالغ {{max}} قصة"
+    },
+    "settings": {
+      "moral": "العبرة",
+      "tone": "النبرة",
+      "environment": "البيئة",
+      "interests": "اهتمامات أخرى"
+    },
+    "mini": {
+      "namePlaceholder": "إيميلي، نوح، إلخ.",
+      "moreOptions": "المزيد من خيارات القصة",
+      "generate": "أنشئ قصة"
+    },
+    "customSelect": {
+      "custom": "مخصص",
+      "addCustom": "أضف مخصصًا…",
+      "placeholder": "{{label}} خاص بك"
+    },
+    "format": {
+      "comic": {
+        "badge": "قصة مصورة",
+        "title": "كتاب مصور",
+        "sub": "~6 صفحات مرسومة · الأفضل للأطفال الصغار",
+        "previewPages": "6 صفحات"
+      },
+      "long": {
+        "badge": "كتاب فصول",
+        "title": "قصة طويلة",
+        "sub": "غلاف مرسوم · نص غني · تعليق صوتي لاحقًا"
+      }
+    }
+  },
+  "createPage": {
+    "title": "إنشاء قصص ما قبل النوم | TalePod",
+    "heading": "عرّف قصتك",
+    "subheading": "خصّص قصة ما قبل النوم بملء حقل \"الاسم\" المطلوب لطفلك.",
+    "tipsHeading": "نصائح لصياغة قصة ما قبل النوم المثالية",
+    "tips": {
+      "familiar": {
+        "title": "أدرج عناصر مألوفة",
+        "body": "أدرج عناصر من حياة طفلك اليومية لجعل القصة أكثر قربًا."
+      },
+      "moral": {
+        "title": "أضف عبرة",
+        "body": "علّم دروسًا قيمة عبر القصة لتغرس قيمًا وسلوكيات جيدة."
+      },
+      "interactive": {
+        "title": "اجعلها تفاعلية",
+        "body": "شجّع طفلك على المشاركة في القصة ليبقى منخرطًا."
+      }
+    }
+  },
+  "generating": {
+    "stages": {
+      "comic": {
+        "imagine": {
+          "label": "نتخيّل…",
+          "sub": "نختار مغامرة الليلة",
+          "rail": "فكرة"
+        },
+        "write": {
+          "label": "نكتب القصة…",
+          "sub": "جمل قصيرة كلوحات مصورة",
+          "rail": "كتابة"
+        },
+        "magic": {
+          "label": "نرش السحر…",
+          "sub": "نجمع كل شيء معًا",
+          "rail": "سحر"
+        },
+        "done": {
+          "label": "انتهينا!",
+          "sub": "نفتح القصة المصورة",
+          "rail": "تم"
+        }
+      },
+      "long": {
+        "imagine": {
+          "label": "نتخيّل…",
+          "sub": "نبني المشهد",
+          "rail": "فكرة"
+        },
+        "write": {
+          "label": "نكتب قصتك…",
+          "sub": "نثر دافئ لما قبل النوم",
+          "rail": "كتابة"
+        },
+        "magic": {
+          "label": "نرش السحر…",
+          "sub": "نجمع كل شيء معًا",
+          "rail": "سحر"
+        },
+        "done": {
+          "label": "انتهينا!",
+          "sub": "نفتح قصتك",
+          "rail": "تم"
+        }
+      }
+    },
+    "imageAlt": "يتم إنشاء قصة لـ {{name}}",
+    "imageAltDefault": "يتم إنشاء قصة للطفل",
+    "formatChip": {
+      "comic": "مصورة · ~6 صفحات",
+      "long": "قصة طويلة"
+    },
+    "forName": "من أجل {{name}}",
+    "duration": {
+      "comic": "عادةً 40–60 ثانية.",
+      "long": "عادةً 25–45 ثانية."
+    },
+    "chip": {
+      "readyNamed": "{{format}} {{name}} جاهزة",
+      "readyGeneric": "قصتك جاهزة",
+      "viewStory": "عرض القصة",
+      "failedTitle": "تعذّر إنشاء قصتك",
+      "failedHint": "يرجى المحاولة مرة أخرى من نموذج الإنشاء.",
+      "creatingNamed": "جارٍ إنشاء {{format}} {{name}}",
+      "creatingGeneric": "جارٍ إنشاء {{format}}",
+      "visitLibrary": "زر",
+      "libraryLink": "المكتبة",
+      "visitLibrarySuffix": "بينما نعمل على قصتك.",
+      "formatComic": "قصة مصورة",
+      "formatStory": "قصة"
+    }
+  },
+  "avatars": {
+    "picker": {
+      "title": "الصورة الرمزية (اختياري)",
+      "manage": "إدارة الصور الرمزية",
+      "loginPrompt": "✨ تريد أن يشبه البطل طفلك؟ سجّل الدخول لإنشاء صور رمزية قابلة لإعادة الاستخدام وإبرازها في كل قصة.",
+      "login": "تسجيل الدخول",
+      "empty": "أنشئ صورة رمزية ليجعل البطل يشبه طفلك أو عائلتك.",
+      "addOne": "أضف واحدة →",
+      "noneAria": "بدون صورة رمزية",
+      "none": "لا شيء",
+      "useAria": "استخدم {{name}}"
+    },
+    "page": {
+      "title": "صوري الرمزية",
+      "subtitle": "أنشئ صورًا رمزية لتبني القصص حول أشخاص يشبهون عائلتك.",
+      "new": "صورة رمزية جديدة",
+      "empty": "لا توجد صور رمزية بعد. أنشئ أول واحدة!",
+      "editTitle": "تعديل الصورة الرمزية",
+      "newTitle": "صورة رمزية جديدة"
+    },
+    "delete": {
+      "title": "حذف الصورة الرمزية؟",
+      "body": "حذف <strong>{{name}}</strong>؟ لا يمكن التراجع. القصص الحالية لن تتأثر.",
+      "cancel": "إلغاء",
+      "confirm": "حذف"
+    },
+    "form": {
+      "name": "الاسم",
+      "relationship": "العلاقة",
+      "relationshipPlaceholder": "ابن، ابنة، زوجة…",
+      "age": "العمر",
+      "gender": "الجنس",
+      "genderUnspecified": "غير محدد",
+      "skinTone": "لون البشرة",
+      "skinTonePlaceholder": "فاتح، زيتوني، بني…",
+      "eyeColor": "لون العينين",
+      "eyeColorPlaceholder": "بني، أزرق…",
+      "hairColor": "لون الشعر",
+      "hairColorPlaceholder": "أسود، أشقر…",
+      "hairStyle": "تسريحة الشعر",
+      "hairStylePlaceholder": "مجعّد، قصير، ذيل…",
+      "outfit": "الملابس",
+      "outfitPlaceholder": "فستان أحمر، بيجاما زرقاء…",
+      "feature": "سمة مميزة",
+      "featurePlaceholder": "نمش، نظارات…",
+      "notes": "ملاحظات",
+      "notesPlaceholder": "أي شيء آخر يساعد الرسم على الدقة",
+      "notAppropriate": "غير مناسب 🙈",
+      "cancel": "إلغاء",
+      "saving": "جارٍ الحفظ…",
+      "save": "حفظ الصورة الرمزية"
+    },
+    "toast": {
+      "updated": "تم تحديث الصورة الرمزية.",
+      "created": "تم إنشاء الصورة الرمزية.",
+      "deleted": "تم حذف الصورة الرمزية.",
+      "error": "حدث خطأ ما.",
+      "deleteError": "فشل حذف الصورة الرمزية."
+    }
+  },
+  "reader": {
+    "pageTitle": "{{title}} | قصة ما قبل النوم على TalePod",
+    "toastCreated": "تم إنشاء القصة بنجاح.",
+    "imagesPending": "صور القصة في الطريق",
+    "notFound": "لم نعثر على القصة التي تبحث عنها",
+    "browseLibrary": "تصفح المكتبة",
+    "author": {
+      "createdBy": "أنشأها:",
+      "avatarAlt": "صورة المستخدم"
+    },
+    "meta": {
+      "createdOn": "تاريخ إنشاء القصة",
+      "name": "الاسم",
+      "gender": "الجنس",
+      "age": "العمر",
+      "language": "اللغة",
+      "interests": "الاهتمامات",
+      "environment": "البيئة",
+      "moral": "العبرة",
+      "tone": "النبرة",
+      "storyLength": "طول القصة",
+      "format": "التنسيق",
+      "artStyle": "نمط الفن",
+      "ageSuffix": "{{age}} سنة",
+      "wordCount": "{{count}} كلمة",
+      "formatComic": "مصورة",
+      "formatLong": "قصة طويلة"
+    },
+    "export": {
+      "heading": "حوّلها إلى كتاب إلكتروني",
+      "description": "حمّل كتاب قصص PDF مصمم بعناية — تذكار جميل للقراءة مرارًا.",
+      "preparing": "جارٍ التحضير…",
+      "download": "تحميل الكتاب",
+      "sending": "جارٍ الإرسال…",
+      "email": "أرسل الكتاب إلي بالبريد",
+      "imagesPending": "الرسوم لا تزال قيد الرسم — سيكون كتابك جاهزًا عند الانتهاء.",
+      "toastReady": "كتابك الإلكتروني جاهز.",
+      "toastPdfError": "❌ تعذّر إنشاء PDF. يرجى المحاولة مرة أخرى.",
+      "toastEmailSent": "سنرسل كتابك بالبريد قريبًا. 📩",
+      "toastEmailError": "❌ تعذّر إرسال الكتاب بالبريد. يرجى المحاولة مرة أخرى."
+    },
+    "audio": {
+      "createHeading": "أنشئ صوتًا لهذه القصة",
+      "voiceLabel": "الصوت",
+      "female": "أنثى",
+      "male": "ذكر",
+      "createButton": "إنشاء صوت",
+      "listenHeading": "استمع إلى القصة",
+      "createdOn": "تاريخ إنشاء الصوت:",
+      "error": "❌ فشل إنشاء الصوت! {{error}}"
+    },
+    "comic": {
+      "gridHint": "مصورة · {{total}} صفحات · اضغط صفحة للانتقال",
+      "closeAria": "إغلاق",
+      "allPagesAria": "كل الصفحات",
+      "pageOf": "صفحة {{current}} من {{total}}"
+    }
+  },
+  "card": {
+    "upgrade": "ترقية",
+    "upgradeAria": "ترقية",
+    "badgeComic": "مصورة",
+    "badgeStory": "قصة",
+    "hasNarration": "يتضمن تعليقًا صوتيًا",
+    "tagOriginal": "أصلية",
+    "authorAvatarAlt": "صورة المستخدم"
+  }
+}

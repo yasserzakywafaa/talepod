@@ -12,6 +12,7 @@ import { AvatarInput, EMPTY_AVATAR_INPUT } from "src/shared/types/avatar";
 import { useEffect, useState } from "react";
 
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
+import { useTranslation } from "react-i18next";
 
 export interface AvatarFormDialogProps {
   open: boolean;
@@ -32,11 +33,11 @@ const AvatarFormDialog = ({
   onClose,
   onSubmit,
 }: AvatarFormDialogProps) => {
+  const { t } = useTranslation("story");
   const [form, setForm] = useState<AvatarInput>(
     initialValue ?? EMPTY_AVATAR_INPUT,
   );
 
-  // Reset the form whenever the dialog (re)opens for a new target.
   useEffect(() => {
     if (open) setForm(initialValue ?? EMPTY_AVATAR_INPUT);
   }, [open, initialValue]);
@@ -76,33 +77,33 @@ const AvatarFormDialog = ({
         >
           <TextField
             required
-            label="Name"
+            label={t("avatars.form.name")}
             value={form.name}
             error={nameInvalid}
-            helperText={nameInvalid ? "Not Appropriate 🙈" : " "}
+            helperText={nameInvalid ? t("avatars.form.notAppropriate") : " "}
             onChange={setField("name")}
           />
           <TextField
-            label="Relationship"
-            placeholder="son, daughter, wife…"
+            label={t("avatars.form.relationship")}
+            placeholder={t("avatars.form.relationshipPlaceholder")}
             value={form.relationship ?? ""}
             onChange={setField("relationship")}
           />
           <TextField
             type="number"
-            label="Age"
+            label={t("avatars.form.age")}
             value={form.age ?? ""}
             onChange={setField("age")}
             slotProps={{ htmlInput: { min: 0, max: 120 } }}
           />
           <TextField
             select
-            label="Gender"
+            label={t("avatars.form.gender")}
             value={form.gender ?? ""}
             onChange={setField("gender")}
           >
             <MenuItem value="">
-              <em>Unspecified</em>
+              <em>{t("avatars.form.genderUnspecified")}</em>
             </MenuItem>
             {GENDER_OPTIONS.map((option) => (
               <MenuItem key={option} value={option}>
@@ -111,47 +112,47 @@ const AvatarFormDialog = ({
             ))}
           </TextField>
           <TextField
-            label="Skin tone"
-            placeholder="fair, olive, brown…"
+            label={t("avatars.form.skinTone")}
+            placeholder={t("avatars.form.skinTonePlaceholder")}
             value={form.skinTone ?? ""}
             onChange={setField("skinTone")}
           />
           <TextField
-            label="Eye color"
-            placeholder="brown, blue…"
+            label={t("avatars.form.eyeColor")}
+            placeholder={t("avatars.form.eyeColorPlaceholder")}
             value={form.eyeColor ?? ""}
             onChange={setField("eyeColor")}
           />
           <TextField
-            label="Hair color"
-            placeholder="black, blonde…"
+            label={t("avatars.form.hairColor")}
+            placeholder={t("avatars.form.hairColorPlaceholder")}
             value={form.hairColor ?? ""}
             onChange={setField("hairColor")}
           />
           <TextField
-            label="Hair style"
-            placeholder="curly, short, ponytail…"
+            label={t("avatars.form.hairStyle")}
+            placeholder={t("avatars.form.hairStylePlaceholder")}
             value={form.hairStyle ?? ""}
             onChange={setField("hairStyle")}
           />
           <TextField
-            label="Outfit"
-            placeholder="red dress, blue pyjamas…"
+            label={t("avatars.form.outfit")}
+            placeholder={t("avatars.form.outfitPlaceholder")}
             value={form.outfit ?? ""}
             onChange={setField("outfit")}
           />
           <TextField
-            label="Distinguishing feature"
-            placeholder="freckles, glasses…"
+            label={t("avatars.form.feature")}
+            placeholder={t("avatars.form.featurePlaceholder")}
             value={form.distinguishingFeature ?? ""}
             onChange={setField("distinguishingFeature")}
           />
           <TextField
-            label="Notes"
+            label={t("avatars.form.notes")}
             multiline
             minRows={2}
             sx={{ gridColumn: { sm: "1 / -1" } }}
-            placeholder="Anything else that helps the illustration look right"
+            placeholder={t("avatars.form.notesPlaceholder")}
             value={form.notes ?? ""}
             onChange={setField("notes")}
           />
@@ -159,10 +160,10 @@ const AvatarFormDialog = ({
       </DialogContent>
       <DialogActions sx={{ px: 3, pb: 2 }}>
         <Button color="secondary" onClick={onClose} disabled={isSaving}>
-          Cancel
+          {t("avatars.form.cancel")}
         </Button>
         <Button variant="contained" onClick={handleSubmit} disabled={!canSave}>
-          {isSaving ? "Saving…" : "Save avatar"}
+          {isSaving ? t("avatars.form.saving") : t("avatars.form.save")}
         </Button>
       </DialogActions>
     </Dialog>

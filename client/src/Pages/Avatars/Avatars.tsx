@@ -22,12 +22,11 @@ import routes from "src/application/routes";
 import { useAvatars } from "./useAvatars";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Trans, useTranslation } from "react-i18next";
 
 const AvatarsPage = () => {
+  const { t } = useTranslation("story");
   const navigate = useNavigate();
-  // All the heavy lifting (optimistic cards, portrait polling, create/update/
-  // delete flows + toasts, per-card pending/busy state) lives in the hook; the
-  // page only owns which dialog is open.
   const {
     cards,
     isLoading,
@@ -54,8 +53,6 @@ const AvatarsPage = () => {
 
   const handleSubmit = (input: AvatarInput) => {
     const target = editing;
-    // Close immediately — the hook shows the optimistic card / painting overlay
-    // and runs the request in the background.
     setDialogOpen(false);
     setEditing(null);
     void saveAvatar(input, target);
@@ -70,7 +67,7 @@ const AvatarsPage = () => {
   const showEmpty = !isLoading && !cards.length;
 
   return (
-    <Page title="My Avatars" isLoading={isLoading && !cards.length}>
+    <Page title={t("avatars.page.title")} isLoading={isLoading && !cards.length}>
       <Container>
         <Box sx={{ maxWidth: 1100, mx: "auto", width: "100%", py: 3 }}>
           <Box
@@ -87,10 +84,10 @@ const AvatarsPage = () => {
               <Typography
                 sx={{ fontFamily: "var(--font-display)", fontSize: 28 }}
               >
-                My Avatars
+                {t("avatars.page.title")}
               </Typography>
               <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                Create avatars so stories star people who look like your family.
+                {t("avatars.page.subtitle")}
               </Typography>
             </Box>
             <Button
@@ -98,7 +95,7 @@ const AvatarsPage = () => {
               startIcon={<PersonAddAlt1Rounded />}
               onClick={openCreate}
             >
-              New avatar
+              {t("avatars.page.new")}
             </Button>
           </Box>
 
@@ -115,9 +112,7 @@ const AvatarsPage = () => {
               }}
             >
               <PersonAddAlt1Rounded sx={{ fontSize: 48, color: honey400 }} />
-              <Typography sx={{ mt: 1 }}>
-                No avatars yet. Create your first one!
-              </Typography>
+              <Typography sx={{ mt: 1 }}>{t("avatars.page.empty")}</Typography>
             </Box>
           ) : (
             <Box
@@ -152,7 +147,9 @@ const AvatarsPage = () => {
 
       <AvatarFormDialog
         open={dialogOpen}
-        title={editing ? "Edit avatar" : "New avatar"}
+        title={
+          editing ? t("avatars.page.editTitle") : t("avatars.page.newTitle")
+        }
         initialValue={editing ? avatarToInput(editing) : undefined}
         isSaving={isSaving}
         onClose={() => {
@@ -166,23 +163,27 @@ const AvatarsPage = () => {
         open={Boolean(pendingDelete)}
         onClose={() => setPendingDelete(null)}
       >
-        <DialogTitle>Delete avatar?</DialogTitle>
+        <DialogTitle>{t("avatars.delete.title")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Delete <strong>{pendingDelete?.name}</strong>? This can't be undone.
-            Existing stories are not affected.
+            <Trans
+              i18nKey="avatars.delete.body"
+              ns="story"
+              values={{ name: pendingDelete?.name }}
+              components={{ strong: <strong /> }}
+            />
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button color="secondary" onClick={() => setPendingDelete(null)}>
-            Cancel
+            {t("avatars.delete.cancel")}
           </Button>
           <Button
             color="error"
             variant="contained"
             onClick={handleConfirmDelete}
           >
-            Delete
+            {t("avatars.delete.confirm")}
           </Button>
         </DialogActions>
       </Dialog>

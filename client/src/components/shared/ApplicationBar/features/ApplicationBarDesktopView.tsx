@@ -18,7 +18,8 @@ import { PagesMatch } from "../ApplicationBar";
 import SettingsMenuButton from "../../SettingsMenuButton";
 import { User } from "src/shared/types/user";
 import UserAccountMenuButton from "../../UserAccountButton";
-import useDeviceSize from "src/shared/hooks/useDeviceSize";
+import { useDeviceSize } from "@yasserzakywafaa/client-core/web";
+import { useTranslation } from "react-i18next";
 
 interface ApplicationBarDesktopViewParams {
   auth: Authentication;
@@ -38,6 +39,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
     setIsInstallAppDialogOpen,
     handleOnMenuItemClick,
   } = props;
+  const { t } = useTranslation("common");
   const { isDesktop } = useDeviceSize();
 
   const buttonHoverStylePrimary = {
@@ -49,6 +51,29 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
         color: secondaryColorForDarkTheme,
       },
     },
+  };
+
+  const buttonHoverStyleSecondary = {
+    "&:hover": {
+      "& .MuiTypography-root": {
+        color: primaryColor,
+      },
+      "& .MuiSvgIcon-root": {
+        color: primaryColor,
+      },
+    },
+  };
+
+  const authNavButtonSx = {
+    ...buttonHoverStyleSecondary,
+    whiteSpace: "nowrap",
+    flexShrink: 0,
+    minWidth: "auto",
+  };
+
+  const authNavLabelSx = {
+    color: "text.primary",
+    whiteSpace: "nowrap",
   };
 
   if (!isDesktop) return null;
@@ -92,7 +117,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
               variant="body1"
               color={pagesMatch.isCreatePage ? primaryColor : "text.primary"}
             >
-              Create Story
+              {t("nav.createProject")}
             </Typography>
           </MenuItem>
 
@@ -106,7 +131,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
               variant="body1"
               color={pagesMatch.isLibraryPage ? primaryColor : "text.primary"}
             >
-              Library
+              {t("nav.library")}
             </Typography>
           </MenuItem>
 
@@ -124,7 +149,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
               variant="body1"
               color={pagesMatch.isPricingPage ? primaryColor : "text.primary"}
             >
-              Pricing
+              {t("nav.pricing")}
             </Typography>
           </MenuItem>
 
@@ -142,7 +167,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
               variant="body1"
               color={pagesMatch.isContactPage ? primaryColor : "text.primary"}
             >
-              Contact Us
+              {t("nav.contact")}
             </Typography>
           </MenuItem>
         </MenuList>
@@ -153,6 +178,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
           gap: 0.5,
           alignItems: "center",
           display: { xs: "none", md: "flex" },
+          flexShrink: 0,
         }}
       >
         {auth.isAuthenticated ? (
@@ -162,25 +188,33 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
           />
         ) : (
           <>
-            <Button variant="text" onClick={handleToggleRegisterModal}>
+            <Button
+              variant="text"
+              sx={authNavButtonSx}
+              onClick={handleToggleRegisterModal}
+            >
               <LockOpenOutlined
                 fontSize="medium"
                 color="secondary"
-                sx={{ mr: 1 }}
+                sx={{ mr: 1, flexShrink: 0 }}
               />
-              <Typography variant="body1" sx={{ color: "text.primary" }}>
-                Register
+              <Typography variant="body1" sx={authNavLabelSx}>
+                {t("nav.register")}
               </Typography>
             </Button>
 
-            <Button variant="text" onClick={handleToggleLoginModal}>
+            <Button
+              variant="text"
+              sx={authNavButtonSx}
+              onClick={handleToggleLoginModal}
+            >
               <VpnKeyOutlined
                 fontSize="medium"
                 color="secondary"
-                sx={{ mr: 1 }}
+                sx={{ mr: 1, flexShrink: 0 }}
               />
-              <Typography variant="body1" sx={{ color: "text.primary" }}>
-                Login
+              <Typography variant="body1" sx={authNavLabelSx}>
+                {t("nav.login")}
               </Typography>
             </Button>
           </>

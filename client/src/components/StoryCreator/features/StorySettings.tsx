@@ -6,6 +6,7 @@ import { Moral, Morals } from "src/shared/mockedData/Moral";
 import { Tone, Tones } from "src/shared/mockedData/Tone";
 import CustomizableSelect from "src/components/shared/CustomizableSelect";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
+import { useTranslation } from "react-i18next";
 
 export interface StorySettingsParams {
   profileInfo: ProfileInfo;
@@ -18,6 +19,7 @@ export interface StorySettingsParams {
 }
 
 const StorySettings = (props: StorySettingsParams) => {
+  const { t } = useTranslation("story");
   const { profileInfo, storyParams, handleFieldChange, handleUpdateStoryInfo } =
     props;
 
@@ -25,7 +27,7 @@ const StorySettings = (props: StorySettingsParams) => {
     <>
       <CustomizableSelect
         name="moral"
-        label="Moral"
+        label={t("form.settings.moral")}
         value={storyParams.moral}
         options={Morals}
         onChange={handleUpdateStoryInfo}
@@ -33,7 +35,7 @@ const StorySettings = (props: StorySettingsParams) => {
 
       <CustomizableSelect
         name="tone"
-        label="Tone"
+        label={t("form.settings.tone")}
         value={storyParams.tone}
         options={Tones}
         onChange={handleUpdateStoryInfo}
@@ -41,7 +43,7 @@ const StorySettings = (props: StorySettingsParams) => {
 
       <CustomizableSelect
         name="environment"
-        label="Environment"
+        label={t("form.settings.environment")}
         value={storyParams.environment}
         options={Environments}
         onChange={handleUpdateStoryInfo}
@@ -52,11 +54,11 @@ const StorySettings = (props: StorySettingsParams) => {
         id="interests"
         name="interests"
         className="form-item"
-        label="Other Interests"
+        label={t("form.settings.interests")}
         value={profileInfo.interests}
         error={hasCensoredWords(profileInfo.interests)}
         helperText={
-          hasCensoredWords(profileInfo.interests) && "Not Appropriate 🙈"
+          hasCensoredWords(profileInfo.interests) && t("form.notAppropriate")
         }
         onChange={handleFieldChange}
       />

@@ -16,8 +16,11 @@ import routes from "src/application/routes";
 import { useDashboardStoriesContext } from "../store/Provider";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const DataGridRowActionsMenu = (params: GridRenderCellParams) => {
+  const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const navigate = useNavigate();
   const {
     manager: { handleDeleteStory },
@@ -40,7 +43,6 @@ const DataGridRowActionsMenu = (params: GridRenderCellParams) => {
 
   const handleOnClickView =
     (params: GridRenderCellParams<DashboardStoriesGridFields>) => () => {
-      // TODO: Navigate to view blog page
       navigate(routes.story(params.row.story.slug));
       handleMenuClose();
     };
@@ -104,11 +106,12 @@ const DataGridRowActionsMenu = (params: GridRenderCellParams) => {
           vertical: "top",
           horizontal: "right",
         }}
+        slotProps={{ list: { "aria-labelledby": "row-actions-menu" } }}
       >
         <MenuItem onClick={handleOnClickView(params)}>
           <Visibility fontSize="small" sx={{ mr: 1 }} />
           <Typography variant="body2" sx={{ fontSize: "14px" }}>
-            View
+            {t("stories.view")}
           </Typography>
         </MenuItem>
 
@@ -120,7 +123,7 @@ const DataGridRowActionsMenu = (params: GridRenderCellParams) => {
         >
           <Delete fontSize="small" sx={{ mr: 1 }} />
           <Typography variant="body2" sx={{ fontSize: "14px" }}>
-            Delete
+            {tCommon("delete")}
           </Typography>
         </MenuItem>
       </Menu>

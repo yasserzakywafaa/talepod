@@ -13,6 +13,7 @@ import { User, UserRole } from "src/shared/types/user";
 
 import { AdminPanelSettings as AdminPanelSettingsIcon } from "@mui/icons-material";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface RoleSelectorProps {
   user: User | null;
@@ -20,6 +21,7 @@ interface RoleSelectorProps {
 }
 
 const RoleSelector = ({ user, onRoleChange }: RoleSelectorProps) => {
+  const { t } = useTranslation("dashboard");
   const [isUpdating, setIsUpdating] = useState(false);
 
   if (!user) {
@@ -45,11 +47,11 @@ const RoleSelector = ({ user, onRoleChange }: RoleSelectorProps) => {
   const getRoleLabel = (role: UserRole) => {
     switch (role) {
       case UserRole.super_admin:
-        return "Super Admin";
+        return t("admin.users.roleSuperAdmin");
       case UserRole.admin:
-        return "Admin";
+        return t("admin.users.roleAdmin");
       case UserRole.user:
-        return "User";
+        return t("admin.user.roleUser");
       default:
         return role;
     }
@@ -65,15 +67,15 @@ const RoleSelector = ({ user, onRoleChange }: RoleSelectorProps) => {
             mb: 2
           }}>
           <AdminPanelSettingsIcon color="primary" sx={{ mr: 1 }} />
-          <Typography variant="h6">User Role</Typography>
+          <Typography variant="h6">{t("admin.user.userRole")}</Typography>
         </Box>
         <FormControl fullWidth>
-          <InputLabel id="role-select-label">Role</InputLabel>
+          <InputLabel id="role-select-label">{t("admin.user.role")}</InputLabel>
           <Select
             labelId="role-select-label"
             id="role-select"
             value={user.role}
-            label="Role"
+            label={t("admin.user.role")}
             onChange={handleRoleChange}
             disabled={isUpdating}
           >
@@ -90,7 +92,7 @@ const RoleSelector = ({ user, onRoleChange }: RoleSelectorProps) => {
             color: "text.secondary",
             mt: 1
           }}>
-          Change the user's role to control their permissions and access level.
+          {t("admin.user.roleHelp")}
         </Typography>
       </CardContent>
     </Card>

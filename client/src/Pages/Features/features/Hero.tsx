@@ -7,8 +7,8 @@ import CreateStoryFormMini from "src/components/StoryCreator/features/CreateStor
 import Typography from "@mui/material/Typography";
 import bunny from "../../../assets/images/sleeping_bunny_with_a_moon.webp";
 import penguin from "../../../assets/images/cute_penguin_with_a_fish.webp";
+import { useTranslation } from "react-i18next";
 
-// Decorative twinkling-stars layer (faithful to design MHero).
 const STAR_FIELD =
   "radial-gradient(circle at 8% 18%, rgba(255,213,107,0.6) 0 1.6px, transparent 2.2px)," +
   "radial-gradient(circle at 88% 12%, rgba(255,255,255,0.6) 0 1.2px, transparent 2px)," +
@@ -17,9 +17,12 @@ const STAR_FIELD =
   "radial-gradient(circle at 50% 30%, rgba(255,213,107,0.35) 0 1px, transparent 1.5px)," +
   "radial-gradient(circle at 78% 70%, rgba(255,255,255,0.4) 0 0.8px, transparent 1.5px)";
 
-const TRUST = ["No card required", "11 languages", "Kid-safe"];
-
 const Hero = () => {
+  const { t } = useTranslation("landing");
+  const trustBadges = t("features.hero.trustBadges", {
+    returnObjects: true,
+  }) as string[];
+
   return (
     <Box id="hero" sx={{ mt: { xs: 1, sm: 3 }, mb: { xs: 3, sm: 6 } }}>
       <Box
@@ -34,7 +37,6 @@ const Hero = () => {
           boxShadow: "var(--shadow-lg)",
         }}
       >
-        {/* stars */}
         <Box
           aria-hidden
           sx={{
@@ -54,7 +56,6 @@ const Hero = () => {
             gap: { xs: 5, md: 7 },
           }}
         >
-          {/* ── Left: copy ───────────────────────────────────── */}
           <Box
             sx={{
               flex: 1,
@@ -62,7 +63,7 @@ const Hero = () => {
               textAlign: { xs: "center", md: "left" },
             }}
           >
-            <Chip variant="badge" label="New · Now in comic format" />
+            <Chip variant="badge" label={t("features.hero.badge")} />
 
             <Typography
               component="h1"
@@ -78,7 +79,7 @@ const Hero = () => {
                 component="span"
                 sx={{ fontSize: "inherit", whiteSpace: "nowrap" }}
               >
-                Bedtime stories,
+                {t("features.hero.titleLine1")}
               </Box>
 
               <br />
@@ -91,7 +92,7 @@ const Hero = () => {
                   backgroundClip: "text",
                 }}
               >
-                made just for them.
+                {t("features.hero.titleLine2")}
               </Box>
             </Typography>
 
@@ -106,9 +107,7 @@ const Hero = () => {
                 mx: { xs: "auto", md: 0 },
               }}
             >
-              TalePod turns your child's name, age and interests into a magical
-              story, narrated by warm AI voices and now illustrated with soft
-              watercolour art. Ready in under a minute.
+              {t("features.hero.subtitle")}
             </Typography>
 
             <Box
@@ -133,9 +132,9 @@ const Hero = () => {
                 justifyContent: { xs: "center", md: "flex-start" },
               }}
             >
-              {TRUST.map((t) => (
+              {trustBadges.map((badge) => (
                 <Box
-                  key={t}
+                  key={badge}
                   sx={{
                     display: "inline-flex",
                     alignItems: "center",
@@ -143,13 +142,12 @@ const Hero = () => {
                   }}
                 >
                   <CheckCircleOutlined sx={{ fontSize: 14, color: honey300 }} />
-                  {t}
+                  {badge}
                 </Box>
               ))}
             </Box>
           </Box>
 
-          {/* ── Right: phone-preview cluster (desktop/tablet) ── */}
           <Box
             sx={{
               position: "relative",
@@ -159,7 +157,6 @@ const Hero = () => {
               display: { xs: "none", sm: "block" },
             }}
           >
-            {/* Main story card */}
             <Box
               sx={{
                 position: "absolute",
@@ -195,7 +192,7 @@ const Hero = () => {
                     color: honey300,
                   }}
                 >
-                  For Lila · age 5
+                  {t("features.hero.previewFor")}
                 </Box>
                 <Box
                   sx={{
@@ -205,7 +202,7 @@ const Hero = () => {
                     m: "4px 0 10px",
                   }}
                 >
-                  When the Moon Forgot to Glow
+                  {t("features.hero.previewTitle")}
                 </Box>
                 <Box sx={{ flex: 1, position: "relative" }}>
                   <Box
@@ -248,15 +245,18 @@ const Hero = () => {
                     <PlayArrowRounded sx={{ fontSize: 16, color: "#fff" }} />
                   </Box>
                   <Box sx={{ fontSize: 11 }}>
-                    <Box sx={{ fontWeight: 600 }}>Fairy Tale voice</Box>
-                    <Box sx={{ opacity: 0.7 }}>2:42 / 8:00</Box>
+                    <Box sx={{ fontWeight: 600 }}>
+                      {t("features.hero.previewVoice")}
+                    </Box>
+                    <Box sx={{ opacity: 0.7 }}>
+                      {t("features.hero.previewDuration")}
+                    </Box>
                   </Box>
                   <Box sx={{ ml: "auto", fontSize: 18 }}>✨</Box>
                 </Box>
               </Box>
             </Box>
 
-            {/* Floating mini-card */}
             <Box
               sx={{
                 position: "absolute",
@@ -300,10 +300,10 @@ const Hero = () => {
                   color: "text.primary",
                 }}
               >
-                Pip the Penguin's First Snowflake
+                {t("features.hero.miniCardTitle")}
               </Box>
               <Box sx={{ fontSize: 10, color: "text.secondary", mt: 0.4 }}>
-                For Lila · 6 min
+                {t("features.hero.miniCardMeta")}
               </Box>
             </Box>
           </Box>

@@ -5,6 +5,7 @@ import DataGridRowActionsMenu from "./dataGridRowActionsMenu";
 import { GridColDef } from "@mui/x-data-grid";
 import ProfileAvatar from "src/components/shared/ProfileAvatar";
 import { Story } from "src/components/StoryCreator/store/state";
+import { formatLocalizedDate } from "@yasserzakywafaa/client-core";
 
 export interface DashboardStoriesGridFields {
   id: string;
@@ -25,9 +26,11 @@ export interface DashboardStoriesGridResult {
 }
 
 export const getDashboardStoriesDataGridConfig = (
-  stories: Story[]
+  stories: Story[],
+  t: (key: string) => string,
+  locale: string,
 ): DashboardStoriesGridResult => {
-  if (stories.length === 0) return { rows: [], columns: [] };
+  if (!stories || stories.length === 0) return { rows: [], columns: [] };
 
   const rows: DashboardStoriesGridFields[] = stories.map((story) => {
     return {
@@ -41,72 +44,69 @@ export const getDashboardStoriesDataGridConfig = (
       age: story.profileInfo.age || 0,
       author: story.authorProfile
         ? `${story.authorProfile.name.givenName} ${story.authorProfile.name.familyName}`
-        : "Unknown",
-      created: new Date(story.createdAt || new Date()).toLocaleDateString(
-        "en-GB",
-        {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        }
-      ),
+        : t("stories.unknownAuthor"),
+      created: formatLocalizedDate(story.createdAt || new Date(), locale, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }),
     };
   });
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
     {
       field: "title",
-      headerName: "STORY TITLE",
+      headerName: t("stories.columnStoryTitle"),
       editable: false,
       sortable: true,
       minWidth: 300,
       flex: 2,
-      description: "Story title",
+      description: t("stories.columnStoryTitleDescription"),
     },
     {
       field: "name",
-      headerName: "NAME",
+      headerName: t("stories.columnName"),
       editable: false,
       sortable: true,
       minWidth: 100,
       flex: 1,
-      description: "Profile Name",
+      description: t("stories.columnNameDescription"),
     },
     {
       field: "gender",
-      headerName: "GENDER",
+      headerName: t("stories.columnGender"),
       editable: false,
       sortable: true,
       minWidth: 100,
       flex: 1,
-      description: "Story gender",
+      description: t("stories.columnGenderDescription"),
     },
     {
       field: "language",
-      headerName: "LANGUAGE",
+      headerName: t("stories.columnLanguage"),
       editable: false,
       sortable: true,
       minWidth: 100,
       flex: 1,
-      description: "Story language",
+      description: t("stories.columnLanguageDescription"),
     },
     {
       field: "age",
-      headerName: "AGE",
+      headerName: t("stories.columnAge"),
       editable: false,
       sortable: true,
       minWidth: 100,
       flex: 1,
-      description: "Story age",
+      description: t("stories.columnAgeDescription"),
     },
     {
       field: "hasAudio",
-      headerName: "AUDIO",
+      headerName: t("stories.columnAudio"),
       editable: false,
       sortable: true,
       minWidth: 100,
       flex: 1,
-      description: "Has audio",
+      description: t("stories.columnAudioDescription"),
       renderCell: (params) => {
         return params.row.hasAudio ? (
           <HeadphonesOutlined fontSize="small" color="primary" />
@@ -117,12 +117,12 @@ export const getDashboardStoriesDataGridConfig = (
     },
     {
       field: "author",
-      headerName: "AUTHOR",
+      headerName: t("stories.columnAuthor"),
       editable: false,
       sortable: true,
       minWidth: 200,
       flex: 1,
-      description: "Story author",
+      description: t("stories.columnAuthorDescription"),
       renderCell: (params) => {
         const story = params.row.story;
         const author = story.authorProfile;
@@ -135,7 +135,9 @@ export const getDashboardStoriesDataGridConfig = (
                 alignItems: "center",
                 height: "100%"
               }}>
-              <Typography variant="body2">Unknown</Typography>
+              <Typography variant="body2">
+                {t("stories.unknownAuthor")}
+              </Typography>
             </Box>
           );
         }
@@ -180,19 +182,19 @@ export const getDashboardStoriesDataGridConfig = (
     },
     {
       field: "created",
-      headerName: "CREATED",
+      headerName: t("stories.columnCreated"),
       editable: false,
       sortable: true,
       minWidth: 120,
       flex: 1,
       display: "flex",
-      description: "Date story was created",
+      description: t("stories.columnCreatedDescription"),
     },
     {
       field: "action",
       align: "right",
       type: "actions",
-      headerName: "ACTIONS",
+      headerName: t("stories.columnActions"),
       headerAlign: "right",
       flex: 1,
       minWidth: 100,

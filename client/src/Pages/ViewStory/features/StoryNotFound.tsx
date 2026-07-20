@@ -4,8 +4,10 @@ import BunnyNoStoryFound from "../../../assets/images/sad_bunny_with_book_and_cl
 import { SearchOutlined } from "@mui/icons-material";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const StoryNotFound: React.FC = () => {
+  const { t } = useTranslation("story");
   const navigate = useNavigate();
   const handleOnClick = () => navigate(routes.library);
 
@@ -41,7 +43,7 @@ const StoryNotFound: React.FC = () => {
             <Typography variant="h5" sx={{
               textAlign: "center"
             }}>
-              We could not find the story you are looking for
+              {t("reader.notFound")}
             </Typography>
 
             <Button
@@ -52,7 +54,7 @@ const StoryNotFound: React.FC = () => {
               endIcon={<SearchOutlined />}
               onClick={handleOnClick}
             >
-              Browse Library
+              {t("reader.browseLibrary")}
             </Button>
           </Box>
         </Box>

@@ -9,8 +9,10 @@ import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
+import { useTranslation } from "react-i18next";
 
 const Unauthorized = () => {
+  const { t } = useTranslation("page");
   const {
     store: {
       state: { auth },
@@ -30,7 +32,7 @@ const Unauthorized = () => {
   }, [auth.isAuthenticated]);
 
   return (
-    <Page title="Unauthorized | TalePod" className="unauthorized-page">
+    <Page title={t("unauthorized.pageTitle")} className="unauthorized-page">
       <Box
         component="div"
         sx={{
@@ -52,11 +54,10 @@ const Unauthorized = () => {
             flexDirection: "column",
             justifyContent: "center"
           }}>
-          <Typography variant="h4">Unauthorized</Typography>
+          <Typography variant="h4">{t("unauthorized.title")}</Typography>
 
           <Alert severity="error" component="h5">
-            Please Login to your account or create an account to enjoy private
-            magical bedtime stories.
+            {t("unauthorized.message")}
           </Alert>
 
           <Box sx={{
@@ -70,7 +71,7 @@ const Unauthorized = () => {
               startIcon={<LockOpenOutlined />}
               onClick={handleToggleRegisterModal}
             >
-              Create Free Account
+              {t("unauthorized.createFreeAccount")}
             </Button>
 
             <Button
@@ -82,7 +83,7 @@ const Unauthorized = () => {
               startIcon={<VpnKeyOutlined />}
               onClick={handleToggleLoginModal}
             >
-              Login to your account
+              {t("unauthorized.loginToAccount")}
             </Button>
           </Box>
         </Box>

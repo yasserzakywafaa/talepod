@@ -1,5 +1,6 @@
 import { Box, Button, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 type UserChoice = Promise<{
   outcome: "accepted" | "dismissed";
@@ -7,6 +8,7 @@ type UserChoice = Promise<{
 }>;
 
 const InstallWebAppOnAndroid: React.FC = () => {
+  const { t } = useTranslation("page");
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
 
@@ -72,11 +74,10 @@ const InstallWebAppOnAndroid: React.FC = () => {
           textAlign: "center",
           mb: 2
         }}>
-        Install this app on your device and enjoy the native application
-        functionality
+        {t("installApp.androidDescription")}
       </Typography>
       <Button variant="contained" color="primary" onClick={handleInstallClick}>
-        Install App
+        {t("installApp.androidButton")}
       </Button>
     </Box>
   );

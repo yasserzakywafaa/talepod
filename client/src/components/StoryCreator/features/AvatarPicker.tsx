@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { honey400 } from "src/application/shared/themes";
 import routes from "src/application/routes";
 import { useAvatars } from "src/Pages/Avatars/useAvatars";
+import { useTranslation } from "react-i18next";
 
 export interface AvatarPickerProps {
   value?: string;
@@ -51,6 +52,7 @@ const AvatarPicker = ({
   autoSelectId,
   onRequestLogin,
 }: AvatarPickerProps) => {
+  const { t } = useTranslation("story");
   const { avatars, isLoading } = useAvatars(enabled);
 
   // One-shot: when an avatar is deep-linked, select it (and pre-fill the form)
@@ -81,7 +83,7 @@ const AvatarPicker = ({
           fontWeight: 600,
           mb: 1
         }}>
-        Avatar (optional)
+        {t("avatars.picker.title")}
       </Typography>
       {enabled && (
         <Button
@@ -91,7 +93,7 @@ const AvatarPicker = ({
           variant="text"
           sx={{ paddingTop: 0 }}
         >
-          Manage avatars
+          {t("avatars.picker.manage")}
         </Button>
       )}
     </Box>
@@ -117,8 +119,7 @@ const AvatarPicker = ({
           }}
         >
           <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
-            ✨ Want the hero to look like your child? Log in to create reusable
-            avatars and star them in every story.
+            {t("avatars.picker.loginPrompt")}
           </Typography>
           <Button
             size="small"
@@ -126,7 +127,7 @@ const AvatarPicker = ({
             startIcon={<LoginRounded />}
             onClick={onRequestLogin}
           >
-            Log in
+            {t("avatars.picker.login")}
           </Button>
         </Box>
       </Box>
@@ -148,12 +149,12 @@ const AvatarPicker = ({
             p: 1.5,
           }}
         >
-          Create an avatar to make the hero look like your child or family.{" "}
+          {t("avatars.picker.empty")}{" "}
           <Link
             to={routes.avatars}
             style={{ color: honey400, fontWeight: 600 }}
           >
-            Add one →
+            {t("avatars.picker.addOne")}
           </Link>
         </Box>
       ) : (
@@ -169,7 +170,7 @@ const AvatarPicker = ({
           <ButtonBase
             onClick={() => onChange("")}
             sx={tileSx(!value)}
-            aria-label="No avatar"
+            aria-label={t("avatars.picker.noneAria")}
           >
             <Box
               sx={{
@@ -187,7 +188,7 @@ const AvatarPicker = ({
               <AddRounded />
             </Box>
             <Typography sx={{ fontSize: 11, color: "text.secondary" }}>
-              None
+              {t("avatars.picker.none")}
             </Typography>
           </ButtonBase>
 
@@ -198,7 +199,7 @@ const AvatarPicker = ({
                 key={avatar._id}
                 onClick={() => onChange(avatar._id, avatar)}
                 sx={tileSx(selected)}
-                aria-label={`Use ${avatar.name}`}
+                aria-label={t("avatars.picker.useAria", { name: avatar.name })}
               >
                 <Box
                   sx={{

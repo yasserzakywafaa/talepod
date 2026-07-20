@@ -28,6 +28,7 @@ import { useApplicationContext } from "src/application/store/Provider";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
 import { useParams } from "react-router-dom";
 import { useViewStoryContext } from "../store/Provider";
+import { useTranslation } from "react-i18next";
 
 /**
  * Audio creation + playback for a story (long or comic). Self-contained: reads
@@ -37,6 +38,7 @@ import { useViewStoryContext } from "../store/Provider";
  * in ViewStory since both share the ViewStory store.
  */
 const StoryAudio: FC = () => {
+  const { t } = useTranslation("story");
   const { userId } = useParams<{ userId: string; slug: string }>();
 
   const {
@@ -95,7 +97,7 @@ const StoryAudio: FC = () => {
       } catch (error) {
         Notify({
           type: ToastTypes.Error,
-          content: `❌ Failed to create audio! ${error}`,
+          content: t("reader.audio.error", { error }),
         });
       }
     }
@@ -137,7 +139,7 @@ const StoryAudio: FC = () => {
               color: (theme) => theme.palette.primary.main,
             }}
           >
-            Create audio for this story
+            {t("reader.audio.createHeading")}
           </Typography>
 
           <Box
@@ -152,11 +154,13 @@ const StoryAudio: FC = () => {
               sx={{ margin: "1rem", width: { xs: "50%", sm: "15%" } }}
               className="voice-select-dropdown"
             >
-              <InputLabel id="voice-select-label">Voice</InputLabel>
+              <InputLabel id="voice-select-label">
+                {t("reader.audio.voiceLabel")}
+              </InputLabel>
               <Select
                 required
                 name="voice"
-                label="Voice"
+                label={t("reader.audio.voiceLabel")}
                 id="voice-select"
                 variant="outlined"
                 labelId="voice-select-label"
@@ -164,7 +168,7 @@ const StoryAudio: FC = () => {
                 defaultValue={audioFileVoice.name}
                 onChange={handleOnAudioVoiceChange}
               >
-                <ListSubheader>Female</ListSubheader>
+                <ListSubheader>{t("reader.audio.female")}</ListSubheader>
                 {dropdownOptionsFemale.map((voice, index) => (
                   <MenuItem
                     key={index}
@@ -178,7 +182,7 @@ const StoryAudio: FC = () => {
                   </MenuItem>
                 ))}
 
-                <ListSubheader>Male</ListSubheader>
+                <ListSubheader>{t("reader.audio.male")}</ListSubheader>
                 {dropdownOptionsMale.map((voice, index) => (
                   <MenuItem
                     key={index}
@@ -201,7 +205,7 @@ const StoryAudio: FC = () => {
               endIcon={<LyricsOutlined />}
               onClick={handleOnCreateAudioClick}
             >
-              Create Audio
+              {t("reader.audio.createButton")}
             </Button>
           </Box>
         </>
@@ -216,7 +220,7 @@ const StoryAudio: FC = () => {
             gutterBottom
             sx={{ color: (theme) => theme.palette.primary.main }}
           >
-            Listen to the Story
+            {t("reader.audio.listenHeading")}
           </Typography>
 
           <AudioPlayer
@@ -231,7 +235,7 @@ const StoryAudio: FC = () => {
             variant="outlined"
             label={
               <span color="textSecondary">
-                Audio created on:{" "}
+                {t("reader.audio.createdOn")}{" "}
                 <span className="bold">
                   {new Date(story.audioFile.createdAt).toLocaleString("en-GB", {
                     timeStyle: "short",

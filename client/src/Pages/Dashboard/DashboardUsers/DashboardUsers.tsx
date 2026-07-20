@@ -8,8 +8,12 @@ import {
 import { getDashboardUsersDataGridConfig } from "./features/dataGridConfig";
 import { useEffect } from "react";
 import { useDashboardUsersContext } from "./store/Provider";
+import { useTranslation } from "react-i18next";
+import { localeFromLanguage } from "@yasserzakywafaa/client-core";
 
 const DashboardUsers = () => {
+  const { t, i18n } = useTranslation("dashboard");
+  const locale = localeFromLanguage(i18n.language);
   const {
     store: {
       state: { isFetching, users, paging },
@@ -17,7 +21,7 @@ const DashboardUsers = () => {
     manager: { setUp, handleGetUsersByPage },
   } = useDashboardUsersContext();
 
-  const config = getDashboardUsersDataGridConfig(users);
+  const config = getDashboardUsersDataGridConfig(users, t, locale);
 
   const handlePaginationModelChange = (model: GridPaginationModel) => {
     const pageNumber = model.page + 1;
@@ -32,7 +36,7 @@ const DashboardUsers = () => {
   return (
     <Box>
       <Typography variant="h4" component="h1" color="primary" gutterBottom>
-        Users
+        {t("admin.users.title")}
       </Typography>
       <Typography
         variant="body1"
@@ -41,8 +45,8 @@ const DashboardUsers = () => {
           mb: 3
         }}>
         {paging.totalCount
-          ? `${paging.totalCount} total`
-          : "Manage users, roles, and permissions from here."}
+          ? t("stories.totalCount", { count: paging.totalCount })
+          : t("admin.users.subtitle")}
       </Typography>
       <Box sx={{ overflowX: "auto", position: "relative", width: "100%" }}>
         <DataGrid

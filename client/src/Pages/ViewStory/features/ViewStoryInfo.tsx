@@ -2,6 +2,7 @@ import { Box, Card, CardContent, Chip } from "@mui/material";
 
 import { ArtStyles } from "src/shared/artStyles";
 import { Story } from "src/components/StoryCreator/store/state";
+import { useTranslation } from "react-i18next";
 
 interface ViewStoryInfoParams {
   story: Story;
@@ -10,11 +11,16 @@ interface ViewStoryInfoParams {
 const artStyleLabel = (id?: string): string =>
   ArtStyles.find((style) => style.id === id)?.label ?? id ?? "";
 
-const formatLabel = (format?: string): string =>
-  format === "comic" ? "Comic" : format === "long" ? "Long Story" : "";
-
 const ViewStoryInfo = (props: ViewStoryInfoParams) => {
+  const { t } = useTranslation("story");
   const { story } = props;
+
+  const formatLabel = (format?: string): string =>
+    format === "comic"
+      ? t("reader.meta.formatComic")
+      : format === "long"
+        ? t("reader.meta.formatLong")
+        : "";
 
   const renderChipLabel = (key: string, value: string) => {
     return (
@@ -32,7 +38,7 @@ const ViewStoryInfo = (props: ViewStoryInfoParams) => {
           <Chip
             variant="outlined"
             label={renderChipLabel(
-              "Story created on",
+              t("reader.meta.createdOn"),
               new Date(story.createdAt).toLocaleString("en-GB", {
                 timeStyle: "short",
                 dateStyle: "short",
@@ -47,22 +53,19 @@ const ViewStoryInfo = (props: ViewStoryInfoParams) => {
             <Chip
               color="primary"
               variant="outlined"
-              label={renderChipLabel("Name", story.profileInfo.name)}
+              label={renderChipLabel(
+                t("reader.meta.name"),
+                story.profileInfo.name,
+              )}
               className="view-story-card-footer-info-tag"
-            />
-            <Chip
-              color="primary"
-              variant="outlined"
-              className="view-story-card-footer-info-tag"
-              label={renderChipLabel("Gender", story.profileInfo.gender)}
             />
             <Chip
               color="primary"
               variant="outlined"
               className="view-story-card-footer-info-tag"
               label={renderChipLabel(
-                "Age",
-                `${story.profileInfo.age}-years-old`
+                t("reader.meta.gender"),
+                story.profileInfo.gender,
               )}
             />
             <Chip
@@ -70,8 +73,17 @@ const ViewStoryInfo = (props: ViewStoryInfoParams) => {
               variant="outlined"
               className="view-story-card-footer-info-tag"
               label={renderChipLabel(
-                "Language",
-                story.profileInfo.language.name
+                t("reader.meta.age"),
+                t("reader.meta.ageSuffix", { age: story.profileInfo.age }),
+              )}
+            />
+            <Chip
+              color="primary"
+              variant="outlined"
+              className="view-story-card-footer-info-tag"
+              label={renderChipLabel(
+                t("reader.meta.language"),
+                story.profileInfo.language.name,
               )}
             />
 
@@ -81,8 +93,8 @@ const ViewStoryInfo = (props: ViewStoryInfoParams) => {
                 variant="outlined"
                 className="view-story-card-footer-info-tag"
                 label={renderChipLabel(
-                  "Interests",
-                  story.profileInfo.interests
+                  t("reader.meta.interests"),
+                  story.profileInfo.interests,
                 )}
               />
             )}
@@ -95,8 +107,8 @@ const ViewStoryInfo = (props: ViewStoryInfoParams) => {
                 variant="outlined"
                 className="view-story-card-footer-info-tag"
                 label={renderChipLabel(
-                  "Environment",
-                  story.storyParams.environment.name
+                  t("reader.meta.environment"),
+                  story.storyParams.environment.name,
                 )}
               />
             )}
@@ -106,7 +118,10 @@ const ViewStoryInfo = (props: ViewStoryInfoParams) => {
                 color="secondary"
                 variant="outlined"
                 className="view-story-card-footer-info-tag"
-                label={renderChipLabel("Moral", story.storyParams.moral.name)}
+                label={renderChipLabel(
+                  t("reader.meta.moral"),
+                  story.storyParams.moral.name,
+                )}
               />
             )}
 
@@ -115,7 +130,10 @@ const ViewStoryInfo = (props: ViewStoryInfoParams) => {
                 color="secondary"
                 variant="outlined"
                 className="view-story-card-footer-info-tag"
-                label={renderChipLabel("Tone", story.storyParams.tone.name)}
+                label={renderChipLabel(
+                  t("reader.meta.tone"),
+                  story.storyParams.tone.name,
+                )}
               />
             )}
 
@@ -125,11 +143,13 @@ const ViewStoryInfo = (props: ViewStoryInfoParams) => {
                 variant="outlined"
                 className="view-story-card-footer-info-tag"
                 label={renderChipLabel(
-                  "Story Length",
-                  `${
-                    story.storyParams.totalWords ??
-                    story.mainStory.trim().split(/\s+/).filter(Boolean).length
-                  } words`
+                  t("reader.meta.storyLength"),
+                  t("reader.meta.wordCount", {
+                    count:
+                      story.storyParams.totalWords ??
+                      story.mainStory.trim().split(/\s+/).filter(Boolean)
+                        .length,
+                  }),
                 )}
               />
             )}
@@ -139,7 +159,10 @@ const ViewStoryInfo = (props: ViewStoryInfoParams) => {
                 color="secondary"
                 variant="outlined"
                 className="view-story-card-footer-info-tag"
-                label={renderChipLabel("Format", formatLabel(story.format))}
+                label={renderChipLabel(
+                  t("reader.meta.format"),
+                  formatLabel(story.format),
+                )}
               />
             )}
 
@@ -149,8 +172,8 @@ const ViewStoryInfo = (props: ViewStoryInfoParams) => {
                 variant="outlined"
                 className="view-story-card-footer-info-tag"
                 label={renderChipLabel(
-                  "Art Style",
-                  artStyleLabel(story.artStyle)
+                  t("reader.meta.artStyle"),
+                  artStyleLabel(story.artStyle),
                 )}
               />
             )}

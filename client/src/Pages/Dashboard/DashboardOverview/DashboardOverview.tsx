@@ -1,4 +1,5 @@
 import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 import { Dashboard as DashboardIcon } from "@mui/icons-material";
 import routes from "src/application/routes";
@@ -8,6 +9,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const DashboardOverview = () => {
+  const { t } = useTranslation("dashboard");
   const navigate = useNavigate();
   const {
     store: {
@@ -35,7 +37,9 @@ const DashboardOverview = () => {
     <Box>
       <Box>
         <Typography variant="h4" component="h1" color="primary" gutterBottom>
-          Welcome back, {user?.name.givenName} {user?.name.familyName}!
+          {t("overview.welcomeBack", {
+            name: `${user?.name.givenName} ${user?.name.familyName}`,
+          })}
         </Typography>
       </Box>
       <Grid container spacing={3}>
@@ -52,7 +56,7 @@ const DashboardOverview = () => {
                   mb: 2
                 }}>
                 <DashboardIcon color="primary" sx={{ mr: 1 }} />
-                <Typography variant="h6">Total Users</Typography>
+                <Typography variant="h6">{t("overview.totalUsers")}</Typography>
               </Box>
               <Typography variant="h4" color="primary">
                 {usersCount !== null ? usersCount : "--"}
@@ -60,7 +64,7 @@ const DashboardOverview = () => {
               <Typography variant="body2" sx={{
                 color: "text.secondary"
               }}>
-                Active users on the platform
+                {t("overview.usersActive")}
               </Typography>
             </CardContent>
           </Card>
@@ -79,7 +83,7 @@ const DashboardOverview = () => {
                   mb: 2
                 }}>
                 <DashboardIcon color="primary" sx={{ mr: 1 }} />
-                <Typography variant="h6">Total Stories</Typography>
+                <Typography variant="h6">{t("overview.totalStories")}</Typography>
               </Box>
               <Typography variant="h4" color="primary">
                 {storiesCount !== null ? storiesCount : "--"}
@@ -87,7 +91,7 @@ const DashboardOverview = () => {
               <Typography variant="body2" sx={{
                 color: "text.secondary"
               }}>
-                Stories created
+                {t("overview.storiesCreated")}
               </Typography>
             </CardContent>
           </Card>

@@ -1,0 +1,768 @@
+{
+  "seo": {
+    "kids": {
+      "title": "Histoires du soir pour enfants | TalePod",
+      "description": "Créez des histoires du soir magiques pour enfants avec TalePod. Personnalisez les contes avec le prénom, l'âge et les centres d'intérêt de votre enfant — illustrés et narrés en quelques secondes.",
+      "path": "/bedtime-stories-for-kids"
+    },
+    "adults": {
+      "title": "Histoires du soir pour adultes | TalePod",
+      "description": "Détendez-vous avec des histoires du soir personnalisées pour adultes sur TalePod. Thèmes sur mesure, narration apaisante et contes uniques conçus pour la relaxation.",
+      "path": "/bedtime-stories-for-adults"
+    },
+    "short": {
+      "title": "Histoires du soir courtes | TalePod",
+      "description": "Des histoires du soir courtes créées en moins d'une minute. TalePod crée des contes rapides et personnalisés avec narration et illustrations pour les couchers pressés.",
+      "path": "/short-bedtime-stories"
+    },
+    "christmas": {
+      "title": "Histoires du soir de Noël magiques | TalePod",
+      "description": "Créez des histoires de Noël magiques avec TalePod. Des contes festifs et personnalisés avec le prénom de votre enfant, une narration chaleureuse et des aquarelles.",
+      "path": "/christmas-bedtime-stories"
+    },
+    "girlfriend": {
+      "title": "Histoires du soir pour votre petite amie | TalePod",
+      "description": "Surprenez-la avec une histoire du soir personnalisée sur TalePod. Des contes romantiques et sur mesure avec narration — un cadeau attentionné pour quelqu'un de spécial.",
+      "path": "/bedtime-stories-for-girlfriend"
+    },
+    "toddlers": {
+      "title": "Histoires du soir pour tout-petits | TalePod",
+      "description": "Des histoires du soir courtes et captivantes pour tout-petits sur TalePod. Des contes adaptés à l'âge, personnalisés avec le prénom et les thèmes préférés de votre petit.",
+      "path": "/bedtime-stories-for-toddlers"
+    },
+    "educational": {
+      "title": "Histoires du soir éducatives | TalePod",
+      "description": "Des histoires du soir éducatives qui enseignent tout en apaisant. TalePod crée des contes personnalisés avec des morales, une narration et des illustrations adaptées aux enfants.",
+      "path": "/educational-bedtime-stories"
+    },
+    "baby": {
+      "title": "Histoires du soir pour bébés | TalePod",
+      "description": "Des histoires du soir douces pour bébés sur TalePod. Des contes calmes et personnalisés avec une narration douce — parfaits pour les plus jeunes auditeurs.",
+      "path": "/baby-bedtime-stories"
+    },
+    "best": {
+      "title": "Meilleures histoires du soir | TalePod",
+      "description": "Découvrez les meilleures histoires du soir sur TalePod. Des contes personnalisés créés par l'IA avec illustrations, narration et 11 langues.",
+      "path": "/best-bedtime-stories"
+    },
+    "quick": {
+      "title": "Histoires du soir rapides | TalePod",
+      "description": "Des histoires du soir rapides prêtes en moins d'une minute. TalePod génère instantanément des contes personnalisés avec narration et aquarelles.",
+      "path": "/quick-bedtime-stories"
+    },
+    "alternatives": {
+      "title": "Alternatives à TalePod — Meilleures applications d'histoires du soir personnalisées",
+      "description": "Comparez TalePod avec StoryFox, Bedtimestory.ai, Storywish, Bairn et DreamPages. Comparaison honnête des applications d'histoires du soir personnalisées.",
+      "path": "/alternatives"
+    },
+    "generator": {
+      "title": "Générateur d'histoires du soir personnalisées | TalePod",
+      "description": "TalePod est un générateur d'histoires du soir personnalisées pour enfants. Entrez le prénom, l'âge et les centres d'intérêt de votre enfant — obtenez une histoire narrée et illustrée en quelques secondes.",
+      "path": "/personalized-bedtime-story-generator"
+    },
+    "home": {
+      "title": "TalePod : Créateur d'histoires du soir par IA",
+      "description": "Découvrez TalePod, où le coucher devient magique grâce à des histoires du soir personnalisées, uniques et enchanteresses, créées à partir des rêves et de l'imagination de votre enfant.",
+      "path": "/"
+    }
+  },
+  "hero": {
+    "noCreditCard": "**Aucune carte bancaire requise",
+    "imageAlt": "home-page-image",
+    "imageAria": "rabbit-sleeping-on-a-pillow"
+  },
+  "shared": {
+    "howToHeading": "Comment créer une nouvelle histoire du soir personnalisée",
+    "whyHeading": "Pourquoi personnaliser les histoires du soir ?",
+    "whyLink": "Histoires du soir personnalisées",
+    "introHeading": "Découvrez TalePod",
+    "introPrefix": "TalePod est une application révolutionnaire conçue pour vous aider à",
+    "introLink": "créer des histoires du soir personnalisées",
+    "introSuffix": "sans effort.",
+    "benefitsHeading": "Avantages de TalePod",
+    "footerPrefix": "TalePod transforme le coucher en une expérience magique en proposant",
+    "footerLibraryLink": "histoires du soir personnalisées",
+    "footerMiddle": "qui répondent aux préférences uniques de votre enfant. Avec TalePod, vous pouvez",
+    "footerCreateLink": "créer des moments du coucher inoubliables",
+    "footerSuffix": "qui nourrissent l'imagination et cultivent l'amour du récit. Commencez à créer l'histoire du soir parfaite. Pour plus d'informations, consultez notre",
+    "privacyLink": "Politique de confidentialité",
+    "cta": "Commencer gratuitement",
+    "imageAlt": "unicorn with a magic wand and a book"
+  },
+  "pages": {
+    "kids": {
+      "heroWhite": "Créez des histoires",
+      "heroColored": "Histoires du soir pour enfants",
+      "heroHeader": "Créez des histoires du soir personnalisées, adaptées aux rêves et à l'imagination de votre enfant.",
+      "whyPersonalize": "rendre le coucher plus captivant et agréable, en offrant un moyen unique d'éveiller l'imagination de votre enfant. TalePod vous permet de créer des histoires sur mesure selon les préférences de votre enfant, faisant de chaque soir une aventure spéciale.",
+      "introducing": "Avec TalePod, vous pouvez créer des récits uniques en phase avec les centres d'intérêt de votre enfant, pour une expérience du coucher captivante et immersive",
+      "benefits": [
+        {
+          "primary": "Adapté aux centres d'intérêt de votre enfant",
+          "secondary": "Avec TalePod, vous pouvez personnaliser les histoires selon les personnages, thèmes et décors préférés de votre enfant, rendant chaque histoire pertinente et captivante."
+        },
+        {
+          "primary": "Stimule la créativité",
+          "secondary": "TalePod inspire la créativité des parents et des enfants, les encourageant à imaginer et explorer de nouveaux mondes ensemble."
+        },
+        {
+          "primary": "Facile à utiliser",
+          "secondary": "L'interface conviviale de TalePod simplifie la création et la personnalisation des histoires, même pour les moins à l'aise avec la technologie."
+        },
+        {
+          "primary": "Favorise l'alphabétisation",
+          "secondary": "Les histoires personnalisées enrichissent le vocabulaire et la compréhension de votre enfant, et cultivent l'amour de la lecture dès le plus jeune âge."
+        }
+      ]
+    },
+    "adults": {
+      "heroWhite": "Créez des histoires",
+      "heroColored": "Histoires du soir pour adultes",
+      "heroHeader": "Profitez d'histoires paisibles et personnalisées pour vous détendre après une longue journée.",
+      "whyPersonalize": "aider les adultes à se détendre et à s'évader dans des récits apaisants adaptés à leur humeur et à leurs centres d'intérêt, faisant du coucher un rituel réconfortant.",
+      "introducing": "TalePod crée des histoires relaxantes avec les thèmes que vous choisissez — parfait pour se détendre après une journée chargée",
+      "benefits": [
+        {
+          "primary": "Adapté à vos besoins de détente",
+          "secondary": "Choisissez des thèmes et des tons apaisants pour vous détendre et préparer un sommeil réparateur."
+        },
+        {
+          "primary": "Favorise un meilleur sommeil",
+          "secondary": "Des récits doux et une narration chaleureuse aident à apaiser l'esprit avant le sommeil."
+        },
+        {
+          "primary": "Facile à utiliser",
+          "secondary": "Créez une histoire personnalisée en quelques minutes grâce à notre interface simple et intuitive."
+        },
+        {
+          "primary": "Personnalisable",
+          "secondary": "Ajustez le ton, l'environnement et les centres d'intérêt pour correspondre exactement à ce dont vous avez besoin ce soir."
+        }
+      ]
+    },
+    "short": {
+      "heroWhite": "Histoires du soir rapides",
+      "heroColored": "pour les soirs pressés",
+      "heroHeader": "Profitez de courtes histoires captivantes, parfaites pour une routine du coucher rapide.",
+      "whyPersonalize": "s'intégrer parfaitement aux emplois du temps chargés tout en restant personnelles et magiques.",
+      "introducing": "TalePod génère des contes courts et captivants en moins d'une minute",
+      "benefits": [
+        {
+          "primary": "Adapté aux centres d'intérêt de votre enfant",
+          "secondary": "Même les histoires rapides peuvent inclure le prénom et les thèmes préférés de votre enfant."
+        },
+        {
+          "primary": "Favorise un meilleur sommeil",
+          "secondary": "Assez courtes pour finir avant que les paupières ne deviennent lourdes, assez longues pour apaiser."
+        },
+        {
+          "primary": "Facile à utiliser",
+          "secondary": "Générez une histoire en quelques secondes — aucune préparation requise."
+        },
+        {
+          "primary": "Personnalisable",
+          "secondary": "Choisissez le ton, la morale et le décor même pour les contes courts."
+        }
+      ]
+    },
+    "christmas": {
+      "heroWhite": "Noël magique",
+      "heroColored": "Histoires du soir",
+      "heroHeader": "Célébrez les fêtes avec des histoires personnalisées qui réchauffent le cœur.",
+      "whyPersonalize": "rendre les fêtes encore plus spéciales avec des contes festifs mettant votre enfant en vedette.",
+      "introducing": "TalePod tisse la magie de Noël dans chaque histoire personnalisée",
+      "benefits": [
+        {
+          "primary": "Adapté aux centres d'intérêt de votre enfant",
+          "secondary": "Des aventures festives avec le prénom de votre enfant et ses vœux de fêtes."
+        },
+        {
+          "primary": "Stimule la créativité",
+          "secondary": "Éveillez l'imagination des fêtes avec des personnages et des décors personnalisés."
+        },
+        {
+          "primary": "Facile à utiliser",
+          "secondary": "Créez une histoire de Noël en quelques minutes avant le coucher."
+        },
+        {
+          "primary": "Favorise l'alphabétisation",
+          "secondary": "Les contes sur le thème des fêtes enrichissent le vocabulaire et le plaisir de lire."
+        }
+      ]
+    },
+    "girlfriend": {
+      "heroWhite": "Histoires du soir sincères",
+      "heroColored": "pour votre petite amie",
+      "heroHeader": "Créez des histoires romantiques et personnalisées à partager avec votre bien-aimé(e).",
+      "whyPersonalize": "transformer un simple bonne nuit en un geste romantique attentionné.",
+      "introducing": "TalePod vous aide à créer des histoires intimes qu'elle n'oubliera pas",
+      "benefits": [
+        {
+          "primary": "Adapté à vos besoins romantiques",
+          "secondary": "Personnalisez les prénoms, thèmes et le ton pour un cadeau plein de sens."
+        },
+        {
+          "primary": "Stimule la créativité",
+          "secondary": "Exprimez vos sentiments à travers un récit unique."
+        },
+        {
+          "primary": "Facile à utiliser",
+          "secondary": "Créez une histoire romantique en quelques minutes — aucun talent d'écriture requis."
+        },
+        {
+          "primary": "Personnalisable",
+          "secondary": "Choisissez l'ambiance, le décor et les détails qui comptent pour vous deux."
+        }
+      ]
+    },
+    "toddlers": {
+      "heroWhite": "Amusant et captivant",
+      "heroColored": "Histoires du soir pour tout-petits",
+      "heroHeader": "Créez de courtes histoires amusantes, parfaites pour votre petit.",
+      "whyPersonalize": "maintenir l'attention des tout-petits avec des aventures simples et adaptées à leur âge.",
+      "introducing": "TalePod crée des contes adaptés aux tout-petits avec des phrases courtes et des thèmes doux",
+      "benefits": [
+        {
+          "primary": "Adapté aux centres d'intérêt de votre enfant",
+          "secondary": "Les histoires correspondent aux animaux, couleurs et routines préférés de votre tout-petit."
+        },
+        {
+          "primary": "Favorise un meilleur sommeil",
+          "secondary": "Un rythme calme et une narration apaisante aident les petits à s'endormir."
+        },
+        {
+          "primary": "Facile à utiliser",
+          "secondary": "Parfait pour les parents épuisés — des histoires prêtes en quelques secondes."
+        },
+        {
+          "primary": "Favorise l'alphabétisation",
+          "secondary": "Une exposition précoce aux histoires personnalisées développe les compétences linguistiques."
+        }
+      ]
+    },
+    "educational": {
+      "heroWhite": "Histoires du soir éducatives",
+      "heroColored": "pour les esprits curieux",
+      "heroHeader": "Enseignez et inspirez votre enfant avec des histoires éducatives personnalisées.",
+      "whyPersonalize": "intégrer leçons et morales dans des contes que votre enfant veut vraiment entendre.",
+      "introducing": "TalePod allie apprentissage et narration en toute fluidité",
+      "benefits": [
+        {
+          "primary": "Adapté aux centres d'intérêt de votre enfant",
+          "secondary": "Enseignez les sciences, la gentillesse ou l'histoire à travers les thèmes qu'ils adorent."
+        },
+        {
+          "primary": "Stimule la créativité",
+          "secondary": "Les esprits curieux explorent de nouvelles idées à travers le récit."
+        },
+        {
+          "primary": "Facile à utiliser",
+          "secondary": "Choisissez une morale et un environnement — TalePod s'occupe du reste."
+        },
+        {
+          "primary": "Favorise l'alphabétisation",
+          "secondary": "Les histoires éducatives enrichissent le vocabulaire et la compréhension."
+        }
+      ]
+    },
+    "baby": {
+      "heroWhite": "Histoires du soir douces",
+      "heroColored": "pour bébés",
+      "heroHeader": "Des histoires douces et apaisantes conçues pour bercer votre bébé.",
+      "whyPersonalize": "créer des rythmes calmes et répétitifs que les bébés adorent au coucher.",
+      "introducing": "TalePod propose les contes les plus doux pour les plus jeunes auditeurs",
+      "benefits": [
+        {
+          "primary": "Adapté aux centres d'intérêt de votre enfant",
+          "secondary": "Même les bébés bénéficient d'entendre leur prénom dans des histoires apaisantes."
+        },
+        {
+          "primary": "Favorise un meilleur sommeil",
+          "secondary": "Une narration douce et un rythme calme soutiennent la routine du coucher."
+        },
+        {
+          "primary": "Facile à utiliser",
+          "secondary": "Un appui — une histoire douce prête pour l'heure du coucher."
+        },
+        {
+          "primary": "Personnalisable",
+          "secondary": "Choisissez des environnements et des tons paisibles pour les tout-petits endormis."
+        }
+      ]
+    },
+    "best": {
+      "heroWhite": "Meilleures histoires du soir",
+      "heroColored": "avec TalePod",
+      "heroHeader": "Explorez une sélection des histoires du soir les plus populaires, adaptées à vos préférences.",
+      "whyPersonalize": "découvrir pourquoi les contes personnalisés surpassent les livres d'histoires génériques.",
+      "introducing": "TalePod propose des histoires personnalisées de grande qualité, adorées par les familles du monde entier",
+      "benefits": [
+        {
+          "primary": "Adapté aux centres d'intérêt de votre enfant",
+          "secondary": "Les meilleures histoires sont celles qui s'adressent directement à votre enfant."
+        },
+        {
+          "primary": "Stimule la créativité",
+          "secondary": "Des aventures dignes d'un prix, nées de l'imagination de votre enfant."
+        },
+        {
+          "primary": "Facile à utiliser",
+          "secondary": "Rejoignez des milliers de parents qui créent des histoires sans effort."
+        },
+        {
+          "primary": "Favorise l'alphabétisation",
+          "secondary": "La lecture personnalisée est l'un des meilleurs moyens de développer l'alphabétisation."
+        }
+      ]
+    },
+    "quick": {
+      "heroWhite": "Histoires du soir rapides",
+      "heroColored": "pour les routines du coucher rapides",
+      "heroHeader": "Des histoires courtes et douces quand le temps presse.",
+      "whyPersonalize": "offrir la magie rapidement sans sacrifier la personnalisation.",
+      "introducing": "Les histoires les plus rapides de TalePod sont prêtes avant même d'enfiler le pyjama",
+      "benefits": [
+        {
+          "primary": "Adapté aux centres d'intérêt de votre enfant",
+          "secondary": "Rapide ne veut pas dire générique — chaque conte est personnalisé."
+        },
+        {
+          "primary": "Favorise un meilleur sommeil",
+          "secondary": "Des histoires courtes qui apaisent et réconfortent toujours."
+        },
+        {
+          "primary": "Facile à utiliser",
+          "secondary": "Moins d'une minute du prénom à l'histoire."
+        },
+        {
+          "primary": "Personnalisable",
+          "secondary": "Choisissez le format, le ton et le thème en quelques secondes."
+        }
+      ]
+    },
+    "generator": {
+      "heroWhite": "Histoire du soir personnalisée",
+      "heroColored": "Générateur",
+      "heroHeader": "Entrez le prénom, l'âge et les centres d'intérêt de votre enfant — obtenez une histoire du soir narrée et illustrée en quelques secondes.",
+      "whyPersonalize": "rendre chaque coucher unique avec des contes créés par l'IA autour de votre enfant.",
+      "introducing": "Notre générateur transforme quelques détails en une histoire complète illustrée et narrée",
+      "benefits": [
+        {
+          "primary": "Prénom, âge et centres d'intérêt intégrés",
+          "secondary": "Notre générateur d'histoires du soir personnalisées utilise les informations de votre enfant pour créer un conte unique à chaque fois."
+        },
+        {
+          "primary": "Narration et aquarelles",
+          "secondary": "Chaque histoire générée inclut une narration IA chaleureuse et de douces aquarelles — prête en moins d'une minute."
+        },
+        {
+          "primary": "11 langues, adaptées aux enfants",
+          "secondary": "Créez des histoires en 11 langues avec des paramètres adaptés aux enfants, conçus pour les jeunes publics."
+        },
+        {
+          "primary": "Format BD ou long",
+          "secondary": "Choisissez des pages de bande dessinée illustrées ou une histoire en prose plus longue avec une couverture."
+        }
+      ]
+    }
+  },
+  "alternatives": {
+    "heading": "Alternatives à TalePod — Meilleures applications d'histoires du soir personnalisées",
+    "intro": "Vous cherchez des alternatives à TalePod ? Voici une comparaison honnête des applications d'histoires du soir personnalisées populaires pour les parents. Les détails des fonctionnalités sont basés sur le site public de chaque produit en 2026.",
+    "table": {
+      "feature": "Fonctionnalité",
+      "talepod": "TalePod",
+      "storyfox": "StoryFox",
+      "bedtimestory": "Bedtimestory.ai",
+      "storywish": "Storywish",
+      "bairn": "Bairn",
+      "dreampages": "DreamPages"
+    },
+    "rows": [
+      {
+        "feature": "Personnalisation (prénom, âge, centres d'intérêt)",
+        "talepod": "Oui — prénom, âge, genre et centres d'intérêt de l'enfant",
+        "storyfox": "Oui — prénom, âge et centres d'intérêt de l'enfant",
+        "bedtimestory": "Oui — personnages enfant et famille",
+        "storywish": "Oui — personnages personnalisés à partir d'une photo/croquis",
+        "bairn": "Oui — 2 à 12 ans, adaptation selon l'âge",
+        "dreampages": "Oui — personnages et décors personnalisés"
+      },
+      {
+        "feature": "Illustrations artistiques",
+        "talepod": "Aquarelles ; formats BD et long",
+        "storyfox": "Pages d'histoire illustrées",
+        "bedtimestory": "Plusieurs styles artistiques",
+        "storywish": "Pages de livre illustré",
+        "bairn": "Histoires illustrées",
+        "dreampages": "Illustration personnalisée par histoire"
+      },
+      {
+        "feature": "Narration et audio",
+        "talepod": "Narration IA avec plusieurs voix",
+        "storyfox": "Narration ; clonage de la voix parentale",
+        "bedtimestory": "Principalement axé texte/image",
+        "storywish": "Narration disponible",
+        "bairn": "Narration incluse",
+        "dreampages": "Narration disponible"
+      },
+      {
+        "feature": "Langues",
+        "talepod": "11 langues",
+        "storyfox": "12+ langues (selon la page d'accueil)",
+        "bedtimestory": "Plusieurs langues",
+        "storywish": "Non mentionné de façon visible",
+        "bairn": "Fiche sur l'App Store",
+        "dreampages": "Plusieurs langues"
+      },
+      {
+        "feature": "Accent sur la sécurité des enfants",
+        "talepod": "Paramètres adaptés aux enfants ; création guidée par les parents",
+        "storyfox": "Déclarations de sécurité sur la page d'accueil",
+        "bedtimestory": "Contenu adapté aux familles",
+        "storywish": "Plateforme orientée famille",
+        "bairn": "Filtres de sécurité et contrôles parentaux",
+        "dreampages": "Contrôles parentaux et modération"
+      },
+      {
+        "feature": "Modèle tarifaire",
+        "talepod": "Offre gratuite + abonnements",
+        "storyfox": "Abonnement (voir storyfox.net)",
+        "bedtimestory": "Modèle d'abonnement (voir bedtimestory.ai)",
+        "storywish": "Abonnement + livres imprimés",
+        "bairn": "Abonnement à l'application",
+        "dreampages": "Abonnement (voir dreampages.ai)"
+      }
+    ],
+    "footer": "Nous avons comparé TalePod aux applications populaires de cette catégorie.",
+    "whyHeading": "Pourquoi choisir TalePod",
+    "whyBody": "TalePod combine histoires personnalisées, aquarelles, narration IA chaleureuse, 11 langues et formats BD ou long — conçu pour une routine du coucher calme, guidée par les parents. Des paramètres adaptés aux enfants et une création parentale aident à garder chaque histoire adaptée à l'âge de votre enfant.",
+    "cta": "Essayer TalePod gratuitement"
+  },
+  "faq": {
+    "generatorHeading": "Générateur d'histoires du soir personnalisées — FAQ"
+  },
+  "features": {
+    "pageTitle": "TalePod : Créateur d'histoires du soir par IA",
+    "generatorLink": "Essayez notre générateur d'histoires du soir personnalisées",
+    "hero": {
+      "badge": "Nouveau · Maintenant en format BD",
+      "titleLine1": "Histoires du soir,",
+      "titleLine2": "créées rien que pour eux.",
+      "subtitle": "TalePod transforme le prénom, l'âge et les centres d'intérêt de votre enfant en une histoire magique, narrée par des voix IA chaleureuses et maintenant illustrée d'aquarelles douces. Prête en moins d'une minute.",
+      "trustBadges": [
+        "Aucune carte requise",
+        "11 langues",
+        "Sécurisé pour les enfants"
+      ],
+      "previewFor": "Pour Lila · 5 ans",
+      "previewTitle": "Quand la lune a oublié de briller",
+      "previewVoice": "Voix conte de fées",
+      "previewDuration": "2:42 / 8:00",
+      "miniCardTitle": "Le premier flocon de Pip le pingouin",
+      "miniCardMeta": "Pour Lila · 6 min"
+    },
+    "storyFormats": {
+      "overline": "Deux formats d'histoire",
+      "title": "Le coucher, raconté de deux façons.",
+      "subtitle": "Choisissez une BD de six pages peintes pour les plus jeunes, ou une longue histoire chapitrée et vivante pour les lecteurs qui ne veulent jamais que le coucher finisse.",
+      "comicPages": "6 pages",
+      "comic": {
+        "badge": "Nouveau · Histoire illustrée",
+        "title": "Bande dessinée",
+        "description": "Six scènes peintes pleine page avec de courtes légendes et des bulles de dialogue occasionnelles. Faites défiler comme un livre d'images — parfait pour les 3–7 ans.",
+        "features": [
+          "~6 pages illustrées, une scène chacune",
+          "Appuyez ou faites glisser pour tourner la page",
+          "Planches classiques ou à bulles",
+          "5–7 minutes de coucher"
+        ],
+        "tryCta": "Essayer la BD"
+      },
+      "long": {
+        "badge": "Livre chapitre",
+        "title": "Longue histoire",
+        "description": "Une illustration de couverture et une prose riche et vivante en dessous. Pour les lecteurs qui veulent se blottir et plonger dans une histoire plus longue.",
+        "features": [
+          "Une couverture peinte, pas d'art au milieu de l'histoire",
+          "Lecture douillette de ~4–6 minutes",
+          "Ajoutez la narration quand vous voulez",
+          "Sauvegardez et reprenez sur tous les appareils"
+        ],
+        "tryCta": "Essayer la longue histoire"
+      }
+    },
+    "testimonials": {
+      "title": "Ce que disent les parents"
+    },
+    "personalizedText": {
+      "howToHeading": "Comment créer une nouvelle histoire du soir personnalisée",
+      "whyHeading": "Pourquoi personnaliser les histoires du soir ?",
+      "whyBody": "Les <whyLink>histoires du soir personnalisées</whyLink> peuvent renforcer le lien entre parents et enfants. Elles rendent le coucher plus captivant et agréable, offrant un moyen unique d'éveiller l'imagination de votre enfant. TalePod vous permet de créer des histoires sur mesure adaptées aux préférences de votre enfant, faisant de chaque soir une aventure spéciale.",
+      "introHeading": "Découvrez TalePod",
+      "introBody": "TalePod est une application révolutionnaire conçue pour vous aider à <introLink>créer des histoires du soir personnalisées</introLink> sans effort. Avec TalePod, vous pouvez composer des récits uniques en phase avec les centres d'intérêt de votre enfant, pour une expérience du coucher captivante et immersive.",
+      "benefitsHeading": "Avantages de TalePod",
+      "benefits": [
+        {
+          "primary": "Adapté aux centres d'intérêt de votre enfant",
+          "secondary": "Avec TalePod, vous pouvez personnaliser les histoires selon les personnages, thèmes et décors préférés de votre enfant, rendant chaque histoire pertinente et captivante."
+        },
+        {
+          "primary": "Stimule la créativité",
+          "secondary": "TalePod inspire la créativité des parents et des enfants, les encourageant à imaginer et explorer de nouveaux mondes ensemble."
+        },
+        {
+          "primary": "Facile à utiliser",
+          "secondary": "L'interface conviviale de TalePod simplifie la création et la personnalisation des histoires, même pour les moins à l'aise avec la technologie."
+        },
+        {
+          "primary": "Favorise l'alphabétisation",
+          "secondary": "Les histoires personnalisées enrichissent le vocabulaire et la compréhension de votre enfant, et cultivent l'amour de la lecture dès le plus jeune âge."
+        }
+      ],
+      "footerBody": "TalePod transforme le coucher en une expérience magique en proposant des <libraryLink>histoires du soir personnalisées</libraryLink> qui répondent aux préférences uniques de votre enfant. Avec TalePod, vous pouvez <createLink>créer des moments du coucher inoubliables</createLink> qui nourrissent l'imagination et cultivent l'amour du récit. Commencez à créer l'histoire du soir parfaite. Pour plus d'informations, consultez notre <privacyLink>Politique de confidentialité</privacyLink>.",
+      "cta": "Commencer gratuitement",
+      "imageAlt": "unicorn with a magic wand and a book"
+    },
+    "keyFeatures": {
+      "title": "Découvrez la magie de TalePod",
+      "subtitle": "Découvrez les fonctionnalités extraordinaires qui font de TalePod le créateur d'histoires du soir ultime.",
+      "items": [
+        {
+          "title": "Histoires personnalisées",
+          "description": "Créez des histoires uniques adaptées aux centres d'intérêt de votre enfant, pour des aventures magiques rien que pour eux."
+        },
+        {
+          "title": "Facile à utiliser",
+          "description": "Notre interface simple rend la création d'histoires rapide et sans effort, même pour les parents les plus occupés."
+        },
+        {
+          "title": "Créativité illimitée",
+          "description": "Explorez des possibilités infinies avec une vaste bibliothèque de personnages, décors et idées d'intrigue."
+        },
+        {
+          "title": "Contenu captivant",
+          "description": "Créez des histoires qui captivent et divertissent, faisant du coucher quelque chose à attendre avec impatience."
+        },
+        {
+          "title": "Sauvegarder et partager",
+          "description": "Sauvegardez vos histoires préférées et partagez-les avec famille et amis, créant des souvenirs durables."
+        },
+        {
+          "title": "Accès multi-appareils",
+          "description": "Accédez à vos histoires depuis n'importe quel appareil, rendant les histoires du soir disponibles où que vous soyez."
+        }
+      ]
+    },
+    "howItWorks": {
+      "title": "Créez des histoires du soir magiques en 3 étapes faciles",
+      "subtitle": "Donnez vie à l'imagination de votre enfant avec le processus simple de création d'histoires de TalePod.",
+      "imageAlt": "bedtime-story",
+      "steps": [
+        {
+          "title": "1. Imaginez l'aventure",
+          "description": "Commencez par un personnage, un décor ou un thème — laissez libre cours à votre imagination !"
+        },
+        {
+          "title": "2. Personnalisez votre histoire",
+          "description": "Ajoutez des détails, choisissez le ton et adaptez l'histoire aux préférences de votre enfant."
+        },
+        {
+          "title": "3. Partagez la magie",
+          "description": "Lisez votre histoire personnalisée à voix haute et créez une expérience du coucher magique."
+        }
+      ],
+      "ctaAuthenticated": "Commencez à créer maintenant !",
+      "ctaGuest": "Commencez votre essai gratuit !",
+      "noCreditCard": "**Aucune carte bancaire requise"
+    },
+    "storyExamples": {
+      "title": "Exemples d'histoires que vous pouvez créer",
+      "items": [
+        {
+          "title": "Le petit astronaute courageux",
+          "description": "Une histoire sur un enfant qui part à l'aventure sur Mars."
+        },
+        {
+          "title": "Les amis de la forêt magique",
+          "description": "Un conte de créatures des bois qui apprennent à travailler ensemble."
+        },
+        {
+          "title": "L'explorateur voyageur du temps",
+          "description": "Un voyage à travers différentes périodes historiques."
+        },
+        {
+          "title": "Le royaume sous-marin",
+          "description": "Une histoire sur un enfant qui découvre un monde sous-marin caché."
+        },
+        {
+          "title": "Le mystère du jouet disparu",
+          "description": "Une histoire de détective où un enfant résout l'affaire d'un jouet perdu."
+        },
+        {
+          "title": "Le jour où les animaux ont parlé",
+          "description": "Une histoire fantaisiste où les animaux peuvent soudainement se parler."
+        },
+        {
+          "title": "La cabane dans l'arbre magique",
+          "description": "Un enfant découvre une cabane dans l'arbre qui peut voyager vers différents endroits."
+        },
+        {
+          "title": "Le dragon amical",
+          "description": "Une histoire sur un dragon qui a peur du feu et se lie d'amitié avec un enfant."
+        },
+        {
+          "title": "La nuit où les étoiles sont tombées",
+          "description": "Une nuit magique où les étoiles tombent du ciel et les enfants les attrapent."
+        },
+        {
+          "title": "Le jardin secret",
+          "description": "Un enfant découvre un jardin caché aux propriétés magiques."
+        }
+      ]
+    },
+    "benefits": {
+      "title": "Pourquoi vous et votre enfant allez adorer TalePod",
+      "subtitle": "Découvrez les nombreuses façons dont TalePod peut enrichir la routine du coucher de votre famille.",
+      "items": [
+        {
+          "title": "Stimule l'imagination",
+          "description": "Encourage la créativité et la pensée imaginative chez les enfants."
+        },
+        {
+          "title": "Renforce les liens",
+          "description": "Crée des moments spéciaux entre parents et enfants."
+        },
+        {
+          "title": "Favorise l'alphabétisation",
+          "description": "Aide les enfants à développer l'amour de la lecture et du récit."
+        },
+        {
+          "title": "Apprentissage personnalisé",
+          "description": "Adaptez les histoires pour renforcer des leçons ou des valeurs spécifiques."
+        },
+        {
+          "title": "Amusant et captivant",
+          "description": "Fait du coucher une expérience excitante et agréable."
+        },
+        {
+          "title": "Réduit le temps d'écran",
+          "description": "Offre une alternative créative au temps d'écran passif."
+        }
+      ]
+    },
+    "guarantee": {
+      "title": "Notre garantie à toute épreuve",
+      "body1": "Nous sommes tellement convaincus que vous et vos enfants allez adorer TalePod que nous offrons une garantie de satisfaction à 100 %.",
+      "body2": "Si vous n'êtes pas entièrement satisfait, nous arrangerons les choses. Sans poser de questions.",
+      "ctaAuthenticated": "Commencez à créer maintenant !",
+      "ctaGuest": "Essayez sans risque !"
+    },
+    "callToAction": {
+      "title": "Prêt à créer des histoires du soir magiques ?",
+      "body": "Rejoignez TalePod aujourd'hui et commencez à créer des histoires personnalisées que vos enfants chériront pour toujours.",
+      "ctaAuthenticated": "Commencez à créer maintenant !",
+      "ctaGuest": "Commencez GRATUITEMENT !",
+      "noCreditCard": "**Aucune carte bancaire requise"
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "items": {
+        "create": {
+          "question": "Comment créer une histoire du soir sur votre plateforme ?",
+          "answer": "Pour créer une histoire du soir, rendez-vous simplement sur la page <createLink>Créer une histoire</createLink> et remplissez les champs pour créer votre propre histoire personnalisée."
+        },
+        "library": {
+          "question": "Puis-je lire et écouter des histoires créées par d'autres utilisateurs ?",
+          "answer": "Absolument ! Vous pouvez explorer et profiter d'un large éventail d'histoires créées par notre équipe et d'autres utilisateurs.<br/><br/>Parcourez la page <libraryLink>Bibliothèque</libraryLink> pour trouver des versions texte et audio de diverses histoires du soir."
+        },
+        "contact": {
+          "question": "Comment contacter le support client si j'ai une question ou un problème ?",
+          "answer": "Si vous avez des questions ou rencontrez des problèmes, vous pouvez contacter notre équipe de support en visitant la page <contactLink>Contact</contactLink> depuis notre menu."
+        },
+        "guidelines": {
+          "question": "Y a-t-il des directives pour créer des histoires ?",
+          "answer": "Nous veillons à ce que toutes les histoires créées soient appropriées pour les enfants et adaptées aux jeunes publics."
+        },
+        "share": {
+          "question": "Puis-je partager les histoires que je crée sur les réseaux sociaux ?",
+          "answer": "Oui, vous pouvez partager vos histoires sur les réseaux sociaux directement depuis notre plateforme. Utilisez le bouton de partage sur votre page d'histoire pour la publier sur diverses plateformes."
+        },
+        "filter": {
+          "question": "Existe-t-il un moyen de filtrer les histoires par âge ou genre ?",
+          "answer": "Certainement ! Notre plateforme vous permet de filtrer les histoires par tranche d'âge et genre, pour trouver l'histoire parfaite pour le coucher de votre enfant."
+        }
+      },
+      "safety": [
+        {
+          "question": "Comment TalePod gère-t-il les données de mon enfant ?",
+          "answer": "TalePod ne collecte que les informations nécessaires pour personnaliser les histoires, comme le prénom, l'âge et les centres d'intérêt d'un enfant saisis par un parent ou tuteur. Nous ne vendons pas de données personnelles. Consultez notre Politique de confidentialité pour tous les détails sur la collecte, le stockage et la conservation."
+        },
+        {
+          "question": "Comment TalePod maintient-il des histoires adaptées à l'âge ?",
+          "answer": "Les histoires sont générées avec des paramètres sécurisés pour les enfants et des filtres de contenu conçus pour garder le langage et les thèmes adaptés aux jeunes publics. Les parents choisissent l'âge de l'enfant lors de la création pour adapter le ton et la complexité."
+        },
+        {
+          "question": "TalePod est-il conforme aux lois sur la vie privée des enfants comme la COPPA ?",
+          "answer": "TalePod est conçu pour être utilisé par les parents et tuteurs qui créent des histoires au nom des enfants. Nous visons à respecter les exigences applicables en matière de vie privée des enfants, y compris en limitant la collecte de données au nécessaire. Les détails complets de conformité sont dans notre Politique de confidentialité — veuillez la consulter avant utilisation."
+        },
+        {
+          "question": "TalePod affiche-t-il des publicités aux enfants ?",
+          "answer": "TalePod n'affiche pas de publicité tierce dans l'expérience de création ou de lecture d'histoires. Notre priorité est une routine du coucher calme et sans publicité pour les familles."
+        }
+      ]
+    },
+    "testimonialsList": [
+      {
+        "name": "Sarah J.",
+        "title": "Mère de deux enfants",
+        "text": "TalePod a complètement transformé notre routine du coucher ! Mes enfants attendent maintenant avec impatience l'heure des histoires chaque soir. C'est devenu un moment précieux de notre journée."
+      },
+      {
+        "name": "Michael B.",
+        "title": "Père d'un enfant de 5 ans",
+        "text": "J'adore la facilité avec laquelle on peut créer des histoires personnalisées avec TalePod. C'est magique ! Le visage de ma fille s'illumine à chaque nouvelle aventure."
+      },
+      {
+        "name": "Emily L.",
+        "title": "Mère de trois enfants",
+        "text": "L'imagination de mes enfants a explosé depuis que nous utilisons TalePod. Ils inventent constamment de nouvelles idées d'histoires. Je le recommande vivement !"
+      },
+      {
+        "name": "David K.",
+        "title": "Parent et éducateur",
+        "text": "En tant que parent et éducateur, je suis impressionné par la capacité de TalePod à engager les enfants. C'est un outil fantastique pour favoriser la créativité et l'amour de la lecture."
+      },
+      {
+        "name": "Jessica R.",
+        "title": "Maman d'une auteure en herbe",
+        "text": "TalePod a permis à mon enfant de devenir conteuse. Elle écrit maintenant ses propres histoires et les illustre. C'est incroyable de voir sa progression."
+      },
+      {
+        "name": "Kevin M.",
+        "title": "Papa de jumeaux",
+        "text": "Avec des jumeaux, le coucher peut être chaotique. TalePod a rendu tout cela tellement plus facile et agréable. Chaque enfant reçoit une histoire personnalisée, et ils adorent !"
+      },
+      {
+        "name": "Amanda P.",
+        "title": "Grand-mère de quatre petits-enfants",
+        "text": "J'utilise TalePod pour créer des histoires pour mes petits-enfants quand ils viennent. C'est une merveilleuse façon de me connecter avec eux et de créer des souvenirs durables."
+      },
+      {
+        "name": "Brian S.",
+        "title": "Parent d'un lecteur réticent",
+        "text": "Mon enfant redoutait la lecture, mais TalePod a changé cela. Maintenant, il est enthousiaste à l'idée de lire et de créer ses propres histoires. Ça a tout changé."
+      },
+      {
+        "name": "Laura W.",
+        "title": "Mère d'un enfant imaginatif",
+        "text": "TalePod a été un débouché fantastique pour l'imagination sans limites de mon enfant. Les histoires sont toujours uniques et captivantes. On adore !"
+      },
+      {
+        "name": "Chris T.",
+        "title": "Père de deux enfants",
+        "text": "J'étais sceptique au début, mais TalePod a dépassé mes attentes. C'est facile à utiliser et les histoires sont toujours de haute qualité. Fortement recommandé !"
+      }
+    ]
+  }
+}

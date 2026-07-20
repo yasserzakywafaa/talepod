@@ -26,6 +26,7 @@ import characterMonkey from "src/assets/images/landing_pages/monkey_holding_bana
 import characterOwl from "src/assets/images/landing_pages/wise_owl.webp";
 import mascotFox from "src/assets/images/dreaming_fox_with_a_pillow.webp";
 import mascotSleepingBunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
+import { useTranslation } from "react-i18next";
 
 /**
  * Paged comic-book reader (ebook style): swipeable full-bleed scenes with a
@@ -57,6 +58,7 @@ export interface ComicReaderProps {
 }
 
 const ComicReader: FC<ComicReaderProps> = ({ story }) => {
+  const { t } = useTranslation("story");
   const pages = story.pages ?? [];
   const total = pages.length;
   const [activeIndex, setActiveIndex] = useState(0);
@@ -86,10 +88,10 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
             }}
           >
             <ViewCarouselOutlined sx={{ fontSize: 16, color: honey400 }} />
-            Comic · {total} pages · tap a page to jump
+            {t("reader.comic.gridHint", { total })}
           </Box>
           <IconButton
-            aria-label="close"
+            aria-label={t("reader.comic.closeAria")}
             onClick={() => setShowGrid(false)}
             sx={{ color: "text.primary" }}
           >
@@ -251,7 +253,7 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
                 />
 
                 <IconButton
-                  aria-label="All pages"
+                  aria-label={t("reader.comic.allPagesAria")}
                   onClick={() => setShowGrid(true)}
                   sx={{
                     position: "absolute",
@@ -290,7 +292,10 @@ const ComicReader: FC<ComicReaderProps> = ({ story }) => {
                     marginBottom: "4px",
                   }}
                 >
-                  Page {index + 1} of {total}
+                  {t("reader.comic.pageOf", {
+                    current: index + 1,
+                    total,
+                  })}
                 </Box>
                 <Box
                   dir="auto"

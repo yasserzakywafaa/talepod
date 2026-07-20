@@ -1,4 +1,5 @@
 import "./DashboardLayout.scss";
+import { useTranslation } from "react-i18next";
 
 import {
   AppBar,
@@ -32,6 +33,7 @@ import UserAccountMenuButton from "src/components/shared/UserAccountButton";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import routes from "../../../application/routes";
 import { useApplicationContext } from "../../../application/store/Provider";
+import { useIsRtl } from "@yasserzakywafaa/client-core/web/i18n";
 
 const DRAWER_WIDTH = 240;
 const APP_BAR_HEIGHT = 64; // Material-UI default Toolbar height
@@ -43,6 +45,8 @@ interface DashboardMenuItem {
 }
 
 const DashboardLayout = () => {
+  const { t } = useTranslation("dashboard");
+  const isRtl = useIsRtl();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isInstallAppDialogOpen, setIsInstallAppDialogOpen] = useState(false);
   const navigate = useNavigate();
@@ -64,17 +68,17 @@ const DashboardLayout = () => {
 
   const menuItems: DashboardMenuItem[] = [
     {
-      label: "Overview",
+      label: t("nav.overview"),
       path: routes.dashboard.home,
       icon: <DashboardIcon />,
     },
     {
-      label: "Users",
+      label: t("nav.users"),
       path: routes.dashboard.users,
       icon: <PeopleIcon />,
     },
     {
-      label: "Stories",
+      label: t("nav.stories"),
       path: routes.dashboard.stories,
       icon: <ArticleIcon />,
     },
@@ -198,13 +202,20 @@ const DashboardLayout = () => {
       />
       <CircularGradientBackground position="bottom" />
 
-      <Box sx={{ display: "flex", minHeight: "100vh", position: "relative" }}>
+      <Box
+        sx={{
+          display: "flex",
+          minHeight: "100vh",
+          position: "relative",
+          direction: isRtl ? "rtl" : "ltr",
+        }}
+      >
         {/* AppBar for mobile */}
         <AppBar
           position="fixed"
           sx={{
             width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
-            ml: { md: `${DRAWER_WIDTH}px` },
+            marginInlineStart: { md: `${DRAWER_WIDTH}px` },
             // bgcolor: "transparent",
             // backgroundImage: "none",
             color: "text.primary",
@@ -234,6 +245,7 @@ const DashboardLayout = () => {
         >
           {/* Mobile drawer */}
           <Drawer
+            anchor={isRtl ? "right" : "left"}
             variant="temporary"
             open={mobileOpen}
             onClose={handleDrawerToggle}
@@ -251,6 +263,7 @@ const DashboardLayout = () => {
           {/* Desktop drawer */}
           <Drawer
             variant="permanent"
+            anchor={isRtl ? "right" : "left"}
             sx={{
               display: { xs: "none", md: "block" },
               "& .MuiDrawer-paper": {

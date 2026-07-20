@@ -22,6 +22,7 @@ import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useNavigate } from "react-router-dom";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 import { trackEvent } from "src/shared/utils/ga4";
+import { useTranslation } from "react-i18next";
 
 interface StoryCardProps {
   story: Story;
@@ -40,6 +41,7 @@ const getCover = (story: Story): string | undefined =>
   undefined;
 
 const StoryCard = (props: StoryCardProps) => {
+  const { t } = useTranslation("story");
   const navigate = useNavigate();
   const { isDesktop } = useDeviceSize();
   const { audioFile, authorProfile } = props.story;
@@ -91,7 +93,7 @@ const StoryCard = (props: StoryCardProps) => {
             size="small"
             type="button"
             color="primary"
-            aria-label="upgrade"
+            aria-label={t("card.upgradeAria")}
             variant="contained"
             onClick={(e) => {
               e.stopPropagation();
@@ -101,7 +103,7 @@ const StoryCard = (props: StoryCardProps) => {
               handleTogglePricingModal("locked_story");
             }}
           >
-            Upgrade
+            {t("card.upgrade")}
           </Button>
         </Box>
       )}
@@ -119,11 +121,11 @@ const StoryCard = (props: StoryCardProps) => {
           <Chip
             variant="badge"
             color={isComic ? "primary" : "secondary"}
-            label={isComic ? "Comic" : "Story"}
+            label={isComic ? t("card.badgeComic") : t("card.badgeStory")}
           />
         </div>
         {audioFile && audioFile.url && (
-          <div className="story-card-cover-audio" title="Has narration">
+          <div className="story-card-cover-audio" title={t("card.hasNarration")}>
             <GraphicEqOutlined sx={{ fontSize: 16, color: "#fff" }} />
           </div>
         )}
@@ -163,7 +165,7 @@ const StoryCard = (props: StoryCardProps) => {
             <Chip
               size="small"
               variant="outlined"
-              label="Original"
+              label={t("card.tagOriginal")}
               color="primary"
               className="story-card-tags-item"
             />
@@ -196,7 +198,7 @@ const StoryCard = (props: StoryCardProps) => {
           ) : (
             <Avatar
               variant="square"
-              alt="User Picture"
+              alt={t("card.authorAvatarAlt")}
               src={authorProfile.picture}
             />
           ))}

@@ -6,8 +6,11 @@ import Container from "@mui/material/Container";
 import { ExpandMoreOutlined } from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
 import { generatorFaqItems } from "src/shared/content/faqContent";
+import { useTranslation } from "react-i18next";
 
 export default function GeneratorFaq() {
+  const { t } = useTranslation("landing");
+
   return (
     <Container
       id="faq"
@@ -29,7 +32,7 @@ export default function GeneratorFaq() {
           width: { sm: "100%", md: "60%" },
           textAlign: { sm: "left", md: "center" }
         }}>
-        Personalized bedtime story generator — FAQ
+        {t("faq.generatorHeading")}
       </Typography>
       <Card sx={{ width: "100%" }}>
         {generatorFaqItems.map((item, index) => {

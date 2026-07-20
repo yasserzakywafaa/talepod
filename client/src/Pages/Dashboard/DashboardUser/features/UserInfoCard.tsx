@@ -1,14 +1,22 @@
 import { Box, Card, CardContent, Chip, Grid, Typography } from "@mui/material";
-import { User, UserStatus } from "src/shared/types/user";
+import { User, UserRole, UserStatus } from "src/shared/types/user";
 
 import ProfileAvatar from "src/components/shared/ProfileAvatar";
 import { getUserContact } from "src/shared/utils/getUserContact";
+import { useTranslation } from "react-i18next";
+import {
+  formatLocalizedDateTime,
+  localeFromLanguage,
+} from "@yasserzakywafaa/client-core";
 
 interface UserInfoCardProps {
   user: User | null;
 }
 
 const UserInfoCard = ({ user }: UserInfoCardProps) => {
+  const { t, i18n } = useTranslation("dashboard");
+  const locale = localeFromLanguage(i18n.language);
+
   if (!user) {
     return null;
   }
@@ -28,6 +36,19 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
     }
   };
 
+  const getRoleLabel = (role: UserRole) => {
+    switch (role) {
+      case UserRole.super_admin:
+        return t("admin.users.roleSuperAdmin");
+      case UserRole.admin:
+        return t("admin.users.roleAdmin");
+      case UserRole.user:
+        return t("admin.user.roleUser");
+      default:
+        return role;
+    }
+  };
+
   return (
     <Card>
       <CardContent>
@@ -38,7 +59,6 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
             justifyContent: "space-between",
             flexWrap: "wrap"
           }}>
-          {/* User info */}
           <Box
             sx={{
               display: "flex",
@@ -62,14 +82,12 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
                   mb: 1
                 }}>
                 <Chip
-                  label={
-                    user.status.charAt(0).toUpperCase() + user.status.slice(1)
-                  }
+                  label={t(`admin.users.statusValues.${user.status}`)}
                   color={getStatusColor(user.status) as any}
                   size="small"
                 />
                 <Chip
-                  label={user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                  label={getRoleLabel(user.role)}
                   color="primary"
                   variant="outlined"
                   size="small"
@@ -83,13 +101,12 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
             </Box>
           </Box>
 
-          {/* User details */}
           <Grid container spacing={1}>
             <Grid container size={{ xs: 12 }} sx={{
               gap: 2
             }}>
               <Grid size={{ xs: 3, sm: 2 }}>
-                <Typography variant="body2">User ID:</Typography>
+                <Typography variant="body2">{t("admin.user.userId")}</Typography>
               </Grid>
               <Grid size="auto">
                 <Typography variant="body2" sx={{
@@ -104,13 +121,13 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
               gap: 2
             }}>
               <Grid size={{ xs: 3, sm: 2 }}>
-                <Typography variant="body2">Created:</Typography>
+                <Typography variant="body2">{t("admin.user.created")}</Typography>
               </Grid>
               <Grid size="auto">
                 <Typography variant="body2" sx={{
                   fontWeight: "bold"
                 }}>
-                  {new Date(user.createdAt).toLocaleString()}
+                  {formatLocalizedDateTime(user.createdAt, locale)}
                 </Typography>
               </Grid>
             </Grid>
@@ -119,13 +136,13 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
               gap: 2
             }}>
               <Grid size={{ xs: 3, sm: 2 }}>
-                <Typography variant="body2">Last Login:</Typography>
+                <Typography variant="body2">{t("admin.user.lastLogin")}</Typography>
               </Grid>
               <Grid size="auto">
                 <Typography variant="body2" sx={{
                   fontWeight: "bold"
                 }}>
-                  {new Date(user.lastLogin).toLocaleString()}
+                  {formatLocalizedDateTime(user.lastLogin, locale)}
                 </Typography>
               </Grid>
             </Grid>
@@ -134,13 +151,13 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
               gap: 2
             }}>
               <Grid size={{ xs: 3, sm: 2 }}>
-                <Typography variant="body2">Subscription:</Typography>
+                <Typography variant="body2">{t("admin.user.subscription")}</Typography>
               </Grid>
               <Grid size="auto">
                 <Typography variant="body2" sx={{
                   fontWeight: "bold"
                 }}>
-                  {user.subscription?.type || "N/A"}
+                  {user.subscription?.type || t("admin.user.notAvailable")}
                 </Typography>
               </Grid>
             </Grid>

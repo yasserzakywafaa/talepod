@@ -7,6 +7,7 @@ import {
 } from "@mui/icons-material";
 
 import { FC } from "react";
+import { useTranslation } from "react-i18next";
 import characterKitten from "src/assets/images/landing_pages/dreamy_kitten.webp";
 import characterLion from "src/assets/images/landing_pages/lion_cub.webp";
 import characterOwl from "src/assets/images/landing_pages/wise_owl.webp";
@@ -31,9 +32,9 @@ export interface FormatChooserProps {
 interface FormatItem {
   id: StoryFormat;
   icon: SvgIconComponent;
-  badge: string;
-  title: string;
-  sub: string;
+  badgeKey: "form.format.comic.badge" | "form.format.long.badge";
+  titleKey: "form.format.comic.title" | "form.format.long.title";
+  subKey: "form.format.comic.sub" | "form.format.long.sub";
   art: string[];
 }
 
@@ -41,17 +42,17 @@ const ITEMS: FormatItem[] = [
   {
     id: "comic",
     icon: ViewCarouselOutlined,
-    badge: "Picture story",
-    title: "Comic book",
-    sub: "~6 illustrated pages · best for younger kids",
+    badgeKey: "form.format.comic.badge",
+    titleKey: "form.format.comic.title",
+    subKey: "form.format.comic.sub",
     art: [mascotSleepingBunny, characterKitten, characterOwl],
   },
   {
     id: "long",
     icon: MenuBookOutlined,
-    badge: "Chapter book",
-    title: "Long story",
-    sub: "Cover illustration · rich text · narration later",
+    badgeKey: "form.format.long.badge",
+    titleKey: "form.format.long.title",
+    subKey: "form.format.long.sub",
     art: [characterLion],
   },
 ];
@@ -61,6 +62,7 @@ const FormatChooser: FC<FormatChooserProps> = ({
   onChange,
   variant = "row",
 }) => {
+  const { t } = useTranslation("story");
   const stacked = variant === "stacked";
   return (
     <Box
@@ -97,7 +99,7 @@ const FormatChooser: FC<FormatChooserProps> = ({
               position: "relative",
             }}
           >
-            <FormatPreview kind={it.id} art={it.art} compact={stacked} />
+            <FormatPreview kind={it.id} art={it.art} compact={stacked} t={t} />
             <Box
               sx={{ display: "flex", alignItems: "flex-start", gap: "10px" }}
             >
@@ -125,7 +127,7 @@ const FormatChooser: FC<FormatChooserProps> = ({
                 <Chip
                   variant="badge"
                   color={sel ? "primary" : "secondary"}
-                  label={it.badge}
+                  label={t(it.badgeKey)}
                 />
                 <Box
                   sx={{
@@ -136,7 +138,7 @@ const FormatChooser: FC<FormatChooserProps> = ({
                     marginTop: "4px",
                   }}
                 >
-                  {it.title}
+                  {t(it.titleKey)}
                 </Box>
                 <Box
                   sx={{
@@ -146,7 +148,7 @@ const FormatChooser: FC<FormatChooserProps> = ({
                     lineHeight: 1.4,
                   }}
                 >
-                  {it.sub}
+                  {t(it.subKey)}
                 </Box>
               </Box>
               <Box
@@ -183,9 +185,10 @@ interface FormatPreviewProps {
   kind: StoryFormat;
   art: string[];
   compact?: boolean;
+  t: (key: string) => string;
 }
 
-const FormatPreview: FC<FormatPreviewProps> = ({ kind, art, compact }) => {
+const FormatPreview: FC<FormatPreviewProps> = ({ kind, art, compact, t }) => {
   const H = compact ? 84 : 110;
   const stars =
     "radial-gradient(circle at 18% 22%, rgba(255,213,107,0.45) 0 1.5px, transparent 2.5px), radial-gradient(circle at 78% 28%, rgba(255,255,255,0.45) 0 1.2px, transparent 2px)";
@@ -243,7 +246,7 @@ const FormatPreview: FC<FormatPreviewProps> = ({ kind, art, compact }) => {
             letterSpacing: "0.04em",
           }}
         >
-          6 pages
+          {t("form.format.comic.previewPages")}
         </Box>
       </Box>
     );

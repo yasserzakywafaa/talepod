@@ -5,8 +5,10 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import { Pricing } from "src/components/shared/Pricing/Pricing";
 import { usePricingModalContext } from "./store/Provider";
+import { useTranslation } from "react-i18next";
 
 export const PricingModal = () => {
+  const { t } = useTranslation("common");
   const {
     store: { state, handleTogglePricingModal },
   } = usePricingModalContext();
@@ -47,7 +49,7 @@ export const PricingModal = () => {
             startIcon={<Close />}
             onClick={handleCloseModal}
           >
-            Close
+            {t("close")}
           </Button>
         </DialogActions>
       </Dialog>

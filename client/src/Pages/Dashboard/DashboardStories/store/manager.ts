@@ -8,6 +8,7 @@ import { ApiResponseWithPaging } from "src/shared/types/types";
 import { DashboardStoriesStore } from "./store";
 import END_POINTS from "src/application/shared/endpoints";
 import { Story } from "src/components/StoryCreator/store/state";
+import i18n from "src/i18n/init";
 
 export interface DashboardStoriesManager {
   setUp: () => Promise<void>;
@@ -71,7 +72,7 @@ export const useDashboardStoriesManager = (
       await axios.delete(END_POINTS.DASHBOARD.STORIES.DELETE_STORY(storyId));
 
       Notify({
-        content: "Story deleted successfully",
+        content: i18n.t("dashboard:toasts.storyDeleted"),
         type: ToastTypes.Success,
       });
 

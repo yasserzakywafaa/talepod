@@ -3,7 +3,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import { ExpandMoreOutlined } from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
-import { safetyFaqItems } from "src/shared/content/faqContent";
+import { useTranslation } from "react-i18next";
 
 interface SafetyFaqAccordionsProps {
   panelIdPrefix?: string;
@@ -14,10 +14,14 @@ export default function SafetyFaqAccordions({
   panelIdPrefix = "safety",
   startPanelIndex = 7,
 }: SafetyFaqAccordionsProps) {
+  const { t } = useTranslation("landing");
+  const safetyItems = t("features.faq.safety", {
+    returnObjects: true,
+  }) as Array<{ question: string; answer: string }>;
+
   return (
     <>
-      {/* TODO: legal review — safety/COPPA FAQ copy below is draft only. */}
-      {safetyFaqItems.map((item, index) => {
+      {safetyItems.map((item, index) => {
         const panelId = `${panelIdPrefix}${startPanelIndex + index}`;
         return (
           <Accordion key={panelId}>

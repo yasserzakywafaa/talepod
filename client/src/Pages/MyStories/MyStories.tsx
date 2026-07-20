@@ -14,8 +14,10 @@ import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 import { useMyStoriesContext } from "../MyStories/store/Provider";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const MyStoriesPage: React.FC = () => {
+  const { t } = useTranslation("library");
   const navigate = useNavigate();
   const {
     store: {
@@ -67,7 +69,7 @@ const MyStoriesPage: React.FC = () => {
     <Page
       isLoading={isFetching && !stories.length}
       className="my-stories-page"
-      title="My Bedtime Stories on TalePod"
+      title={t("page.myStoriesTitle")}
       loaderComponentName={LoaderComponentNameEnum.BedtimeStories}
     >
       <Container className="my-stories-container">
@@ -86,7 +88,7 @@ const MyStoriesPage: React.FC = () => {
               mt: { xs: 0, sm: 2 }
             }}>
             <Button variant="text" onClick={handleFilterButtonClick}>
-              Filters
+              {t("page.filters")}
               {activeFiltersCount ? (
                 <Badge badgeContent={activeFiltersCount} color="secondary">
                   <FilterAltOutlined color="primary" />

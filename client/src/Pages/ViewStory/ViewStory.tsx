@@ -36,8 +36,10 @@ import { useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useViewStoryContext } from "./store/Provider";
 import { trackEvent } from "src/shared/utils/ga4";
+import { useTranslation } from "react-i18next";
 
 const ViewStoryPage: React.FC = () => {
+  const { t } = useTranslation("story");
   const { slug } = useParams<{ userId: string; slug: string }>();
   const {
     store: {
@@ -133,7 +135,7 @@ const ViewStoryPage: React.FC = () => {
       if (isStoryGenerated) {
         Notify({
           type: ToastTypes.Success,
-          content: "Story created successfully.",
+          content: t("reader.toastCreated"),
         });
         window.localStorage.removeItem(
           APP_CONSTANTS.LOCAL_STORAGE.STORY_GENERATED,
@@ -152,7 +154,11 @@ const ViewStoryPage: React.FC = () => {
       isLoading={isFetching || isCreatingAudio}
       // isLoading={!isCreatingAudio}
       className="view-story-page"
-      title={`${story && story.title} | Bedtime story on TalePod`}
+      title={
+        story && story.title
+          ? t("reader.pageTitle", { title: story.title })
+          : undefined
+      }
       loaderComponentName={
         isCreatingAudio
           ? LoaderComponentNameEnum.CreateAudio
@@ -183,7 +189,7 @@ const ViewStoryPage: React.FC = () => {
                   alignItems: "center",
                 }}
               >
-                Story images are on the way
+                {t("reader.imagesPending")}
               </Alert>
             )}
 

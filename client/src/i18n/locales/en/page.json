@@ -1,0 +1,508 @@
+{
+  "features": {
+    "pageTitle": "Talepod: AI-Powered Tendering & BOQ Platform for Teams",
+    "heroTitle": "Smart Tendering & BOQ for",
+    "heroTitleHighlight": "Construction Companies",
+    "heroSubtitle": "Generate accurate Bill of Quantities (BOQ) in minutes with AI-powered logic and streamline your tendering process.",
+    "heroCta": "Try For free",
+    "heroNote": "No credit card required.",
+    "badge": "AI-Powered Tendering Platform",
+    "heroHeadline": "From Drawings to <highlight>Tender-Ready BOQ</highlight> with Your Team",
+    "heroSubheadline": "Upload DWG drawings, let AI extract quantities and generate descriptions, then export professional BOQs. All in one workspace your whole team can access.",
+    "getStartedFree": "Get Started Free",
+    "seeHowItWorks": "See How It Works",
+    "heroTrustNote": "No credit card required. Invite your team with a <joinCode>simple join code</joinCode>.",
+    "trustBadges": {
+      "dwgDxf": "DWG & DXF",
+      "drawingFormats": "Drawing Formats Supported",
+      "teams": "Teams",
+      "workspaceCollaboration": "Shared Workspace Collaboration",
+      "minutes": "Minutes",
+      "uploadToBoq": "From Upload to Tender-Ready BOQ"
+    },
+    "problemSolution": {
+      "title": "Stop Wasting Time on Manual Takeoffs",
+      "subtitle": "See how Talepod transforms your quantity takeoff and tendering process",
+      "oldWay": "The Old Way",
+      "meterzWay": "The Talepod Way",
+      "problems": [
+        "Manual BOQ creation takes days of tedious work",
+        "Writing SMM descriptions from scratch is slow and error-prone",
+        "Pricing each line item requires hours of research",
+        "Team members work in silos with no shared project access"
+      ],
+      "solutions": [
+        "AI extracts quantities from DWG drawings in minutes",
+        "AI generates SMM-compliant descriptions automatically",
+        "AI fills unit rates using configured price sources",
+        "Shared workspace lets your whole team collaborate on projects"
+      ]
+    },
+    "howItWorks": {
+      "title": "Four Steps to a Tender-Ready BOQ",
+      "subtitle": "From drawing upload to professional tender documents in minutes",
+      "startFirstProject": "Start Your First Project",
+      "steps": [
+        {
+          "title": "Upload Drawings",
+          "description": "Upload your DWG or DXF files — individually or as a ZIP archive. Talepod processes them and extracts quantities automatically."
+        },
+        {
+          "title": "AI Generates Your BOQ",
+          "description": "AI writes SMM-compliant descriptions for each line item and fills unit rates using your configured price sources."
+        },
+        {
+          "title": "Review & Refine",
+          "description": "Review the generated BOQ in an editable table. Accept, edit, or decline AI suggestions. Track budget and variance in real time."
+        },
+        {
+          "title": "Export & Submit",
+          "description": "Export your final BOQ as Excel, Tender Pack, or PDF — ready for tender submission or cost estimation."
+        }
+      ]
+    },
+    "grid": {
+      "title": "Everything You Need for Faster Tendering",
+      "subtitle": "Powerful features designed for quantity surveyors and construction teams",
+      "items": [
+        {
+          "title": "DWG & DXF Support",
+          "description": "Upload AutoCAD DWG and DXF files directly. Process single files or ZIP archives containing multiple drawings for bulk extraction."
+        },
+        {
+          "title": "AI-Generated Descriptions",
+          "description": "AI writes SMM-compliant descriptions for every BOQ line item using your project context — location, discipline, and measurement standard."
+        },
+        {
+          "title": "AI Rate Filling",
+          "description": "Automatically fill unit rates for your BOQ items using your configured price sources and resource library. Review and adjust before finalizing."
+        },
+        {
+          "title": "Bulk Processing",
+          "description": "Process hundreds of drawings at once. Upload a ZIP archive and Talepod aggregates quantities across all files into one comprehensive BOQ."
+        },
+        {
+          "title": "Team Workspaces",
+          "description": "Create a workspace for your company. Invite colleagues with a simple join code. Everyone sees and works on the same projects."
+        },
+        {
+          "title": "Editable BOQ Table",
+          "description": "Edit quantities, descriptions, and rates directly in the table. Add or remove rows. Track unsaved changes with real-time budget and variance indicators."
+        },
+        {
+          "title": "Multi-Currency & Budget Tracking",
+          "description": "Set your project currency (EGP, USD, EUR, GBP). Define budgets and track variance with Pareto analysis of top cost items."
+        },
+        {
+          "title": "Professional Exports",
+          "description": "Export as Excel spreadsheet, detailed Tender Pack, or PDF. Every format is ready for tender submission or client review."
+        }
+      ]
+    },
+    "testimonials": {
+      "title": "Trusted by Construction Teams",
+      "subtitle": "See how quantity surveyors and engineers use Talepod to streamline tendering"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Everything you need to know about Talepod",
+      "items": [
+        {
+          "question": "What file formats does Talepod support?",
+          "answer": "Talepod supports AutoCAD DWG and DXF files. You can upload individual files or ZIP archives containing multiple drawings. The system processes them and extracts quantities for concrete, steel, and other materials."
+        },
+        {
+          "question": "What does the AI actually do?",
+          "answer": "Talepod uses AI for two key tasks: generating SMM-compliant descriptions for your BOQ line items, and filling unit rates based on your configured price sources and resource library. You review and accept each suggestion before it's applied."
+        },
+        {
+          "question": "How does the team workspace work?",
+          "answer": "When you sign up, you create a workspace for your company or team. You get a join code you can share with colleagues — they enter the code to join your workspace. Everyone in the workspace sees the same projects and can collaborate on BOQs."
+        },
+        {
+          "question": "Can I process multiple drawings at once?",
+          "answer": "Yes. Upload a ZIP archive or select multiple DWG/DXF files, and Talepod will process them all and aggregate quantities across every drawing into a single BOQ. You can track progress with real-time processing logs."
+        },
+        {
+          "question": "What export formats are available?",
+          "answer": "Talepod offers three export options: a standard Excel spreadsheet, a detailed Tender Pack with extended information, and a professional PDF. All formats include itemized quantities, descriptions, rates, and amounts — ready for tender submission."
+        },
+        {
+          "question": "What currencies and measurement standards are supported?",
+          "answer": "You can set your project currency to EGP, USD, EUR, or GBP. For AI descriptions, you can choose between SMM standards like NRM2 or CESMM4. The system uses your project's country, region, and discipline to generate context-aware outputs."
+        }
+      ]
+    },
+    "finalCta": {
+      "title": "Ready to Streamline Your Tendering?",
+      "subtitle": "Create a workspace, invite your team, and let AI handle the heavy lifting — from quantity extraction to tender-ready BOQs.",
+      "noCreditCard": "No credit card required.",
+      "freeToStart": "Free to start, invite your whole team"
+    }
+  },
+  "contact": {
+    "pageTitle": "Contact Us | TalePod",
+    "title": "Contact Us",
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message",
+    "sendMessage": "Send Message",
+    "breadcrumbHome": "Home",
+    "breadcrumbContact": "Contact"
+  },
+  "pricing": {
+    "pageTitle": "Pricing | TalePod",
+    "title": "Pricing",
+    "subtitle": "We have a wide range of packages for you to choose from",
+    "plans": "Plans",
+    "popular": "Popular",
+    "mostPopular": "Most popular",
+    "perMonth": "/month",
+    "freeForever": "free forever",
+    "billedMonthly": "billed monthly",
+    "billedYearly": "billed yearly · {{currency}}{{total}}/yr",
+    "heroTitle": "One price for unlimited bedtimes",
+    "heroSubtitle": "Start free. Upgrade when bedtime becomes the best part of the day.",
+    "tableAriaLabel": "pricing table",
+    "bestValue": "Best value",
+    "breadcrumbHome": "Home",
+    "breadcrumbPricing": "Pricing",
+    "cta": {
+      "createStories": "Create Stories",
+      "registerSubscribe": "Register & Subscribe",
+      "upgrade": "Upgrade",
+      "currentPlan": "Current Plan"
+    },
+    "features": {
+      "standardSupport": "Standard customer support",
+      "createUpToFree_one": "Create up to {{count}} bedtime story",
+      "createUpToFree_other": "Create up to {{count}} bedtime stories",
+      "basicTts": "Basic text-to-speech conversion",
+      "limitedLibrary": "Access to a limited story library",
+      "prioritySupport": "Priority customer support",
+      "customizableParams": "Customizable story parameters",
+      "highQualityTts": "High-quality text-to-speech conversion",
+      "createUpToMonthly_one": "Create up to {{count}} bedtime story per month",
+      "createUpToMonthly_other": "Create up to {{count}} bedtime stories per month",
+      "accessPremiumStories": "Access your Premium created stories",
+      "everythingInPremium": "Everything in Premium",
+      "unlimitedStories": "Unlimited bedtime stories",
+      "priorityGeneration": "Priority story generation",
+      "allVoices": "All storyteller voices",
+      "unlimitedLibrary": "Save unlimited stories in your library"
+    },
+    "table": {
+      "rowNumberOfStories": "Number of stories",
+      "rowStoryCustomization": "Story customization",
+      "rowVisibility": "Visibility of Stories",
+      "rowCustomizableParams": "Customizable story parameters",
+      "rowHighQualityTts": "High-quality text-to-speech conversion",
+      "rowAccessPremiumStories": "Access your Premium created stories",
+      "rowCustomerSupport": "Customer support",
+      "valueUnlimited": "Unlimited",
+      "valueStandard": "Standard",
+      "valuePriority": "Priority",
+      "valuePublic": "Public"
+    }
+  },
+  "notFound": {
+    "pageTitle": "Not Found | TalePod",
+    "title": "Page Not Found",
+    "goToMain": "Go back home"
+  },
+  "unauthorized": {
+    "pageTitle": "Unauthorized | TalePod",
+    "title": "Unauthorized",
+    "message": "Please Login to your account or create an account to enjoy private magical bedtime stories.",
+    "createFreeAccount": "Create Free Account",
+    "loginToAccount": "Login to your account"
+  },
+  "legal": {
+    "privacyPageTitle": "Privacy Policy | TalePod",
+    "privacyTitle": "Privacy Policy",
+    "termsPageTitle": "Terms and Conditions | TalePod",
+    "termsTitle": "Terms and Conditions for TalePod",
+    "lastUpdated": "Last updated:"
+  },
+  "paymentStatus": {
+    "pageTitle": "Payment Success | TalePod",
+    "processing": "Please wait while we securely process your payment...",
+    "successTitle": "Payment Successful",
+    "successMessage": "Hooray, {{name}}! 🎉 <br />Your payment process of <bold>{{amount}}</bold> has been completed successfully!",
+    "subscriptionEnd": "Your subscription will end on <b>{{date}}</b>.",
+    "storyCreditAdded_one": "A story credit has been added to your account 🎉 You now have <b>{{count}}</b> credit to use anytime — even beyond your plan's limit.",
+    "storyCreditAdded_other": "A story credit has been added to your account 🎉 You now have <b>{{count}}</b> credits to use anytime — even beyond your plan's limit.",
+    "goToProfile": "Go to Profile",
+    "createStory": "Create a Story",
+    "createPremiumStories": "Create Premium Stories"
+  },
+  "installApp": {
+    "fromBrowser": "From",
+    "browserWord": "browser",
+    "tapIconAndThen": "simply tap the",
+    "clickIconAndThen": "simply click the",
+    "iconAndThen": "icon and then",
+    "iosDescription": "Install this app on your iPhone or iPad and enjoy the mobile application functionality.",
+    "iosStep1": "Safari",
+    "iosStep2": "Add to Home Screen",
+    "androidDescription": "Install this app on your device and enjoy the native application functionality",
+    "androidButton": "Install App",
+    "macDescription": "Install this app on your Mac and enjoy the native application functionality.",
+    "macStep1": "Safari",
+    "macStep2": "Add to Dock",
+    "windowsDescription": "Install this app on your Windows computer and enjoy the desktop application functionality.",
+    "windowsStep1": "Chrome",
+    "windowsFromChrome": "at the top next to the URL,",
+    "windowsButton": "Install"
+  },
+  "howItWorks": {
+    "pageTitle": "How It Works | Talepod",
+    "tabs": {
+      "overview": "Overview",
+      "projectSetup": "Project Setup",
+      "quantityTakeoff": "Quantity Takeoff",
+      "smartMapper": "Smart Mapper",
+      "pricing": "Pricing",
+      "analysisExport": "Analysis & Export",
+      "tipsFaq": "Tips & FAQ"
+    },
+    "overview": {
+      "title": "How Talepod Works",
+      "subtitle": "From drawings to tender-ready BOQ in 8 steps",
+      "description": "Talepod automates the Bill of Quantities workflow. Upload your CAD drawings, and AI handles descriptions, pricing, and analysis — giving you a tender-ready BOQ in minutes instead of days.",
+      "proTip": "Traditional BOQ creation takes 3–5 days of manual measurement and data entry. With Talepod, a typical project goes from DWG files to a priced, exportable tender pack in under 30 minutes.",
+      "startFirstProject": "Start Your First Project",
+      "steps": [
+        "Create Project",
+        "Configure Settings",
+        "Set Up Resources",
+        "Upload Drawings",
+        "Smart Mapper",
+        "Pricing",
+        "Financial Advisor",
+        "Export"
+      ]
+    },
+    "projectSetup": {
+      "title": "Setting Up Your Project",
+      "subtitle": "Create your project and configure the context that drives AI and pricing",
+      "steps": [
+        {
+          "title": "Create Project",
+          "description": "Give your project a name, set start and end dates, and add an optional description. This is your project's identity throughout the workflow."
+        },
+        {
+          "title": "Configure Settings",
+          "description": "Set your project's location (country/region), currency, project type, budget target, risk profile, and SMM standard (NRM2 or CESMM4)."
+        },
+        {
+          "title": "Set Up Resources",
+          "description": "Define your resource library: materials (concrete, steel, bricks), labor rates, and plant costs. Each resource has a name, type, unit, and optional price URL."
+        }
+      ],
+      "concepts": {
+        "smm": {
+          "title": "What is an SMM Standard?",
+          "body": "SMM (Standard Method of Measurement) defines how construction work items should be described and measured in a BOQ. Talepod supports <strong>NRM2</strong> (New Rules of Measurement 2, used in the UK) and <strong>CESMM4</strong> (Civil Engineering Standard Method of Measurement 4). Your choice determines the style and structure of AI-generated descriptions."
+        },
+        "priceUrls": {
+          "title": "What are Price Source URLs?",
+          "body": "These are web pages containing current material or labor prices (e.g., a supplier price list page, a government rate schedule). Talepod fetches these pages and uses AI to extract relevant prices when filling your BOQ rates automatically."
+        },
+        "riskProfile": {
+          "title": "What is a Risk Profile?",
+          "body": "Your risk profile (Low, Medium, High) determines the contingency percentage automatically applied to rates. Low = ~5%, Medium = ~10%, High = ~15%. This accounts for uncertainties in pricing and ensures your estimates include appropriate buffers."
+        }
+      },
+      "proTip": "Set your currency and location before uploading drawings. The AI uses these to generate context-aware descriptions and find region-specific pricing.",
+      "warning": "Skipping the Resources setup is one of the most common mistakes. Without resources, the pricing engine has nothing to map BOQ items to. Add at least your key materials (concrete, steel, bricks) before running Fill Rates."
+    },
+    "quantityTakeoff": {
+      "title": "Quantity Takeoff: From Drawings to Data",
+      "subtitle": "Upload DWG/DXF files and let Talepod extract quantities automatically",
+      "dwgTitle": "DWG & DXF Files",
+      "dwgDescription": "Upload individual AutoCAD drawing files. Talepod processes each file and extracts quantities from layers, blocks, and text entities.",
+      "zipTitle": "ZIP Archives",
+      "zipDescription": "Upload a ZIP containing multiple DWG/DXF files. Talepod extracts and processes every drawing, then aggregates results into a single BOQ.",
+      "howToUpload": "How to Upload & Process",
+      "uploadSteps": [
+        "Open your project and go to the Quantity Takeoff tab",
+        "(Optional) Fill the tender form: reference ID, submission deadline, discipline",
+        "Drag-and-drop files or click to select (up to 30 files at once)",
+        "Review staged files — remove any unwanted files before processing",
+        "Click Start Processing and watch live progress logs",
+        "Review aggregated results: BOQ table + concrete/steel summary cards",
+        "Click Save to Project to populate the BOQ tab"
+      ],
+      "whatGetsExtracted": "What Gets Extracted",
+      "table": {
+        "material": "Material",
+        "detected": "What's Detected",
+        "units": "Units",
+        "concrete": "Concrete",
+        "concreteDetected": "Slabs, walls, foundations from layer names (e.g., CONC-SLAB, CONC-WALL, FOUNDATION)",
+        "concreteUnits": "Volume (m³), Area (m²), Weight (tonnes)",
+        "steel": "Steel / Rebar",
+        "steelDetected": "Rebar from layer names (REBAR, STEEL), text counts (e.g., \"20-T16\", \"T12@200\")",
+        "steelUnits": "Length (m), Weight (tonnes)"
+      },
+      "mergeNote": "When you upload multiple files, Talepod merges identical line items (same description + unit) across all drawings, summing quantities into a single BOQ. Item numbers are renumbered automatically.",
+      "layerDetection": {
+        "title": "How does layer detection work?",
+        "body": "Talepod reads AutoCAD layer names to identify material types. Layers matching keywords like CONC-SLAB, FOUNDATION, REBAR are automatically classified. Thickness is read from layer names (e.g., SLAB-150 = 150mm). Annotations, dimensions, grid lines, and formwork layers are excluded to keep the BOQ clean."
+      },
+      "proTip": "Name your CAD layers using standard naming conventions (e.g., CONC-SLAB-150, REBAR-T16). The more consistent your layer names, the more accurate the extraction.",
+      "warning": "Uploading files with non-standard units can cause issues. Talepod auto-detects units from the DWG header (mm, cm, m, inches, feet) and normalizes to meters. If your drawings use custom unit scales, check the extracted quantities carefully."
+    },
+    "smartMapper": {
+      "title": "Smart Mapper: AI-Generated Descriptions",
+      "subtitle": "Turn raw extraction data into professional, SMM-compliant BOQ descriptions",
+      "beforeLabel": "Before — Raw QTO",
+      "beforeExample": "Concrete Works (Walls, Slabs, Foundations) — m³ — 245.50",
+      "afterLabel": "After — Smart Mapper",
+      "afterExample": "Reinforced in-situ concrete; grade C30/37; in walls; thickness 200–350mm; including formwork, both sides — m³ — 245.50",
+      "howToUse": "How to Use It",
+      "usageSteps": [
+        "Go to the BOQ tab after Quantity Takeoff data has been saved",
+        "Click \"Generate Descriptions\"",
+        "AI processes each line item using your project's SMM standard and context (location, discipline, project type)",
+        "Review the suggestion table showing Current Description vs. Suggested Description",
+        "Accept, edit, or decline each suggestion individually — or use Apply All",
+        "Descriptions are updated and saved to your project BOQ"
+      ],
+      "nrmVsCesmm": {
+        "title": "NRM2 vs CESMM4 — Which should I choose?",
+        "body": "<strong>NRM2</strong> (New Rules of Measurement 2) is the UK standard for detailed measurement of building works. Use it for building projects (residential, commercial, high-rise). <strong>CESMM4</strong> (Civil Engineering Standard Method of Measurement 4) is for civil engineering works (roads, bridges, tunnels). Choose based on your project type. If unsure, NRM2 is the most common choice."
+      },
+      "proTip": "The AI uses your project's country, region, discipline, and SMM standard to generate descriptions. The more complete your project settings, the better the descriptions will be.",
+      "note": "You always have the final say. Every AI suggestion must be reviewed and accepted before it is applied to your BOQ. You can edit suggestions inline before accepting them."
+    },
+    "pricing": {
+      "title": "Pricing: Automated Rate Buildup",
+      "subtitle": "Fill rates using live prices, your resource library, and intelligent rate formulas",
+      "materialRate": "Material Rate",
+      "laborRate": "Labor Rate",
+      "plantRate": "Plant Rate",
+      "contingency": "Contingency %",
+      "unitRate": "Unit Rate",
+      "howPricingWorks": "How Pricing Works",
+      "steps": [
+        "Go to the BOQ tab in your project",
+        "Click \"Fill Rates from Prices\"",
+        "Talepod fetches content from your configured price source URLs",
+        "AI extracts relevant prices from the fetched pages",
+        "BOQ items are mapped to your resources by description and unit",
+        "Rates are calculated with contingency applied based on your risk profile",
+        "The table refreshes with filled rates and amounts"
+      ],
+      "rateBuildup": {
+        "title": "What is a Rate Buildup?",
+        "body": "A rate buildup (or rate build-up) is the construction industry method of calculating a unit rate for a BOQ item by summing the costs of all inputs: materials, labor, and plant/equipment. In Talepod, the pricing engine does this automatically by mapping BOQ items to your resource library and applying contingency from your risk profile."
+      },
+      "livePricing": {
+        "title": "How does live pricing work?",
+        "body": "You provide URLs to web pages containing current prices (e.g., a supplier catalog, a government schedule of rates). When you click Fill Rates, Talepod fetches those pages, uses AI to extract price data, and maps it to your BOQ items. This ensures your rates reflect current market conditions rather than outdated historical data."
+      },
+      "warning": "Running Fill Rates without price source URLs configured is a common mistake. The pricing engine needs URLs to fetch prices from. Add them in your project Settings tab or in your Resources before running pricing."
+    },
+    "analysisExport": {
+      "title": "Analysis & Export",
+      "subtitle": "Analyze your BOQ against budget targets and export professional tender documents",
+      "financialAdvisor": "Financial Advisor",
+      "financialAdvisorIntro": "Once your BOQ is priced, the Financial Advisor gives you instant budget intelligence:",
+      "financialSummary": "Financial Summary",
+      "financialSummaryDesc": "Total cost, budget target, variance (amount and percentage), and a clear Within Budget / Over Budget indicator.",
+      "paretoAnalysis": "Pareto Analysis",
+      "paretoAnalysisDesc": "A ranked table of your top cost-driving items with cumulative percentages, showing which 20% of items make up 80% of cost.",
+      "paretoExplainer": {
+        "title": "What is Pareto Analysis (80/20 Rule)?",
+        "body": "Pareto analysis identifies the vital few items that account for the majority of cost. Typically, 20% of BOQ items represent 80% of the total cost. Understanding this distribution helps you focus review efforts on the items that matter most to your budget."
+      },
+      "exportFormats": "Export Formats",
+      "excelTitle": "Excel (Standard)",
+      "excelDescription": "Single-sheet Excel spreadsheet with all BOQ items: item number, description, quantity, unit, rate, and amount. Ready for further editing or sharing.",
+      "tenderPackTitle": "Tender Pack",
+      "tenderPackDescription": "Multi-sheet XLSX with professional formatting: Cover Sheet, Summary Sheet, and detailed BOQ Sheet. Ready for formal tender submission.",
+      "pdfTitle": "PDF",
+      "pdfDescription": "Single-document PDF with formatted BOQ table. Ideal for client review, printing, or archiving completed estimates.",
+      "proTip": "Use the Tender Pack export for formal submissions. It includes a cover sheet with your project details and tender reference, saving you the time of formatting a presentation document."
+    },
+    "tipsFaq": {
+      "title": "Tips, Tricks & FAQ",
+      "subtitle": "Get the most out of Talepod with these expert recommendations",
+      "proTips": "Pro Tips",
+      "proTipsList": [
+        "Complete your project settings before uploading drawings. The AI uses location, currency, project type, and SMM standard to generate better descriptions and pricing.",
+        "Use consistent CAD layer naming conventions (e.g., CONC-SLAB-150, REBAR-T16). The extraction engine relies on layer names to classify materials and calculate quantities.",
+        "Add price source URLs that are publicly accessible and contain tabular price data. Government rate schedules and major supplier catalogs work best.",
+        "Run the Financial Advisor after pricing to identify your top cost drivers. Focus your review on the top 5 items — that's where the biggest impact on your budget is.",
+        "Use the Tender Pack export format for formal submissions. For internal estimates, the standard Excel export is faster to work with.",
+        "Invite your team using the workspace join code. Everyone sees the same projects, so there is no need for file sharing or version confusion."
+      ],
+      "commonMistakes": "Common Mistakes to Avoid",
+      "commonMistakesList": [
+        "Skipping Resource setup — The pricing engine cannot fill rates without resources to map to.",
+        "Uploading drawings with custom unit scales without checking extracted quantities afterward.",
+        "Not reviewing AI suggestions before applying — Always verify descriptions and rates match your requirements.",
+        "Running Fill Rates without price source URLs configured in Settings or Resources.",
+        "Forgetting to click \"Save to Project\" after QTO processing — Your BOQ tab will remain empty until you explicitly save."
+      ],
+      "faqTitle": "Frequently Asked Questions",
+      "faqItems": [
+        {
+          "question": "How do I change the SMM standard after creating a project?",
+          "answer": "Go to your project's Settings tab, change the SMM Standard dropdown, and save. Then re-run Generate Descriptions from the BOQ tab to get descriptions in the new standard."
+        },
+        {
+          "question": "Can I edit quantities after extraction?",
+          "answer": "Yes. The BOQ table is fully editable. Click any cell to modify quantities, descriptions, or rates. Changes are saved when you update the project."
+        },
+        {
+          "question": "What happens if a drawing fails to process?",
+          "answer": "Failed files are marked in the processing results. Successful files are still aggregated into the BOQ. You can re-upload failed files individually after fixing them in AutoCAD."
+        },
+        {
+          "question": "How accurate is the AI description generation?",
+          "answer": "The AI generates SMM-compliant descriptions based on your project context. Accuracy depends on the quality of your project settings (location, discipline, SMM standard). Always review suggestions before applying."
+        },
+        {
+          "question": "Can I use Talepod for civil engineering projects?",
+          "answer": "Yes. Set your SMM standard to CESMM4 for civil engineering projects. The AI will generate descriptions following civil engineering measurement conventions."
+        },
+        {
+          "question": "How do I share a project with my team?",
+          "answer": "Projects are workspace-level. Everyone in your workspace can see all projects. To add team members, go to the Workspace page from the sidebar and share the join code."
+        },
+        {
+          "question": "What if I do not have price source URLs?",
+          "answer": "You can still use Talepod. Skip the automated pricing and fill rates manually in the BOQ table. Or add URLs later and re-run Fill Rates at any time."
+        },
+        {
+          "question": "Is my data secure?",
+          "answer": "Yes. All data is encrypted in transit and at rest. Your drawings and BOQ data are isolated to your workspace and accessible only by workspace members."
+        }
+      ]
+    }
+  },
+  "onboarding": {
+    "pageTitle": "Set up workspace | Talepod",
+    "welcome": "Welcome to Talepod",
+    "subtitle": "Create a workspace for your team, or join an existing one with a code.",
+    "createTitle": "Create a workspace",
+    "workspaceName": "Workspace name",
+    "workspaceNamePlaceholder": "e.g. Acme Corp",
+    "createButton": "Create workspace",
+    "or": "or",
+    "joinTitle": "Join a workspace",
+    "joinCode": "Join code",
+    "joinCodePlaceholder": "e.g. A3X9K2M7",
+    "joinButton": "Join workspace",
+    "toasts": {
+      "created": "Workspace created!",
+      "joined": "Joined workspace!",
+      "createFailed": "Failed to create workspace",
+      "invalidJoinCode": "Invalid join code"
+    }
+  }
+}

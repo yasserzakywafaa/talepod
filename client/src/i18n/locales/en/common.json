@@ -1,0 +1,72 @@
+{
+  "close": "Close",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "emailSentSuccess": "Email sent successfully",
+  "noResults": "No Results Found",
+  "noStoriesFound": "No Stories Found",
+  "loggedOut": "Logged out",
+  "nav": {
+    "features": "Features",
+    "howItWorks": "How It Works",
+    "pricing": "Pricing",
+    "contact": "Contact Us",
+    "register": "Register",
+    "login": "Log in",
+    "createProject": "Create Story",
+    "library": "Library",
+    "myStories": "My Stories",
+    "blog": "Blog"
+  },
+  "settings": {
+    "menu": "Settings",
+    "profile": "Profile",
+    "dashboard": "Dashboard",
+    "logout": "Logout",
+    "theme": "Theme",
+    "themeToggle": "Theme toggle button",
+    "install": "Install",
+    "refreshApp": "Refresh App",
+    "myAvatars": "My Avatars"
+  },
+  "footer": {
+    "taglineIntro": "At <brand>TalePod</brand>, we help parents and caregivers create magical, personalized bedtime stories in minutes — with AI-generated illustrations, audio narration, and stories tailored to your child.",
+    "taglineAudience": "Perfect for busy parents who want unique stories featuring their child's name, interests, and values — in comic or long-form format, ready to read or listen at bedtime.",
+    "taglineScale": "Browse the community library, save your favorites, and create unlimited personalized tales that grow with your family.",
+    "product": "Product",
+    "company": "Company",
+    "privacyPolicy": "Privacy Policy",
+    "termsAndConditions": "Terms and Conditions",
+    "copyright": "Copyright ©",
+    "tagline": "Personalized bedtime stories — gently written and illustrated by AI, crafted with the Montessori spirit of curiosity, for the children you love most.",
+    "landingSectionTitle": "Bedtime stories for",
+    "privacyShort": "Privacy",
+    "termsShort": "Terms",
+    "madeIn": "Made in Switzerland & Portugal",
+    "productLinks": {
+      "createStory": "Create a story",
+      "library": "Library",
+      "pricing": "Pricing",
+      "alternatives": "Alternatives",
+      "storyGenerator": "Story generator",
+      "blog": "Blog",
+      "contact": "Contact"
+    },
+    "landingLinks": {
+      "bedtimeStoriesForKids": "Bedtime stories for kids",
+      "bedtimeStoriesForAdults": "Bedtime stories for adults",
+      "shortBedtimeStories": "Short bedtime stories",
+      "christmasBedtimeStories": "Christmas bedtime stories",
+      "bedtimeStoriesForGirlfriend": "Bedtime stories for girlfriend",
+      "bedtimeStoriesForToddlers": "Bedtime stories for toddlers",
+      "educationalBedtimeStories": "Educational bedtime stories",
+      "babyBedtimeStories": "Baby bedtime stories",
+      "bestBedtimeStories": "Best bedtime stories",
+      "quickBedtimeStories": "Quick bedtime stories"
+    }
+  },
+  "cookiePolicy": {
+    "message": "By continuing to use this website, you agree to our use of cookies to improve your experience and analyze site traffic. See our <privacyLink>Privacy Policy</privacyLink> for more information.",
+    "ok": "OK"
+  }
+}

@@ -7,15 +7,17 @@ import { HomeOutlined } from "@mui/icons-material";
 import Page from "src/components/shared/Page/Page";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const NotFoundPage = () => {
+  const { t } = useTranslation("page");
   const navigate = useNavigate();
   const handleOnClick = () => navigate(routes.features);
 
   return (
     <>
       <Box component="div" className="not-found-page">
-        <Page title="Not Found | TalePod">
+        <Page title={t("notFound.pageTitle")}>
           <Box
             component="div"
             className="not-found-card-wrapper "
@@ -43,7 +45,7 @@ const NotFoundPage = () => {
               <Typography variant="h5" sx={{
                 textAlign: "center"
               }}>
-                Page Not Found
+                {t("notFound.title")}
               </Typography>
 
               <Button
@@ -54,7 +56,7 @@ const NotFoundPage = () => {
                 endIcon={<HomeOutlined />}
                 onClick={handleOnClick}
               >
-                Go back home
+                {t("notFound.goToMain")}
               </Button>
             </Box>
           </Box>

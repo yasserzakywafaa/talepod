@@ -6,8 +6,10 @@ import { useApplicationContext } from "src/application/store/Provider";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useNavigate } from "react-router-dom";
 import { trackEvent } from "src/shared/utils/ga4";
+import { useTranslation } from "react-i18next";
 
 const Guarantee = () => {
+  const { t } = useTranslation("landing");
   const navigate = useNavigate();
   const {
     store: {
@@ -27,7 +29,9 @@ const Guarantee = () => {
       event.preventDefault();
 
       trackEvent("cta_click", {
-        cta_name: isAuthenticated ? "guarantee_start_creating" : "guarantee_try_risk_free",
+        cta_name: isAuthenticated
+          ? "guarantee_start_creating"
+          : "guarantee_try_risk_free",
         destination: route,
         is_authenticated: isAuthenticated,
       });
@@ -48,19 +52,18 @@ const Guarantee = () => {
           color: "primary.contrastText",
           p: 4,
           borderRadius: 2,
-          textAlign: "center"
-        }}>
+          textAlign: "center",
+        }}
+      >
         <VerifiedUser sx={{ fontSize: 60, mb: 2 }} />
         <Typography variant="h4" component="h2" gutterBottom>
-          Our Ironclad Guarantee
+          {t("features.guarantee.title")}
         </Typography>
         <Typography variant="body1" gutterBottom>
-          We're so confident that you and your children will love TalePod that
-          we're offering a 100% satisfaction guarantee.
+          {t("features.guarantee.body1")}
         </Typography>
         <Typography variant="body1" gutterBottom>
-          If you're not completely happy, we'll make it right. No questions
-          asked.
+          {t("features.guarantee.body2")}
         </Typography>
         <Button
           size="large"
@@ -71,7 +74,9 @@ const Guarantee = () => {
           href={routes.create}
           onClick={handleOnButtonClick(routes.create)}
         >
-          {isAuthenticated ? "Start Creating Now!" : "Try it Risk-Free!"}
+          {isAuthenticated
+            ? t("features.guarantee.ctaAuthenticated")
+            : t("features.guarantee.ctaGuest")}
         </Button>
       </Box>
     </Container>

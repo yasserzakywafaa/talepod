@@ -16,8 +16,11 @@ import { useState } from "react";
 import DeleteUserDialog from "./deleteUserDialog";
 import { useNavigate } from "react-router-dom";
 import routes from "src/application/routes";
+import { useTranslation } from "react-i18next";
 
 const DataGridRowActionsMenu = (params: GridRenderCellParams) => {
+  const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const navigate = useNavigate();
   const {
     manager: { handleBlockUser, handleDeleteUser },
@@ -110,11 +113,12 @@ const DataGridRowActionsMenu = (params: GridRenderCellParams) => {
           vertical: "top",
           horizontal: "right",
         }}
+        slotProps={{ list: { "aria-labelledby": "row-actions-menu" } }}
       >
         <MenuItem onClick={handleOnClickViewEdit(params)}>
           <Edit fontSize="small" sx={{ mr: 1 }} />
           <Typography variant="body2" sx={{ fontSize: "14px" }}>
-            View/Edit
+            {t("stories.viewEdit")}
           </Typography>
         </MenuItem>
 
@@ -123,7 +127,7 @@ const DataGridRowActionsMenu = (params: GridRenderCellParams) => {
         <MenuItem onClick={handleOnClickBlock(params)}>
           <Block fontSize="small" sx={{ mr: 1 }} />
           <Typography variant="body2" sx={{ fontSize: "14px" }}>
-            Block
+            {t("admin.users.block")}
           </Typography>
         </MenuItem>
 
@@ -133,7 +137,7 @@ const DataGridRowActionsMenu = (params: GridRenderCellParams) => {
         >
           <Delete fontSize="small" sx={{ mr: 1 }} />
           <Typography variant="body2" sx={{ fontSize: "14px" }}>
-            Delete
+            {tCommon("delete")}
           </Typography>
         </MenuItem>
       </Menu>

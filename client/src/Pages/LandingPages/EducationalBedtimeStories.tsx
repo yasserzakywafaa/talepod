@@ -1,18 +1,10 @@
-import {
-  BedOutlined,
-  ChildCareOutlined,
-  DevicesOutlined,
-  EditOutlined,
-} from "@mui/icons-material";
-import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
-
+import WiseOwl from "../../assets/images/landing_pages/wise_owl.webp";
 import Hero from "./features/Hero";
 import Page from "src/components/shared/Page/Page";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
 import { Pricing } from "src/components/shared/Pricing/Pricing";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.webp";
-import WiseOwl from "../../assets/images/landing_pages/wise_owl.webp";
 import { useApplicationContext } from "src/application/store/Provider";
 import PricingTable from "src/components/shared/Pricing/PricingTable";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
@@ -24,11 +16,12 @@ import KeyFeatures from "../Features/features/KeyFeatures";
 import StoryExamples from "../Features/features/StoryExamples";
 import Testimonials from "../Features/features/Testimonials";
 import CallToAction from "../Features/features/CallToAction";
-import { landingPageSeo } from "./landingPageSeo";
-import { landingPageSeoProps } from "./landingPageSeoProps";
-import routes from "src/application/routes";
+import { useLandingPageSeo } from "src/shared/i18n/useLandingPageSeo";
+import { useTranslation } from "react-i18next";
 
 const EducationalBedtimeStories = () => {
+  const { t } = useTranslation("landing");
+  const seoProps = useLandingPageSeo("educational");
   const {
     store: {
       state: { isFetching },
@@ -36,63 +29,13 @@ const EducationalBedtimeStories = () => {
   } = useApplicationContext();
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
 
-  const benefitsList = (
-    <List>
-      <ListItem>
-        <ListItemIcon>
-          <ChildCareOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Tailored to Your Child's Interests"
-          secondary="With TalePod, you can customize stories based on your child's favorite characters, themes, and settings, making each story relevant and captivating."
-        />
-      </ListItem>
-
-      <ListItem>
-        <ListItemIcon>
-          <BedOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Promotes Better Sleep"
-          secondary="Calm and personalized stories can help you ease into sleep and relaxation."
-        />
-      </ListItem>
-
-      <ListItem>
-        <ListItemIcon>
-          <DevicesOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Easy to Use"
-          secondary="TalePod's user-friendly interface makes it simple to create and customize stories, even for those who are not tech-savvy."
-        />
-      </ListItem>
-
-      <ListItem>
-        <ListItemIcon>
-          <EditOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Customizable"
-          secondary="TalePod is designed to meet the needs of both adults and children."
-        />
-      </ListItem>
-    </List>
-  );
-
   return (
-    <Page
-      {...landingPageSeoProps(
-        landingPageSeo[routes.landingPages.educationalBedtimeStories],
-      )}
-      className="educational-bedtime-stories-page"
-      isLoading={isFetching}
-    >
+    <Page {...seoProps} className="home-page" isLoading={isFetching}>
       <Hero
         heroImage={WiseOwl}
-        pageTitleWhite="Educational Bedtime Stories"
-        pageTitleColored="for Curious Minds"
-        pageHeader="Teach and inspire your child with personalized educational stories."
+        pageTitleWhite={t("pages.educational.heroWhite")}
+        pageTitleColored={t("pages.educational.heroColored")}
+        pageHeader={t("pages.educational.heroHeader")}
       />
 
       <div className="section">
@@ -100,10 +43,8 @@ const EducationalBedtimeStories = () => {
       </div>
 
       <PersonalizedBedtimeStoryText
-        whyPersonalizeBedtimeStories="can be used for both learning and relaxation. Personalized educational stories offer the perfect balance between entertainment and teaching."
-        introducingTalePod="TalePod lets you create bedtime stories that are not only fun but also provide valuable learning moments for your child."
+        pageKey="educational"
         personalizeImage={Unicorn}
-        benefitsList={benefitsList}
         benefitsImage={<RandomImage />}
       />
 

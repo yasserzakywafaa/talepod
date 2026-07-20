@@ -28,8 +28,11 @@ import { Tones } from "src/shared/mockedData/Tone";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 import { useLibraryContext } from "../../store/Provider";
 import { trackEvent } from "src/shared/utils/ga4";
+import { useTranslation } from "react-i18next";
 
 const FiltersPanel: React.FC = (): JSX.Element => {
+  const { t } = useTranslation("library");
+  const { t: tStory } = useTranslation("story");
   const {
     store: {
       state: { filters, isFiltersPanelOpen },
@@ -116,7 +119,7 @@ const FiltersPanel: React.FC = (): JSX.Element => {
           mt: "1rem"
         }}>
         <Typography variant="h5" color="primary">
-          Filter Stories
+          {t("filters.title")}
         </Typography>
       </Box>
       <Box
@@ -129,30 +132,36 @@ const FiltersPanel: React.FC = (): JSX.Element => {
         }}>
         <Box className="filters-form">
           <TextField
-            label="Name"
+            label={t("filters.name")}
             name="name"
             size="small"
             variant="outlined"
             value={filters.name}
             className="filters-form-item"
             error={hasCensoredWords(filters.name || "")}
-            helperText={hasCensoredWords(filters.name || "") && "Not Appropriate 🙈"}
+            helperText={
+              hasCensoredWords(filters.name || "") && t("filters.notAppropriate")
+            }
             onChange={handleFieldChange}
           />
 
           <FormControl className="filters-form-item">
-            <InputLabel id="language-select-label">Language</InputLabel>
+            <InputLabel id="language-select-label">
+              {t("filters.language")}
+            </InputLabel>
             <Select<string[]>
               required
               multiple
               name="language"
               variant="outlined"
-              label="Language"
+              label={t("filters.language")}
               id="language-select"
               value={filters.language}
               labelId="language-select-label"
               renderValue={(selected) =>
-                !selected.length ? "None..." : selected.join(", ").toUpperCase()
+                !selected.length
+                  ? t("filters.languageNone")
+                  : selected.join(", ").toUpperCase()
               }
               onChange={handleSelectChange}
             >
@@ -172,11 +181,11 @@ const FiltersPanel: React.FC = (): JSX.Element => {
           </FormControl>
 
           <FormControl className="filters-form-item">
-            <InputLabel id="age-select-label">Age</InputLabel>
+            <InputLabel id="age-select-label">{t("filters.age")}</InputLabel>
             <Select<string[]>
               multiple
               name="age"
-              label="Age"
+              label={t("filters.age")}
               variant="outlined"
               id="age-select"
               value={filters.age.map((a) => a.toString())}
@@ -254,7 +263,7 @@ const FiltersPanel: React.FC = (): JSX.Element => {
             <FormGroup>
               <FormControlLabel
                 name="audio"
-                label="Story audio"
+                label={t("filters.storyAudio")}
                 checked={filters.audio}
                 control={<Checkbox />}
                 onChange={handleAudioCheckboxChange}
@@ -263,11 +272,13 @@ const FiltersPanel: React.FC = (): JSX.Element => {
           </Box>
 
           <FormControl className="filters-form-item">
-            <InputLabel id="nationality-select-label">Moral</InputLabel>
+            <InputLabel id="nationality-select-label">
+              {tStory("form.settings.moral")}
+            </InputLabel>
             <Select<string[]>
               multiple
               name="moral"
-              label="Moral"
+              label={tStory("form.settings.moral")}
               variant="outlined"
               id="filters-moral-select"
               value={filters.moral}
@@ -291,12 +302,14 @@ const FiltersPanel: React.FC = (): JSX.Element => {
           </FormControl>
 
           <FormControl className="filters-form-item">
-            <InputLabel id="nationality-select-label">Tone</InputLabel>
+            <InputLabel id="nationality-select-label">
+              {tStory("form.settings.tone")}
+            </InputLabel>
             <Select<string[]>
               multiple
               name="tone"
               variant="outlined"
-              label="Tone"
+              label={tStory("form.settings.tone")}
               id="filters-tone-select"
               value={filters.tone}
               labelId="filters-tone-select-label"
@@ -319,12 +332,14 @@ const FiltersPanel: React.FC = (): JSX.Element => {
           </FormControl>
 
           <FormControl className="filters-form-item">
-            <InputLabel id="nationality-select-label">Environment</InputLabel>
+            <InputLabel id="nationality-select-label">
+              {tStory("form.settings.environment")}
+            </InputLabel>
             <Select<string[]>
               multiple
               name="environment"
               variant="outlined"
-              label="Environment"
+              label={tStory("form.settings.environment")}
               id="environment-select"
               value={filters.environment}
               labelId="environment-select-label"
@@ -364,7 +379,7 @@ const FiltersPanel: React.FC = (): JSX.Element => {
             color="secondary"
             onClick={handleOnCancelClick}
           >
-            Cancel
+            {t("filters.cancel")}
           </Button>
 
           <Box
@@ -380,7 +395,7 @@ const FiltersPanel: React.FC = (): JSX.Element => {
               variant="outlined"
               onClick={handleOnClearFiltersClick}
             >
-              Clear
+              {t("filters.clear")}
             </Button>
 
             <Button
@@ -389,7 +404,7 @@ const FiltersPanel: React.FC = (): JSX.Element => {
               variant="contained"
               onClick={handleOnApplyFiltersClick}
             >
-              Apply
+              {t("filters.apply")}
             </Button>
           </Box>
         </Box>

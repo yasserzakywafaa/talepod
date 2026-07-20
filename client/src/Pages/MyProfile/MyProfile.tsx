@@ -37,15 +37,17 @@ import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 import { honey300, honey400, honey700 } from "src/application/shared/themes";
+import { useTranslation } from "react-i18next";
+import {
+  formatLocalizedDate,
+  localeFromLanguage,
+} from "@yasserzakywafaa/client-core";
 
 type ProfileTab = "profile" | "billing";
 
-const TABS: [ProfileTab, string, SvgIconComponent][] = [
-  ["profile", "Profile", PersonOutlined],
-  ["billing", "Billing", CreditCardOutlined],
-];
-
 const MyProfilePage = () => {
+  const { t, i18n } = useTranslation("dashboard");
+  const locale = localeFromLanguage(i18n.language);
   const navigate = useNavigate();
   const [isDeleteAccountDialogOpen, setIsDeleteAccountDialogOpen] =
     useState(false);
@@ -73,6 +75,11 @@ const MyProfilePage = () => {
   } = usePricingModalContext();
 
   const [tab, setTab] = useState<ProfileTab>("profile");
+
+  const TABS: [ProfileTab, string, SvgIconComponent][] = [
+    ["profile", t("profile.tabProfile"), PersonOutlined],
+    ["billing", t("profile.tabBilling"), CreditCardOutlined],
+  ];
 
   useEffect(() => {
     if (user?.subscription && user.subscription.id) {
@@ -102,7 +109,7 @@ const MyProfilePage = () => {
 
   return (
     <Page
-      title="My Profile | TalePod"
+      title={t("profile.pageTitle")}
       className="my-profile-page"
       isLoading={isFetching}
     >
@@ -116,7 +123,7 @@ const MyProfilePage = () => {
           color="primary"
           sx={{ mb: 4, fontFamily: "var(--font-display)" }}
         >
-          My Profile
+          {t("profile.title")}
         </Typography>
 
         <Box
@@ -133,7 +140,7 @@ const MyProfilePage = () => {
           <Typography variant="h5" component="h5" sx={{
             marginLeft: 2
           }}>
-            Hi {user?.name.givenName} 👋🏻
+            {t("profile.greeting", { name: user?.name.givenName })}
           </Typography>
         </Box>
 
@@ -188,7 +195,7 @@ const MyProfilePage = () => {
           <Grid size={{ xs: 12, md: 8 }}>
             {tab === "profile" && (
               <Card elevation={3} sx={{ padding: 3 }}>
-                <Typography variant="h5">Profile Information</Typography>
+                <Typography variant="h5">{t("profile.profileInformation")}</Typography>
 
                 <Grid container spacing={2} sx={{ marginTop: 2 }}>
                   <Grid size={{ xs: 12, md: 6 }}>
@@ -197,7 +204,7 @@ const MyProfilePage = () => {
                       component="p"
                       className="text-underline"
                     >
-                      Full Name
+                      {t("profile.fullName")}
                     </Typography>
                     <span className="bold">
                       {`${user.name.givenName} ${user.name.familyName}`}
@@ -221,10 +228,10 @@ const MyProfilePage = () => {
                       component="p"
                       className="text-underline"
                     >
-                      Date joined
+                      {t("profile.dateJoined")}
                     </Typography>
                     <span className="bold">
-                      {new Date(user.createdAt).toLocaleString("en-GB", {
+                      {formatLocalizedDate(new Date(user.createdAt), locale, {
                         dateStyle: "short",
                       })}
                     </span>
@@ -232,7 +239,7 @@ const MyProfilePage = () => {
 
                   <Grid size={{ xs: 12, md: 6 }}>
                     <Typography variant="h6" component="p">
-                      <span className="text-underline">Appearance</span>
+                      <span className="text-underline">{t("profile.appearance")}</span>
                       <Switch
                         size="medium"
                         value="dark-mode"
@@ -240,7 +247,9 @@ const MyProfilePage = () => {
                         onChange={handleOnDarkModeSwitchChange}
                       />
                       <span className="bold">
-                        {themeMode.toLocaleUpperCase()}
+                        {themeMode === "dark"
+                          ? t("profile.themeDark")
+                          : t("profile.themeLight")}
                       </span>
                     </Typography>
                   </Grid>
@@ -259,17 +268,16 @@ const MyProfilePage = () => {
                 }}
               >
                 <Typography variant="h5" color="error" sx={{ mb: 1 }}>
-                  Danger Zone
+                  {t("profile.dangerZone")}
                 </Typography>
                 <Typography
                   variant="body2"
                   sx={{
                     color: "text.secondary",
-                    mb: 2
-                  }}>
-                  Permanently delete your account and all associated stories,
-                  avatars, story credits, and subscription data. If you have an
-                  active subscription, billing will be cancelled immediately.
+                    mb: 2,
+                  }}
+                >
+                  {t("profile.dangerZoneDescription")}
                 </Typography>
                 <Button
                   variant="outlined"
@@ -277,7 +285,7 @@ const MyProfilePage = () => {
                   startIcon={<DeleteOutlined />}
                   onClick={() => setIsDeleteAccountDialogOpen(true)}
                 >
-                  Delete Account
+                  {t("profile.deleteAccount")}
                 </Button>
               </Card>
             )}
@@ -298,7 +306,10 @@ const MyProfilePage = () => {
                 boxShadow: "var(--shadow-md)",
               }}
             >
-              <Chip variant="badge" label={`${user.subscription.type} plan`} />
+              <Chip
+                variant="badge"
+                label={t("profile.planLabel", { plan: user.subscription.type })}
+              />
               <Typography
                 sx={{
                   fontFamily: "var(--font-display)",
@@ -309,8 +320,8 @@ const MyProfilePage = () => {
                 }}
               >
                 {isFreeUser
-                  ? "Unlock illustrations & every voice"
-                  : "Thanks for supporting TalePod"}
+                  ? t("profile.unlockPremium")
+                  : t("profile.thanksSupporter")}
               </Typography>
 
               <Box
@@ -329,7 +340,7 @@ const MyProfilePage = () => {
                     mb: 1,
                   }}
                 >
-                  <span>Stories used</span>
+                  <span>{t("profile.storiesUsed")}</span>
                   <span style={{ fontWeight: 700 }}>
                     {storiesUsed} / {storiesMax}
                   </span>
@@ -372,7 +383,7 @@ const MyProfilePage = () => {
                     <LocalActivityOutlined
                       sx={{ fontSize: 18, color: honey300 }}
                     />
-                    <span>Story credits</span>
+                    <span>{t("profile.storyCredits")}</span>
                   </Box>
                   <span style={{ fontWeight: 700 }}>{user.storyCredits}</span>
                 </Box>
@@ -386,7 +397,7 @@ const MyProfilePage = () => {
                     startIcon={<WorkspacePremiumOutlined />}
                     onClick={() => handleTogglePricingModal("profile")}
                   >
-                    Upgrade to Premium
+                    {t("profile.upgradeToPremium")}
                   </Button>
                 </Box>
               )}
@@ -398,11 +409,11 @@ const MyProfilePage = () => {
         isOpen={isDeleteAccountDialogOpen}
         isDeleting={isDeletingAccount}
         impactItems={[
-          `${user.storyCount} stor${user.storyCount === 1 ? "y" : "ies"}`,
-          "Avatars and story credits",
-          "Subscription and billing data",
+          t("profile.impactStories", { count: user.storyCount }),
+          t("profile.impactAvatarsCredits"),
+          t("profile.impactSubscription"),
         ]}
-        warningMessage="Stories published to the community library will not be removed automatically."
+        warningMessage={t("profile.libraryPublishWarning")}
         onClose={() => setIsDeleteAccountDialogOpen(false)}
         onConfirm={async (confirmationPhrase) => {
           const deleted = await handleDeleteAccount(confirmationPhrase);

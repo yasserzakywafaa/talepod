@@ -7,6 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import END_POINTS from "src/application/shared/endpoints";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 /** Traits that change how the avatar is *drawn* (mirrors the server). Editing
  *  only name/relationship must not re-paint the portrait. */
@@ -51,6 +52,7 @@ const uniq = (ids: string[]): string[] => Array.from(new Set(ids));
  * and surfaced by the poll once ready.
  */
 export const useAvatars = (enabled = true) => {
+  const { t } = useTranslation("story");
   const [avatars, setAvatars] = useState<Avatar[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -206,7 +208,7 @@ export const useAvatars = (enabled = true) => {
       try {
         if (isEditing && editingId) {
           const updated = await updateAvatar(editingId, input);
-          Notify({ type: ToastTypes.Success, content: "Avatar updated." });
+          Notify({ type: ToastTypes.Success, content: t("avatars.toast.updated") });
           if (willRepaint) {
             pollForPortraits([{ id: updated._id, since: previousPortrait }]);
           } else {
@@ -215,7 +217,7 @@ export const useAvatars = (enabled = true) => {
         } else {
           const created = await createAvatar(input);
           setOptimistic((prev) => prev.filter((a) => a._id !== tempId));
-          Notify({ type: ToastTypes.Success, content: "Avatar created." });
+          Notify({ type: ToastTypes.Success, content: t("avatars.toast.created") });
           pollForPortraits([{ id: created._id }]);
         }
       } catch (error) {
@@ -225,10 +227,10 @@ export const useAvatars = (enabled = true) => {
           setPendingPortraitIds((prev) => prev.filter((id) => id !== editingId));
           setBusyIds((prev) => prev.filter((id) => id !== editingId));
         }
-        Notify({ type: ToastTypes.Error, content: "Something went wrong." });
+        Notify({ type: ToastTypes.Error, content: t("avatars.toast.error") });
       }
     },
-    [createAvatar, updateAvatar, pollForPortraits],
+    [createAvatar, updateAvatar, pollForPortraits, t],
   );
 
   /** Delete an avatar (with toasts); disables its card actions while in flight. */
@@ -237,14 +239,14 @@ export const useAvatars = (enabled = true) => {
       setBusyIds((prev) => uniq([...prev, avatar._id]));
       try {
         await deleteAvatar(avatar._id);
-        Notify({ type: ToastTypes.Success, content: "Avatar deleted." });
+        Notify({ type: ToastTypes.Success, content: t("avatars.toast.deleted") });
       } catch (error) {
-        Notify({ type: ToastTypes.Error, content: "Failed to delete avatar." });
+        Notify({ type: ToastTypes.Error, content: t("avatars.toast.deleteError") });
       } finally {
         setBusyIds((prev) => prev.filter((id) => id !== avatar._id));
       }
     },
-    [deleteAvatar],
+    [deleteAvatar, t],
   );
 
   // ---- derived view state for the page ----

@@ -1,3 +1,4 @@
+import "./i18n/init";
 import "./application/shared/axiosConfig";
 import App from "./application/App";
 import { CacheProvider } from "@emotion/react";

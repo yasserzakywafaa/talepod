@@ -20,6 +20,7 @@ import routes from "src/application/routes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useNavigate } from "react-router-dom";
 import { trackEvent } from "src/shared/utils/ga4";
+import { useTranslation } from "react-i18next";
 
 interface BlogCard {
   blog: Blog;
@@ -32,6 +33,7 @@ interface BlogCard {
 }
 
 const StoryCard = (props: BlogCard) => {
+  const { t } = useTranslation("blog");
   const navigate = useNavigate();
   const { isDesktop } = useDeviceSize();
   const hasDirectionRtl = props.blog.language === "ar";
@@ -130,11 +132,11 @@ const StoryCard = (props: BlogCard) => {
             size="medium"
             type="button"
             color="primary"
-            aria-label="read more"
+            aria-label={t("card.readMoreAria")}
             variant="text"
             endIcon={<ArrowRightAltOutlined />}
           >
-            Read More
+            {t("card.readMore")}
           </Button>
         </Box>
       </CardActions>

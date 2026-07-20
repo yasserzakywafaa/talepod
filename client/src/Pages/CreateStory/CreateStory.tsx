@@ -22,8 +22,10 @@ import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.we
 import { useApplicationContext } from "src/application/store/Provider";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
+import { useTranslation } from "react-i18next";
 
 const CreateStoryPage = () => {
+  const { t } = useTranslation("story");
   const {
     store: {
       state: { isFetching: isPageFetching },
@@ -44,9 +46,12 @@ const CreateStoryPage = () => {
     },
   } = useOpenaiContext();
 
+  const tipIcons = [LooksOneOutlined, LooksTwoOutlined, Looks3Outlined] as const;
+  const tipKeys = ["familiar", "moral", "interactive"] as const;
+
   return (
     <Page
-      title="Create Bedtime Stories | TalePod"
+      title={t("createPage.title")}
       className="create-story-page"
       // Story-text creation is async and surfaced by the global, non-blocking
       // GenerationProgressChip, so it is intentionally excluded from this
@@ -70,12 +75,11 @@ const CreateStoryPage = () => {
               color: (theme) => theme.palette.primary.main,
             }}
           >
-            Define your story
+            {t("createPage.heading")}
           </Typography>
 
           <Typography variant="subtitle1">
-            Personalize your bedtime story by filling in the required "Name" for
-            your child.
+            {t("createPage.subheading")}
           </Typography>
         </Box>
 
@@ -83,39 +87,24 @@ const CreateStoryPage = () => {
 
         <Container sx={{ my: 4 }}>
           <Typography variant="h5" gutterBottom>
-            Tips for Crafting the Perfect Bedtime Story
+            {t("createPage.tipsHeading")}
           </Typography>
 
           <List>
-            <ListItem>
-              <ListItemIcon>
-                <LooksOneOutlined fontSize="large" color="secondary" />
-              </ListItemIcon>
-              <ListItemText
-                primary="Include Familiar Elements"
-                secondary="Incorporate elements from your child's daily life to make the story more relatable."
-              />
-            </ListItem>
-
-            <ListItem>
-              <ListItemIcon>
-                <LooksTwoOutlined fontSize="large" color="secondary" />
-              </ListItemIcon>
-              <ListItemText
-                primary="Add a Moral Lesson"
-                secondary="Teach valuable lessons through the story to instill good values and behaviors."
-              />
-            </ListItem>
-
-            <ListItem>
-              <ListItemIcon>
-                <Looks3Outlined fontSize="large" color="secondary" />
-              </ListItemIcon>
-              <ListItemText
-                primary="Keep It Interactive"
-                secondary="Encourage your child to participate in the story to keep them engaged."
-              />
-            </ListItem>
+            {tipKeys.map((key, index) => {
+              const Icon = tipIcons[index];
+              return (
+                <ListItem key={key}>
+                  <ListItemIcon>
+                    <Icon fontSize="large" color="secondary" />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={t(`createPage.tips.${key}.title`)}
+                    secondary={t(`createPage.tips.${key}.body`)}
+                  />
+                </ListItem>
+              );
+            })}
           </List>
         </Container>
       </Container>

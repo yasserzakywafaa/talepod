@@ -1,6 +1,7 @@
 import { AutoFixHighOutlined, FilterAltOffOutlined } from "@mui/icons-material";
 import { Box, Button } from "@mui/material";
 import NoResultsFound from "src/components/shared/NoResults/NoResults";
+import { useTranslation } from "react-i18next";
 
 interface NoStoriesFoundProps {
   handleOnCreateClick: () => void;
@@ -8,6 +9,7 @@ interface NoStoriesFoundProps {
 }
 
 const NoStoriesFound = (props: NoStoriesFoundProps) => {
+  const { t } = useTranslation("library");
   const { handleOnCreateClick, handleClearFilters } = props;
 
   return (
@@ -28,7 +30,7 @@ const NoStoriesFound = (props: NoStoriesFoundProps) => {
           endIcon={<AutoFixHighOutlined />}
           onClick={handleOnCreateClick}
         >
-          Create Story
+          {t("page.emptyCreate")}
         </Button>
 
         <Button
@@ -39,7 +41,7 @@ const NoStoriesFound = (props: NoStoriesFoundProps) => {
           endIcon={<FilterAltOffOutlined />}
           onClick={handleClearFilters}
         >
-          Clear Filters
+          {t("page.emptyClearFilters")}
         </Button>
       </Box>
     </>

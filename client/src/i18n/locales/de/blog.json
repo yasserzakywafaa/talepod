@@ -1,0 +1,10 @@
+{
+  "page": {
+    "listTitle": "Blog auf TalePod",
+    "detailTitle": "{{title}} | TalePod"
+  },
+  "card": {
+    "readMore": "Mehr lesen",
+    "readMoreAria": "mehr lesen"
+  }
+}

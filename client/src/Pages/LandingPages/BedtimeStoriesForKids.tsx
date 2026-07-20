@@ -1,11 +1,3 @@
-import {
-  ChildCareOutlined,
-  DevicesOutlined,
-  EmojiObjectsOutlined,
-  LocalLibraryOutlined,
-} from "@mui/icons-material";
-import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
-
 import Hero from "./features/Hero";
 import Page from "src/components/shared/Page/Page";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
@@ -24,11 +16,12 @@ import KeyFeatures from "../Features/features/KeyFeatures";
 import StoryExamples from "../Features/features/StoryExamples";
 import Testimonials from "../Features/features/Testimonials";
 import CallToAction from "../Features/features/CallToAction";
-import { landingPageSeo } from "./landingPageSeo";
-import { landingPageSeoProps } from "./landingPageSeoProps";
-import routes from "src/application/routes";
+import { useLandingPageSeo } from "src/shared/i18n/useLandingPageSeo";
+import { useTranslation } from "react-i18next";
 
 const BedtimeStoriesForKids = () => {
+  const { t } = useTranslation("landing");
+  const seoProps = useLandingPageSeo("kids");
   const {
     store: {
       state: { isFetching },
@@ -36,64 +29,13 @@ const BedtimeStoriesForKids = () => {
   } = useApplicationContext();
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
 
-  const benefitsList = (
-    <List>
-      <ListItem>
-        <ListItemIcon>
-          <ChildCareOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Tailored to Your Child's Interests"
-          secondary="With TalePod, you can customize stories based on your child's favorite characters, themes, and settings, making each story relevant and captivating."
-        />
-      </ListItem>
-
-      <ListItem>
-        <ListItemIcon>
-          <EmojiObjectsOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Encourages Creativity"
-          secondary="TalePod inspires creativity in both parents and children, encouraging them to imagine and explore new worlds together."
-        />
-      </ListItem>
-
-      <ListItem>
-        <ListItemIcon>
-          <DevicesOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Easy to Use"
-          secondary="TalePod's user-friendly interface makes it simple to create and customize stories, even for those who are not tech-savvy."
-        />
-      </ListItem>
-
-      <ListItem>
-        <ListItemIcon>
-          <LocalLibraryOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Promotes Literacy"
-          secondary="Personalized stories can enhance your child's vocabulary and comprehension skills, promoting a love for reading from an early age."
-        />
-      </ListItem>
-    </List>
-  );
-
   return (
-    <Page
-      {...landingPageSeoProps(
-        landingPageSeo[routes.landingPages.bedtimeStoriesForKids],
-      )}
-      className="home-page"
-      isLoading={isFetching}
-    >
-
+    <Page {...seoProps} className="home-page" isLoading={isFetching}>
       <Hero
         heroImage={PlayfulBunny}
-        pageTitleWhite="Create Magical"
-        pageTitleColored="Bedtime Stories for Kids"
-        pageHeader="Craft personalized bedtime stories tailored to your child's dreams and imagination."
+        pageTitleWhite={t("pages.kids.heroWhite")}
+        pageTitleColored={t("pages.kids.heroColored")}
+        pageHeader={t("pages.kids.heroHeader")}
       />
 
       <div className="section">
@@ -101,16 +43,8 @@ const BedtimeStoriesForKids = () => {
       </div>
 
       <PersonalizedBedtimeStoryText
-        whyPersonalizeBedtimeStories="make
-              bedtime more engaging and enjoyable, providing a unique way to
-              spark your child's imagination. TalePod allows you to create
-              custom stories tailored to your child's preferences, making each
-              night a special adventure."
-        introducingTalePod="With TalePod, you can craft unique narratives that
-              resonate with your child's interests, ensuring an exciting and
-              immersive bedtime experience"
+        pageKey="kids"
         personalizeImage={Unicorn}
-        benefitsList={benefitsList}
         benefitsImage={<RandomImage />}
       />
 

@@ -4,12 +4,14 @@ import END_POINTS from "src/application/shared/endpoints";
 import { Google as GoogleIcon } from "@mui/icons-material";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
+import { useTranslation } from "react-i18next";
 
 interface GoogleAuthProps {
   authType?: AuthType;
 }
 
 const GoogleAuth = (props: GoogleAuthProps): JSX.Element => {
+  const { t } = useTranslation("auth");
   const { authType } = props;
   const isRegister = authType === "register";
   const { store: registerStore } = useRegisterModalContext();
@@ -41,7 +43,7 @@ const GoogleAuth = (props: GoogleAuthProps): JSX.Element => {
       }}
     >
       <GoogleIcon />
-      {isRegister ? "Register with Google" : "Login with Google"}
+      {isRegister ? t("registerWithGoogle") : t("loginWithGoogle")}
     </Button>
   );
 };

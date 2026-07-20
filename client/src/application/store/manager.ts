@@ -4,8 +4,10 @@ import {
   getThemePreference,
 } from "./state";
 import axios, { AxiosResponse } from "axios";
+import i18n from "i18next";
 
 import APP_CONSTANTS from "../shared/app_constants";
+import { syncI18nWithUser } from "@yasserzakywafaa/client-core";
 import { ApplicationStore } from "./store";
 import END_POINTS from "../shared/endpoints";
 import { User } from "src/shared/types/user";
@@ -56,6 +58,7 @@ export const useApplicationManager = (
     );
     localStorage.setItem(USER, JSON.stringify(authInfo.user));
     store.updateAuthInfo(authInfo);
+    syncI18nWithUser(i18n, authInfo.user ?? undefined);
   };
 
   const handleFetchUserInfo = async (): Promise<User | null> => {
@@ -89,6 +92,8 @@ export const useApplicationManager = (
 
   const handleInitialAuthentication = async () => {
     const storedAuthInfo = getLocalStorageAuthItems();
+
+    syncI18nWithUser(i18n, storedAuthInfo.user ?? undefined);
 
     const initialTheme = getThemePreference(storedAuthInfo.user);
     document.body.classList.remove(

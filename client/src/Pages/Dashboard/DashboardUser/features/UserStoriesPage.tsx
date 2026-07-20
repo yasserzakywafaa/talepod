@@ -14,8 +14,12 @@ import { useDashboardUserContext } from "../store/Provider";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { localeFromLanguage } from "@yasserzakywafaa/client-core";
 
 const UserStoriesPage = () => {
+  const { t, i18n } = useTranslation("dashboard");
+  const locale = localeFromLanguage(i18n.language);
   const { userId } = useParams<{ userId: string }>();
   const {
     store: {
@@ -31,7 +35,7 @@ const UserStoriesPage = () => {
     totalCount: 0,
   });
 
-  const config = getDashboardStoriesDataGridConfig(stories);
+  const config = getDashboardStoriesDataGridConfig(stories, t, locale);
 
   const handleGetStoriesByPage = async (
     pageNumber: number = 1,
@@ -81,7 +85,9 @@ const UserStoriesPage = () => {
   return (
     <Box>
       <Typography variant="h4" component="h1" color="primary" gutterBottom>
-        {user?.name.givenName} {user?.name.familyName}'s Stories
+        {t("stories.userStoriesTitle", {
+          name: `${user?.name.givenName} ${user?.name.familyName}`,
+        })}
       </Typography>
       <Typography
         variant="body1"
@@ -90,8 +96,8 @@ const UserStoriesPage = () => {
           mb: 3
         }}>
         {paging.totalCount
-          ? `${paging.totalCount} total stories`
-          : "No stories found for this user."}
+          ? t("stories.userStoriesTotal", { count: paging.totalCount })
+          : t("stories.userStoriesEmpty")}
       </Typography>
       <Box sx={{ overflowX: "auto", position: "relative", width: "100%" }}>
         <DataGrid

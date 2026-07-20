@@ -12,8 +12,15 @@ import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import routes from "src/application/routes";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import {
+  formatLocalizedDate,
+  localeFromLanguage,
+} from "@yasserzakywafaa/client-core";
 
 const TermsAndConditions = () => {
+  const { t, i18n } = useTranslation("page");
+  const locale = localeFromLanguage(i18n.language);
   const navigate = useNavigate();
 
   const handleLinkClick =
@@ -25,7 +32,7 @@ const TermsAndConditions = () => {
 
   return (
     <Page
-      title="Terms and Conditions | TalePod"
+      title={t("legal.termsPageTitle")}
       className="terms-and-conditions-page"
       isLoading={false}
       noIndex
@@ -36,12 +43,12 @@ const TermsAndConditions = () => {
         </Box>
 
         <Typography variant="h4" gutterBottom>
-          Terms and Conditions for TalePod
+          {t("legal.termsTitle")}
         </Typography>
         <Typography variant="subtitle1" gutterBottom color="primary">
-          Last updated:{" "}
+          {t("legal.lastUpdated")}{" "}
           <span className="bold">
-            {new Date("01/01/2025").toLocaleDateString("en-GB", {
+            {formatLocalizedDate(new Date("01/01/2025"), locale, {
               dateStyle: "short",
             })}
           </span>

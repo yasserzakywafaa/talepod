@@ -7,6 +7,7 @@ import END_POINTS from "src/application/shared/endpoints";
 import { PricingFormState } from "./state";
 import { PricingStore } from "./store";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 export interface PricingManager {
   handleUpdatePricingForm: (key: string, value: string) => void;
@@ -14,6 +15,7 @@ export interface PricingManager {
 }
 
 export const usePricingManager = (store: PricingStore): PricingManager => {
+  const { t } = useTranslation("common");
   const handleUpdatePricingForm = (key: string, value: string): void => {
     store.updatePricingForm(key, value);
   };
@@ -36,7 +38,7 @@ export const usePricingManager = (store: PricingStore): PricingManager => {
       );
 
       Notify({
-        content: "Email sent successfully",
+        content: t("emailSentSuccess"),
         type: ToastTypes.Success,
       });
 

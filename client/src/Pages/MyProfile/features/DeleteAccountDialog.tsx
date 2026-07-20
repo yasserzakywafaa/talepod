@@ -13,6 +13,7 @@ import {
 import { DeleteOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { DELETE_ACCOUNT_CONFIRMATION_PHRASE } from "src/shared/utils/deleteAccount";
+import { useTranslation } from "react-i18next";
 
 interface DeleteAccountDialogProps {
   isOpen: boolean;
@@ -31,6 +32,8 @@ const DeleteAccountDialog = ({
   onClose,
   onConfirm,
 }: DeleteAccountDialogProps) => {
+  const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const [hasAcknowledged, setHasAcknowledged] = useState(false);
   const [confirmationPhrase, setConfirmationPhrase] = useState("");
 
@@ -66,16 +69,16 @@ const DeleteAccountDialog = ({
           sx={{
             display: "flex",
             alignItems: "center",
-            gap: 1
-          }}>
+            gap: 1,
+          }}
+        >
           <DeleteOutlined color="error" fontSize="large" />
-          <Typography variant="h5">Delete Account</Typography>
+          <Typography variant="h5">{t("profile.deleteAccount")}</Typography>
         </Box>
       </DialogTitle>
       <DialogContent>
         <Typography variant="body2" sx={{ mb: 2 }}>
-          This will permanently delete your account and remove all associated
-          data, including:
+          {t("profile.deleteAccountIntro")}
         </Typography>
 
         <Box component="ul" sx={{ pl: 2, mb: 2 }}>
@@ -91,8 +94,9 @@ const DeleteAccountDialog = ({
             variant="body2"
             sx={{
               color: "warning.main",
-              mb: 2
-            }}>
+              mb: 2,
+            }}
+          >
             {warningMessage}
           </Typography>
         )}
@@ -105,23 +109,25 @@ const DeleteAccountDialog = ({
               disabled={isDeleting}
             />
           }
-          label="I understand this action is permanent and cannot be undone"
+          label={t("profile.deleteAcknowledge")}
         />
 
         <TextField
           fullWidth
           margin="normal"
-          label="Type the confirmation phrase"
+          label={t("profile.typeConfirmationPhrase")}
           value={confirmationPhrase}
           onChange={(event) => setConfirmationPhrase(event.target.value)}
           disabled={isDeleting}
           placeholder={DELETE_ACCOUNT_CONFIRMATION_PHRASE}
-          helperText={`Type "${DELETE_ACCOUNT_CONFIRMATION_PHRASE}" to confirm`}
+          helperText={t("profile.typeToConfirm", {
+            phrase: DELETE_ACCOUNT_CONFIRMATION_PHRASE,
+          })}
         />
       </DialogContent>
       <DialogActions>
         <Button variant="outlined" onClick={handleClose} disabled={isDeleting}>
-          Cancel
+          {tCommon("cancel")}
         </Button>
         <Button
           variant="contained"
@@ -130,7 +136,7 @@ const DeleteAccountDialog = ({
           disabled={!canDelete}
           startIcon={<DeleteOutlined />}
         >
-          {isDeleting ? "Deleting..." : "Delete Account"}
+          {isDeleting ? t("profile.deleting") : t("profile.deleteAccount")}
         </Button>
       </DialogActions>
     </Dialog>

@@ -6,6 +6,7 @@ import END_POINTS from "src/application/shared/endpoints";
 import { MyProfileStore } from "./store";
 import { Notify } from "src/components/shared/Notification/Notification";
 import { useApplicationContext } from "src/application/store/Provider";
+import { useTranslation } from "react-i18next";
 
 export interface MyProfileManager {
   handleIsFetching: (isFetching: boolean) => void;
@@ -18,6 +19,7 @@ export interface MyProfileManager {
 export const useMyProfileManager = (
   store: MyProfileStore
 ): MyProfileManager => {
+  const { t } = useTranslation("dashboard");
   const {
     store: {
       state: { auth },
@@ -125,7 +127,7 @@ export const useMyProfileManager = (
 
       Notify({
         type: "success",
-        content: "Subscription is canceled &#128148;",
+        content: t("toasts.subscriptionCanceled"),
       });
 
       handleIsFetching(false);
@@ -156,7 +158,7 @@ export const useMyProfileManager = (
 
       Notify({
         type: "success",
-        content: "Your account has been deleted",
+        content: t("toasts.accountDeleted"),
       });
 
       return true;

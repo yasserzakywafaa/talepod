@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import { Phone } from "@mui/icons-material";
 import PhoneOtpAuthForm from "src/components/shared/Auth/PhoneOtpAuthForm";
 import { primaryColor } from "src/application/shared/themes";
+import { useTranslation } from "react-i18next";
 
 interface PhoneAuthProps {
   authType?: "login" | "register";
@@ -21,12 +22,11 @@ const PhoneAuth: React.FC<PhoneAuthProps> = ({
   onAuthSuccess,
   disabled = false,
 }) => {
+  const { t } = useTranslation("auth");
   const [expanded, setExpanded] = useState(false);
   const [isWaitingForOtp, setIsWaitingForOtp] = useState(false);
   const isRegister = authType === "register";
-  const label = isRegister
-    ? "Register by Phone Number"
-    : "Login by Phone Number";
+  const label = isRegister ? t("registerByPhone") : t("loginByPhone");
 
   const handleAccordionChange = (
     _: React.SyntheticEvent,

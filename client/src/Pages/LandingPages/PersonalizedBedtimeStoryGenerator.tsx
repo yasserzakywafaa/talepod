@@ -1,11 +1,3 @@
-import {
-  ChildCareOutlined,
-  DevicesOutlined,
-  EmojiObjectsOutlined,
-  LocalLibraryOutlined,
-} from "@mui/icons-material";
-import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
-
 import Hero from "./features/Hero";
 import Page from "src/components/shared/Page/Page";
 import PersonalizedBedtimeStoryText from "./features/PersonalizedBedtimeStoryText";
@@ -24,14 +16,16 @@ import StoryExamples from "../Features/features/StoryExamples";
 import Testimonials from "../Features/features/Testimonials";
 import CallToAction from "../Features/features/CallToAction";
 import GeneratorFaq from "./features/GeneratorFaq";
-import { landingPageSeo } from "./landingPageSeo";
-import { landingPageSeoProps } from "./landingPageSeoProps";
 import routes from "src/application/routes";
 import { generatorFaqItems } from "src/shared/content/faqContent";
 import { createFAQPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
 import { useMemo } from "react";
+import { useLandingPageSeo } from "src/shared/i18n/useLandingPageSeo";
+import { useTranslation } from "react-i18next";
 
 const PersonalizedBedtimeStoryGenerator = () => {
+  const { t } = useTranslation("landing");
+  const seoProps = useLandingPageSeo("generator");
   const {
     store: {
       state: { isFetching },
@@ -50,64 +44,17 @@ const PersonalizedBedtimeStoryGenerator = () => {
 
   useSchemaOrg(faqSchema, "faq-page-schema");
 
-  const benefitsList = (
-    <List>
-      <ListItem>
-        <ListItemIcon>
-          <ChildCareOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Name, age & interests built in"
-          secondary="Our personalized bedtime story generator uses your child's details to craft a unique tale every time."
-        />
-      </ListItem>
-
-      <ListItem>
-        <ListItemIcon>
-          <EmojiObjectsOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Narration & watercolor art"
-          secondary="Every generated story includes warm AI narration and soft watercolor illustrations — ready in under a minute."
-        />
-      </ListItem>
-
-      <ListItem>
-        <ListItemIcon>
-          <DevicesOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="11 languages, kid-safe"
-          secondary="Create stories in 11 languages with kid-safe defaults designed for young audiences."
-        />
-      </ListItem>
-
-      <ListItem>
-        <ListItemIcon>
-          <LocalLibraryOutlined fontSize="large" color="secondary" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Comic or long formats"
-          secondary="Choose illustrated comic pages or a longer prose story with a cover image."
-        />
-      </ListItem>
-    </List>
-  );
-
   return (
     <Page
-      {...landingPageSeoProps(
-        landingPageSeo[routes.landingPages.personalizedBedtimeStoryGenerator],
-      )}
+      {...seoProps}
       className="personalized-bedtime-story-generator-page"
       isLoading={isFetching}
     >
-
       <Hero
         heroImage={PlayfulBunny}
-        pageTitleWhite="Personalized Bedtime Story"
-        pageTitleColored="Generator"
-        pageHeader="Enter your child's name, age, and interests — get a narrated, illustrated bedtime story in seconds."
+        pageTitleWhite={t("pages.generator.heroWhite")}
+        pageTitleColored={t("pages.generator.heroColored")}
+        pageHeader={t("pages.generator.heroHeader")}
       />
 
       <div className="section">
@@ -115,10 +62,8 @@ const PersonalizedBedtimeStoryGenerator = () => {
       </div>
 
       <PersonalizedBedtimeStoryText
-        introducingTalePod="TalePod's personalized bedtime story generator turns a few details about your child into a complete story with narration and watercolor illustrations."
-        whyPersonalizeBedtimeStories="help children feel seen and engaged at bedtime. A generator that uses their name, age, and favorite themes makes every story feel made just for them."
+        pageKey="generator"
         personalizeImage={Unicorn}
-        benefitsList={benefitsList}
         benefitsImage={<RandomImage />}
       />
 

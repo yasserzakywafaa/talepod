@@ -7,8 +7,10 @@ import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import { useBlogsContext } from "./store/Provider";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const BlogsPage = () => {
+  const { t } = useTranslation("blog");
   const {
     store: {
       state: { isFetching, blogs, pagingInfo },
@@ -31,7 +33,7 @@ const BlogsPage = () => {
 
   return (
     <Page
-      title="Blogs on TalePod"
+      title={t("page.listTitle")}
       isLoading={isFetching || (isFetching && !blogs.length)}
       className="blogs-page"
     >

@@ -14,8 +14,23 @@ import {
   ScreenShare,
   Star,
 } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
+
+const benefitIcons = [
+  Lightbulb,
+  Favorite,
+  MenuBook,
+  ChildCare,
+  Star,
+  ScreenShare,
+];
 
 const Benefits = () => {
+  const { t } = useTranslation("landing");
+  const items = t("features.benefits.items", {
+    returnObjects: true,
+  }) as Array<{ title: string; description: string }>;
+
   return (
     <Container sx={{ py: 4 }}>
       <Typography
@@ -25,7 +40,7 @@ const Benefits = () => {
         color="primary"
         gutterBottom
       >
-        Why You and Your Child Will Love TalePod
+        {t("features.benefits.title")}
       </Typography>
       <Typography
         variant="subtitle1"
@@ -33,144 +48,29 @@ const Benefits = () => {
         color="textSecondary"
         gutterBottom
       >
-        Discover the many ways TalePod can enhance your family's bedtime
-        routine.
+        {t("features.benefits.subtitle")}
       </Typography>
-      <Grid container spacing={3} sx={{
-        mt: 2
-      }}>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <Card sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
-            <CardContent>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  p: 3
-                }}>
-                <Lightbulb color="primary" fontSize="large" sx={{ mr: 2 }} />
-                <Box>
-                  <Typography variant="h6">Boosts Imagination</Typography>
-                  <Typography variant="body2" sx={{
-                    color: "text.secondary"
-                  }}>
-                    Encourages creativity and imaginative thinking in children.
-                  </Typography>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <Card sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
-            <CardContent>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  p: 3
-                }}>
-                <Favorite color="primary" fontSize="large" sx={{ mr: 2 }} />
-                <Box>
-                  <Typography variant="h6">Strengthens Bonds</Typography>
-                  <Typography variant="body2" sx={{
-                    color: "text.secondary"
-                  }}>
-                    Creates special moments between parents and children.
-                  </Typography>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <Card sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
-            <CardContent>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  p: 3
-                }}>
-                <MenuBook color="primary" fontSize="large" sx={{ mr: 2 }} />
-                <Box>
-                  <Typography variant="h6">Promotes Literacy</Typography>
-                  <Typography variant="body2" sx={{
-                    color: "text.secondary"
-                  }}>
-                    Helps children develop a love for reading and storytelling.
-                  </Typography>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <Card sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
-            <CardContent>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  p: 3
-                }}>
-                <ChildCare color="primary" fontSize="large" sx={{ mr: 2 }} />
-                <Box>
-                  <Typography variant="h6">Customized Learning</Typography>
-                  <Typography variant="body2" sx={{
-                    color: "text.secondary"
-                  }}>
-                    Tailor stories to reinforce specific lessons or values.
-                  </Typography>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <Card sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
-            <CardContent>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  p: 3
-                }}>
-                <Star color="primary" fontSize="large" sx={{ mr: 2 }} />
-                <Box>
-                  <Typography variant="h6">Fun and Engaging</Typography>
-                  <Typography variant="body2" sx={{
-                    color: "text.secondary"
-                  }}>
-                    Makes bedtime an exciting and enjoyable experience.
-                  </Typography>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <Card sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
-            <CardContent>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  p: 3
-                }}>
-                <ScreenShare color="primary" fontSize="large" sx={{ mr: 2 }} />
-                <Box>
-                  <Typography variant="h6">Reduces Screen Time</Typography>
-                  <Typography variant="body2" sx={{
-                    color: "text.secondary"
-                  }}>
-                    Offers a creative alternative to passive screen time.
-                  </Typography>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
+      <Grid container spacing={3} sx={{ mt: 2 }}>
+        {items.map((item, index) => {
+          const Icon = benefitIcons[index];
+          return (
+            <Grid key={item.title} size={{ xs: 12, sm: 6, md: 4 }}>
+              <Card sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
+                <CardContent>
+                  <Box sx={{ display: "flex", alignItems: "center", p: 3 }}>
+                    <Icon color="primary" fontSize="large" sx={{ mr: 2 }} />
+                    <Box>
+                      <Typography variant="h6">{item.title}</Typography>
+                      <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                        {item.description}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+          );
+        })}
       </Grid>
     </Container>
   );
