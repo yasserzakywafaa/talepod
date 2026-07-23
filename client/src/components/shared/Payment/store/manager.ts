@@ -7,7 +7,7 @@ import { PaymentStore } from "./store";
 import { getAxiosError } from "src/shared/utils/getAxiosError";
 import { redirectToStripeCheckout } from "@yasserzakywafaa/client-core/web";
 import { isPrerendering } from "src/shared/utils/prerender";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 
 export interface PaymentManager {

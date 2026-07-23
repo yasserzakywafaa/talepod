@@ -19,7 +19,7 @@ import {
   localeFromLanguage,
 } from "@yasserzakywafaa/client-core";
 import { Trans, useTranslation } from "react-i18next";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 import { usePaymentStatusContext } from "./store/Provider";

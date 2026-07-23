@@ -3,9 +3,10 @@ import * as React from "react";
 import { Box } from "@mui/material";
 import TalePodLogo from "src/assets/images/sleeping_bunny_with_a_moon.webp";
 import TalePodLogoSmall from "src/assets/images/sleeping_bunny_with_a_moon.webp";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
 import { honey300, twilight500 } from "src/application/shared/themes";
 import { useApplicationContext } from "src/application/store/Provider";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useNavigate } from "react-router-dom";
 
 export interface LogoProps {
@@ -25,6 +26,7 @@ export type LogoVariant = "small" | "full";
 
 const Logo = (props: LogoProps) => {
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
   const {
     store: {
       state: { themeMode },
@@ -42,7 +44,7 @@ const Logo = (props: LogoProps) => {
     if (onClick) {
       onClick();
     } else if (component === LogoComponentEnum.ANCHOR) {
-      navigate(routes.features);
+      navigate(localizedPath(routes.features));
     }
   };
 
@@ -89,12 +91,12 @@ const Logo = (props: LogoProps) => {
     return (
       <img
         src={logoSrc}
-        alt="Blogz Logo"
+        alt="TalePod Logo"
         style={defaultStyle}
         width={style?.width}
         height={style?.height}
         onClick={handleClick}
-        aria-label="blogz.ai logo image"
+        aria-label="TalePod logo image"
       />
     );
   };

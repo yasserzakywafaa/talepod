@@ -1,4 +1,4 @@
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
 import type { LandingPageSeoKey } from "src/shared/i18n/useLandingPageSeo";
 
 export interface LandingPageSeo {

@@ -4,7 +4,7 @@ import {
 } from "@mui/icons-material";
 import { Box, Button, Card, CardContent, Typography } from "@mui/material";
 
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 

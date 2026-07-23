@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import { Avatar } from "src/shared/types/avatar";
 import { Link } from "react-router-dom";
 import { honey400 } from "src/application/shared/themes";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
 import { useAvatars } from "src/Pages/Avatars/useAvatars";
 import { useTranslation } from "react-i18next";
 

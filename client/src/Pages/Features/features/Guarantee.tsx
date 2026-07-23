@@ -1,7 +1,8 @@
 import { Box, Button, Container, Typography } from "@mui/material";
 
 import { VerifiedUser } from "@mui/icons-material";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +12,7 @@ import { useTranslation } from "react-i18next";
 const Guarantee = () => {
   const { t } = useTranslation("landing");
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
   const {
     store: {
       state: {
@@ -71,8 +73,8 @@ const Guarantee = () => {
           LinkComponent="a"
           variant="contained"
           sx={{ mt: 4, px: 2 }}
-          href={routes.create}
-          onClick={handleOnButtonClick(routes.create)}
+          href={localizedPath(routes.create)}
+          onClick={handleOnButtonClick(localizedPath(routes.create))}
         >
           {isAuthenticated
             ? t("features.guarantee.ctaAuthenticated")

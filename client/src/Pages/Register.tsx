@@ -3,11 +3,10 @@ import { Box, Container, Typography } from "@mui/material";
 import { LockOutlined } from "@mui/icons-material";
 import Page from "src/components/shared/Page/Page";
 import SocialRegister from "src/components/Modals/RegisterModal/features/SocialRegister/SocialRegister";
-import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { consumeReturnUrl } from "src/shared/utils/authReturn";
+import { consumePostAuthRedirect } from "src/shared/utils/authReturn";
 import { useTranslation } from "react-i18next";
 
 const RegisterPage = () => {
@@ -21,9 +20,7 @@ const RegisterPage = () => {
 
   useEffect(() => {
     if (auth?.user?._id) {
-      navigate(consumeReturnUrl() ?? routes.myProfile(auth.user._id), {
-        replace: true,
-      });
+      navigate(consumePostAuthRedirect(auth.user), { replace: true });
     }
   }, [auth, navigate]);
 

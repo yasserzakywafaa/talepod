@@ -16,12 +16,11 @@ import KeyFeatures from "../Features/features/KeyFeatures";
 import StoryExamples from "../Features/features/StoryExamples";
 import Testimonials from "../Features/features/Testimonials";
 import CallToAction from "../Features/features/CallToAction";
-import { useLandingPageSeo } from "src/shared/i18n/useLandingPageSeo";
+import { routes } from "src/application/routes";
 import { useTranslation } from "react-i18next";
 
 const ShortBedtimeStories = () => {
   const { t } = useTranslation("landing");
-  const seoProps = useLandingPageSeo("short");
   const {
     store: {
       state: { isFetching },
@@ -30,7 +29,12 @@ const ShortBedtimeStories = () => {
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
 
   return (
-    <Page {...seoProps} className="home-page" isLoading={isFetching}>
+    <Page
+      title={t("seo.short.title")}
+      seo={{ description: t("seo.short.description"), segment: routes.shortBedtimeStories }}
+      className="home-page"
+      isLoading={isFetching}
+    >
       <Hero
         heroImage={ChickBird}
         pageTitleWhite={t("pages.short.heroWhite")}

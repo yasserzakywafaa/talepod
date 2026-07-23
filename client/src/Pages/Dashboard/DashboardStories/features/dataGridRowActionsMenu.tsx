@@ -12,7 +12,7 @@ import { DashboardStoriesGridFields } from "./dataGridConfig";
 import DeleteStoryDialog from "./deleteStoryDialog";
 import { GridRenderCellParams } from "@mui/x-data-grid";
 import { primaryColor } from "src/application/shared/themes";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
 import { useDashboardStoriesContext } from "../store/Provider";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";

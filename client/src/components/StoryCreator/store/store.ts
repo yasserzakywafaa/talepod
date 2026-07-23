@@ -7,7 +7,7 @@ import {
 } from "./state";
 
 import { useState } from "react";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
 import { consumeCreateDraft } from "src/shared/utils/authReturn";
 
 export interface StoryCreatorStore {

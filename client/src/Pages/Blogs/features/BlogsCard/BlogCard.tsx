@@ -16,7 +16,7 @@ import { Blog } from "src/Pages/Blog/store/state";
 import { CSSProperties } from "react";
 import { Languages } from "src/shared/languages";
 // import RandomImage from "src/components/shared/RandomImage/RandomImage";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useNavigate } from "react-router-dom";
 import { trackEvent } from "src/shared/utils/ga4";

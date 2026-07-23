@@ -5,7 +5,8 @@ import characterKitten from "src/assets/images/landing_pages/dreamy_kitten.webp"
 import characterLion from "src/assets/images/landing_pages/lion_cub.webp";
 import characterOwl from "src/assets/images/landing_pages/wise_owl.webp";
 import mascotSleepingBunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useNavigate } from "react-router-dom";
 import {
   gradCover,
@@ -269,8 +270,9 @@ const FormatPanel: React.FC<FormatPanelProps> = ({
 const StoryFormats: React.FC = () => {
   const { t } = useTranslation("landing");
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
   const goCreate = (style: "comic" | "long") =>
-    navigate(`${routes.create}?style=${style}`);
+    navigate(`${localizedPath(routes.create)}?style=${style}`);
 
   const comicFeatures = t("features.storyFormats.comic.features", {
     returnObjects: true,

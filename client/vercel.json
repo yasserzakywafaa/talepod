@@ -1,5 +1,85 @@
 {
   "outputDirectory": "dist",
+  "redirects": [
+    { "source": "/pricing", "destination": "/en/pricing", "permanent": true },
+    {
+      "source": "/bedtime-stories",
+      "destination": "/en/bedtime-stories",
+      "permanent": true
+    },
+    { "source": "/create", "destination": "/en/create", "permanent": true },
+    { "source": "/contact", "destination": "/en/contact", "permanent": true },
+    {
+      "source": "/privacy-policy",
+      "destination": "/en/privacy-policy",
+      "permanent": true
+    },
+    {
+      "source": "/terms-and-conditions",
+      "destination": "/en/terms-and-conditions",
+      "permanent": true
+    },
+    {
+      "source": "/bedtime-stories-for-kids",
+      "destination": "/en/bedtime-stories-for-kids",
+      "permanent": true
+    },
+    {
+      "source": "/bedtime-stories-for-adults",
+      "destination": "/en/bedtime-stories-for-adults",
+      "permanent": true
+    },
+    {
+      "source": "/short-bedtime-stories",
+      "destination": "/en/short-bedtime-stories",
+      "permanent": true
+    },
+    {
+      "source": "/christmas-bedtime-stories",
+      "destination": "/en/christmas-bedtime-stories",
+      "permanent": true
+    },
+    {
+      "source": "/bedtime-stories-for-girlfriend",
+      "destination": "/en/bedtime-stories-for-girlfriend",
+      "permanent": true
+    },
+    {
+      "source": "/bedtime-stories-for-toddlers",
+      "destination": "/en/bedtime-stories-for-toddlers",
+      "permanent": true
+    },
+    {
+      "source": "/educational-bedtime-stories",
+      "destination": "/en/educational-bedtime-stories",
+      "permanent": true
+    },
+    {
+      "source": "/baby-bedtime-stories",
+      "destination": "/en/baby-bedtime-stories",
+      "permanent": true
+    },
+    {
+      "source": "/best-bedtime-stories",
+      "destination": "/en/best-bedtime-stories",
+      "permanent": true
+    },
+    {
+      "source": "/quick-bedtime-stories",
+      "destination": "/en/quick-bedtime-stories",
+      "permanent": true
+    },
+    {
+      "source": "/alternatives",
+      "destination": "/en/alternatives",
+      "permanent": true
+    },
+    {
+      "source": "/personalized-bedtime-story-generator",
+      "destination": "/en/personalized-bedtime-story-generator",
+      "permanent": true
+    }
+  ],
   "routes": [
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
