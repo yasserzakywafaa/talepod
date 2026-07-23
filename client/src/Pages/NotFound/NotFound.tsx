@@ -5,19 +5,21 @@ import { Box, Button, Typography } from "@mui/material";
 import BunnyNotFound from "../../assets/images/not_found_404/confused_bunny_with_magnifier.webp";
 import { HomeOutlined } from "@mui/icons-material";
 import Page from "src/components/shared/Page/Page";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
+import { localizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 const NotFoundPage = () => {
-  const { t } = useTranslation("page");
+  const { t, i18n } = useTranslation("page");
   const navigate = useNavigate();
-  const handleOnClick = () => navigate(routes.features);
+  const handleOnClick = () =>
+    navigate(localizedPath(routes.features, i18n.language));
 
   return (
     <>
       <Box component="div" className="not-found-page">
-        <Page title={t("notFound.pageTitle")}>
+        <Page title={t("notFound.pageTitle")} noIndex>
           <Box
             component="div"
             className="not-found-card-wrapper "

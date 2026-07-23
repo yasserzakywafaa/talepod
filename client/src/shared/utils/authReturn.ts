@@ -1,5 +1,10 @@
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import { ChildGenderEnum } from "src/components/StoryCreator/store/state";
+import { ALL_PUBLIC_SEGMENTS } from "src/application/routes";
+import { routes } from "src/application/routes";
+import { User } from "src/shared/types/user";
+import { hasAdminRights } from "src/shared/utils/getUserRoles";
+import { DEFAULT_LOCALE_CONFIG } from "@yasserzakywafaa/client-core/web/i18n";
 
 /**
  * Tiny sessionStorage helpers so a return URL and an in-progress Create-form
@@ -19,14 +24,80 @@ const {
 } = APP_CONSTANTS.SESSION_STORAGE;
 const DRAFT_VERSION = 1;
 
-// Never return the user to an auth/error route — that would loop or be useless.
-const BLOCKED = ["/login", "/register", "/logout", "/unauthorized", "/notfound"];
+const { supportedLocales } = DEFAULT_LOCALE_CONFIG;
 
-const isSafeUrl = (url: string | null): url is string =>
-  !!url &&
-  url.startsWith("/") &&
-  !url.startsWith("//") &&
-  !BLOCKED.some((r) => url === r || url.startsWith(`${r}?`));
+// Never return the user to an auth/error route — that would loop or be useless.
+const BLOCKED_EXACT = [
+  "/login",
+  "/register",
+  "/logout",
+  "/unauthorized",
+  "/notfound",
+];
+
+const normalizeSegment = (segment: string): string =>
+  segment.replace(/^\/+|\/+$/g, "");
+
+const isPublicMarketingSegment = (segment: string): boolean =>
+  ALL_PUBLIC_SEGMENTS.some(
+    (publicSegment) => normalizeSegment(publicSegment) === segment,
+  );
+
+/**
+ * Return URLs must point at a real post-auth destination. Rejects stale paths
+ * from other apps (e.g. move-pi `/en/dashboard/admin/users`) and locale-prefixed
+ * dashboard URLs (dashboard stays flat on talepod).
+ */
+const isSafeUrl = (url: string | null): url is string => {
+  if (!url || !url.startsWith("/") || url.startsWith("//")) {
+    return false;
+  }
+
+  const [pathname] = url.split("?");
+  if (BLOCKED_EXACT.some((blocked) => pathname === blocked)) {
+    return false;
+  }
+
+  const parts = pathname.split("/").filter(Boolean);
+  if (parts.length === 0) {
+    return false;
+  }
+
+  // Locale-prefixed marketing pages only (e.g. /ar/pricing).
+  if (supportedLocales.includes(parts[0])) {
+    const segment = parts.slice(1).join("/");
+    if (segment.startsWith("dashboard")) {
+      return false;
+    }
+    if (!segment) {
+      return true;
+    }
+    return isPublicMarketingSegment(segment);
+  }
+
+  // Flat app routes — never locale-prefixed.
+  if (pathname.startsWith("/dashboard")) {
+    // Talepod uses /dashboard/users, not move-pi's /dashboard/admin/users.
+    if (pathname.includes("/dashboard/admin/")) {
+      return false;
+    }
+    return true;
+  }
+
+  const flatAllowedPrefixes = [
+    "/my-profile/",
+    "/my-bedtime-stories/",
+    "/bedtime-story/",
+    "/payment-status/",
+    "/avatars",
+    "/blogs",
+    "/blog/",
+  ];
+
+  return flatAllowedPrefixes.some(
+    (prefix) => pathname === prefix.replace(/\/$/, "") || pathname.startsWith(prefix),
+  );
+};
 
 export const saveReturnUrl = (url: string): void => {
   if (!isSafeUrl(url)) return;
@@ -37,14 +108,36 @@ export const saveReturnUrl = (url: string): void => {
   }
 };
 
-export const consumeReturnUrl = (): string | null => {
+/** Read validated return URL without clearing sessionStorage. */
+export const peekReturnUrl = (): string | null => {
   try {
     const url = sessionStorage.getItem(RETURN_URL_KEY);
-    sessionStorage.removeItem(RETURN_URL_KEY);
     return isSafeUrl(url) ? url : null;
   } catch {
     return null;
   }
+};
+
+export const consumeReturnUrl = (): string | null => {
+  try {
+    const url = peekReturnUrl();
+    sessionStorage.removeItem(RETURN_URL_KEY);
+    return url;
+  } catch {
+    return null;
+  }
+};
+
+/** After auth, prefer saved return URL, then admin dashboard, then profile. */
+export const consumePostAuthRedirect = (user: User): string => {
+  const returnUrl = consumeReturnUrl();
+  if (returnUrl) {
+    return returnUrl;
+  }
+  if (hasAdminRights(user)) {
+    return routes.dashboard.home;
+  }
+  return routes.myProfile(user._id);
 };
 
 export const saveCreateDraft = (draft: object): void => {

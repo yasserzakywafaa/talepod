@@ -17,7 +17,7 @@ import { CSSProperties } from "react";
 import UserAccountMenuButton from "../UserAccountButton";
 import { VerifiedBadge } from "../VerifiedBadge";
 import mascotBunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useNavigate } from "react-router-dom";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";

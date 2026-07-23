@@ -1,7 +1,7 @@
 import APP_CONSTANTS from "./app_constants";
 import END_POINTS from "src/application/shared/endpoints";
 import axios from "axios";
-import routes from "../routes";
+import { routes } from "../routes";
 import { setupAuthAxios } from "@yasserzakywafaa/client-core/web";
 
 const { AUTHENTICATED, USER, TOKEN } = APP_CONSTANTS.LOCAL_STORAGE;

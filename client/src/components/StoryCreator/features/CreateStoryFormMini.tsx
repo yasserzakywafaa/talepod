@@ -19,7 +19,8 @@ import { useEffect, useRef } from "react";
 
 import { SupportedLanguages } from "src/shared/languages";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useGenerateStory } from "../hooks/useGenerateStory";
 import { useNavigate } from "react-router-dom";
@@ -36,6 +37,7 @@ const MINI_DEFAULT_AGE = 3;
 const CreateStoryFormMini = () => {
   const { t } = useTranslation("story");
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
   const {
     store: {
       state: { profileInfo },
@@ -98,7 +100,7 @@ const CreateStoryFormMini = () => {
   };
 
   const handleOnAdvancedClick = () => {
-    navigate(routes.create);
+    navigate(localizedPath(routes.create));
   };
 
   const runMiniGenerate = (overrides?: {

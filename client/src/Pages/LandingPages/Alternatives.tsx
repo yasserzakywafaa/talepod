@@ -12,17 +12,17 @@ import {
   Typography,
 } from "@mui/material";
 import Page from "src/components/shared/Page/Page";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useNavigate } from "react-router-dom";
 import CallToAction from "../Features/features/CallToAction";
 import FAQ from "../Features/features/FAQ";
-import { useLandingPageSeo } from "src/shared/i18n/useLandingPageSeo";
 import { useTranslation } from "react-i18next";
 
 const Alternatives = () => {
   const { t } = useTranslation("landing");
-  const seoProps = useLandingPageSeo("alternatives");
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
 
   const comparisonRows = t("alternatives.rows", {
     returnObjects: true,
@@ -37,7 +37,14 @@ const Alternatives = () => {
   }>;
 
   return (
-    <Page {...seoProps} className="alternatives-page">
+    <Page
+      title={t("seo.alternatives.title")}
+      seo={{
+        description: t("seo.alternatives.description"),
+        segment: routes.alternatives,
+      }}
+      className="alternatives-page"
+    >
       <Container sx={{ py: { xs: 4, sm: 8 } }}>
         <Typography
           component="h1"
@@ -119,7 +126,7 @@ const Alternatives = () => {
             <Button
               variant="contained"
               color="primary"
-              onClick={() => navigate(routes.create)}
+              onClick={() => navigate(localizedPath(routes.create))}
             >
               {t("alternatives.cta")}
             </Button>

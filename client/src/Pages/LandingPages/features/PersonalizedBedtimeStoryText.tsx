@@ -9,7 +9,8 @@ import {
 } from "@mui/material";
 
 import { AutoFixHighOutlined } from "@mui/icons-material";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LandingPageContentKey } from "src/shared/i18n/useLandingPageSeo";
@@ -26,6 +27,7 @@ const PersonalizedBedtimeStoryText = (
 ) => {
   const { t } = useTranslation("landing");
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
 
   const handleFooterLinkItemClick =
     (route: string) =>
@@ -74,8 +76,8 @@ const PersonalizedBedtimeStoryText = (
 
             <Typography variant="body1" sx={{ mb: 2 }}>
               <Link
-                href={routes.termsAndConditions}
-                onClick={handleFooterLinkItemClick(routes.library)}
+                href={localizedPath(routes.library)}
+                onClick={handleFooterLinkItemClick(localizedPath(routes.library))}
                 sx={{
                   color: "text.secondary",
                   pr: "5px"
@@ -91,8 +93,8 @@ const PersonalizedBedtimeStoryText = (
             <Typography variant="body1" sx={{ mb: 2 }}>
               {t("shared.introPrefix")}
               <Link
-                href={routes.termsAndConditions}
-                onClick={handleFooterLinkItemClick(routes.create)}
+                href={localizedPath(routes.create)}
+                onClick={handleFooterLinkItemClick(localizedPath(routes.create))}
                 sx={{
                   color: "text.secondary",
                   px: "5px"
@@ -141,8 +143,8 @@ const PersonalizedBedtimeStoryText = (
       <Typography variant="body1" sx={{ mb: 2 }}>
         {t("shared.footerPrefix")}{" "}
         <Link
-          href={routes.library}
-          onClick={handleFooterLinkItemClick(routes.library)}
+          href={localizedPath(routes.library)}
+          onClick={handleFooterLinkItemClick(localizedPath(routes.library))}
           sx={{
             color: "text.secondary",
             pr: "5px"
@@ -151,8 +153,8 @@ const PersonalizedBedtimeStoryText = (
         </Link>{" "}
         {t("shared.footerMiddle")}{" "}
         <Link
-          href={routes.create}
-          onClick={handleFooterLinkItemClick(routes.create)}
+          href={localizedPath(routes.create)}
+          onClick={handleFooterLinkItemClick(localizedPath(routes.create))}
           sx={{
             color: "text.secondary",
             pr: "5px"
@@ -161,8 +163,8 @@ const PersonalizedBedtimeStoryText = (
         </Link>{" "}
         {t("shared.footerSuffix")}{" "}
         <Link
-          href={routes.privacyPolicy}
-          onClick={handleFooterLinkItemClick(routes.privacyPolicy)}
+          href={localizedPath(routes.privacyPolicy)}
+          onClick={handleFooterLinkItemClick(localizedPath(routes.privacyPolicy))}
           sx={{
             color: "text.secondary",
             pr: "5px"
@@ -182,9 +184,9 @@ const PersonalizedBedtimeStoryText = (
           LinkComponent="a"
           variant="contained"
           sx={{ my: 2, px: 2 }}
-          href={routes.create}
+          href={localizedPath(routes.create)}
           endIcon={<AutoFixHighOutlined />}
-          onClick={handleFooterLinkItemClick(routes.create)}
+          onClick={handleFooterLinkItemClick(localizedPath(routes.create))}
         >
           {t("shared.cta")}
         </Button>

@@ -1,3 +1,7 @@
+/**
+ * Story content languages (slug locales in generated stories).
+ * Site UI routing uses client-core DEFAULT_LOCALE_CONFIG (en, de, fr, ar).
+ */
 export interface Language {
   name: string;
   value: SupportedLanguages;

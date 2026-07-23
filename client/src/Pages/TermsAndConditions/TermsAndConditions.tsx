@@ -7,10 +7,13 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import { createWebPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
 
 import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -22,6 +25,7 @@ const TermsAndConditions = () => {
   const { t, i18n } = useTranslation("page");
   const locale = localeFromLanguage(i18n.language);
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
 
   const handleLinkClick =
     (route: string) =>
@@ -29,6 +33,17 @@ const TermsAndConditions = () => {
       event.preventDefault();
       navigate(route);
     };
+
+  const webPageSchema = useMemo(() => {
+    return createWebPageSchema(
+      "Terms and Conditions",
+      "Please read these terms and conditions carefully before using Our Service. These Terms and Conditions set out the rights and obligations of all users regarding the use of the Service.",
+      localizedPath(routes.termsAndConditions),
+      new Date("01/01/2025"),
+    );
+  }, [localizedPath]);
+
+  useSchemaOrg(webPageSchema, "terms-and-conditions-webpage-schema");
 
   return (
     <Page
@@ -157,8 +172,8 @@ const TermsAndConditions = () => {
             acceptance of and compliance with the{" "}
             <Link
               component="a"
-              href={routes.privacyPolicy}
-              onClick={handleLinkClick(routes.privacyPolicy)}
+              href={localizedPath(routes.privacyPolicy)}
+              onClick={handleLinkClick(localizedPath(routes.privacyPolicy))}
             >
               Privacy Policy
             </Link>{" "}
@@ -181,8 +196,8 @@ const TermsAndConditions = () => {
             and this{" "}
             <Link
               component="a"
-              href={routes.privacyPolicy}
-              onClick={handleLinkClick(routes.privacyPolicy)}
+              href={localizedPath(routes.privacyPolicy)}
+              onClick={handleLinkClick(localizedPath(routes.privacyPolicy))}
             >
               Privacy Policy
             </Link>
@@ -354,8 +369,8 @@ const TermsAndConditions = () => {
             first try to resolve the dispute informally by{" "}
             <Link
               component="a"
-              href={routes.contact}
-              onClick={handleLinkClick(routes.contact)}
+              href={localizedPath(routes.contact)}
+              onClick={handleLinkClick(localizedPath(routes.contact))}
             >
               contacting the Company
             </Link>
@@ -472,8 +487,8 @@ const TermsAndConditions = () => {
                 secondary={
                   <Link
                     component="a"
-                    href={routes.contact}
-                    onClick={handleLinkClick(routes.contact)}
+                    href={localizedPath(routes.contact)}
+                    onClick={handleLinkClick(localizedPath(routes.contact))}
                   >
                     {`${window.location.origin}/contact`}
                   </Link>

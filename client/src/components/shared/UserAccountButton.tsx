@@ -18,7 +18,8 @@ import { User } from "src/shared/types/user";
 import axios from "axios";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import { primaryColor } from "src/application/shared/themes";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
+import { localizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -32,7 +33,7 @@ interface UserAccountMenuButtonProps {
 }
 
 const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
-  const { t } = useTranslation("common");
+  const { t, i18n } = useTranslation("common");
   const navigate = useNavigate();
   const {
     manager: { handleSetAuthInfo },
@@ -113,7 +114,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
       content: t("loggedOut"),
     });
 
-    navigate(routes.features);
+    navigate(localizedPath(routes.features, i18n.language));
   };
 
   return (

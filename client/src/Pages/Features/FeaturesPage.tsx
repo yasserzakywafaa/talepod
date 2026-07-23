@@ -10,8 +10,6 @@ import HowItWorks from "./features/HowItWorks";
 import KeyFeatures from "./features/KeyFeatures";
 import { LoaderComponentNameEnum } from "src/components/shared/Loader/LoaderSpinner";
 import Page from "src/components/shared/Page/Page";
-import { homepageSeo } from "../LandingPages/landingPageSeo";
-import { landingPageSeoProps } from "../LandingPages/landingPageSeoProps";
 import {
   homepageFaqItems,
   safetyFaqItems,
@@ -31,13 +29,19 @@ import Testimonials from "./features/Testimonials";
 import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
 import { Link } from "react-router-dom";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import {
+  useLocaleContext,
+  useLocalizedPath,
+} from "@yasserzakywafaa/client-core/web/i18n";
 
 const FeaturesPage = () => {
   const { t } = useTranslation("landing");
+  const { locale } = useLocaleContext();
+  const localizedPath = useLocalizedPath();
   const {
     store: {
       state: { isFetching },
@@ -54,8 +58,8 @@ const FeaturesPage = () => {
   } = useOpenaiContext();
 
   const organizationSchema = useMemo(
-    () => createOrganizationSchemaForSite(),
-    [],
+    () => createOrganizationSchemaForSite(locale),
+    [locale],
   );
   const softwareApplicationSchema = useMemo(
     () => createSoftwareApplicationSchema(),
@@ -65,9 +69,9 @@ const FeaturesPage = () => {
     () =>
       createFAQPageSchema(
         [...homepageFaqItems, ...safetyFaqItems],
-        routes.features,
+        localizedPath(routes.features),
       ),
-    [],
+    [localizedPath],
   );
 
   useSchemaOrg(organizationSchema, "organization-schema");
@@ -76,19 +80,22 @@ const FeaturesPage = () => {
 
   return (
     <Page
-      {...landingPageSeoProps(homepageSeo)}
       title={t("features.pageTitle")}
       className="features-page"
       isLoading={isFetching || isCreateStoryFetching}
       loaderComponentName={
         isCreateStoryFetching ? LoaderComponentNameEnum.CreateStory : undefined
       }
+      seo={{
+        description: t("seo.home.description"),
+        segment: routes.features,
+      }}
     >
       <Hero />
 
       <MuiLink
         component={Link}
-        to={routes.landingPages.personalizedBedtimeStoryGenerator}
+        to={localizedPath(routes.landingPages.personalizedBedtimeStoryGenerator)}
         sx={{
           display: "block",
           textAlign: "center",

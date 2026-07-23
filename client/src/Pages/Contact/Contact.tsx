@@ -6,6 +6,7 @@ import ContactForm from "./features/ContactForm";
 import ContactMap from "./features/ContactMap";
 import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
+import { routes } from "src/application/routes";
 import { useContactContext } from "./store/Provider";
 import { useTranslation } from "react-i18next";
 
@@ -22,6 +23,7 @@ const ContactPage = () => {
       title={t("contact.pageTitle")}
       className="contact-page"
       isLoading={isFetching}
+      seo={{ description: t("contact.pageTitle"), segment: routes.contact }}
     >
       <Box component="div" className="bg-image-character">
         <RandomImage />

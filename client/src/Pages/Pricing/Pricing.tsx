@@ -4,6 +4,7 @@ import BunnyHoldingMoneyBag from "src/assets/images/bunny_holding_money_bag.webp
 import Page from "src/components/shared/Page/Page";
 import { Pricing } from "src/components/shared/Pricing/Pricing";
 import PricingTable from "src/components/shared/Pricing/PricingTable";
+import { routes } from "src/application/routes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { usePricingContext } from "./store/Provider";
 import { useTranslation } from "react-i18next";
@@ -23,6 +24,7 @@ const PricingPage = () => {
       title={t("pricing.pageTitle")}
       className="pricing-page"
       isLoading={isFetching}
+      seo={{ description: t("pricing.subtitle"), segment: routes.pricing }}
     >
       <Box component="div" className="bg-image-character">
         <img

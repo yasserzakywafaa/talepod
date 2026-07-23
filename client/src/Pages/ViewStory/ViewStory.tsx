@@ -31,8 +31,14 @@ import ViewStoryInfo from "./features/ViewStoryInfo";
 import ViewStorySEO from "./features/ViewStorySEO";
 import { getAxiosError } from "src/shared/utils/getAxiosError";
 import { buildStoryMetaDescription } from "src/shared/utils/storyMetaDescription";
+import {
+  createBreadcrumbSchema,
+  useSchemaOrg,
+} from "src/shared/utils/schemaOrg";
+import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useApplicationContext } from "src/application/store/Provider";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useViewStoryContext } from "./store/Provider";
 import { trackEvent } from "src/shared/utils/ga4";
@@ -40,6 +46,8 @@ import { useTranslation } from "react-i18next";
 
 const ViewStoryPage: React.FC = () => {
   const { t } = useTranslation("story");
+  const { t: tCommon } = useTranslation("common");
+  const localizedPath = useLocalizedPath();
   const { slug } = useParams<{ userId: string; slug: string }>();
   const {
     store: {
@@ -59,6 +67,28 @@ const ViewStoryPage: React.FC = () => {
   const hasDirectionRtl = story && story.profileInfo.language.value === "ar";
   const isComic = !!story && story.format === "comic" && !!story.pages?.length;
   const trackedStorySlugRef = useRef<string | null>(null);
+
+  const breadcrumbSchema = useMemo(() => {
+    if (!story || !story.slug) return null;
+
+    const breadcrumbs = [
+      {
+        name: tCommon("nav.features"),
+        url: localizedPath(routes.features),
+      },
+      {
+        name: tCommon("nav.library"),
+        url: localizedPath(routes.library),
+      },
+      {
+        name: story.title,
+        url: routes.story(story.slug),
+      },
+    ];
+    return createBreadcrumbSchema(breadcrumbs);
+  }, [localizedPath, story, t, tCommon]);
+
+  useSchemaOrg(breadcrumbSchema, "view-story-breadcrumb-schema");
 
   const handleFetchStoryAuthorInfo = async () => {
     try {

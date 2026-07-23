@@ -15,7 +15,7 @@ import { useDashboardUsersContext } from "../store/Provider";
 import { useState } from "react";
 import DeleteUserDialog from "./deleteUserDialog";
 import { useNavigate } from "react-router-dom";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
 import { useTranslation } from "react-i18next";
 
 const DataGridRowActionsMenu = (params: GridRenderCellParams) => {

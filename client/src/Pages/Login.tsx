@@ -4,11 +4,10 @@ import APP_CONSTANTS from "src/application/shared/app_constants";
 import { LockOpenOutlined } from "@mui/icons-material";
 import Page from "src/components/shared/Page/Page";
 import SocialLogin from "src/components/Modals/LoginModal/features/SocialLogin/SocialLogin";
-import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { consumeReturnUrl } from "src/shared/utils/authReturn";
+import { consumePostAuthRedirect } from "src/shared/utils/authReturn";
 import { useTranslation } from "react-i18next";
 
 const LoginPage = () => {
@@ -33,9 +32,7 @@ const LoginPage = () => {
       hasUserInStorage !== "null" &&
       auth?.user?._id
     ) {
-      navigate(consumeReturnUrl() ?? routes.myProfile(auth.user._id), {
-        replace: true,
-      });
+      navigate(consumePostAuthRedirect(auth.user), { replace: true });
     }
   }, [auth, navigate]);
 

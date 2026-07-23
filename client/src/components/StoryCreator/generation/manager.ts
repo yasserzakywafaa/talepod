@@ -6,7 +6,7 @@ import APP_CONSTANTS from "src/application/shared/app_constants";
 import END_POINTS from "src/application/shared/endpoints";
 import { GenerationStore } from "./store";
 import { Story } from "../store/state";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 
 export interface GenerationManager {

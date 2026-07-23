@@ -1,7 +1,9 @@
 # https://www.robotstxt.org/robotstxt.html
 
-# Sitemap location
+# Sitemap locations
 Sitemap: https://www.talepod.com/sitemap.xml
+Sitemap: https://www.talepod.com/sitemap-stories.xml
+Sitemap: https://www.talepod.com/sitemap-blogs.xml
 
 # Block specific robots from accessing certain parts
 User-agent: BadBot
@@ -10,23 +12,3 @@ Disallow: /
 User-agent: *
 Disallow: /private/
 Allow: /
-Allow: /create/
-Allow: /bedtime-stories/
-Allow: /bedtime-stories/*
-Allow: /bedtime-story/*
-Allow: /contact/
-Allow: /privacy-policy/
-Allow: /terms-and-conditions/
-# Landing Pages
-Allow: /bedtime-stories-for-kids/
-Allow: /bedtime-stories-for-adults/
-Allow: /short-bedtime-stories/
-Allow: /christmas-bedtime-stories/
-Allow: /bedtime-stories-for-girlfriend/
-Allow: /bedtime-stories-for-toddlers/
-Allow: /educational-bedtime-stories/
-Allow: /baby-bedtime-stories/
-Allow: /best-bedtime-stories/
-Allow: /quick-bedtime-stories/
-Allow: /alternatives/
-Allow: /personalized-bedtime-story-generator/

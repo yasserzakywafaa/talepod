@@ -6,7 +6,8 @@ import Container from "@mui/material/Container";
 import { ExpandMoreOutlined } from "@mui/icons-material";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
@@ -24,6 +25,7 @@ const faqItemKeys = [
 export default function FAQ() {
   const { t } = useTranslation("landing");
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
   const [expanded, setExpanded] = useState<string | false>(false);
 
   const handleChange =
@@ -38,13 +40,13 @@ export default function FAQ() {
 
       switch (name) {
         case "create":
-          navigate(routes.create);
+          navigate(localizedPath(routes.create));
           break;
         case "library":
-          navigate(routes.library);
+          navigate(localizedPath(routes.library));
           break;
         case "contact":
-          navigate(routes.contact);
+          navigate(localizedPath(routes.contact));
           break;
       }
     };
@@ -52,19 +54,19 @@ export default function FAQ() {
   const linkComponents = {
     createLink: (
       <Link
-        href={`${window.location.origin}/create`}
+        href={`${window.location.origin}${localizedPath(routes.create)}`}
         onClick={handleLinkClick("create")}
       />
     ),
     libraryLink: (
       <Link
-        href={`${window.location.origin}${routes.library}`}
+        href={`${window.location.origin}${localizedPath(routes.library)}`}
         onClick={handleLinkClick("library")}
       />
     ),
     contactLink: (
       <Link
-        href={`${window.location.origin}/contact`}
+        href={`${window.location.origin}${localizedPath(routes.contact)}`}
         onClick={handleLinkClick("contact")}
       />
     ),

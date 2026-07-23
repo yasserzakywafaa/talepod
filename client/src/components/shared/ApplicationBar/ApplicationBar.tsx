@@ -1,5 +1,5 @@
 import { AppBar, Container, Toolbar } from "@mui/material";
-import { useMatch, useNavigate } from "react-router-dom";
+import { useLocation, useMatch, useNavigate } from "react-router-dom";
 
 import ApplicationBarDesktopView from "./features/ApplicationBarDesktopView";
 import ApplicationBarMobileView from "./features/ApplicationBarMobileView";
@@ -7,11 +7,12 @@ import { InstallAppModal } from "src/components/Modals/InstallAppModal/InstallAp
 import { LoginModal } from "src/components/Modals/LoginModal/LoginModal";
 import { PricingModal } from "src/components/Modals/PricingModal/PricingModal";
 import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
 import { scrollToSection } from "src/shared/utils/scrollTo";
 import { useApplicationContext } from "src/application/store/Provider";
 import useDetectScroll from "src/shared/hooks/useDetectScroll";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useState } from "react";
 import { trackEvent } from "src/shared/utils/ga4";
 
@@ -37,6 +38,8 @@ const ApplicationBar = () => {
     useState<boolean>(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const localizedPath = useLocalizedPath();
   const { isScrolledFromTop } = useDetectScroll();
   const { isDesktop } = useDeviceSize();
 
@@ -51,19 +54,21 @@ const ApplicationBar = () => {
 
   const isAppBarVisible = true;
   const pagesMatch: PagesMatch = {
-    isFeaturesPage: !!useMatch(routes.features),
-    isCreatePage: !!useMatch(routes.create),
-    isLibraryPage: !!useMatch(routes.library),
-    isPricingPage: !!useMatch(routes.pricing),
+    isFeaturesPage: !!useMatch({ path: "/:locale", end: true }),
+    isCreatePage: !!useMatch("/:locale/create"),
+    isLibraryPage: !!useMatch("/:locale/bedtime-stories"),
+    isPricingPage: !!useMatch("/:locale/pricing"),
     isBlogsPage: !!useMatch(routes.blogs),
-    isContactPage: !!useMatch(routes.contact),
+    isContactPage: !!useMatch("/:locale/contact"),
     isViewBlogPage: !!useMatch(routes.blog(":id")),
     isMyStoriesPage: !!useMatch(routes.myStories(":userId")),
     isMyProfilePage: !!useMatch(routes.myProfile(":userId")),
     isUnauthorized: !!useMatch(routes.unauthorized),
-    isPrivacyPolicy: !!useMatch(routes.privacyPolicy),
-    isTermsOfService: !!useMatch(routes.termsAndConditions),
-    isLandingPage: !!window.location.pathname.includes("blogs"),
+    isPrivacyPolicy: !!useMatch("/:locale/privacy-policy"),
+    isTermsOfService: !!useMatch("/:locale/terms-and-conditions"),
+    isLandingPage: Object.values(routes.landingPages).some((segment) =>
+      location.pathname.endsWith(`/${segment}`),
+    ),
   };
 
   const handleSetDrawer = (isOpen: boolean) => () => {
@@ -89,22 +94,22 @@ const ApplicationBar = () => {
 
     switch (sectionId) {
       case "features":
-        navigate(routes.features);
+        navigate(localizedPath(routes.features));
         break;
       case "library":
-        navigate(routes.library);
+        navigate(localizedPath(routes.library));
         break;
       case "create":
-        navigate(routes.create);
+        navigate(localizedPath(routes.create));
         break;
       case "pricing":
-        navigate(routes.pricing);
+        navigate(localizedPath(routes.pricing));
         break;
       case "contact":
-        navigate(routes.contact);
+        navigate(localizedPath(routes.contact));
         break;
       case "original-stories":
-        navigate(routes.library);
+        navigate(localizedPath(routes.library));
         break;
       case "install":
         setIsInstallAppDialogOpen(true);

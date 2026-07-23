@@ -8,54 +8,56 @@ import SwitzerlandFlag from "src/assets/images/switzerland_flag.png";
 import { honey300 } from "src/application/shared/themes";
 import mascotBunny from "src/assets/images/sleeping_bunny_with_a_moon.webp";
 import APP_CONSTANTS from "src/application/shared/app_constants";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 const Footer = () => {
   const { t } = useTranslation("common");
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
 
   const landingLinks = [
     {
       text: t("footer.landingLinks.bedtimeStoriesForKids"),
-      href: routes.landingPages.bedtimeStoriesForKids,
+      href: localizedPath(routes.landingPages.bedtimeStoriesForKids),
     },
     {
       text: t("footer.landingLinks.bedtimeStoriesForAdults"),
-      href: routes.landingPages.bedtimeStoriesForAdults,
+      href: localizedPath(routes.landingPages.bedtimeStoriesForAdults),
     },
     {
       text: t("footer.landingLinks.shortBedtimeStories"),
-      href: routes.landingPages.shortBedtimeStories,
+      href: localizedPath(routes.landingPages.shortBedtimeStories),
     },
     {
       text: t("footer.landingLinks.christmasBedtimeStories"),
-      href: routes.landingPages.christmasBedtimeStories,
+      href: localizedPath(routes.landingPages.christmasBedtimeStories),
     },
     {
       text: t("footer.landingLinks.bedtimeStoriesForGirlfriend"),
-      href: routes.landingPages.bedtimeStoriesForGirlfriend,
+      href: localizedPath(routes.landingPages.bedtimeStoriesForGirlfriend),
     },
     {
       text: t("footer.landingLinks.bedtimeStoriesForToddlers"),
-      href: routes.landingPages.bedtimeStoriesForToddlers,
+      href: localizedPath(routes.landingPages.bedtimeStoriesForToddlers),
     },
     {
       text: t("footer.landingLinks.educationalBedtimeStories"),
-      href: routes.landingPages.educationalBedtimeStories,
+      href: localizedPath(routes.landingPages.educationalBedtimeStories),
     },
     {
       text: t("footer.landingLinks.babyBedtimeStories"),
-      href: routes.landingPages.babyBedtimeStories,
+      href: localizedPath(routes.landingPages.babyBedtimeStories),
     },
     {
       text: t("footer.landingLinks.bestBedtimeStories"),
-      href: routes.landingPages.bestBedtimeStories,
+      href: localizedPath(routes.landingPages.bestBedtimeStories),
     },
     {
       text: t("footer.landingLinks.quickBedtimeStories"),
-      href: routes.landingPages.quickBedtimeStories,
+      href: localizedPath(routes.landingPages.quickBedtimeStories),
     },
   ];
 
@@ -64,19 +66,19 @@ const Footer = () => {
     href: string;
     external?: boolean;
   }> = [
-    { text: t("footer.productLinks.createStory"), href: routes.create },
-    { text: t("footer.productLinks.library"), href: routes.library },
-    { text: t("footer.productLinks.pricing"), href: routes.pricing },
+    { text: t("footer.productLinks.createStory"), href: localizedPath(routes.create) },
+    { text: t("footer.productLinks.library"), href: localizedPath(routes.library) },
+    { text: t("footer.productLinks.pricing"), href: localizedPath(routes.pricing) },
     {
       text: t("footer.productLinks.alternatives"),
-      href: routes.landingPages.alternatives,
+      href: localizedPath(routes.landingPages.alternatives),
     },
     {
       text: t("footer.productLinks.storyGenerator"),
-      href: routes.landingPages.personalizedBedtimeStoryGenerator,
+      href: localizedPath(routes.landingPages.personalizedBedtimeStoryGenerator),
     },
     { text: t("footer.productLinks.blog"), href: APP_CONSTANTS.BLOG_URL, external: true },
-    { text: t("footer.productLinks.contact"), href: routes.contact },
+    { text: t("footer.productLinks.contact"), href: localizedPath(routes.contact) },
   ];
 
   const go =
@@ -181,7 +183,7 @@ const Footer = () => {
             className="footer-landing-pages-links"
           >
             {landingLinks.map((l) => (
-              <Link key={l.href} href={l.href} sx={linkSx}>
+              <Link key={l.href} href={l.href} onClick={go(l.href)} sx={linkSx}>
                 {l.text}
               </Link>
             ))}
@@ -205,16 +207,16 @@ const Footer = () => {
         <span>© {new Date().getFullYear()} TalePod</span>
         <span>·</span>
         <Link
-          href={routes.privacyPolicy}
-          onClick={go(routes.privacyPolicy)}
+          href={localizedPath(routes.privacyPolicy)}
+          onClick={go(localizedPath(routes.privacyPolicy))}
           sx={linkSx}
         >
           {t("footer.privacyShort")}
         </Link>
         <span>·</span>
         <Link
-          href={routes.termsAndConditions}
-          onClick={go(routes.termsAndConditions)}
+          href={localizedPath(routes.termsAndConditions)}
+          onClick={go(localizedPath(routes.termsAndConditions))}
           sx={linkSx}
         >
           {t("footer.termsShort")}

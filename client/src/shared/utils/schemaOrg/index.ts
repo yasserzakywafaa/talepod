@@ -6,3 +6,5 @@ export {
 } from "./organizationSchema";
 export { createFAQPageSchema } from "./faqSchema";
 export type { FAQItem } from "./faqSchema";
+export { createBreadcrumbSchema } from "./breadcrumbSchema";
+export { createWebPageSchema } from "./webPageSchema";

@@ -9,10 +9,13 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import { createWebPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
 
 import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -24,6 +27,7 @@ const PrivacyPolicyPage = () => {
   const { t, i18n } = useTranslation("page");
   const locale = localeFromLanguage(i18n.language);
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
 
   const handleLinkClick =
     (route: string) =>
@@ -31,6 +35,17 @@ const PrivacyPolicyPage = () => {
       event.preventDefault();
       navigate(route);
     };
+
+  const webPageSchema = useMemo(() => {
+    return createWebPageSchema(
+      "Privacy Policy",
+      "This Privacy Policy describes Our policies and procedures on the collection, use, and disclosure of your information when you use the Service and tells you about your privacy rights and how the law protects you.",
+      localizedPath(routes.privacyPolicy),
+      new Date("01/07/2024"),
+    );
+  }, [localizedPath]);
+
+  useSchemaOrg(webPageSchema, "privacy-policy-webpage-schema");
 
   return (
     <Page
@@ -146,8 +161,8 @@ const PrivacyPolicyPage = () => {
                 primary="Website"
                 secondary={
                   <Link
-                    href={routes.features}
-                    onClick={handleLinkClick(routes.features)}
+                    href={localizedPath(routes.features)}
+                    onClick={handleLinkClick(localizedPath(routes.features))}
                   >
                     {window.location.origin}
                   </Link>

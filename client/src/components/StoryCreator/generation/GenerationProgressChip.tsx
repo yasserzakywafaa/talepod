@@ -8,7 +8,8 @@ import {
 } from "@mui/material";
 import { ErrorOutlineOutlined, MenuBookOutlined } from "@mui/icons-material";
 
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useGenerationContext } from "./Provider";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -23,6 +24,7 @@ import { useTranslation } from "react-i18next";
 const GenerationProgressChip = () => {
   const { t } = useTranslation("story");
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
   const {
     store: { job },
     manager: { dismissGeneration },
@@ -126,11 +128,11 @@ const GenerationProgressChip = () => {
           <Button
             size="small"
             component="a"
-            href={routes.library}
+            href={localizedPath(routes.library)}
             variant="text"
             onClick={(e) => {
               e.preventDefault();
-              navigate(routes.library);
+              navigate(localizedPath(routes.library));
             }}
             sx={{
               minWidth: 0,
