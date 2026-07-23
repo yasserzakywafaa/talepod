@@ -23,11 +23,11 @@
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
-    "@emotion/styled": "11.14.0",
+    "@emotion/styled": "11.14.1",
     "@mui/icons-material": "9.2.0",
     "@mui/material": "9.2.0",
     "@mui/styles": "6.4.8",
-    "@mui/x-data-grid": "^9.8.0",
+    "@mui/x-data-grid": "^9.10.0",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
     "@types/react-router-dom": "5.3.3",
@@ -36,34 +36,34 @@
     "classnames": "2.5.1",
     "i18next": "^26.3.4",
     "i18next-browser-languagedetector": "^8.2.1",
-    "libphonenumber-js": "^1.13.8",
+    "libphonenumber-js": "^1.13.9",
     "mui-tel-input": "^11.0.0",
-    "react": "^17.0.0 || ^18.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0",
-    "react-i18next": "^17.0.8",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-i18next": "^17.0.11",
     "react-markdown": "10.1.0",
     "react-router-dom": "7.18.1",
     "react-toastify": "11.1.0",
     "rimraf": "^6.1.2",
-    "swiper": "^14.0.1"
+    "swiper": "^14.0.6"
   },
   "devDependencies": {
     "@sparticuz/chromium": "^149.0.0",
     "@types/node": "latest",
-    "@vitejs/plugin-react": "^6.0.3",
+    "@vitejs/plugin-react": "^6.0.4",
     "puppeteer": "npm:puppeteer-core@^24.22.0",
-    "sass": "1.101.0",
+    "sass": "1.101.6",
     "serve": "14.2.6",
-    "typescript": "6.0.3",
-    "vite": "^8.1.3",
+    "typescript": "7.0.2",
+    "vite": "^8.1.5",
     "vite-plugin-prerender": "^1.0.8"
   },
   "resolutions": {
     "puppeteer": "npm:puppeteer-core@^24.22.0"
   },
   "peerDependencies": {
-    "react": "^17.0.0 || ^18.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0"
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
   },
   "browserslist": [
     "last 1 chrome version",
