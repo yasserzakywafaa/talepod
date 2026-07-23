@@ -17,6 +17,8 @@ import Page from "src/components/shared/Page/Page";
 import RandomImage from "src/components/shared/RandomImage/RandomImage";
 import Share from "src/components/shared/Share/Share";
 import StoryCard from "src/components/shared/StoryCard/StoryCard";
+import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useLibraryContext } from "./store/Provider";
 import { useNavigate } from "react-router-dom";
 import { trackEvent } from "src/shared/utils/ga4";
@@ -30,6 +32,7 @@ export const LibraryContent = (props: LibraryPageContentProps): JSX.Element => {
   const { t } = useTranslation("library");
   const { showSourceChips = true } = props;
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
   const {
     store: {
       state: {
@@ -56,7 +59,7 @@ export const LibraryContent = (props: LibraryPageContentProps): JSX.Element => {
   };
 
   const handleOnCreateClick = () => {
-    navigate("/create");
+    navigate(localizedPath(routes.create));
   };
 
   const handleFilterButtonClick = () => {
@@ -78,6 +81,7 @@ export const LibraryContent = (props: LibraryPageContentProps): JSX.Element => {
       className="library-page"
       title={t("page.libraryTitle")}
       loaderComponentName={LoaderComponentNameEnum.BedtimeStories}
+      seo={{ description: t("page.libraryTitle"), segment: routes.library }}
     >
       <Container className="library-container">
         <FiltersPanel />

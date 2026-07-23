@@ -1,6 +1,6 @@
 import { ReactNode, useEffect } from "react";
 
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useNavigate } from "react-router-dom";
 

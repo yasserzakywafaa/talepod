@@ -16,13 +16,14 @@ import { User } from "src/shared/types/user";
 import axios from "axios";
 import { getAxiosError } from "src/shared/utils/getAxiosError";
 import { parsePhoneNumber } from "libphonenumber-js";
-import routes from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   consumeCreateDraft,
+  consumePostAuthRedirect,
   consumeReturnUrl,
+  peekReturnUrl,
 } from "src/shared/utils/authReturn";
 import { trackEvent } from "src/shared/utils/ga4";
 
@@ -178,7 +179,7 @@ const PhoneOtpAuthForm = ({
         type: ToastTypes.Success,
       });
 
-      const returnUrl = consumeReturnUrl();
+      const returnUrl = peekReturnUrl();
       const currentUrl = location.pathname + location.search;
 
       onWaitingForOtp?.(false);
@@ -187,9 +188,10 @@ const PhoneOtpAuthForm = ({
       if (returnUrl && returnUrl === currentUrl) {
         // In-place auth (login modal on /create): the form is still mounted
         // with the user's data, so stay put and discard the saved draft.
+        consumeReturnUrl();
         consumeCreateDraft();
       } else {
-        navigate(returnUrl ?? routes.myProfile(response.data.user._id), {
+        navigate(consumePostAuthRedirect(response.data.user), {
           replace: true,
         });
       }

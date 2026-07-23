@@ -4,7 +4,7 @@ import APP_CONSTANTS from "src/application/shared/app_constants";
 import END_POINTS from "src/application/shared/endpoints";
 import Page from "src/components/shared/Page/Page";
 import axios from "axios";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
 import { getApplicationInitialState } from "src/application/store/state";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useNavigate } from "react-router-dom";

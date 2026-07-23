@@ -2,7 +2,8 @@ import { AutoAwesome, Create, MenuBook } from "@mui/icons-material";
 import { Box, Button, Container, Grid, Paper, Typography } from "@mui/material";
 
 import BedtimeStory from "../../../assets/images/landing_pages/wise_owl.webp";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useApplicationContext } from "src/application/store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
@@ -14,6 +15,7 @@ const stepIcons = [Create, AutoAwesome, MenuBook];
 const HowItWorks = () => {
   const { t } = useTranslation("landing");
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
   const { isMobile, isTablet, isDesktop } = useDeviceSize();
   const {
     store: {
@@ -126,8 +128,8 @@ const HowItWorks = () => {
             LinkComponent="a"
             variant="contained"
             sx={{ mt: 4, px: 2 }}
-            href={routes.create}
-            onClick={handleOnButtonClick(routes.create)}
+            href={localizedPath(routes.create)}
+            onClick={handleOnButtonClick(localizedPath(routes.create))}
           >
             {isAuthenticated
               ? t("features.howItWorks.ctaAuthenticated")

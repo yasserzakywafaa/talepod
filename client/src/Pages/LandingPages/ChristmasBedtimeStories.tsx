@@ -16,12 +16,11 @@ import StoryExamples from "../Features/features/StoryExamples";
 import Testimonials from "../Features/features/Testimonials";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import CallToAction from "../Features/features/CallToAction";
-import { useLandingPageSeo } from "src/shared/i18n/useLandingPageSeo";
+import { routes } from "src/application/routes";
 import { useTranslation } from "react-i18next";
 
 const ChristmasBedtimeStories = () => {
   const { t } = useTranslation("landing");
-  const seoProps = useLandingPageSeo("christmas");
   const {
     store: {
       state: { isFetching },
@@ -30,7 +29,12 @@ const ChristmasBedtimeStories = () => {
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
 
   return (
-    <Page {...seoProps} className="home-page" isLoading={isFetching}>
+    <Page
+      title={t("seo.christmas.title")}
+      seo={{ description: t("seo.christmas.description"), segment: routes.christmasBedtimeStories }}
+      className="home-page"
+      isLoading={isFetching}
+    >
       <Hero
         heroImage={FestiveReindeer}
         pageTitleWhite={t("pages.christmas.heroWhite")}

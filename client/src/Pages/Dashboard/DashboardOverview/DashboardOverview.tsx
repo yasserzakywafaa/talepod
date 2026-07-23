@@ -2,7 +2,7 @@ import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 import { Dashboard as DashboardIcon } from "@mui/icons-material";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useDashboardOverviewContext } from "./store/Provider";
 import { useEffect } from "react";

@@ -31,7 +31,7 @@ import { Notification } from "src/components/shared/Notification/Notification";
 import SettingsMenuButton from "src/components/shared/SettingsMenuButton";
 import UserAccountMenuButton from "src/components/shared/UserAccountButton";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
-import routes from "../../../application/routes";
+import { routes } from "../../../application/routes";
 import { useApplicationContext } from "../../../application/store/Provider";
 import { useIsRtl } from "@yasserzakywafaa/client-core/web/i18n";
 

@@ -3,13 +3,16 @@ import { Box, Button, Link as MuiLink, Paper, Snackbar, Typography } from "@mui/
 import { Trans, useTranslation } from "react-i18next";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 
 const CONSENT_KEY = APP_CONSTANTS.LOCAL_STORAGE.COOKIE_CONSENT;
 
 const CookiePolicy = () => {
   const { t } = useTranslation("common");
+  const localizedPath = useLocalizedPath();
   const [visible, setVisible] = useState(
     () => !localStorage.getItem(CONSENT_KEY),
   );
@@ -65,7 +68,8 @@ const CookiePolicy = () => {
             components={{
               privacyLink: (
                 <MuiLink
-                  href={routes.privacyPolicy}
+                  component={RouterLink}
+                  to={localizedPath(routes.privacyPolicy)}
                   underline="hover"
                   sx={{ color: "primary.main" }}
                 />

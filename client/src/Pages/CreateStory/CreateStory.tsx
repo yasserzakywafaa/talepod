@@ -19,6 +19,7 @@ import { LoaderComponentNameEnum } from "src/components/shared/Loader/LoaderSpin
 import Page from "src/components/shared/Page/Page";
 import StoryCreator from "src/components/StoryCreator/StoryCreator";
 import Unicorn from "../../assets/images/unicorn_with_a_magic_wand_and_a_book.webp";
+import { routes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useOpenaiContext } from "src/components/StoryCreator/features/Openai/store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
@@ -60,6 +61,10 @@ const CreateStoryPage = () => {
       loaderComponentName={
         !isPricingModalVisible ? LoaderComponentNameEnum.CreateStory : undefined
       }
+      seo={{
+        description: t("createPage.subheading"),
+        segment: routes.create,
+      }}
     >
       <Container>
         <Box component="div" className="bg-image-character">

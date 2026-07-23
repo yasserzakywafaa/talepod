@@ -17,22 +17,20 @@ import ScrollToTopButton from "../BackToTopButton/BackToTopButton";
 import SwipeToRefresh from "./features/SwipeToRefresh/SwipeToRefresh";
 import classNames from "classnames";
 import END_POINTS from "src/application/shared/endpoints";
-import routes from "src/application/routes";
-import { consumeReturnUrl, saveReturnUrl } from "src/shared/utils/authReturn";
+import { routes } from "src/application/routes";
+import { consumePostAuthRedirect, saveReturnUrl } from "src/shared/utils/authReturn";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useLocation, useNavigate } from "react-router-dom";
 import { trackEvent } from "src/shared/utils/ga4";
-import { applyPageSeoMeta } from "src/shared/utils/seoMeta";
+import { PageSeoConfig, usePageSeo } from "@yasserzakywafaa/client-core/web/seo";
 
 export interface PageProps {
   title: string;
-  description?: string;
-  canonicalPath?: string;
-  ogTitle?: string;
-  ogDescription?: string;
   className?: string;
   isLoading?: boolean;
   noIndex?: boolean;
+  /** Provide for indexable public pages to emit canonical + hreflang + OG. */
+  seo?: PageSeoConfig;
   style?: CSSProperties;
   swipeToRefresh?: boolean;
   children?: React.ReactNode;
@@ -45,14 +43,11 @@ export interface PageProps {
 const Page = (params: PageProps) => {
   const {
     title,
-    description,
-    canonicalPath,
-    ogTitle,
-    ogDescription,
     style,
     children,
     isLoading,
     noIndex = false,
+    seo,
     className = "",
     containerProps = {},
     swipeToRefresh,
@@ -113,30 +108,12 @@ const Page = (params: PageProps) => {
     saveReturnUrl(location.pathname + location.search);
   }, [location.pathname, location.search]);
 
-  useEffect(() => {
-    applyPageSeoMeta({
-      title,
-      description,
-      canonicalPath,
-      ogTitle,
-      ogDescription,
-    });
-  }, [title, description, canonicalPath, ogTitle, ogDescription]);
-
-  useEffect(() => {
-    let robotsMeta = document.querySelector(
-      "meta[name='robots']",
-    ) as HTMLMetaElement | null;
-    if (!robotsMeta) {
-      robotsMeta = document.createElement("meta");
-      robotsMeta.setAttribute("name", "robots");
-      document.head.appendChild(robotsMeta);
-    }
-    robotsMeta.setAttribute(
-      "content",
-      noIndex ? "noindex, follow" : "index, follow",
-    );
-  }, [noIndex]);
+  usePageSeo({
+    title,
+    noIndex,
+    seo,
+    getAppUrl: () => APP_CONSTANTS.APP_URL,
+  });
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -161,9 +138,7 @@ const Page = (params: PageProps) => {
           user: data,
         });
         trackEvent("login", { method: provider });
-        navigate(consumeReturnUrl() ?? routes.myProfile(data._id), {
-          replace: true,
-        });
+        navigate(consumePostAuthRedirect(data), { replace: true });
       } catch {
         if (cancelled) return;
         navigate(routes.auth.login, { replace: true });

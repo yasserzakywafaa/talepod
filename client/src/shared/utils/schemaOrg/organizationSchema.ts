@@ -1,6 +1,13 @@
+import {
+  DEFAULT_LOCALE_CONFIG,
+  localizedPath,
+} from "@yasserzakywafaa/client-core/web/i18n";
+import { routes } from "src/application/routes";
 import { getAbsoluteUrl, getImageUrl } from "./schemaGenerators";
 
-export const createOrganizationSchemaForSite = (): object => {
+export const createOrganizationSchemaForSite = (
+  locale: string = DEFAULT_LOCALE_CONFIG.defaultLocale,
+): object => {
   const baseUrl = getAbsoluteUrl("");
 
   return {
@@ -15,7 +22,7 @@ export const createOrganizationSchemaForSite = (): object => {
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "Customer Service",
-      url: getAbsoluteUrl("/contact"),
+      url: getAbsoluteUrl(localizedPath(routes.contact, locale)),
     },
   };
 };

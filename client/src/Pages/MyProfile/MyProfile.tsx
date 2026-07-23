@@ -34,7 +34,8 @@ import { useApplicationContext } from "src/application/store/Provider";
 import { useMyProfileContext } from "./store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
+import { localizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useNavigate } from "react-router-dom";
 import { honey300, honey400, honey700 } from "src/application/shared/themes";
 import { useTranslation } from "react-i18next";
@@ -419,7 +420,7 @@ const MyProfilePage = () => {
           const deleted = await handleDeleteAccount(confirmationPhrase);
           if (deleted) {
             setIsDeleteAccountDialogOpen(false);
-            navigate(routes.features);
+            navigate(localizedPath(routes.features, i18n.language));
           }
         }}
       />

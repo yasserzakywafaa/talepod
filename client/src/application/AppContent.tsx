@@ -1,6 +1,7 @@
 import "./App.scss";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { getThemedTheme } from "./shared/themes";
 import { lazy, useEffect } from "react";
 
 import { CssBaseline } from "@mui/material";
@@ -12,11 +13,15 @@ import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import NotFoundPage from "../Pages/NotFound/NotFound";
 import ProtectedRoute from "./ProtectedRoute";
 import { ThemeProvider } from "@mui/material/styles";
-import { getThemedTheme } from "./shared/themes";
-import { hasAdminRights } from "src/shared/utils/getUserRoles";
-import routes from "./routes";
+import {
+  LocaleProvider,
+  LocaleLayout,
+  LocaleRedirect,
+  useAppDirection,
+} from "@yasserzakywafaa/client-core/web/i18n";
+import i18n from "src/i18n/init";
+import { ALL_PUBLIC_SEGMENTS, routes } from "./routes";
 import { useApplicationContext } from "./store/Provider";
-import { useAppDirection } from "@yasserzakywafaa/client-core/web/i18n";
 
 const FeaturesPage = lazy(() => import("../Pages/Features/FeaturesPage"));
 const PricingPage = lazy(() => import("../Pages/Pricing/Pricing"));
@@ -50,7 +55,6 @@ const UnauthorizedPage = lazy(
   () => import("../Pages/Unauthorized/Unauthorized"),
 );
 
-// Landing Pages
 const BedtimeStoriesForKids = lazy(
   () => import("../Pages/LandingPages/BedtimeStoriesForKids"),
 );
@@ -86,7 +90,6 @@ const PersonalizedBedtimeStoryGenerator = lazy(
   () => import("../Pages/LandingPages/PersonalizedBedtimeStoryGenerator"),
 );
 
-// Dashboard Layout and Pages
 const DashboardLayout = lazy(
   () => import("./layouts/DashboardLayout/DashboardLayout"),
 );
@@ -126,176 +129,169 @@ const AppContent = () => {
 
       {!state.isFetchingUserInfo && (
         <BrowserRouter>
-          <Ga4PageView />
-          <Ga4ScrollDepth />
-          <Routes>
-            {/* Public Routes */}
-            <Route index path={routes.features} element={<FeaturesPage />} />
-            <Route path={routes.pricing} element={<PricingPage />} />
-            <Route path={routes.contact} element={<ContactPage />} />
-            <Route
-              path={routes.privacyPolicy}
-              element={<PrivacyPolicyPage />}
-            />
-            <Route
-              path={routes.termsAndConditions}
-              element={<TermsAndConditionsPage />}
-            />
-            <Route path={routes.unauthorized} element={<UnauthorizedPage />} />
-            <Route path={routes.auth.login} element={<LoginPage />} />
-            <Route path={routes.auth.register} element={<RegisterPage />} />
-            <Route path={routes.auth.logout} element={<LogoutPage />} />
+          <LocaleProvider publicSegments={ALL_PUBLIC_SEGMENTS} i18n={i18n}>
+            <Ga4PageView />
+            <Ga4ScrollDepth />
+            <Routes>
+              <Route
+                path={routes.root}
+                element={<LocaleRedirect />}
+              />
 
-            {/* Story Creation Routes */}
-            <Route path={routes.create} element={<CreateStoryPage />} />
+              {/* Flat routes — must stay outside /:locale (auth, app, admin) */}
+              <Route path={routes.unauthorized} element={<UnauthorizedPage />} />
+              <Route path={routes.auth.login} element={<LoginPage />} />
+              <Route path={routes.auth.register} element={<RegisterPage />} />
+              <Route path={routes.auth.logout} element={<LogoutPage />} />
 
-            {/* Story Viewing Routes */}
-            <Route path={routes.library} element={<LibraryPage />} />
-            <Route path={routes.story(":slug")} element={<ViewStoryPage />} />
-            <Route
-              path={routes.myStory(":userId", ":slug")}
-              element={<ViewStoryPage />}
-            />
+              <Route path={routes.story(":slug")} element={<ViewStoryPage />} />
+              <Route
+                path={routes.myStory(":userId", ":slug")}
+                element={<ViewStoryPage />}
+              />
 
-            {/* Blog Routes */}
-            <Route path={routes.blogs} element={<BlogsPage />} />
-            <Route path={routes.blog(":slug")} element={<BlogPage />} />
+              <Route path={routes.blogs} element={<BlogsPage />} />
+              <Route path={routes.blog(":slug")} element={<BlogPage />} />
 
-            {/* Authenticated user routes */}
-            <Route
-              path={routes.myStories(":userId")}
-              element={
-                <ProtectedRoute>
-                  <MyStoriesPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={routes.myProfile(":userId")}
-              element={
-                <ProtectedRoute>
-                  <MyProfilePage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={routes.avatars}
-              element={
-                <ProtectedRoute>
-                  <AvatarsPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={routes.paymentStatus(":sessionId")}
-              element={
-                <ProtectedRoute>
-                  <PaymentStatusPage />
-                </ProtectedRoute>
-              }
-            />
+              <Route
+                path={routes.myStories(":userId")}
+                element={
+                  <ProtectedRoute>
+                    <MyStoriesPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={routes.myProfile(":userId")}
+                element={
+                  <ProtectedRoute>
+                    <MyProfilePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={routes.avatars}
+                element={
+                  <ProtectedRoute>
+                    <AvatarsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={routes.paymentStatus(":sessionId")}
+                element={
+                  <ProtectedRoute>
+                    <PaymentStatusPage />
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* Admin Routes */}
-            {state.auth.isAuthenticated &&
-              !!state.auth.user &&
-              hasAdminRights(state.auth.user) && (
-                <>
-                  <Route
-                    path={routes.usersStories}
-                    element={
-                      <ProtectedRoute>
-                        <UsersStoriesPage />
-                      </ProtectedRoute>
-                    }
-                  />
+              <Route
+                path={routes.usersStories}
+                element={
+                  <ProtectedRoute>
+                    <UsersStoriesPage />
+                  </ProtectedRoute>
+                }
+              />
 
-                  <Route
-                    path={routes.dashboard.base}
-                    element={
-                      <ProtectedRoute>
-                        <DashboardLayout />
-                      </ProtectedRoute>
-                    }
-                  >
-                    <Route index element={<DashboardPage />} />
-                    <Route path="users" element={<DashboardUsersPage />} />
-                    <Route
-                      path={routes.dashboard.viewUser(":userId")}
-                      element={<DashboardUser />}
-                    />
-                    <Route
-                      path={routes.dashboard.viewUserStories(":userId")}
-                      element={<DashboardUserStoriesPage />}
-                    />
-                    <Route
-                      path={routes.dashboard.stories}
-                      element={<DashboardStoriesPage />}
-                    />
-                  </Route>
-                </>
-              )}
+              <Route
+                path={routes.dashboard.base}
+                element={
+                  <ProtectedRoute>
+                    <DashboardLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<DashboardPage />} />
+                <Route path="users" element={<DashboardUsersPage />} />
+                <Route
+                  path={routes.dashboard.viewUser(":userId")}
+                  element={<DashboardUser />}
+                />
+                <Route
+                  path={routes.dashboard.viewUserStories(":userId")}
+                  element={<DashboardUserStoriesPage />}
+                />
+                <Route
+                  path={routes.dashboard.stories}
+                  element={<DashboardStoriesPage />}
+                />
+              </Route>
 
-            {/* Landing Pages */}
-            <Route
-              path={routes.landingPages.bedtimeStoriesForKids}
-              element={<BedtimeStoriesForKids />}
-            />
-            <Route
-              path={routes.landingPages.bedtimeStoriesForAdults}
-              element={<BedtimeStoriesForAdults />}
-            />
-            <Route
-              path={routes.landingPages.shortBedtimeStories}
-              element={<ShortBedtimeStories />}
-            />
-            <Route
-              path={routes.landingPages.christmasBedtimeStories}
-              element={<ChristmasBedtimeStories />}
-            />
-            <Route
-              path={routes.landingPages.bedtimeStoriesForGirlfriend}
-              element={<BedtimeStoriesForGirlfriend />}
-            />
-            <Route
-              path={routes.landingPages.bedtimeStoriesForToddlers}
-              element={<BedtimeStoriesForToddlers />}
-            />
-            <Route
-              path={routes.landingPages.educationalBedtimeStories}
-              element={<EducationalBedtimeStories />}
-            />
-            <Route
-              path={routes.landingPages.babyBedtimeStories}
-              element={<BabyBedtimeStories />}
-            />
-            <Route
-              path={routes.landingPages.bestBedtimeStories}
-              element={<BestBedtimeStories />}
-            />
-            <Route
-              path={routes.landingPages.quickBedtimeStories}
-              element={<QuickBedtimeStories />}
-            />
-            <Route
-              path={routes.landingPages.alternatives}
-              element={<Alternatives />}
-            />
-            <Route
-              path={routes.landingPages.personalizedBedtimeStoryGenerator}
-              element={<PersonalizedBedtimeStoryGenerator />}
-            />
+              <Route path="/:locale" element={<LocaleLayout i18n={i18n} />}>
+                <Route index element={<FeaturesPage />} />
+                <Route path={routes.pricing} element={<PricingPage />} />
+                <Route path={routes.contact} element={<ContactPage />} />
+                <Route path={routes.library} element={<LibraryPage />} />
+                <Route path={routes.create} element={<CreateStoryPage />} />
+                <Route
+                  path={routes.bedtimeStoriesForKids}
+                  element={<BedtimeStoriesForKids />}
+                />
+                <Route
+                  path={routes.bedtimeStoriesForAdults}
+                  element={<BedtimeStoriesForAdults />}
+                />
+                <Route
+                  path={routes.shortBedtimeStories}
+                  element={<ShortBedtimeStories />}
+                />
+                <Route
+                  path={routes.christmasBedtimeStories}
+                  element={<ChristmasBedtimeStories />}
+                />
+                <Route
+                  path={routes.bedtimeStoriesForGirlfriend}
+                  element={<BedtimeStoriesForGirlfriend />}
+                />
+                <Route
+                  path={routes.bedtimeStoriesForToddlers}
+                  element={<BedtimeStoriesForToddlers />}
+                />
+                <Route
+                  path={routes.educationalBedtimeStories}
+                  element={<EducationalBedtimeStories />}
+                />
+                <Route
+                  path={routes.babyBedtimeStories}
+                  element={<BabyBedtimeStories />}
+                />
+                <Route
+                  path={routes.bestBedtimeStories}
+                  element={<BestBedtimeStories />}
+                />
+                <Route
+                  path={routes.quickBedtimeStories}
+                  element={<QuickBedtimeStories />}
+                />
+                <Route
+                  path={routes.alternatives}
+                  element={<Alternatives />}
+                />
+                <Route
+                  path={routes.personalizedBedtimeStoryGenerator}
+                  element={<PersonalizedBedtimeStoryGenerator />}
+                />
+                <Route
+                  path={routes.privacyPolicy}
+                  element={<PrivacyPolicyPage />}
+                />
+                <Route
+                  path={routes.termsAndConditions}
+                  element={<TermsAndConditionsPage />}
+                />
+                <Route path="*" element={<NotFoundPage />} />
+              </Route>
 
-            {/* Fallback route for 404 errors */}
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
 
-          {/* Global, non-blocking story-generation progress chip (persists
-              across routes and survives refresh). */}
-          <GenerationProgressChip />
+            <GenerationProgressChip />
+            <CookiePolicy />
+          </LocaleProvider>
         </BrowserRouter>
       )}
-
-      <CookiePolicy />
     </ThemeProvider>
   );
 };

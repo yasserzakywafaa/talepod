@@ -18,7 +18,7 @@ import AvatarCard from "src/components/shared/AvatarCard/AvatarCard";
 import AvatarFormDialog from "./AvatarFormDialog";
 import Page from "src/components/shared/Page/Page";
 import { honey400 } from "src/application/shared/themes";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
 import { useAvatars } from "./useAvatars";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";

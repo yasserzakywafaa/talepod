@@ -16,16 +16,16 @@ import StoryExamples from "../Features/features/StoryExamples";
 import Testimonials from "../Features/features/Testimonials";
 import CallToAction from "../Features/features/CallToAction";
 import GeneratorFaq from "./features/GeneratorFaq";
-import routes from "src/application/routes";
+import { routes } from "src/application/routes";
 import { generatorFaqItems } from "src/shared/content/faqContent";
 import { createFAQPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useMemo } from "react";
-import { useLandingPageSeo } from "src/shared/i18n/useLandingPageSeo";
 import { useTranslation } from "react-i18next";
 
 const PersonalizedBedtimeStoryGenerator = () => {
   const { t } = useTranslation("landing");
-  const seoProps = useLandingPageSeo("generator");
+  const localizedPath = useLocalizedPath();
   const {
     store: {
       state: { isFetching },
@@ -37,16 +37,20 @@ const PersonalizedBedtimeStoryGenerator = () => {
     () =>
       createFAQPageSchema(
         generatorFaqItems,
-        routes.landingPages.personalizedBedtimeStoryGenerator,
+        localizedPath(routes.personalizedBedtimeStoryGenerator),
       ),
-    [],
+    [localizedPath],
   );
 
   useSchemaOrg(faqSchema, "faq-page-schema");
 
   return (
     <Page
-      {...seoProps}
+      title={t("seo.generator.title")}
+      seo={{
+        description: t("seo.generator.description"),
+        segment: routes.personalizedBedtimeStoryGenerator,
+      }}
       className="personalized-bedtime-story-generator-page"
       isLoading={isFetching}
     >
