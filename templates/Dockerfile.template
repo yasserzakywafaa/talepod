@@ -19,8 +19,8 @@ FROM node:16-alpine as builder
 # RUN  yarn install
 # # RUN yarn install --frozen-lockfile
 
-# COPY client/public client/public
-# COPY client/src client/src
+# COPY web/public web/public
+# COPY web/src web/src
 # RUN  yarn build
 
 # COPY server server

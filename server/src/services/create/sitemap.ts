@@ -9,7 +9,7 @@ export interface AddUrlToSiteMapParams {
 
 export const handleAddUrlToSitemapLocally = (props: AddUrlToSiteMapParams) => {
   const { siteMapFileName, url } = props;
-  const CLIENT_PUBLIC_DIR = path.join(__dirname, "../../../../client/public");
+  const CLIENT_PUBLIC_DIR = path.join(__dirname, "../../../../web/public");
   const sitemapPath = path.join(
     CLIENT_PUBLIC_DIR,
     siteMapFileName || "sitemap-blogs.xml"
