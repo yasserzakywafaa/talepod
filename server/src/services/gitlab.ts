@@ -33,7 +33,7 @@ export const handleUpdateSitemapInGitLab = async (
     return;
 
   const filePath =
-    `client/public/${siteMapFileName}` || "client/public/sitemap.xml";
+    `web/public/${siteMapFileName}` || "web/public/sitemap.xml";
   const targetBranch = CONFIG.IS_DEV
     ? BranchesEnum.develop
     : BranchesEnum.master;

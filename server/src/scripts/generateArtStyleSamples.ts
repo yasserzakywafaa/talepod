@@ -3,7 +3,7 @@
  * form's Art Style picker can show a true preview of each look (instead of a
  * flat gradient). Writes optimized JPEGs to the client assets folder:
  *
- *   client/src/assets/images/art-styles/{styleId}.jpg
+ *   web/src/assets/images/art-styles/{styleId}.jpg
  *
  * Run from the `server` directory with an OpenRouter key available, e.g.:
  *   npx ts-node src/scripts/generateArtStyleSamples.ts
@@ -25,7 +25,7 @@ const SCENE =
 
 const OUTPUT_DIR = path.resolve(
   __dirname,
-  "../../../client/src/assets/images/art-styles",
+  "../../../web/src/assets/images/art-styles",
 );
 
 /** Download the model's image URL (data: or remote) into a Buffer. */

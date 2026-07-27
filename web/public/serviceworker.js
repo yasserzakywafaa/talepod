@@ -1,5 +1,5 @@
 const _this = this;
-const version = "20260723-111220"; // Increment this on every deploy
+const version = "20260727-073523"; // Increment this on every deploy
 const host = _this.location.origin;
 const CACHE_NAME = `talepod-v${version}`;
 const urlsToCache = [

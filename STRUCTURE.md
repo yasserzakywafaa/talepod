@@ -1,7 +1,7 @@
 # Project Folder Structure
 
     project-name
-    ├── client
+    ├── web
     │   ├── build
     │   ├── node_modules
     │   ├── public
@@ -48,7 +48,7 @@
     │   ├── yarn.lock
     │   └── server
     ├── templates
-    │   ├── client
+    │   ├── web
     │   └── server
     ├── node_modules
     ├── .dockerignore

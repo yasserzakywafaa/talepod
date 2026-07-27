@@ -23,8 +23,8 @@ const CONFIG = {
   PUBLIC_URLS_CLIENT_PROD: process.env.PUBLIC_URLS_CLIENT_PROD,
 
   // Paths
-  FRONTEND_DEV_PATH: path.resolve("../client/public"),
-  FRONTEND_BUILD_PATH: path.resolve("../client/dist"),
+  FRONTEND_DEV_PATH: path.resolve("../web/public"),
+  FRONTEND_BUILD_PATH: path.resolve("../web/dist"),
   SERVE_STATIC_CONTENT: process.env.SERVE_STATIC_CONTENT,
   // Assets
   SERVER_TEXT_TO_SPEECH_PATH: "assets/audio",
