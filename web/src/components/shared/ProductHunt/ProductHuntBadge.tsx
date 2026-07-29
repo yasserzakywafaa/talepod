@@ -1,12 +1,8 @@
 import { Link } from "@mui/material";
-import { useApplicationContext } from "src/application/store/Provider";
+import { useAppResolvedThemeMode } from "src/application/hooks/useAppResolvedThemeMode";
 
 const ProductHuntBadge = () => {
-  const {
-    store: {
-      state: { themeMode },
-    },
-  } = useApplicationContext();
+  const themeMode = useAppResolvedThemeMode();
 
   const productHuntTheme = themeMode === "light" ? "light" : "neutral";
 

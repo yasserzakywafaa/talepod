@@ -725,10 +725,10 @@
   dependencies:
     "@rolldown/pluginutils" "^1.0.1"
 
-"@yasserzakywafaa/client-core@^0.6.3":
-  version "0.6.3"
-  resolved "https://npm.pkg.github.com/download/@yasserzakywafaa/client-core/0.6.3/4d76a52fd03c5ddc4e890e9b3acce9624bfef784#4d76a52fd03c5ddc4e890e9b3acce9624bfef784"
-  integrity sha512-BeveCX6e2iEtr+OsP4AqcNRTV+UZnzpwNZTL8jptnuPt1GHC4yimr0i66ViD8oGW6twF0sOL6Gp8fAlD4JtJtQ==
+"@yasserzakywafaa/client-core@^0.8.0":
+  version "0.8.0"
+  resolved "https://npm.pkg.github.com/download/@yasserzakywafaa/client-core/0.8.0/fd2351459d456d725c4b77fc38f7b9933510aed4#fd2351459d456d725c4b77fc38f7b9933510aed4"
+  integrity sha512-CYGGOs4Qeh17/Zo38h069/H4hPalWsyuxsYcyOXR/3zwvAeaCyGHXufAZZlXJCavnUXs8EEKwy0IF354p3Td7Q==
 
 "@zeit/schemas@2.36.0":
   version "2.36.0"

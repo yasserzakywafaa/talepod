@@ -15,6 +15,11 @@ authRouter.get(
 );
 
 authRouter.post(
+  END_POINTS.AUTH.GOOGLE_MOBILE_EXCHANGE,
+  AuthController.googleMobileExchange,
+);
+
+authRouter.post(
   END_POINTS.AUTH.PHONE_REGISTER_SEND_OTP,
   AuthController.sendPhoneRegisterOtp,
 );

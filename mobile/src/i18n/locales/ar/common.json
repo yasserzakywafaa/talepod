@@ -1,0 +1,35 @@
+{
+  "account": "الحساب",
+  "back": "رجوع",
+  "footer": {
+    "company": "الشركة",
+    "copyright": "حقوق النشر ©",
+    "linksLine": "{{product}} · {{company}} · {{privacy}} · {{terms}}",
+    "mobileTagline": "في metriz.ai، نُبسّط المناقصات وجداول الكميات للفرق التي تحتاج إلى التوسع — نفس المنصة على الويب والجوال.",
+    "privacyPolicy": "سياسة الخصوصية",
+    "product": "المنتج",
+    "termsAndConditions": "الشروط والأحكام"
+  },
+  "logo": "الصفحة الرئيسية",
+  "nav": {
+    "contact": "اتصل بنا",
+    "createProject": "إنشاء مشروع",
+    "features": "الميزات",
+    "login": "تسجيل الدخول",
+    "register": "التسجيل"
+  },
+  "settings": {
+    "dashboard": "لوحة التحكم",
+    "languageLabel": "اللغة",
+    "logout": "تسجيل الخروج",
+    "menu": "الإعدادات",
+    "profile": "الملف الشخصي",
+    "refreshApp": "تحديث التطبيق",
+    "theme": "المظهر",
+    "themeDark": "داكن",
+    "themeLight": "فاتح",
+    "themeSystem": "النظام"
+  },
+  "sheetClose": "إغلاق",
+  "signedInUser": "مستخدم مسجّل الدخول"
+}

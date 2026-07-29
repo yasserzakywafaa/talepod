@@ -1,0 +1,29 @@
+import type { DrawerScreenProps } from "@react-navigation/drawer";
+import { useTranslation } from "react-i18next";
+import { Text } from "react-native-paper";
+
+import { mobileRoutes } from "src/application/routes";
+import type { DashboardDrawerParamList } from "src/application/navigation/DashboardDrawerNavigator";
+import { DashboardScreenBody } from "src/components/layout/PageScaffold";
+import { useScreenTypography } from "src/components/layout/useScreenTypography";
+
+type Props = DrawerScreenProps<
+  DashboardDrawerParamList,
+  typeof mobileRoutes.dashboard.adminUsers
+>;
+
+export const AdminUsersPlaceholderScreen = (_props: Props) => {
+  const { t } = useTranslation("dashboard");
+  const typography = useScreenTypography();
+
+  return (
+    <DashboardScreenBody>
+      <Text variant="headlineSmall" style={typography.title}>
+        {t("adminNav.usersTitle")}
+      </Text>
+      <Text variant="bodyMedium" style={typography.body}>
+        {t("admin.users.subtitle")}
+      </Text>
+    </DashboardScreenBody>
+  );
+};

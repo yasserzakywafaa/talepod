@@ -1,0 +1,46 @@
+{
+  "account": "Account",
+  "back": "Back",
+  "close": "Close",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "emailSentSuccess": "Email sent successfully",
+  "noResults": "No Results Found",
+  "noStoriesFound": "No Stories Found",
+  "loggedOut": "Logged out",
+  "footer": {
+    "company": "Company",
+    "copyright": "Copyright ©",
+    "linksLine": "{{product}} · {{company}} · {{privacy}} · {{terms}}",
+    "mobileTagline": "At TalePod, we help parents create magical, personalized bedtime stories in minutes — with illustrations, narration, and tales tailored to your child.",
+    "privacyPolicy": "Privacy Policy",
+    "product": "Product",
+    "termsAndConditions": "Terms and Conditions"
+  },
+  "logo": "TalePod home",
+  "nav": {
+    "contact": "Contact Us",
+    "createProject": "Create Story",
+    "features": "Features",
+    "howItWorks": "How It Works",
+    "library": "Library",
+    "login": "Log in",
+    "myStories": "My Stories",
+    "pricing": "Pricing",
+    "register": "Register"
+  },
+  "settings": {
+    "dashboard": "Dashboard",
+    "languageLabel": "Language",
+    "logout": "Logout",
+    "menu": "Settings",
+    "profile": "Profile",
+    "refreshApp": "Refresh App",
+    "theme": "Theme",
+    "themeDark": "Dark",
+    "themeLight": "Light",
+    "themeSystem": "System"
+  },
+  "sheetClose": "Close",
+  "signedInUser": "Signed-in user"
+}

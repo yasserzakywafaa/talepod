@@ -1,0 +1,25 @@
+{
+  "page": {
+    "libraryTitle": "Bibliothèque d'histoires du soir sur TalePod",
+    "myStoriesTitle": "Mes histoires du soir sur TalePod",
+    "sourceCommunity": "Communauté",
+    "sourceTalepod": "par TalePod",
+    "filters": "Filtres",
+    "emptyCreate": "Créer une histoire",
+    "emptyClearFilters": "Effacer les filtres"
+  },
+  "filters": {
+    "title": "Filtrer les histoires",
+    "name": "Nom",
+    "language": "Langue",
+    "age": "Âge",
+    "languageNone": "Aucune...",
+    "storyAudio": "Audio de l'histoire",
+    "originals": "Originaux TalePod",
+    "originalsTooltip": "Créés et personnalisés par l'équipe TalePod",
+    "notAppropriate": "Pas approprié 🙈",
+    "cancel": "Annuler",
+    "clear": "Effacer",
+    "apply": "Appliquer"
+  }
+}

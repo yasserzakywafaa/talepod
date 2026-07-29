@@ -20,6 +20,7 @@ import END_POINTS from "src/application/shared/endpoints";
 import { routes } from "src/application/routes";
 import { consumePostAuthRedirect, saveReturnUrl } from "src/shared/utils/authReturn";
 import { useApplicationContext } from "src/application/store/Provider";
+import { useAppResolvedThemeMode } from "src/application/hooks/useAppResolvedThemeMode";
 import { useLocation, useNavigate } from "react-router-dom";
 import { trackEvent } from "src/shared/utils/ga4";
 import { PageSeoConfig, usePageSeo } from "@yasserzakywafaa/client-core/web/seo";
@@ -57,11 +58,12 @@ const Page = (params: PageProps) => {
   } = params;
   const {
     store: {
-      state: { isFetching, themeMode },
+      state: { isFetching, themePreference },
       setPreviousUrl,
     },
     manager: { handleSetAuthInfo },
   } = useApplicationContext();
+  const resolvedThemeMode = useAppResolvedThemeMode();
   const location = useLocation();
   const navigate = useNavigate();
   const oauthReturnHandledRef = useRef(false);
@@ -86,13 +88,13 @@ const Page = (params: PageProps) => {
     // Update page color
     localStorage.setItem(
       APP_CONSTANTS.DESIGN.LOCAL_STORAGE_APP_THEME,
-      themeMode
+      themePreference,
     );
     const themeColorMetaTag = document.getElementById("theme-color");
     themeColorMetaTag &&
       themeColorMetaTag.setAttribute(
         "content",
-        themeMode === "dark" ? "#14133E" : "#FAF4EA"
+        resolvedThemeMode === "dark" ? "#14133E" : "#FAF4EA",
       );
 
     return () => {
@@ -163,7 +165,7 @@ const Page = (params: PageProps) => {
         className="gradient-background"
         style={{
           background:
-            themeMode === "dark"
+            resolvedThemeMode === "dark"
               ? darkBackground
               : lightTheme.palette.background.default,
         }}

@@ -17,7 +17,7 @@ import {
   secondaryColorForLightTheme,
 } from "src/application/shared/themes";
 
-import { useApplicationContext } from "src/application/store/Provider";
+import { useAppResolvedThemeMode } from "src/application/hooks/useAppResolvedThemeMode";
 import { useAutoScroll } from "src/shared/hooks/useAutoScroll";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
@@ -30,11 +30,7 @@ const Testimonials = () => {
     returnObjects: true,
   }) as Array<{ name: string; title: string; text: string; image?: string }>;
 
-  const {
-    store: {
-      state: { themeMode },
-    },
-  } = useApplicationContext();
+  const themeMode = useAppResolvedThemeMode();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const { scrollNext, scrollPrev, handleInteraction } = useAutoScroll({

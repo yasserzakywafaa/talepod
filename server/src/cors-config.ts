@@ -40,6 +40,7 @@ const corsConfig = createCors({
     "Authorization",
     "X-Custom-Header",
     "X-Preview-Secret",
+    "X-Client-Platform",
   ],
   credentials: true,
   optionsSuccessStatus: 204,

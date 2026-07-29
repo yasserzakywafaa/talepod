@@ -1,0 +1,25 @@
+{
+  "page": {
+    "libraryTitle": "Library of Bedtime Stories on TalePod",
+    "myStoriesTitle": "My Bedtime Stories on TalePod",
+    "sourceCommunity": "Community",
+    "sourceTalepod": "by TalePod",
+    "filters": "Filters",
+    "emptyCreate": "Create Story",
+    "emptyClearFilters": "Clear Filters"
+  },
+  "filters": {
+    "title": "Filter Stories",
+    "name": "Name",
+    "language": "Language",
+    "age": "Age",
+    "languageNone": "None...",
+    "storyAudio": "Story audio",
+    "originals": "TalePod Originals",
+    "originalsTooltip": "Crafted and Personalized by TalePod team",
+    "notAppropriate": "Not Appropriate 🙈",
+    "cancel": "Cancel",
+    "clear": "Clear",
+    "apply": "Apply"
+  }
+}

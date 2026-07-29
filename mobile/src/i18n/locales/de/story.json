@@ -1,0 +1,270 @@
+{
+  "form": {
+    "artStyleLabel": "Kunststil",
+    "nameLabel": "Name",
+    "languageLabel": "Sprache",
+    "ageLabel": "Alter",
+    "notAppropriate": "Nicht angemessen 🙈",
+    "moreSettings": "Weitere Story-Einstellungen (optional)",
+    "subscribe": "Abonnieren",
+    "generateComic": "{{name}}s Comic erstellen",
+    "generateStory": "{{name}}s Geschichte erstellen",
+    "generateComicAnonymous": "Comic erstellen",
+    "generateStoryAnonymous": "Geschichte erstellen",
+    "alerts": {
+      "accountInactive": "Dein Konto ist nicht aktiv und darf keine Geschichten erstellen!",
+      "adminUnlimited": "Als Admin kannst du ♾️ Geschichten erstellen 😎",
+      "storiesRemaining": "Du hast noch {{remaining}} von {{max}} Geschichten",
+      "limitReached": "Du hast dein Maximum von {{max}} Geschichten verbraucht"
+    },
+    "settings": {
+      "moral": "Moral",
+      "tone": "Ton",
+      "environment": "Umgebung",
+      "interests": "Weitere Interessen"
+    },
+    "mini": {
+      "namePlaceholder": "Emily, Noah, usw.",
+      "moreOptions": "Weitere Story-Optionen verfügbar",
+      "generate": "Geschichte erstellen"
+    },
+    "customSelect": {
+      "custom": "Benutzerdefiniert",
+      "addCustom": "Eigenes hinzufügen…",
+      "placeholder": "Dein eigenes {{label}}"
+    },
+    "format": {
+      "comic": {
+        "badge": "Bildergeschichte",
+        "title": "Comicbuch",
+        "sub": "~6 illustrierte Seiten · ideal für jüngere Kinder",
+        "previewPages": "6 Seiten"
+      },
+      "long": {
+        "badge": "Kapitelbuch",
+        "title": "Lange Geschichte",
+        "sub": "Cover-Illustration · ausführlicher Text · Audio später"
+      }
+    }
+  },
+  "createPage": {
+    "title": "Gute-Nacht-Geschichten erstellen | TalePod",
+    "heading": "Definiere deine Geschichte",
+    "subheading": "Personalisiere deine Gute-Nacht-Geschichte, indem du das Pflichtfeld „Name“ für dein Kind ausfüllst.",
+    "tipsHeading": "Tipps für die perfekte Gute-Nacht-Geschichte",
+    "tips": {
+      "familiar": {
+        "title": "Vertraute Elemente einbauen",
+        "body": "Baue Elemente aus dem Alltag deines Kindes ein, damit die Geschichte nahbarer wirkt."
+      },
+      "moral": {
+        "title": "Eine Moral hinzufügen",
+        "body": "Vermittle wertvolle Lektionen durch die Geschichte und stärke gute Werte."
+      },
+      "interactive": {
+        "title": "Interaktiv gestalten",
+        "body": "Ermutige dein Kind zur Mitgestaltung, damit es engagiert bleibt."
+      }
+    }
+  },
+  "generating": {
+    "stages": {
+      "comic": {
+        "imagine": {
+          "label": "Vorstellen…",
+          "sub": "Heutiges Abenteuer wählen",
+          "rail": "Idee"
+        },
+        "write": {
+          "label": "Geschichte schreiben…",
+          "sub": "Kurze Comic-Panel-Texte",
+          "rail": "Schreiben"
+        },
+        "magic": {
+          "label": "Magie streuen…",
+          "sub": "Alles zusammenfügen",
+          "rail": "Magie"
+        },
+        "done": {
+          "label": "Fertig!",
+          "sub": "Comic wird geöffnet",
+          "rail": "Fertig"
+        }
+      },
+      "long": {
+        "imagine": {
+          "label": "Vorstellen…",
+          "sub": "Szene aufbauen",
+          "rail": "Idee"
+        },
+        "write": {
+          "label": "Deine Geschichte schreiben…",
+          "sub": "Warme, reiche Gute-Nacht-Prosa",
+          "rail": "Schreiben"
+        },
+        "magic": {
+          "label": "Magie streuen…",
+          "sub": "Alles zusammenfügen",
+          "rail": "Magie"
+        },
+        "done": {
+          "label": "Fertig!",
+          "sub": "Geschichte wird geöffnet",
+          "rail": "Fertig"
+        }
+      }
+    },
+    "imageAlt": "Geschichte wird für {{name}} erstellt",
+    "imageAltDefault": "Geschichte wird für das Kind erstellt",
+    "formatChip": {
+      "comic": "Comic · ~6 Seiten",
+      "long": "Lange Geschichte"
+    },
+    "forName": "Für {{name}}",
+    "duration": {
+      "comic": "Meist 40–60 Sekunden.",
+      "long": "Meist 25–45 Sekunden."
+    },
+    "chip": {
+      "readyNamed": "{{name}}s {{format}} ist fertig",
+      "readyGeneric": "Deine Geschichte ist fertig",
+      "viewStory": "Geschichte ansehen",
+      "failedTitle": "Geschichte konnte nicht erstellt werden",
+      "failedHint": "Bitte versuche es erneut im Erstellungsformular.",
+      "creatingNamed": "{{name}}s {{format}} wird erstellt",
+      "creatingGeneric": "Dein {{format}} wird erstellt",
+      "visitLibrary": "Besuche unsere",
+      "libraryLink": "Bibliothek",
+      "visitLibrarySuffix": "während wir an deiner Geschichte arbeiten.",
+      "formatComic": "Comic",
+      "formatStory": "Geschichte"
+    }
+  },
+  "avatars": {
+    "picker": {
+      "title": "Avatar (optional)",
+      "manage": "Avatare verwalten",
+      "loginPrompt": "✨ Soll der Held wie dein Kind aussehen? Melde dich an, um wiederverwendbare Avatare zu erstellen.",
+      "login": "Anmelden",
+      "empty": "Erstelle einen Avatar, damit der Held wie dein Kind oder deine Familie aussieht.",
+      "addOne": "Einen hinzufügen →",
+      "noneAria": "Kein Avatar",
+      "none": "Keiner",
+      "useAria": "{{name}} verwenden"
+    },
+    "page": {
+      "title": "Meine Avatare",
+      "subtitle": "Erstelle Avatare, damit Geschichten Menschen aus deiner Familie zeigen.",
+      "new": "Neuer Avatar",
+      "empty": "Noch keine Avatare. Erstelle den ersten!",
+      "editTitle": "Avatar bearbeiten",
+      "newTitle": "Neuer Avatar"
+    },
+    "delete": {
+      "title": "Avatar löschen?",
+      "body": "<strong>{{name}}</strong> löschen? Das kann nicht rückgängig gemacht werden. Bestehende Geschichten bleiben unverändert.",
+      "cancel": "Abbrechen",
+      "confirm": "Löschen"
+    },
+    "form": {
+      "name": "Name",
+      "relationship": "Beziehung",
+      "relationshipPlaceholder": "Sohn, Tochter, Ehefrau…",
+      "age": "Alter",
+      "gender": "Geschlecht",
+      "genderUnspecified": "Nicht angegeben",
+      "skinTone": "Hautton",
+      "skinTonePlaceholder": "hell, oliv, braun…",
+      "eyeColor": "Augenfarbe",
+      "eyeColorPlaceholder": "braun, blau…",
+      "hairColor": "Haarfarbe",
+      "hairColorPlaceholder": "schwarz, blond…",
+      "hairStyle": "Frisur",
+      "hairStylePlaceholder": "lockig, kurz, Pferdeschwanz…",
+      "outfit": "Outfit",
+      "outfitPlaceholder": "rotes Kleid, blaue Pyjama…",
+      "feature": "Besonderes Merkmal",
+      "featurePlaceholder": "Sommersprossen, Brille…",
+      "notes": "Notizen",
+      "notesPlaceholder": "Alles, was der Illustration hilft",
+      "notAppropriate": "Nicht angemessen 🙈",
+      "cancel": "Abbrechen",
+      "saving": "Speichern…",
+      "save": "Avatar speichern"
+    },
+    "toast": {
+      "updated": "Avatar aktualisiert.",
+      "created": "Avatar erstellt.",
+      "deleted": "Avatar gelöscht.",
+      "error": "Etwas ist schiefgelaufen.",
+      "deleteError": "Avatar konnte nicht gelöscht werden."
+    }
+  },
+  "reader": {
+    "pageTitle": "{{title}} | Gute-Nacht-Geschichte auf TalePod",
+    "toastCreated": "Geschichte erfolgreich erstellt.",
+    "imagesPending": "Geschichtsbilder sind unterwegs",
+    "notFound": "Wir konnten die gesuchte Geschichte nicht finden",
+    "browseLibrary": "Bibliothek durchsuchen",
+    "author": {
+      "createdBy": "Erstellt von:",
+      "avatarAlt": "Benutzerbild"
+    },
+    "meta": {
+      "createdOn": "Geschichte erstellt am",
+      "name": "Name",
+      "gender": "Geschlecht",
+      "age": "Alter",
+      "language": "Sprache",
+      "interests": "Interessen",
+      "environment": "Umgebung",
+      "moral": "Moral",
+      "tone": "Ton",
+      "storyLength": "Geschichtslänge",
+      "format": "Format",
+      "artStyle": "Kunststil",
+      "ageSuffix": "{{age}} Jahre alt",
+      "wordCount": "{{count}} Wörter",
+      "formatComic": "Comic",
+      "formatLong": "Lange Geschichte"
+    },
+    "export": {
+      "heading": "Als eBook speichern",
+      "description": "Lade ein liebevoll gestaltetes PDF-Geschichtenbuch herunter — ein schönes Andenken.",
+      "preparing": "Wird vorbereitet…",
+      "download": "eBook herunterladen",
+      "sending": "Wird gesendet…",
+      "email": "eBook per E-Mail senden",
+      "imagesPending": "Illustrationen werden noch gemalt — dein eBook ist danach bereit.",
+      "toastReady": "Dein eBook ist bereit.",
+      "toastPdfError": "❌ PDF konnte nicht erstellt werden. Bitte erneut versuchen.",
+      "toastEmailSent": "Wir senden dir dein eBook in Kürze per E-Mail. 📩",
+      "toastEmailError": "❌ eBook konnte nicht per E-Mail gesendet werden."
+    },
+    "audio": {
+      "createHeading": "Audio für diese Geschichte erstellen",
+      "voiceLabel": "Stimme",
+      "female": "Weiblich",
+      "male": "Männlich",
+      "createButton": "Audio erstellen",
+      "listenHeading": "Geschichte anhören",
+      "createdOn": "Audio erstellt am:",
+      "error": "❌ Audio konnte nicht erstellt werden! {{error}}"
+    },
+    "comic": {
+      "gridHint": "Comic · {{total}} Seiten · Tippe eine Seite zum Springen",
+      "closeAria": "schließen",
+      "allPagesAria": "Alle Seiten",
+      "pageOf": "Seite {{current}} von {{total}}"
+    }
+  },
+  "card": {
+    "upgrade": "Upgrade",
+    "upgradeAria": "upgrade",
+    "badgeComic": "Comic",
+    "badgeStory": "Geschichte",
+    "hasNarration": "Mit Erzählung",
+    "tagOriginal": "Original",
+    "authorAvatarAlt": "Benutzerbild"
+  }
+}

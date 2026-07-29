@@ -1,0 +1,21 @@
+{
+  "contact": {
+    "mobileBody": "Die Web-Kontaktseite nutzt dieselbe API. Ein natives Formular verwendet später den Contact-Store-Manager.",
+    "title": "Kontakt"
+  },
+  "home": {
+    "badge": "KI-gestützte Plattform",
+    "body": "Das mobile Layout spiegelt den Web-Client: Material-App-Leiste, Menü rechts und Dashboard-Seitenleiste nach der Anmeldung.",
+    "ctaPricing": "Preise ansehen",
+    "ctaLogin": "Kostenlos testen",
+    "title": "Erstellen, verwalten und erweitern Sie Ihre Projekte im Web oder mobil."
+  },
+  "pricing": {
+    "freeTierBody": "Starten Sie mit den Kernfunktionen.",
+    "freeTierTitle": "Kostenlos",
+    "mobileBody": "Gleiche Stufen wie die Web-Preisseite. Stripe-Checkout bleibt vorerst im Web.",
+    "paidTiersBody": "Lite, Basic, Essential, Premium — heute im Web-Dashboard verwalten.",
+    "paidTiersTitle": "Bezahlte Tarife",
+    "plans": "Tarife"
+  }
+}

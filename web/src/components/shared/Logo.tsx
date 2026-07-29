@@ -5,7 +5,7 @@ import TalePodLogo from "src/assets/images/sleeping_bunny_with_a_moon.webp";
 import TalePodLogoSmall from "src/assets/images/sleeping_bunny_with_a_moon.webp";
 import { routes } from "src/application/routes";
 import { honey300, twilight500 } from "src/application/shared/themes";
-import { useApplicationContext } from "src/application/store/Provider";
+import { useAppResolvedThemeMode } from "src/application/hooks/useAppResolvedThemeMode";
 import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useNavigate } from "react-router-dom";
 
@@ -27,11 +27,7 @@ export type LogoVariant = "small" | "full";
 const Logo = (props: LogoProps) => {
   const navigate = useNavigate();
   const localizedPath = useLocalizedPath();
-  const {
-    store: {
-      state: { themeMode },
-    },
-  } = useApplicationContext();
+  const themeMode = useAppResolvedThemeMode();
   const {
     variant = "full",
     isText = false,

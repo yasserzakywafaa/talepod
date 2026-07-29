@@ -48,6 +48,7 @@ const END_POINTS = {
     LOGOUT: `/api/v1/auth/logout`,
     GOOGLE: `/api/v1/auth/google`,
     GOOGLE_CALLBACK: `/api/v1/auth/google/callback`,
+    GOOGLE_MOBILE_EXCHANGE: `/api/v1/auth/google/mobile/exchange`,
     REFRESH_TOKEN: `/api/v1/auth/refresh-token`,
     PHONE_REGISTER_SEND_OTP: `/api/v1/auth/phone/register/send-otp`,
     PHONE_REGISTER_VERIFY_OTP: `/api/v1/auth/phone/register/verify-otp`,

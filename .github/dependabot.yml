@@ -15,3 +15,11 @@ updates:
     groups:
       npm_and_yarn:
         patterns: ["*"]
+
+  - package-ecosystem: "npm"
+    directory: "/mobile"
+    schedule:
+      interval: "weekly"
+    groups:
+      npm_and_yarn:
+        patterns: ["*"]
