@@ -33,12 +33,15 @@ const config: ExpoConfig = {
   },
   extra: {
     eas: {
-      projectId: process.env.EAS_PROJECT_ID,
+      projectId: "e45e39e8-00dd-4c56-90db-e4f2496bb745",
     },
   },
-  owner: "yasserzakywafaa",
+  owner: "swissli",
   runtimeVersion: {
     policy: "appVersion",
+  },
+  updates: {
+    url: "https://u.expo.dev/e45e39e8-00dd-4c56-90db-e4f2496bb745",
   },
 };
 
