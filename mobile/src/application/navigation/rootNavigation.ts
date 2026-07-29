@@ -118,7 +118,7 @@ export const navigateToDashboard = (
 
 export const navigateToMarketingHome = () => {
   whenReady(() => {
-    rootNavigationRef.navigate(rootRoutes.marketing, {
+    rootNavigationRef.navigate(rootRoutes.main, {
       screen: mobileRoutes.public.home,
     });
   });
@@ -156,7 +156,7 @@ export const resetToMarketingAfterLogout = () => {
       index: 0,
       routes: [
         {
-          name: rootRoutes.marketing,
+          name: rootRoutes.main,
           params: { screen: mobileRoutes.public.home },
         },
       ],

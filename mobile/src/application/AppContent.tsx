@@ -6,8 +6,7 @@ import { useMemo } from "react";
 import { mobileRoutes, rootRoutes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
-import { MarketingDrawerNavigator } from "src/application/navigation/MarketingDrawerNavigator";
-import { ProtectedMainNavigator } from "src/application/navigation/ProtectedMainNavigator";
+import { MainDrawerNavigator } from "src/application/navigation/MainDrawerNavigator";
 import { ProtectedDashboardNavigator } from "src/application/navigation/ProtectedDashboardNavigator";
 import { formSheetScreenOptions } from "src/application/navigation/formSheetScreenOptions";
 import type { RootStackParamList } from "src/application/navigation/types";
@@ -20,10 +19,6 @@ import { SettingsSheetScreen } from "src/screens/sheets/SettingsSheetScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-/**
- * Mobile route tree (parity with `web/src/application/AppContent.tsx`).
- * Root stack: marketing drawer, dashboard drawer, and global form sheets.
- */
 const AppContent = () => {
   const theme = useTheme();
   const {
@@ -36,11 +31,11 @@ const AppContent = () => {
   } = useApplicationContext();
 
   const initialRoute = useMemo(() => {
-    if (!isAuthenticated || !user) {
-      return rootRoutes.marketing;
+    if (user && hasAdminRights(user)) {
+      return rootRoutes.dashboard;
     }
-    return hasAdminRights(user) ? rootRoutes.dashboard : rootRoutes.main;
-  }, [isAuthenticated, user]);
+    return rootRoutes.main;
+  }, [user]);
 
   if (isFetchingUserInfo) {
     return (
@@ -60,11 +55,7 @@ const AppContent = () => {
       screenOptions={{ headerShown: false }}
       initialRouteName={initialRoute}
     >
-      <Stack.Screen
-        name={rootRoutes.marketing}
-        component={MarketingDrawerNavigator}
-      />
-      <Stack.Screen name={rootRoutes.main} component={ProtectedMainNavigator} />
+      <Stack.Screen name={rootRoutes.main} component={MainDrawerNavigator} />
       <Stack.Screen
         name={rootRoutes.dashboard}
         component={ProtectedDashboardNavigator}

@@ -1,6 +1,5 @@
-/** Root native-stack screens (parent of marketing / dashboard drawers). */
+/** Root native-stack screens (main app drawer + admin dashboard drawer). */
 export const rootRoutes = {
-  marketing: "Marketing",
   main: "Main",
   dashboard: "Dashboard",
 } as const;

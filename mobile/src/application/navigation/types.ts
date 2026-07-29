@@ -11,10 +11,8 @@ import {
 
 import type { MainDrawerParamList } from "./MainDrawerNavigator";
 import type { DashboardDrawerParamList } from "./DashboardDrawerNavigator";
-import type { MarketingDrawerParamList } from "./MarketingDrawerNavigator";
 
 export type RootStackParamList = {
-  [rootRoutes.marketing]: NavigatorScreenParams<MarketingDrawerParamList>;
   [rootRoutes.main]: NavigatorScreenParams<MainDrawerParamList>;
   [rootRoutes.dashboard]: NavigatorScreenParams<DashboardDrawerParamList>;
   [mobileRoutes.authenticated.viewStory]: { slug: string };
@@ -24,10 +22,13 @@ export type RootStackParamList = {
 export type RootStackNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
-export type MarketingDrawerNavigationProp = CompositeNavigationProp<
-  DrawerNavigationProp<MarketingDrawerParamList>,
+export type MainDrawerNavigationProp = CompositeNavigationProp<
+  DrawerNavigationProp<MainDrawerParamList>,
   RootStackNavigationProp
 >;
+
+/** @deprecated Use MainDrawerNavigationProp */
+export type MarketingDrawerNavigationProp = MainDrawerNavigationProp;
 
 export type DashboardDrawerNavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamList>,

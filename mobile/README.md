@@ -43,19 +43,18 @@ On **web** (`web/src/application/AppContent.tsx`), one **React Router** tree map
 
 On **mobile**, there is no address bar. [**React Navigation**](https://reactnavigation.org/) keeps a tree of **screens** (stack, drawer, modals/sheets). You still have one app, but the tree has **branches** and **overlays** instead of a flat path list.
 
-This is **not** three separate navigation libraries. It is one `NavigationContainer` (see `application/App.tsx`, like `BrowserRouter`) and one **root stack** with two main areas plus **form sheets** on top.
+This is **not** three separate navigation libraries. It is one `NavigationContainer` (see `application/App.tsx`, like `BrowserRouter`) and one **root stack** with two drawer areas plus **form sheets** on top.
 
 ### Tree (what actually runs)
 
 ```text
 NavigationContainer          ← application/App.tsx, ref={rootNavigationRef}
 └── Root stack               ← application/AppContent.tsx
-    ├── Marketing            ← MarketingDrawerNavigator (public site)
-    │   └── Drawer screens: home, pricing, contact, library
+    ├── Main                 ← MainDrawerNavigator (guests + logged-in consumers)
+    │   ├── MainShell        ← tabs + stack (Create, My Stories, …; Library/Contact/Pricing on stack when logged in)
+    │   └── Public* screens  ← home, pricing, contact, library (guest marketing pages)
     ├── Dashboard            ← ProtectedDashboardNavigator → DashboardDrawerNavigator (admin only)
     │   └── Drawer screens: overview, admin users, admin stories
-    ├── Main                 ← ProtectedMainNavigator (logged-in users): drawer + bottom tabs
-    │   └── Tabs: Create | My Stories | My Avatars | Profile (opens account sheet)
     ├── ViewStory            ← root stack (slug)
     ├── MyProfile            ← root stack (account menu → Profile, all users)
     └── Stack.Group (formSheet)
@@ -65,30 +64,31 @@ NavigationContainer          ← application/App.tsx, ref={rootNavigationRef}
         └── SheetAccount
 ```
 
-**Marketing** and **Dashboard** are the same idea as web: public marketing shell vs logged-in app shell. **Sheets** are like web login/register/settings **modals**: they slide over whatever is underneath (marketing or dashboard).
+**Main** (right drawer) covers public marketing and the logged-in consumer shell. **Dashboard** (left drawer) is admin-only. **Sheets** are like web login/register/settings **modals**: they slide over whatever is underneath.
 
 ### `routes.ts` — names, not extra navigators
 
 | Export | Meaning | Web analogy |
 |--------|---------|-------------|
-| `rootRoutes` | Top stack branches: `Marketing`, `Dashboard` | Choosing marketing layout vs `/dashboard/*` |
-| `mobileRoutes.public` | Drawer screen names under marketing (`PublicHome`, …) plus **route ids** for login/register sheets | `/`, `/pricing`, `/contact`; login/register are overlays, not drawer pages |
+| `rootRoutes` | Top stack branches: `Main`, `Dashboard` | Consumer site + app shell vs `/dashboard/*` |
+| `mobileRoutes.public` | Drawer screen names under main (`PublicHome`, …) plus **route ids** for login/register sheets | `/`, `/pricing`, `/contact`; login/register are overlays, not drawer pages |
+| `mobileRoutes.main` | Logged-in shell (`MainShell`) and tab ids | In-app tabs under the main drawer |
 | `mobileRoutes.sheet` | Route ids for menu sheets (`SheetSettings`, `SheetAccount`) | Settings / account dropdown modals |
 | `mobileRoutes.dashboard` | Drawer screen names under dashboard | `/dashboard/overview`, `/dashboard/projects`, … |
 
-Login and register live under `public` in the file for **product** naming (auth), but they are registered on the **root stack** as form sheets, not inside the marketing drawer.
+Login and register live under `public` in the file for **product** naming (auth), but they are registered on the **root stack** as form sheets, not inside the main drawer.
 
 ### How to navigate (cheat sheet)
 
 | Goal | API | Example |
 |------|-----|---------|
-| Change page **inside the open drawer** (marketing or dashboard) | `navigation.navigate(...)` from that screen or drawer | `navigation.navigate(mobileRoutes.public.pricing)` |
+| Change page **inside the open drawer** (main or dashboard) | `navigation.navigate(...)` from that screen or drawer | `navigation.navigate(mobileRoutes.public.pricing)` |
 | Open **login / register / settings / account** sheet | `openRootSheet(...)` in `rootNavigation.ts` | `openRootSheet(mobileRoutes.public.login)` |
 | Switch to **dashboard** (admin) | `navigateToDashboard()` | Account sheet → Dashboard |
-| **Create story** (logged in) | `navigateToCreateStory()` | Marketing app bar / drawer |
+| **Create story** (logged in) | `navigateToCreateStory()` | Main shell app bar / drawer |
 | **My profile** (logged in) | `navigateToMyProfile()` | Account sheet → Profile |
 | Open a story from library | `navigateToViewStory(slug)` | Library list tap |
-| Go to **marketing home** from dashboard | `navigateToMarketingHome()` | Logo in dashboard drawer |
+| Go to **public home** from dashboard | `navigateToMarketingHome()` | Logo in dashboard drawer |
 | After **login** / **logout** reset the tree | `resetAfterLogin(user)` / `resetToMarketingAfterLogout()` | Login/Register screens, account sheet logout |
 
 Helpers use `rootNavigationRef` on `NavigationContainer` so you do not walk `navigation.getParent()` from nested drawers.
@@ -99,7 +99,8 @@ Helpers use `rootNavigationRef` on `NavigationContainer` so you do not walk `nav
 |------|------|
 | `application/App.tsx` | Providers + `NavigationContainer` + `ref={rootNavigationRef}` (parity with `web/…/application/App.tsx`) |
 | `application/AppContent.tsx` | Root stack + sheet group (same role as `web/…/AppContent.tsx`) |
-| `application/navigation/MarketingDrawerNavigator.tsx` | Public drawer |
+| `application/navigation/MainDrawerNavigator.tsx` | Main drawer (guest public pages + logged-in shell) |
+| `application/navigation/MainDrawerContent.tsx` | Right drawer menu (auth-aware) |
 | `application/navigation/DashboardDrawerNavigator.tsx` | Dashboard drawer |
 | `application/navigation/rootNavigation.ts` | `openRootSheet`, `navigateToDashboard`, resets |
 | `application/navigation/types.ts` | TypeScript param lists for the root stack |

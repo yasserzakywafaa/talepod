@@ -5,7 +5,7 @@ import { Appbar, useTheme } from "react-native-paper";
 
 import { SafeAreaTopBar } from "src/components/layout/SafeAreaTopBar";
 import { mobileRoutes } from "src/application/routes";
-import type { MarketingDrawerParamList } from "src/application/navigation/MarketingDrawerNavigator";
+import type { MainDrawerParamList } from "src/application/navigation/MainDrawerNavigator";
 import {
   navigateToCreateStory,
   openRootSheet,
@@ -14,7 +14,7 @@ import { useApplicationContext } from "src/application/store/Provider";
 import { AppButton } from "./AppButton";
 
 type MarketingAppBarProps = {
-  navigation: DrawerNavigationProp<MarketingDrawerParamList>;
+  navigation: DrawerNavigationProp<MainDrawerParamList>;
   showCreateOnHome?: boolean;
 };
 

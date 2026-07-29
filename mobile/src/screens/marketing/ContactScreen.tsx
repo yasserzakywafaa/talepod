@@ -3,12 +3,12 @@ import { useTranslation } from "react-i18next";
 import { Text } from "react-native-paper";
 
 import { mobileRoutes } from "src/application/routes";
-import type { MarketingDrawerParamList } from "src/application/navigation/MarketingDrawerNavigator";
+import type { MainDrawerParamList } from "src/application/navigation/MainDrawerNavigator";
 import { MarketingScreenBody } from "src/components/layout/PageScaffold";
 import { useScreenTypography } from "src/components/layout/useScreenTypography";
 
 type Props = DrawerScreenProps<
-  MarketingDrawerParamList,
+  MainDrawerParamList,
   typeof mobileRoutes.public.contact
 >;
 
