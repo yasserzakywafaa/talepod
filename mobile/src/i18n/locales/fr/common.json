@@ -1,0 +1,35 @@
+{
+  "account": "Compte",
+  "back": "Retour",
+  "footer": {
+    "company": "Entreprise",
+    "copyright": "Copyright ©",
+    "linksLine": "{{product}} · {{company}} · {{privacy}} · {{terms}}",
+    "mobileTagline": "Chez metriz.ai, nous simplifions les appels d'offres et les BOQ pour les équipes qui doivent passer à l'échelle — la même plateforme sur le web et mobile.",
+    "privacyPolicy": "Politique de confidentialité",
+    "product": "Produit",
+    "termsAndConditions": "Conditions générales"
+  },
+  "logo": "Accueil Metriz",
+  "nav": {
+    "contact": "Nous contacter",
+    "createProject": "Créer un projet",
+    "features": "Fonctionnalités",
+    "login": "Se connecter",
+    "register": "S'inscrire"
+  },
+  "settings": {
+    "dashboard": "Tableau de bord",
+    "languageLabel": "Langue",
+    "logout": "Déconnexion",
+    "menu": "Paramètres",
+    "profile": "Profil",
+    "refreshApp": "Actualiser l'application",
+    "theme": "Thème",
+    "themeDark": "Sombre",
+    "themeLight": "Clair",
+    "themeSystem": "Système"
+  },
+  "sheetClose": "Fermer",
+  "signedInUser": "Utilisateur connecté"
+}

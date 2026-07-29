@@ -1,0 +1,83 @@
+{
+  "admin": {
+    "users": {
+      "subtitle": "Manage users, roles, and permissions from here."
+    }
+  },
+  "adminNav": {
+    "storiesTitle": "Admin · Stories",
+    "usersTitle": "Admin · Users"
+  },
+  "logo": "Go to marketing home",
+  "nav": {
+    "admin": "Admin",
+    "overview": "Overview",
+    "stories": "Stories",
+    "users": "Users"
+  },
+  "overview": {
+    "storiesMetricHint": "Stories created on the platform.",
+    "storiesCreated": "Stories created",
+    "subtitle": "Dashboard overview",
+    "totalStories": "Total Stories",
+    "totalUsers": "Total Users",
+    "usersActive": "Active users on the platform",
+    "welcomeBack": "Welcome back, {{name}}!",
+    "welcomeBackFallback": "Welcome back"
+  },
+  "profile": {
+    "pageTitle": "My Profile | TalePod",
+    "title": "My Profile",
+    "greeting": "Hi {{name}} 👋🏻",
+    "tabsAriaLabel": "profile tabs",
+    "tabProfile": "Profile",
+    "tabBilling": "Billing",
+    "viewMyStories": "My Stories",
+    "profileInformation": "Profile Information",
+    "fullName": "Full Name",
+    "email": "Email",
+    "phoneNumber": "Phone Number",
+    "dateJoined": "Date joined",
+    "appearance": "Appearance",
+    "themeLight": "LIGHT",
+    "themeDark": "DARK",
+    "dangerZone": "Danger Zone",
+    "dangerZoneDescription": "Permanently delete your account and all associated stories, avatars, story credits, and subscription data. If you have an active subscription, billing will be cancelled immediately.",
+    "deleteAccount": "Delete Account",
+    "keepMyAccount": "Keep my account",
+    "deleteAccountForever": "Delete account forever",
+    "deleteAccountIntro": "This will permanently delete your account and remove all associated data, including:",
+    "deleteAcknowledge": "I understand this action is permanent and cannot be undone",
+    "typeConfirmationPhrase": "Type the confirmation phrase",
+    "typeToConfirm": "Type \"{{phrase}}\" to confirm",
+    "deleting": "Deleting...",
+    "impactStories_one": "{{count}} story",
+    "impactStories_other": "{{count}} stories",
+    "impactAvatarsCredits": "Avatars and story credits",
+    "impactSubscription": "Subscription and billing data",
+    "libraryPublishWarning": "Stories published to the community library will not be removed automatically.",
+    "planLabel": "{{plan}} plan",
+    "unlockPremium": "Unlock illustrations & every voice",
+    "thanksSupporter": "Thanks for supporting TalePod",
+    "storiesUsed": "Stories used",
+    "storyCredits": "Story credits",
+    "upgradeToPremium": "Upgrade to Premium",
+    "manageOnWeb": "Manage subscription on the web"
+  },
+  "stories": {
+    "subtitle": "Manage and view all platform stories.",
+    "title": "Stories"
+  },
+  "subscription": {
+    "title": "Subscription",
+    "planType": "Plan Type",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "storiesLeft": "You have {{left}} stories left out of {{max}}",
+    "cancelledUntil": "Enjoy subscription benefits until {{date}}"
+  },
+  "toasts": {
+    "subscriptionCanceled": "Subscription is canceled 💔",
+    "accountDeleted": "Your account has been deleted"
+  }
+}

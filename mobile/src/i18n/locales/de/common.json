@@ -1,0 +1,35 @@
+{
+  "account": "Konto",
+  "back": "Zurück",
+  "footer": {
+    "company": "Unternehmen",
+    "copyright": "Copyright ©",
+    "linksLine": "{{product}} · {{company}} · {{privacy}} · {{terms}}",
+    "mobileTagline": "Bei metriz.ai vereinfachen wir Ausschreibungen und Leistungsverzeichnisse für Teams, die skalieren müssen — dieselbe Plattform im Web und mobil.",
+    "privacyPolicy": "Datenschutzerklärung",
+    "product": "Produkt",
+    "termsAndConditions": "AGB"
+  },
+  "logo": "Metriz Startseite",
+  "nav": {
+    "contact": "Kontakt",
+    "createProject": "Projekt erstellen",
+    "features": "Funktionen",
+    "login": "Anmelden",
+    "register": "Registrieren"
+  },
+  "settings": {
+    "dashboard": "Dashboard",
+    "languageLabel": "Sprache",
+    "logout": "Abmelden",
+    "menu": "Einstellungen",
+    "profile": "Profil",
+    "refreshApp": "App aktualisieren",
+    "theme": "Design",
+    "themeDark": "Dunkel",
+    "themeLight": "Hell",
+    "themeSystem": "System"
+  },
+  "sheetClose": "Schließen",
+  "signedInUser": "Angemeldeter Benutzer"
+}

@@ -10,6 +10,7 @@ import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal
 import { routes } from "src/application/routes";
 import { scrollToSection } from "src/shared/utils/scrollTo";
 import { useApplicationContext } from "src/application/store/Provider";
+import { useAppResolvedThemeMode } from "src/application/hooks/useAppResolvedThemeMode";
 import useDetectScroll from "src/shared/hooks/useDetectScroll";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
@@ -43,9 +44,10 @@ const ApplicationBar = () => {
   const { isScrolledFromTop } = useDetectScroll();
   const { isDesktop } = useDeviceSize();
 
+  const themeMode = useAppResolvedThemeMode();
   const {
     store: {
-      state: { themeMode, auth },
+      state: { auth },
     },
   } = useApplicationContext();
 

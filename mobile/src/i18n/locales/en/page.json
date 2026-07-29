@@ -1,0 +1,21 @@
+{
+  "contact": {
+    "mobileBody": "Send us a message — we use the same contact API as the web app.",
+    "title": "Contact Us"
+  },
+  "home": {
+    "badge": "Personalized bedtime stories",
+    "body": "Create magical tales with your child's name, interests, and values — illustrated and narrated in minutes.",
+    "ctaPricing": "View pricing",
+    "ctaLogin": "Get Started for Free",
+    "title": "Bedtime stories crafted for the children you love most."
+  },
+  "pricing": {
+    "freeTierBody": "Start creating personalized stories.",
+    "freeTierTitle": "Free",
+    "mobileBody": "Same plans as talepod.com. Upgrade and checkout on the web today.",
+    "paidTiersBody": "Premium plans unlock more stories, illustrations, and voices.",
+    "paidTiersTitle": "Paid plans",
+    "plans": "Plans"
+  }
+}

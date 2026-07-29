@@ -1,16 +1,11 @@
 import * as React from "react";
 
-import { Box, ListItemIcon, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
-import {
-  InstallMobileOutlined,
-  ModeNightOutlined,
-  RefreshOutlined,
-  Settings,
-  WbSunnyOutlined,
-} from "@mui/icons-material";
+import { InstallMobileOutlined, RefreshOutlined, Settings } from "@mui/icons-material";
 
 import { LanguageSwitcher } from "@yasserzakywafaa/client-core/web/i18n";
+import { ThemeSwitcher } from "@yasserzakywafaa/client-core/web";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { SupportedLang } from "@yasserzakywafaa/client-core";
@@ -29,9 +24,9 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
   const { t } = useTranslation("common");
   const {
     store: {
-      state: { themeMode, auth },
+      state: { themePreference, auth },
     },
-    manager: { handleToggleThemeMode, handleUpdateUserInfoInApplication },
+    manager: { handleThemePreferenceChange, handleUpdateUserInfoInApplication },
   } = useApplicationContext();
   const { isInStandaloneMode } = useDetectBrowserType();
   const { changeLocale } = useLocaleContext();
@@ -102,47 +97,27 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
         variant="menu"
         onClose={handleCloseMenu}
       >
+        <ThemeSwitcher
+          value={themePreference}
+          onChange={handleThemePreferenceChange}
+          accentColor={primaryColor}
+        />
+
         <LanguageSwitcher
           styles={{ ...buttonHoverStylePrimary }}
           onLanguageChange={handleOnLanguageChange}
         />
-
-        <MenuItem
-          sx={{ ...buttonHoverStylePrimary }}
-          onClick={handleToggleThemeMode}
-        >
-          <ListItemIcon>
-            {themeMode === "dark" ? (
-              <WbSunnyOutlined
-                fontSize="medium"
-                color="secondary"
-                sx={{ mr: 1 }}
-              />
-            ) : (
-              <ModeNightOutlined
-                fontSize="medium"
-                color="secondary"
-                sx={{ mr: 1 }}
-              />
-            )}
-          </ListItemIcon>
-
-          <Typography variant="body1">{t("settings.theme")}</Typography>
-        </MenuItem>
 
         {!isInStandaloneMode && (
           <MenuItem
             sx={{ ...buttonHoverStylePrimary }}
             onClick={handleOnInstallClick}
           >
-            <ListItemIcon>
-              <InstallMobileOutlined
-                fontSize="medium"
-                color="secondary"
-                sx={{ mr: 1 }}
-              />
-            </ListItemIcon>
-
+            <InstallMobileOutlined
+              fontSize="medium"
+              color="secondary"
+              sx={{ mr: 1 }}
+            />
             <Typography variant="body1">{t("settings.install")}</Typography>
           </MenuItem>
         )}

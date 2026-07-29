@@ -1,0 +1,25 @@
+{
+  "page": {
+    "libraryTitle": "مكتبة قصص ما قبل النوم على TalePod",
+    "myStoriesTitle": "قصصي لما قبل النوم على TalePod",
+    "sourceCommunity": "المجتمع",
+    "sourceTalepod": "من TalePod",
+    "filters": "الفلاتر",
+    "emptyCreate": "أنشئ قصة",
+    "emptyClearFilters": "مسح الفلاتر"
+  },
+  "filters": {
+    "title": "تصفية القصص",
+    "name": "الاسم",
+    "language": "اللغة",
+    "age": "العمر",
+    "languageNone": "لا شيء...",
+    "storyAudio": "صوت القصة",
+    "originals": "أصل TalePod",
+    "originalsTooltip": "من إعداد فريق TalePod",
+    "notAppropriate": "غير مناسب 🙈",
+    "cancel": "إلغاء",
+    "clear": "مسح",
+    "apply": "تطبيق"
+  }
+}

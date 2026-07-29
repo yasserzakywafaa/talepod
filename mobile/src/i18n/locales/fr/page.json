@@ -1,0 +1,21 @@
+{
+  "contact": {
+    "mobileBody": "La page Contact web utilise la même API. Un formulaire natif réutilisera le gestionnaire Contact ensuite.",
+    "title": "Contactez-nous"
+  },
+  "home": {
+    "badge": "Plateforme propulsée par l'IA",
+    "body": "La mise en page mobile reflète le client web : barre d'application Material, menu à droite et panneau tableau de bord après connexion.",
+    "ctaPricing": "Voir les tarifs",
+    "ctaLogin": "Essayer gratuitement",
+    "title": "Créez, gérez et développez vos projets depuis le web ou le mobile."
+  },
+  "pricing": {
+    "freeTierBody": "Commencez avec les fonctionnalités essentielles.",
+    "freeTierTitle": "Gratuit",
+    "mobileBody": "Mêmes niveaux que la page tarifs web. Le paiement Stripe reste sur le web pour l'instant.",
+    "paidTiersBody": "Lite, Basic, Essential, Premium — gérez-les depuis le tableau de bord web aujourd'hui.",
+    "paidTiersTitle": "Offres payantes",
+    "plans": "Forfaits"
+  }
+}
