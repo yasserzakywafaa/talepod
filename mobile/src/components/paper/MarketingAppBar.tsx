@@ -1,7 +1,7 @@
 import type { DrawerNavigationProp } from "@react-navigation/drawer";
 import { StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
-import { Appbar, useTheme } from "react-native-paper";
+import { Appbar, Text, useTheme } from "react-native-paper";
 import { mobileRoutes } from "src/application/routes";
 import type { MainDrawerParamList } from "src/application/navigation/MainDrawerNavigator";
 import {
@@ -14,11 +14,13 @@ import { AppButton } from "./AppButton";
 type MarketingAppBarProps = {
   navigation: DrawerNavigationProp<MainDrawerParamList>;
   showCreateOnHome?: boolean;
+  title?: string;
 };
 
 export const MarketingAppBar = ({
   navigation,
   showCreateOnHome: _showCreateOnHome,
+  title,
 }: MarketingAppBarProps) => {
   const { t } = useTranslation("common");
   const theme = useTheme();
@@ -51,6 +53,22 @@ export const MarketingAppBar = ({
             {t("nav.createProject")}
           </AppButton>
         </View>
+        {title ? (
+          <Appbar.Content
+            title={
+              <Text
+                variant="titleMedium"
+                numberOfLines={1}
+                style={{ color: theme.colors.onSurface }}
+              >
+                {title}
+              </Text>
+            }
+            style={styles.titleContent}
+          />
+        ) : (
+          <View style={styles.flex} />
+        )}
         <Appbar.Action
           icon="menu"
           onPress={() => navigation.openDrawer()}
@@ -68,5 +86,12 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 8,
     justifyContent: "center",
+  },
+  flex: {
+    flex: 1,
+  },
+  titleContent: {
+    flex: 2,
+    alignItems: "center",
   },
 });

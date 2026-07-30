@@ -31,9 +31,6 @@ export const PrivacyPolicyScreen = (_props: Props) => {
   return (
     <Page header={header}>
       <PageBody>
-        <Text variant="headlineSmall" style={typography.title}>
-          {t("legal.privacyTitle")}
-        </Text>
         <Text
           variant="bodyMedium"
           style={[typography.badge, { marginBottom: 8 }]}

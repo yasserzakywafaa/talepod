@@ -24,9 +24,6 @@ export const DashboardUsersScreen = ({ navigation, route }: Props) => {
       }
     >
       <PageBody>
-        <Text variant="headlineSmall" style={typography.title}>
-          {t("nav.users")}
-        </Text>
         <Text variant="bodyMedium" style={typography.body}>
           {t("users.subtitle")}
         </Text>

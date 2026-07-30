@@ -22,9 +22,6 @@ export const ContactScreen = (_props: Props) => {
   return (
     <Page header={header}>
       <PageBody>
-        <Text variant="headlineSmall" style={typography.title}>
-          {t("contact.title")}
-        </Text>
         <Text variant="bodyMedium" style={typography.body}>
           {t("contact.subtitle")}
         </Text>

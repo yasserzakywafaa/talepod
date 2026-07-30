@@ -72,19 +72,12 @@ const MyStoriesScreenContent = () => {
     [theme.colors.onSurfaceVariant],
   );
 
-  const listHeader = (
-    <Text variant="headlineSmall" style={{ color: theme.colors.primary }}>
-      {t("page.myStoriesTitle")}
-    </Text>
-  );
-
   return (
     <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
       <FlatList
         data={stories}
         keyExtractor={(item) => item._id}
         renderItem={renderItem}
-        ListHeaderComponent={listHeader}
         {...PAGE_SCROLL_PROPS}
         contentContainerStyle={[
           styles.listContent,

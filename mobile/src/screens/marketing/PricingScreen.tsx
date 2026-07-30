@@ -23,9 +23,6 @@ export const PricingScreen = (_props: Props) => {
   return (
     <Page header={header}>
       <PageBody>
-        <Text variant="headlineSmall" style={typography.title}>
-          {t("pricing.plans")}
-        </Text>
         <Text variant="bodyMedium" style={typography.body}>
           {t("pricing.mobileBody")}
         </Text>

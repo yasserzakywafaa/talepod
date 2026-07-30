@@ -73,9 +73,6 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
       ) : (
         <LocaleLayoutBoundary>
           <ScrollView contentContainerStyle={styles.scroll}>
-            <Text variant="headlineSmall" style={{ color: theme.colors.primary }}>
-              {story.title}
-            </Text>
             {story.summary ? (
               <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
                 {story.summary}

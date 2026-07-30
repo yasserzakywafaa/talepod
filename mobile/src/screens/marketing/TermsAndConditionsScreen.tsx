@@ -31,9 +31,6 @@ export const TermsAndConditionsScreen = (_props: Props) => {
   return (
     <Page header={header}>
       <PageBody>
-        <Text variant="headlineSmall" style={typography.title}>
-          {t("legal.termsTitle")}
-        </Text>
         <Text
           variant="bodyMedium"
           style={[typography.badge, { marginBottom: 8 }]}

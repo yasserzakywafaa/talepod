@@ -86,9 +86,6 @@ const LibraryScreenContent = () => {
 
   const listHeader = (
     <View style={styles.header}>
-      <Text variant="headlineSmall" style={{ color: theme.colors.primary }}>
-        {t("page.libraryTitle")}
-      </Text>
       <SegmentedButtons
         value={storiesSource === "talepod" ? "talepod" : "community"}
         onValueChange={(v) =>
@@ -105,9 +102,6 @@ const LibraryScreenContent = () => {
   const listEmpty =
     !isFetching && stories.length === 0 ? (
       <View style={styles.empty}>
-        <Text variant="bodyLarge" style={{ textAlign: "center" }}>
-          {t("page.libraryTitle")}
-        </Text>
         <Button
           mode="contained"
           onPress={() => navigateToCreateStory()}

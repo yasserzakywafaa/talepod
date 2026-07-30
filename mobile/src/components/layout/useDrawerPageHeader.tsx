@@ -12,10 +12,11 @@ export const useDrawerPageHeader = (titleKey: string) => {
   const { t } = useTranslation("common");
   const shellDrawer = useMainShellDrawer();
   const navigation = useNavigation<DrawerNavigationProp<MainDrawerParamList>>();
+  const title = t(titleKey);
 
   if (shellDrawer) {
-    return <MainShellAppBar title={t(titleKey)} />;
+    return <MainShellAppBar title={title} />;
   }
 
-  return <MarketingAppBar navigation={navigation} />;
+  return <MarketingAppBar navigation={navigation} title={title} />;
 };

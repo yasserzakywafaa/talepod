@@ -23,9 +23,6 @@ export const DashboardStoriesScreen = ({ navigation, route }: Props) => {
       }
     >
       <PageBody>
-        <Text variant="headlineSmall" style={{ color: theme.colors.onSurface }}>
-          {t("stories.title")}
-        </Text>
         <Text
           variant="bodyLarge"
           style={{ color: theme.colors.onSurfaceVariant }}
