@@ -8,8 +8,10 @@ import { mobileRoutes } from "src/application/routes";
 import type { MainDrawerParamList } from "src/application/navigation/MainDrawerNavigator";
 import type { MainShellStackParamList } from "src/application/navigation/MainShellStackNavigator";
 import {
-  openRootSheet,
-} from "src/application/navigation/rootNavigation";
+  buildMainShellTabParams,
+  type MainTabRouteName,
+} from "src/application/navigation/mainShellNavigation";
+import { openRootSheet } from "src/application/navigation/rootNavigation";
 import { useDrawerSafeAreaPadding } from "src/components/layout/useDrawerSafeAreaPadding";
 import { LocaleLayoutBoundary } from "src/components/layout/LocaleLayoutBoundary";
 import { Logo } from "src/components/paper/Logo";
@@ -18,7 +20,7 @@ import { UserAccountMenuButton } from "src/components/paper/UserAccountMenuButto
 import { useApplicationContext } from "src/application/store/Provider";
 
 export const MainDrawerContent = (props: DrawerContentComponentProps) => {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation(["common", "story"]);
   const theme = useTheme();
   const drawerSafeArea = useDrawerSafeAreaPadding();
   const { navigation } = props;
@@ -38,6 +40,12 @@ export const MainDrawerContent = (props: DrawerContentComponentProps) => {
 
   const goShell = (screen: keyof MainShellStackParamList) => {
     navigation.navigate(mobileRoutes.main.shell, { screen });
+    navigation.closeDrawer();
+  };
+
+  const goTab = (tabRoute: MainTabRouteName) => {
+    const { screen, params } = buildMainShellTabParams(tabRoute);
+    navigation.navigate(screen, params);
     navigation.closeDrawer();
   };
 
@@ -66,9 +74,7 @@ export const MainDrawerContent = (props: DrawerContentComponentProps) => {
           {!isAuthenticated ? (
             <List.Item
               title={t("nav.features")}
-              left={(p) => (
-                <List.Icon {...p} icon="headphones" color={theme.colors.primary} />
-              )}
+              left={(p) => <List.Icon {...p} icon="headphones" />}
               onPress={() => navigateDrawer(mobileRoutes.public.home)}
               titleStyle={{ color: theme.colors.onSurface }}
             />
@@ -103,15 +109,69 @@ export const MainDrawerContent = (props: DrawerContentComponentProps) => {
             />
           ) : null}
 
-          {!isAuthenticated ? (
+          {isAuthenticated ? (
             <>
               <Divider
-                style={[styles.divider, { backgroundColor: theme.colors.outline }]}
+                style={[
+                  styles.divider,
+                  { backgroundColor: theme.colors.outline },
+                ]}
               />
               <List.Item
                 title={t("nav.createProject")}
                 left={(p) => (
-                  <List.Icon {...p} icon="auto-fix" color={theme.colors.primary} />
+                  <List.Icon
+                    {...p}
+                    icon="auto-fix"
+                    color={theme.colors.primary}
+                  />
+                )}
+                onPress={() => goTab(mobileRoutes.tabs.create)}
+                titleStyle={{ color: theme.colors.onSurface }}
+              />
+              <List.Item
+                title={t("nav.myStories")}
+                left={(p) => (
+                  <List.Icon
+                    {...p}
+                    icon="book-open-variant"
+                    color={theme.colors.primary}
+                  />
+                )}
+                onPress={() => goTab(mobileRoutes.tabs.myStories)}
+                titleStyle={{ color: theme.colors.onSurface }}
+              />
+              <List.Item
+                title={t("avatars.page.title", { ns: "story" })}
+                left={(p) => (
+                  <List.Icon
+                    {...p}
+                    icon="account-circle"
+                    color={theme.colors.primary}
+                  />
+                )}
+                onPress={() => goTab(mobileRoutes.tabs.myAvatars)}
+                titleStyle={{ color: theme.colors.onSurface }}
+              />
+            </>
+          ) : null}
+
+          {!isAuthenticated ? (
+            <>
+              <Divider
+                style={[
+                  styles.divider,
+                  { backgroundColor: theme.colors.outline },
+                ]}
+              />
+              <List.Item
+                title={t("nav.createProject")}
+                left={(p) => (
+                  <List.Icon
+                    {...p}
+                    icon="auto-fix"
+                    color={theme.colors.primary}
+                  />
                 )}
                 onPress={() => {
                   navigation.closeDrawer();
@@ -125,7 +185,10 @@ export const MainDrawerContent = (props: DrawerContentComponentProps) => {
 
         <View style={styles.bottom}>
           <Divider
-            style={[styles.bottomDivider, { backgroundColor: theme.colors.outline }]}
+            style={[
+              styles.bottomDivider,
+              { backgroundColor: theme.colors.outline },
+            ]}
           />
           {isAuthenticated ? (
             <View style={styles.accountRow}>

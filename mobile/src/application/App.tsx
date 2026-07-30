@@ -6,7 +6,7 @@ import {
 } from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StyleSheet } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaProvider, initialWindowMetrics } from "react-native-safe-area-context";
 
 import AppContent from "src/application/AppContent";
 import { I18nAppShell } from "src/application/I18nAppShell";
@@ -66,7 +66,7 @@ const NavigationRoot = () => {
 const App = () => {
   return (
     <GestureHandlerRootView style={styles.root}>
-      <SafeAreaProvider>
+      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <I18nAppShell>
           <ApplicationContextProvider>
             <DashboardOverviewContextProvider>

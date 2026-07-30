@@ -4,8 +4,10 @@ import { Text } from "react-native-paper";
 
 import { mobileRoutes } from "src/application/routes";
 import type { MainDrawerParamList } from "src/application/navigation/MainDrawerNavigator";
-import { MarketingScreenBody } from "src/components/layout/PageScaffold";
+import { Page, PageBody } from "src/components/layout/Page";
+import { useDrawerPageHeader } from "src/components/layout/useDrawerPageHeader";
 import { useScreenTypography } from "src/components/layout/useScreenTypography";
+import { ContactForm } from "src/screens/marketing/features/ContactForm";
 
 type Props = DrawerScreenProps<
   MainDrawerParamList,
@@ -15,15 +17,19 @@ type Props = DrawerScreenProps<
 export const ContactScreen = (_props: Props) => {
   const { t } = useTranslation("page");
   const typography = useScreenTypography();
+  const header = useDrawerPageHeader("nav.contact");
 
   return (
-    <MarketingScreenBody>
-      <Text variant="headlineSmall" style={typography.title}>
-        {t("contact.title")}
-      </Text>
-      <Text variant="bodyMedium" style={typography.body}>
-        {t("contact.mobileBody")}
-      </Text>
-    </MarketingScreenBody>
+    <Page header={header}>
+      <PageBody>
+        <Text variant="headlineSmall" style={typography.title}>
+          {t("contact.title")}
+        </Text>
+        <Text variant="bodyMedium" style={typography.body}>
+          {t("contact.subtitle")}
+        </Text>
+        <ContactForm />
+      </PageBody>
+    </Page>
   );
 };

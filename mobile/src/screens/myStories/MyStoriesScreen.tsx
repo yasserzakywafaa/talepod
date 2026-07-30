@@ -16,14 +16,12 @@ import {
 } from "react-native-paper";
 
 import { navigateToViewStory } from "src/application/navigation/rootNavigation";
+import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
-import {
-  MyStoriesContextProvider,
-  useMyStoriesContext,
-} from "src/features/myStories/store/Provider";
+import { MyStoriesContextProvider, useMyStoriesContext } from "src/features/myStories/store/Provider";
 import type { Story } from "src/features/storyCreator/store/state";
 import { getStoryCoverImageUrl } from "src/shared/utils/getStoryCoverImageUrl";
-
+import { MainShellAppBar } from "src/components/paper/MainShellAppBar";
 const MyStoriesScreenContent = () => {
   const { t } = useTranslation("library");
   const theme = useTheme();
@@ -75,7 +73,7 @@ const MyStoriesScreenContent = () => {
   );
 
   const listHeader = (
-    <Text variant="headlineSmall" style={{ color: theme.colors.primary, paddingTop: 8 }}>
+    <Text variant="headlineSmall" style={{ color: theme.colors.primary }}>
       {t("page.myStoriesTitle")}
     </Text>
   );
@@ -87,6 +85,7 @@ const MyStoriesScreenContent = () => {
         keyExtractor={(item) => item._id}
         renderItem={renderItem}
         ListHeaderComponent={listHeader}
+        {...PAGE_SCROLL_PROPS}
         contentContainerStyle={[
           styles.listContent,
           {
@@ -120,7 +119,7 @@ const MyStoriesScreenContent = () => {
                 }
                 style={styles.loadMore}
               >
-                Load more
+                {t("page.loadMore")}
               </Button>
             ) : null}
           </>
@@ -130,11 +129,21 @@ const MyStoriesScreenContent = () => {
   );
 };
 
-export const MyStoriesScreen = () => (
-  <MyStoriesContextProvider>
-    <MyStoriesScreenContent />
-  </MyStoriesContextProvider>
-);
+export const MyStoriesScreen = () => {
+  const { t } = useTranslation("library");
+
+  return (
+    <Page
+      header={
+        <MainShellAppBar title={t("nav.myStories", { ns: "common" })} />
+      }
+    >
+      <MyStoriesContextProvider>
+        <MyStoriesScreenContent />
+      </MyStoriesContextProvider>
+    </Page>
+  );
+};
 
 const styles = StyleSheet.create({
   root: { flex: 1 },

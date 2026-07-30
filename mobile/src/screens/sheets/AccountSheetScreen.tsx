@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import {
@@ -22,6 +22,7 @@ import { useApplicationContext } from "src/application/store/Provider";
 import type { User } from "src/shared/types/user";
 import { getUserProfileContact } from "src/shared/utils/getUserProfileContact";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
+import { SheetBody } from "src/components/layout/SheetPage";
 
 type Props = NativeStackScreenProps<
   RootStackParamList,
@@ -84,78 +85,69 @@ export const AccountSheetScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <ScrollView
-      style={{ backgroundColor: theme.colors.background }}
-      contentContainerStyle={styles.content}
-    >
-      <View style={styles.sheetHeader}>
-        {user.picture ? (
-          <Avatar.Image size={56} source={{ uri: user.picture }} />
-        ) : (
-          <Avatar.Text
-            size={56}
-            label={avatarLabel(user)}
-            style={{ backgroundColor: theme.colors.surfaceVariant }}
-          />
-        )}
-        <Text
-          variant="titleMedium"
-          style={{ color: theme.colors.onSurface, marginTop: 12 }}
-        >
-          {fullName(user, accountLabel)}
-        </Text>
-        {profileContact.value ? (
+    <SheetBody>
+        <View style={styles.sheetHeader}>
+          {user.picture ? (
+            <Avatar.Image size={56} source={{ uri: user.picture }} />
+          ) : (
+            <Avatar.Text
+              size={56}
+              label={avatarLabel(user)}
+              style={{ backgroundColor: theme.colors.surfaceVariant }}
+            />
+          )}
           <Text
-            variant="bodySmall"
-            style={{ color: theme.colors.onSurfaceVariant, marginTop: 4 }}
+            variant="titleMedium"
+            style={{ color: theme.colors.onSurface, marginTop: 12 }}
           >
-            {profileContact.value}
+            {fullName(user, accountLabel)}
           </Text>
+          {profileContact.value ? (
+            <Text
+              variant="bodySmall"
+              style={{ color: theme.colors.onSurfaceVariant, marginTop: 4 }}
+            >
+              {profileContact.value}
+            </Text>
+          ) : null}
+        </View>
+
+        <Divider style={styles.divider} />
+
+        <List.Item
+          title={t("settings.profile")}
+          onPress={goProfile}
+          left={(props) => <List.Icon {...props} icon="account-outline" />}
+          titleStyle={{ color: theme.colors.onSurface }}
+        />
+
+        {showDashboardLink ? (
+          <>
+            <Divider style={styles.divider} />
+            <List.Item
+              title={t("settings.dashboard")}
+              onPress={goDashboard}
+              left={(props) => <List.Icon {...props} icon="view-dashboard" />}
+              titleStyle={{ color: theme.colors.onSurface }}
+            />
+          </>
         ) : null}
-      </View>
 
-      <Divider style={styles.divider} />
+        <Divider style={styles.divider} />
 
-      <List.Item
-        title={t("settings.profile")}
-        onPress={goProfile}
-        left={(props) => <List.Icon {...props} icon="account-outline" />}
-        titleStyle={{ color: theme.colors.onSurface }}
-      />
-
-      {showDashboardLink ? (
-        <>
-          <Divider style={styles.divider} />
-          <List.Item
-            title={t("settings.dashboard")}
-            onPress={goDashboard}
-            left={(props) => <List.Icon {...props} icon="view-dashboard" />}
-            titleStyle={{ color: theme.colors.onSurface }}
-          />
-        </>
-      ) : null}
-
-      <Divider style={styles.divider} />
-
-      <List.Item
-        title={t("settings.logout")}
-        onPress={() => void onLogout()}
-        left={(props) => <List.Icon {...props} icon="logout" color="#ff6b6b" />}
-        titleStyle={{ color: theme.colors.error }}
-      />
-    </ScrollView>
+        <List.Item
+          title={t("settings.logout")}
+          onPress={() => void onLogout()}
+          left={(props) => <List.Icon {...props} icon="logout" color="#ff6b6b" />}
+          titleStyle={{ color: theme.colors.error }}
+        />
+    </SheetBody>
   );
 };
 
 const styles = StyleSheet.create({
-  content: {
-    paddingHorizontal: 8,
-    paddingBottom: 24,
-  },
   sheetHeader: {
     alignItems: "center",
-    paddingVertical: 16,
-    paddingHorizontal: 8,
   },
   divider: {
     marginVertical: 4,

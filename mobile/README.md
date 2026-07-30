@@ -86,7 +86,7 @@ Login and register live under `public` in the file for **product** naming (auth)
 | Open **login / register / settings / account** sheet | `openRootSheet(...)` in `rootNavigation.ts` | `openRootSheet(mobileRoutes.public.login)` |
 | Switch to **dashboard** (admin) | `navigateToDashboard()` | Account sheet → Dashboard |
 | **Create story** (logged in) | `navigateToCreateStory()` | Main shell app bar / drawer |
-| **My profile** (logged in) | `navigateToMyProfile()` | Account sheet → Profile |
+| **Profile** (logged in) | `navigateToMainProfileTab()` | Account sheet → Profile |
 | Open a story from library | `navigateToViewStory(slug)` | Library list tap |
 | Go to **public home** from dashboard | `navigateToMarketingHome()` | Logo in dashboard drawer |
 | After **login** / **logout** reset the tree | `resetAfterLogin(user)` / `resetToMarketingAfterLogout()` | Login/Register screens, account sheet logout |

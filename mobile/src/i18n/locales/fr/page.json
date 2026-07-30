@@ -1,7 +1,16 @@
 {
   "contact": {
-    "mobileBody": "La page Contact web utilise la même API. Un formulaire natif réutilisera le gestionnaire Contact ensuite.",
-    "title": "Contactez-nous"
+    "title": "Contactez-nous",
+    "subtitle": "Envoyez-nous un message — nous vous répondrons.",
+    "name": "Nom",
+    "email": "E-mail",
+    "subject": "Objet",
+    "message": "Message",
+    "sendMessage": "Envoyer le message",
+    "validationRequired": "Veuillez remplir tous les champs.",
+    "validationEmail": "Veuillez saisir une adresse e-mail valide.",
+    "sendFailed": "Impossible d'envoyer votre message. Réessayez.",
+    "networkError": "Serveur inaccessible. Vérifiez votre connexion et réessayez."
   },
   "home": {
     "badge": "Plateforme propulsée par l'IA",
@@ -17,5 +26,10 @@
     "paidTiersBody": "Lite, Basic, Essential, Premium — gérez-les depuis le tableau de bord web aujourd'hui.",
     "paidTiersTitle": "Offres payantes",
     "plans": "Forfaits"
+  },
+  "legal": {
+    "lastUpdated": "Dernière mise à jour :",
+    "privacyTitle": "Politique de confidentialité",
+    "termsTitle": "Conditions générales pour TalePod"
   }
 }

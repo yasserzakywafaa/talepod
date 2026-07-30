@@ -2,11 +2,11 @@ import CONFIG from "../config";
 import { Request, Response } from "express";
 import {
   createTokenService,
+  isMobileClient,
   TokenService as CoreTokenService,
   TokenPair,
 } from "@yasserzakywafaa/server-core";
 import { RefreshTokenPayload, TokenPayload } from "../types/token";
-import { isMobileClient } from "../utils/mobileClient";
 
 type AccessTokenInput = Omit<TokenPayload, "iat" | "exp">;
 type RefreshTokenInput = Omit<RefreshTokenPayload, "iat" | "exp">;

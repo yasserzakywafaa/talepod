@@ -10,19 +10,19 @@ export const mobileRoutes = {
     pricing: "PublicPricing",
     contact: "PublicContact",
     library: "PublicLibrary",
+    privacyPolicy: "PublicPrivacyPolicy",
+    termsAndConditions: "PublicTermsAndConditions",
     login: "PublicLogin",
     register: "PublicRegister",
   },
   dashboard: {
     overview: "DashboardOverview",
+    users: "DashboardUsers",
     stories: "DashboardStories",
-    adminUsers: "DashboardAdminUsers",
-    adminStories: "DashboardAdminStories",
   },
   authenticated: {
     create: "CreateStory",
     viewStory: "ViewStory",
-    myProfile: "MyProfile",
   },
   main: {
     shell: "MainShell",
@@ -43,6 +43,14 @@ export const mobileRoutes = {
 
 export type PublicRouteName =
   (typeof mobileRoutes.public)[keyof typeof mobileRoutes.public];
+
+/** Marketing screens reachable from the drawer or authenticated shell stack. */
+export type PublicMarketingScreenRoute =
+  | typeof mobileRoutes.public.library
+  | typeof mobileRoutes.public.contact
+  | typeof mobileRoutes.public.pricing
+  | typeof mobileRoutes.public.privacyPolicy
+  | typeof mobileRoutes.public.termsAndConditions;
 
 export type DashboardRouteName =
   (typeof mobileRoutes.dashboard)[keyof typeof mobileRoutes.dashboard];

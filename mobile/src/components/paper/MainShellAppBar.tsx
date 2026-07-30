@@ -4,7 +4,6 @@ import { StyleSheet, View } from "react-native";
 import { Appbar, Text, useTheme } from "react-native-paper";
 
 import { useMainShellDrawer } from "src/application/navigation/MainShellDrawerContext";
-import { SafeAreaTopBar } from "src/components/layout/SafeAreaTopBar";
 
 type MainShellAppBarProps = {
   /** @deprecated Prefer `useMainShellDrawer()` from shell layout context. */
@@ -30,33 +29,31 @@ export const MainShellAppBar = ({
   };
 
   return (
-    <SafeAreaTopBar>
-      <Appbar.Header
-        statusBarHeight={0}
-        style={[styles.header, { backgroundColor: theme.colors.background }]}
-      >
-        {showBack && onBack ? (
-          <Appbar.BackAction onPress={onBack} color={theme.colors.primary} />
-        ) : null}
-        {title ? (
-          <Appbar.Content
-            title={
-              <Text variant="titleMedium" style={{ color: theme.colors.onSurface }}>
-                {title}
-              </Text>
-            }
-            style={styles.content}
-          />
-        ) : (
-          <View style={styles.flex} />
-        )}
-        <Appbar.Action
-          icon="menu"
-          onPress={openMenu}
-          color={theme.colors.primary}
+    <Appbar.Header
+      statusBarHeight={0}
+      style={[styles.header, { backgroundColor: theme.colors.background }]}
+    >
+      {showBack && onBack ? (
+        <Appbar.BackAction onPress={onBack} color={theme.colors.primary} />
+      ) : null}
+      {title ? (
+        <Appbar.Content
+          title={
+            <Text variant="titleMedium" style={{ color: theme.colors.onSurface }}>
+              {title}
+            </Text>
+          }
+          style={styles.content}
         />
-      </Appbar.Header>
-    </SafeAreaTopBar>
+      ) : (
+        <View style={styles.flex} />
+      )}
+      <Appbar.Action
+        icon="menu"
+        onPress={openMenu}
+        color={theme.colors.primary}
+      />
+    </Appbar.Header>
   );
 };
 

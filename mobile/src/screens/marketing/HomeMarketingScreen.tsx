@@ -11,13 +11,13 @@ import {
   openRootSheet,
 } from "src/application/navigation/rootNavigation";
 import { useApplicationContext } from "src/application/store/Provider";
-import { hasAdminRights } from "src/shared/utils/getUserRoles";
-import { MarketingScreenBody } from "src/components/layout/PageScaffold";
+import { Page, PageBody } from "src/components/layout/Page";
 import {
   useBrandButtonColors,
   useScreenTypography,
 } from "src/components/layout/useScreenTypography";
 import { AppButton } from "src/components/paper/AppButton";
+import { MarketingAppBar } from "src/components/paper/MarketingAppBar";
 
 type Props = DrawerScreenProps<
   MainDrawerParamList,
@@ -35,40 +35,46 @@ export const HomeMarketingScreen = ({ navigation }: Props) => {
   } = useApplicationContext();
 
   useEffect(() => {
-    if (auth.isAuthenticated && auth.user && !hasAdminRights(auth.user)) {
+    if (auth.isAuthenticated && auth.user) {
       navigateToMainMyStories();
     }
   }, [auth.isAuthenticated, auth.user]);
 
   return (
-    <MarketingScreenBody>
-      <View style={styles.hero}>
-        <Text variant="labelLarge" style={typography.badge}>
-          {t("home.badge")}
-        </Text>
-        <Text variant="headlineMedium" style={typography.title}>
-          {t("home.title")}
-        </Text>
-        <Text variant="bodyLarge" style={typography.body}>
-          {t("home.body")}
-        </Text>
-        <AppButton
-          mode="contained"
-          buttonColor={brand.contained}
-          textColor={brand.onContained}
-          onPress={() => openRootSheet(mobileRoutes.public.login)}
-        >
-          {t("home.ctaLogin")}
-        </AppButton>
-        <AppButton
-          mode="outlined"
-          textColor={brand.outlined}
-          onPress={() => navigation.navigate(mobileRoutes.public.pricing)}
-        >
-          {t("home.ctaPricing")}
-        </AppButton>
-      </View>
-    </MarketingScreenBody>
+    <Page
+      header={
+        <MarketingAppBar navigation={navigation} showCreateOnHome />
+      }
+    >
+      <PageBody>
+        <View style={styles.hero}>
+          <Text variant="labelLarge" style={typography.badge}>
+            {t("home.badge")}
+          </Text>
+          <Text variant="headlineMedium" style={typography.title}>
+            {t("home.title")}
+          </Text>
+          <Text variant="bodyLarge" style={typography.body}>
+            {t("home.body")}
+          </Text>
+          <AppButton
+            mode="contained"
+            buttonColor={brand.contained}
+            textColor={brand.onContained}
+            onPress={() => openRootSheet(mobileRoutes.public.login)}
+          >
+            {t("home.ctaLogin")}
+          </AppButton>
+          <AppButton
+            mode="outlined"
+            textColor={brand.outlined}
+            onPress={() => navigation.navigate(mobileRoutes.public.pricing)}
+          >
+            {t("home.ctaPricing")}
+          </AppButton>
+        </View>
+      </PageBody>
+    </Page>
   );
 };
 

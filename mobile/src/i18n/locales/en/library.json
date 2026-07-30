@@ -1,7 +1,8 @@
 {
   "page": {
     "libraryTitle": "Library of Bedtime Stories on TalePod",
-    "myStoriesTitle": "My Bedtime Stories on TalePod",
+    "myStoriesTitle": "My Stories",
+    "loadMore": "Load more",
     "sourceCommunity": "Community",
     "sourceTalepod": "by TalePod",
     "filters": "Filters",

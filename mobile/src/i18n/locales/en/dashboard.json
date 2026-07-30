@@ -1,16 +1,6 @@
 {
-  "admin": {
-    "users": {
-      "subtitle": "Manage users, roles, and permissions from here."
-    }
-  },
-  "adminNav": {
-    "storiesTitle": "Admin · Stories",
-    "usersTitle": "Admin · Users"
-  },
-  "logo": "Go to marketing home",
+  "logo": "Go to TalePod home",
   "nav": {
-    "admin": "Admin",
     "overview": "Overview",
     "stories": "Stories",
     "users": "Users"
@@ -25,11 +15,14 @@
     "welcomeBack": "Welcome back, {{name}}!",
     "welcomeBackFallback": "Welcome back"
   },
+  "users": {
+    "subtitle": "Manage users, roles, and permissions."
+  },
   "profile": {
     "pageTitle": "My Profile | TalePod",
     "title": "My Profile",
-    "greeting": "Hi {{name}} 👋🏻",
-    "tabsAriaLabel": "profile tabs",
+    "greeting": "Hi {{name}} 👋",
+    "tabsAriaLabel": "Profile tabs",
     "tabProfile": "Profile",
     "tabBilling": "Billing",
     "viewMyStories": "My Stories",
@@ -65,6 +58,7 @@
     "manageOnWeb": "Manage subscription on the web"
   },
   "stories": {
+    "comingSoon": "Full platform stories list will ship in a follow-up PR.",
     "subtitle": "Manage and view all platform stories.",
     "title": "Stories"
   },

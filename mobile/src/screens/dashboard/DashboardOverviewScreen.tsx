@@ -6,7 +6,8 @@ import { ActivityIndicator, Card, Text, useTheme } from "react-native-paper";
 
 import { mobileRoutes } from "src/application/routes";
 import type { DashboardDrawerParamList } from "src/application/navigation/DashboardDrawerNavigator";
-import { DashboardScreenBody } from "src/components/layout/PageScaffold";
+import { Page, PageBody } from "src/components/layout/Page";
+import { DashboardAppBar } from "src/components/paper/DashboardAppBar";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useDashboardOverviewContext } from "src/features/dashboardOverview/store/Provider";
 
@@ -15,7 +16,7 @@ type Props = DrawerScreenProps<
   typeof mobileRoutes.dashboard.overview
 >;
 
-export const DashboardOverviewScreen = (_props: Props) => {
+export const DashboardOverviewScreen = ({ navigation, route }: Props) => {
   const { t } = useTranslation("dashboard");
   const theme = useTheme();
   const {
@@ -77,7 +78,12 @@ export const DashboardOverviewScreen = (_props: Props) => {
   );
 
   return (
-    <DashboardScreenBody>
+    <Page
+      header={
+        <DashboardAppBar navigation={navigation} routeName={route.name} />
+      }
+    >
+      <PageBody>
       <Text variant="headlineSmall" style={{ color: theme.colors.onSurface }}>
         {displayName
           ? t("overview.welcomeBack", { name: displayName })
@@ -106,7 +112,8 @@ export const DashboardOverviewScreen = (_props: Props) => {
           )}
         </View>
       )}
-    </DashboardScreenBody>
+      </PageBody>
+    </Page>
   );
 };
 

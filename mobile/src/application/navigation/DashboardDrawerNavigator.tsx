@@ -4,17 +4,15 @@ import { useTheme } from "react-native-paper";
 
 import { mobileRoutes } from "src/application/routes";
 import { DRAWER_WIDTH } from "src/application/paperTheme";
-import { DashboardAppBar } from "src/components/paper/DashboardAppBar";
 import { DashboardDrawerContent } from "src/components/paper/DashboardDrawerContent";
 import { DashboardOverviewScreen } from "src/screens/dashboard/DashboardOverviewScreen";
-import { AdminStoriesPlaceholderScreen } from "src/screens/dashboard/AdminStoriesPlaceholderScreen";
-import { AdminUsersPlaceholderScreen } from "src/screens/dashboard/AdminUsersPlaceholderScreen";
+import { DashboardStoriesScreen } from "src/screens/dashboard/DashboardStoriesScreen";
+import { DashboardUsersScreen } from "src/screens/dashboard/DashboardUsersScreen";
 
 export type DashboardDrawerParamList = {
   [mobileRoutes.dashboard.overview]: undefined;
+  [mobileRoutes.dashboard.users]: undefined;
   [mobileRoutes.dashboard.stories]: undefined;
-  [mobileRoutes.dashboard.adminUsers]: undefined;
-  [mobileRoutes.dashboard.adminStories]: undefined;
 };
 
 const Drawer = createDrawerNavigator<DashboardDrawerParamList>();
@@ -29,9 +27,10 @@ export const DashboardDrawerNavigator = () => {
       key={i18n.language}
       drawerContent={(props) => <DashboardDrawerContent {...props} />}
       initialRouteName={mobileRoutes.dashboard.overview}
-      screenOptions={({ navigation, route }) => ({
+      screenOptions={{
         drawerType: "front",
         drawerPosition: "left",
+        headerShown: false,
         drawerStyle: {
           width: DRAWER_WIDTH,
           backgroundColor: theme.colors.surface,
@@ -39,23 +38,20 @@ export const DashboardDrawerNavigator = () => {
         drawerActiveBackgroundColor: theme.colors.primary,
         drawerActiveTintColor: theme.colors.onPrimary,
         drawerInactiveTintColor: theme.colors.onSurface,
-        header: () => (
-          <DashboardAppBar navigation={navigation} routeName={route.name} />
-        ),
         sceneContainerStyle: { backgroundColor: theme.colors.background },
-      })}
+      }}
     >
       <Drawer.Screen
         name={mobileRoutes.dashboard.overview}
         component={DashboardOverviewScreen}
       />
       <Drawer.Screen
-        name={mobileRoutes.dashboard.adminUsers}
-        component={AdminUsersPlaceholderScreen}
+        name={mobileRoutes.dashboard.users}
+        component={DashboardUsersScreen}
       />
       <Drawer.Screen
-        name={mobileRoutes.dashboard.adminStories}
-        component={AdminStoriesPlaceholderScreen}
+        name={mobileRoutes.dashboard.stories}
+        component={DashboardStoriesScreen}
       />
     </Drawer.Navigator>
   );

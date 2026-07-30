@@ -20,7 +20,7 @@ import { resetToMarketingAfterLogout, navigateToMainMyStories } from "src/applic
 import { useApplicationContext } from "src/application/store/Provider";
 import { useResolvedThemeMode } from "src/application/useResolvedThemeMode";
 import { ProfileAvatar } from "src/components/shared/ProfileAvatar";
-import { MarketingScreenBody } from "src/components/layout/PageScaffold";
+import { PageBody } from "src/components/layout/Page";
 import { DeleteAccountDialog } from "src/features/dashboardProfile/DeleteAccountDialog";
 import { ProfileBillingPanel } from "src/features/dashboardProfile/ProfileBillingPanel";
 import { useDashboardProfileContext } from "src/features/dashboardProfile/store/Provider";
@@ -117,7 +117,7 @@ export const ProfileScreenContent = () => {
 
   return (
     <View style={styles.screen}>
-      <MarketingScreenBody>
+      <PageBody>
         <View style={styles.header}>
           <ProfileAvatar user={user} />
           <View style={styles.headerText}>
@@ -329,7 +329,7 @@ export const ProfileScreenContent = () => {
             </Card.Content>
           </Card>
         ) : null}
-      </MarketingScreenBody>
+      </PageBody>
 
       <DeleteAccountDialog
         visible={deleteDialogVisible}
@@ -361,6 +361,7 @@ const styles = StyleSheet.create({
   header: {
     alignItems: "center",
     gap: 16,
+    paddingTop: 8,
   },
   headerText: {
     alignItems: "center",

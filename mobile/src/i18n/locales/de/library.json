@@ -1,7 +1,8 @@
 {
   "page": {
     "libraryTitle": "Bibliothek Gute-Nacht-Geschichten auf TalePod",
-    "myStoriesTitle": "Meine Gute-Nacht-Geschichten auf TalePod",
+    "myStoriesTitle": "Meine Geschichten",
+    "loadMore": "Mehr laden",
     "sourceCommunity": "Community",
     "sourceTalepod": "von TalePod",
     "filters": "Filter",

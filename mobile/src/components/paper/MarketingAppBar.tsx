@@ -2,8 +2,6 @@ import type { DrawerNavigationProp } from "@react-navigation/drawer";
 import { StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Appbar, useTheme } from "react-native-paper";
-
-import { SafeAreaTopBar } from "src/components/layout/SafeAreaTopBar";
 import { mobileRoutes } from "src/application/routes";
 import type { MainDrawerParamList } from "src/application/navigation/MainDrawerNavigator";
 import {
@@ -39,14 +37,17 @@ export const MarketingAppBar = ({
   };
 
   return (
-    <SafeAreaTopBar>
-      <Appbar.Header
+    <Appbar.Header
         statusBarHeight={0}
         style={[styles.header, { backgroundColor: theme.colors.background }]}
         mode="center-aligned"
       >
         <View style={styles.left}>
-          <AppButton mode="contained" onPress={handleCreate} buttonColor={theme.colors.primary}>
+          <AppButton
+            mode="contained"
+            onPress={handleCreate}
+            buttonColor={theme.colors.primary}
+          >
             {t("nav.createProject")}
           </AppButton>
         </View>
@@ -56,7 +57,6 @@ export const MarketingAppBar = ({
           color={theme.colors.primary}
         />
       </Appbar.Header>
-    </SafeAreaTopBar>
   );
 };
 

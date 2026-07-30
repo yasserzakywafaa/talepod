@@ -1,21 +1,32 @@
 {
   "account": "الحساب",
   "back": "رجوع",
+  "close": "إغلاق",
+  "cancel": "إلغاء",
+  "delete": "حذف",
+  "emailSentSuccess": "تم إرسال البريد الإلكتروني بنجاح",
+  "noResults": "لا توجد نتائج",
+  "noStoriesFound": "لا توجد قصص",
+  "loggedOut": "تم تسجيل الخروج",
   "footer": {
     "company": "الشركة",
     "copyright": "حقوق النشر ©",
     "linksLine": "{{product}} · {{company}} · {{privacy}} · {{terms}}",
-    "mobileTagline": "في metriz.ai، نُبسّط المناقصات وجداول الكميات للفرق التي تحتاج إلى التوسع — نفس المنصة على الويب والجوال.",
+    "mobileTagline": "في TalePod، نساعد الآباء على إنشاء قصص ما قبل النوم سحرية ومخصصة في دقائق — مع رسوم توضيحية وسرد وقصص مصممة لطفلك.",
     "privacyPolicy": "سياسة الخصوصية",
     "product": "المنتج",
     "termsAndConditions": "الشروط والأحكام"
   },
-  "logo": "الصفحة الرئيسية",
+  "logo": "الصفحة الرئيسية لـ TalePod",
   "nav": {
     "contact": "اتصل بنا",
-    "createProject": "إنشاء مشروع",
+    "createProject": "إنشاء قصة",
     "features": "الميزات",
+    "howItWorks": "كيف يعمل",
+    "library": "المكتبة",
     "login": "تسجيل الدخول",
+    "myStories": "قصصي",
+    "pricing": "الأسعار",
     "register": "التسجيل"
   },
   "settings": {
@@ -28,7 +39,8 @@
     "theme": "المظهر",
     "themeDark": "داكن",
     "themeLight": "فاتح",
-    "themeSystem": "النظام"
+    "themeSystem": "النظام",
+    "version": "الإصدار {{version}}"
   },
   "sheetClose": "إغلاق",
   "signedInUser": "مستخدم مسجّل الدخول"

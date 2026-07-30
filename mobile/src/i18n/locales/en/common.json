@@ -39,7 +39,8 @@
     "theme": "Theme",
     "themeDark": "Dark",
     "themeLight": "Light",
-    "themeSystem": "System"
+    "themeSystem": "System",
+    "version": "Version {{version}}"
   },
   "sheetClose": "Close",
   "signedInUser": "Signed-in user"

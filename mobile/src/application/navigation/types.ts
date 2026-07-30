@@ -16,7 +16,6 @@ export type RootStackParamList = {
   [rootRoutes.main]: NavigatorScreenParams<MainDrawerParamList>;
   [rootRoutes.dashboard]: NavigatorScreenParams<DashboardDrawerParamList>;
   [mobileRoutes.authenticated.viewStory]: { slug: string };
-  [mobileRoutes.authenticated.myProfile]: undefined;
 } & Record<RootSheetRouteName, undefined>;
 
 export type RootStackNavigationProp =

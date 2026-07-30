@@ -1,7 +1,16 @@
 {
   "contact": {
-    "mobileBody": "Die Web-Kontaktseite nutzt dieselbe API. Ein natives Formular verwendet später den Contact-Store-Manager.",
-    "title": "Kontakt"
+    "title": "Kontakt",
+    "subtitle": "Senden Sie uns eine Nachricht — wir melden uns bei Ihnen.",
+    "name": "Name",
+    "email": "E-Mail",
+    "subject": "Betreff",
+    "message": "Nachricht",
+    "sendMessage": "Nachricht senden",
+    "validationRequired": "Bitte füllen Sie alle Felder aus.",
+    "validationEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+    "sendFailed": "Nachricht konnte nicht gesendet werden. Bitte erneut versuchen.",
+    "networkError": "Server nicht erreichbar. Verbindung prüfen und erneut versuchen."
   },
   "home": {
     "badge": "KI-gestützte Plattform",
@@ -17,5 +26,10 @@
     "paidTiersBody": "Lite, Basic, Essential, Premium — heute im Web-Dashboard verwalten.",
     "paidTiersTitle": "Bezahlte Tarife",
     "plans": "Tarife"
+  },
+  "legal": {
+    "lastUpdated": "Zuletzt aktualisiert:",
+    "privacyTitle": "Datenschutzerklärung",
+    "termsTitle": "Allgemeine Geschäftsbedingungen für TalePod"
   }
 }

@@ -1,31 +1,28 @@
 import type { ReactNode } from "react";
-import { StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
+import { StyleSheet, type StyleProp, type ViewStyle } from "react-native";
 import { useTheme } from "react-native-paper";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type SafeAreaTopBarProps = {
-  children: ReactNode;
+  children?: ReactNode;
   style?: StyleProp<ViewStyle>;
 };
 
-/** Applies top safe-area inset (notch / Dynamic Island / status bar). */
+/** Top safe-area inset (notch / Dynamic Island / status bar) for headers and standalone top bars. */
 export const SafeAreaTopBar = ({ children, style }: SafeAreaTopBarProps) => {
-  const insets = useSafeAreaInsets();
   const theme = useTheme();
 
   return (
-    <View
+    <SafeAreaView
+      edges={["top"]}
       style={[
         styles.bar,
-        {
-          paddingTop: insets.top,
-          backgroundColor: theme.colors.background,
-        },
+        { backgroundColor: theme.colors.background },
         style,
       ]}
     >
       {children}
-    </View>
+    </SafeAreaView>
   );
 };
 

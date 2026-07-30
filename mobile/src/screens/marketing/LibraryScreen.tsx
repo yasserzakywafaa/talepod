@@ -17,6 +17,8 @@ import {
 } from "react-native-paper";
 
 import { navigateToCreateStory, navigateToViewStory } from "src/application/navigation/rootNavigation";
+import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
+import { useDrawerPageHeader } from "src/components/layout/useDrawerPageHeader";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
 import {
   LibraryContextProvider,
@@ -127,6 +129,7 @@ const LibraryScreenContent = () => {
         renderItem={renderItem}
         ListHeaderComponent={listHeader}
         ListEmptyComponent={listEmpty}
+        {...PAGE_SCROLL_PROPS}
         contentContainerStyle={[
           styles.listContent,
           {
@@ -160,15 +163,21 @@ const LibraryScreenContent = () => {
   );
 };
 
-export const LibraryScreen = () => (
-  <LibraryContextProvider>
-    <LibraryScreenContent />
-  </LibraryContextProvider>
-);
+export const LibraryScreen = () => {
+  const header = useDrawerPageHeader("nav.library");
+
+  return (
+    <Page header={header}>
+      <LibraryContextProvider>
+        <LibraryScreenContent />
+      </LibraryContextProvider>
+    </Page>
+  );
+};
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  header: { gap: 12, marginBottom: 16, paddingTop: 8 },
+  header: { gap: 12, marginBottom: 16 },
   toolbar: { flexDirection: "row", justifyContent: "flex-end" },
   listContent: { paddingBottom: 24 },
   card: { marginBottom: 12 },

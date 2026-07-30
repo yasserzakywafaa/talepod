@@ -76,16 +76,16 @@ export const DashboardDrawerContent = (props: DrawerContentComponentProps) => {
             <List.Item
               title={t("nav.users")}
               left={(p) => <List.Icon {...p} icon="account-group" />}
-              onPress={() => go(mobileRoutes.dashboard.adminUsers)}
-              style={itemStyleFor(mobileRoutes.dashboard.adminUsers)}
-              titleStyle={itemTitleFor(mobileRoutes.dashboard.adminUsers)}
+              onPress={() => go(mobileRoutes.dashboard.users)}
+              style={itemStyleFor(mobileRoutes.dashboard.users)}
+              titleStyle={itemTitleFor(mobileRoutes.dashboard.users)}
             />
             <List.Item
               title={t("nav.stories")}
               left={(p) => <List.Icon {...p} icon="book-open-variant" />}
-              onPress={() => go(mobileRoutes.dashboard.adminStories)}
-              style={itemStyleFor(mobileRoutes.dashboard.adminStories)}
-              titleStyle={itemTitleFor(mobileRoutes.dashboard.adminStories)}
+              onPress={() => go(mobileRoutes.dashboard.stories)}
+              style={itemStyleFor(mobileRoutes.dashboard.stories)}
+              titleStyle={itemTitleFor(mobileRoutes.dashboard.stories)}
             />
           </List.Section>
         )}

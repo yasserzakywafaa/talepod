@@ -18,6 +18,8 @@ import {
 
 import END_POINTS from "src/application/shared/endpoints";
 import { api } from "src/application/shared/apiClient";
+import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
+import { MainShellAppBar } from "src/components/paper/MainShellAppBar";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
 import { AvatarFormDialog } from "src/features/myAvatars/AvatarFormDialog";
 import {
@@ -86,6 +88,16 @@ export const useMyAvatars = (enabled = true) => {
 
 export const MyAvatarsScreen = () => {
   const { t } = useTranslation("story");
+
+  return (
+    <Page header={<MainShellAppBar title={t("avatars.page.title")} />}>
+      <MyAvatarsScreenContent />
+    </Page>
+  );
+};
+
+const MyAvatarsScreenContent = () => {
+  const { t } = useTranslation("story");
   const theme = useTheme();
   const { horizontalGutter, contentMaxWidth } = useReadableLayout();
   const { avatars, isLoading, isSaving, saveAvatar, removeAvatar } =
@@ -117,6 +129,7 @@ export const MyAvatarsScreen = () => {
       <FlatList
         data={avatars}
         keyExtractor={(item) => item._id}
+        {...PAGE_SCROLL_PROPS}
         contentContainerStyle={[
           styles.list,
           {
@@ -222,7 +235,7 @@ export const MyAvatarsScreen = () => {
 const styles = StyleSheet.create({
   root: { flex: 1 },
   list: { paddingBottom: 24 },
-  header: { paddingTop: 8, marginBottom: 12 },
+  header: { marginBottom: 12 },
   card: { marginBottom: 12 },
   cardRow: {
     flexDirection: "row",

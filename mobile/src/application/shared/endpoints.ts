@@ -53,6 +53,9 @@ const END_POINTS = {
   PAYMENTS: {
     GET_SUBSCRIPTION_DETAILS: `${publicApiUrl}/api/v1/auth/get-subscription-details`,
   },
+  CONTACT: {
+    SUPPORT: `${publicApiUrl}/api/v1/contact-support`,
+  },
   DASHBOARD: {
     OVERVIEW: {
       GET_USERS_COUNT: `${publicApiUrl}/api/v1/dashboard/overview/users-count`,

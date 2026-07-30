@@ -1,78 +1,192 @@
+import { DrawerActions } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { DrawerNavigationProp } from "@react-navigation/drawer";
-import { useNavigationState } from "@react-navigation/native";
+import { useSyncExternalStore } from "react";
 import { useTranslation } from "react-i18next";
 import { Platform, Pressable, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Text, useTheme } from "react-native-paper";
+import { Avatar, Text, useTheme } from "react-native-paper";
 
 import { mobileRoutes } from "src/application/routes";
+import { useApplicationContext } from "src/application/store/Provider";
+import type { User } from "src/shared/types/user";
 import type { MainDrawerParamList } from "src/application/navigation/MainDrawerNavigator";
+import { resolveActiveMainTabRoute } from "src/application/navigation/mainShellNavigation";
+import {
+  openRootSheet,
+  rootNavigationRef,
+} from "src/application/navigation/rootNavigation";
 import {
   FLOATING_TAB_BAR_BOTTOM_GAP,
   FLOATING_TAB_BAR_HEIGHT,
   FLOATING_TAB_BAR_MARGIN_H,
 } from "src/components/navigation/floatingTabBarConstants";
 
-type TabDef = {
-  tabRoute: (typeof mobileRoutes.tabs)[keyof typeof mobileRoutes.tabs];
-  icon: keyof typeof MaterialCommunityIcons.glyphMap;
-  labelKey: string;
-};
+type TabRouteName = (typeof mobileRoutes.tabs)[keyof typeof mobileRoutes.tabs];
+
+type TabDef =
+  | {
+      kind: "route";
+      id: TabRouteName;
+      tabRoute: TabRouteName;
+      icon: keyof typeof MaterialCommunityIcons.glyphMap;
+      labelKey: string;
+    }
+  | {
+      kind: "account";
+      id: "account";
+      labelKey: "account";
+    };
 
 const TABS: TabDef[] = [
   {
+    kind: "route",
+    id: mobileRoutes.tabs.create,
     tabRoute: mobileRoutes.tabs.create,
     icon: "auto-fix",
     labelKey: "nav.createProject",
   },
   {
+    kind: "route",
+    id: mobileRoutes.tabs.myStories,
     tabRoute: mobileRoutes.tabs.myStories,
     icon: "book-open-variant",
     labelKey: "nav.myStories",
   },
   {
+    kind: "route",
+    id: mobileRoutes.tabs.myAvatars,
     tabRoute: mobileRoutes.tabs.myAvatars,
     icon: "account-circle",
     labelKey: "story:avatars.page.title",
   },
   {
-    tabRoute: mobileRoutes.tabs.profile,
-    icon: "account-outline",
-    labelKey: "settings.profile",
+    kind: "account",
+    id: "account",
+    labelKey: "account",
   },
 ];
 
+const avatarLabel = (user: User): string => {
+  const a = user.name.givenName?.charAt(0) ?? "";
+  const b = user.name.familyName?.charAt(0) ?? "";
+  return (a + b).toUpperCase() || "?";
+};
+
+const TabAccountAvatar = ({
+  user,
+  focused,
+}: {
+  user: User | null;
+  focused: boolean;
+}) => {
+  const theme = useTheme();
+  const ringStyle = focused
+    ? { borderWidth: 2, borderColor: theme.colors.primary }
+    : undefined;
+
+  if (!user) {
+    return (
+      <MaterialCommunityIcons
+        name="account-outline"
+        size={22}
+        color={theme.colors.onSurfaceVariant}
+      />
+    );
+  }
+
+  if (user.picture) {
+    return (
+      <Avatar.Image
+        size={26}
+        source={{ uri: user.picture }}
+        style={[styles.accountAvatar, ringStyle]}
+      />
+    );
+  }
+
+  return (
+    <Avatar.Text
+      size={26}
+      label={avatarLabel(user)}
+      style={[
+        styles.accountAvatar,
+        { backgroundColor: theme.colors.surfaceVariant },
+        ringStyle,
+      ]}
+      labelStyle={{ color: theme.colors.onSurface, fontSize: 11 }}
+    />
+  );
+};
+
 type Props = {
   navigation: DrawerNavigationProp<MainDrawerParamList>;
+};
+
+const subscribeToRootNavigation = (onStoreChange: () => void) => {
+  const listeners: Array<() => void> = [];
+
+  const attachStateListener = () => {
+    if (!rootNavigationRef.isReady()) {
+      return;
+    }
+
+    listeners.push(rootNavigationRef.addListener("state", onStoreChange));
+  };
+
+  attachStateListener();
+
+  if (!rootNavigationRef.isReady()) {
+    listeners.push(
+      rootNavigationRef.addListener("ready", () => {
+        onStoreChange();
+        attachStateListener();
+      }),
+    );
+  }
+
+  return () => {
+    listeners.forEach((unsubscribe) => unsubscribe());
+  };
+};
+
+const getActiveTabSnapshot = () => {
+  if (!rootNavigationRef.isReady()) {
+    return null;
+  }
+
+  return resolveActiveMainTabRoute(rootNavigationRef.getRootState());
 };
 
 export const PersistentMainTabBar = ({ navigation }: Props) => {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation(["common", "story"]);
+  const {
+    store: {
+      state: {
+        auth: { user },
+      },
+    },
+  } = useApplicationContext();
 
-  const activeTabRoute = useNavigationState((state) => {
-    if (!state) return null;
-    const shellIndex = state.index ?? 0;
-    const shellRoute = state.routes[shellIndex];
-    if (!shellRoute?.state) return null;
-    const stackState = shellRoute.state;
-    const stackIndex = stackState.index ?? 0;
-    const stackRoute = stackState.routes[stackIndex];
-    if (!stackRoute || stackRoute.name !== mobileRoutes.main.tabs || !stackRoute.state) {
-      return null;
-    }
-    const tabState = stackRoute.state;
-    const tabIndex = tabState.index ?? 0;
-    return tabState.routes[tabIndex]?.name ?? null;
-  });
+  const activeTabRoute = useSyncExternalStore(
+    subscribeToRootNavigation,
+    getActiveTabSnapshot,
+    () => null,
+  );
 
-  const goToTab = (tabRoute: TabDef["tabRoute"]) => {
+  const goToTab = (tabRoute: TabRouteName) => {
+    navigation.dispatch(DrawerActions.closeDrawer());
     navigation.navigate(mobileRoutes.main.shell, {
       screen: mobileRoutes.main.tabs,
       params: { screen: tabRoute },
     });
+  };
+
+  const openAccountSheet = () => {
+    navigation.dispatch(DrawerActions.closeDrawer());
+    openRootSheet(mobileRoutes.sheet.account);
   };
 
   return (
@@ -96,29 +210,43 @@ export const PersistentMainTabBar = ({ navigation }: Props) => {
         ]}
       >
         {TABS.map((tab) => {
-          const isFocused = activeTabRoute === tab.tabRoute;
-          const label = tab.labelKey.startsWith("story:")
-            ? t(tab.labelKey)
-            : t(tab.labelKey, { ns: "common" });
+          const isFocused =
+            tab.kind === "account"
+              ? activeTabRoute === mobileRoutes.tabs.profile
+              : activeTabRoute === tab.tabRoute;
+          const label =
+            tab.labelKey === "account"
+              ? ` ${user?.name.givenName ?? t("account")}`
+              : tab.labelKey.startsWith("story:")
+                ? t(tab.labelKey)
+                : t(tab.labelKey, { ns: "common" });
 
           return (
             <Pressable
-              key={tab.tabRoute}
-              onPress={() => goToTab(tab.tabRoute)}
+              key={tab.id}
+              onPress={
+                tab.kind === "account"
+                  ? openAccountSheet
+                  : () => goToTab(tab.tabRoute)
+              }
               style={[
                 styles.tab,
                 isFocused && { backgroundColor: theme.colors.surfaceVariant },
               ]}
             >
-              <MaterialCommunityIcons
-                name={tab.icon}
-                size={22}
-                color={
-                  isFocused
-                    ? theme.colors.primary
-                    : theme.colors.onSurfaceVariant
-                }
-              />
+              {tab.kind === "account" ? (
+                <TabAccountAvatar user={user} focused={isFocused} />
+              ) : (
+                <MaterialCommunityIcons
+                  name={tab.icon}
+                  size={22}
+                  color={
+                    isFocused
+                      ? theme.colors.primary
+                      : theme.colors.onSurfaceVariant
+                  }
+                />
+              )}
               <Text
                 variant="labelSmall"
                 numberOfLines={1}
@@ -173,5 +301,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     borderRadius: 24,
     minHeight: 48,
+  },
+  accountAvatar: {
+    borderRadius: 13,
   },
 });

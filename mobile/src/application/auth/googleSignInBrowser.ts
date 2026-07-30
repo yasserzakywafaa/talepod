@@ -1,6 +1,12 @@
 import * as WebBrowser from "expo-web-browser";
 import * as Linking from "expo-linking";
 
+import {
+  parseMobileOAuthCallbackUrl,
+  redactMobileOAuthCallbackUrl,
+  stripUrlHash,
+} from "@yasserzakywafaa/client-core";
+
 import { api } from "src/application/shared/apiClient";
 import END_POINTS from "src/application/shared/endpoints";
 import { mobileApiHeaders } from "src/application/auth/mobileApiHeaders";
@@ -14,52 +20,7 @@ export type GoogleBrowserSignInResult = {
   refreshToken: string;
 };
 
-/** randomBytes(32).toString("hex") on the server */
-const MOBILE_OAUTH_CODE_HEX_LENGTH = 64;
-
-const stripUrlHash = (url: string): string => url.split("#")[0];
-
-const parseAuthCallbackUrl = (
-  url: string,
-): { code?: string; error?: string } => {
-  // Expo/iOS may append "#" to exp:// callback URLs. Feeding that into
-  // URLSearchParams would attach "#" to ?code= and break the 64-char hex code.
-  const urlWithoutHash = stripUrlHash(url);
-  const queryStart = urlWithoutHash.indexOf("?");
-  const query = queryStart >= 0 ? urlWithoutHash.slice(queryStart + 1) : "";
-  const params = new URLSearchParams(query);
-  const rawCode = params.get("code") ?? undefined;
-  const code =
-    rawCode?.replace(/[^a-f0-9]/gi, "").slice(0, MOBILE_OAUTH_CODE_HEX_LENGTH) ||
-    undefined;
-
-  return {
-    code:
-      code?.length === MOBILE_OAUTH_CODE_HEX_LENGTH ? code : undefined,
-    error: params.get("error") ?? undefined,
-  };
-};
-
-const redactCallbackUrl = (url: string): string => {
-  const urlWithoutHash = stripUrlHash(url);
-  const queryStart = urlWithoutHash.indexOf("?");
-  if (queryStart < 0) {
-    return urlWithoutHash;
-  }
-
-  const base = urlWithoutHash.slice(0, queryStart);
-  const params = new URLSearchParams(urlWithoutHash.slice(queryStart + 1));
-  const code = params.get("code");
-
-  if (code) {
-    params.set(
-      "code",
-      code.length > 8 ? `${code.slice(0, 8)}…(${code.length} chars)` : "[redacted]",
-    );
-  }
-
-  return `${base}?${params.toString()}`;
-};
+const redactCallbackUrl = redactMobileOAuthCallbackUrl;
 
 export const signInWithGoogleBrowser =
   async (): Promise<GoogleBrowserSignInResult | null> => {
@@ -113,7 +74,7 @@ export const signInWithGoogleBrowser =
       return null;
     }
 
-    const { code, error } = parseAuthCallbackUrl(authSessionResult.url);
+    const { code, error } = parseMobileOAuthCallbackUrl(authSessionResult.url);
 
     if (error) {
       console.error("❌ Mobile Google OAuth: callback returned error", { error });

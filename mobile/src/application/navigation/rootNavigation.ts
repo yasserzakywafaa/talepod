@@ -3,11 +3,15 @@ import {
   createNavigationContainerRef,
 } from "@react-navigation/native";
 
-import { mobileRoutes, rootRoutes, type DashboardRouteName, type RootSheetRouteName } from "src/application/routes";
+import { mobileRoutes, rootRoutes, type DashboardRouteName, type PublicMarketingScreenRoute, type RootSheetRouteName } from "src/application/routes";
+import {
+  buildMainDrawerShellState,
+  buildMainShellTabParams,
+  type MainTabRouteName,
+} from "src/application/navigation/mainShellNavigation";
 
 import type { RootStackParamList } from "./types";
 import type { User } from "src/shared/types/user";
-import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import { getStoredAuth } from "src/shared/storage/authStorage";
 
 /**
@@ -23,18 +27,24 @@ const whenReady = (run: () => void) => {
   }
 };
 
-const mainShellMyStoriesParams = () => ({
-  screen: mobileRoutes.main.shell,
-  params: {
-    screen: mobileRoutes.main.tabs,
-    params: { screen: mobileRoutes.tabs.myStories },
-  },
-});
+const mainShellMyStoriesParams = () =>
+  buildMainShellTabParams(mobileRoutes.tabs.myStories);
 
 const resetToMainMyStories = () => ({
   name: rootRoutes.main,
-  params: mainShellMyStoriesParams(),
+  state: buildMainDrawerShellState(mobileRoutes.tabs.myStories),
 });
+
+const closeMainDrawer = () => {
+  rootNavigationRef.dispatch(DrawerActions.closeDrawer());
+};
+
+const navigateToMainTab = (tabRoute: MainTabRouteName) => {
+  whenReady(() => {
+    closeMainDrawer();
+    rootNavigationRef.navigate(rootRoutes.main, buildMainShellTabParams(tabRoute));
+  });
+};
 
 /** Opens a root-level form sheet (login, register, settings, account). */
 export const openRootSheet = (screen: RootSheetRouteName) => {
@@ -54,33 +64,15 @@ export const openRootSheet = (screen: RootSheetRouteName) => {
 };
 
 export const navigateToCreateStory = () => {
-  whenReady(() => {
-    rootNavigationRef.navigate(rootRoutes.main, {
-      screen: mobileRoutes.main.shell,
-      params: {
-        screen: mobileRoutes.main.tabs,
-        params: { screen: mobileRoutes.tabs.create },
-      },
-    });
-  });
+  navigateToMainTab(mobileRoutes.tabs.create);
 };
 
 export const navigateToMainMyStories = () => {
-  whenReady(() => {
-    rootNavigationRef.navigate(rootRoutes.main, mainShellMyStoriesParams());
-  });
+  navigateToMainTab(mobileRoutes.tabs.myStories);
 };
 
 export const navigateToMainProfileTab = () => {
-  whenReady(() => {
-    rootNavigationRef.navigate(rootRoutes.main, {
-      screen: mobileRoutes.main.shell,
-      params: {
-        screen: mobileRoutes.main.tabs,
-        params: { screen: mobileRoutes.tabs.profile },
-      },
-    });
-  });
+  navigateToMainTab(mobileRoutes.tabs.profile);
 };
 
 export const openMainDrawer = () => {
@@ -96,12 +88,6 @@ export const openMainDrawer = () => {
   });
 };
 
-export const navigateToMyProfile = () => {
-  whenReady(() => {
-    rootNavigationRef.navigate(mobileRoutes.authenticated.myProfile);
-  });
-};
-
 export const navigateToViewStory = (slug: string) => {
   whenReady(() => {
     rootNavigationRef.navigate(mobileRoutes.authenticated.viewStory, { slug });
@@ -112,6 +98,7 @@ export const navigateToDashboard = (
   screen: DashboardRouteName = mobileRoutes.dashboard.overview,
 ) => {
   whenReady(() => {
+    closeMainDrawer();
     rootNavigationRef.navigate(rootRoutes.dashboard, { screen });
   });
 };
@@ -124,20 +111,28 @@ export const navigateToMarketingHome = () => {
   });
 };
 
-export const resetAfterLogin = (user: User | null | undefined) => {
+/** Library, contact, pricing, privacy, and terms — drawer (guest) or shell stack (signed in). */
+export const navigateToPublicMarketingScreen = (
+  screen: PublicMarketingScreenRoute,
+  isAuthenticated: boolean,
+) => {
   whenReady(() => {
-    if (user && hasAdminRights(user)) {
-      rootNavigationRef.reset({
-        index: 0,
-        routes: [
-          {
-            name: rootRoutes.dashboard,
-            params: { screen: mobileRoutes.dashboard.overview },
-          },
-        ],
+    closeMainDrawer();
+    if (isAuthenticated) {
+      rootNavigationRef.navigate(rootRoutes.main, {
+        screen: mobileRoutes.main.shell,
+        params: { screen },
       });
       return;
     }
+
+    rootNavigationRef.navigate(rootRoutes.main, { screen });
+  });
+};
+
+export const resetAfterLogin = (_user?: User | null) => {
+  whenReady(() => {
+    closeMainDrawer();
     rootNavigationRef.reset({
       index: 0,
       routes: [resetToMainMyStories()],

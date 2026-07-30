@@ -1,83 +1,77 @@
 {
-  "admin": {
-    "users": {
-      "subtitle": "Manage users, roles, and permissions from here."
-    }
-  },
-  "adminNav": {
-    "storiesTitle": "Admin · Stories",
-    "usersTitle": "Admin · Users"
-  },
-  "logo": "Go to marketing home",
+  "logo": "Aller à l'accueil TalePod",
   "nav": {
-    "admin": "Admin",
-    "overview": "Overview",
-    "stories": "Stories",
-    "users": "Users"
+    "overview": "Aperçu",
+    "stories": "Histoires",
+    "users": "Utilisateurs"
   },
   "overview": {
-    "storiesMetricHint": "Stories created on the platform.",
-    "storiesCreated": "Stories created",
-    "subtitle": "Dashboard overview",
-    "totalStories": "Total Stories",
-    "totalUsers": "Total Users",
-    "usersActive": "Active users on the platform",
-    "welcomeBack": "Welcome back, {{name}}!",
-    "welcomeBackFallback": "Welcome back"
+    "storiesMetricHint": "Histoires créées sur la plateforme.",
+    "storiesCreated": "Histoires créées",
+    "subtitle": "Aperçu du tableau de bord",
+    "totalStories": "Total des histoires",
+    "totalUsers": "Total des utilisateurs",
+    "usersActive": "Utilisateurs actifs sur la plateforme",
+    "welcomeBack": "Bon retour, {{name}} !",
+    "welcomeBackFallback": "Bon retour"
+  },
+  "users": {
+    "subtitle": "Gérer les utilisateurs, les rôles et les autorisations."
   },
   "profile": {
-    "pageTitle": "My Profile | TalePod",
-    "title": "My Profile",
-    "greeting": "Hi {{name}} 👋🏻",
-    "tabsAriaLabel": "profile tabs",
-    "tabProfile": "Profile",
-    "tabBilling": "Billing",
-    "viewMyStories": "My Stories",
-    "profileInformation": "Profile Information",
-    "fullName": "Full Name",
-    "email": "Email",
-    "phoneNumber": "Phone Number",
-    "dateJoined": "Date joined",
-    "appearance": "Appearance",
-    "themeLight": "LIGHT",
-    "themeDark": "DARK",
-    "dangerZone": "Danger Zone",
-    "dangerZoneDescription": "Permanently delete your account and all associated stories, avatars, story credits, and subscription data. If you have an active subscription, billing will be cancelled immediately.",
-    "deleteAccount": "Delete Account",
-    "keepMyAccount": "Keep my account",
-    "deleteAccountForever": "Delete account forever",
-    "deleteAccountIntro": "This will permanently delete your account and remove all associated data, including:",
-    "deleteAcknowledge": "I understand this action is permanent and cannot be undone",
-    "typeConfirmationPhrase": "Type the confirmation phrase",
-    "typeToConfirm": "Type \"{{phrase}}\" to confirm",
-    "deleting": "Deleting...",
-    "impactStories_one": "{{count}} story",
-    "impactStories_other": "{{count}} stories",
-    "impactAvatarsCredits": "Avatars and story credits",
-    "impactSubscription": "Subscription and billing data",
-    "libraryPublishWarning": "Stories published to the community library will not be removed automatically.",
-    "planLabel": "{{plan}} plan",
-    "unlockPremium": "Unlock illustrations & every voice",
-    "thanksSupporter": "Thanks for supporting TalePod",
-    "storiesUsed": "Stories used",
-    "storyCredits": "Story credits",
-    "upgradeToPremium": "Upgrade to Premium",
-    "manageOnWeb": "Manage subscription on the web"
+    "pageTitle": "Mon profil | TalePod",
+    "title": "Mon profil",
+    "greeting": "Bonjour {{name}} 👋",
+    "tabsAriaLabel": "Onglets du profil",
+    "tabProfile": "Profil",
+    "tabBilling": "Facturation",
+    "viewMyStories": "Mes histoires",
+    "profileInformation": "Informations du profil",
+    "fullName": "Nom complet",
+    "email": "E-mail",
+    "phoneNumber": "Numéro de téléphone",
+    "dateJoined": "Date d'inscription",
+    "appearance": "Apparence",
+    "themeLight": "CLAIR",
+    "themeDark": "SOMBRE",
+    "dangerZone": "Zone de danger",
+    "dangerZoneDescription": "Supprimez définitivement votre compte et toutes les histoires, avatars, crédits d'histoires et données d'abonnement associés. Si vous avez un abonnement actif, la facturation sera annulée immédiatement.",
+    "deleteAccount": "Supprimer le compte",
+    "keepMyAccount": "Conserver mon compte",
+    "deleteAccountForever": "Supprimer le compte définitivement",
+    "deleteAccountIntro": "Cela supprimera définitivement votre compte et toutes les données associées, notamment :",
+    "deleteAcknowledge": "Je comprends que cette action est définitive et irréversible",
+    "typeConfirmationPhrase": "Saisissez la phrase de confirmation",
+    "typeToConfirm": "Tapez \"{{phrase}}\" pour confirmer",
+    "deleting": "Suppression...",
+    "impactStories_one": "{{count}} histoire",
+    "impactStories_other": "{{count}} histoires",
+    "impactAvatarsCredits": "Avatars et crédits d'histoires",
+    "impactSubscription": "Données d'abonnement et de facturation",
+    "libraryPublishWarning": "Les histoires publiées dans la bibliothèque communautaire ne seront pas supprimées automatiquement.",
+    "planLabel": "Forfait {{plan}}",
+    "unlockPremium": "Débloquez les illustrations et toutes les voix",
+    "thanksSupporter": "Merci de soutenir TalePod",
+    "storiesUsed": "Histoires utilisées",
+    "storyCredits": "Crédits d'histoires",
+    "upgradeToPremium": "Passer à Premium",
+    "manageOnWeb": "Gérer l'abonnement sur le web"
   },
   "stories": {
-    "subtitle": "Manage and view all platform stories.",
-    "title": "Stories"
+    "comingSoon": "La liste complète des histoires de la plateforme sera disponible dans une prochaine mise à jour.",
+    "subtitle": "Gérer et consulter toutes les histoires de la plateforme.",
+    "title": "Histoires"
   },
   "subscription": {
-    "title": "Subscription",
-    "planType": "Plan Type",
-    "startDate": "Start Date",
-    "endDate": "End Date",
-    "storiesLeft": "You have {{left}} stories left out of {{max}}",
-    "cancelledUntil": "Enjoy subscription benefits until {{date}}"
+    "title": "Abonnement",
+    "planType": "Type de forfait",
+    "startDate": "Date de début",
+    "endDate": "Date de fin",
+    "storiesLeft": "Il vous reste {{left}} histoires sur {{max}}",
+    "cancelledUntil": "Profitez des avantages de l'abonnement jusqu'au {{date}}"
   },
   "toasts": {
-    "subscriptionCanceled": "Subscription is canceled 💔",
-    "accountDeleted": "Your account has been deleted"
+    "subscriptionCanceled": "L'abonnement est annulé 💔",
+    "accountDeleted": "Votre compte a été supprimé"
   }
 }

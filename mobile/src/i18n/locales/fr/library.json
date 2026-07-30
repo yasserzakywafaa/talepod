@@ -1,7 +1,8 @@
 {
   "page": {
     "libraryTitle": "Bibliothèque d'histoires du soir sur TalePod",
-    "myStoriesTitle": "Mes histoires du soir sur TalePod",
+    "myStoriesTitle": "Mes histoires",
+    "loadMore": "Charger plus",
     "sourceCommunity": "Communauté",
     "sourceTalepod": "par TalePod",
     "filters": "Filtres",

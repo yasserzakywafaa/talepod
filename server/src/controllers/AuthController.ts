@@ -20,18 +20,11 @@ import { DBCollectionsEnum } from "../models/mongoDb";
 import { ObjectId } from "mongodb";
 import { PhoneOtpService } from "../services/PhoneOtpService";
 import { TokenService } from "../services/tokenService";
-import { TokenPair } from "@yasserzakywafaa/server-core";
+import { withMobileTokens } from "@yasserzakywafaa/server-core";
 import passport from "passport";
 import { randomUUID } from "crypto";
-import { isMobileClient } from "../utils/mobileClient";
-import {
-  MOBILE_OAUTH_CODE_HEX_LENGTH,
-  MobileOAuthCodeService,
-} from "../services/mobileOAuthCodeService";
-import {
-  MobileOAuthRedirectService,
-  isAllowedMobileOAuthRedirectUri,
-} from "../services/mobileOAuthRedirectService";
+import { mobileOAuth } from "../services/mobileOAuthService";
+import { googleMobileExchange } from "../services/googleMobileExchangeHandler";
 
 /**
  * Send 200 with HTML that redirects via meta refresh. Used so cookies are set in a
@@ -76,114 +69,11 @@ interface PhoneLoginVerifyRequestBody extends PhoneOtpRequestBody {
   otpCode?: string;
 }
 
-interface GoogleMobileExchangeRequestBody {
-  code?: string;
-}
-
-const MOBILE_OAUTH_STATE_PREFIX = "mobile:";
-
-const isMobileOAuthState = (state: unknown): boolean =>
-  typeof state === "string" && state.startsWith(MOBILE_OAUTH_STATE_PREFIX);
-
-/** Redact one-time codes in redirect URLs for server logs. */
-const redactMobileOAuthUrl = (url: string): string => {
-  const urlWithoutHash = url.split("#")[0];
-  const queryStart = urlWithoutHash.indexOf("?");
-  if (queryStart < 0) {
-    return urlWithoutHash;
-  }
-
-  const base = urlWithoutHash.slice(0, queryStart);
-  const params = new URLSearchParams(urlWithoutHash.slice(queryStart + 1));
-
-  const code = params.get("code");
-  if (code) {
-    params.set(
-      "code",
-      code.length > 8
-        ? `${code.slice(0, 8)}…(${code.length} chars)`
-        : "[redacted]",
-    );
-  }
-
-  return `${base}?${params.toString()}`;
-};
-
-const redirectMobileOAuthResult = async (
-  oauthState: unknown,
-  query: Record<string, string>,
-  res: Response,
-): Promise<boolean> => {
-  if (!isMobileOAuthState(oauthState)) {
-    return false;
-  }
-
-  console.log("📱 Mobile OAuth redirect:", {
-    state:
-      typeof oauthState === "string"
-        ? oauthState.slice(0, 20) + "…"
-        : oauthState,
-    hasCode: Boolean(query.code),
-    hasError: Boolean(query.error),
-    error: query.error,
-    codeLength: query.code?.length,
-  });
-
-  const redirectUrl =
-    await MobileOAuthRedirectService.resolveMobileOAuthRedirect(
-      oauthState as string,
-      query,
-    );
-
-  if (!redirectUrl) {
-    const fallbackUrl = `${CONFIG.MOBILE_OAUTH_SCHEME}://auth/google?${new URLSearchParams(
-      {
-        ...query,
-        error: query.error || "invalid_oauth_session",
-      },
-    ).toString()}`;
-
-    console.error(
-      "❌ Mobile OAuth redirect session not found — using scheme fallback:",
-      {
-        scheme: CONFIG.MOBILE_OAUTH_SCHEME,
-        fallbackUrl: redactMobileOAuthUrl(fallbackUrl),
-      },
-    );
-
-    res.redirect(fallbackUrl);
-    return true;
-  }
-
-  console.log(
-    "✅ Mobile OAuth redirecting app:",
-    redactMobileOAuthUrl(redirectUrl),
-  );
-  res.redirect(redirectUrl);
-  return true;
-};
-
 const OTP_CODE_REGEX = /^\d{4,8}$/;
 
 const sanitizeUserForResponse = (user: User): Omit<User, "refreshToken"> => {
   const { refreshToken, ...safeUser } = user;
   return safeUser;
-};
-
-const withMobileTokens = (
-  req: Request,
-  tokenPair: TokenPair,
-  payload: Record<string, unknown>,
-): Record<string, unknown> => {
-  if (!isMobileClient(req)) {
-    return payload;
-  }
-
-  return {
-    ...payload,
-    accessToken: tokenPair.accessToken,
-    refreshToken: tokenPair.refreshToken,
-  };
 };
 
 const normalizeAndValidatePhoneNumber = (
@@ -206,103 +96,6 @@ const normalizeAndValidatePhoneNumber = (
 const isPhoneAuthConfiguredError = (message: string): boolean =>
   message.toLowerCase().includes("not configured");
 
-const googleMobileExchange = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    console.log("📲 Google mobile exchange received");
-
-    if (!isMobileClient(req)) {
-      console.error(
-        "❌ Google mobile exchange rejected: missing X-Client-Platform header",
-      );
-      return res.status(401).json({
-        message: "This endpoint is only available for mobile clients.",
-      });
-    }
-
-    const { code: rawCode } = req.body as GoogleMobileExchangeRequestBody;
-    if (!rawCode || typeof rawCode !== "string") {
-      console.error(
-        "❌ Google mobile exchange rejected: authorization code missing",
-      );
-      return res
-        .status(400)
-        .json({ message: "Authorization code is required." });
-    }
-
-    const code = rawCode
-      .replace(/[^a-f0-9]/gi, "")
-      .slice(0, MOBILE_OAUTH_CODE_HEX_LENGTH);
-    if (code.length !== MOBILE_OAUTH_CODE_HEX_LENGTH) {
-      console.error("❌ Google mobile exchange rejected: malformed code", {
-        rawCodeLength: rawCode.length,
-        normalizedCodeLength: code.length,
-        rawCodePreview:
-          rawCode.length > 8 ? `${rawCode.slice(0, 8)}…` : rawCode,
-        trailingCharCodes: [...rawCode.slice(MOBILE_OAUTH_CODE_HEX_LENGTH)].map(
-          (char) => char.charCodeAt(0),
-        ),
-      });
-      return res
-        .status(400)
-        .json({ message: "Invalid authorization code format." });
-    }
-
-    console.log("🔑 Google mobile exchange consuming code:", {
-      rawCodeLength: rawCode.length,
-      codeLength: code.length,
-      codePreview: code.length > 8 ? `${code.slice(0, 8)}…` : "[short]",
-    });
-
-    const userId = await MobileOAuthCodeService.consumeCode(code);
-    if (!userId) {
-      console.error(
-        "❌ Google mobile exchange failed: invalid or expired code",
-      );
-      return res.status(401).json({
-        message: "Invalid or expired authorization code.",
-      });
-    }
-
-    const dbUser = (await getDocumentFromDb(
-      new ObjectId(userId),
-      DBCollectionsEnum.users,
-    )) as User | null;
-
-    if (!dbUser) {
-      console.error("❌ Google mobile exchange failed: user not found", {
-        userId,
-      });
-      return res.status(401).json({ message: "User not found." });
-    }
-
-    const tokenPair = TokenService.generateTokenPair({
-      userId: dbUser._id?.toString() || userId,
-      email: dbUser.email,
-    });
-
-    console.log("✅ Google mobile exchange successful:", {
-      userId: dbUser._id?.toString(),
-      email: dbUser.email,
-      hasAccessToken: Boolean(tokenPair.accessToken),
-      hasRefreshToken: Boolean(tokenPair.refreshToken),
-    });
-
-    return res.status(200).json(
-      withMobileTokens(req, tokenPair, {
-        message: "Login successful.",
-        user: sanitizeUserForResponse(dbUser),
-      }),
-    );
-  } catch (error) {
-    console.error("❌ Google mobile exchange error:", error);
-    return res.status(500).json({ message: "Google login failed." });
-  }
-};
-
 const oauth2Google = async (
   req: Request,
   res: Response,
@@ -323,7 +116,7 @@ const oauth2Google = async (
 
     if (
       typeof redirectUriParam !== "string" ||
-      !isAllowedMobileOAuthRedirectUri(redirectUriParam)
+      !mobileOAuth.isAllowedRedirectUri(redirectUriParam)
     ) {
       console.error("❌ Mobile Google OAuth rejected: invalid redirect_uri", {
         redirectUri: redirectUriParam,
@@ -353,12 +146,12 @@ const oauth2Google = async (
   };
 
   if (isMobilePlatform && typeof redirectUriParam === "string") {
-    const stateToken =
-      await MobileOAuthRedirectService.createMobileOAuthState(redirectUriParam);
-    authenticateOptions.state = `${MOBILE_OAUTH_STATE_PREFIX}${stateToken}`;
+    const passportState =
+      await mobileOAuth.buildPassportState(redirectUriParam);
+    authenticateOptions.state = passportState;
 
     console.log("📱 Mobile Google OAuth state saved:", {
-      state: `${MOBILE_OAUTH_STATE_PREFIX}${stateToken.slice(0, 8)}…`,
+      state: `${passportState.slice(0, 16)}…`,
       redirectUri: redirectUriParam,
     });
   }
@@ -375,7 +168,7 @@ const oauth2GoogleCallback = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const isMobileCallback = isMobileOAuthState(req.query.state);
+  const isMobileCallback = mobileOAuth.isMobileOAuthState(req.query.state);
   console.log("🔄 Google OAuth callback received", {
     platform: isMobileCallback ? "mobile" : "web",
     state:
@@ -401,7 +194,7 @@ const oauth2GoogleCallback = async (
           console.error("🔧 Info object:", info);
 
           if (
-            await redirectMobileOAuthResult(
+            await mobileOAuth.redirectMobileOAuthResult(
               req.query.state,
               { error: "google_auth_failed" },
               res,
@@ -433,7 +226,7 @@ const oauth2GoogleCallback = async (
           });
         }
 
-        if (isMobileOAuthState(req.query.state)) {
+        if (mobileOAuth.isMobileOAuthState(req.query.state)) {
           console.log(
             "📱 Mobile Google OAuth callback: issuing one-time code",
             {
@@ -442,7 +235,7 @@ const oauth2GoogleCallback = async (
             },
           );
 
-          const oauthCode = await MobileOAuthCodeService.createCode(
+          const oauthCode = await mobileOAuth.createCode(
             dbUser._id?.toString() || "",
           );
 
@@ -452,7 +245,7 @@ const oauth2GoogleCallback = async (
           });
 
           if (
-            await redirectMobileOAuthResult(
+            await mobileOAuth.redirectMobileOAuthResult(
               req.query.state,
               { code: oauthCode },
               res,
@@ -486,7 +279,7 @@ const oauth2GoogleCallback = async (
       } catch (error) {
         console.error("❌ Google OAuth callback error:", error);
         if (
-          await redirectMobileOAuthResult(
+          await mobileOAuth.redirectMobileOAuthResult(
             req.query.state,
             { error: "server_error" },
             res,

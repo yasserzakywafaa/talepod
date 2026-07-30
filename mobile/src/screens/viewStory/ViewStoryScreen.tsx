@@ -11,8 +11,8 @@ import { ActivityIndicator, Appbar, Text, useTheme } from "react-native-paper";
 
 import { mobileRoutes } from "src/application/routes";
 import type { RootStackParamList } from "src/application/navigation/types";
-import { SafeAreaTopBar } from "src/components/layout/SafeAreaTopBar";
 import { LocaleLayoutBoundary } from "src/components/layout/LocaleLayoutBoundary";
+import { Page } from "src/components/layout/Page";
 import { openMainDrawer } from "src/application/navigation/rootNavigation";
 import {
   useViewStoryManager,
@@ -40,32 +40,32 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
   const isComic =
     story?.format === "comic" && (story.pages?.length ?? 0) > 0;
 
-  return (
-    <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
-      <SafeAreaTopBar>
-        <Appbar.Header
-          statusBarHeight={0}
-          style={[styles.topBarHeader, { backgroundColor: theme.colors.background }]}
-        >
-          <Appbar.BackAction
-            onPress={() => navigation.goBack()}
-            color={theme.colors.primary}
-          />
-          <Appbar.Content
-            title={
-              <Text variant="titleMedium" numberOfLines={1}>
-                {story?.title ?? ""}
-              </Text>
-            }
-          />
-          <Appbar.Action
-            icon="menu"
-            onPress={openMainDrawer}
-            color={theme.colors.primary}
-          />
-        </Appbar.Header>
-      </SafeAreaTopBar>
+  const header = (
+    <Appbar.Header
+      statusBarHeight={0}
+      style={[styles.topBarHeader, { backgroundColor: theme.colors.background }]}
+    >
+      <Appbar.BackAction
+        onPress={() => navigation.goBack()}
+        color={theme.colors.primary}
+      />
+      <Appbar.Content
+        title={
+          <Text variant="titleMedium" numberOfLines={1}>
+            {story?.title ?? ""}
+          </Text>
+        }
+      />
+      <Appbar.Action
+        icon="menu"
+        onPress={openMainDrawer}
+        color={theme.colors.primary}
+      />
+    </Appbar.Header>
+  );
 
+  return (
+    <Page header={header}>
       {isFetching && !story ? (
         <ActivityIndicator style={styles.loader} color={theme.colors.primary} />
       ) : !story ? (
@@ -121,12 +121,11 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
           </ScrollView>
         </LocaleLayoutBoundary>
       )}
-    </View>
+    </Page>
   );
 };
 
 const styles = StyleSheet.create({
-  root: { flex: 1 },
   topBarHeader: { elevation: 0 },
   loader: { marginTop: 48, alignSelf: "center" },
   scroll: { padding: 16, gap: 16, paddingBottom: 40 },

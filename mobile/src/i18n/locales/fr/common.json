@@ -1,21 +1,32 @@
 {
   "account": "Compte",
   "back": "Retour",
+  "close": "Fermer",
+  "cancel": "Annuler",
+  "delete": "Supprimer",
+  "emailSentSuccess": "E-mail envoyé avec succès",
+  "noResults": "Aucun résultat trouvé",
+  "noStoriesFound": "Aucune histoire trouvée",
+  "loggedOut": "Déconnecté",
   "footer": {
     "company": "Entreprise",
     "copyright": "Copyright ©",
     "linksLine": "{{product}} · {{company}} · {{privacy}} · {{terms}}",
-    "mobileTagline": "Chez metriz.ai, nous simplifions les appels d'offres et les BOQ pour les équipes qui doivent passer à l'échelle — la même plateforme sur le web et mobile.",
+    "mobileTagline": "Chez TalePod, nous aidons les parents à créer des histoires du soir magiques et personnalisées en quelques minutes — avec illustrations, narration et contes adaptés à votre enfant.",
     "privacyPolicy": "Politique de confidentialité",
     "product": "Produit",
     "termsAndConditions": "Conditions générales"
   },
-  "logo": "Accueil Metriz",
+  "logo": "Accueil TalePod",
   "nav": {
     "contact": "Nous contacter",
-    "createProject": "Créer un projet",
+    "createProject": "Créer une histoire",
     "features": "Fonctionnalités",
+    "howItWorks": "Comment ça marche",
+    "library": "Bibliothèque",
     "login": "Se connecter",
+    "myStories": "Mes histoires",
+    "pricing": "Tarifs",
     "register": "S'inscrire"
   },
   "settings": {
@@ -28,7 +39,8 @@
     "theme": "Thème",
     "themeDark": "Sombre",
     "themeLight": "Clair",
-    "themeSystem": "Système"
+    "themeSystem": "Système",
+    "version": "Version {{version}}"
   },
   "sheetClose": "Fermer",
   "signedInUser": "Utilisateur connecté"
