@@ -44,15 +44,16 @@ export const SettingsSheetScreen = ({ navigation }: Props) => {
   const handleRefresh = async () => {
     dismiss();
     try {
-      if (!__DEV__ && Updates.isEnabled) {
+      if (Updates.isEnabled) {
+        const check = await Updates.checkForUpdateAsync();
+        if (check.isAvailable) {
+          await Updates.fetchUpdateAsync();
+        }
         await Updates.reloadAsync();
         return;
       }
     } catch (error) {
-      console.warn(
-        "expo-updates reload failed, falling back to DevSettings:",
-        error,
-      );
+      console.warn("Refresh app via expo-updates failed:", error);
     }
 
     if (typeof DevSettings.reload === "function") {
