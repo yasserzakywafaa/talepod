@@ -42,6 +42,8 @@ export const setupMobileAxios = (): void => {
     return config;
   });
 
+  const googleMobileExchangeUrl = END_POINTS.AUTH.GOOGLE_MOBILE_EXCHANGE;
+
   setupAuthAxios({
     instance: api,
     withCredentials: false,
@@ -59,7 +61,9 @@ export const setupMobileAxios = (): void => {
     onLogout: () => {
       void clearStoredAuth();
     },
-    isExcludedAuthUrl,
+    isExcludedAuthUrl: (requestUrl, authUrl) =>
+      isExcludedAuthUrl(requestUrl, authUrl) ||
+      Boolean(requestUrl?.includes(googleMobileExchangeUrl)),
     requestRefresh: async (_instance, refreshUrl) => {
       const { refreshToken } = await getStoredAuth();
       if (!refreshToken) {

@@ -3,6 +3,7 @@ import { randomBytes } from "crypto";
 import { getCollection, DBCollectionsEnum } from "../models/mongoDb";
 
 const CODE_TTL_MS = 2 * 60 * 1000;
+export const MOBILE_OAUTH_CODE_HEX_LENGTH = 64;
 
 type MobileOAuthCodeDocument = {
   code: string;
@@ -44,10 +45,19 @@ const createCode = async (userId: string): Promise<string> => {
   return code;
 };
 
+const normalizeOAuthCode = (raw: string): string | null => {
+  const hex = raw.replace(/[^a-f0-9]/gi, "");
+  if (hex.length !== MOBILE_OAUTH_CODE_HEX_LENGTH) {
+    return null;
+  }
+  return hex.toLowerCase();
+};
+
 const consumeCode = async (code: string): Promise<string | null> => {
   await ensureIndexes();
 
-  if (!code || typeof code !== "string") {
+  const normalizedCode = normalizeOAuthCode(code);
+  if (!normalizedCode) {
     return null;
   }
 
@@ -57,11 +67,23 @@ const consumeCode = async (code: string): Promise<string | null> => {
 
   const minCreatedAt = new Date(Date.now() - CODE_TTL_MS);
   const result = await collection.findOneAndDelete({
-    code,
+    code: normalizedCode,
     createdAt: { $gte: minCreatedAt },
   });
 
-  const document = result as MobileOAuthCodeDocument | null;
+  if (!result) {
+    return null;
+  }
+
+  // MongoDB driver 6+ returns the document directly; older drivers used { value }.
+  const document =
+    typeof result === "object" &&
+    result !== null &&
+    "value" in result &&
+    (result as { value?: MobileOAuthCodeDocument | null }).value
+      ? (result as { value: MobileOAuthCodeDocument }).value
+      : (result as MobileOAuthCodeDocument);
+
   return document?.userId ?? null;
 };
 

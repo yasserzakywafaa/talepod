@@ -1,4 +1,9 @@
-import { AuthProviderEnum, User, UserRole, getInitialUserData } from "../models/types";
+import {
+  AuthProviderEnum,
+  User,
+  UserRole,
+  getInitialUserData,
+} from "../models/types";
 import { NextFunction, Request, Response } from "express";
 import { AuthenticatedRequest } from "../middleware/authMiddleware";
 import { deleteUserAccount } from "../services/userDeletionService";
@@ -19,7 +24,10 @@ import { TokenPair } from "@yasserzakywafaa/server-core";
 import passport from "passport";
 import { randomUUID } from "crypto";
 import { isMobileClient } from "../utils/mobileClient";
-import { MobileOAuthCodeService } from "../services/mobileOAuthCodeService";
+import {
+  MOBILE_OAUTH_CODE_HEX_LENGTH,
+  MobileOAuthCodeService,
+} from "../services/mobileOAuthCodeService";
 import {
   MobileOAuthRedirectService,
   isAllowedMobileOAuthRedirectUri,
@@ -77,6 +85,30 @@ const MOBILE_OAUTH_STATE_PREFIX = "mobile:";
 const isMobileOAuthState = (state: unknown): boolean =>
   typeof state === "string" && state.startsWith(MOBILE_OAUTH_STATE_PREFIX);
 
+/** Redact one-time codes in redirect URLs for server logs. */
+const redactMobileOAuthUrl = (url: string): string => {
+  const urlWithoutHash = url.split("#")[0];
+  const queryStart = urlWithoutHash.indexOf("?");
+  if (queryStart < 0) {
+    return urlWithoutHash;
+  }
+
+  const base = urlWithoutHash.slice(0, queryStart);
+  const params = new URLSearchParams(urlWithoutHash.slice(queryStart + 1));
+
+  const code = params.get("code");
+  if (code) {
+    params.set(
+      "code",
+      code.length > 8
+        ? `${code.slice(0, 8)}…(${code.length} chars)`
+        : "[redacted]",
+    );
+  }
+
+  return `${base}?${params.toString()}`;
+};
+
 const redirectMobileOAuthResult = async (
   oauthState: unknown,
   query: Record<string, string>,
@@ -86,21 +118,47 @@ const redirectMobileOAuthResult = async (
     return false;
   }
 
-  const redirectUrl = await MobileOAuthRedirectService.resolveMobileOAuthRedirect(
-    oauthState as string,
-    query,
-  );
+  console.log("📱 Mobile OAuth redirect:", {
+    state:
+      typeof oauthState === "string"
+        ? oauthState.slice(0, 20) + "…"
+        : oauthState,
+    hasCode: Boolean(query.code),
+    hasError: Boolean(query.error),
+    error: query.error,
+    codeLength: query.code?.length,
+  });
+
+  const redirectUrl =
+    await MobileOAuthRedirectService.resolveMobileOAuthRedirect(
+      oauthState as string,
+      query,
+    );
 
   if (!redirectUrl) {
-    res.redirect(
-      `${CONFIG.MOBILE_OAUTH_SCHEME}://auth/google?${new URLSearchParams({
+    const fallbackUrl = `${CONFIG.MOBILE_OAUTH_SCHEME}://auth/google?${new URLSearchParams(
+      {
         ...query,
         error: query.error || "invalid_oauth_session",
-      }).toString()}`,
+      },
+    ).toString()}`;
+
+    console.error(
+      "❌ Mobile OAuth redirect session not found — using scheme fallback:",
+      {
+        scheme: CONFIG.MOBILE_OAUTH_SCHEME,
+        fallbackUrl: redactMobileOAuthUrl(fallbackUrl),
+      },
     );
+
+    res.redirect(fallbackUrl);
     return true;
   }
 
+  console.log(
+    "✅ Mobile OAuth redirecting app:",
+    redactMobileOAuthUrl(redirectUrl),
+  );
   res.redirect(redirectUrl);
   return true;
 };
@@ -154,19 +212,56 @@ const googleMobileExchange = async (
   next: NextFunction,
 ) => {
   try {
+    console.log("📲 Google mobile exchange received");
+
     if (!isMobileClient(req)) {
+      console.error(
+        "❌ Google mobile exchange rejected: missing X-Client-Platform header",
+      );
       return res.status(401).json({
         message: "This endpoint is only available for mobile clients.",
       });
     }
 
-    const { code } = req.body as GoogleMobileExchangeRequestBody;
-    if (!code || typeof code !== "string") {
-      return res.status(400).json({ message: "Authorization code is required." });
+    const { code: rawCode } = req.body as GoogleMobileExchangeRequestBody;
+    if (!rawCode || typeof rawCode !== "string") {
+      console.error(
+        "❌ Google mobile exchange rejected: authorization code missing",
+      );
+      return res
+        .status(400)
+        .json({ message: "Authorization code is required." });
     }
+
+    const code = rawCode
+      .replace(/[^a-f0-9]/gi, "")
+      .slice(0, MOBILE_OAUTH_CODE_HEX_LENGTH);
+    if (code.length !== MOBILE_OAUTH_CODE_HEX_LENGTH) {
+      console.error("❌ Google mobile exchange rejected: malformed code", {
+        rawCodeLength: rawCode.length,
+        normalizedCodeLength: code.length,
+        rawCodePreview:
+          rawCode.length > 8 ? `${rawCode.slice(0, 8)}…` : rawCode,
+        trailingCharCodes: [...rawCode.slice(MOBILE_OAUTH_CODE_HEX_LENGTH)].map(
+          (char) => char.charCodeAt(0),
+        ),
+      });
+      return res
+        .status(400)
+        .json({ message: "Invalid authorization code format." });
+    }
+
+    console.log("🔑 Google mobile exchange consuming code:", {
+      rawCodeLength: rawCode.length,
+      codeLength: code.length,
+      codePreview: code.length > 8 ? `${code.slice(0, 8)}…` : "[short]",
+    });
 
     const userId = await MobileOAuthCodeService.consumeCode(code);
     if (!userId) {
+      console.error(
+        "❌ Google mobile exchange failed: invalid or expired code",
+      );
       return res.status(401).json({
         message: "Invalid or expired authorization code.",
       });
@@ -178,12 +273,22 @@ const googleMobileExchange = async (
     )) as User | null;
 
     if (!dbUser) {
+      console.error("❌ Google mobile exchange failed: user not found", {
+        userId,
+      });
       return res.status(401).json({ message: "User not found." });
     }
 
     const tokenPair = TokenService.generateTokenPair({
       userId: dbUser._id?.toString() || userId,
       email: dbUser.email,
+    });
+
+    console.log("✅ Google mobile exchange successful:", {
+      userId: dbUser._id?.toString(),
+      email: dbUser.email,
+      hasAccessToken: Boolean(tokenPair.accessToken),
+      hasRefreshToken: Boolean(tokenPair.refreshToken),
     });
 
     return res.status(200).json(
@@ -209,10 +314,21 @@ const oauth2Google = async (
   const redirectUriParam = req.query.redirect_uri;
 
   if (isMobilePlatform) {
+    console.log("📱 Mobile Google OAuth start:", {
+      redirectUri:
+        typeof redirectUriParam === "string"
+          ? redirectUriParam
+          : redirectUriParam,
+    });
+
     if (
       typeof redirectUriParam !== "string" ||
       !isAllowedMobileOAuthRedirectUri(redirectUriParam)
     ) {
+      console.error("❌ Mobile Google OAuth rejected: invalid redirect_uri", {
+        redirectUri: redirectUriParam,
+        scheme: CONFIG.MOBILE_OAUTH_SCHEME,
+      });
       return res.status(400).json({
         message:
           "A valid redirect_uri query parameter is required for mobile Google login.",
@@ -238,16 +354,20 @@ const oauth2Google = async (
 
   if (isMobilePlatform && typeof redirectUriParam === "string") {
     const stateToken =
-      await MobileOAuthRedirectService.createMobileOAuthState(
-        redirectUriParam,
-      );
+      await MobileOAuthRedirectService.createMobileOAuthState(redirectUriParam);
     authenticateOptions.state = `${MOBILE_OAUTH_STATE_PREFIX}${stateToken}`;
+
+    console.log("📱 Mobile Google OAuth state saved:", {
+      state: `${MOBILE_OAUTH_STATE_PREFIX}${stateToken.slice(0, 8)}…`,
+      redirectUri: redirectUriParam,
+    });
   }
 
-  return passport.authenticate(
-    AuthProviderEnum.google,
-    authenticateOptions,
-  )(req, res, next);
+  return passport.authenticate(AuthProviderEnum.google, authenticateOptions)(
+    req,
+    res,
+    next,
+  );
 };
 
 const oauth2GoogleCallback = async (
@@ -255,7 +375,14 @@ const oauth2GoogleCallback = async (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log("🔄 Google OAuth callback received");
+  const isMobileCallback = isMobileOAuthState(req.query.state);
+  console.log("🔄 Google OAuth callback received", {
+    platform: isMobileCallback ? "mobile" : "web",
+    state:
+      typeof req.query.state === "string"
+        ? String(req.query.state).slice(0, 24) + "…"
+        : req.query.state,
+  });
 
   passport.authenticate(
     AuthProviderEnum.google,
@@ -280,6 +407,9 @@ const oauth2GoogleCallback = async (
               res,
             )
           ) {
+            console.error(
+              "❌ Mobile Google OAuth callback failed — redirected error to app",
+            );
             return;
           }
 
@@ -304,9 +434,23 @@ const oauth2GoogleCallback = async (
         }
 
         if (isMobileOAuthState(req.query.state)) {
+          console.log(
+            "📱 Mobile Google OAuth callback: issuing one-time code",
+            {
+              userId: dbUser._id?.toString(),
+              email: dbUser.email,
+            },
+          );
+
           const oauthCode = await MobileOAuthCodeService.createCode(
             dbUser._id?.toString() || "",
           );
+
+          console.log("🔑 Mobile one-time code created:", {
+            codeLength: oauthCode.length,
+            codePreview: `${oauthCode.slice(0, 8)}…`,
+          });
+
           if (
             await redirectMobileOAuthResult(
               req.query.state,
@@ -316,6 +460,10 @@ const oauth2GoogleCallback = async (
           ) {
             return;
           }
+
+          console.error(
+            "❌ Mobile Google OAuth callback: redirectMobileOAuthResult returned false after code creation",
+          );
         }
 
         // Debug: Log token generation
@@ -344,6 +492,9 @@ const oauth2GoogleCallback = async (
             res,
           )
         ) {
+          console.error(
+            "❌ Mobile Google OAuth callback server_error — redirected error to app",
+          );
           return;
         }
         return res.redirect(
@@ -840,10 +991,7 @@ const deleteAccount = async (
     return;
   }
 
-  if (
-    user.role === UserRole.admin ||
-    user.role === UserRole.super_admin
-  ) {
+  if (user.role === UserRole.admin || user.role === UserRole.super_admin) {
     response.status(403).json({
       message: "❌ Admin accounts cannot be deleted via self-service",
     });
@@ -857,9 +1005,7 @@ const deleteAccount = async (
     return;
   }
 
-  if (
-    confirmationPhrase.trim() !== DELETE_ACCOUNT_CONFIRMATION_PHRASE
-  ) {
+  if (confirmationPhrase.trim() !== DELETE_ACCOUNT_CONFIRMATION_PHRASE) {
     response.status(400).json({
       message: `❌ Please type "${DELETE_ACCOUNT_CONFIRMATION_PHRASE}" to confirm`,
     });
