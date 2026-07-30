@@ -1634,8 +1634,10 @@
   resolved "https://registry.npmjs.org/@xmldom/xmldom/-/xmldom-0.9.10.tgz"
   integrity sha512-A9gOqLdi6cV4ibazAjcQufGj0B1y/vDqYrcuP6d/6x8P27gRS8643Dj9o1dEKtB6O7fwxb2FgBmJS2mX7gpvdw==
 
-"@yasserzakywafaa/client-core@file:../../../client-core":
+"@yasserzakywafaa/client-core@0.9.0":
   version "0.9.0"
+  resolved "https://npm.pkg.github.com/download/@yasserzakywafaa/client-core/0.9.0/00d94f8373b02079708ee02e3dc2191346be7a23#00d94f8373b02079708ee02e3dc2191346be7a23"
+  integrity sha512-cAgXTXpZ0ch/X7ebUARXAhKJL56AhK6UeeItswZ0JWD0bHlQ959DqStdGkFwpTAhnHpbXV1fWBZUpCkLgpZTtg==
 
 abort-controller@^3.0.0:
   version "3.0.0"
