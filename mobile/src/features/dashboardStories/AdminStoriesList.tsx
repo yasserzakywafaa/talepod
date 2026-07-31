@@ -14,7 +14,9 @@ import { useAppTheme } from "src/application/theme/useAppTheme";
 import { PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
 import { AppToast } from "src/components/chrome/AppToast";
+import { FiltersButton } from "src/components/brand/FiltersButton";
 import { PillButton } from "src/components/brand/PillButton";
+import { StoryFiltersSheet } from "src/components/brand/StoryFiltersSheet";
 import { AdminEmptyState } from "src/features/dashboardShared/AdminEmptyState";
 import { ConfirmDestructiveDialog } from "src/features/dashboardShared/ConfirmDestructiveDialog";
 import { AdminStoryCard } from "src/features/dashboardStories/AdminStoryCard";
@@ -45,12 +47,25 @@ export const AdminStoriesList = ({
 
   const {
     store: {
-      state: { isFetching, isMutating, stories, paging, feedback },
+      state: {
+        isFetching,
+        isMutating,
+        stories,
+        paging,
+        feedback,
+        filters,
+        isFiltersPanelOpen,
+        activeFiltersCount,
+      },
     },
     manager: {
       setUp,
       handleGetStoriesByPage,
       handleDeleteStory,
+      handleToggleFiltersPanel,
+      handleUpdateFilter,
+      handleApplyFilters,
+      handleClearFilters,
       handleDismissFeedback,
     },
   } = useDashboardStoriesContext();
@@ -86,21 +101,45 @@ export const AdminStoriesList = ({
           { paddingHorizontal: horizontalGutter, maxWidth: contentMaxWidth },
         ]}
         ListHeaderComponent={
-          <Text
-            style={[
-              styles.subtitle,
-              {
-                color: theme.colors.onSurfaceVariant,
-                fontFamily: theme.tokens.fontFamily.regular,
-              },
-            ]}
-          >
-            {subtitle}
-          </Text>
+          <View style={styles.header}>
+            <Text
+              style={[
+                styles.subtitle,
+                {
+                  color: theme.colors.onSurfaceVariant,
+                  fontFamily: theme.tokens.fontFamily.regular,
+                },
+              ]}
+            >
+              {subtitle}
+            </Text>
+            <FiltersButton
+              activeCount={activeFiltersCount}
+              onPress={() => handleToggleFiltersPanel(true)}
+            />
+          </View>
         }
         ListEmptyComponent={
           !isFetching ? (
-            <AdminEmptyState icon="book-off-outline" message={emptyMessage} />
+            <AdminEmptyState
+              icon="book-off-outline"
+              message={
+                activeFiltersCount > 0
+                  ? t("dashboard:stories.emptyFiltered")
+                  : emptyMessage
+              }
+              action={
+                activeFiltersCount > 0 ? (
+                  <PillButton
+                    variant="outlined"
+                    compact
+                    onPress={() => void handleClearFilters()}
+                  >
+                    {t("library:filters.clear")}
+                  </PillButton>
+                ) : null
+              }
+            />
           ) : null
         }
         ListFooterComponent={
@@ -120,6 +159,18 @@ export const AdminStoriesList = ({
             ) : null}
           </View>
         }
+      />
+
+      {/* The same sheet Library and My Stories use — the admin list filters on
+          exactly the fields those lists do, and the server reads one shape. */}
+      <StoryFiltersSheet
+        visible={isFiltersPanelOpen}
+        values={filters}
+        showOriginals
+        onChange={handleUpdateFilter}
+        onApply={() => void handleApplyFilters()}
+        onClear={() => void handleClearFilters()}
+        onDismiss={() => handleToggleFiltersPanel(false)}
       />
 
       <ConfirmDestructiveDialog
@@ -156,6 +207,12 @@ const styles = StyleSheet.create({
     width: "100%",
     alignSelf: "center",
   },
-  subtitle: { fontSize: 14, lineHeight: 20, includeFontPadding: false },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 12,
+  },
+  subtitle: { flex: 1, fontSize: 14, lineHeight: 20, includeFontPadding: false },
   footer: { paddingVertical: 16, alignItems: "center", gap: 12 },
 });

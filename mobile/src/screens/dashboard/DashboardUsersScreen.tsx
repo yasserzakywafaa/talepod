@@ -17,10 +17,12 @@ import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
 import { DashboardAppBar } from "src/components/chrome/DashboardAppBar";
 import { AppToast } from "src/components/chrome/AppToast";
+import { FiltersButton } from "src/components/brand/FiltersButton";
 import { PillButton } from "src/components/brand/PillButton";
 import { AdminEmptyState } from "src/features/dashboardShared/AdminEmptyState";
 import { ConfirmDestructiveDialog } from "src/features/dashboardShared/ConfirmDestructiveDialog";
 import { AdminUserCard } from "src/features/dashboardUsers/AdminUserCard";
+import { AdminUsersFiltersSheet } from "src/features/dashboardUsers/AdminUsersFiltersSheet";
 import {
   DashboardUsersContextProvider,
   useDashboardUsersContext,
@@ -43,7 +45,16 @@ const DashboardUsersContent = ({ navigation }: Props) => {
 
   const {
     store: {
-      state: { isFetching, isMutating, users, paging, feedback },
+      state: {
+        isFetching,
+        isMutating,
+        users,
+        paging,
+        feedback,
+        filters,
+        isFiltersPanelOpen,
+        activeFiltersCount,
+      },
     },
     manager: {
       setUp,
@@ -51,6 +62,10 @@ const DashboardUsersContent = ({ navigation }: Props) => {
       handleBlockUser,
       handleUnblockUser,
       handleDeleteUser,
+      handleToggleFiltersPanel,
+      handleUpdateFilter,
+      handleApplyFilters,
+      handleClearFilters,
       handleDismissFeedback,
     },
   } = useDashboardUsersContext();
@@ -100,25 +115,46 @@ const DashboardUsersContent = ({ navigation }: Props) => {
           { paddingHorizontal: horizontalGutter, maxWidth: contentMaxWidth },
         ]}
         ListHeaderComponent={
-          <Text
-            style={[
-              styles.subtitle,
-              {
-                color: theme.colors.onSurfaceVariant,
-                fontFamily: theme.tokens.fontFamily.regular,
-              },
-            ]}
-          >
-            {totalCount
-              ? t("stories.totalCount", { count: totalCount })
-              : t("admin.users.subtitle")}
-          </Text>
+          <View style={styles.header}>
+            <Text
+              style={[
+                styles.subtitle,
+                {
+                  color: theme.colors.onSurfaceVariant,
+                  fontFamily: theme.tokens.fontFamily.regular,
+                },
+              ]}
+            >
+              {totalCount
+                ? t("stories.totalCount", { count: totalCount })
+                : t("admin.users.subtitle")}
+            </Text>
+            <FiltersButton
+              activeCount={activeFiltersCount}
+              onPress={() => handleToggleFiltersPanel(true)}
+            />
+          </View>
         }
         ListEmptyComponent={
           !isFetching ? (
             <AdminEmptyState
               icon="account-off-outline"
-              message={t("admin.users.empty")}
+              message={
+                activeFiltersCount > 0
+                  ? t("admin.users.emptyFiltered")
+                  : t("admin.users.empty")
+              }
+              action={
+                activeFiltersCount > 0 ? (
+                  <PillButton
+                    variant="outlined"
+                    compact
+                    onPress={() => void handleClearFilters()}
+                  >
+                    {t("library:filters.clear")}
+                  </PillButton>
+                ) : null
+              }
             />
           ) : null
         }
@@ -137,6 +173,15 @@ const DashboardUsersContent = ({ navigation }: Props) => {
             ) : null}
           </View>
         }
+      />
+
+      <AdminUsersFiltersSheet
+        visible={isFiltersPanelOpen}
+        values={filters}
+        onChange={handleUpdateFilter}
+        onApply={() => void handleApplyFilters()}
+        onClear={() => void handleClearFilters()}
+        onDismiss={() => handleToggleFiltersPanel(false)}
       />
 
       <ConfirmDestructiveDialog
@@ -181,6 +226,12 @@ const styles = StyleSheet.create({
     width: "100%",
     alignSelf: "center",
   },
-  subtitle: { fontSize: 14, lineHeight: 20, includeFontPadding: false },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 12,
+  },
+  subtitle: { flex: 1, fontSize: 14, lineHeight: 20, includeFontPadding: false },
   footer: { paddingVertical: 16, alignItems: "center", gap: 12 },
 });

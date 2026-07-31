@@ -7,9 +7,13 @@ import { logApiError } from "src/shared/api/logApiError";
 import type { ApiResponseWithPaging } from "src/shared/types/api";
 import type { User } from "src/shared/types/user";
 import { normalizeUserFromApi } from "src/shared/utils/normalizeUserFromApi";
+import { countActiveFilters } from "src/shared/utils/countActiveFilters";
 import { getApiErrorMessage } from "src/features/dashboardShared/adminFeedback";
 
-import { getDashboardUsersInitialState } from "./state";
+import {
+  getDashboardUsersInitialState,
+  type DashboardUsersFilters,
+} from "./state";
 import type { DashboardUsersStore } from "./store";
 
 export interface DashboardUsersManager {
@@ -18,6 +22,13 @@ export interface DashboardUsersManager {
   handleBlockUser: (userId: string) => Promise<void>;
   handleUnblockUser: (userId: string) => Promise<void>;
   handleDeleteUser: (userId: string) => Promise<void>;
+  handleToggleFiltersPanel: (isOpen: boolean) => void;
+  handleUpdateFilter: <Key extends keyof DashboardUsersFilters>(
+    key: Key,
+    value: DashboardUsersFilters[Key],
+  ) => void;
+  handleApplyFilters: () => Promise<void>;
+  handleClearFilters: () => Promise<void>;
   handleDismissFeedback: () => void;
 }
 
@@ -26,8 +37,9 @@ const { paging: initialPaging } = getDashboardUsersInitialState();
 /**
  * Read-and-moderate port of the web's `useDashboardUsersManager`.
  *
- * Same endpoints and same actions; the only difference is that pages append
- * here — a phone list scrolls rather than flipping through a grid footer.
+ * Two differences, both because this runs on a phone: pages append rather than
+ * replace, and the list can be filtered — walking to page 100 with a thumb is
+ * not a search strategy.
  */
 export const useDashboardUsersManager = (
   store: DashboardUsersStore,
@@ -35,40 +47,53 @@ export const useDashboardUsersManager = (
   const storeRef = useRef(store);
   storeRef.current = store;
 
-  const fetchUsers = useCallback(async (pageNumber: number) => {
-    storeRef.current.setIsFetching(true);
+  const fetchUsers = useCallback(
+    async (pageNumber: number, filters?: DashboardUsersFilters) => {
+      storeRef.current.setIsFetching(true);
+      const active = filters ?? storeRef.current.state.filters;
 
-    try {
-      const { data } = await api.get<ApiResponseWithPaging<User[]>>(
-        END_POINTS.DASHBOARD.USERS.GET_ALL_USERS,
-        {
-          params: { pageNumber, pageSize: initialPaging.pageSize },
-        },
-      );
+      try {
+        const { data } = await api.get<ApiResponseWithPaging<User[]>>(
+          END_POINTS.DASHBOARD.USERS.GET_ALL_USERS,
+          {
+            params: {
+              pageNumber,
+              pageSize: initialPaging.pageSize,
+              search: active.search || undefined,
+              role: active.role || undefined,
+              status: active.status || undefined,
+            },
+          },
+        );
 
-      const users = (data.results ?? []).map(normalizeUserFromApi);
-      if (pageNumber > 1) {
-        storeRef.current.appendUsers(users);
-      } else {
-        storeRef.current.setUsers(users);
+        const users = (data.results ?? []).map(normalizeUserFromApi);
+        if (pageNumber > 1) {
+          storeRef.current.appendUsers(users);
+        } else {
+          storeRef.current.setUsers(users);
+        }
+
+        storeRef.current.setPaging({
+          pageNumber: data.paging?.pageNumber ?? pageNumber,
+          pageSize: initialPaging.pageSize,
+          totalCount: data.paging?.totalCount ?? 0,
+          totalPagesCount: data.paging?.totalPagesCount,
+        });
+      } catch (error) {
+        logApiError("Failed to fetch dashboard users", error);
+        storeRef.current.setFeedback({
+          message: getApiErrorMessage(
+            error,
+            i18n.t("dashboard:errors.loadUsers"),
+          ),
+          variant: "error",
+        });
+      } finally {
+        storeRef.current.setIsFetching(false);
       }
-
-      storeRef.current.setPaging({
-        pageNumber: data.paging?.pageNumber ?? pageNumber,
-        pageSize: initialPaging.pageSize,
-        totalCount: data.paging?.totalCount ?? 0,
-        totalPagesCount: data.paging?.totalPagesCount,
-      });
-    } catch (error) {
-      logApiError("Failed to fetch dashboard users", error);
-      storeRef.current.setFeedback({
-        message: getApiErrorMessage(error, i18n.t("dashboard:errors.loadUsers")),
-        variant: "error",
-      });
-    } finally {
-      storeRef.current.setIsFetching(false);
-    }
-  }, []);
+    },
+    [],
+  );
 
   const setUp = useCallback(async () => {
     await fetchUsers(initialPaging.pageNumber);
@@ -80,6 +105,33 @@ export const useDashboardUsersManager = (
     },
     [fetchUsers],
   );
+
+  const handleToggleFiltersPanel = useCallback((isOpen: boolean) => {
+    storeRef.current.toggleFiltersPanel(isOpen);
+  }, []);
+
+  const handleUpdateFilter = useCallback(
+    <Key extends keyof DashboardUsersFilters>(
+      key: Key,
+      value: DashboardUsersFilters[Key],
+    ) => {
+      storeRef.current.updateFilter(key, value);
+    },
+    [],
+  );
+
+  const handleApplyFilters = useCallback(async () => {
+    const filters = storeRef.current.state.filters;
+    storeRef.current.setActiveFiltersCount(countActiveFilters(filters));
+    storeRef.current.toggleFiltersPanel(false);
+    await fetchUsers(initialPaging.pageNumber, filters);
+  }, [fetchUsers]);
+
+  const handleClearFilters = useCallback(async () => {
+    const filters = storeRef.current.clearFilters();
+    storeRef.current.toggleFiltersPanel(false);
+    await fetchUsers(initialPaging.pageNumber, filters);
+  }, [fetchUsers]);
 
   /**
    * Every mutation reloads from page one rather than patching the row: the
@@ -154,6 +206,10 @@ export const useDashboardUsersManager = (
       handleBlockUser,
       handleUnblockUser,
       handleDeleteUser,
+      handleToggleFiltersPanel,
+      handleUpdateFilter,
+      handleApplyFilters,
+      handleClearFilters,
       handleDismissFeedback,
     }),
     [
@@ -162,6 +218,10 @@ export const useDashboardUsersManager = (
       handleBlockUser,
       handleUnblockUser,
       handleDeleteUser,
+      handleToggleFiltersPanel,
+      handleUpdateFilter,
+      handleApplyFilters,
+      handleClearFilters,
       handleDismissFeedback,
     ],
   );

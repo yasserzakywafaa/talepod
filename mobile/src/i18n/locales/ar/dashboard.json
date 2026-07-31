@@ -81,7 +81,8 @@
     "hasAudio": "يحتوي على سرد صوتي",
     "noAudio": "بدون سرد صوتي",
     "ageValue": "العمر {{age}}",
-    "rowActions": "إجراءات {{title}}"
+    "rowActions": "إجراءات {{title}}",
+    "emptyFiltered": "لا توجد قصص تطابق هذه المرشحات."
   },
   "subscription": {
     "title": "الاشتراك",
@@ -124,7 +125,13 @@
       "storiesCount_two": "{{count}} قصتان",
       "storiesCount_few": "{{count}} قصص",
       "storiesCount_many": "{{count}} قصة",
-      "storiesCount_other": "{{count}} قصة"
+      "storiesCount_other": "{{count}} قصة",
+      "emptyFiltered": "لا يوجد مستخدمون يطابقون هذه المرشحات.",
+      "filterSearch": "بحث",
+      "filterSearchHint": "الاسم أو البريد أو الهاتف أو المعرّف",
+      "filterRole": "نوع الحساب",
+      "filterStatus": "الحالة",
+      "filterAny": "الكل"
     },
     "user": {
       "title": "تفاصيل المستخدم",

@@ -11,7 +11,11 @@ import {
   type AdminRowAction,
 } from "src/features/dashboardShared/AdminRowActionsMenu";
 import { formatAdminDate } from "src/features/dashboardShared/userPresentation";
+import { Gradient } from "src/components/shared/Gradient";
 import type { Story } from "src/features/storyCreator/store/state";
+import { getStoryCoverImageUrl } from "src/shared/utils/getStoryCoverImageUrl";
+
+const mascotBunny = require("../../../assets/images/characters/sleeping_bunny_with_a_moon.webp");
 
 type AdminStoryCardProps = {
   story: Story;
@@ -37,6 +41,7 @@ export const AdminStoryCard = ({
   const theme = useAppTheme();
   const { fontFamily } = theme.tokens;
 
+  const cover = getStoryCoverImageUrl(story);
   const profile = story.profileInfo;
   const author = story.authorProfile;
   const authorName = author
@@ -63,6 +68,32 @@ export const AdminStoryCard = ({
   return (
     <BrandCard onPress={onOpen} style={styles.card}>
       <View style={styles.header}>
+        {/* Same cover the story lists show, at thumbnail size — an admin
+            scanning 232 rows recognises the artwork before the title. */}
+        <View
+          style={[styles.cover, { borderRadius: theme.tokens.radius.sm }]}
+        >
+          {cover ? (
+            <Image
+              source={{ uri: cover }}
+              style={StyleSheet.absoluteFillObject}
+              resizeMode="cover"
+              accessibilityIgnoresInvertColors
+            />
+          ) : (
+            <Gradient
+              colors={theme.tokens.gradients.scene}
+              style={[StyleSheet.absoluteFillObject, styles.coverPlaceholder]}
+            >
+              <Image
+                source={mascotBunny}
+                style={styles.mascot}
+                resizeMode="contain"
+              />
+            </Gradient>
+          )}
+        </View>
+
         <View style={styles.titleWrap}>
           <DisplayText size={16} numberOfLines={2}>
             {story.title}
@@ -145,6 +176,9 @@ export const AdminStoryCard = ({
 const styles = StyleSheet.create({
   card: { width: "100%", padding: 14, gap: 10 },
   header: { flexDirection: "row", alignItems: "center", gap: 10 },
+  cover: { width: 64, height: 48, overflow: "hidden" },
+  coverPlaceholder: { alignItems: "center", justifyContent: "flex-end" },
+  mascot: { width: "60%", height: "86%" },
   titleWrap: { flex: 1 },
   tags: { flexDirection: "row", alignItems: "center", gap: 6, flexWrap: "wrap" },
   footer: {

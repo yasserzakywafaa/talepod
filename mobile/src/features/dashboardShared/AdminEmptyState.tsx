@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -6,10 +7,16 @@ import { useAppTheme } from "src/application/theme/useAppTheme";
 type AdminEmptyStateProps = {
   icon: keyof typeof MaterialCommunityIcons.glyphMap;
   message: string;
+  /** Usually "Clear filters" — an empty filtered list needs a way back. */
+  action?: ReactNode;
 };
 
 /** Quiet placeholder for an admin list that came back empty. */
-export const AdminEmptyState = ({ icon, message }: AdminEmptyStateProps) => {
+export const AdminEmptyState = ({
+  icon,
+  message,
+  action,
+}: AdminEmptyStateProps) => {
   const theme = useAppTheme();
 
   return (
@@ -30,6 +37,7 @@ export const AdminEmptyState = ({ icon, message }: AdminEmptyStateProps) => {
       >
         {message}
       </Text>
+      {action}
     </View>
   );
 };

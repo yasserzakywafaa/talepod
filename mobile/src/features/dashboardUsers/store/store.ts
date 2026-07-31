@@ -5,7 +5,9 @@ import type { User } from "src/shared/types/user";
 import type { AdminFeedback } from "src/features/dashboardShared/adminFeedback";
 
 import {
+  getDashboardUsersInitialFilters,
   getDashboardUsersInitialState,
+  type DashboardUsersFilters,
   type DashboardUsersState,
 } from "./state";
 
@@ -18,6 +20,13 @@ export interface DashboardUsersStore {
   appendUsers: (users: User[]) => void;
   setPaging: (paging: PagingInfo) => void;
   setFeedback: (feedback: AdminFeedback | null) => void;
+  toggleFiltersPanel: (isOpen: boolean) => void;
+  updateFilter: <Key extends keyof DashboardUsersFilters>(
+    key: Key,
+    value: DashboardUsersFilters[Key],
+  ) => void;
+  setActiveFiltersCount: (count: number) => void;
+  clearFilters: () => DashboardUsersFilters;
 }
 
 export const useDashboardUsersStore = (): DashboardUsersStore => {
@@ -42,6 +51,28 @@ export const useDashboardUsersStore = (): DashboardUsersStore => {
   const setFeedback = (feedback: AdminFeedback | null) =>
     setState((prev) => ({ ...prev, feedback }));
 
+  const toggleFiltersPanel = (isFiltersPanelOpen: boolean) =>
+    setState((prev) => ({ ...prev, isFiltersPanelOpen }));
+
+  const updateFilter = <Key extends keyof DashboardUsersFilters>(
+    key: Key,
+    value: DashboardUsersFilters[Key],
+  ) =>
+    setState((prev) => ({
+      ...prev,
+      filters: { ...prev.filters, [key]: value },
+    }));
+
+  const setActiveFiltersCount = (activeFiltersCount: number) =>
+    setState((prev) => ({ ...prev, activeFiltersCount }));
+
+  /** Returns the reset values so the caller can refetch without a re-render. */
+  const clearFilters = () => {
+    const filters = getDashboardUsersInitialFilters();
+    setState((prev) => ({ ...prev, filters, activeFiltersCount: 0 }));
+    return filters;
+  };
+
   return {
     state,
     setIsFetching,
@@ -50,5 +81,9 @@ export const useDashboardUsersStore = (): DashboardUsersStore => {
     appendUsers,
     setPaging,
     setFeedback,
+    toggleFiltersPanel,
+    updateFilter,
+    setActiveFiltersCount,
+    clearFilters,
   };
 };

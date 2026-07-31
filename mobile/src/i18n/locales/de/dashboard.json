@@ -73,7 +73,8 @@
     "hasAudio": "Mit Vertonung",
     "noAudio": "Ohne Vertonung",
     "ageValue": "Alter {{age}}",
-    "rowActions": "Aktionen für {{title}}"
+    "rowActions": "Aktionen für {{title}}",
+    "emptyFiltered": "Keine Geschichten entsprechen diesen Filtern."
   },
   "subscription": {
     "title": "Abonnement",
@@ -112,7 +113,13 @@
       "rowActions": "Aktionen für {{name}}",
       "deleteUserConfirmPlain": "Den Benutzer „{{name}}“ löschen? Das kann nicht rückgängig gemacht werden.",
       "storiesCount_one": "{{count}} Geschichte",
-      "storiesCount_other": "{{count}} Geschichten"
+      "storiesCount_other": "{{count}} Geschichten",
+      "emptyFiltered": "Keine Benutzer entsprechen diesen Filtern.",
+      "filterSearch": "Suche",
+      "filterSearchHint": "Name, E-Mail, Telefon oder ID",
+      "filterRole": "Kontotyp",
+      "filterStatus": "Status",
+      "filterAny": "Beliebig"
     },
     "user": {
       "title": "Benutzerdetails",

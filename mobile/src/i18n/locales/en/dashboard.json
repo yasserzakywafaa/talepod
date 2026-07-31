@@ -73,7 +73,8 @@
     "hasAudio": "Has narration",
     "noAudio": "No narration",
     "ageValue": "Age {{age}}",
-    "rowActions": "Actions for {{title}}"
+    "rowActions": "Actions for {{title}}",
+    "emptyFiltered": "No stories match these filters."
   },
   "subscription": {
     "title": "Subscription",
@@ -112,7 +113,13 @@
       "rowActions": "Actions for {{name}}",
       "deleteUserConfirmPlain": "Delete the user \"{{name}}\"? This cannot be undone.",
       "storiesCount_one": "{{count}} story",
-      "storiesCount_other": "{{count}} stories"
+      "storiesCount_other": "{{count}} stories",
+      "emptyFiltered": "No users match these filters.",
+      "filterSearch": "Search",
+      "filterSearchHint": "Name, email, phone or ID",
+      "filterRole": "Account type",
+      "filterStatus": "Status",
+      "filterAny": "Any"
     },
     "user": {
       "title": "User Details",

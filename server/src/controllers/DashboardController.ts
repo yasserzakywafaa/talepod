@@ -8,9 +8,52 @@ import { NextFunction, Request, Response } from "express";
 import { PageResponse, Story } from "../models/types";
 import { User, UserRole, UserStatus } from "../models/types/user";
 
-import { ObjectId } from "mongodb";
+import { Filter, ObjectId } from "mongodb";
+import { StoryFilters } from "../models/types/story";
 import { getDocumentFromDb } from "../models/mongoDb";
+import { getQuery } from "../models/mongoDb/query";
 import { deleteUserAccount } from "../services/userDeletionService";
+
+/**
+ * Free-text search across the fields an admin would recognise a person by.
+ *
+ * The dashboard lists are paged, and a phone cannot realistically walk to page
+ * 100 — so both list endpoints accept filters rather than always matching
+ * everything.
+ */
+const getUsersQuery = (
+  search: string,
+  role?: string,
+  status?: string
+): Filter<User> => {
+  const conditions: Filter<User>[] = [];
+
+  const term = search.trim();
+  if (term) {
+    // Escaped so a stray "+" in a phone number is not read as a quantifier.
+    const pattern = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const like = { $regex: pattern, $options: "i" };
+    conditions.push({
+      $or: [
+        { "name.givenName": like },
+        { "name.familyName": like },
+        { email: like },
+        { phoneNumber: like },
+        { userId: like },
+      ],
+    } as Filter<User>);
+  }
+
+  if (role && Object.values(UserRole).includes(role as UserRole)) {
+    conditions.push({ role: role as UserRole } as Filter<User>);
+  }
+
+  if (status && Object.values(UserStatus).includes(status as UserStatus)) {
+    conditions.push({ status: status as UserStatus } as Filter<User>);
+  }
+
+  return conditions.length ? { $and: conditions } : {};
+};
 
 export const getUsersCount = async (
   request: Request,
@@ -71,8 +114,14 @@ export const getAllUsers = async (
     const pageNumber = parseInt(request.query.pageNumber as string) || 1;
     const pageSize = parseInt(request.query.pageSize as string) || 10;
 
+    const query = getUsersQuery(
+      (request.query.search as string) || "",
+      request.query.role as string,
+      request.query.status as string
+    );
+
     const { results, paging } = await getPaginatedDocuments<User>(
-      {},
+      query,
       DBCollectionsEnum.users,
       { pageNumber, pageSize },
       {
@@ -251,8 +300,17 @@ export const getAllStories = async (
       },
     ];
 
+    // Same filter shape the story lists already send, so the dashboard can
+    // reuse the app's filters panel rather than inventing a second language.
+    const hasActiveFilters: boolean = request.query.hasActiveFilters === "true";
+    const filters: StoryFilters = JSON.parse(
+      (request.query.filters as string) || "{}"
+    );
+    // `getQuery` is typed against its own condition shape, not the collection.
+    const query = (hasActiveFilters ? getQuery(filters) : {}) as Filter<Story>;
+
     const { results, paging } = await getPaginatedDocuments<Story>(
-      {},
+      query,
       DBCollectionsEnum.stories,
       { pageNumber, pageSize },
       {

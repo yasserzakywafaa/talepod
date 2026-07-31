@@ -73,7 +73,8 @@
     "hasAudio": "Avec narration",
     "noAudio": "Sans narration",
     "ageValue": "Âge {{age}}",
-    "rowActions": "Actions pour {{title}}"
+    "rowActions": "Actions pour {{title}}",
+    "emptyFiltered": "Aucune histoire ne correspond à ces filtres."
   },
   "subscription": {
     "title": "Abonnement",
@@ -112,7 +113,13 @@
       "rowActions": "Actions pour {{name}}",
       "deleteUserConfirmPlain": "Supprimer l'utilisateur « {{name}} » ? Cette action est irréversible.",
       "storiesCount_one": "{{count}} histoire",
-      "storiesCount_other": "{{count}} histoires"
+      "storiesCount_other": "{{count}} histoires",
+      "emptyFiltered": "Aucun utilisateur ne correspond à ces filtres.",
+      "filterSearch": "Rechercher",
+      "filterSearchHint": "Nom, e-mail, téléphone ou ID",
+      "filterRole": "Type de compte",
+      "filterStatus": "Statut",
+      "filterAny": "Tous"
     },
     "user": {
       "title": "Détails de l'utilisateur",
