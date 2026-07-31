@@ -9,21 +9,17 @@ import { MainDrawerContent } from "src/components/paper/MainDrawerContent";
 import { MainShellScreen } from "src/application/navigation/MainShellScreen";
 import type { MainShellStackParamList } from "src/application/navigation/MainShellStackNavigator";
 import { useApplicationContext } from "src/application/store/Provider";
-import { ContactScreen } from "src/screens/marketing/ContactScreen";
 import { HomeMarketingScreen } from "src/screens/marketing/HomeMarketingScreen";
-import { LibraryScreen } from "src/screens/marketing/LibraryScreen";
-import { PricingScreen } from "src/screens/marketing/PricingScreen";
-import { PrivacyPolicyScreen } from "src/screens/marketing/PrivacyPolicyScreen";
-import { TermsAndConditionsScreen } from "src/screens/marketing/TermsAndConditionsScreen";
 
+/**
+ * The drawer hosts two things: the app shell and the marketing landing page.
+ *
+ * Library, contact, pricing and the legal pages are *not* here — they belong
+ * to the shell stack, so they keep the tab bar and can push the story reader.
+ */
 export type MainDrawerParamList = {
   [mobileRoutes.main.shell]: NavigatorScreenParams<MainShellStackParamList>;
   [mobileRoutes.public.home]: undefined;
-  [mobileRoutes.public.pricing]: undefined;
-  [mobileRoutes.public.contact]: undefined;
-  [mobileRoutes.public.library]: undefined;
-  [mobileRoutes.public.privacyPolicy]: undefined;
-  [mobileRoutes.public.termsAndConditions]: undefined;
 };
 
 const Drawer = createDrawerNavigator<MainDrawerParamList>();
@@ -72,26 +68,6 @@ export const MainDrawerNavigator = () => {
       <Drawer.Screen
         name={mobileRoutes.public.home}
         component={HomeMarketingScreen}
-      />
-      <Drawer.Screen
-        name={mobileRoutes.public.pricing}
-        component={PricingScreen}
-      />
-      <Drawer.Screen
-        name={mobileRoutes.public.contact}
-        component={ContactScreen}
-      />
-      <Drawer.Screen
-        name={mobileRoutes.public.library}
-        component={LibraryScreen}
-      />
-      <Drawer.Screen
-        name={mobileRoutes.public.privacyPolicy}
-        component={PrivacyPolicyScreen}
-      />
-      <Drawer.Screen
-        name={mobileRoutes.public.termsAndConditions}
-        component={TermsAndConditionsScreen}
       />
     </Drawer.Navigator>
   );

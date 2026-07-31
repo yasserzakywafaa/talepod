@@ -1,16 +1,16 @@
 import { StyleSheet } from "react-native";
-import type { DrawerScreenProps } from "@react-navigation/drawer";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { Card, Text, useTheme } from "react-native-paper";
 
 import { mobileRoutes } from "src/application/routes";
-import type { MainDrawerParamList } from "src/application/navigation/MainDrawerNavigator";
+import type { MainShellStackParamList } from "src/application/navigation/MainShellStackNavigator";
 import { Page, PageBody } from "src/components/layout/Page";
 import { useDrawerPageHeader } from "src/components/layout/useDrawerPageHeader";
 import { useScreenTypography } from "src/components/layout/useScreenTypography";
 
-type Props = DrawerScreenProps<
-  MainDrawerParamList,
+type Props = NativeStackScreenProps<
+  MainShellStackParamList,
   typeof mobileRoutes.public.pricing
 >;
 

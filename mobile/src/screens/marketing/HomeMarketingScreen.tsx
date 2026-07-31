@@ -7,6 +7,7 @@ import { mobileRoutes } from "src/application/routes";
 import type { MainDrawerParamList } from "src/application/navigation/MainDrawerNavigator";
 import {
   navigateToMainMyStories,
+  navigateToPublicMarketingScreen,
   openRootSheet,
 } from "src/application/navigation/rootNavigation";
 import { useApplicationContext } from "src/application/store/Provider";
@@ -73,7 +74,9 @@ export const HomeMarketingScreen = ({ navigation }: Props) => {
             <PillButton
               variant="text"
               color="#FFFFFF"
-              onPress={() => navigation.navigate(mobileRoutes.public.pricing)}
+              onPress={() =>
+                navigateToPublicMarketingScreen(mobileRoutes.public.pricing)
+              }
             >
               {t("home.ctaPricing")}
             </PillButton>

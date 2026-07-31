@@ -1,9 +1,12 @@
 import {
   DrawerActions,
   createNavigationContainerRef,
+  type NavigatorScreenParams,
 } from "@react-navigation/native";
 
 import { mobileRoutes, rootRoutes, type DashboardRouteName, type PublicMarketingScreenRoute, type RootSheetRouteName } from "src/application/routes";
+import type { MainDrawerParamList } from "src/application/navigation/MainDrawerNavigator";
+import type { MainShellStackParamList } from "src/application/navigation/MainShellStackNavigator";
 import {
   buildMainDrawerShellState,
   buildMainShellTabParams,
@@ -26,9 +29,6 @@ const whenReady = (run: () => void) => {
     run();
   }
 };
-
-const mainShellMyStoriesParams = () =>
-  buildMainShellTabParams(mobileRoutes.tabs.myStories);
 
 const resetToMainMyStories = () => ({
   name: rootRoutes.main,
@@ -79,23 +79,24 @@ export const navigateToMainProfileTab = () => {
   navigateToMainTab(mobileRoutes.tabs.profile);
 };
 
-export const openMainDrawer = () => {
+/** Push a screen onto the main shell stack (library, contact, story reader…). */
+const navigateToShellScreen = <RouteName extends keyof MainShellStackParamList>(
+  screen: RouteName,
+  params?: MainShellStackParamList[RouteName],
+) => {
   whenReady(() => {
-    const state = rootNavigationRef.getRootState();
-    const onMain = state.routes[state.index]?.name === rootRoutes.main;
-    if (!onMain) {
-      rootNavigationRef.navigate(rootRoutes.main, mainShellMyStoriesParams());
-    }
-    setTimeout(() => {
-      rootNavigationRef.dispatch(DrawerActions.openDrawer());
-    }, 100);
+    closeMainDrawer();
+    rootNavigationRef.navigate(rootRoutes.main, {
+      screen: mobileRoutes.main.shell,
+      // `{ screen, params }` is well typed for each concrete RouteName, but TS
+      // can't narrow the nested union while RouteName is still generic.
+      params: { screen, params },
+    } as NavigatorScreenParams<MainDrawerParamList>);
   });
 };
 
 export const navigateToViewStory = (slug: string) => {
-  whenReady(() => {
-    rootNavigationRef.navigate(mobileRoutes.authenticated.viewStory, { slug });
-  });
+  navigateToShellScreen(mobileRoutes.authenticated.viewStory, { slug });
 };
 
 export const navigateToDashboard = (
@@ -115,23 +116,18 @@ export const navigateToMarketingHome = () => {
   });
 };
 
-/** Library, contact, pricing, privacy, and terms — drawer (guest) or shell stack (signed in). */
+/**
+ * Library, contact, pricing, privacy, and terms.
+ *
+ * These live in the shell stack for everyone. They used to be duplicated as
+ * drawer screens for guests, which meant the same nav item landed on two
+ * different screens — one with the tab bar, one without — depending on which
+ * control you tapped, and left stories unreachable from the guest copy.
+ */
 export const navigateToPublicMarketingScreen = (
   screen: PublicMarketingScreenRoute,
-  isAuthenticated: boolean,
 ) => {
-  whenReady(() => {
-    closeMainDrawer();
-    if (isAuthenticated) {
-      rootNavigationRef.navigate(rootRoutes.main, {
-        screen: mobileRoutes.main.shell,
-        params: { screen },
-      });
-      return;
-    }
-
-    rootNavigationRef.navigate(rootRoutes.main, { screen });
-  });
+  navigateToShellScreen(screen);
 };
 
 export const resetAfterLogin = (_user?: User | null) => {

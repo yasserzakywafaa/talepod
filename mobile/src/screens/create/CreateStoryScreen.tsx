@@ -4,13 +4,13 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { Snackbar, TextInput } from "react-native-paper";
 
-import { mobileRoutes, rootRoutes } from "src/application/routes";
-import type { RootStackParamList } from "src/application/navigation/types";
+import { mobileRoutes } from "src/application/routes";
+import type { CreateTabStackParamList } from "src/application/navigation/CreateTabStackNavigator";
 import {
   openRootSheet,
   navigateToMainMyStories,
   navigateToMainMyAvatars,
-  rootNavigationRef,
+  navigateToPublicMarketingScreen,
 } from "src/application/navigation/rootNavigation";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useAppTheme } from "src/application/theme/useAppTheme";
@@ -50,7 +50,7 @@ type Props = {
   embeddedInMainShell?: boolean;
 } & Partial<
   NativeStackScreenProps<
-    RootStackParamList,
+    CreateTabStackParamList,
     typeof mobileRoutes.authenticated.create
   >
 >;
@@ -135,10 +135,7 @@ export const CreateStoryScreen = ({
       return;
     }
     if (hasMaxStoriesLimit) {
-      rootNavigationRef.navigate(rootRoutes.main, {
-        screen: mobileRoutes.main.shell,
-        params: { screen: mobileRoutes.public.pricing },
-      });
+      navigateToPublicMarketingScreen(mobileRoutes.public.pricing);
       return;
     }
     try {

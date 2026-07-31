@@ -11,7 +11,10 @@ import {
   buildMainShellTabParams,
   type MainTabRouteName,
 } from "src/application/navigation/mainShellNavigation";
-import { openRootSheet } from "src/application/navigation/rootNavigation";
+import {
+  navigateToCreateStory,
+  openRootSheet,
+} from "src/application/navigation/rootNavigation";
 import { useDrawerSafeAreaPadding } from "src/components/layout/useDrawerSafeAreaPadding";
 import { LocaleLayoutBoundary } from "src/components/layout/LocaleLayoutBoundary";
 import { Logo } from "src/components/paper/Logo";
@@ -80,24 +83,18 @@ export const MainDrawerContent = (props: DrawerContentComponentProps) => {
             />
           ) : null}
 
+          {/* Signed in or not, these are the shell's copies — one route per
+              page, so the tab bar stays put and stories stay reachable. */}
           <List.Item
             title={t("nav.library")}
             left={(p) => <List.Icon {...p} icon="book-open-variant" />}
-            onPress={() =>
-              isAuthenticated
-                ? goShell(mobileRoutes.public.library)
-                : navigateDrawer(mobileRoutes.public.library)
-            }
+            onPress={() => goShell(mobileRoutes.public.library)}
             titleStyle={{ color: theme.colors.onSurface }}
           />
           <List.Item
             title={t("nav.contact")}
             left={(p) => <List.Icon {...p} icon="email-outline" />}
-            onPress={() =>
-              isAuthenticated
-                ? goShell(mobileRoutes.public.contact)
-                : navigateDrawer(mobileRoutes.public.contact)
-            }
+            onPress={() => goShell(mobileRoutes.public.contact)}
             titleStyle={{ color: theme.colors.onSurface }}
           />
           {isAuthenticated ? (
@@ -173,9 +170,11 @@ export const MainDrawerContent = (props: DrawerContentComponentProps) => {
                     color={theme.colors.primary}
                   />
                 )}
+                // Creating is public: guests fill in the whole form and are
+                // only asked to sign in when they press Generate.
                 onPress={() => {
                   navigation.closeDrawer();
-                  openRootSheet(mobileRoutes.public.login);
+                  navigateToCreateStory();
                 }}
                 titleStyle={{ color: theme.colors.onSurface }}
               />

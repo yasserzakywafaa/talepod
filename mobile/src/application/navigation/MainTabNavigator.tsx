@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { mobileRoutes } from "src/application/routes";
+import { useApplicationContext } from "src/application/store/Provider";
 import { CreateTabStackNavigator } from "src/application/navigation/CreateTabStackNavigator";
 import { ProfileScreen } from "src/screens/profile/ProfileScreen";
 import { MyAvatarsScreen } from "src/screens/myAvatars/MyAvatarsScreen";
@@ -16,10 +17,27 @@ export type MainTabParamList = {
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
 export const MainTabNavigator = () => {
+  const {
+    store: {
+      state: {
+        auth: { isAuthenticated },
+      },
+    },
+  } = useApplicationContext();
+
+  /**
+   * The tab under everything else in the shell. My Stories would fetch on
+   * mount and sit behind Library as the back target — neither of which makes
+   * sense for a guest, whose home in the shell is the story creator.
+   */
+  const initialRouteName = isAuthenticated
+    ? mobileRoutes.tabs.myStories
+    : mobileRoutes.tabs.create;
+
   return (
     <Tab.Navigator
       id="MainTabs"
-      initialRouteName={mobileRoutes.tabs.myStories}
+      initialRouteName={initialRouteName}
       screenOptions={{
         headerShown: false,
         tabBarStyle: { display: "none" },

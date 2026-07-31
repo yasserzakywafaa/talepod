@@ -10,7 +10,6 @@ import { formSheetScreenOptions } from "src/application/navigation/formSheetScre
 import type { RootStackParamList } from "src/application/navigation/types";
 import { LoginScreen } from "src/screens/LoginScreen";
 import { RegisterScreen } from "src/screens/marketing/RegisterScreen";
-import { ViewStoryScreen } from "src/screens/viewStory/ViewStoryScreen";
 import { AccountSheetScreen } from "src/screens/sheets/AccountSheetScreen";
 import { SettingsSheetScreen } from "src/screens/sheets/SettingsSheetScreen";
 
@@ -43,11 +42,6 @@ const AppContent = () => {
       <Stack.Screen
         name={rootRoutes.dashboard}
         component={ProtectedDashboardNavigator}
-      />
-      <Stack.Screen
-        name={mobileRoutes.authenticated.viewStory}
-        component={ViewStoryScreen}
-        options={{ headerShown: false }}
       />
       <Stack.Group screenOptions={formSheetScreenOptions}>
         <Stack.Screen
