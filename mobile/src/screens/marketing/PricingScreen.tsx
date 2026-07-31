@@ -21,6 +21,8 @@ import {
   type PricingPlan,
 } from "src/features/pricing/usePricingPlans";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
+import { useApplicationContext } from "src/application/store/Provider";
+import { navigateToCreateStory } from "src/application/navigation/rootNavigation";
 
 type Props = NativeStackScreenProps<
   MainShellStackParamList,
@@ -131,20 +133,104 @@ type PlanCardProps = {
   display: { amount: number; billedYearly: boolean; yearlyTotal: number };
 };
 
+type PlanCardCta = {
+  label: string;
+  disabled: boolean;
+  variant: "contained" | "outlined";
+  icon?: keyof typeof MaterialCommunityIcons.glyphMap;
+  trailingIcon?: keyof typeof MaterialCommunityIcons.glyphMap;
+  onPress: () => void;
+};
+
+const getPlanCardCta = (
+  plan: PricingPlan,
+  isAuthenticated: boolean,
+  isPaidUser: boolean,
+  subscriptionType: SubscriptionPlanEnum | undefined,
+  t: (key: string) => string,
+): PlanCardCta => {
+  const isPremiumUser = subscriptionType === SubscriptionPlanEnum.Premium;
+  const isFreeUser =
+    isAuthenticated &&
+    (subscriptionType === SubscriptionPlanEnum.Free || !isPaidUser);
+
+  if (plan.isFree) {
+    return {
+      label: t("pricing.cta.createStories"),
+      disabled: false,
+      variant: isAuthenticated ? "outlined" : "contained",
+      icon: "auto-fix",
+      onPress: navigateToCreateStory,
+    };
+  }
+
+  if (!isAuthenticated) {
+    return {
+      label: t("pricing.cta.createStories"),
+      disabled: false,
+      variant: "outlined",
+      icon: "auto-fix",
+      onPress: navigateToCreateStory,
+    };
+  }
+
+  if (isPremiumUser) {
+    return {
+      label: t("pricing.cta.currentPlan"),
+      disabled: true,
+      variant: "outlined",
+      onPress: () => undefined,
+    };
+  }
+
+  if (isFreeUser) {
+    return {
+      label: t("pricing.cta.upgrade"),
+      disabled: false,
+      variant: "contained",
+      trailingIcon: "open-in-new",
+      onPress: () => {
+        void Linking.openURL(PRICING_URL);
+      },
+    };
+  }
+
+  return {
+    label: t("pricing.cta.upgrade"),
+    disabled: false,
+    variant: "outlined",
+    trailingIcon: "open-in-new",
+    onPress: () => {
+      void Linking.openURL(PRICING_URL);
+    },
+  };
+};
+
 const PlanCard = ({ plan, currency, display }: PlanCardProps) => {
   const { t } = useTranslation("page");
   const theme = useAppTheme();
-  const { fontFamily, brand } = theme.tokens;
+  const {
+    store: {
+      state: { auth },
+    },
+  } = useApplicationContext();
 
+  const { fontFamily, brand } = theme.tokens;
   const isPremium = plan.title === SubscriptionPlanEnum.Premium;
   const hasPrice = !plan.isFree && display.amount > 0;
+  const cta = getPlanCardCta(
+    plan,
+    auth.isAuthenticated,
+    auth.user?.isPaidUser ?? false,
+    auth.user?.subscription.type,
+    t,
+  );
 
   const billingLine = plan.isFree
     ? t("pricing.freeForever")
     : display.billedYearly
       ? t("pricing.billedYearly", { currency, total: display.yearlyTotal })
       : t("pricing.billedMonthly");
-
   return (
     <BrandCard selected={isPremium} style={styles.card}>
       <View style={styles.cardHeader}>
@@ -224,13 +310,15 @@ const PlanCard = ({ plan, currency, display }: PlanCardProps) => {
       ))}
 
       <PillButton
-        variant={isPremium ? "contained" : "outlined"}
-        icon="open-in-new"
+        variant={cta.variant}
+        icon={cta.icon}
+        trailingIcon={cta.trailingIcon}
+        disabled={cta.disabled}
         fullWidth
-        onPress={() => void Linking.openURL(PRICING_URL)}
+        onPress={cta.onPress}
         style={styles.cta}
       >
-        {plan.isFree ? t("pricing.cta.createStories") : t("pricing.openOnWeb")}
+        {cta.label}
       </PillButton>
     </BrandCard>
   );

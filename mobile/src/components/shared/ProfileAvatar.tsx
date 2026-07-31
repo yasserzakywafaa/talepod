@@ -8,6 +8,8 @@ export interface ProfileAvatarProps {
   size?: number;
 }
 
+const BORDER_WIDTH = 4;
+
 export const ProfileAvatar = ({ user, size = 112 }: ProfileAvatarProps) => {
   const theme = useTheme();
 
@@ -15,13 +17,29 @@ export const ProfileAvatar = ({ user, size = 112 }: ProfileAvatarProps) => {
     `${user.name.givenName?.charAt(0) ?? ""}${user.name.familyName?.charAt(0) ?? ""}`.trim() ||
     "?";
 
+  const avatarStyle = [
+    styles.avatar,
+    {
+      borderRadius: size / 2,
+      borderWidth: BORDER_WIDTH,
+      borderColor: theme.colors.primary,
+    },
+  ];
+
   const avatar = user.picture ? (
-    <Avatar.Image size={size} source={{ uri: user.picture }} style={styles.square} />
+    <Avatar.Image
+      size={size}
+      source={{ uri: user.picture }}
+      style={avatarStyle}
+    />
   ) : (
     <Avatar.Text
       size={size}
       label={initials}
-      style={[styles.square, { backgroundColor: theme.colors.primaryContainer }]}
+      style={[
+        avatarStyle,
+        { backgroundColor: theme.colors.primaryContainer },
+      ]}
       labelStyle={{ color: theme.colors.onPrimaryContainer }}
     />
   );
@@ -31,7 +49,7 @@ export const ProfileAvatar = ({ user, size = 112 }: ProfileAvatarProps) => {
   }
 
   return (
-    <View>
+    <View style={{ width: size + BORDER_WIDTH * 2, height: size + BORDER_WIDTH * 2 }}>
       <Badge
         visible
         size={28}
@@ -45,8 +63,9 @@ export const ProfileAvatar = ({ user, size = 112 }: ProfileAvatarProps) => {
 };
 
 const styles = StyleSheet.create({
-  square: {
-    borderRadius: 12,
+  avatar: {
+    overflow: "hidden",
+    backgroundColor: "transparent",
   },
   badge: {
     position: "absolute",

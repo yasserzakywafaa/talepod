@@ -1,4 +1,11 @@
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { useAppTheme } from "src/application/theme/useAppTheme";
@@ -6,12 +13,8 @@ import { Gradient } from "src/components/shared/Gradient";
 import { DisplayText } from "src/components/brand/DisplayText";
 import { ArtStyles } from "src/shared/artStyles";
 
-/**
- * The samples are 4:3 (640×480). A near-square tile with `cover` cropped a
- * fifth off each side and pushed the child and fox out of frame, leaving just
- * canopy — so the tile carries the artwork's own ratio and nothing is lost.
- */
-const TILE_WIDTH = 200;
+/** Matches web `ArtStyleChooser` tile size (160×150). */
+const TILE_WIDTH = 160;
 const TILE_HEIGHT = 150;
 
 type ArtStyleChooserProps = {
@@ -20,9 +23,8 @@ type ArtStyleChooserProps = {
 };
 
 /**
- * Visual art-style picker — the native read of web `ArtStyleChooser`: a
- * horizontal rail of sample renders with a dark scrim, serif label and a honey
- * check on the active tile.
+ * Visual art-style picker — mirrors web `ArtStyleChooser`: a horizontal rail of
+ * sample renders with a bottom scrim, overlaid serif label and a honey check.
  */
 export const ArtStyleChooser = ({ value, onChange }: ArtStyleChooserProps) => {
   const theme = useAppTheme();
@@ -49,7 +51,7 @@ export const ArtStyleChooser = ({ value, onChange }: ArtStyleChooserProps) => {
               selected ? glowHoney : shadow.xs,
               {
                 borderRadius: radius.lg,
-                borderWidth: selected ? 1.5 : StyleSheet.hairlineWidth,
+                borderWidth: selected ? 1.5 : 1,
                 borderColor: selected
                   ? brand.honey[400]
                   : theme.colors.outlineVariant,
@@ -57,22 +59,30 @@ export const ArtStyleChooser = ({ value, onChange }: ArtStyleChooserProps) => {
               },
             ]}
           >
-            <View style={[styles.clip, { borderRadius: radius.lg - 1 }]}>
-              {/* Swatch shows through until the sample render decodes. */}
-              <Gradient
-                colors={style.swatch}
-                style={StyleSheet.absoluteFillObject}
-              />
-              <Image
-                source={style.thumbnail}
-                style={StyleSheet.absoluteFillObject}
-                resizeMode="cover"
-                accessibilityIgnoresInvertColors
-              />
+            <Gradient
+              colors={style.swatch}
+              style={StyleSheet.absoluteFillObject}
+            />
+            <Image
+              source={style.thumbnail}
+              style={styles.thumbnail}
+              resizeMode="contain"
+              accessibilityIgnoresInvertColors
+            />
 
-              {/* Bottom scrim so the label stays legible on any artwork —
-                  same three stops the web uses, kept short enough to sit
-                  behind the caption rather than over the illustration. */}
+            {selected ? (
+              <View
+                style={[styles.check, { backgroundColor: brand.honey[400] }]}
+              >
+                <MaterialCommunityIcons
+                  name="check"
+                  size={14}
+                  color="#FFFFFF"
+                />
+              </View>
+            ) : null}
+
+            <View style={styles.captionOverlay}>
               <Gradient
                 colors={
                   [
@@ -81,11 +91,10 @@ export const ArtStyleChooser = ({ value, onChange }: ArtStyleChooserProps) => {
                     "rgba(0,0,0,0.85)",
                   ] as const
                 }
-                style={styles.scrim}
+                style={StyleSheet.absoluteFillObject}
               />
-
               <View style={styles.caption}>
-                <DisplayText size={15} color="#FFFFFF" numberOfLines={1}>
+                <DisplayText size={14} color="#FFFFFF" numberOfLines={1}>
                   {style.label}
                 </DisplayText>
                 <Text
@@ -98,21 +107,6 @@ export const ArtStyleChooser = ({ value, onChange }: ArtStyleChooserProps) => {
                   {style.description}
                 </Text>
               </View>
-
-              {selected ? (
-                <View
-                  style={[
-                    styles.check,
-                    { backgroundColor: brand.honey[400] },
-                  ]}
-                >
-                  <MaterialCommunityIcons
-                    name="check"
-                    size={14}
-                    color="#FFFFFF"
-                  />
-                </View>
-              ) : null}
             </View>
           </Pressable>
         );
@@ -128,37 +122,38 @@ const styles = StyleSheet.create({
     height: TILE_HEIGHT,
     overflow: "hidden",
   },
-  clip: { flex: 1, overflow: "hidden" },
-  scrim: {
+  thumbnail: {
+    objectFit: "cover",
+    width: "100%",
+    height: "100%",
+  },
+  captionOverlay: {
     position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
-    height: "48%",
   },
   caption: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
+    paddingTop: 28,
     paddingHorizontal: 12,
     paddingBottom: 12,
     gap: 2,
   },
   description: {
     fontSize: 11,
-    lineHeight: 15,
-    color: "rgba(255,255,255,0.82)",
+    lineHeight: 14,
+    color: "rgba(255,255,255,0.8)",
     includeFontPadding: false,
   },
   check: {
     position: "absolute",
     top: 8,
     right: 8,
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
     alignItems: "center",
     justifyContent: "center",
+    zIndex: 1,
   },
 });
