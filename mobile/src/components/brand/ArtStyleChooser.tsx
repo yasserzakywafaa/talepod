@@ -6,8 +6,13 @@ import { Gradient } from "src/components/shared/Gradient";
 import { DisplayText } from "src/components/brand/DisplayText";
 import { ArtStyles } from "src/shared/artStyles";
 
-const TILE_WIDTH = 168;
-const TILE_HEIGHT = 158;
+/**
+ * The samples are 4:3 (640×480). A near-square tile with `cover` cropped a
+ * fifth off each side and pushed the child and fox out of frame, leaving just
+ * canopy — so the tile carries the artwork's own ratio and nothing is lost.
+ */
+const TILE_WIDTH = 200;
+const TILE_HEIGHT = 150;
 
 type ArtStyleChooserProps = {
   value: string;
@@ -65,9 +70,17 @@ export const ArtStyleChooser = ({ value, onChange }: ArtStyleChooserProps) => {
                 accessibilityIgnoresInvertColors
               />
 
-              {/* Bottom scrim so the label stays legible on any artwork. */}
+              {/* Bottom scrim so the label stays legible on any artwork —
+                  same three stops the web uses, kept short enough to sit
+                  behind the caption rather than over the illustration. */}
               <Gradient
-                colors={["rgba(0,0,0,0)", "#000000"] as const}
+                colors={
+                  [
+                    "rgba(0,0,0,0)",
+                    "rgba(0,0,0,0.55)",
+                    "rgba(0,0,0,0.85)",
+                  ] as const
+                }
                 style={styles.scrim}
               />
 
@@ -121,8 +134,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    height: "62%",
-    opacity: 0.85,
+    height: "48%",
   },
   caption: {
     position: "absolute",

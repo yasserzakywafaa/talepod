@@ -17,7 +17,7 @@ import { BrandBadge } from "src/components/brand/BrandBadge";
 import { DisplayText } from "src/components/brand/DisplayText";
 import { PillButton } from "src/components/brand/PillButton";
 import { Gradient } from "src/components/shared/Gradient";
-import { MarketingAppBar } from "src/components/paper/MarketingAppBar";
+import { MarketingAppBar } from "src/components/chrome/MarketingAppBar";
 
 type Props = DrawerScreenProps<
   MainDrawerParamList,

@@ -5,7 +5,7 @@ import { Text } from "react-native-paper";
 import { mobileRoutes } from "src/application/routes";
 import type { DashboardDrawerParamList } from "src/application/navigation/DashboardDrawerNavigator";
 import { Page, PageBody } from "src/components/layout/Page";
-import { DashboardAppBar } from "src/components/paper/DashboardAppBar";
+import { DashboardAppBar } from "src/components/chrome/DashboardAppBar";
 import { useScreenTypography } from "src/components/layout/useScreenTypography";
 
 type Props = DrawerScreenProps<

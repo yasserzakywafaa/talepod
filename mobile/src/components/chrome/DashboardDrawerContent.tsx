@@ -61,7 +61,7 @@ export const DashboardDrawerContent = (props: DrawerContentComponentProps) => {
             navigateToMarketingHome();
           }}
         >
-          <Logo width={56} />
+          <Logo width={88} />
         </Pressable>
 
         {isAdmin && (

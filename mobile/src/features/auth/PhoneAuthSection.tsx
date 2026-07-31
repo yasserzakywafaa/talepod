@@ -4,8 +4,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "react-native-paper";
 
-import { AuthSocialButton } from "src/components/auth/AuthSocialButton";
-import { PhoneOtpAuthForm } from "src/components/auth/PhoneOtpAuthForm";
+import { AuthSocialButton } from "src/features/auth/AuthSocialButton";
+import { PhoneOtpAuthForm } from "src/features/auth/PhoneOtpAuthForm";
 import type { User } from "src/shared/types/user";
 
 type PhoneAuthSectionProps = {

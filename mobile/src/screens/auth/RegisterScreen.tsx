@@ -4,7 +4,7 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { Text, useTheme } from "react-native-paper";
 
-import { AuthMethodScreen } from "src/components/auth/AuthMethodScreen";
+import { AuthMethodPanel } from "src/features/auth/AuthMethodPanel";
 import { mobileRoutes } from "src/application/routes";
 import type { RootStackParamList } from "src/application/navigation/types";
 import { resetAfterLogin } from "src/application/navigation/rootNavigation";
@@ -44,7 +44,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <AuthMethodScreen
+    <AuthMethodPanel
       authType="register"
       onAuthSuccess={handleAuthSuccess}
       footer={

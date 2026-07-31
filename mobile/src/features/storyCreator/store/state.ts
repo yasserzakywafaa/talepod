@@ -1,7 +1,7 @@
-import { Environment, Environments } from "src/shared/mockedData/Environments";
+import { Environment, Environments } from "src/shared/storyOptions/Environments";
 import { Language, Languages } from "src/shared/languages";
-import { Moral, Morals } from "src/shared/mockedData/Moral";
-import { Tone, Tones } from "src/shared/mockedData/Tone";
+import { Moral, Morals } from "src/shared/storyOptions/Moral";
+import { Tone, Tones } from "src/shared/storyOptions/Tone";
 
 import { DEFAULT_ART_STYLE_ID } from "src/shared/artStyles";
 import { User } from "src/shared/types/user";

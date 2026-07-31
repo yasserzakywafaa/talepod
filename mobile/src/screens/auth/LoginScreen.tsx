@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-import { AuthMethodScreen } from "src/components/auth/AuthMethodScreen";
+import { AuthMethodPanel } from "src/features/auth/AuthMethodPanel";
 import { mobileRoutes } from "src/application/routes";
 import type { RootStackParamList } from "src/application/navigation/types";
 import { resetAfterLogin } from "src/application/navigation/rootNavigation";
@@ -32,6 +32,6 @@ export const LoginScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <AuthMethodScreen authType="login" onAuthSuccess={handleAuthSuccess} />
+    <AuthMethodPanel authType="login" onAuthSuccess={handleAuthSuccess} />
   );
 };

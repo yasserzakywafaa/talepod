@@ -10,8 +10,8 @@ import { api } from "src/application/shared/apiClient";
 import END_POINTS from "src/application/shared/endpoints";
 import { getApiErrorMessage } from "src/application/shared/getApiErrorMessage";
 import { mobileApiHeaders } from "src/application/auth/mobileApiHeaders";
-import { AuthSelectField } from "src/components/auth/AuthSelectField";
-import { AuthSocialButton } from "src/components/auth/AuthSocialButton";
+import { AuthSelectField } from "src/features/auth/AuthSelectField";
+import { AuthSocialButton } from "src/features/auth/AuthSocialButton";
 import {
   useScreenTypography,
   useThemedTextInputProps,

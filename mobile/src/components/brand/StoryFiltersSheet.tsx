@@ -12,9 +12,9 @@ import { PillButton } from "src/components/brand/PillButton";
 import { SectionLabel } from "src/components/brand/SectionLabel";
 import { AdultGenderEnum } from "src/features/storyCreator/store/state";
 import { Languages } from "src/shared/languages";
-import { Environments } from "src/shared/mockedData/Environments";
-import { Morals } from "src/shared/mockedData/Moral";
-import { Tones } from "src/shared/mockedData/Tone";
+import { Environments } from "src/shared/storyOptions/Environments";
+import { Morals } from "src/shared/storyOptions/Moral";
+import { Tones } from "src/shared/storyOptions/Tone";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 
 /** The filter fields Library and My Stories have in common, plus `createdByAdmin`. */

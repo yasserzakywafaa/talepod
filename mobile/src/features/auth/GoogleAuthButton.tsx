@@ -7,7 +7,7 @@ import { Text } from "react-native-paper";
 import { getApiErrorMessage } from "src/application/shared/getApiErrorMessage";
 import { signInWithGoogleBrowser } from "src/application/auth/googleSignInBrowser";
 import { useApplicationContext } from "src/application/store/Provider";
-import { AuthSocialButton } from "src/components/auth/AuthSocialButton";
+import { AuthSocialButton } from "src/features/auth/AuthSocialButton";
 
 import type { User } from "src/shared/types/user";
 

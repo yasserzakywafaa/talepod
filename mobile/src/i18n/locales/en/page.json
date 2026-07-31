@@ -20,12 +20,43 @@
     "title": "Bedtime stories crafted for the children you love most."
   },
   "pricing": {
-    "freeTierBody": "Start creating personalized stories.",
-    "freeTierTitle": "Free",
-    "mobileBody": "Same plans as talepod.com. Upgrade and checkout on the web today.",
-    "paidTiersBody": "Premium plans unlock more stories, illustrations, and voices.",
-    "paidTiersTitle": "Paid plans",
-    "plans": "Plans"
+    "mostPopular": "Most popular",
+    "perMonth": "/month",
+    "freeForever": "free forever",
+    "billedMonthly": "billed monthly",
+    "billedYearly": "billed yearly · {{currency}}{{total}}/yr",
+    "heroTitle": "One price for unlimited bedtimes",
+    "heroSubtitle": "Start free. Upgrade when bedtime becomes the best part of the day.",
+    "bestValue": "Best value",
+    "plans": "Plans",
+    "cta": {
+      "createStories": "Create Stories",
+      "registerSubscribe": "Register & Subscribe",
+      "upgrade": "Upgrade",
+      "currentPlan": "Current Plan"
+    },
+    "features": {
+      "standardSupport": "Standard customer support",
+      "createUpToFree_one": "Create up to {{count}} bedtime story",
+      "createUpToFree_other": "Create up to {{count}} bedtime stories",
+      "basicTts": "Basic text-to-speech conversion",
+      "limitedLibrary": "Access to a limited story library",
+      "prioritySupport": "Priority customer support",
+      "customizableParams": "Customizable story parameters",
+      "highQualityTts": "High-quality text-to-speech conversion",
+      "createUpToMonthly_one": "Create up to {{count}} bedtime story per month",
+      "createUpToMonthly_other": "Create up to {{count}} bedtime stories per month",
+      "accessPremiumStories": "Access your Premium created stories",
+      "everythingInPremium": "Everything in Premium",
+      "unlimitedStories": "Unlimited bedtime stories",
+      "priorityGeneration": "Priority story generation",
+      "allVoices": "All storyteller voices",
+      "unlimitedLibrary": "Save unlimited stories in your library"
+    },
+    "checkoutOnWeb": "Checkout happens on talepod.com — your plan applies to the app straight away.",
+    "openOnWeb": "Open on the web",
+    "monthly": "Monthly",
+    "yearly": "Yearly"
   },
   "legal": {
     "lastUpdated": "Last updated:",

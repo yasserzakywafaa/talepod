@@ -4,7 +4,7 @@ import { useTheme } from "react-native-paper";
 
 import { mobileRoutes } from "src/application/routes";
 import { DRAWER_WIDTH } from "src/application/paperTheme";
-import { DashboardDrawerContent } from "src/components/paper/DashboardDrawerContent";
+import { DashboardDrawerContent } from "src/components/chrome/DashboardDrawerContent";
 import { DashboardOverviewScreen } from "src/screens/dashboard/DashboardOverviewScreen";
 import { DashboardStoriesScreen } from "src/screens/dashboard/DashboardStoriesScreen";
 import { DashboardUsersScreen } from "src/screens/dashboard/DashboardUsersScreen";

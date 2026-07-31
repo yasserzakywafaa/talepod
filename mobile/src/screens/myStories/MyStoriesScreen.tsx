@@ -19,7 +19,7 @@ import {
   useMyStoriesContext,
 } from "src/features/myStories/store/Provider";
 import type { Story } from "src/features/storyCreator/store/state";
-import { MainShellAppBar } from "src/components/paper/MainShellAppBar";
+import { MainShellAppBar } from "src/components/chrome/MainShellAppBar";
 
 const MyStoriesScreenContent = () => {
   const { t } = useTranslation("library");

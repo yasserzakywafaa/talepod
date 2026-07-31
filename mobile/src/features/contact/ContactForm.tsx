@@ -5,8 +5,8 @@ import { TextInput } from "react-native-paper";
 
 import { getApiErrorMessage } from "src/application/shared/getApiErrorMessage";
 import { useApplicationContext } from "src/application/store/Provider";
-import { AppButton } from "src/components/paper/AppButton";
-import { AppToast } from "src/components/paper/AppToast";
+import { AppButton } from "src/components/chrome/AppButton";
+import { AppToast } from "src/components/chrome/AppToast";
 import { useThemedTextInputProps } from "src/components/layout/useScreenTypography";
 import { submitContactForm } from "src/features/contact/submitContactForm";
 import {

@@ -5,7 +5,7 @@ import { useTheme } from "react-native-paper";
 import type { NavigatorScreenParams } from "@react-navigation/native";
 
 import { mobileRoutes } from "src/application/routes";
-import { MainDrawerContent } from "src/components/paper/MainDrawerContent";
+import { MainDrawerContent } from "src/components/chrome/MainDrawerContent";
 import { MainShellScreen } from "src/application/navigation/MainShellScreen";
 import type { MainShellStackParamList } from "src/application/navigation/MainShellStackNavigator";
 import { useApplicationContext } from "src/application/store/Provider";

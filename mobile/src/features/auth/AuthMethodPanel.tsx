@@ -3,23 +3,23 @@ import { StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Icon, Text, useTheme } from "react-native-paper";
 
-import { GoogleAuthButton } from "src/components/auth/GoogleAuthButton";
-import { PhoneAuthSection } from "src/components/auth/PhoneAuthSection";
+import { GoogleAuthButton } from "src/features/auth/GoogleAuthButton";
+import { PhoneAuthSection } from "src/features/auth/PhoneAuthSection";
 import { AuthScreenBody } from "src/components/layout/SheetPage";
 import { useScreenTypography } from "src/components/layout/useScreenTypography";
 import type { User } from "src/shared/types/user";
 
-type AuthMethodScreenProps = {
+type AuthMethodPanelProps = {
   authType: "login" | "register";
   onAuthSuccess: (user: User) => void;
   footer?: ReactNode;
 };
 
-export const AuthMethodScreen = ({
+export const AuthMethodPanel = ({
   authType,
   onAuthSuccess,
   footer,
-}: AuthMethodScreenProps) => {
+}: AuthMethodPanelProps) => {
   const { t } = useTranslation("auth");
   const theme = useTheme();
   const typography = useScreenTypography();

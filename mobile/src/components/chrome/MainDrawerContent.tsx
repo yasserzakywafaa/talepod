@@ -17,9 +17,9 @@ import {
 } from "src/application/navigation/rootNavigation";
 import { useDrawerSafeAreaPadding } from "src/components/layout/useDrawerSafeAreaPadding";
 import { LocaleLayoutBoundary } from "src/components/layout/LocaleLayoutBoundary";
-import { Logo } from "src/components/paper/Logo";
-import { SettingsMenuButton } from "src/components/paper/SettingsMenuButton";
-import { UserAccountMenuButton } from "src/components/paper/UserAccountMenuButton";
+import { Logo } from "src/components/chrome/Logo";
+import { SettingsMenuButton } from "src/components/chrome/SettingsMenuButton";
+import { UserAccountMenuButton } from "src/components/chrome/UserAccountMenuButton";
 import { useApplicationContext } from "src/application/store/Provider";
 
 export const MainDrawerContent = (props: DrawerContentComponentProps) => {
@@ -60,7 +60,7 @@ export const MainDrawerContent = (props: DrawerContentComponentProps) => {
       >
         {isAuthenticated ? (
           <View style={styles.logoWrap} accessibilityLabel={t("logo")}>
-            <Logo width={56} />
+            <Logo width={88} />
           </View>
         ) : (
           <Pressable
@@ -69,7 +69,7 @@ export const MainDrawerContent = (props: DrawerContentComponentProps) => {
             accessibilityLabel={t("logo")}
             onPress={() => navigateDrawer(mobileRoutes.public.home)}
           >
-            <Logo width={56} />
+            <Logo width={88} />
           </Pressable>
         )}
 
@@ -97,14 +97,14 @@ export const MainDrawerContent = (props: DrawerContentComponentProps) => {
             onPress={() => goShell(mobileRoutes.public.contact)}
             titleStyle={{ color: theme.colors.onSurface }}
           />
-          {isAuthenticated ? (
-            <List.Item
-              title={t("nav.pricing")}
-              left={(p) => <List.Icon {...p} icon="tag-outline" />}
-              onPress={() => goShell(mobileRoutes.public.pricing)}
-              titleStyle={{ color: theme.colors.onSurface }}
-            />
-          ) : null}
+          {/* Public on the web, and it is the page that explains the free
+              tier — the people who most need it are the ones not signed in. */}
+          <List.Item
+            title={t("nav.pricing")}
+            left={(p) => <List.Icon {...p} icon="tag-outline" />}
+            onPress={() => goShell(mobileRoutes.public.pricing)}
+            titleStyle={{ color: theme.colors.onSurface }}
+          />
 
           {isAuthenticated ? (
             <>

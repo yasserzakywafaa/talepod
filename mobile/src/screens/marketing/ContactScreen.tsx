@@ -7,7 +7,7 @@ import type { MainShellStackParamList } from "src/application/navigation/MainShe
 import { Page, PageBody } from "src/components/layout/Page";
 import { useDrawerPageHeader } from "src/components/layout/useDrawerPageHeader";
 import { useScreenTypography } from "src/components/layout/useScreenTypography";
-import { ContactForm } from "src/screens/marketing/features/ContactForm";
+import { ContactForm } from "src/features/contact/ContactForm";
 
 type Props = NativeStackScreenProps<
   MainShellStackParamList,

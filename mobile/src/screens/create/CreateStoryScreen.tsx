@@ -14,7 +14,7 @@ import {
 } from "src/application/navigation/rootNavigation";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useAppTheme } from "src/application/theme/useAppTheme";
-import { MainShellAppBar } from "src/components/paper/MainShellAppBar";
+import { MainShellAppBar } from "src/components/chrome/MainShellAppBar";
 import { Page } from "src/components/layout/Page";
 import { useMainShellDrawer } from "src/application/navigation/MainShellDrawerContext";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
@@ -39,9 +39,9 @@ import {
   type StoryFormat,
 } from "src/features/storyCreator/store/state";
 import { Languages, type Language } from "src/shared/languages";
-import { Environments } from "src/shared/mockedData/Environments";
-import { Morals } from "src/shared/mockedData/Moral";
-import { Tones } from "src/shared/mockedData/Tone";
+import { Environments } from "src/shared/storyOptions/Environments";
+import { Morals } from "src/shared/storyOptions/Moral";
+import { Tones } from "src/shared/storyOptions/Tone";
 import { hasCensoredWords } from "src/shared/utils/censoredWords/getAllCensoredWords";
 import { saveCreateDraft } from "src/shared/utils/authReturn";
 import { UserRole, UserStatus } from "src/shared/types/user";

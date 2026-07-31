@@ -8,8 +8,8 @@ import { MainDrawerNavigator } from "src/application/navigation/MainDrawerNaviga
 import { ProtectedDashboardNavigator } from "src/application/navigation/ProtectedDashboardNavigator";
 import { formSheetScreenOptions } from "src/application/navigation/formSheetScreenOptions";
 import type { RootStackParamList } from "src/application/navigation/types";
-import { LoginScreen } from "src/screens/LoginScreen";
-import { RegisterScreen } from "src/screens/marketing/RegisterScreen";
+import { LoginScreen } from "src/screens/auth/LoginScreen";
+import { RegisterScreen } from "src/screens/auth/RegisterScreen";
 import { AccountSheetScreen } from "src/screens/sheets/AccountSheetScreen";
 import { SettingsSheetScreen } from "src/screens/sheets/SettingsSheetScreen";
 

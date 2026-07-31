@@ -52,6 +52,8 @@ const END_POINTS = {
   },
   PAYMENTS: {
     GET_SUBSCRIPTION_DETAILS: `${publicApiUrl}/api/v1/auth/get-subscription-details`,
+    GET_PRICES_LIST: `${publicApiUrl}/api/v1/payments/prices-list`,
+    GET_PRODUCTS_LIST_WITH_PRICES: `${publicApiUrl}/api/v1/payments/products-list-with-prices`,
   },
   CONTACT: {
     SUPPORT: `${publicApiUrl}/api/v1/contact-support`,

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import { MainShellAppBar } from "src/components/paper/MainShellAppBar";
+import { MainShellAppBar } from "src/components/chrome/MainShellAppBar";
 
 /**
  * Header for library/contact/pricing and the legal pages.

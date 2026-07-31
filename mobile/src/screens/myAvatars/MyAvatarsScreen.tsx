@@ -8,7 +8,7 @@ import { api } from "src/application/shared/apiClient";
 import { navigateToCreateStory } from "src/application/navigation/rootNavigation";
 import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
-import { MainShellAppBar } from "src/components/paper/MainShellAppBar";
+import { MainShellAppBar } from "src/components/chrome/MainShellAppBar";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
 import { AvatarCard } from "src/components/brand/AvatarCard";
 import { DisplayText } from "src/components/brand/DisplayText";
