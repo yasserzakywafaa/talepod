@@ -1,9 +1,11 @@
 import { StatusBar } from "expo-status-bar";
+import * as SplashScreen from "expo-splash-screen";
 import {
   NavigationContainer,
   DarkTheme,
   DefaultTheme,
 } from "@react-navigation/native";
+import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StyleSheet } from "react-native";
 import { SafeAreaProvider, initialWindowMetrics } from "react-native-safe-area-context";
@@ -14,6 +16,7 @@ import { ThemedPaperProvider } from "src/application/ThemedPaperProvider";
 import { rootNavigationRef } from "src/application/navigation/rootNavigation";
 import { paperDarkTheme, paperLightTheme } from "src/application/paperTheme";
 import { fontFamily } from "src/application/theme/tokens";
+import { useAppFonts } from "src/application/theme/useAppFonts";
 import { ApplicationContextProvider } from "src/application/store/Provider";
 import { useResolvedThemeMode } from "src/application/useResolvedThemeMode";
 import { DashboardOverviewContextProvider } from "src/features/dashboardOverview/store/Provider";
@@ -63,7 +66,22 @@ const NavigationRoot = () => {
   );
 };
 
+// Hold the native splash so the first painted frame already uses the brand
+// faces — otherwise the app flashes system type for a frame or two.
+void SplashScreen.preventAutoHideAsync().catch(() => {
+  // Already hidden (fast refresh, or the splash was dismissed) — nothing to do.
+});
+
 const App = () => {
+  const fontsLoaded = useAppFonts();
+
+  useEffect(() => {
+    if (!fontsLoaded) return;
+    void SplashScreen.hideAsync().catch(() => {
+      // Hiding twice is harmless; never let it block the first render.
+    });
+  }, [fontsLoaded]);
+
   return (
     <GestureHandlerRootView style={styles.root}>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
@@ -71,7 +89,7 @@ const App = () => {
           <ApplicationContextProvider>
             <DashboardOverviewContextProvider>
               <DashboardProfileContextProvider>
-                <ThemedPaperProvider>
+                <ThemedPaperProvider fontsLoaded={fontsLoaded}>
                   <StoryFlowProviders>
                     <NavigationRoot />
                     <GenerationProgressSnackbar />

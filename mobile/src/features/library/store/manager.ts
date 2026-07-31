@@ -5,6 +5,7 @@ import type {
   ApiRequestParams,
   ApiResponseWithPaging,
 } from "src/shared/types/api";
+import { countActiveFilters } from "src/shared/utils/countActiveFilters";
 
 import type { LibraryStore } from "./store";
 import {
@@ -19,6 +20,12 @@ export interface LibraryManager {
   handleClearFilters: () => Promise<void>;
   handleGetStoriesByPage: (pageNumber: number) => Promise<void>;
   handleSetStoriesSource: (source: LibraryStoriesSource) => Promise<void>;
+  handleToggleFiltersPanel: (isOpen: boolean) => void;
+  handleUpdateFilters: (
+    name: keyof LibraryStoryFilters,
+    value: LibraryStoryFilters[typeof name],
+  ) => void;
+  handleFilterStories: () => Promise<void>;
   handleFetchStories: (
     newFilters?: FetchStoryFilters,
     hasActiveFilters?: boolean,
@@ -119,6 +126,34 @@ export const useLibraryManager = (store: LibraryStore): LibraryManager => {
     );
   };
 
+  const handleToggleFiltersPanel = (isOpen: boolean) => {
+    store.toggleFiltersPanel(isOpen);
+  };
+
+  const handleUpdateFilters = (
+    name: keyof LibraryStoryFilters,
+    value: LibraryStoryFilters[typeof name],
+  ) => {
+    store.updateFilters(name, value);
+  };
+
+  /** Applies the pending filter selection and reloads from page one. */
+  const handleFilterStories = async () => {
+    const activeFiltersCount = countActiveFilters(filters);
+    store.setActiveFiltersCount(activeFiltersCount);
+    store.toggleFiltersPanel(false);
+    store.updatePageNumber(initialPagingInfo.pageNumber);
+    await handleFetchStories(
+      {
+        ...filters,
+        pageNumber: initialPagingInfo.pageNumber,
+        pageSize: pagingInfo.pageSize,
+      },
+      activeFiltersCount > 0,
+      storiesSource,
+    );
+  };
+
   const handleSetStoriesSource = async (newSource: LibraryStoriesSource) => {
     if (newSource === storiesSource) return;
     store.setStoriesSource(newSource);
@@ -140,6 +175,9 @@ export const useLibraryManager = (store: LibraryStore): LibraryManager => {
     handleClearFilters,
     handleGetStoriesByPage,
     handleSetStoriesSource,
+    handleToggleFiltersPanel,
+    handleUpdateFilters,
+    handleFilterStories,
     handleFetchStories,
   };
 };

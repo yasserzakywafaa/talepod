@@ -6,8 +6,10 @@ import { navigateToViewStory } from "src/application/navigation/rootNavigation";
 import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
+import { FiltersButton } from "src/components/brand/FiltersButton";
 import { PillButton } from "src/components/brand/PillButton";
 import { StoryCard } from "src/components/brand/StoryCard";
+import { StoryFiltersSheet } from "src/components/brand/StoryFiltersSheet";
 import {
   MyStoriesContextProvider,
   useMyStoriesContext,
@@ -21,9 +23,23 @@ const MyStoriesScreenContent = () => {
   const { horizontalGutter, contentMaxWidth } = useReadableLayout();
   const {
     store: {
-      state: { isFetching, stories, pagingInfo },
+      state: {
+        isFetching,
+        stories,
+        pagingInfo,
+        filters,
+        isFiltersPanelOpen,
+        activeFiltersCount,
+      },
     },
-    manager: { setUp, handleGetStoriesByPage },
+    manager: {
+      setUp,
+      handleGetStoriesByPage,
+      handleClearFilters,
+      handleToggleFiltersPanel,
+      handleUpdateFilters,
+      handleFilterStories,
+    },
   } = useMyStoriesContext();
 
   useEffect(() => {
@@ -44,6 +60,14 @@ const MyStoriesScreenContent = () => {
         data={stories}
         keyExtractor={(item) => item._id}
         renderItem={renderItem}
+        ListHeaderComponent={
+          <View style={styles.header}>
+            <FiltersButton
+              activeCount={activeFiltersCount}
+              onPress={() => handleToggleFiltersPanel(true)}
+            />
+          </View>
+        }
         {...PAGE_SCROLL_PROPS}
         contentContainerStyle={[
           styles.listContent,
@@ -88,6 +112,16 @@ const MyStoriesScreenContent = () => {
           </View>
         }
       />
+
+      <StoryFiltersSheet
+        visible={isFiltersPanelOpen}
+        values={filters}
+        showOriginals
+        onChange={handleUpdateFilters}
+        onApply={() => void handleFilterStories()}
+        onClear={() => void handleClearFilters()}
+        onDismiss={() => handleToggleFiltersPanel(false)}
+      />
     </View>
   );
 };
@@ -108,6 +142,7 @@ export const MyStoriesScreen = () => {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
+  header: { marginBottom: 4 },
   listContent: { paddingBottom: 24, gap: 16 },
   empty: {
     fontSize: 15,

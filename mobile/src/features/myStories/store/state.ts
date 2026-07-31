@@ -5,6 +5,7 @@ export interface MyStoriesInitialState {
   isFetching: boolean;
   stories: Story[];
   filters: MyStoriesStoryFilters;
+  isFiltersPanelOpen: boolean;
   activeFiltersCount: number;
   pagingInfo: PagingInfo;
 }
@@ -26,6 +27,7 @@ export interface MyStoriesStoryFilters {
 export const getMyStoriesInitialState = (): MyStoriesInitialState => ({
   isFetching: true,
   stories: [],
+  isFiltersPanelOpen: false,
   activeFiltersCount: 0,
   filters: {
     name: "",

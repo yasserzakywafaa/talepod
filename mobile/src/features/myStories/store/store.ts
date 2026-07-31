@@ -15,6 +15,12 @@ export interface MyStoriesStore {
   updateStories: (stories: Story[]) => void;
   updatePageNumber: (pageNumber: number) => void;
   updatePagingInfo: (pagingInfo: PagingInfo) => void;
+  toggleFiltersPanel: (isOpen: boolean) => void;
+  updateFilters: (
+    key: keyof MyStoriesStoryFilters,
+    value: MyStoriesStoryFilters[typeof key],
+  ) => void;
+  setActiveFiltersCount: (activeFiltersCount: number) => void;
   clearFilters: () => void;
 }
 
@@ -42,6 +48,24 @@ export const useMyStoriesStore = (): MyStoriesStore => {
     setState((prev) => ({ ...prev, pagingInfo }));
   };
 
+  const toggleFiltersPanel = (isFiltersPanelOpen: boolean) => {
+    setState((prev) => ({ ...prev, isFiltersPanelOpen }));
+  };
+
+  const updateFilters = (
+    key: keyof MyStoriesStoryFilters,
+    value: MyStoriesStoryFilters[typeof key],
+  ) => {
+    setState((prev) => ({
+      ...prev,
+      filters: { ...prev.filters, [key]: value },
+    }));
+  };
+
+  const setActiveFiltersCount = (activeFiltersCount: number) => {
+    setState((prev) => ({ ...prev, activeFiltersCount }));
+  };
+
   const clearFilters = () => {
     setState((prev) => ({
       ...prev,
@@ -56,6 +80,9 @@ export const useMyStoriesStore = (): MyStoriesStore => {
     updateStories,
     updatePageNumber,
     updatePagingInfo,
+    toggleFiltersPanel,
+    updateFilters,
+    setActiveFiltersCount,
     clearFilters,
   };
 };

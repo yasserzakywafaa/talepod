@@ -6,7 +6,7 @@ type GradientProps = {
   colors: readonly string[];
   /** Gradient axis. Web V2 uses vertical for scenes, diagonal for CTAs. */
   direction?: "vertical" | "horizontal";
-  /** Band count — higher is smoother, 24 is imperceptible at phone DPI. */
+  /** Band count — higher is smoother; 48 is imperceptible at phone DPI. */
   bands?: number;
   style?: StyleProp<ViewStyle>;
   children?: ReactNode;
@@ -85,25 +85,41 @@ const buildBands = (colors: readonly string[], bands: number) => {
 export const Gradient = ({
   colors,
   direction = "vertical",
-  bands = 24,
+  bands = 48,
   style,
   children,
 }: GradientProps) => {
-  const resolved = useMemo(() => buildBands(colors, bands), [colors, bands]);
+  const key = colors.join("|");
+  const resolved = useMemo(
+    () => buildBands(key.split("|"), bands),
+    [key, bands],
+  );
+
+  const horizontal = direction === "horizontal";
 
   return (
     <View style={[styles.root, style]}>
       <View
         style={[
           StyleSheet.absoluteFill,
-          direction === "horizontal" ? styles.row : styles.column,
+          horizontal ? styles.row : styles.column,
+          // Base coat: if a band ever fails to cover a subpixel row, the
+          // colour behind it is a gradient stop rather than the surface.
+          { backgroundColor: resolved[0] },
         ]}
         pointerEvents="none"
       >
         {resolved.map((color, index) => (
           <View
             key={`${color}-${index}`}
-            style={[styles.band, { backgroundColor: color }]}
+            style={[
+              styles.band,
+              // Bands overlap by 1px. Laying them out edge-to-edge leaves
+              // hairline seams wherever `flex: 1` rounds down against the
+              // device pixel grid — the visible lines across the cards.
+              horizontal ? styles.overlapRow : styles.overlapColumn,
+              { backgroundColor: color },
+            ]}
           />
         ))}
       </View>
@@ -117,4 +133,6 @@ const styles = StyleSheet.create({
   column: { flexDirection: "column" },
   row: { flexDirection: "row" },
   band: { flex: 1 },
+  overlapColumn: { marginBottom: -1 },
+  overlapRow: { marginRight: -1 },
 });

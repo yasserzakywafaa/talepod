@@ -10,13 +10,16 @@ import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useDrawerPageHeader } from "src/components/layout/useDrawerPageHeader";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
+import { FiltersButton } from "src/components/brand/FiltersButton";
 import { PillButton } from "src/components/brand/PillButton";
 import { SegmentedControl } from "src/components/brand/SegmentedControl";
 import { StoryCard } from "src/components/brand/StoryCard";
+import { StoryFiltersSheet } from "src/components/brand/StoryFiltersSheet";
 import {
   LibraryContextProvider,
   useLibraryContext,
 } from "src/features/library/store/Provider";
+import type { LibraryStoryFilters } from "src/features/library/store/state";
 import type { Story } from "src/features/storyCreator/store/state";
 
 const LibraryScreenContent = () => {
@@ -25,13 +28,24 @@ const LibraryScreenContent = () => {
   const { horizontalGutter, contentMaxWidth } = useReadableLayout();
   const {
     store: {
-      state: { isFetching, stories, pagingInfo, storiesSource },
+      state: {
+        isFetching,
+        stories,
+        pagingInfo,
+        storiesSource,
+        filters,
+        isFiltersPanelOpen,
+        activeFiltersCount,
+      },
     },
     manager: {
       setUp,
       handleClearFilters,
       handleGetStoriesByPage,
       handleSetStoriesSource,
+      handleToggleFiltersPanel,
+      handleUpdateFilters,
+      handleFilterStories,
     },
   } = useLibraryContext();
 
@@ -60,6 +74,10 @@ const LibraryScreenContent = () => {
         onChange={(value) =>
           void handleSetStoriesSource(value as "community" | "talepod")
         }
+      />
+      <FiltersButton
+        activeCount={activeFiltersCount}
+        onPress={() => handleToggleFiltersPanel(true)}
       />
     </View>
   );
@@ -116,6 +134,20 @@ const LibraryScreenContent = () => {
           </View>
         }
       />
+
+      <StoryFiltersSheet
+        visible={isFiltersPanelOpen}
+        values={filters}
+        onChange={(key, value) => {
+          // The sheet's key set includes `createdByAdmin`, which only My
+          // Stories filters on; without `showOriginals` it is never emitted.
+          if (key === "createdByAdmin") return;
+          handleUpdateFilters(key, value as LibraryStoryFilters[typeof key]);
+        }}
+        onApply={() => void handleFilterStories()}
+        onClear={() => void handleClearFilters()}
+        onDismiss={() => handleToggleFiltersPanel(false)}
+      />
     </View>
   );
 };
@@ -134,7 +166,7 @@ export const LibraryScreen = () => {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  header: { marginBottom: 16 },
+  header: { marginBottom: 16, gap: 4 },
   listContent: { paddingBottom: 24, gap: 16 },
   empty: { gap: 12, paddingVertical: 32, alignItems: "center" },
   footer: { paddingVertical: 16, alignItems: "center", gap: 12 },
