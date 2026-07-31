@@ -20,6 +20,11 @@ type SelectFieldProps<T extends string | number> = {
    * Defaults to the page background; pass `colors.surface` inside a dialog.
    */
   surfaceColor?: string;
+  /**
+   * Expand options in-place instead of a Paper `Menu`. Use inside React Native
+   * `Modal` sheets — portaled menus render behind the modal layer.
+   */
+  inline?: boolean;
 };
 
 /**
@@ -32,12 +37,141 @@ export const SelectField = <T extends string | number>({
   options,
   onChange,
   surfaceColor,
+  inline = false,
 }: SelectFieldProps<T>) => {
   const [open, setOpen] = useState(false);
   const theme = useAppTheme();
-  const { radius, fontFamily } = theme.tokens;
+  const { radius, fontFamily, semantic } = theme.tokens;
+  const fieldBackground = surfaceColor ?? theme.colors.background;
 
   const selected = options.find((option) => option.value === value);
+
+  const field = (
+    <Pressable
+      onPress={() => setOpen((previous) => !previous)}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityState={{ expanded: open }}
+      accessibilityValue={{ text: selected?.label }}
+      style={[
+        styles.field,
+        {
+          borderRadius: radius.md,
+          borderColor: open ? theme.colors.primary : theme.colors.outline,
+          borderWidth: open ? 2 : 1,
+        },
+      ]}
+    >
+      <View style={[styles.labelWrap, { backgroundColor: fieldBackground }]}>
+        <Text
+          style={[
+            styles.label,
+            {
+              color: open
+                ? theme.colors.primary
+                : theme.colors.onSurfaceVariant,
+              fontFamily: fontFamily.regular,
+            },
+          ]}
+        >
+          {label}
+        </Text>
+      </View>
+
+      <Text
+        numberOfLines={1}
+        style={[
+          styles.value,
+          {
+            color: theme.colors.onSurface,
+            fontFamily: fontFamily.regular,
+          },
+        ]}
+      >
+        {selected?.label ?? ""}
+      </Text>
+
+      <MaterialCommunityIcons
+        name={inline && open ? "menu-up" : "menu-down"}
+        size={22}
+        color={theme.colors.onSurfaceVariant}
+      />
+    </Pressable>
+  );
+
+  if (inline) {
+    return (
+      <View style={styles.block}>
+        {field}
+        {open ? (
+          <View
+            style={[
+              styles.panel,
+              {
+                borderRadius: radius.md,
+                backgroundColor: semantic.surface2,
+              },
+            ]}
+          >
+            {options.map((option) => {
+              const selectedOption = option.value === value;
+              return (
+                <Pressable
+                  key={String(option.value)}
+                  onPress={() => {
+                    onChange(option.value);
+                    setOpen(false);
+                  }}
+                  accessibilityRole="menuitem"
+                  accessibilityState={{ selected: selectedOption }}
+                  style={({ pressed }) => [
+                    styles.option,
+                    {
+                      borderRadius: radius.sm,
+                      backgroundColor: selectedOption
+                        ? theme.colors.primaryContainer
+                        : "transparent",
+                      opacity: pressed ? 0.7 : 1,
+                    },
+                  ]}
+                >
+                  <MaterialCommunityIcons
+                    name={
+                      selectedOption
+                        ? "check-circle"
+                        : "checkbox-blank-circle-outline"
+                    }
+                    size={18}
+                    color={
+                      selectedOption
+                        ? theme.colors.primary
+                        : theme.colors.outline
+                    }
+                  />
+                  <Text
+                    numberOfLines={1}
+                    style={[
+                      styles.optionLabel,
+                      {
+                        color: selectedOption
+                          ? theme.colors.onSurface
+                          : theme.colors.onSurfaceVariant,
+                        fontFamily: selectedOption
+                          ? fontFamily.semiBold
+                          : fontFamily.regular,
+                      },
+                    ]}
+                  >
+                    {option.label}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+        ) : null}
+      </View>
+    );
+  }
 
   return (
     <Menu
@@ -59,12 +193,7 @@ export const SelectField = <T extends string | number>({
             },
           ]}
         >
-          <View
-            style={[
-              styles.labelWrap,
-              { backgroundColor: surfaceColor ?? theme.colors.background },
-            ]}
-          >
+          <View style={[styles.labelWrap, { backgroundColor: fieldBackground }]}>
             <Text
               style={[
                 styles.label,
@@ -124,6 +253,16 @@ export const SelectField = <T extends string | number>({
 };
 
 const styles = StyleSheet.create({
+  block: { gap: 8 },
+  panel: { padding: 6 },
+  option: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+  },
+  optionLabel: { flex: 1, fontSize: 14, includeFontPadding: false },
   field: {
     flexDirection: "row",
     alignItems: "center",

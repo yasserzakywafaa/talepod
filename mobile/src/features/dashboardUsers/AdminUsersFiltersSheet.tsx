@@ -149,6 +149,7 @@ export const AdminUsersFiltersSheet = ({
             />
 
             <SelectField
+              inline
               label={t("dashboard:admin.users.filterRole")}
               value={values.role}
               options={roleOptions}
@@ -156,6 +157,7 @@ export const AdminUsersFiltersSheet = ({
             />
 
             <SelectField
+              inline
               label={t("dashboard:admin.users.filterStatus")}
               value={values.status}
               options={statusOptions}
