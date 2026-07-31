@@ -231,7 +231,7 @@ export const ProfileScreenContent = () => {
               </Text>
               <PillButton
                 variant="outlined"
-                icon="book-open-variant"
+                icon="view-array-outline"
                 style={styles.statAction}
                 onPress={() => navigateToMainMyStories()}
               >

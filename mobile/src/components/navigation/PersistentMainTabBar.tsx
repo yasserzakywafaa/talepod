@@ -69,14 +69,20 @@ const AUTHENTICATED_TABS: TabDef[] = [
     kind: "route",
     id: mobileRoutes.tabs.myStories,
     tabRoute: mobileRoutes.tabs.myStories,
-    icon: "book-open-variant",
+    /**
+     * The web's `WebStoriesOutlined` — a card between two thin rules. Not
+     * `view-carousel-outline`, whose fat side blocks are MUI's
+     * `ViewCarouselOutlined`, which the web keeps for the Comic format.
+     */
+    icon: "view-array-outline",
     labelKey: "nav.myStories",
   },
   {
     kind: "route",
     id: mobileRoutes.tabs.myAvatars,
     tabRoute: mobileRoutes.tabs.myAvatars,
-    icon: "account-circle",
+    /** The web's `FaceOutlined` — the same glyph, renamed in MCI v6. */
+    icon: "face-man-outline",
     labelKey: "story:avatars.page.title",
   },
   {

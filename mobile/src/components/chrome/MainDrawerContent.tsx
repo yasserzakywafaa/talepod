@@ -131,7 +131,7 @@ export const MainDrawerContent = (props: DrawerContentComponentProps) => {
                 left={(p) => (
                   <List.Icon
                     {...p}
-                    icon="book-open-variant"
+                    icon="view-array-outline"
                     color={theme.colors.primary}
                   />
                 )}
@@ -143,7 +143,7 @@ export const MainDrawerContent = (props: DrawerContentComponentProps) => {
                 left={(p) => (
                   <List.Icon
                     {...p}
-                    icon="account-circle"
+                    icon="face-man-outline"
                     color={theme.colors.primary}
                   />
                 )}
