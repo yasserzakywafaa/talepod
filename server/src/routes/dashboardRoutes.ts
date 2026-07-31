@@ -40,6 +40,13 @@ dashboardRoutes.post(
   DashboardController.blockUser
 );
 
+// Without this, blocking a user is a one-way door: the controller and the
+// endpoint have both existed all along, only the route was missing.
+dashboardRoutes.post(
+  END_POINTS.DASHBOARD.USERS.UNBLOCK_USER(":userId"),
+  DashboardController.unblockUser
+);
+
 dashboardRoutes.delete(
   END_POINTS.DASHBOARD.USERS.DELETE_USER(":userId"),
   DashboardController.deleteUser

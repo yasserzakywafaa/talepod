@@ -72,6 +72,3 @@ export const MainDrawerNavigator = () => {
     </Drawer.Navigator>
   );
 };
-
-/** @deprecated Use MainDrawerParamList */
-export type PublicStackParamList = MainDrawerParamList;

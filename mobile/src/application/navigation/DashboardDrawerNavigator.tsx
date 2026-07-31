@@ -1,18 +1,23 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "react-native-paper";
+import type { NavigatorScreenParams } from "@react-navigation/native";
 
 import { mobileRoutes } from "src/application/routes";
 import { DRAWER_WIDTH } from "src/application/paperTheme";
 import { DashboardDrawerContent } from "src/components/chrome/DashboardDrawerContent";
-import { DashboardOverviewScreen } from "src/screens/dashboard/DashboardOverviewScreen";
-import { DashboardStoriesScreen } from "src/screens/dashboard/DashboardStoriesScreen";
-import { DashboardUsersScreen } from "src/screens/dashboard/DashboardUsersScreen";
+import { DashboardShellScreen } from "src/application/navigation/DashboardShellScreen";
+import type { DashboardShellStackParamList } from "src/application/navigation/DashboardShellStackNavigator";
 
+/**
+ * The admin drawer hosts one screen: the stack holding every admin section.
+ *
+ * The sections used to be drawer screens directly, which left nowhere to push
+ * a user or story detail page — and anything pushed above the drawer could not
+ * have opened the menu.
+ */
 export type DashboardDrawerParamList = {
-  [mobileRoutes.dashboard.overview]: undefined;
-  [mobileRoutes.dashboard.users]: undefined;
-  [mobileRoutes.dashboard.stories]: undefined;
+  [mobileRoutes.dashboard.shell]: NavigatorScreenParams<DashboardShellStackParamList>;
 };
 
 const Drawer = createDrawerNavigator<DashboardDrawerParamList>();
@@ -26,7 +31,7 @@ export const DashboardDrawerNavigator = () => {
       id="DashboardDrawer"
       key={i18n.language}
       drawerContent={(props) => <DashboardDrawerContent {...props} />}
-      initialRouteName={mobileRoutes.dashboard.overview}
+      initialRouteName={mobileRoutes.dashboard.shell}
       screenOptions={{
         drawerType: "front",
         drawerPosition: "left",
@@ -42,19 +47,9 @@ export const DashboardDrawerNavigator = () => {
       }}
     >
       <Drawer.Screen
-        name={mobileRoutes.dashboard.overview}
-        component={DashboardOverviewScreen}
-      />
-      <Drawer.Screen
-        name={mobileRoutes.dashboard.users}
-        component={DashboardUsersScreen}
-      />
-      <Drawer.Screen
-        name={mobileRoutes.dashboard.stories}
-        component={DashboardStoriesScreen}
+        name={mobileRoutes.dashboard.shell}
+        component={DashboardShellScreen}
       />
     </Drawer.Navigator>
   );
 };
-
-export type DashboardStackParamList = DashboardDrawerParamList;

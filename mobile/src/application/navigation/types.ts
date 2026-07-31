@@ -24,11 +24,3 @@ export type MainDrawerNavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<MainDrawerParamList>,
   RootStackNavigationProp
 >;
-
-/** @deprecated Use MainDrawerNavigationProp */
-export type MarketingDrawerNavigationProp = MainDrawerNavigationProp;
-
-export type DashboardDrawerNavigationProp = CompositeNavigationProp<
-  DrawerNavigationProp<DashboardDrawerParamList>,
-  RootStackNavigationProp
->;

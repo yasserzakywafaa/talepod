@@ -48,11 +48,15 @@ export const ProfileAvatar = ({ user, size = 112 }: ProfileAvatarProps) => {
     return avatar;
   }
 
+  // Scales with the avatar so the tick stays a badge in a 44px list row; at
+  // the 112px default this is still 28, as before.
+  const badgeSize = Math.max(14, Math.round(size / 4));
+
   return (
     <View style={{ width: size + BORDER_WIDTH * 2, height: size + BORDER_WIDTH * 2 }}>
       <Badge
         visible
-        size={28}
+        size={badgeSize}
         style={[styles.badge, { backgroundColor: theme.colors.primary }]}
       >
         ✓

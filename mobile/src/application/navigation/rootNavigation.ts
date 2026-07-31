@@ -4,9 +4,11 @@ import {
   type NavigatorScreenParams,
 } from "@react-navigation/native";
 
-import { mobileRoutes, rootRoutes, type DashboardRouteName, type PublicMarketingScreenRoute, type RootSheetRouteName } from "src/application/routes";
+import { mobileRoutes, rootRoutes, type DashboardSectionRouteName, type PublicMarketingScreenRoute, type RootSheetRouteName } from "src/application/routes";
+import type { DashboardDrawerParamList } from "src/application/navigation/DashboardDrawerNavigator";
 import type { MainDrawerParamList } from "src/application/navigation/MainDrawerNavigator";
 import type { MainShellStackParamList } from "src/application/navigation/MainShellStackNavigator";
+import { buildDashboardShellParams } from "src/application/navigation/dashboardShellNavigation";
 import {
   buildMainDrawerShellState,
   buildMainShellTabParams,
@@ -100,11 +102,14 @@ export const navigateToViewStory = (slug: string) => {
 };
 
 export const navigateToDashboard = (
-  screen: DashboardRouteName = mobileRoutes.dashboard.overview,
+  screen: DashboardSectionRouteName = mobileRoutes.dashboard.overview,
 ) => {
   whenReady(() => {
     closeMainDrawer();
-    rootNavigationRef.navigate(rootRoutes.dashboard, { screen });
+    rootNavigationRef.navigate(
+      rootRoutes.dashboard,
+      buildDashboardShellParams(screen) as NavigatorScreenParams<DashboardDrawerParamList>,
+    );
   });
 };
 

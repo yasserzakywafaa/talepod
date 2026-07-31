@@ -1,5 +1,6 @@
 import type { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
+import type { NavigatorScreenParams } from "@react-navigation/native";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Divider, List, useTheme } from "react-native-paper";
@@ -8,7 +9,12 @@ import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import { useDrawerSafeAreaPadding } from "src/components/layout/useDrawerSafeAreaPadding";
 import { LocaleLayoutBoundary } from "src/components/layout/LocaleLayoutBoundary";
 
-import { mobileRoutes } from "src/application/routes";
+import {
+  mobileRoutes,
+  type DashboardSectionRouteName,
+} from "src/application/routes";
+import type { DashboardShellStackParamList } from "src/application/navigation/DashboardShellStackNavigator";
+import { resolveActiveDashboardStackRoute } from "src/application/navigation/dashboardShellNavigation";
 import { navigateToMarketingHome } from "src/application/navigation/rootNavigation";
 import { useApplicationContext } from "src/application/store/Provider";
 import { Logo } from "./Logo";
@@ -29,10 +35,15 @@ export const DashboardDrawerContent = (props: DrawerContentComponentProps) => {
   const user = auth.user;
   const isAdmin = hasAdminRights(user);
 
-  const activeRoute = state.routeNames[state.index];
+  // The drawer holds a single shell route, so the highlighted item comes from
+  // the stack nested inside it rather than from the drawer's own index.
+  const activeRoute = resolveActiveDashboardStackRoute(state);
 
-  const go = (name: string) => {
-    navigation.navigate(name);
+  const go = (name: DashboardSectionRouteName) => {
+    navigation.navigate(
+      mobileRoutes.dashboard.shell,
+      { screen: name } as NavigatorScreenParams<DashboardShellStackParamList>,
+    );
     navigation.closeDrawer();
   };
 

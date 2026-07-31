@@ -16,9 +16,13 @@ export const mobileRoutes = {
     register: "PublicRegister",
   },
   dashboard: {
+    /** The admin drawer's single screen; everything below is a stack screen. */
+    shell: "DashboardShell",
     overview: "DashboardOverview",
     users: "DashboardUsers",
     stories: "DashboardStories",
+    user: "DashboardUser",
+    userStories: "DashboardUserStories",
   },
   authenticated: {
     create: "CreateStory",
@@ -54,6 +58,16 @@ export type PublicMarketingScreenRoute =
 
 export type DashboardRouteName =
   (typeof mobileRoutes.dashboard)[keyof typeof mobileRoutes.dashboard];
+
+/**
+ * The three admin sections the drawer links to. The detail screens (a single
+ * user, that user's stories) are pushed from a list and always carry params,
+ * so they are never a drawer destination.
+ */
+export type DashboardSectionRouteName =
+  | typeof mobileRoutes.dashboard.overview
+  | typeof mobileRoutes.dashboard.users
+  | typeof mobileRoutes.dashboard.stories;
 
 export type RootSheetRouteName =
   | (typeof mobileRoutes.public)["login"]

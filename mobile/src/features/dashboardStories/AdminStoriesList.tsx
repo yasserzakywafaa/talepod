@@ -7,56 +7,54 @@ import {
   View,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 
-import { mobileRoutes } from "src/application/routes";
-import type { DashboardShellStackParamList } from "src/application/navigation/DashboardShellStackNavigator";
+import { navigateToViewStory } from "src/application/navigation/rootNavigation";
 import { useAppTheme } from "src/application/theme/useAppTheme";
-import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
+import { PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
-import { DashboardAppBar } from "src/components/chrome/DashboardAppBar";
 import { AppToast } from "src/components/chrome/AppToast";
 import { PillButton } from "src/components/brand/PillButton";
 import { AdminEmptyState } from "src/features/dashboardShared/AdminEmptyState";
 import { ConfirmDestructiveDialog } from "src/features/dashboardShared/ConfirmDestructiveDialog";
-import { AdminUserCard } from "src/features/dashboardUsers/AdminUserCard";
-import {
-  DashboardUsersContextProvider,
-  useDashboardUsersContext,
-} from "src/features/dashboardUsers/store/Provider";
-import type { User } from "src/shared/types/user";
+import { AdminStoryCard } from "src/features/dashboardStories/AdminStoryCard";
+import { useDashboardStoriesContext } from "src/features/dashboardStories/store/Provider";
+import type { Story } from "src/features/storyCreator/store/state";
 
-type Props = NativeStackScreenProps<
-  DashboardShellStackParamList,
-  typeof mobileRoutes.dashboard.users
->;
+type AdminStoriesListProps = {
+  /** Rendered above the list — the count line, or a per-user heading. */
+  subtitle: string;
+  emptyMessage: string;
+};
 
-const DashboardUsersContent = ({ navigation }: Props) => {
+/**
+ * The story list shared by "all platform stories" and "one user's stories",
+ * exactly as the web shares one data-grid config between those two pages.
+ */
+export const AdminStoriesList = ({
+  subtitle,
+  emptyMessage,
+}: AdminStoriesListProps) => {
   const { t } = useTranslation(["dashboard", "library"]);
   const theme = useAppTheme();
   const { horizontalGutter, contentMaxWidth } = useReadableLayout();
-  const [userToDelete, setUserToDelete] = useState<{
+  const [storyToDelete, setStoryToDelete] = useState<{
     id: string;
-    name: string;
+    title: string;
   } | null>(null);
 
   const {
     store: {
-      state: { isFetching, isMutating, users, paging, feedback },
+      state: { isFetching, isMutating, stories, paging, feedback },
     },
     manager: {
       setUp,
-      handleGetUsersByPage,
-      handleBlockUser,
-      handleUnblockUser,
-      handleDeleteUser,
+      handleGetStoriesByPage,
+      handleDeleteStory,
       handleDismissFeedback,
     },
-  } = useDashboardUsersContext();
+  } = useDashboardStoriesContext();
 
-  // Refetch on focus, not just on mount: coming back from a user's page, that
-  // row's role or status may have changed under us.
   useFocusEffect(
     useCallback(() => {
       void setUp();
@@ -64,34 +62,22 @@ const DashboardUsersContent = ({ navigation }: Props) => {
   );
 
   const renderItem = useCallback(
-    ({ item }: { item: User }) => (
-      <AdminUserCard
-        user={item}
-        onPress={() =>
-          navigation.navigate(mobileRoutes.dashboard.user, { userId: item._id })
-        }
-        onBlock={() => void handleBlockUser(item._id)}
-        onUnblock={() => void handleUnblockUser(item._id)}
-        onDelete={() =>
-          setUserToDelete({
-            id: item._id,
-            name: `${item.name?.givenName ?? ""} ${
-              item.name?.familyName ?? ""
-            }`.trim(),
-          })
-        }
+    ({ item }: { item: Story }) => (
+      <AdminStoryCard
+        story={item}
+        onOpen={() => navigateToViewStory(item.slug)}
+        onDelete={() => setStoryToDelete({ id: item._id, title: item.title })}
       />
     ),
-    [navigation, handleBlockUser, handleUnblockUser],
+    [],
   );
 
-  const totalCount = paging.totalCount ?? 0;
   const hasMore = (paging.totalPagesCount ?? 1) > paging.pageNumber;
 
   return (
     <View style={styles.root}>
       <FlatList
-        data={users}
+        data={stories}
         keyExtractor={(item) => item._id}
         renderItem={renderItem}
         {...PAGE_SCROLL_PROPS}
@@ -109,17 +95,12 @@ const DashboardUsersContent = ({ navigation }: Props) => {
               },
             ]}
           >
-            {totalCount
-              ? t("stories.totalCount", { count: totalCount })
-              : t("admin.users.subtitle")}
+            {subtitle}
           </Text>
         }
         ListEmptyComponent={
           !isFetching ? (
-            <AdminEmptyState
-              icon="account-off-outline"
-              message={t("admin.users.empty")}
-            />
+            <AdminEmptyState icon="book-off-outline" message={emptyMessage} />
           ) : null
         }
         ListFooterComponent={
@@ -130,7 +111,9 @@ const DashboardUsersContent = ({ navigation }: Props) => {
             {hasMore && !isFetching ? (
               <PillButton
                 variant="outlined"
-                onPress={() => void handleGetUsersByPage(paging.pageNumber + 1)}
+                onPress={() =>
+                  void handleGetStoriesByPage(paging.pageNumber + 1)
+                }
               >
                 {t("library:page.loadMore")}
               </PillButton>
@@ -140,19 +123,19 @@ const DashboardUsersContent = ({ navigation }: Props) => {
       />
 
       <ConfirmDestructiveDialog
-        visible={!!userToDelete}
-        title={t("admin.users.deleteUserTitle")}
-        message={t("admin.users.deleteUserConfirmPlain", {
-          name: userToDelete?.name ?? "",
+        visible={!!storyToDelete}
+        title={t("dashboard:stories.deleteStoryTitle")}
+        message={t("dashboard:stories.deleteStoryConfirmPlain", {
+          name: storyToDelete?.title ?? "",
         })}
         isBusy={isMutating}
         onConfirm={() => {
-          if (userToDelete) {
-            void handleDeleteUser(userToDelete.id);
-            setUserToDelete(null);
+          if (storyToDelete) {
+            void handleDeleteStory(storyToDelete.id);
+            setStoryToDelete(null);
           }
         }}
-        onDismiss={() => setUserToDelete(null)}
+        onDismiss={() => setStoryToDelete(null)}
       />
 
       <AppToast
@@ -164,14 +147,6 @@ const DashboardUsersContent = ({ navigation }: Props) => {
     </View>
   );
 };
-
-export const DashboardUsersScreen = (props: Props) => (
-  <Page header={<DashboardAppBar routeName={props.route.name} />}>
-    <DashboardUsersContextProvider>
-      <DashboardUsersContent {...props} />
-    </DashboardUsersContextProvider>
-  </Page>
-);
 
 const styles = StyleSheet.create({
   root: { flex: 1 },

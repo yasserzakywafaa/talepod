@@ -63,6 +63,26 @@ const END_POINTS = {
       GET_USERS_COUNT: `${publicApiUrl}/api/v1/dashboard/overview/users-count`,
       GET_STORIES_COUNT: `${publicApiUrl}/api/v1/dashboard/overview/stories-count`,
     },
+    USERS: {
+      GET_ALL_USERS: `${publicApiUrl}/api/v1/dashboard/users`,
+      GET_USER_BY_ID: (userId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/users/${userId}`,
+      GET_USER_STORIES_COUNT: (userId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/users/${userId}/stories/count`,
+      UPDATE_USER_ROLE: (userId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/users/${userId}/role`,
+      BLOCK_USER: (userId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/users/block/${userId}`,
+      UNBLOCK_USER: (userId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/users/unblock/${userId}`,
+      DELETE_USER: (userId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/users/delete/${userId}`,
+    },
+    STORIES: {
+      GET_ALL_STORIES: `${publicApiUrl}/api/v1/dashboard/stories`,
+      DELETE_STORY: (storyId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/stories/delete/${storyId}`,
+    },
   },
 };
 

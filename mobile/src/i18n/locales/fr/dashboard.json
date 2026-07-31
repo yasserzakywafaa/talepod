@@ -15,9 +15,6 @@
     "welcomeBack": "Bon retour, {{name}} !",
     "welcomeBackFallback": "Bon retour"
   },
-  "users": {
-    "subtitle": "Gérer les utilisateurs, les rôles et les autorisations."
-  },
   "profile": {
     "pageTitle": "Mon profil | TalePod",
     "title": "Mon profil",
@@ -58,9 +55,25 @@
     "manageOnWeb": "Gérer l'abonnement sur le web"
   },
   "stories": {
-    "comingSoon": "La liste complète des histoires de la plateforme sera disponible dans une prochaine mise à jour.",
-    "subtitle": "Gérer et consulter toutes les histoires de la plateforme.",
-    "title": "Histoires"
+    "title": "Histoires",
+    "subtitle": "Gérez et consultez toutes les histoires de la plateforme.",
+    "totalCount_one": "{{count}} au total",
+    "totalCount_other": "{{count}} au total",
+    "idLabel": "ID",
+    "view": "Voir",
+    "viewEdit": "Voir/Modifier",
+    "unknownAuthor": "Inconnu",
+    "deleteStoryTitle": "Supprimer l'histoire",
+    "userStoriesTitle": "Histoires de {{name}}",
+    "userStoriesEmpty": "Aucune histoire trouvée pour cet utilisateur.",
+    "userStoriesTotal_one": "{{count}} histoire au total",
+    "userStoriesTotal_other": "{{count}} histoires au total",
+    "empty": "Aucune histoire pour le moment.",
+    "deleteStoryConfirmPlain": "Supprimer l'histoire « {{name}} » ? Cette action est irréversible.",
+    "hasAudio": "Avec narration",
+    "noAudio": "Sans narration",
+    "ageValue": "Âge {{age}}",
+    "rowActions": "Actions pour {{title}}"
   },
   "subscription": {
     "title": "Abonnement",
@@ -72,6 +85,64 @@
   },
   "toasts": {
     "subscriptionCanceled": "L'abonnement est annulé 💔",
-    "accountDeleted": "Votre compte a été supprimé"
+    "accountDeleted": "Votre compte a été supprimé",
+    "userBlocked": "Utilisateur bloqué avec succès",
+    "userDeleted": "Utilisateur supprimé avec succès",
+    "userRoleUpdated": "Rôle de l'utilisateur mis à jour avec succès",
+    "storyDeleted": "Histoire supprimée avec succès",
+    "userUnblocked": "Utilisateur débloqué avec succès"
+  },
+  "admin": {
+    "users": {
+      "title": "Utilisateurs",
+      "subtitle": "Gérez les utilisateurs, les rôles et les autorisations depuis ici.",
+      "roleSuperAdmin": "Super Admin",
+      "roleAdmin": "Admin",
+      "roleRegular": "Régulier",
+      "statusValues": {
+        "active": "Actif",
+        "inactive": "Inactif",
+        "suspended": "Suspendu",
+        "banned": "Banni"
+      },
+      "block": "Bloquer",
+      "deleteUserTitle": "Supprimer l'utilisateur",
+      "unblock": "Débloquer",
+      "empty": "Aucun utilisateur trouvé.",
+      "rowActions": "Actions pour {{name}}",
+      "deleteUserConfirmPlain": "Supprimer l'utilisateur « {{name}} » ? Cette action est irréversible.",
+      "storiesCount_one": "{{count}} histoire",
+      "storiesCount_other": "{{count}} histoires"
+    },
+    "user": {
+      "title": "Détails de l'utilisateur",
+      "subtitle": "Consultez et gérez les informations, histoires et autorisations de l'utilisateur.",
+      "notFoundTitle": "Utilisateur introuvable",
+      "notFoundDescription": "L'utilisateur que vous recherchez n'existe pas ou a été supprimé.",
+      "userId": "ID utilisateur :",
+      "created": "Créé :",
+      "lastLogin": "Dernière connexion :",
+      "subscription": "Abonnement :",
+      "notAvailable": "N/D",
+      "userRole": "Rôle de l'utilisateur",
+      "role": "Rôle",
+      "roleUser": "Utilisateur",
+      "roleHelp": "Modifiez le rôle de l'utilisateur pour contrôler ses autorisations et son niveau d'accès.",
+      "storiesCreated_one": "Histoire créée",
+      "storiesCreated_other": "Histoires créées",
+      "viewStories": "Voir les histoires",
+      "moderation": "Modération",
+      "deleteUser": "Supprimer l'utilisateur"
+    }
+  },
+  "errors": {
+    "loadUsers": "Échec du chargement des utilisateurs",
+    "loadStories": "Échec du chargement des histoires",
+    "loadUser": "Échec du chargement de cet utilisateur",
+    "blockUser": "Échec du blocage de l'utilisateur",
+    "unblockUser": "Échec du déblocage de l'utilisateur",
+    "deleteUser": "Échec de la suppression de l'utilisateur",
+    "deleteStory": "Échec de la suppression de l'histoire",
+    "updateRole": "Échec de la mise à jour du rôle"
   }
 }

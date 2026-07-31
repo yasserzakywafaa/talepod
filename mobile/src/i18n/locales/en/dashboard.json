@@ -15,9 +15,6 @@
     "welcomeBack": "Welcome back, {{name}}!",
     "welcomeBackFallback": "Welcome back"
   },
-  "users": {
-    "subtitle": "Manage users, roles, and permissions."
-  },
   "profile": {
     "pageTitle": "My Profile | TalePod",
     "title": "My Profile",
@@ -58,9 +55,25 @@
     "manageOnWeb": "Manage subscription on the web"
   },
   "stories": {
-    "comingSoon": "Full platform stories list will ship in a follow-up PR.",
+    "title": "Stories",
     "subtitle": "Manage and view all platform stories.",
-    "title": "Stories"
+    "totalCount_one": "{{count}} total",
+    "totalCount_other": "{{count}} total",
+    "idLabel": "ID",
+    "view": "View",
+    "viewEdit": "View/Edit",
+    "unknownAuthor": "Unknown",
+    "deleteStoryTitle": "Delete Story",
+    "userStoriesTitle": "{{name}}'s Stories",
+    "userStoriesEmpty": "No stories found for this user.",
+    "userStoriesTotal_one": "{{count}} total story",
+    "userStoriesTotal_other": "{{count}} total stories",
+    "empty": "No stories yet.",
+    "deleteStoryConfirmPlain": "Delete the story \"{{name}}\"? This cannot be undone.",
+    "hasAudio": "Has narration",
+    "noAudio": "No narration",
+    "ageValue": "Age {{age}}",
+    "rowActions": "Actions for {{title}}"
   },
   "subscription": {
     "title": "Subscription",
@@ -72,6 +85,64 @@
   },
   "toasts": {
     "subscriptionCanceled": "Subscription is canceled 💔",
-    "accountDeleted": "Your account has been deleted"
+    "accountDeleted": "Your account has been deleted",
+    "userBlocked": "User blocked successfully",
+    "userDeleted": "User deleted successfully",
+    "userRoleUpdated": "User role updated successfully",
+    "storyDeleted": "Story deleted successfully",
+    "userUnblocked": "User unblocked successfully"
+  },
+  "admin": {
+    "users": {
+      "title": "Users",
+      "subtitle": "Manage users, roles, and permissions from here.",
+      "roleSuperAdmin": "Super Admin",
+      "roleAdmin": "Admin",
+      "roleRegular": "Regular",
+      "statusValues": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "suspended": "Suspended",
+        "banned": "Banned"
+      },
+      "block": "Block",
+      "deleteUserTitle": "Delete User",
+      "unblock": "Unblock",
+      "empty": "No users found.",
+      "rowActions": "Actions for {{name}}",
+      "deleteUserConfirmPlain": "Delete the user \"{{name}}\"? This cannot be undone.",
+      "storiesCount_one": "{{count}} story",
+      "storiesCount_other": "{{count}} stories"
+    },
+    "user": {
+      "title": "User Details",
+      "subtitle": "View and manage user information, stories, and permissions.",
+      "notFoundTitle": "User Not Found",
+      "notFoundDescription": "The user you're looking for doesn't exist or has been deleted.",
+      "userId": "User ID:",
+      "created": "Created:",
+      "lastLogin": "Last Login:",
+      "subscription": "Subscription:",
+      "notAvailable": "N/A",
+      "userRole": "User Role",
+      "role": "Role",
+      "roleUser": "User",
+      "roleHelp": "Change the user's role to control their permissions and access level.",
+      "storiesCreated_one": "Story Created",
+      "storiesCreated_other": "Stories Created",
+      "viewStories": "View Stories",
+      "moderation": "Moderation",
+      "deleteUser": "Delete user"
+    }
+  },
+  "errors": {
+    "loadUsers": "Failed to load users",
+    "loadStories": "Failed to load stories",
+    "loadUser": "Failed to load this user",
+    "blockUser": "Failed to block user",
+    "unblockUser": "Failed to unblock user",
+    "deleteUser": "Failed to delete user",
+    "deleteStory": "Failed to delete story",
+    "updateRole": "Failed to update user role"
   }
 }
