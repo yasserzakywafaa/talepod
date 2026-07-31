@@ -8,7 +8,7 @@ import type { MainDrawerParamList } from "src/application/navigation/MainDrawerN
 import {
   navigateToMainMyStories,
   navigateToPublicMarketingScreen,
-  openRootSheet,
+  navigateToCreateStory,
 } from "src/application/navigation/rootNavigation";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useAppTheme } from "src/application/theme/useAppTheme";
@@ -39,12 +39,16 @@ export const HomeMarketingScreen = ({ navigation }: Props) => {
     }
   }, [auth.isAuthenticated, auth.user]);
 
+  const handleCreateStoryPress = () => {
+    navigateToCreateStory();
+  };
+
+  const handlePricingPress = () => {
+    navigateToPublicMarketingScreen(mobileRoutes.public.pricing);
+  };
+
   return (
-    <Page
-      header={
-        <MarketingAppBar navigation={navigation} showCreateOnHome />
-      }
-    >
+    <Page header={<MarketingAppBar navigation={navigation} showCreateOnHome />}>
       <PageBody>
         {/* Night-sky-to-dawn hero — the web `bgTwilight` ramp. */}
         <Gradient
@@ -65,18 +69,13 @@ export const HomeMarketingScreen = ({ navigation }: Props) => {
             {t("home.body")}
           </Text>
           <View style={styles.actions}>
-            <PillButton
-              onPress={() => openRootSheet(mobileRoutes.public.login)}
-              trailingIcon="shimmer"
-            >
+            <PillButton onPress={handleCreateStoryPress} trailingIcon="shimmer">
               {t("home.ctaLogin")}
             </PillButton>
             <PillButton
               variant="text"
               color="#FFFFFF"
-              onPress={() =>
-                navigateToPublicMarketingScreen(mobileRoutes.public.pricing)
-              }
+              onPress={handlePricingPress}
             >
               {t("home.ctaPricing")}
             </PillButton>
@@ -102,5 +101,12 @@ const styles = StyleSheet.create({
     color: "rgba(255,255,255,0.88)",
     includeFontPadding: false,
   },
-  actions: { alignItems: "center", gap: 8, paddingTop: 8 },
+  actions: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 8,
+    paddingTop: 8,
+  },
 });
