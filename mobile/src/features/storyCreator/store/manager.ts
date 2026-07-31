@@ -8,10 +8,10 @@ import {
 
 import { Avatar } from "src/shared/types/avatar";
 import { Country } from "src/shared/countries";
-import { Environment } from "src/shared/mockedData/Environments";
-import { Moral } from "src/shared/mockedData/Moral";
+import { Environment } from "src/shared/storyOptions/Environments";
+import { Moral } from "src/shared/storyOptions/Moral";
 import { StoryCreatorStore } from "./store";
-import { Tone } from "src/shared/mockedData/Tone";
+import { Tone } from "src/shared/storyOptions/Tone";
 import { useEffect } from "react";
 
 export interface StoryCreatorManager {

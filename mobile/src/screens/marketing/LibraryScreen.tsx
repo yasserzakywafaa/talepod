@@ -1,45 +1,54 @@
 import { useCallback, useEffect } from "react";
-import {
-  FlatList,
-  Image,
-  Pressable,
-  StyleSheet,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
-import {
-  ActivityIndicator,
-  Button,
-  Card,
-  SegmentedButtons,
-  Text,
-  useTheme,
-} from "react-native-paper";
 
-import { navigateToCreateStory, navigateToViewStory } from "src/application/navigation/rootNavigation";
+import {
+  navigateToCreateStory,
+  navigateToViewStory,
+} from "src/application/navigation/rootNavigation";
+import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useDrawerPageHeader } from "src/components/layout/useDrawerPageHeader";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
+import { FiltersButton } from "src/components/brand/FiltersButton";
+import { NoStoriesFound } from "src/components/brand/NoStoriesFound";
+import { PillButton } from "src/components/brand/PillButton";
+import { SegmentedControl } from "src/components/brand/SegmentedControl";
+import { ServiceUnavailable } from "src/components/brand/ServiceUnavailable";
+import { StoryCard } from "src/components/brand/StoryCard";
+import { StoryFiltersSheet } from "src/components/brand/StoryFiltersSheet";
 import {
   LibraryContextProvider,
   useLibraryContext,
 } from "src/features/library/store/Provider";
+import type { LibraryStoryFilters } from "src/features/library/store/state";
 import type { Story } from "src/features/storyCreator/store/state";
-import { getStoryCoverImageUrl } from "src/shared/utils/getStoryCoverImageUrl";
 
 const LibraryScreenContent = () => {
   const { t } = useTranslation("library");
-  const theme = useTheme();
+  const theme = useAppTheme();
   const { horizontalGutter, contentMaxWidth } = useReadableLayout();
   const {
     store: {
-      state: { isFetching, stories, pagingInfo, storiesSource },
+      state: {
+        isFetching,
+        stories,
+        loadError,
+        pagingInfo,
+        storiesSource,
+        filters,
+        isFiltersPanelOpen,
+        activeFiltersCount,
+      },
     },
     manager: {
       setUp,
       handleClearFilters,
       handleGetStoriesByPage,
       handleSetStoriesSource,
+      handleToggleFiltersPanel,
+      handleUpdateFilters,
+      handleFilterStories,
     },
   } = useLibraryContext();
 
@@ -53,67 +62,54 @@ const LibraryScreenContent = () => {
     navigateToViewStory(slug);
   }, []);
 
-  const renderItem = ({ item }: { item: Story }) => {
-    const coverUrl = getStoryCoverImageUrl(item);
-    return (
-    <Pressable onPress={() => onStoryPress(item.slug)}>
-      <Card mode="outlined" style={styles.card}>
-        {coverUrl ? (
-          <Image
-            source={{ uri: coverUrl }}
-            style={styles.cover}
-            resizeMode="cover"
-          />
-        ) : null}
-        <Card.Content>
-          <Text variant="titleMedium" numberOfLines={2}>
-            {item.title}
-          </Text>
-          {item.summary ? (
-            <Text
-              variant="bodySmall"
-              numberOfLines={3}
-              style={{ color: theme.colors.onSurfaceVariant, marginTop: 4 }}
-            >
-              {item.summary}
-            </Text>
-          ) : null}
-        </Card.Content>
-      </Card>
-    </Pressable>
-    );
-  };
+  const renderItem = ({ item }: { item: Story }) => (
+    <StoryCard story={item} onPress={() => onStoryPress(item.slug)} />
+  );
 
   const listHeader = (
     <View style={styles.header}>
-      <SegmentedButtons
+      <SegmentedControl
         value={storiesSource === "talepod" ? "talepod" : "community"}
-        onValueChange={(v) =>
-          void handleSetStoriesSource(v as "community" | "talepod")
-        }
-        buttons={[
+        options={[
           { value: "community", label: t("page.sourceCommunity") },
           { value: "talepod", label: t("page.sourceTalepod") },
         ]}
+        onChange={(value) =>
+          void handleSetStoriesSource(value as "community" | "talepod")
+        }
+      />
+      <FiltersButton
+        activeCount={activeFiltersCount}
+        onPress={() => handleToggleFiltersPanel(true)}
       />
     </View>
   );
 
   const listEmpty =
     !isFetching && stories.length === 0 ? (
-      <View style={styles.empty}>
-        <Button
-          mode="contained"
-          onPress={() => navigateToCreateStory()}
-          style={styles.emptyButton}
-        >
-          {t("page.emptyCreate")}
-        </Button>
-        <Button mode="outlined" onPress={() => void handleClearFilters()}>
-          {t("page.emptyClearFilters")}
-        </Button>
-      </View>
+      <NoStoriesFound
+        onCreate={() => navigateToCreateStory()}
+        onClearFilters={
+          activeFiltersCount > 0
+            ? () => void handleClearFilters()
+            : undefined
+        }
+      />
     ) : null;
+
+  // Nothing loaded and the API is unreachable — say so rather than showing
+  // an empty library that reads as "there are no stories".
+  if (loadError && stories.length === 0) {
+    return (
+      <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
+        <ServiceUnavailable
+          kind={loadError}
+          isRetrying={isFetching}
+          onRetry={() => void setUp()}
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
@@ -134,24 +130,37 @@ const LibraryScreenContent = () => {
           },
         ]}
         ListFooterComponent={
-          <>
+          <View style={styles.footer}>
             {isFetching ? (
-              <ActivityIndicator style={styles.loader} />
+              <ActivityIndicator color={theme.colors.primary} />
             ) : null}
             {(pagingInfo.totalPagesCount ?? 1) > pagingInfo.pageNumber &&
             !isFetching ? (
-              <Button
-                mode="outlined"
+              <PillButton
+                variant="outlined"
                 onPress={() =>
                   void handleGetStoriesByPage(pagingInfo.pageNumber + 1)
                 }
-                style={styles.loadMore}
               >
-                Load more
-              </Button>
+                {t("page.loadMore")}
+              </PillButton>
             ) : null}
-          </>
+          </View>
         }
+      />
+
+      <StoryFiltersSheet
+        visible={isFiltersPanelOpen}
+        values={filters}
+        onChange={(key, value) => {
+          // The sheet's key set includes `createdByAdmin`, which only My
+          // Stories filters on; without `showOriginals` it is never emitted.
+          if (key === "createdByAdmin") return;
+          handleUpdateFilters(key, value as LibraryStoryFilters[typeof key]);
+        }}
+        onApply={() => void handleFilterStories()}
+        onClear={() => void handleClearFilters()}
+        onDismiss={() => handleToggleFiltersPanel(false)}
       />
     </View>
   );
@@ -171,13 +180,7 @@ export const LibraryScreen = () => {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  header: { gap: 12, marginBottom: 16 },
-  toolbar: { flexDirection: "row", justifyContent: "flex-end" },
-  listContent: { paddingBottom: 24 },
-  card: { marginBottom: 12 },
-  cover: { width: "100%", height: 160 },
-  empty: { gap: 12, paddingVertical: 32, alignItems: "center" },
-  emptyButton: { marginTop: 8 },
-  loadMore: { marginTop: 8, alignSelf: "center" },
-  loader: { paddingVertical: 16 },
+  header: { marginBottom: 16, gap: 4 },
+  listContent: { paddingBottom: 24, gap: 16 },
+  footer: { paddingVertical: 16, alignItems: "center", gap: 12 },
 });

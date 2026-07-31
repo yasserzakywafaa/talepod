@@ -150,7 +150,9 @@
       "addOne": "En ajouter un →",
       "noneAria": "Pas d'avatar",
       "none": "Aucun",
-      "useAria": "Utiliser {{name}}"
+      "useAria": "Utiliser {{name}}",
+      "offline": "Impossible de charger tes personnages — vérifie ta connexion.",
+      "failed": "Impossible de charger tes personnages pour le moment."
     },
     "page": {
       "title": "Mes avatars",
@@ -198,6 +200,11 @@
       "deleted": "Avatar supprimé.",
       "error": "Une erreur s'est produite.",
       "deleteError": "Échec de la suppression de l'avatar."
+    },
+    "card": {
+      "create": "Créer",
+      "edit": "Modifier",
+      "delete": "Supprimer"
     }
   },
   "reader": {

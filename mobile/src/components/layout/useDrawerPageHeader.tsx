@@ -1,22 +1,15 @@
-import { useNavigation } from "@react-navigation/native";
-import type { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useTranslation } from "react-i18next";
 
-import { useMainShellDrawer } from "src/application/navigation/MainShellDrawerContext";
-import type { MainDrawerParamList } from "src/application/navigation/MainDrawerNavigator";
-import { MainShellAppBar } from "src/components/paper/MainShellAppBar";
-import { MarketingAppBar } from "src/components/paper/MarketingAppBar";
+import { MainShellAppBar } from "src/components/chrome/MainShellAppBar";
 
-/** Header for library/contact/pricing shown in the main drawer or authenticated shell. */
+/**
+ * Header for library/contact/pricing and the legal pages.
+ *
+ * These all live in the main shell stack now — signed in or not — so they get
+ * the shell app bar, which reaches the drawer through shell context.
+ */
 export const useDrawerPageHeader = (titleKey: string) => {
   const { t } = useTranslation("common");
-  const shellDrawer = useMainShellDrawer();
-  const navigation = useNavigation<DrawerNavigationProp<MainDrawerParamList>>();
-  const title = t(titleKey);
 
-  if (shellDrawer) {
-    return <MainShellAppBar title={title} />;
-  }
-
-  return <MarketingAppBar navigation={navigation} title={title} />;
+  return <MainShellAppBar title={t(titleKey)} />;
 };

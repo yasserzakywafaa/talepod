@@ -1,3 +1,4 @@
+import { useReadableLayout } from "src/components/layout/useReadableLayout";
 import { Image, StyleSheet, View, useWindowDimensions } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 
@@ -36,7 +37,9 @@ export const LongStoryBody = ({
 }: LongStoryBodyProps) => {
   const theme = useTheme();
   const { width } = useWindowDimensions();
-  const imageWidth = width - 32;
+  const { contentMaxWidth } = useReadableLayout();
+  // Capped so a landscape window does not produce an image taller than the screen.
+  const imageWidth = Math.min(width, contentMaxWidth) - 32;
   const bodyStyle = {
     color: theme.colors.onSurface,
     lineHeight: 26 as const,

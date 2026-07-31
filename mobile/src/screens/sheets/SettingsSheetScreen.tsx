@@ -26,19 +26,18 @@ export const SettingsSheetScreen = ({ navigation }: Props) => {
   const theme = useTheme();
   const {
     store: {
-      state: { themePreference, auth },
+      state: { themePreference },
     },
     manager: { handleThemePreferenceChange, handleLanguageChange },
   } = useApplicationContext();
 
-  const isAuthenticated = auth.isAuthenticated && !!auth.user;
   const appVersion = getAppVersionLabel();
 
   const dismiss = () => navigation.goBack();
 
   const openPublicPage = (screen: PublicMarketingScreenRoute) => {
     dismiss();
-    navigateToPublicMarketingScreen(screen, isAuthenticated);
+    navigateToPublicMarketingScreen(screen);
   };
 
   const handleRefresh = async () => {

@@ -1,3 +1,4 @@
+import type { RequestErrorKind } from "src/shared/api/getRequestErrorKind";
 import { useState } from "react";
 
 import type { PagingInfo } from "src/shared/types/api";
@@ -13,6 +14,7 @@ import {
 export interface LibraryStore {
   state: LibraryInitialState;
   isLibraryFetching: (isFetching: boolean) => void;
+  setLoadError: (loadError: RequestErrorKind | null) => void;
   toggleFiltersPanel: (isOpen: boolean) => void;
   sortStories: () => void;
   setStoriesSource: (storiesSource: LibraryStoriesSource) => void;
@@ -34,6 +36,10 @@ export const useLibraryStore = (): LibraryStore => {
 
   const isLibraryFetching = (isFetching: boolean) => {
     setState((prev) => ({ ...prev, isFetching }));
+  };
+
+  const setLoadError = (loadError: RequestErrorKind | null) => {
+    setState((prev) => ({ ...prev, loadError }));
   };
 
   const toggleFiltersPanel = (isFiltersPanelOpen: boolean) => {
@@ -88,6 +94,7 @@ export const useLibraryStore = (): LibraryStore => {
   return {
     state,
     isLibraryFetching,
+    setLoadError,
     updateStories,
     sortStories,
     setStoriesSource,

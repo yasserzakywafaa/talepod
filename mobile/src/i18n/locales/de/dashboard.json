@@ -3,7 +3,8 @@
   "nav": {
     "overview": "Übersicht",
     "stories": "Geschichten",
-    "users": "Benutzer"
+    "users": "Benutzer",
+    "backToApp": "Zurück zur App"
   },
   "overview": {
     "storiesMetricHint": "Auf der Plattform erstellte Geschichten.",
@@ -14,9 +15,6 @@
     "usersActive": "Aktive Benutzer auf der Plattform",
     "welcomeBack": "Willkommen zurück, {{name}}!",
     "welcomeBackFallback": "Willkommen zurück"
-  },
-  "users": {
-    "subtitle": "Benutzer, Rollen und Berechtigungen verwalten."
   },
   "profile": {
     "pageTitle": "Mein Profil | TalePod",
@@ -58,9 +56,26 @@
     "manageOnWeb": "Abonnement im Web verwalten"
   },
   "stories": {
-    "comingSoon": "Die vollständige Plattform-Geschichtenliste folgt in einem späteren Update.",
-    "subtitle": "Alle Plattform-Geschichten verwalten und anzeigen.",
-    "title": "Geschichten"
+    "title": "Geschichten",
+    "subtitle": "Verwalten und anzeigen aller Plattform-Geschichten.",
+    "totalCount_one": "{{count}} insgesamt",
+    "totalCount_other": "{{count}} insgesamt",
+    "idLabel": "ID",
+    "view": "Ansehen",
+    "viewEdit": "Ansehen/Bearbeiten",
+    "unknownAuthor": "Unbekannt",
+    "deleteStoryTitle": "Geschichte löschen",
+    "userStoriesTitle": "Geschichten von {{name}}",
+    "userStoriesEmpty": "Keine Geschichten für diesen Benutzer gefunden.",
+    "userStoriesTotal_one": "{{count}} Geschichte insgesamt",
+    "userStoriesTotal_other": "{{count}} Geschichten insgesamt",
+    "empty": "Noch keine Geschichten.",
+    "deleteStoryConfirmPlain": "Die Geschichte „{{name}}“ löschen? Das kann nicht rückgängig gemacht werden.",
+    "hasAudio": "Mit Vertonung",
+    "noAudio": "Ohne Vertonung",
+    "ageValue": "Alter {{age}}",
+    "rowActions": "Aktionen für {{title}}",
+    "emptyFiltered": "Keine Geschichten entsprechen diesen Filtern."
   },
   "subscription": {
     "title": "Abonnement",
@@ -72,6 +87,70 @@
   },
   "toasts": {
     "subscriptionCanceled": "Abonnement wurde gekündigt 💔",
-    "accountDeleted": "Ihr Konto wurde gelöscht"
+    "accountDeleted": "Ihr Konto wurde gelöscht",
+    "userBlocked": "Benutzer erfolgreich gesperrt",
+    "userDeleted": "Benutzer erfolgreich gelöscht",
+    "userRoleUpdated": "Benutzerrolle erfolgreich aktualisiert",
+    "storyDeleted": "Geschichte erfolgreich gelöscht",
+    "userUnblocked": "Benutzer erfolgreich entsperrt"
+  },
+  "admin": {
+    "users": {
+      "title": "Benutzer",
+      "subtitle": "Verwalten Sie hier Benutzer, Rollen und Berechtigungen.",
+      "roleSuperAdmin": "Super-Admin",
+      "roleAdmin": "Admin",
+      "roleRegular": "Regulär",
+      "statusValues": {
+        "active": "Aktiv",
+        "inactive": "Inaktiv",
+        "suspended": "Gesperrt",
+        "banned": "Gebannt"
+      },
+      "block": "Sperren",
+      "deleteUserTitle": "Benutzer löschen",
+      "unblock": "Entsperren",
+      "empty": "Keine Benutzer gefunden.",
+      "rowActions": "Aktionen für {{name}}",
+      "deleteUserConfirmPlain": "Den Benutzer „{{name}}“ löschen? Das kann nicht rückgängig gemacht werden.",
+      "storiesCount_one": "{{count}} Geschichte",
+      "storiesCount_other": "{{count}} Geschichten",
+      "emptyFiltered": "Keine Benutzer entsprechen diesen Filtern.",
+      "filterSearch": "Suche",
+      "filterSearchHint": "Name, E-Mail, Telefon oder ID",
+      "filterRole": "Kontotyp",
+      "filterStatus": "Status",
+      "filterAny": "Beliebig"
+    },
+    "user": {
+      "title": "Benutzerdetails",
+      "subtitle": "Benutzerinformationen, Geschichten und Berechtigungen anzeigen und verwalten.",
+      "notFoundTitle": "Benutzer nicht gefunden",
+      "notFoundDescription": "Der gesuchte Benutzer existiert nicht oder wurde gelöscht.",
+      "userId": "Benutzer-ID:",
+      "created": "Erstellt:",
+      "lastLogin": "Letzte Anmeldung:",
+      "subscription": "Abonnement:",
+      "notAvailable": "N/V",
+      "userRole": "Benutzerrolle",
+      "role": "Rolle",
+      "roleUser": "Benutzer",
+      "roleHelp": "Ändern Sie die Benutzerrolle, um Berechtigungen und Zugriffsebene zu steuern.",
+      "storiesCreated_one": "Geschichte erstellt",
+      "storiesCreated_other": "Geschichten erstellt",
+      "viewStories": "Geschichten ansehen",
+      "moderation": "Moderation",
+      "deleteUser": "Benutzer löschen"
+    }
+  },
+  "errors": {
+    "loadUsers": "Benutzer konnten nicht geladen werden",
+    "loadStories": "Geschichten konnten nicht geladen werden",
+    "loadUser": "Dieser Benutzer konnte nicht geladen werden",
+    "blockUser": "Benutzer konnte nicht gesperrt werden",
+    "unblockUser": "Benutzer konnte nicht entsperrt werden",
+    "deleteUser": "Benutzer konnte nicht gelöscht werden",
+    "deleteStory": "Geschichte konnte nicht gelöscht werden",
+    "updateRole": "Benutzerrolle konnte nicht aktualisiert werden"
   }
 }

@@ -1,4 +1,4 @@
-import type { DrawerScreenProps } from "@react-navigation/drawer";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import {
   formatLocalizedDate,
   localeFromLanguage,
@@ -7,14 +7,14 @@ import { useTranslation } from "react-i18next";
 import { Text, useTheme } from "react-native-paper";
 
 import { mobileRoutes } from "src/application/routes";
-import type { MainDrawerParamList } from "src/application/navigation/MainDrawerNavigator";
+import type { MainShellStackParamList } from "src/application/navigation/MainShellStackNavigator";
 import { PrivacyPolicyBody } from "src/components/legal/PrivacyPolicyBody";
 import { Page, PageBody } from "src/components/layout/Page";
 import { useDrawerPageHeader } from "src/components/layout/useDrawerPageHeader";
 import { useScreenTypography } from "src/components/layout/useScreenTypography";
 
-type Props = DrawerScreenProps<
-  MainDrawerParamList,
+type Props = NativeStackScreenProps<
+  MainShellStackParamList,
   typeof mobileRoutes.public.privacyPolicy
 >;
 

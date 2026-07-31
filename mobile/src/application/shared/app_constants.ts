@@ -10,6 +10,11 @@ const APP_CONSTANTS = {
   IS_DEV: rawEnv === "dev" || rawEnv === "development",
   IS_PROD: rawEnv === "prod" || rawEnv === "production",
 
+  /** Mirrors `web/src/application/shared/app_constants.ts`. */
+  MAX_STORIES_LIMIT_FREE: 4,
+  MAX_STORIES_LIMIT_PREMIUM: 50,
+  MAX_STORIES_LIMIT_ADVANCED: 999,
+
   MOBILE_CLIENT_HEADER: "X-Client-Platform",
   MOBILE_CLIENT_VALUE: "mobile",
 

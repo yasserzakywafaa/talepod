@@ -1,3 +1,5 @@
+import { logApiError } from "src/shared/api/logApiError";
+import { getRequestErrorKind } from "src/shared/api/getRequestErrorKind";
 import END_POINTS from "src/application/shared/endpoints";
 import { api } from "src/application/shared/apiClient";
 import { useApplicationContext } from "src/application/store/Provider";
@@ -6,6 +8,7 @@ import type {
   ApiRequestParams,
   ApiResponseWithPaging,
 } from "src/shared/types/api";
+import { countActiveFilters } from "src/shared/utils/countActiveFilters";
 
 import type { MyStoriesStore } from "./store";
 import { getMyStoriesInitialState, type MyStoriesStoryFilters } from "./state";
@@ -14,6 +17,12 @@ export interface MyStoriesManager {
   setUp: () => Promise<void>;
   handleClearFilters: () => Promise<void>;
   handleGetStoriesByPage: (pageNumber: number) => Promise<void>;
+  handleToggleFiltersPanel: (isOpen: boolean) => void;
+  handleUpdateFilters: (
+    name: keyof MyStoriesStoryFilters,
+    value: MyStoriesStoryFilters[typeof name],
+  ) => void;
+  handleFilterStories: () => Promise<void>;
   handleFetchStories: (filters?: MyStoriesStoryFilters) => Promise<void>;
 }
 
@@ -64,6 +73,12 @@ export const useMyStoriesManager = (store: MyStoriesStore): MyStoriesManager => 
       store.updateStories(
         page > 1 ? [...previous, ...data.results] : data.results,
       );
+      store.setLoadError(null);
+    } catch (error) {
+      // Previously this rejected into the void and left an empty list with no
+      // explanation. An unreachable API now surfaces on screen instead.
+      logApiError("Failed to fetch my stories", error);
+      store.setLoadError(getRequestErrorKind(error));
     } finally {
       store.isMyStoriesFetching(false);
     }
@@ -80,8 +95,36 @@ export const useMyStoriesManager = (store: MyStoriesStore): MyStoriesManager => 
     );
   };
 
+  const handleToggleFiltersPanel = (isOpen: boolean) => {
+    store.toggleFiltersPanel(isOpen);
+  };
+
+  const handleUpdateFilters = (
+    name: keyof MyStoriesStoryFilters,
+    value: MyStoriesStoryFilters[typeof name],
+  ) => {
+    store.updateFilters(name, value);
+  };
+
+  /** Applies the pending filter selection and reloads from page one. */
+  const handleFilterStories = async () => {
+    const activeFiltersCount = countActiveFilters(filters);
+    store.setActiveFiltersCount(activeFiltersCount);
+    store.toggleFiltersPanel(false);
+    store.updatePageNumber(initialPagingInfo.pageNumber);
+    await handleFetchStories(
+      {
+        ...filters,
+        pageNumber: initialPagingInfo.pageNumber,
+        pageSize: pagingInfo.pageSize,
+      },
+      activeFiltersCount > 0,
+    );
+  };
+
   const handleClearFilters = async () => {
     store.clearFilters();
+    store.toggleFiltersPanel(false);
     store.updatePageNumber(initialPagingInfo.pageNumber);
     const resetFilters = getMyStoriesInitialState().filters;
     await handleFetchStories(
@@ -110,6 +153,9 @@ export const useMyStoriesManager = (store: MyStoriesStore): MyStoriesManager => 
     setUp,
     handleClearFilters,
     handleGetStoriesByPage,
+    handleToggleFiltersPanel,
+    handleUpdateFilters,
+    handleFilterStories,
     handleFetchStories,
   };
 };

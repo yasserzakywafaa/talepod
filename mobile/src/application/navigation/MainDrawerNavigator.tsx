@@ -1,38 +1,39 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { Dimensions } from "react-native";
+import { useWindowDimensions } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "react-native-paper";
 import type { NavigatorScreenParams } from "@react-navigation/native";
 
 import { mobileRoutes } from "src/application/routes";
-import { MainDrawerContent } from "src/components/paper/MainDrawerContent";
+import { MainDrawerContent } from "src/components/chrome/MainDrawerContent";
 import { MainShellScreen } from "src/application/navigation/MainShellScreen";
 import type { MainShellStackParamList } from "src/application/navigation/MainShellStackNavigator";
 import { useApplicationContext } from "src/application/store/Provider";
-import { ContactScreen } from "src/screens/marketing/ContactScreen";
 import { HomeMarketingScreen } from "src/screens/marketing/HomeMarketingScreen";
-import { LibraryScreen } from "src/screens/marketing/LibraryScreen";
-import { PricingScreen } from "src/screens/marketing/PricingScreen";
-import { PrivacyPolicyScreen } from "src/screens/marketing/PrivacyPolicyScreen";
-import { TermsAndConditionsScreen } from "src/screens/marketing/TermsAndConditionsScreen";
 
+/**
+ * The drawer hosts two things: the app shell and the marketing landing page.
+ *
+ * Library, contact, pricing and the legal pages are *not* here — they belong
+ * to the shell stack, so they keep the tab bar and can push the story reader.
+ */
 export type MainDrawerParamList = {
   [mobileRoutes.main.shell]: NavigatorScreenParams<MainShellStackParamList>;
   [mobileRoutes.public.home]: undefined;
-  [mobileRoutes.public.pricing]: undefined;
-  [mobileRoutes.public.contact]: undefined;
-  [mobileRoutes.public.library]: undefined;
-  [mobileRoutes.public.privacyPolicy]: undefined;
-  [mobileRoutes.public.termsAndConditions]: undefined;
 };
 
 const Drawer = createDrawerNavigator<MainDrawerParamList>();
 
-const drawerWidth = Math.min(Dimensions.get("window").width * 0.55, 320);
-
 export const MainDrawerNavigator = () => {
   const theme = useTheme();
   const { i18n } = useTranslation();
+  /**
+   * Read per render, not once at import: a width snapshotted in one
+   * orientation is wrong in the other — 55% of a landscape screen covers most
+   * of the portrait one.
+   */
+  const { width } = useWindowDimensions();
+  const drawerWidth = Math.min(width * 0.55, 320);
   const {
     store: {
       state: {
@@ -73,29 +74,6 @@ export const MainDrawerNavigator = () => {
         name={mobileRoutes.public.home}
         component={HomeMarketingScreen}
       />
-      <Drawer.Screen
-        name={mobileRoutes.public.pricing}
-        component={PricingScreen}
-      />
-      <Drawer.Screen
-        name={mobileRoutes.public.contact}
-        component={ContactScreen}
-      />
-      <Drawer.Screen
-        name={mobileRoutes.public.library}
-        component={LibraryScreen}
-      />
-      <Drawer.Screen
-        name={mobileRoutes.public.privacyPolicy}
-        component={PrivacyPolicyScreen}
-      />
-      <Drawer.Screen
-        name={mobileRoutes.public.termsAndConditions}
-        component={TermsAndConditionsScreen}
-      />
     </Drawer.Navigator>
   );
 };
-
-/** @deprecated Use MainDrawerParamList */
-export type PublicStackParamList = MainDrawerParamList;

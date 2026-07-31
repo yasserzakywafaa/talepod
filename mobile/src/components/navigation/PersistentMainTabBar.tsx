@@ -3,15 +3,20 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useSyncExternalStore } from "react";
 import { useTranslation } from "react-i18next";
-import { Platform, Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Avatar, Text, useTheme } from "react-native-paper";
+import { Avatar } from "react-native-paper";
 
+import { useAppTheme } from "src/application/theme/useAppTheme";
 import { mobileRoutes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import type { User } from "src/shared/types/user";
 import type { MainDrawerParamList } from "src/application/navigation/MainDrawerNavigator";
-import { resolveActiveMainTabRoute } from "src/application/navigation/mainShellNavigation";
+import type { MainShellStackParamList } from "src/application/navigation/MainShellStackNavigator";
+import {
+  resolveActiveMainTabRoute,
+  resolveActiveShellStackRoute,
+} from "src/application/navigation/mainShellNavigation";
 import {
   openRootSheet,
   rootNavigationRef,
@@ -27,8 +32,22 @@ type TabRouteName = (typeof mobileRoutes.tabs)[keyof typeof mobileRoutes.tabs];
 type TabDef =
   | {
       kind: "route";
-      id: TabRouteName;
+      id: string;
       tabRoute: TabRouteName;
+      icon: keyof typeof MaterialCommunityIcons.glyphMap;
+      labelKey: string;
+    }
+  | {
+      /** A shell-stack screen rather than a bottom tab (e.g. Library). */
+      kind: "shell";
+      id: string;
+      shellRoute: keyof MainShellStackParamList;
+      icon: keyof typeof MaterialCommunityIcons.glyphMap;
+      labelKey: string;
+    }
+  | {
+      kind: "login";
+      id: "login";
       icon: keyof typeof MaterialCommunityIcons.glyphMap;
       labelKey: string;
     }
@@ -38,7 +57,7 @@ type TabDef =
       labelKey: "account";
     };
 
-const TABS: TabDef[] = [
+const AUTHENTICATED_TABS: TabDef[] = [
   {
     kind: "route",
     id: mobileRoutes.tabs.create,
@@ -50,20 +69,53 @@ const TABS: TabDef[] = [
     kind: "route",
     id: mobileRoutes.tabs.myStories,
     tabRoute: mobileRoutes.tabs.myStories,
-    icon: "book-open-variant",
+    /**
+     * The web's `WebStoriesOutlined` — a card between two thin rules. Not
+     * `view-carousel-outline`, whose fat side blocks are MUI's
+     * `ViewCarouselOutlined`, which the web keeps for the Comic format.
+     */
+    icon: "view-array-outline",
     labelKey: "nav.myStories",
   },
   {
     kind: "route",
     id: mobileRoutes.tabs.myAvatars,
     tabRoute: mobileRoutes.tabs.myAvatars,
-    icon: "account-circle",
+    /** The web's `FaceOutlined` — the same glyph, renamed in MCI v6. */
+    icon: "face-man-outline",
     labelKey: "story:avatars.page.title",
   },
   {
     kind: "account",
     id: "account",
     labelKey: "account",
+  },
+];
+
+/**
+ * Guests can create and browse, exactly as on the web — My Stories and My
+ * Avatars are user-scoped, so they only appear once signed in.
+ */
+const GUEST_TABS: TabDef[] = [
+  {
+    kind: "route",
+    id: mobileRoutes.tabs.create,
+    tabRoute: mobileRoutes.tabs.create,
+    icon: "auto-fix",
+    labelKey: "nav.createProject",
+  },
+  {
+    kind: "shell",
+    id: mobileRoutes.public.library,
+    shellRoute: mobileRoutes.public.library,
+    icon: "book-open-variant",
+    labelKey: "nav.library",
+  },
+  {
+    kind: "login",
+    id: "login",
+    icon: "login",
+    labelKey: "nav.login",
   },
 ];
 
@@ -80,7 +132,7 @@ const TabAccountAvatar = ({
   user: User | null;
   focused: boolean;
 }) => {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const ringStyle = focused
     ? { borderWidth: 2, borderColor: theme.colors.primary }
     : undefined;
@@ -158,14 +210,22 @@ const getActiveTabSnapshot = () => {
   return resolveActiveMainTabRoute(rootNavigationRef.getRootState());
 };
 
+const getActiveShellRouteSnapshot = () => {
+  if (!rootNavigationRef.isReady()) {
+    return null;
+  }
+
+  return resolveActiveShellStackRoute(rootNavigationRef.getRootState());
+};
+
 export const PersistentMainTabBar = ({ navigation }: Props) => {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation(["common", "story"]);
   const {
     store: {
       state: {
-        auth: { user },
+        auth: { user, isAuthenticated },
       },
     },
   } = useApplicationContext();
@@ -176,12 +236,30 @@ export const PersistentMainTabBar = ({ navigation }: Props) => {
     () => null,
   );
 
+  const activeShellRoute = useSyncExternalStore(
+    subscribeToRootNavigation,
+    getActiveShellRouteSnapshot,
+    () => null,
+  );
+
+  const tabs = isAuthenticated ? AUTHENTICATED_TABS : GUEST_TABS;
+
   const goToTab = (tabRoute: TabRouteName) => {
     navigation.dispatch(DrawerActions.closeDrawer());
     navigation.navigate(mobileRoutes.main.shell, {
       screen: mobileRoutes.main.tabs,
       params: { screen: tabRoute },
     });
+  };
+
+  const goToShellScreen = (shellRoute: keyof MainShellStackParamList) => {
+    navigation.dispatch(DrawerActions.closeDrawer());
+    navigation.navigate(mobileRoutes.main.shell, { screen: shellRoute });
+  };
+
+  const openLoginSheet = () => {
+    navigation.dispatch(DrawerActions.closeDrawer());
+    openRootSheet(mobileRoutes.public.login);
   };
 
   const openAccountSheet = () => {
@@ -195,7 +273,10 @@ export const PersistentMainTabBar = ({ navigation }: Props) => {
         styles.wrapper,
         {
           paddingBottom: insets.bottom + FLOATING_TAB_BAR_BOTTOM_GAP,
-          paddingHorizontal: FLOATING_TAB_BAR_MARGIN_H,
+          // Sideways the notch takes one long edge; inset both so the pill
+          // stays centred rather than shifting away from it.
+          paddingHorizontal:
+            FLOATING_TAB_BAR_MARGIN_H + Math.max(insets.left, insets.right),
         },
       ]}
       pointerEvents="box-none"
@@ -203,17 +284,23 @@ export const PersistentMainTabBar = ({ navigation }: Props) => {
       <View
         style={[
           styles.pill,
+          theme.tokens.shadow.md,
           {
             backgroundColor: theme.colors.surface,
             borderColor: theme.colors.outlineVariant,
           },
         ]}
       >
-        {TABS.map((tab) => {
+        {tabs.map((tab) => {
           const isFocused =
             tab.kind === "account"
               ? activeTabRoute === mobileRoutes.tabs.profile
-              : activeTabRoute === tab.tabRoute;
+              : tab.kind === "route"
+                ? activeTabRoute === tab.tabRoute
+                : tab.kind === "shell"
+                  ? activeShellRoute === tab.shellRoute
+                  : false;
+
           const label =
             tab.labelKey === "account"
               ? ` ${user?.name.givenName ?? t("account")}`
@@ -221,17 +308,31 @@ export const PersistentMainTabBar = ({ navigation }: Props) => {
                 ? t(tab.labelKey)
                 : t(tab.labelKey, { ns: "common" });
 
+          const onPress = () => {
+            switch (tab.kind) {
+              case "account":
+                return openAccountSheet();
+              case "login":
+                return openLoginSheet();
+              case "shell":
+                return goToShellScreen(tab.shellRoute);
+              default:
+                return goToTab(tab.tabRoute);
+            }
+          };
+
           return (
             <Pressable
               key={tab.id}
-              onPress={
-                tab.kind === "account"
-                  ? openAccountSheet
-                  : () => goToTab(tab.tabRoute)
-              }
+              onPress={onPress}
+              accessibilityRole="button"
+              accessibilityState={{ selected: isFocused }}
               style={[
                 styles.tab,
-                isFocused && { backgroundColor: theme.colors.surfaceVariant },
+                // Soft honey wash on the active tab — the web's selected pill.
+                isFocused && {
+                  backgroundColor: theme.colors.primaryContainer,
+                },
               ]}
             >
               {tab.kind === "account" ? (
@@ -248,14 +349,18 @@ export const PersistentMainTabBar = ({ navigation }: Props) => {
                 />
               )}
               <Text
-                variant="labelSmall"
                 numberOfLines={1}
-                style={{
-                  color: isFocused
-                    ? theme.colors.primary
-                    : theme.colors.onSurfaceVariant,
-                  marginTop: 2,
-                }}
+                style={[
+                  styles.tabLabel,
+                  {
+                    color: isFocused
+                      ? theme.colors.primary
+                      : theme.colors.onSurfaceVariant,
+                    fontFamily: isFocused
+                      ? theme.tokens.fontFamily.semiBold
+                      : theme.tokens.fontFamily.medium,
+                  },
+                ]}
               >
                 {label}
               </Text>
@@ -283,15 +388,6 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     paddingHorizontal: 4,
     paddingVertical: 6,
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.12,
-        shadowRadius: 12,
-      },
-      android: { elevation: 8 },
-    }),
   },
   tab: {
     flex: 1,
@@ -301,6 +397,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     borderRadius: 24,
     minHeight: 48,
+  },
+  tabLabel: {
+    fontSize: 11,
+    marginTop: 3,
+    includeFontPadding: false,
   },
   accountAvatar: {
     borderRadius: 13,

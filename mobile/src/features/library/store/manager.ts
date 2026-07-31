@@ -1,3 +1,5 @@
+import { logApiError } from "src/shared/api/logApiError";
+import { getRequestErrorKind } from "src/shared/api/getRequestErrorKind";
 import END_POINTS from "src/application/shared/endpoints";
 import { api } from "src/application/shared/apiClient";
 import type { Story } from "src/features/storyCreator/store/state";
@@ -5,6 +7,7 @@ import type {
   ApiRequestParams,
   ApiResponseWithPaging,
 } from "src/shared/types/api";
+import { countActiveFilters } from "src/shared/utils/countActiveFilters";
 
 import type { LibraryStore } from "./store";
 import {
@@ -19,6 +22,12 @@ export interface LibraryManager {
   handleClearFilters: () => Promise<void>;
   handleGetStoriesByPage: (pageNumber: number) => Promise<void>;
   handleSetStoriesSource: (source: LibraryStoriesSource) => Promise<void>;
+  handleToggleFiltersPanel: (isOpen: boolean) => void;
+  handleUpdateFilters: (
+    name: keyof LibraryStoryFilters,
+    value: LibraryStoryFilters[typeof name],
+  ) => void;
+  handleFilterStories: () => Promise<void>;
   handleFetchStories: (
     newFilters?: FetchStoryFilters,
     hasActiveFilters?: boolean,
@@ -68,6 +77,12 @@ export const useLibraryManager = (store: LibraryStore): LibraryManager => {
       store.updateStories(
         page > 1 ? [...previous, ...data.results] : data.results,
       );
+      store.setLoadError(null);
+    } catch (error) {
+      // Previously this rejected into the void and left an empty list with no
+      // explanation. An unreachable API now surfaces on screen instead.
+      logApiError("Failed to fetch library stories", error);
+      store.setLoadError(getRequestErrorKind(error));
     } finally {
       store.isLibraryFetching(false);
     }
@@ -119,6 +134,34 @@ export const useLibraryManager = (store: LibraryStore): LibraryManager => {
     );
   };
 
+  const handleToggleFiltersPanel = (isOpen: boolean) => {
+    store.toggleFiltersPanel(isOpen);
+  };
+
+  const handleUpdateFilters = (
+    name: keyof LibraryStoryFilters,
+    value: LibraryStoryFilters[typeof name],
+  ) => {
+    store.updateFilters(name, value);
+  };
+
+  /** Applies the pending filter selection and reloads from page one. */
+  const handleFilterStories = async () => {
+    const activeFiltersCount = countActiveFilters(filters);
+    store.setActiveFiltersCount(activeFiltersCount);
+    store.toggleFiltersPanel(false);
+    store.updatePageNumber(initialPagingInfo.pageNumber);
+    await handleFetchStories(
+      {
+        ...filters,
+        pageNumber: initialPagingInfo.pageNumber,
+        pageSize: pagingInfo.pageSize,
+      },
+      activeFiltersCount > 0,
+      storiesSource,
+    );
+  };
+
   const handleSetStoriesSource = async (newSource: LibraryStoriesSource) => {
     if (newSource === storiesSource) return;
     store.setStoriesSource(newSource);
@@ -140,6 +183,9 @@ export const useLibraryManager = (store: LibraryStore): LibraryManager => {
     handleClearFilters,
     handleGetStoriesByPage,
     handleSetStoriesSource,
+    handleToggleFiltersPanel,
+    handleUpdateFilters,
+    handleFilterStories,
     handleFetchStories,
   };
 };

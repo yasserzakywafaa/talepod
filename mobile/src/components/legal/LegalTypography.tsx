@@ -2,9 +2,8 @@ import type { ReactNode } from "react";
 import { StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 
-import { mobileRoutes, type PublicMarketingScreenRoute } from "src/application/routes";
+import type { PublicMarketingScreenRoute } from "src/application/routes";
 import { navigateToPublicMarketingScreen } from "src/application/navigation/rootNavigation";
-import { useApplicationContext } from "src/application/store/Provider";
 import { useScreenTypography } from "src/components/layout/useScreenTypography";
 
 export const LegalSection = ({ children }: { children: ReactNode }) => (
@@ -111,18 +110,11 @@ export const LegalLink = ({
   screen: PublicMarketingScreenRoute;
 }) => {
   const theme = useTheme();
-  const {
-    store: {
-      state: {
-        auth: { isAuthenticated },
-      },
-    },
-  } = useApplicationContext();
 
   return (
     <Text
       style={{ color: theme.colors.primary, textDecorationLine: "underline" }}
-      onPress={() => navigateToPublicMarketingScreen(screen, isAuthenticated)}
+      onPress={() => navigateToPublicMarketingScreen(screen)}
     >
       {children}
     </Text>

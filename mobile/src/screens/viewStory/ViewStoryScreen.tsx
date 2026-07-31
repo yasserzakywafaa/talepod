@@ -7,13 +7,17 @@ import {
   useWindowDimensions,
 } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { ActivityIndicator, Appbar, Text, useTheme } from "react-native-paper";
+import { DrawerActions } from "@react-navigation/native";
+import { ActivityIndicator, Appbar, Text } from "react-native-paper";
 
 import { mobileRoutes } from "src/application/routes";
-import type { RootStackParamList } from "src/application/navigation/types";
+import type { MainShellStackParamList } from "src/application/navigation/MainShellStackNavigator";
+import { useMainShellDrawer } from "src/application/navigation/MainShellDrawerContext";
+import { useAppTheme } from "src/application/theme/useAppTheme";
+import { DisplayText } from "src/components/brand/DisplayText";
 import { LocaleLayoutBoundary } from "src/components/layout/LocaleLayoutBoundary";
+import { useReadableLayout } from "src/components/layout/useReadableLayout";
 import { Page } from "src/components/layout/Page";
-import { openMainDrawer } from "src/application/navigation/rootNavigation";
 import {
   useViewStoryManager,
   useViewStoryStore,
@@ -21,14 +25,22 @@ import {
 import { LongStoryBody } from "src/features/viewStory/LongStoryBody";
 
 type Props = NativeStackScreenProps<
-  RootStackParamList,
+  MainShellStackParamList,
   typeof mobileRoutes.authenticated.viewStory
 >;
 
 export const ViewStoryScreen = ({ navigation, route }: Props) => {
   const { slug } = route.params;
-  const theme = useTheme();
+  const theme = useAppTheme();
   const { width } = useWindowDimensions();
+  const { contentMaxWidth } = useReadableLayout();
+  /**
+   * Sideways the window is wider than the screen is tall, so a full-width
+   * comic page would stand taller than the viewport. Cap it the way every
+   * other page caps its copy.
+   */
+  const mediaWidth = Math.min(width, contentMaxWidth) - 32;
+  const shellDrawer = useMainShellDrawer();
   const store = useViewStoryStore();
   const manager = useViewStoryManager(store);
   const { story, isFetching } = store.state;
@@ -36,6 +48,18 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
   useEffect(() => {
     void manager.setUp(slug);
   }, [slug]);
+
+  /**
+   * A story can be opened straight from the generation snackbar, in which case
+   * there is nothing beneath it to pop back to — fall back to the library.
+   */
+  const goBack = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+      return;
+    }
+    navigation.replace(mobileRoutes.public.library);
+  };
 
   const isComic =
     story?.format === "comic" && (story.pages?.length ?? 0) > 0;
@@ -45,20 +69,19 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
       statusBarHeight={0}
       style={[styles.topBarHeader, { backgroundColor: theme.colors.background }]}
     >
-      <Appbar.BackAction
-        onPress={() => navigation.goBack()}
-        color={theme.colors.primary}
-      />
+      <Appbar.BackAction onPress={goBack} color={theme.colors.primary} />
       <Appbar.Content
         title={
-          <Text variant="titleMedium" numberOfLines={1}>
+          <DisplayText size={18} numberOfLines={1}>
             {story?.title ?? ""}
-          </Text>
+          </DisplayText>
         }
       />
+      {/* The drawer wraps the shell, so it now slides over the story instead
+          of having to navigate somewhere else first. */}
       <Appbar.Action
         icon="menu"
-        onPress={openMainDrawer}
+        onPress={() => shellDrawer?.dispatch(DrawerActions.openDrawer())}
         color={theme.colors.primary}
       />
     </Appbar.Header>
@@ -85,14 +108,18 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
                   {page.imageUrl ? (
                     <Image
                       source={{ uri: page.imageUrl }}
-                      style={{ width: width - 32, height: (width - 32) * 0.75 }}
+                      style={{
+                        width: mediaWidth,
+                        height: mediaWidth * 0.75,
+                        borderRadius: theme.tokens.radius.lg,
+                      }}
                       resizeMode="cover"
                     />
                   ) : (
                     <View
                       style={[
                         styles.imagePlaceholder,
-                        { width: width - 32, backgroundColor: theme.colors.surfaceVariant },
+                        { width: mediaWidth, backgroundColor: theme.colors.surfaceVariant },
                       ]}
                     >
                       <ActivityIndicator color={theme.colors.primary} />
@@ -129,7 +156,7 @@ const styles = StyleSheet.create({
   page: { gap: 8 },
   imagePlaceholder: {
     height: 200,
-    borderRadius: 12,
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
   },

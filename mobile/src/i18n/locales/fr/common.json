@@ -43,5 +43,12 @@
     "version": "Version {{version}}"
   },
   "sheetClose": "Fermer",
-  "signedInUser": "Utilisateur connecté"
+  "signedInUser": "Utilisateur connecté",
+  "serviceError": {
+    "offlineTitle": "Impossible de joindre TalePod",
+    "offlineBody": "Vérifie ta connexion et réessaie. Si tout va bien de ton côté, notre conteur fait sûrement la sieste.",
+    "serverTitle": "Un problème est survenu",
+    "serverBody": "TalePod rencontre des difficultés. Ce n'est pas de ta faute — réessaie dans un instant.",
+    "retry": "Réessayer"
+  }
 }

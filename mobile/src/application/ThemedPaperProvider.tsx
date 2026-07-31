@@ -3,18 +3,23 @@ import { useMemo } from "react";
 import { PaperProvider } from "react-native-paper";
 
 import { useResolvedThemeMode } from "src/application/useResolvedThemeMode";
-import { paperDarkTheme, paperLightTheme } from "src/application/paperTheme";
+import { getPaperTheme } from "src/application/paperTheme";
 
 type ThemedPaperProviderProps = {
   children: React.ReactNode;
+  /** Owned by `App`, which keeps the splash up until the faces resolve. */
+  fontsLoaded: boolean;
 };
 
-export const ThemedPaperProvider = ({ children }: ThemedPaperProviderProps) => {
+export const ThemedPaperProvider = ({
+  children,
+  fontsLoaded,
+}: ThemedPaperProviderProps) => {
   const resolvedThemeMode = useResolvedThemeMode();
 
   const theme = useMemo(
-    () => (resolvedThemeMode === "light" ? paperLightTheme : paperDarkTheme),
-    [resolvedThemeMode],
+    () => getPaperTheme(resolvedThemeMode, fontsLoaded),
+    [resolvedThemeMode, fontsLoaded],
   );
 
   return (

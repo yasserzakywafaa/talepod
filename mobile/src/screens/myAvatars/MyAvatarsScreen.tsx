@@ -1,27 +1,23 @@
+import { logApiError } from "src/shared/api/logApiError";
+import { getRequestErrorKind, type RequestErrorKind } from "src/shared/api/getRequestErrorKind";
 import { useCallback, useEffect, useState } from "react";
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
-import {
-  ActivityIndicator,
-  Button,
-  Card,
-  Dialog,
-  Portal,
-  Text,
-  useTheme,
-} from "react-native-paper";
+import { Dialog, Portal, Button } from "react-native-paper";
 
 import END_POINTS from "src/application/shared/endpoints";
 import { api } from "src/application/shared/apiClient";
+import { navigateToCreateStory } from "src/application/navigation/rootNavigation";
+import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
-import { MainShellAppBar } from "src/components/paper/MainShellAppBar";
+import { MainShellAppBar } from "src/components/chrome/MainShellAppBar";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
+import { AvatarCard } from "src/components/brand/AvatarCard";
+import { DisplayText } from "src/components/brand/DisplayText";
+import { PillButton } from "src/components/brand/PillButton";
+import { ServiceUnavailable } from "src/components/brand/ServiceUnavailable";
 import { AvatarFormDialog } from "src/features/myAvatars/AvatarFormDialog";
+import { useStoryCreatorContext } from "src/features/storyCreator/store/Provider";
 import {
   EMPTY_AVATAR_INPUT,
   type Avatar,
@@ -33,12 +29,17 @@ export const useMyAvatars = (enabled = true) => {
   const [avatars, setAvatars] = useState<Avatar[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [loadError, setLoadError] = useState<RequestErrorKind | null>(null);
 
   const fetchAvatars = useCallback(async () => {
     setIsLoading(true);
     try {
       const { data } = await api.get<Avatar[]>(END_POINTS.AVATARS.LIST);
       setAvatars(Array.isArray(data) ? data : []);
+      setLoadError(null);
+    } catch (error) {
+      logApiError("Failed to fetch avatars", error);
+      setLoadError(getRequestErrorKind(error));
     } finally {
       setIsLoading(false);
     }
@@ -80,6 +81,7 @@ export const useMyAvatars = (enabled = true) => {
     avatars,
     isLoading,
     isSaving,
+    loadError,
     refetch: fetchAvatars,
     saveAvatar,
     removeAvatar,
@@ -98,10 +100,13 @@ export const MyAvatarsScreen = () => {
 
 const MyAvatarsScreenContent = () => {
   const { t } = useTranslation("story");
-  const theme = useTheme();
+  const theme = useAppTheme();
   const { horizontalGutter, contentMaxWidth } = useReadableLayout();
-  const { avatars, isLoading, isSaving, saveAvatar, removeAvatar } =
+  const { avatars, isLoading, isSaving, loadError, refetch, saveAvatar, removeAvatar } =
     useMyAvatars(true);
+  const {
+    manager: { handleSelectAvatar },
+  } = useStoryCreatorContext();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<Avatar | null>(null);
@@ -124,6 +129,29 @@ const MyAvatarsScreenContent = () => {
     void saveAvatar(input, editing).then(() => setDialogOpen(false));
   };
 
+  /**
+   * Mirrors the web's `?avatarId=` deep link from the avatars page: seed the
+   * creator with this character, then jump to the form.
+   */
+  const startStoryWith = (avatar: Avatar) => {
+    handleSelectAvatar(avatar);
+    navigateToCreateStory();
+  };
+
+  // Nothing loaded and the API is unreachable — say so rather than showing
+  // an empty list that reads as "you have no avatars".
+  if (loadError && avatars.length === 0) {
+    return (
+      <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
+        <ServiceUnavailable
+          kind={loadError}
+          isRetrying={isLoading}
+          onRetry={() => void refetch()}
+        />
+      </View>
+    );
+  }
+
   return (
     <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
       <FlatList
@@ -141,59 +169,50 @@ const MyAvatarsScreenContent = () => {
         ]}
         ListHeaderComponent={
           <View style={styles.header}>
-            <Button mode="contained" onPress={openCreate} icon="plus">
+            <Text
+              style={[
+                styles.subtitle,
+                {
+                  color: theme.colors.onSurfaceVariant,
+                  fontFamily: theme.tokens.fontFamily.regular,
+                },
+              ]}
+            >
+              {t("avatars.page.subtitle")}
+            </Text>
+            <PillButton icon="plus" onPress={openCreate} fullWidth>
               {t("avatars.page.new")}
-            </Button>
+            </PillButton>
           </View>
         }
         ListEmptyComponent={
           isLoading ? (
-            <ActivityIndicator style={{ marginTop: 24 }} />
+            <ActivityIndicator
+              style={styles.loader}
+              color={theme.colors.primary}
+            />
           ) : (
-            <Text style={{ color: theme.colors.onSurfaceVariant, marginTop: 16 }}>
+            <Text
+              style={[
+                styles.empty,
+                {
+                  color: theme.colors.onSurfaceVariant,
+                  fontFamily: theme.tokens.fontFamily.regular,
+                },
+              ]}
+            >
               {t("avatars.page.empty")}
             </Text>
           )
         }
         renderItem={({ item }) => (
-          <Card mode="outlined" style={styles.card}>
-            <View style={styles.cardRow}>
-              {item.portraitUrl ? (
-                <Image source={{ uri: item.portraitUrl }} style={styles.portrait} />
-              ) : (
-                <View
-                  style={[
-                    styles.portrait,
-                    { backgroundColor: theme.colors.surfaceVariant },
-                  ]}
-                />
-              )}
-              <View style={styles.cardText}>
-                <Text variant="titleMedium">{item.name}</Text>
-                {item.relationship ? (
-                  <Text
-                    variant="bodySmall"
-                    style={{ color: theme.colors.onSurfaceVariant }}
-                  >
-                    {item.relationship}
-                  </Text>
-                ) : null}
-                <View style={styles.cardActions}>
-                  <Button mode="outlined" onPress={() => openEdit(item)} compact>
-                    {t("avatars.page.editTitle")}
-                  </Button>
-                  <Button
-                    mode="text"
-                    textColor={theme.colors.error}
-                    onPress={() => setDeleteTarget(item)}
-                    compact
-                  >
-                    {t("avatars.delete.confirm")}
-                  </Button>
-                </View>
-              </View>
-            </View>
-          </Card>
+          <AvatarCard
+            avatar={item}
+            disabled={isSaving}
+            onCreate={() => startStoryWith(item)}
+            onEdit={() => openEdit(item)}
+            onDelete={() => setDeleteTarget(item)}
+          />
         )}
       />
 
@@ -209,10 +228,25 @@ const MyAvatarsScreenContent = () => {
           onSubmit={onSubmit}
         />
 
-        <Dialog visible={deleteTarget !== null} onDismiss={() => setDeleteTarget(null)}>
-          <Dialog.Title>{t("avatars.delete.title")}</Dialog.Title>
+        <Dialog
+          visible={deleteTarget !== null}
+          onDismiss={() => setDeleteTarget(null)}
+          style={{ borderRadius: theme.tokens.radius.lg }}
+        >
+          <Dialog.Title>
+            <DisplayText size={20}>{t("avatars.delete.title")}</DisplayText>
+          </Dialog.Title>
           <Dialog.Content>
-            <Text>{t("avatars.delete.body", { name: deleteTarget?.name ?? "" })}</Text>
+            <Text
+              style={{
+                color: theme.colors.onSurfaceVariant,
+                fontFamily: theme.tokens.fontFamily.regular,
+              }}
+            >
+              {t("avatars.delete.body", {
+                name: deleteTarget?.name ?? "",
+              }).replace(/<\/?strong>/g, "")}
+            </Text>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={() => setDeleteTarget(null)}>{t("avatars.delete.cancel")}</Button>
@@ -234,21 +268,14 @@ const MyAvatarsScreenContent = () => {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  list: { paddingBottom: 24 },
-  header: { marginBottom: 12 },
-  card: { marginBottom: 12 },
-  cardRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 12,
-    gap: 12,
-  },
-  portrait: { width: 64, height: 64, borderRadius: 32 },
-  cardText: { flex: 1, gap: 4 },
-  cardActions: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-    marginTop: 8,
+  list: { paddingBottom: 24, gap: 16 },
+  header: { marginBottom: 4, gap: 12 },
+  subtitle: { fontSize: 14, lineHeight: 21, includeFontPadding: false },
+  loader: { marginTop: 24 },
+  empty: {
+    fontSize: 15,
+    lineHeight: 22,
+    marginTop: 16,
+    includeFontPadding: false,
   },
 });

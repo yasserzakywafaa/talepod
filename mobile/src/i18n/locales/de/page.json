@@ -20,12 +20,43 @@
     "title": "Erstellen, verwalten und erweitern Sie Ihre Projekte im Web oder mobil."
   },
   "pricing": {
-    "freeTierBody": "Starten Sie mit den Kernfunktionen.",
-    "freeTierTitle": "Kostenlos",
-    "mobileBody": "Gleiche Stufen wie die Web-Preisseite. Stripe-Checkout bleibt vorerst im Web.",
-    "paidTiersBody": "Lite, Basic, Essential, Premium — heute im Web-Dashboard verwalten.",
-    "paidTiersTitle": "Bezahlte Tarife",
-    "plans": "Tarife"
+    "mostPopular": "Am beliebtesten",
+    "perMonth": "/Monat",
+    "freeForever": "für immer kostenlos",
+    "billedMonthly": "monatliche Abrechnung",
+    "billedYearly": "jährliche Abrechnung · {{currency}}{{total}}/Jahr",
+    "heroTitle": "Ein Preis für unbegrenzte Schlafenszeiten",
+    "heroSubtitle": "Starten Sie kostenlos. Upgraden Sie, wenn die Schlafenszeit zum besten Teil des Tages wird.",
+    "bestValue": "Bestes Preis-Leistungs-Verhältnis",
+    "plans": "Tarife",
+    "cta": {
+      "createStories": "Geschichten erstellen",
+      "registerSubscribe": "Registrieren & Abonnieren",
+      "upgrade": "Upgrade",
+      "currentPlan": "Aktueller Tarif"
+    },
+    "features": {
+      "standardSupport": "Standard-Kundensupport",
+      "createUpToFree_one": "Bis zu {{count}} Gute-Nacht-Geschichte erstellen",
+      "createUpToFree_other": "Bis zu {{count}} Gute-Nacht-Geschichten erstellen",
+      "basicTts": "Einfache Text-zu-Sprache-Umwandlung",
+      "limitedLibrary": "Zugang zu einer begrenzten Geschichtenbibliothek",
+      "prioritySupport": "Prioritäts-Kundensupport",
+      "customizableParams": "Anpassbare Geschichtenparameter",
+      "highQualityTts": "Hochwertige Text-zu-Sprache-Umwandlung",
+      "createUpToMonthly_one": "Bis zu {{count}} Gute-Nacht-Geschichte pro Monat erstellen",
+      "createUpToMonthly_other": "Bis zu {{count}} Gute-Nacht-Geschichten pro Monat erstellen",
+      "accessPremiumStories": "Zugang zu Ihren Premium-Geschichten",
+      "everythingInPremium": "Alles aus Premium",
+      "unlimitedStories": "Unbegrenzte Gute-Nacht-Geschichten",
+      "priorityGeneration": "Priorisierte Geschichtengenerierung",
+      "allVoices": "Alle Erzählerstimmen",
+      "unlimitedLibrary": "Unbegrenzt Geschichten in Ihrer Bibliothek speichern"
+    },
+    "checkoutOnWeb": "Die Bezahlung erfolgt auf talepod.com — dein Tarif gilt sofort auch in der App.",
+    "openOnWeb": "Im Web öffnen",
+    "monthly": "Monatlich",
+    "yearly": "Jährlich"
   },
   "legal": {
     "lastUpdated": "Zuletzt aktualisiert:",

@@ -150,7 +150,9 @@
       "addOne": "Add one →",
       "noneAria": "No avatar",
       "none": "None",
-      "useAria": "Use {{name}}"
+      "useAria": "Use {{name}}",
+      "offline": "We couldn't load your characters — check your connection.",
+      "failed": "We couldn't load your characters just now."
     },
     "page": {
       "title": "My Avatars",
@@ -198,6 +200,11 @@
       "deleted": "Avatar deleted.",
       "error": "Something went wrong.",
       "deleteError": "Failed to delete avatar."
+    },
+    "card": {
+      "create": "Create",
+      "edit": "Edit",
+      "delete": "Delete"
     }
   },
   "reader": {

@@ -43,5 +43,12 @@
     "version": "Version {{version}}"
   },
   "sheetClose": "Schließen",
-  "signedInUser": "Angemeldeter Benutzer"
+  "signedInUser": "Angemeldeter Benutzer",
+  "serviceError": {
+    "offlineTitle": "TalePod ist nicht erreichbar",
+    "offlineBody": "Prüfe deine Verbindung und versuch es erneut. Wenn bei dir alles passt, macht unser Geschichtenerzähler gerade ein Nickerchen.",
+    "serverTitle": "Etwas ist schiefgelaufen",
+    "serverBody": "TalePod hat gerade Probleme. Es liegt nicht an dir — bitte versuch es gleich noch einmal.",
+    "retry": "Erneut versuchen"
+  }
 }

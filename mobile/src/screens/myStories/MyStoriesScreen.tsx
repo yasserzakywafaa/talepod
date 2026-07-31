@@ -1,36 +1,51 @@
 import { useCallback, useEffect } from "react";
-import {
-  FlatList,
-  Image,
-  Pressable,
-  StyleSheet,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
-import {
-  ActivityIndicator,
-  Button,
-  Card,
-  Text,
-  useTheme,
-} from "react-native-paper";
 
-import { navigateToViewStory } from "src/application/navigation/rootNavigation";
+import {
+  navigateToCreateStory,
+  navigateToViewStory,
+} from "src/application/navigation/rootNavigation";
+import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
-import { MyStoriesContextProvider, useMyStoriesContext } from "src/features/myStories/store/Provider";
+import { FiltersButton } from "src/components/brand/FiltersButton";
+import { NoStoriesFound } from "src/components/brand/NoStoriesFound";
+import { PillButton } from "src/components/brand/PillButton";
+import { ServiceUnavailable } from "src/components/brand/ServiceUnavailable";
+import { StoryCard } from "src/components/brand/StoryCard";
+import { StoryFiltersSheet } from "src/components/brand/StoryFiltersSheet";
+import {
+  MyStoriesContextProvider,
+  useMyStoriesContext,
+} from "src/features/myStories/store/Provider";
 import type { Story } from "src/features/storyCreator/store/state";
-import { getStoryCoverImageUrl } from "src/shared/utils/getStoryCoverImageUrl";
-import { MainShellAppBar } from "src/components/paper/MainShellAppBar";
+import { MainShellAppBar } from "src/components/chrome/MainShellAppBar";
+
 const MyStoriesScreenContent = () => {
   const { t } = useTranslation("library");
-  const theme = useTheme();
+  const theme = useAppTheme();
   const { horizontalGutter, contentMaxWidth } = useReadableLayout();
   const {
     store: {
-      state: { isFetching, stories, pagingInfo },
+      state: {
+        isFetching,
+        stories,
+        loadError,
+        pagingInfo,
+        filters,
+        isFiltersPanelOpen,
+        activeFiltersCount,
+      },
     },
-    manager: { setUp, handleGetStoriesByPage },
+    manager: {
+      setUp,
+      handleGetStoriesByPage,
+      handleClearFilters,
+      handleToggleFiltersPanel,
+      handleUpdateFilters,
+      handleFilterStories,
+    },
   } = useMyStoriesContext();
 
   useEffect(() => {
@@ -39,38 +54,25 @@ const MyStoriesScreenContent = () => {
   }, []);
 
   const renderItem = useCallback(
-    ({ item }: { item: Story }) => {
-      const coverUrl = getStoryCoverImageUrl(item);
-      return (
-      <Pressable onPress={() => navigateToViewStory(item.slug)}>
-        <Card mode="outlined" style={styles.card}>
-          {coverUrl ? (
-            <Image
-              source={{ uri: coverUrl }}
-              style={styles.cover}
-              resizeMode="cover"
-            />
-          ) : null}
-          <Card.Content>
-            <Text variant="titleMedium" numberOfLines={2}>
-              {item.title}
-            </Text>
-            {item.summary ? (
-              <Text
-                variant="bodySmall"
-                numberOfLines={3}
-                style={{ color: theme.colors.onSurfaceVariant, marginTop: 4 }}
-              >
-                {item.summary}
-              </Text>
-            ) : null}
-          </Card.Content>
-        </Card>
-      </Pressable>
-      );
-    },
-    [theme.colors.onSurfaceVariant],
+    ({ item }: { item: Story }) => (
+      <StoryCard story={item} onPress={() => navigateToViewStory(item.slug)} />
+    ),
+    [],
   );
+
+  // Nothing loaded and the API is unreachable — say so rather than showing
+  // an empty list that reads as "you have no stories".
+  if (loadError && stories.length === 0) {
+    return (
+      <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
+        <ServiceUnavailable
+          kind={loadError}
+          isRetrying={isFetching}
+          onRetry={() => void setUp()}
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
@@ -78,6 +80,14 @@ const MyStoriesScreenContent = () => {
         data={stories}
         keyExtractor={(item) => item._id}
         renderItem={renderItem}
+        ListHeaderComponent={
+          <View style={styles.header}>
+            <FiltersButton
+              activeCount={activeFiltersCount}
+              onPress={() => handleToggleFiltersPanel(true)}
+            />
+          </View>
+        }
         {...PAGE_SCROLL_PROPS}
         contentContainerStyle={[
           styles.listContent,
@@ -90,33 +100,44 @@ const MyStoriesScreenContent = () => {
         ]}
         ListEmptyComponent={
           !isFetching ? (
-            <Text
-              variant="bodyMedium"
-              style={{ color: theme.colors.onSurfaceVariant, marginTop: 24 }}
-            >
-              {t("page.emptyCreate")}
-            </Text>
+            <NoStoriesFound
+              onCreate={() => navigateToCreateStory()}
+              onClearFilters={
+                activeFiltersCount > 0
+                  ? () => void handleClearFilters()
+                  : undefined
+              }
+            />
           ) : null
         }
         ListFooterComponent={
-          <>
+          <View style={styles.footer}>
             {isFetching ? (
-              <ActivityIndicator style={styles.loader} color={theme.colors.primary} />
+              <ActivityIndicator color={theme.colors.primary} />
             ) : null}
             {(pagingInfo.totalPagesCount ?? 1) > pagingInfo.pageNumber &&
             !isFetching ? (
-              <Button
-                mode="outlined"
+              <PillButton
+                variant="outlined"
                 onPress={() =>
                   void handleGetStoriesByPage(pagingInfo.pageNumber + 1)
                 }
-                style={styles.loadMore}
               >
                 {t("page.loadMore")}
-              </Button>
+              </PillButton>
             ) : null}
-          </>
+          </View>
         }
+      />
+
+      <StoryFiltersSheet
+        visible={isFiltersPanelOpen}
+        values={filters}
+        showOriginals
+        onChange={handleUpdateFilters}
+        onApply={() => void handleFilterStories()}
+        onClear={() => void handleClearFilters()}
+        onDismiss={() => handleToggleFiltersPanel(false)}
       />
     </View>
   );
@@ -127,9 +148,7 @@ export const MyStoriesScreen = () => {
 
   return (
     <Page
-      header={
-        <MainShellAppBar title={t("nav.myStories", { ns: "common" })} />
-      }
+      header={<MainShellAppBar title={t("nav.myStories", { ns: "common" })} />}
     >
       <MyStoriesContextProvider>
         <MyStoriesScreenContent />
@@ -140,9 +159,7 @@ export const MyStoriesScreen = () => {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  listContent: { paddingBottom: 24, gap: 12 },
-  card: { marginBottom: 12 },
-  cover: { width: "100%", height: 160 },
-  loadMore: { marginTop: 8, alignSelf: "center" },
-  loader: { paddingVertical: 16 },
+  header: { marginBottom: 4 },
+  listContent: { paddingBottom: 24, gap: 16 },
+  footer: { paddingVertical: 16, alignItems: "center", gap: 12 },
 });
