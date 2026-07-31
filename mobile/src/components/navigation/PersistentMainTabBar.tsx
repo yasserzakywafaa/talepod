@@ -3,10 +3,11 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useSyncExternalStore } from "react";
 import { useTranslation } from "react-i18next";
-import { Platform, Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Avatar, Text, useTheme } from "react-native-paper";
+import { Avatar } from "react-native-paper";
 
+import { useAppTheme } from "src/application/theme/useAppTheme";
 import { mobileRoutes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import type { User } from "src/shared/types/user";
@@ -80,7 +81,7 @@ const TabAccountAvatar = ({
   user: User | null;
   focused: boolean;
 }) => {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const ringStyle = focused
     ? { borderWidth: 2, borderColor: theme.colors.primary }
     : undefined;
@@ -159,7 +160,7 @@ const getActiveTabSnapshot = () => {
 };
 
 export const PersistentMainTabBar = ({ navigation }: Props) => {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation(["common", "story"]);
   const {
@@ -203,6 +204,7 @@ export const PersistentMainTabBar = ({ navigation }: Props) => {
       <View
         style={[
           styles.pill,
+          theme.tokens.shadow.md,
           {
             backgroundColor: theme.colors.surface,
             borderColor: theme.colors.outlineVariant,
@@ -229,9 +231,14 @@ export const PersistentMainTabBar = ({ navigation }: Props) => {
                   ? openAccountSheet
                   : () => goToTab(tab.tabRoute)
               }
+              accessibilityRole="button"
+              accessibilityState={{ selected: isFocused }}
               style={[
                 styles.tab,
-                isFocused && { backgroundColor: theme.colors.surfaceVariant },
+                // Soft honey wash on the active tab — the web's selected pill.
+                isFocused && {
+                  backgroundColor: theme.colors.primaryContainer,
+                },
               ]}
             >
               {tab.kind === "account" ? (
@@ -248,14 +255,18 @@ export const PersistentMainTabBar = ({ navigation }: Props) => {
                 />
               )}
               <Text
-                variant="labelSmall"
                 numberOfLines={1}
-                style={{
-                  color: isFocused
-                    ? theme.colors.primary
-                    : theme.colors.onSurfaceVariant,
-                  marginTop: 2,
-                }}
+                style={[
+                  styles.tabLabel,
+                  {
+                    color: isFocused
+                      ? theme.colors.primary
+                      : theme.colors.onSurfaceVariant,
+                    fontFamily: isFocused
+                      ? theme.tokens.fontFamily.semiBold
+                      : theme.tokens.fontFamily.medium,
+                  },
+                ]}
               >
                 {label}
               </Text>
@@ -283,15 +294,6 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     paddingHorizontal: 4,
     paddingVertical: 6,
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.12,
-        shadowRadius: 12,
-      },
-      android: { elevation: 8 },
-    }),
   },
   tab: {
     flex: 1,
@@ -301,6 +303,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     borderRadius: 24,
     minHeight: 48,
+  },
+  tabLabel: {
+    fontSize: 11,
+    marginTop: 3,
+    includeFontPadding: false,
   },
   accountAvatar: {
     borderRadius: 13,

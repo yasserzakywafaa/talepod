@@ -7,10 +7,12 @@ import {
   useWindowDimensions,
 } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { ActivityIndicator, Appbar, Text, useTheme } from "react-native-paper";
+import { ActivityIndicator, Appbar, Text } from "react-native-paper";
 
 import { mobileRoutes } from "src/application/routes";
 import type { RootStackParamList } from "src/application/navigation/types";
+import { useAppTheme } from "src/application/theme/useAppTheme";
+import { DisplayText } from "src/components/brand/DisplayText";
 import { LocaleLayoutBoundary } from "src/components/layout/LocaleLayoutBoundary";
 import { Page } from "src/components/layout/Page";
 import { openMainDrawer } from "src/application/navigation/rootNavigation";
@@ -27,7 +29,7 @@ type Props = NativeStackScreenProps<
 
 export const ViewStoryScreen = ({ navigation, route }: Props) => {
   const { slug } = route.params;
-  const theme = useTheme();
+  const theme = useAppTheme();
   const { width } = useWindowDimensions();
   const store = useViewStoryStore();
   const manager = useViewStoryManager(store);
@@ -51,9 +53,9 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
       />
       <Appbar.Content
         title={
-          <Text variant="titleMedium" numberOfLines={1}>
+          <DisplayText size={18} numberOfLines={1}>
             {story?.title ?? ""}
-          </Text>
+          </DisplayText>
         }
       />
       <Appbar.Action
@@ -85,7 +87,11 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
                   {page.imageUrl ? (
                     <Image
                       source={{ uri: page.imageUrl }}
-                      style={{ width: width - 32, height: (width - 32) * 0.75 }}
+                      style={{
+                        width: width - 32,
+                        height: (width - 32) * 0.75,
+                        borderRadius: theme.tokens.radius.lg,
+                      }}
                       resizeMode="cover"
                     />
                   ) : (
@@ -129,7 +135,7 @@ const styles = StyleSheet.create({
   page: { gap: 8 },
   imagePlaceholder: {
     height: 200,
-    borderRadius: 12,
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
   },

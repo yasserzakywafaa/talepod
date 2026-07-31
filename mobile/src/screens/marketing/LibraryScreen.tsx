@@ -1,35 +1,27 @@
 import { useCallback, useEffect } from "react";
-import {
-  FlatList,
-  Image,
-  Pressable,
-  StyleSheet,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
-import {
-  ActivityIndicator,
-  Button,
-  Card,
-  SegmentedButtons,
-  Text,
-  useTheme,
-} from "react-native-paper";
 
-import { navigateToCreateStory, navigateToViewStory } from "src/application/navigation/rootNavigation";
+import {
+  navigateToCreateStory,
+  navigateToViewStory,
+} from "src/application/navigation/rootNavigation";
+import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useDrawerPageHeader } from "src/components/layout/useDrawerPageHeader";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
+import { PillButton } from "src/components/brand/PillButton";
+import { SegmentedControl } from "src/components/brand/SegmentedControl";
+import { StoryCard } from "src/components/brand/StoryCard";
 import {
   LibraryContextProvider,
   useLibraryContext,
 } from "src/features/library/store/Provider";
 import type { Story } from "src/features/storyCreator/store/state";
-import { getStoryCoverImageUrl } from "src/shared/utils/getStoryCoverImageUrl";
 
 const LibraryScreenContent = () => {
   const { t } = useTranslation("library");
-  const theme = useTheme();
+  const theme = useAppTheme();
   const { horizontalGutter, contentMaxWidth } = useReadableLayout();
   const {
     store: {
@@ -53,48 +45,21 @@ const LibraryScreenContent = () => {
     navigateToViewStory(slug);
   }, []);
 
-  const renderItem = ({ item }: { item: Story }) => {
-    const coverUrl = getStoryCoverImageUrl(item);
-    return (
-    <Pressable onPress={() => onStoryPress(item.slug)}>
-      <Card mode="outlined" style={styles.card}>
-        {coverUrl ? (
-          <Image
-            source={{ uri: coverUrl }}
-            style={styles.cover}
-            resizeMode="cover"
-          />
-        ) : null}
-        <Card.Content>
-          <Text variant="titleMedium" numberOfLines={2}>
-            {item.title}
-          </Text>
-          {item.summary ? (
-            <Text
-              variant="bodySmall"
-              numberOfLines={3}
-              style={{ color: theme.colors.onSurfaceVariant, marginTop: 4 }}
-            >
-              {item.summary}
-            </Text>
-          ) : null}
-        </Card.Content>
-      </Card>
-    </Pressable>
-    );
-  };
+  const renderItem = ({ item }: { item: Story }) => (
+    <StoryCard story={item} onPress={() => onStoryPress(item.slug)} />
+  );
 
   const listHeader = (
     <View style={styles.header}>
-      <SegmentedButtons
+      <SegmentedControl
         value={storiesSource === "talepod" ? "talepod" : "community"}
-        onValueChange={(v) =>
-          void handleSetStoriesSource(v as "community" | "talepod")
-        }
-        buttons={[
+        options={[
           { value: "community", label: t("page.sourceCommunity") },
           { value: "talepod", label: t("page.sourceTalepod") },
         ]}
+        onChange={(value) =>
+          void handleSetStoriesSource(value as "community" | "talepod")
+        }
       />
     </View>
   );
@@ -102,16 +67,15 @@ const LibraryScreenContent = () => {
   const listEmpty =
     !isFetching && stories.length === 0 ? (
       <View style={styles.empty}>
-        <Button
-          mode="contained"
-          onPress={() => navigateToCreateStory()}
-          style={styles.emptyButton}
-        >
+        <PillButton onPress={() => navigateToCreateStory()}>
           {t("page.emptyCreate")}
-        </Button>
-        <Button mode="outlined" onPress={() => void handleClearFilters()}>
+        </PillButton>
+        <PillButton
+          variant="outlined"
+          onPress={() => void handleClearFilters()}
+        >
           {t("page.emptyClearFilters")}
-        </Button>
+        </PillButton>
       </View>
     ) : null;
 
@@ -134,23 +98,22 @@ const LibraryScreenContent = () => {
           },
         ]}
         ListFooterComponent={
-          <>
+          <View style={styles.footer}>
             {isFetching ? (
-              <ActivityIndicator style={styles.loader} />
+              <ActivityIndicator color={theme.colors.primary} />
             ) : null}
             {(pagingInfo.totalPagesCount ?? 1) > pagingInfo.pageNumber &&
             !isFetching ? (
-              <Button
-                mode="outlined"
+              <PillButton
+                variant="outlined"
                 onPress={() =>
                   void handleGetStoriesByPage(pagingInfo.pageNumber + 1)
                 }
-                style={styles.loadMore}
               >
-                Load more
-              </Button>
+                {t("page.loadMore")}
+              </PillButton>
             ) : null}
-          </>
+          </View>
         }
       />
     </View>
@@ -171,13 +134,8 @@ export const LibraryScreen = () => {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  header: { gap: 12, marginBottom: 16 },
-  toolbar: { flexDirection: "row", justifyContent: "flex-end" },
-  listContent: { paddingBottom: 24 },
-  card: { marginBottom: 12 },
-  cover: { width: "100%", height: 160 },
+  header: { marginBottom: 16 },
+  listContent: { paddingBottom: 24, gap: 16 },
   empty: { gap: 12, paddingVertical: 32, alignItems: "center" },
-  emptyButton: { marginTop: 8 },
-  loadMore: { marginTop: 8, alignSelf: "center" },
-  loader: { paddingVertical: 16 },
+  footer: { paddingVertical: 16, alignItems: "center", gap: 12 },
 });

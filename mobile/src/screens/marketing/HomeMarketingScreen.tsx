@@ -1,8 +1,7 @@
 import { useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import type { DrawerScreenProps } from "@react-navigation/drawer";
 import { useTranslation } from "react-i18next";
-import { Text } from "react-native-paper";
 
 import { mobileRoutes } from "src/application/routes";
 import type { MainDrawerParamList } from "src/application/navigation/MainDrawerNavigator";
@@ -11,12 +10,12 @@ import {
   openRootSheet,
 } from "src/application/navigation/rootNavigation";
 import { useApplicationContext } from "src/application/store/Provider";
+import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PageBody } from "src/components/layout/Page";
-import {
-  useBrandButtonColors,
-  useScreenTypography,
-} from "src/components/layout/useScreenTypography";
-import { AppButton } from "src/components/paper/AppButton";
+import { BrandBadge } from "src/components/brand/BrandBadge";
+import { DisplayText } from "src/components/brand/DisplayText";
+import { PillButton } from "src/components/brand/PillButton";
+import { Gradient } from "src/components/shared/Gradient";
 import { MarketingAppBar } from "src/components/paper/MarketingAppBar";
 
 type Props = DrawerScreenProps<
@@ -26,8 +25,7 @@ type Props = DrawerScreenProps<
 
 export const HomeMarketingScreen = ({ navigation }: Props) => {
   const { t } = useTranslation("page");
-  const typography = useScreenTypography();
-  const brand = useBrandButtonColors();
+  const theme = useAppTheme();
   const {
     store: {
       state: { auth },
@@ -47,32 +45,40 @@ export const HomeMarketingScreen = ({ navigation }: Props) => {
       }
     >
       <PageBody>
-        <View style={styles.hero}>
-          <Text variant="labelLarge" style={typography.badge}>
-            {t("home.badge")}
-          </Text>
-          <Text variant="headlineMedium" style={typography.title}>
+        {/* Night-sky-to-dawn hero — the web `bgTwilight` ramp. */}
+        <Gradient
+          colors={theme.tokens.gradients.twilight}
+          bands={32}
+          style={[styles.hero, { borderRadius: theme.tokens.radius.xl }]}
+        >
+          <BrandBadge label={t("home.badge")} />
+          <DisplayText size={32} color="#FFFFFF" style={styles.title}>
             {t("home.title")}
-          </Text>
-          <Text variant="bodyLarge" style={typography.body}>
+          </DisplayText>
+          <Text
+            style={[
+              styles.body,
+              { fontFamily: theme.tokens.fontFamily.regular },
+            ]}
+          >
             {t("home.body")}
           </Text>
-          <AppButton
-            mode="contained"
-            buttonColor={brand.contained}
-            textColor={brand.onContained}
-            onPress={() => openRootSheet(mobileRoutes.public.login)}
-          >
-            {t("home.ctaLogin")}
-          </AppButton>
-          <AppButton
-            mode="outlined"
-            textColor={brand.outlined}
-            onPress={() => navigation.navigate(mobileRoutes.public.pricing)}
-          >
-            {t("home.ctaPricing")}
-          </AppButton>
-        </View>
+          <View style={styles.actions}>
+            <PillButton
+              onPress={() => openRootSheet(mobileRoutes.public.login)}
+              trailingIcon="shimmer"
+            >
+              {t("home.ctaLogin")}
+            </PillButton>
+            <PillButton
+              variant="text"
+              color="#FFFFFF"
+              onPress={() => navigation.navigate(mobileRoutes.public.pricing)}
+            >
+              {t("home.ctaPricing")}
+            </PillButton>
+          </View>
+        </Gradient>
       </PageBody>
     </Page>
   );
@@ -80,6 +86,18 @@ export const HomeMarketingScreen = ({ navigation }: Props) => {
 
 const styles = StyleSheet.create({
   hero: {
-    gap: 12,
+    gap: 16,
+    alignItems: "center",
+    paddingHorizontal: 24,
+    paddingVertical: 40,
   },
+  title: { textAlign: "center" },
+  body: {
+    fontSize: 15,
+    lineHeight: 24,
+    textAlign: "center",
+    color: "rgba(255,255,255,0.88)",
+    includeFontPadding: false,
+  },
+  actions: { alignItems: "center", gap: 8, paddingTop: 8 },
 });

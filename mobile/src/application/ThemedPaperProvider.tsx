@@ -3,7 +3,8 @@ import { useMemo } from "react";
 import { PaperProvider } from "react-native-paper";
 
 import { useResolvedThemeMode } from "src/application/useResolvedThemeMode";
-import { paperDarkTheme, paperLightTheme } from "src/application/paperTheme";
+import { getPaperTheme } from "src/application/paperTheme";
+import { useAppFonts } from "src/application/theme/useAppFonts";
 
 type ThemedPaperProviderProps = {
   children: React.ReactNode;
@@ -11,10 +12,13 @@ type ThemedPaperProviderProps = {
 
 export const ThemedPaperProvider = ({ children }: ThemedPaperProviderProps) => {
   const resolvedThemeMode = useResolvedThemeMode();
+  // The brand faces are bundled, so this resolves within a frame or two; the
+  // theme falls back to the system face until then rather than blocking paint.
+  const fontsLoaded = useAppFonts();
 
   const theme = useMemo(
-    () => (resolvedThemeMode === "light" ? paperLightTheme : paperDarkTheme),
-    [resolvedThemeMode],
+    () => getPaperTheme(resolvedThemeMode, fontsLoaded),
+    [resolvedThemeMode, fontsLoaded],
   );
 
   return (

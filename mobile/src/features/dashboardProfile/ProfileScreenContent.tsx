@@ -1,16 +1,7 @@
 import { useState } from "react";
-import { Linking, Pressable, StyleSheet, View } from "react-native";
+import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
-import {
-  Button,
-  Card,
-  Chip,
-  SegmentedButtons,
-  Snackbar,
-  Switch,
-  Text,
-  useTheme,
-} from "react-native-paper";
+import { Snackbar, Switch } from "react-native-paper";
 import {
   formatLocalizedDate,
   localeFromLanguage,
@@ -18,9 +9,15 @@ import {
 
 import { resetToMarketingAfterLogout, navigateToMainMyStories } from "src/application/navigation/rootNavigation";
 import { useApplicationContext } from "src/application/store/Provider";
+import { useAppTheme } from "src/application/theme/useAppTheme";
 import { useResolvedThemeMode } from "src/application/useResolvedThemeMode";
 import { ProfileAvatar } from "src/components/shared/ProfileAvatar";
 import { PageBody } from "src/components/layout/Page";
+import { BrandCard } from "src/components/brand/BrandCard";
+import { DisplayText } from "src/components/brand/DisplayText";
+import { MetaTag } from "src/components/brand/MetaTag";
+import { PillButton } from "src/components/brand/PillButton";
+import { UnderlineTabs } from "src/components/brand/UnderlineTabs";
 import { DeleteAccountDialog } from "src/features/dashboardProfile/DeleteAccountDialog";
 import { ProfileBillingPanel } from "src/features/dashboardProfile/ProfileBillingPanel";
 import { useDashboardProfileContext } from "src/features/dashboardProfile/store/Provider";
@@ -34,27 +31,25 @@ const formatStatusLabel = (status: string) =>
 const formatRoleLabel = (role: string) =>
   role.charAt(0).toUpperCase() + role.slice(1).replace("_", " ");
 
-const getStatusChipMode = (status: UserStatus): "flat" | "outlined" => {
-  switch (status) {
-    case UserStatus.active:
-      return "flat";
-    default:
-      return "outlined";
-  }
-};
-
 type ProfileFieldProps = {
   label: string;
   children: React.ReactNode;
 };
 
+/** Honey underlined label over a bold value — the web profile-info rows. */
 const ProfileField = ({ label, children }: ProfileFieldProps) => {
-  const theme = useTheme();
+  const theme = useAppTheme();
   return (
     <View style={styles.field}>
       <Text
-        variant="titleSmall"
-        style={[styles.fieldLabel, { color: theme.colors.primary }]}
+        style={[
+          styles.fieldLabel,
+          {
+            color: theme.colors.onSurface,
+            textDecorationColor: theme.colors.primary,
+            fontFamily: theme.tokens.fontFamily.medium,
+          },
+        ]}
       >
         {label}
       </Text>
@@ -63,9 +58,31 @@ const ProfileField = ({ label, children }: ProfileFieldProps) => {
   );
 };
 
+type ProfileValueProps = {
+  children: string;
+  tone?: "default" | "link";
+};
+
+const ProfileValue = ({ children, tone = "default" }: ProfileValueProps) => {
+  const theme = useAppTheme();
+  return (
+    <Text
+      style={[
+        styles.fieldValue,
+        {
+          color: tone === "link" ? theme.colors.primary : theme.colors.onSurface,
+          fontFamily: theme.tokens.fontFamily.semiBold,
+        },
+      ]}
+    >
+      {children}
+    </Text>
+  );
+};
+
 export const ProfileScreenContent = () => {
   const { t, i18n } = useTranslation(["dashboard", "common"]);
-  const theme = useTheme();
+  const theme = useAppTheme();
   const locale = localeFromLanguage(i18n.language);
   const resolvedThemeMode = useResolvedThemeMode();
 
@@ -121,23 +138,15 @@ export const ProfileScreenContent = () => {
         <View style={styles.header}>
           <ProfileAvatar user={user} />
           <View style={styles.headerText}>
-            <Text
-              variant="headlineSmall"
-              style={{ color: theme.colors.primary, textAlign: "center" }}
-            >
+            <DisplayText size={26} color={theme.colors.primary}>
               {t("profile.greeting", { name: user.name.givenName })}
-            </Text>
+            </DisplayText>
             <View style={styles.chips}>
-              <Chip
-                compact
-                mode={getStatusChipMode(user.status)}
-                selected={user.status === UserStatus.active}
-              >
-                {formatStatusLabel(user.status)}
-              </Chip>
-              <Chip compact mode="outlined">
-                {formatRoleLabel(user.role)}
-              </Chip>
+              <MetaTag
+                label={formatStatusLabel(user.status)}
+                tone={user.status === UserStatus.active ? "primary" : "secondary"}
+              />
+              <MetaTag label={formatRoleLabel(user.role)} />
             </View>
             {profileContact.value ? (
               profileContact.openUrl ? (
@@ -145,22 +154,26 @@ export const ProfileScreenContent = () => {
                   onPress={() => void Linking.openURL(profileContact.openUrl!)}
                 >
                   <Text
-                    variant="bodyMedium"
-                    style={{
-                      color: theme.colors.onSurfaceVariant,
-                      textAlign: "center",
-                    }}
+                    style={[
+                      styles.contact,
+                      {
+                        color: theme.colors.onSurfaceVariant,
+                        fontFamily: theme.tokens.fontFamily.regular,
+                      },
+                    ]}
                   >
                     {profileContact.value}
                   </Text>
                 </Pressable>
               ) : (
                 <Text
-                  variant="bodyMedium"
-                  style={{
-                    color: theme.colors.onSurfaceVariant,
-                    textAlign: "center",
-                  }}
+                  style={[
+                    styles.contact,
+                    {
+                      color: theme.colors.onSurfaceVariant,
+                      fontFamily: theme.tokens.fontFamily.regular,
+                    },
+                  ]}
                 >
                   {profileContact.value}
                 </Text>
@@ -169,12 +182,20 @@ export const ProfileScreenContent = () => {
           </View>
         </View>
 
-        <SegmentedButtons
+        <UnderlineTabs
           value={activeTab}
-          onValueChange={(v) => setActiveTab(v as "profile" | "billing")}
-          buttons={[
-            { value: "profile", label: t("profile.tabProfile") },
-            { value: "billing", label: t("profile.tabBilling") },
+          onChange={setActiveTab}
+          tabs={[
+            {
+              value: "profile" as const,
+              label: t("profile.tabProfile"),
+              icon: "account-outline",
+            },
+            {
+              value: "billing" as const,
+              label: t("profile.tabBilling"),
+              icon: "credit-card-outline",
+            },
           ]}
         />
 
@@ -182,152 +203,141 @@ export const ProfileScreenContent = () => {
           <ProfileBillingPanel user={user} />
         ) : (
           <>
-        <Card
-          mode="outlined"
-          style={[styles.card, { borderColor: theme.colors.primary }]}
-        >
-          <Card.Content>
-            <View style={styles.statHeader}>
+            <BrandCard style={styles.cardBody}>
               <Text
-                variant="titleMedium"
-                style={{ color: theme.colors.onSurface }}
+                style={[
+                  styles.statLabel,
+                  {
+                    color: theme.colors.onSurfaceVariant,
+                    fontFamily: theme.tokens.fontFamily.semiBold,
+                  },
+                ]}
               >
                 {t("overview.totalStories")}
               </Text>
-            </View>
-            <Text
-              variant="displaySmall"
-              style={{ color: theme.colors.primary }}
-            >
-              {user.storyCount}
-            </Text>
-            <Text
-              variant="bodySmall"
-              style={{ color: theme.colors.onSurfaceVariant }}
-            >
-              {t("overview.storiesCreated")}
-            </Text>
-          </Card.Content>
-          <Card.Actions>
-            <Button
-              mode="outlined"
-              icon="book-open-variant"
-              style={styles.fullWidthButton}
-              onPress={() => navigateToMainMyStories()}
-            >
-              {t("profile.viewMyStories")}
-            </Button>
-          </Card.Actions>
-        </Card>
-
-        <Card mode="outlined" style={[styles.card, styles.expandCard]}>
-          <Card.Content style={styles.infoCardContent}>
-            <Text
-              variant="titleLarge"
-              style={{ color: theme.colors.onSurface }}
-            >
-              {t("profile.profileInformation")}
-            </Text>
-
-            <ProfileField label={t("profile.fullName")}>
+              <DisplayText size={38} color={theme.colors.primary}>
+                {String(user.storyCount)}
+              </DisplayText>
               <Text
-                variant="bodyLarge"
-                style={{ color: theme.colors.onSurfaceVariant }}
+                style={[
+                  styles.statCaption,
+                  {
+                    color: theme.colors.onSurfaceVariant,
+                    fontFamily: theme.tokens.fontFamily.regular,
+                  },
+                ]}
               >
-                {`${user.name.givenName} ${user.name.familyName}`.trim()}
+                {t("overview.storiesCreated")}
               </Text>
-            </ProfileField>
+              <PillButton
+                variant="outlined"
+                icon="book-open-variant"
+                style={styles.statAction}
+                onPress={() => navigateToMainMyStories()}
+              >
+                {t("profile.viewMyStories")}
+              </PillButton>
+            </BrandCard>
 
-            <ProfileField label={t(contactLabelKey)}>
-              {profileContact.value && profileContact.openUrl ? (
-                <Pressable
-                  onPress={() => void Linking.openURL(profileContact.openUrl!)}
-                >
-                  <Text
-                    variant="bodyLarge"
-                    style={{ color: theme.colors.primary }}
+            <BrandCard style={[styles.cardBody, styles.infoCardContent]}>
+              <DisplayText size={22}>
+                {t("profile.profileInformation")}
+              </DisplayText>
+
+              <ProfileField label={t("profile.fullName")}>
+                <ProfileValue>
+                  {`${user.name.givenName} ${user.name.familyName}`.trim()}
+                </ProfileValue>
+              </ProfileField>
+
+              <ProfileField label={t(contactLabelKey)}>
+                {profileContact.value && profileContact.openUrl ? (
+                  <Pressable
+                    onPress={() =>
+                      void Linking.openURL(profileContact.openUrl!)
+                    }
                   >
-                    {profileContact.value}
+                    <ProfileValue tone="link">
+                      {profileContact.value}
+                    </ProfileValue>
+                  </Pressable>
+                ) : (
+                  <ProfileValue>{profileContact.value || "—"}</ProfileValue>
+                )}
+              </ProfileField>
+
+              <ProfileField label={t("profile.dateJoined")}>
+                <ProfileValue>
+                  {formatLocalizedDate(user.createdAt, locale, {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </ProfileValue>
+              </ProfileField>
+
+              <ProfileField label={t("profile.appearance")}>
+                <Pressable onPress={handleThemeToggle} style={styles.themeRow}>
+                  <Text
+                    style={[
+                      styles.themeLabel,
+                      {
+                        color: theme.colors.onSurfaceVariant,
+                        fontFamily: theme.tokens.fontFamily.medium,
+                      },
+                    ]}
+                  >
+                    {t("profile.themeLight")}
+                  </Text>
+                  <Switch
+                    value={resolvedThemeMode === "dark"}
+                    onValueChange={handleThemeToggle}
+                  />
+                  <Text
+                    style={[
+                      styles.themeLabel,
+                      {
+                        color: theme.colors.onSurfaceVariant,
+                        fontFamily: theme.tokens.fontFamily.medium,
+                      },
+                    ]}
+                  >
+                    {t("profile.themeDark")}
                   </Text>
                 </Pressable>
-              ) : (
-                <Text
-                  variant="bodyLarge"
-                  style={{ color: theme.colors.onSurfaceVariant }}
-                >
-                  {profileContact.value || "—"}
-                </Text>
-              )}
-            </ProfileField>
-
-            <ProfileField label={t("profile.dateJoined")}>
-              <Text
-                variant="bodyLarge"
-                style={{ color: theme.colors.onSurfaceVariant }}
-              >
-                {formatLocalizedDate(user.createdAt, locale, {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                })}
-              </Text>
-            </ProfileField>
-
-            <ProfileField label={t("profile.appearance")}>
-              <Pressable onPress={handleThemeToggle} style={styles.themeRow}>
-                <Text
-                  variant="bodySmall"
-                  style={{ color: theme.colors.onSurfaceVariant }}
-                >
-                  {t("profile.themeLight")}
-                </Text>
-                <Switch
-                  value={resolvedThemeMode === "dark"}
-                  onValueChange={handleThemeToggle}
-                />
-                <Text
-                  variant="bodySmall"
-                  style={{ color: theme.colors.onSurfaceVariant }}
-                >
-                  {t("profile.themeDark")}
-                </Text>
-              </Pressable>
-            </ProfileField>
-          </Card.Content>
-        </Card>
+              </ProfileField>
+            </BrandCard>
           </>
         )}
 
         {activeTab === "profile" && showDeleteAccount ? (
-          <Card
-            mode="outlined"
-            style={[
-              styles.card,
-              styles.dangerCard,
-              { borderColor: theme.colors.error },
-            ]}
+          <BrandCard
+            style={[styles.cardBody, { borderColor: theme.colors.error }]}
           >
-            <Card.Content>
-              <Text variant="titleLarge" style={{ color: theme.colors.error }}>
-                {t("profile.dangerZone")}
-              </Text>
-              <Text
-                variant="bodyMedium"
-                style={{ color: theme.colors.onSurfaceVariant, marginTop: 8 }}
-              >
-                {t("profile.dangerZoneDescription")}
-              </Text>
-              <Button
-                mode="outlined"
-                icon="delete"
-                textColor={theme.colors.error}
-                style={styles.dangerButton}
-                onPress={() => setDeleteDialogVisible(true)}
-              >
-                {t("profile.deleteAccount")}
-              </Button>
-            </Card.Content>
-          </Card>
+            <DisplayText size={22} color={theme.colors.error}>
+              {t("profile.dangerZone")}
+            </DisplayText>
+            <Text
+              style={[
+                styles.dangerCopy,
+                {
+                  color: theme.colors.onSurfaceVariant,
+                  fontFamily: theme.tokens.fontFamily.regular,
+                },
+              ]}
+            >
+              {t("profile.dangerZoneDescription")}
+            </Text>
+            <PillButton
+              variant="outlined"
+              icon="delete"
+              color={theme.colors.error}
+              style={styles.dangerButton}
+              onPress={() => setDeleteDialogVisible(true)}
+            >
+              {t("profile.deleteAccount")}
+            </PillButton>
+          </BrandCard>
         ) : null}
       </PageBody>
 
@@ -374,38 +384,37 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
   },
-  card: {
-    marginTop: 0,
-  },
-  expandCard: {
-    flexGrow: 1,
-  },
-  statHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  fullWidthButton: {
-    flex: 1,
-  },
+  contact: { fontSize: 14, textAlign: "center", includeFontPadding: false },
+  cardBody: { padding: 20, gap: 8 },
+  statLabel: { fontSize: 15, includeFontPadding: false },
+  statCaption: { fontSize: 13, includeFontPadding: false },
+  statAction: { marginTop: 12 },
   infoCardContent: {
-    gap: 16,
+    gap: 18,
   },
   field: {
     gap: 4,
   },
   fieldLabel: {
+    fontSize: 15,
     textDecorationLine: "underline",
+    includeFontPadding: false,
   },
+  fieldValue: { fontSize: 15, includeFontPadding: false },
   themeRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: 10,
   },
-  dangerCard: {},
+  themeLabel: { fontSize: 13, includeFontPadding: false },
+  dangerCopy: {
+    fontSize: 14,
+    lineHeight: 21,
+    marginTop: 4,
+    includeFontPadding: false,
+  },
   dangerButton: {
     marginTop: 16,
     alignSelf: "flex-start",
-    borderColor: undefined,
   },
 });

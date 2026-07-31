@@ -1,30 +1,23 @@
 import { useCallback, useEffect } from "react";
-import {
-  FlatList,
-  Image,
-  Pressable,
-  StyleSheet,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
-import {
-  ActivityIndicator,
-  Button,
-  Card,
-  Text,
-  useTheme,
-} from "react-native-paper";
 
 import { navigateToViewStory } from "src/application/navigation/rootNavigation";
+import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
-import { MyStoriesContextProvider, useMyStoriesContext } from "src/features/myStories/store/Provider";
+import { PillButton } from "src/components/brand/PillButton";
+import { StoryCard } from "src/components/brand/StoryCard";
+import {
+  MyStoriesContextProvider,
+  useMyStoriesContext,
+} from "src/features/myStories/store/Provider";
 import type { Story } from "src/features/storyCreator/store/state";
-import { getStoryCoverImageUrl } from "src/shared/utils/getStoryCoverImageUrl";
 import { MainShellAppBar } from "src/components/paper/MainShellAppBar";
+
 const MyStoriesScreenContent = () => {
   const { t } = useTranslation("library");
-  const theme = useTheme();
+  const theme = useAppTheme();
   const { horizontalGutter, contentMaxWidth } = useReadableLayout();
   const {
     store: {
@@ -39,37 +32,10 @@ const MyStoriesScreenContent = () => {
   }, []);
 
   const renderItem = useCallback(
-    ({ item }: { item: Story }) => {
-      const coverUrl = getStoryCoverImageUrl(item);
-      return (
-      <Pressable onPress={() => navigateToViewStory(item.slug)}>
-        <Card mode="outlined" style={styles.card}>
-          {coverUrl ? (
-            <Image
-              source={{ uri: coverUrl }}
-              style={styles.cover}
-              resizeMode="cover"
-            />
-          ) : null}
-          <Card.Content>
-            <Text variant="titleMedium" numberOfLines={2}>
-              {item.title}
-            </Text>
-            {item.summary ? (
-              <Text
-                variant="bodySmall"
-                numberOfLines={3}
-                style={{ color: theme.colors.onSurfaceVariant, marginTop: 4 }}
-              >
-                {item.summary}
-              </Text>
-            ) : null}
-          </Card.Content>
-        </Card>
-      </Pressable>
-      );
-    },
-    [theme.colors.onSurfaceVariant],
+    ({ item }: { item: Story }) => (
+      <StoryCard story={item} onPress={() => navigateToViewStory(item.slug)} />
+    ),
+    [],
   );
 
   return (
@@ -91,31 +57,35 @@ const MyStoriesScreenContent = () => {
         ListEmptyComponent={
           !isFetching ? (
             <Text
-              variant="bodyMedium"
-              style={{ color: theme.colors.onSurfaceVariant, marginTop: 24 }}
+              style={[
+                styles.empty,
+                {
+                  color: theme.colors.onSurfaceVariant,
+                  fontFamily: theme.tokens.fontFamily.regular,
+                },
+              ]}
             >
               {t("page.emptyCreate")}
             </Text>
           ) : null
         }
         ListFooterComponent={
-          <>
+          <View style={styles.footer}>
             {isFetching ? (
-              <ActivityIndicator style={styles.loader} color={theme.colors.primary} />
+              <ActivityIndicator color={theme.colors.primary} />
             ) : null}
             {(pagingInfo.totalPagesCount ?? 1) > pagingInfo.pageNumber &&
             !isFetching ? (
-              <Button
-                mode="outlined"
+              <PillButton
+                variant="outlined"
                 onPress={() =>
                   void handleGetStoriesByPage(pagingInfo.pageNumber + 1)
                 }
-                style={styles.loadMore}
               >
                 {t("page.loadMore")}
-              </Button>
+              </PillButton>
             ) : null}
-          </>
+          </View>
         }
       />
     </View>
@@ -127,9 +97,7 @@ export const MyStoriesScreen = () => {
 
   return (
     <Page
-      header={
-        <MainShellAppBar title={t("nav.myStories", { ns: "common" })} />
-      }
+      header={<MainShellAppBar title={t("nav.myStories", { ns: "common" })} />}
     >
       <MyStoriesContextProvider>
         <MyStoriesScreenContent />
@@ -140,9 +108,12 @@ export const MyStoriesScreen = () => {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  listContent: { paddingBottom: 24, gap: 12 },
-  card: { marginBottom: 12 },
-  cover: { width: "100%", height: 160 },
-  loadMore: { marginTop: 8, alignSelf: "center" },
-  loader: { paddingVertical: 16 },
+  listContent: { paddingBottom: 24, gap: 16 },
+  empty: {
+    fontSize: 15,
+    lineHeight: 22,
+    marginTop: 24,
+    includeFontPadding: false,
+  },
+  footer: { paddingVertical: 16, alignItems: "center", gap: 12 },
 });

@@ -1,34 +1,34 @@
 import { useState } from "react";
-import { Image, Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
-import {
-  ActivityIndicator,
-  Chip,
-  List,
-  SegmentedButtons,
-  Snackbar,
-  Text,
-  TextInput,
-  useTheme,
-} from "react-native-paper";
+import { Snackbar, TextInput } from "react-native-paper";
 
 import { mobileRoutes, rootRoutes } from "src/application/routes";
 import type { RootStackParamList } from "src/application/navigation/types";
 import {
   openRootSheet,
   navigateToMainMyStories,
+  navigateToMainMyAvatars,
   rootNavigationRef,
 } from "src/application/navigation/rootNavigation";
 import { useApplicationContext } from "src/application/store/Provider";
-import { AppButton } from "src/components/paper/AppButton";
+import { useAppTheme } from "src/application/theme/useAppTheme";
 import { MainShellAppBar } from "src/components/paper/MainShellAppBar";
 import { Page } from "src/components/layout/Page";
 import { useMainShellDrawer } from "src/application/navigation/MainShellDrawerContext";
-import {
-  useBrandButtonColors,
-  useThemedTextInputProps,
-} from "src/components/layout/useScreenTypography";
+import { useReadableLayout } from "src/components/layout/useReadableLayout";
+import { useThemedTextInputProps } from "src/components/layout/useScreenTypography";
+import { Accordion } from "src/components/brand/Accordion";
+import { ArtStyleChooser } from "src/components/brand/ArtStyleChooser";
+import { AvatarPicker } from "src/components/brand/AvatarPicker";
+import { ChoiceChip } from "src/components/brand/ChoiceChip";
+import { DisplayText } from "src/components/brand/DisplayText";
+import { FormatChooser } from "src/components/brand/FormatChooser";
+import { PillButton } from "src/components/brand/PillButton";
+import { SectionLabel } from "src/components/brand/SectionLabel";
+import { SegmentedControl } from "src/components/brand/SegmentedControl";
+import { SelectField } from "src/components/brand/SelectField";
 import { useGenerateStory } from "src/features/storyCreator/hooks/useGenerateStory";
 import { useAvatarsList } from "src/features/storyCreator/hooks/useAvatarsList";
 import { useStoryCreatorContext } from "src/features/storyCreator/store/Provider";
@@ -38,7 +38,6 @@ import {
   ChildGenderEnum,
   type StoryFormat,
 } from "src/features/storyCreator/store/state";
-import { ArtStyles } from "src/shared/artStyles";
 import { Languages, type Language } from "src/shared/languages";
 import { Environments } from "src/shared/mockedData/Environments";
 import { Morals } from "src/shared/mockedData/Moral";
@@ -56,14 +55,16 @@ type Props = {
   >
 >;
 
+const TIP_KEYS = ["familiar", "moral", "interactive"] as const;
+
 export const CreateStoryScreen = ({
   navigation,
   embeddedInMainShell,
 }: Props) => {
   const { t } = useTranslation("story");
-  const theme = useTheme();
+  const theme = useAppTheme();
   const inputProps = useThemedTextInputProps();
-  const brand = useBrandButtonColors();
+  const { horizontalGutter } = useReadableLayout();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
@@ -153,238 +154,268 @@ export const CreateStoryScreen = ({
     }
   };
 
-  const formatButtons = [
-    { value: "comic", label: t("form.format.comic.title") },
-    { value: "long", label: t("form.format.long.title") },
-  ];
-
   const shellDrawer = useMainShellDrawer();
   const drawerNavigation = embeddedInMainShell ? shellDrawer : undefined;
 
   const body = (
-    <ScrollView contentContainerStyle={styles.scroll}>
-      <Text
-        variant="bodyMedium"
-        style={{ color: theme.colors.onSurfaceVariant }}
-      >
-        {t("createPage.subheading")}
-      </Text>
-
-      <TextInput
-        label={t("form.nameLabel")}
-        value={profileInfo.name}
-        onChangeText={(v) => handleUpdateProfileInfo("name", v)}
-        mode="outlined"
-        {...inputProps}
-        error={hasCensoredWords(profileInfo.name)}
-      />
-
-      <Text variant="labelLarge" style={{ color: theme.colors.onSurface }}>
-        Gender
-      </Text>
-      <View style={styles.chipRow}>
-        {genders.map((g) => (
-          <Chip
-            key={g}
-            selected={profileInfo.gender === g}
-            onPress={() => handleUpdateProfileInfo("gender", g)}
-          >
-            {g}
-          </Chip>
-        ))}
+    <ScrollView
+      contentContainerStyle={[
+        styles.scroll,
+        { paddingHorizontal: horizontalGutter },
+      ]}
+      showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps="handled"
+    >
+      {/* Hero — serif heading in honey over centred body copy, as on web. */}
+      <View style={styles.hero}>
+        <DisplayText size={28} color={theme.colors.primary} style={styles.center}>
+          {t("createPage.heading")}
+        </DisplayText>
+        <Text
+          style={[
+            styles.subheading,
+            {
+              color: theme.colors.onSurface,
+              fontFamily: theme.tokens.fontFamily.regular,
+            },
+          ]}
+        >
+          {t("createPage.subheading")}
+        </Text>
       </View>
 
-      <TextInput
-        label={t("form.ageLabel")}
-        value={String(profileInfo.age)}
-        onChangeText={(v) => {
-          const n = parseInt(v, 10);
-          if (!Number.isNaN(n)) handleUpdateProfileInfo("age", n);
-        }}
-        keyboardType="number-pad"
-        mode="outlined"
-        {...inputProps}
-      />
-
-      <Text variant="labelLarge">{t("form.languageLabel")}</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View style={styles.chipRow}>
-          {Languages.map((lang) => (
-            <Chip
-              key={lang.value}
-              selected={profileInfo.language.value === lang.value}
-              onPress={() =>
-                handleUpdateProfileInfo("language", lang as Language)
-              }
-            >
-              {lang.name}
-            </Chip>
-          ))}
-        </View>
-      </ScrollView>
-
-      <Text variant="labelLarge">Format</Text>
-      <SegmentedButtons
+      <FormatChooser
         value={format}
-        onValueChange={(v) => handleSetFormat(v as StoryFormat)}
-        buttons={formatButtons}
+        onChange={(value: StoryFormat) => handleSetFormat(value)}
       />
 
-      <Text variant="labelLarge">{t("form.artStyleLabel")}</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View style={styles.chipRow}>
-          {ArtStyles.map((style) => (
-            <Pressable
-              key={style.id}
-              onPress={() => handleSetArtStyle(style.id)}
-              style={[
-                styles.artTile,
-                {
-                  borderColor:
-                    artStyle === style.id
-                      ? theme.colors.primary
-                      : theme.colors.outline,
-                  backgroundColor: style.swatchColor,
-                },
-              ]}
-            >
-              <Text variant="labelSmall">{style.label}</Text>
-            </Pressable>
-          ))}
+      <View style={styles.section}>
+        <SectionLabel>{t("form.artStyleLabel")}</SectionLabel>
+        <ArtStyleChooser value={artStyle} onChange={handleSetArtStyle} />
+      </View>
+
+      <AvatarPicker
+        value={avatarId ?? null}
+        avatars={avatars}
+        isLoading={avatarsLoading}
+        enabled={auth.isAuthenticated}
+        onSelect={handleSelectAvatar}
+        onRequestLogin={() => openRootSheet(mobileRoutes.public.login)}
+        onManage={() => navigateToMainMyAvatars()}
+      />
+
+      <View style={styles.section}>
+        <TextInput
+          label={t("form.nameLabel")}
+          placeholder={t("form.mini.namePlaceholder")}
+          value={profileInfo.name}
+          onChangeText={(value) => handleUpdateProfileInfo("name", value)}
+          mode="outlined"
+          outlineStyle={{ borderRadius: theme.tokens.radius.md }}
+          style={{ backgroundColor: theme.colors.background }}
+          {...inputProps}
+          error={hasCensoredWords(profileInfo.name)}
+        />
+
+        <SelectField
+          label={t("form.languageLabel")}
+          value={profileInfo.language.value}
+          options={Languages.map((language) => ({
+            value: language.value,
+            label: language.name,
+          }))}
+          onChange={(value) => {
+            const match = Languages.find(
+              (language) => language.value === value,
+            );
+            if (match) handleUpdateProfileInfo("language", match as Language);
+          }}
+        />
+
+        <View style={styles.pair}>
+          <View style={styles.pairItem}>
+            <TextInput
+              label={t("form.ageLabel")}
+              value={String(profileInfo.age)}
+              onChangeText={(value) => {
+                const parsed = parseInt(value, 10);
+                if (!Number.isNaN(parsed))
+                  handleUpdateProfileInfo("age", parsed);
+              }}
+              keyboardType="number-pad"
+              mode="outlined"
+              outlineStyle={{ borderRadius: theme.tokens.radius.md }}
+              style={{ backgroundColor: theme.colors.background }}
+              {...inputProps}
+            />
+          </View>
+          <View style={styles.pairItem}>
+            <SegmentedControl
+              value={profileInfo.gender}
+              options={genders.map((gender) => ({
+                value: gender,
+                label: gender,
+              }))}
+              onChange={(value) => handleUpdateProfileInfo("gender", value)}
+            />
+          </View>
         </View>
-      </ScrollView>
+      </View>
 
-      {auth.isAuthenticated ? (
-        <>
-          <Text variant="labelLarge">{t("avatars.picker.title")}</Text>
-          {avatarsLoading ? (
-            <ActivityIndicator />
-          ) : (
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View style={styles.chipRow}>
-                <Chip
-                  selected={!avatarId}
-                  onPress={() => handleSelectAvatar(null)}
-                >
-                  {t("avatars.picker.none")}
-                </Chip>
-                {avatars.map((a) => (
-                  <Chip
-                    key={a._id}
-                    selected={avatarId === a._id}
-                    onPress={() => handleSelectAvatar(a)}
-                    avatar={
-                      a.portraitUrl ? (
-                        <Image
-                          source={{ uri: a.portraitUrl }}
-                          style={styles.avatarThumb}
-                        />
-                      ) : undefined
-                    }
-                  >
-                    {a.name}
-                  </Chip>
-                ))}
-              </View>
-            </ScrollView>
-          )}
-        </>
-      ) : null}
-
-      <List.Accordion
+      <Accordion
         title={t("form.moreSettings")}
         expanded={settingsOpen}
-        onPress={() => setSettingsOpen((o) => !o)}
+        onToggle={() => setSettingsOpen((open) => !open)}
       >
-        <View style={styles.settings}>
-          <Text variant="labelMedium">{t("form.settings.moral")}</Text>
+        <View style={styles.section}>
+          <SectionLabel>{t("form.settings.moral")}</SectionLabel>
           <View style={styles.chipRow}>
-            {Morals.slice(0, 8).map((m) => (
-              <Chip
-                key={m.value}
-                selected={storyParams.moral.value === m.value}
-                onPress={() => handleUpdateStoryInfo("moral", m)}
-              >
-                {m.name}
-              </Chip>
+            {Morals.slice(0, 8).map((moral) => (
+              <ChoiceChip
+                key={moral.value}
+                label={moral.name}
+                selected={storyParams.moral.value === moral.value}
+                onPress={() => handleUpdateStoryInfo("moral", moral)}
+              />
             ))}
           </View>
-          <Text variant="labelMedium">{t("form.settings.tone")}</Text>
+        </View>
+
+        <View style={styles.section}>
+          <SectionLabel>{t("form.settings.tone")}</SectionLabel>
           <View style={styles.chipRow}>
             {Tones.slice(0, 6).map((tone) => (
-              <Chip
+              <ChoiceChip
                 key={tone.value}
+                label={tone.name}
                 selected={storyParams.tone.value === tone.value}
                 onPress={() => handleUpdateStoryInfo("tone", tone)}
-              >
-                {tone.name}
-              </Chip>
+              />
             ))}
           </View>
-          <Text variant="labelMedium">{t("form.settings.environment")}</Text>
-          <View style={styles.chipRow}>
-            {Environments.slice(0, 6).map((env) => (
-              <Chip
-                key={env.value}
-                selected={storyParams.environment.value === env.value}
-                onPress={() => handleUpdateStoryInfo("environment", env)}
-              >
-                {env.name}
-              </Chip>
-            ))}
-          </View>
-          <TextInput
-            label={t("form.settings.interests")}
-            value={profileInfo.interests}
-            onChangeText={(v) => handleUpdateProfileInfo("interests", v)}
-            mode="outlined"
-            {...inputProps}
-          />
         </View>
-      </List.Accordion>
+
+        <View style={styles.section}>
+          <SectionLabel>{t("form.settings.environment")}</SectionLabel>
+          <View style={styles.chipRow}>
+            {Environments.slice(0, 6).map((environment) => (
+              <ChoiceChip
+                key={environment.value}
+                label={environment.name}
+                selected={storyParams.environment.value === environment.value}
+                onPress={() =>
+                  handleUpdateStoryInfo("environment", environment)
+                }
+              />
+            ))}
+          </View>
+        </View>
+
+        <TextInput
+          label={t("form.settings.interests")}
+          value={profileInfo.interests}
+          onChangeText={(value) => handleUpdateProfileInfo("interests", value)}
+          mode="outlined"
+          outlineStyle={{ borderRadius: theme.tokens.radius.md }}
+          style={{ backgroundColor: theme.colors.background }}
+          {...inputProps}
+          error={hasCensoredWords(profileInfo.interests)}
+        />
+      </Accordion>
 
       {hasMaxStoriesLimit ? (
-        <Text style={{ color: theme.colors.error }}>
+        <Text
+          style={[
+            styles.limit,
+            {
+              color: theme.colors.error,
+              fontFamily: theme.tokens.fontFamily.medium,
+            },
+          ]}
+        >
           {t("form.alerts.limitReached", {
             max: user?.subscription.maxStoriesAllowed ?? 0,
           })}
         </Text>
       ) : null}
 
-      <AppButton
-        mode="contained"
-        buttonColor={brand.contained}
-        textColor={brand.onContained}
-        disabled={submitDisabled}
-        loading={isCreatingStory}
-        onPress={() => void onSubmit()}
-      >
-        {ctaLabel}
-      </AppButton>
+      <View style={styles.cta}>
+        <PillButton
+          onPress={() => void onSubmit()}
+          disabled={submitDisabled}
+          loading={isCreatingStory}
+          trailingIcon="shimmer"
+        >
+          {ctaLabel}
+        </PillButton>
+      </View>
+
+      {/* Tips — the same three-point list the web create page closes with. */}
+      <View style={styles.tips}>
+        <DisplayText size={22}>{t("createPage.tipsHeading")}</DisplayText>
+        {TIP_KEYS.map((key, index) => (
+          <View key={key} style={styles.tip}>
+            <View
+              style={[
+                styles.tipNumber,
+                { backgroundColor: theme.colors.secondary },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.tipNumberLabel,
+                  { fontFamily: theme.tokens.fontFamily.bold },
+                ]}
+              >
+                {index + 1}
+              </Text>
+            </View>
+            <View style={styles.tipCopy}>
+              <Text
+                style={[
+                  styles.tipTitle,
+                  {
+                    color: theme.colors.onSurface,
+                    fontFamily: theme.tokens.fontFamily.semiBold,
+                  },
+                ]}
+              >
+                {t(`createPage.tips.${key}.title`)}
+              </Text>
+              <Text
+                style={[
+                  styles.tipBody,
+                  {
+                    color: theme.colors.onSurfaceVariant,
+                    fontFamily: theme.tokens.fontFamily.regular,
+                  },
+                ]}
+              >
+                {t(`createPage.tips.${key}.body`)}
+              </Text>
+            </View>
+          </View>
+        ))}
+      </View>
     </ScrollView>
+  );
+
+  const content = (
+    <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
+      {body}
+      <Snackbar
+        visible={errorMessage !== null}
+        onDismiss={() => setErrorMessage(null)}
+      >
+        {errorMessage}
+      </Snackbar>
+    </View>
   );
 
   if (embeddedInMainShell && drawerNavigation) {
     return (
-      <Page
-        header={
-          <MainShellAppBar
-            navigation={drawerNavigation}
-            title={t("createPage.heading")}
-          />
-        }
-      >
-        <View
-          style={[styles.root, { backgroundColor: theme.colors.background }]}
-        >
-          {body}
-          <Snackbar
-            visible={errorMessage !== null}
-            onDismiss={() => setErrorMessage(null)}
-          >
-            {errorMessage}
-          </Snackbar>
-        </View>
+      <Page header={<MainShellAppBar navigation={drawerNavigation} />}>
+        {content}
       </Page>
     );
   }
@@ -393,54 +424,47 @@ export const CreateStoryScreen = ({
     <Page
       header={
         navigation ? (
-          <View style={styles.topBar}>
-            <AppButton mode="text" onPress={() => navigation.goBack()}>
-              {t("common:back", { ns: "common" })}
-            </AppButton>
-            <Text
-              variant="titleMedium"
-              style={{ color: theme.colors.onSurface }}
-            >
-              {t("createPage.heading")}
-            </Text>
-            <View style={styles.topBarSpacer} />
-          </View>
+          <MainShellAppBar showBack onBack={() => navigation.goBack()} />
         ) : undefined
       }
     >
-      <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
-        {body}
-        <Snackbar
-          visible={errorMessage !== null}
-          onDismiss={() => setErrorMessage(null)}
-        >
-          {errorMessage}
-        </Snackbar>
-      </View>
+      {content}
     </Page>
   );
 };
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  topBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 8,
-    paddingBottom: 8,
+  scroll: { gap: 20, paddingTop: 8, paddingBottom: 48 },
+  hero: { gap: 8, alignItems: "center", paddingBottom: 4 },
+  center: { textAlign: "center" },
+  subheading: {
+    fontSize: 15,
+    lineHeight: 23,
+    textAlign: "center",
+    includeFontPadding: false,
   },
-  topBarSpacer: { width: 64 },
-  scroll: { padding: 16, gap: 12, paddingBottom: 40 },
+  section: { gap: 12 },
+  pair: { flexDirection: "row", gap: 12, alignItems: "center" },
+  pairItem: { flex: 1 },
   chipRow: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
-  artTile: {
-    width: 100,
-    height: 72,
-    borderRadius: 12,
-    borderWidth: 2,
-    padding: 8,
-    justifyContent: "flex-end",
+  limit: { fontSize: 14, lineHeight: 20, includeFontPadding: false },
+  cta: { alignItems: "center", paddingTop: 4 },
+  tips: { gap: 16, paddingTop: 12 },
+  tip: { flexDirection: "row", gap: 12, alignItems: "flex-start" },
+  tipNumber: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  avatarThumb: { width: 24, height: 24, borderRadius: 12 },
-  settings: { gap: 8, paddingBottom: 8 },
+  tipNumberLabel: {
+    color: "#FFFFFF",
+    fontSize: 13,
+    includeFontPadding: false,
+  },
+  tipCopy: { flex: 1, gap: 2 },
+  tipTitle: { fontSize: 15, includeFontPadding: false },
+  tipBody: { fontSize: 13, lineHeight: 19, includeFontPadding: false },
 });

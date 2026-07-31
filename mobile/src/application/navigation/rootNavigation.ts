@@ -71,6 +71,10 @@ export const navigateToMainMyStories = () => {
   navigateToMainTab(mobileRoutes.tabs.myStories);
 };
 
+export const navigateToMainMyAvatars = () => {
+  navigateToMainTab(mobileRoutes.tabs.myAvatars);
+};
+
 export const navigateToMainProfileTab = () => {
   navigateToMainTab(mobileRoutes.tabs.profile);
 };

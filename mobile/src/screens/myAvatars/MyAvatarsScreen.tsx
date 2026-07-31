@@ -1,26 +1,25 @@
 import { useCallback, useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   StyleSheet,
+  Text,
   View,
 } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
-import {
-  ActivityIndicator,
-  Button,
-  Card,
-  Dialog,
-  Portal,
-  Text,
-  useTheme,
-} from "react-native-paper";
+import { Dialog, Portal, Button } from "react-native-paper";
 
 import END_POINTS from "src/application/shared/endpoints";
 import { api } from "src/application/shared/apiClient";
+import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { MainShellAppBar } from "src/components/paper/MainShellAppBar";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
+import { BrandCard } from "src/components/brand/BrandCard";
+import { DisplayText } from "src/components/brand/DisplayText";
+import { PillButton } from "src/components/brand/PillButton";
 import { AvatarFormDialog } from "src/features/myAvatars/AvatarFormDialog";
 import {
   EMPTY_AVATAR_INPUT,
@@ -98,7 +97,7 @@ export const MyAvatarsScreen = () => {
 
 const MyAvatarsScreenContent = () => {
   const { t } = useTranslation("story");
-  const theme = useTheme();
+  const theme = useAppTheme();
   const { horizontalGutter, contentMaxWidth } = useReadableLayout();
   const { avatars, isLoading, isSaving, saveAvatar, removeAvatar } =
     useMyAvatars(true);
@@ -141,59 +140,100 @@ const MyAvatarsScreenContent = () => {
         ]}
         ListHeaderComponent={
           <View style={styles.header}>
-            <Button mode="contained" onPress={openCreate} icon="plus">
+            <Text
+              style={[
+                styles.subtitle,
+                {
+                  color: theme.colors.onSurfaceVariant,
+                  fontFamily: theme.tokens.fontFamily.regular,
+                },
+              ]}
+            >
+              {t("avatars.page.subtitle")}
+            </Text>
+            <PillButton icon="plus" onPress={openCreate} fullWidth>
               {t("avatars.page.new")}
-            </Button>
+            </PillButton>
           </View>
         }
         ListEmptyComponent={
           isLoading ? (
-            <ActivityIndicator style={{ marginTop: 24 }} />
+            <ActivityIndicator
+              style={styles.loader}
+              color={theme.colors.primary}
+            />
           ) : (
-            <Text style={{ color: theme.colors.onSurfaceVariant, marginTop: 16 }}>
+            <Text
+              style={[
+                styles.empty,
+                {
+                  color: theme.colors.onSurfaceVariant,
+                  fontFamily: theme.tokens.fontFamily.regular,
+                },
+              ]}
+            >
               {t("avatars.page.empty")}
             </Text>
           )
         }
         renderItem={({ item }) => (
-          <Card mode="outlined" style={styles.card}>
+          <BrandCard style={styles.card}>
             <View style={styles.cardRow}>
               {item.portraitUrl ? (
-                <Image source={{ uri: item.portraitUrl }} style={styles.portrait} />
+                <Image
+                  source={{ uri: item.portraitUrl }}
+                  style={styles.portrait}
+                />
               ) : (
                 <View
                   style={[
                     styles.portrait,
-                    { backgroundColor: theme.colors.surfaceVariant },
+                    styles.portraitFallback,
+                    { backgroundColor: theme.tokens.semantic.surface2 },
                   ]}
-                />
+                >
+                  <MaterialCommunityIcons
+                    name="account"
+                    size={28}
+                    color={theme.colors.onSurfaceVariant}
+                  />
+                </View>
               )}
               <View style={styles.cardText}>
-                <Text variant="titleMedium">{item.name}</Text>
+                <DisplayText size={18}>{item.name}</DisplayText>
                 {item.relationship ? (
                   <Text
-                    variant="bodySmall"
-                    style={{ color: theme.colors.onSurfaceVariant }}
+                    style={[
+                      styles.relationship,
+                      {
+                        color: theme.colors.onSurfaceVariant,
+                        fontFamily: theme.tokens.fontFamily.regular,
+                      },
+                    ]}
                   >
                     {item.relationship}
                   </Text>
                 ) : null}
                 <View style={styles.cardActions}>
-                  <Button mode="outlined" onPress={() => openEdit(item)} compact>
+                  <PillButton
+                    variant="outlined"
+                    compact
+                    onPress={() => openEdit(item)}
+                  >
                     {t("avatars.page.editTitle")}
-                  </Button>
+                  </PillButton>
                   <Button
                     mode="text"
+                    compact
                     textColor={theme.colors.error}
                     onPress={() => setDeleteTarget(item)}
-                    compact
                   >
                     {t("avatars.delete.confirm")}
                   </Button>
                 </View>
               </View>
             </View>
-          </Card>
+          </BrandCard>
         )}
       />
 
@@ -209,10 +249,25 @@ const MyAvatarsScreenContent = () => {
           onSubmit={onSubmit}
         />
 
-        <Dialog visible={deleteTarget !== null} onDismiss={() => setDeleteTarget(null)}>
-          <Dialog.Title>{t("avatars.delete.title")}</Dialog.Title>
+        <Dialog
+          visible={deleteTarget !== null}
+          onDismiss={() => setDeleteTarget(null)}
+          style={{ borderRadius: theme.tokens.radius.lg }}
+        >
+          <Dialog.Title>
+            <DisplayText size={20}>{t("avatars.delete.title")}</DisplayText>
+          </Dialog.Title>
           <Dialog.Content>
-            <Text>{t("avatars.delete.body", { name: deleteTarget?.name ?? "" })}</Text>
+            <Text
+              style={{
+                color: theme.colors.onSurfaceVariant,
+                fontFamily: theme.tokens.fontFamily.regular,
+              }}
+            >
+              {t("avatars.delete.body", {
+                name: deleteTarget?.name ?? "",
+              }).replace(/<\/?strong>/g, "")}
+            </Text>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={() => setDeleteTarget(null)}>{t("avatars.delete.cancel")}</Button>
@@ -234,21 +289,32 @@ const MyAvatarsScreenContent = () => {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  list: { paddingBottom: 24 },
-  header: { marginBottom: 12 },
-  card: { marginBottom: 12 },
+  list: { paddingBottom: 24, gap: 12 },
+  header: { marginBottom: 12, gap: 12 },
+  subtitle: { fontSize: 14, lineHeight: 21, includeFontPadding: false },
+  card: { marginBottom: 0 },
   cardRow: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 12,
-    gap: 12,
+    padding: 14,
+    gap: 14,
   },
   portrait: { width: 64, height: 64, borderRadius: 32 },
-  cardText: { flex: 1, gap: 4 },
+  portraitFallback: { alignItems: "center", justifyContent: "center" },
+  cardText: { flex: 1, gap: 2 },
+  relationship: { fontSize: 13, includeFontPadding: false },
   cardActions: {
     flexDirection: "row",
     flexWrap: "wrap",
+    alignItems: "center",
     gap: 8,
-    marginTop: 8,
+    marginTop: 10,
+  },
+  loader: { marginTop: 24 },
+  empty: {
+    fontSize: 15,
+    lineHeight: 22,
+    marginTop: 16,
+    includeFontPadding: false,
   },
 });
