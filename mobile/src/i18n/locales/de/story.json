@@ -198,6 +198,11 @@
       "deleted": "Avatar gelöscht.",
       "error": "Etwas ist schiefgelaufen.",
       "deleteError": "Avatar konnte nicht gelöscht werden."
+    },
+    "card": {
+      "create": "Erstellen",
+      "edit": "Bearbeiten",
+      "delete": "Löschen"
     }
   },
   "reader": {

@@ -3,13 +3,8 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 
-import { mobileRoutes } from "src/application/routes";
 import type { MainDrawerParamList } from "src/application/navigation/MainDrawerNavigator";
-import {
-  navigateToCreateStory,
-  openRootSheet,
-} from "src/application/navigation/rootNavigation";
-import { useApplicationContext } from "src/application/store/Provider";
+import { navigateToCreateStory } from "src/application/navigation/rootNavigation";
 import { useAppTheme } from "src/application/theme/useAppTheme";
 import { DisplayText } from "src/components/brand/DisplayText";
 import { PillButton } from "src/components/brand/PillButton";
@@ -28,24 +23,13 @@ export const MarketingAppBar = ({
 }: MarketingAppBarProps) => {
   const { t } = useTranslation("common");
   const theme = useAppTheme();
-  const {
-    store: {
-      state: { auth },
-    },
-  } = useApplicationContext();
-
-  const handleCreate = () => {
-    if (auth.isAuthenticated) {
-      navigateToCreateStory();
-      return;
-    }
-    openRootSheet(mobileRoutes.public.login);
-  };
 
   return (
     <View style={{ backgroundColor: theme.colors.background }}>
       <View style={styles.bar}>
-        <PillButton compact onPress={handleCreate}>
+        {/* Creating is public, as on the web: guests can fill the whole form
+            and are only asked to sign in when they hit Generate. */}
+        <PillButton compact onPress={() => navigateToCreateStory()}>
           {t("nav.createProject")}
         </PillButton>
 

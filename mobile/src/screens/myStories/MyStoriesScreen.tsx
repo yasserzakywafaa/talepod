@@ -1,12 +1,16 @@
 import { useCallback, useEffect } from "react";
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
-import { navigateToViewStory } from "src/application/navigation/rootNavigation";
+import {
+  navigateToCreateStory,
+  navigateToViewStory,
+} from "src/application/navigation/rootNavigation";
 import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
 import { FiltersButton } from "src/components/brand/FiltersButton";
+import { NoStoriesFound } from "src/components/brand/NoStoriesFound";
 import { PillButton } from "src/components/brand/PillButton";
 import { StoryCard } from "src/components/brand/StoryCard";
 import { StoryFiltersSheet } from "src/components/brand/StoryFiltersSheet";
@@ -80,17 +84,14 @@ const MyStoriesScreenContent = () => {
         ]}
         ListEmptyComponent={
           !isFetching ? (
-            <Text
-              style={[
-                styles.empty,
-                {
-                  color: theme.colors.onSurfaceVariant,
-                  fontFamily: theme.tokens.fontFamily.regular,
-                },
-              ]}
-            >
-              {t("page.emptyCreate")}
-            </Text>
+            <NoStoriesFound
+              onCreate={() => navigateToCreateStory()}
+              onClearFilters={
+                activeFiltersCount > 0
+                  ? () => void handleClearFilters()
+                  : undefined
+              }
+            />
           ) : null
         }
         ListFooterComponent={
@@ -144,11 +145,5 @@ const styles = StyleSheet.create({
   root: { flex: 1 },
   header: { marginBottom: 4 },
   listContent: { paddingBottom: 24, gap: 16 },
-  empty: {
-    fontSize: 15,
-    lineHeight: 22,
-    marginTop: 24,
-    includeFontPadding: false,
-  },
   footer: { paddingVertical: 16, alignItems: "center", gap: 12 },
 });

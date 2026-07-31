@@ -61,6 +61,36 @@ export const resolveActiveMainTabRoute = (
   return resolveTabRouteFromTabsRoute(stackRoute);
 };
 
+/**
+ * Resolve the shell stack's active screen (e.g. `MainTabs`, `PublicLibrary`).
+ *
+ * `resolveActiveMainTabRoute` returns null once the shell shows something
+ * other than the tab navigator, which is exactly when the guest tab bar needs
+ * to know that Library is the current screen.
+ */
+export const resolveActiveShellStackRoute = (
+  state: NavState | undefined,
+): string | null => {
+  if (!state?.routes?.length) return null;
+
+  const activeRoute = state.routes[state.index ?? 0];
+  if (!activeRoute) return null;
+
+  let shellRoute = activeRoute;
+
+  if (activeRoute.name === rootRoutes.main && activeRoute.state) {
+    const drawerState = activeRoute.state;
+    shellRoute = drawerState.routes[drawerState.index ?? 0] ?? activeRoute;
+  }
+
+  if (shellRoute.name !== mobileRoutes.main.shell || !shellRoute.state) {
+    return null;
+  }
+
+  const stackState = shellRoute.state;
+  return stackState.routes[stackState.index ?? 0]?.name ?? null;
+};
+
 export const buildMainDrawerShellState = (tabRoute: MainTabRouteName) => ({
   routes: [
     {

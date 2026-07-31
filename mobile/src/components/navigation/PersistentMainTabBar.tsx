@@ -12,7 +12,11 @@ import { mobileRoutes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import type { User } from "src/shared/types/user";
 import type { MainDrawerParamList } from "src/application/navigation/MainDrawerNavigator";
-import { resolveActiveMainTabRoute } from "src/application/navigation/mainShellNavigation";
+import type { MainShellStackParamList } from "src/application/navigation/MainShellStackNavigator";
+import {
+  resolveActiveMainTabRoute,
+  resolveActiveShellStackRoute,
+} from "src/application/navigation/mainShellNavigation";
 import {
   openRootSheet,
   rootNavigationRef,
@@ -28,8 +32,22 @@ type TabRouteName = (typeof mobileRoutes.tabs)[keyof typeof mobileRoutes.tabs];
 type TabDef =
   | {
       kind: "route";
-      id: TabRouteName;
+      id: string;
       tabRoute: TabRouteName;
+      icon: keyof typeof MaterialCommunityIcons.glyphMap;
+      labelKey: string;
+    }
+  | {
+      /** A shell-stack screen rather than a bottom tab (e.g. Library). */
+      kind: "shell";
+      id: string;
+      shellRoute: keyof MainShellStackParamList;
+      icon: keyof typeof MaterialCommunityIcons.glyphMap;
+      labelKey: string;
+    }
+  | {
+      kind: "login";
+      id: "login";
       icon: keyof typeof MaterialCommunityIcons.glyphMap;
       labelKey: string;
     }
@@ -39,7 +57,7 @@ type TabDef =
       labelKey: "account";
     };
 
-const TABS: TabDef[] = [
+const AUTHENTICATED_TABS: TabDef[] = [
   {
     kind: "route",
     id: mobileRoutes.tabs.create,
@@ -65,6 +83,33 @@ const TABS: TabDef[] = [
     kind: "account",
     id: "account",
     labelKey: "account",
+  },
+];
+
+/**
+ * Guests can create and browse, exactly as on the web — My Stories and My
+ * Avatars are user-scoped, so they only appear once signed in.
+ */
+const GUEST_TABS: TabDef[] = [
+  {
+    kind: "route",
+    id: mobileRoutes.tabs.create,
+    tabRoute: mobileRoutes.tabs.create,
+    icon: "auto-fix",
+    labelKey: "nav.createProject",
+  },
+  {
+    kind: "shell",
+    id: mobileRoutes.public.library,
+    shellRoute: mobileRoutes.public.library,
+    icon: "book-open-variant",
+    labelKey: "nav.library",
+  },
+  {
+    kind: "login",
+    id: "login",
+    icon: "login",
+    labelKey: "nav.login",
   },
 ];
 
@@ -159,6 +204,14 @@ const getActiveTabSnapshot = () => {
   return resolveActiveMainTabRoute(rootNavigationRef.getRootState());
 };
 
+const getActiveShellRouteSnapshot = () => {
+  if (!rootNavigationRef.isReady()) {
+    return null;
+  }
+
+  return resolveActiveShellStackRoute(rootNavigationRef.getRootState());
+};
+
 export const PersistentMainTabBar = ({ navigation }: Props) => {
   const theme = useAppTheme();
   const insets = useSafeAreaInsets();
@@ -166,7 +219,7 @@ export const PersistentMainTabBar = ({ navigation }: Props) => {
   const {
     store: {
       state: {
-        auth: { user },
+        auth: { user, isAuthenticated },
       },
     },
   } = useApplicationContext();
@@ -177,12 +230,30 @@ export const PersistentMainTabBar = ({ navigation }: Props) => {
     () => null,
   );
 
+  const activeShellRoute = useSyncExternalStore(
+    subscribeToRootNavigation,
+    getActiveShellRouteSnapshot,
+    () => null,
+  );
+
+  const tabs = isAuthenticated ? AUTHENTICATED_TABS : GUEST_TABS;
+
   const goToTab = (tabRoute: TabRouteName) => {
     navigation.dispatch(DrawerActions.closeDrawer());
     navigation.navigate(mobileRoutes.main.shell, {
       screen: mobileRoutes.main.tabs,
       params: { screen: tabRoute },
     });
+  };
+
+  const goToShellScreen = (shellRoute: keyof MainShellStackParamList) => {
+    navigation.dispatch(DrawerActions.closeDrawer());
+    navigation.navigate(mobileRoutes.main.shell, { screen: shellRoute });
+  };
+
+  const openLoginSheet = () => {
+    navigation.dispatch(DrawerActions.closeDrawer());
+    openRootSheet(mobileRoutes.public.login);
   };
 
   const openAccountSheet = () => {
@@ -211,11 +282,16 @@ export const PersistentMainTabBar = ({ navigation }: Props) => {
           },
         ]}
       >
-        {TABS.map((tab) => {
+        {tabs.map((tab) => {
           const isFocused =
             tab.kind === "account"
               ? activeTabRoute === mobileRoutes.tabs.profile
-              : activeTabRoute === tab.tabRoute;
+              : tab.kind === "route"
+                ? activeTabRoute === tab.tabRoute
+                : tab.kind === "shell"
+                  ? activeShellRoute === tab.shellRoute
+                  : false;
+
           const label =
             tab.labelKey === "account"
               ? ` ${user?.name.givenName ?? t("account")}`
@@ -223,14 +299,23 @@ export const PersistentMainTabBar = ({ navigation }: Props) => {
                 ? t(tab.labelKey)
                 : t(tab.labelKey, { ns: "common" });
 
+          const onPress = () => {
+            switch (tab.kind) {
+              case "account":
+                return openAccountSheet();
+              case "login":
+                return openLoginSheet();
+              case "shell":
+                return goToShellScreen(tab.shellRoute);
+              default:
+                return goToTab(tab.tabRoute);
+            }
+          };
+
           return (
             <Pressable
               key={tab.id}
-              onPress={
-                tab.kind === "account"
-                  ? openAccountSheet
-                  : () => goToTab(tab.tabRoute)
-              }
+              onPress={onPress}
               accessibilityRole="button"
               accessibilityState={{ selected: isFocused }}
               style={[

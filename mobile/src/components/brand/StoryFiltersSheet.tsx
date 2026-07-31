@@ -7,6 +7,7 @@ import { TextInput } from "react-native-paper";
 import { useAppTheme } from "src/application/theme/useAppTheme";
 import { ChoiceChip } from "src/components/brand/ChoiceChip";
 import { DisplayText } from "src/components/brand/DisplayText";
+import { MultiSelectField } from "src/components/brand/MultiSelectField";
 import { PillButton } from "src/components/brand/PillButton";
 import { SectionLabel } from "src/components/brand/SectionLabel";
 import { AdultGenderEnum } from "src/features/storyCreator/store/state";
@@ -48,10 +49,6 @@ type StoryFiltersSheetProps = {
 
 /** Ages offered in the picker — matches the web filter panel's 1–50 range. */
 const AGES = Array.from({ length: 50 }, (_, index) => index + 1);
-
-/** Adds or removes `item`, leaving the original array untouched. */
-const toggle = <T,>(list: T[], item: T): T[] =>
-  list.includes(item) ? list.filter((entry) => entry !== item) : [...list, item];
 
 /**
  * Filter sheet for the story lists — the native read of the web
@@ -204,35 +201,53 @@ export const StoryFiltersSheet = ({
               </View>
             </View>
 
-            <View style={styles.section}>
-              <SectionLabel>{t("filters.language")}</SectionLabel>
-              <View style={styles.chipRow}>
-                {Languages.map((language) => (
-                  <ChoiceChip
-                    key={language.value}
-                    label={language.name}
-                    selected={values.language.includes(language.value)}
-                    onPress={() =>
-                      onChange("language", toggle(values.language, language.value))
-                    }
-                  />
-                ))}
-              </View>
-            </View>
+            <MultiSelectField
+              label={t("filters.language")}
+              values={values.language}
+              options={Languages.map((language) => ({
+                value: language.value as string,
+                label: language.name,
+              }))}
+              onChange={(next) => onChange("language", next)}
+            />
 
-            <View style={styles.section}>
-              <SectionLabel>{t("filters.age")}</SectionLabel>
-              <View style={styles.chipRow}>
-                {AGES.map((age) => (
-                  <ChoiceChip
-                    key={age}
-                    label={String(age)}
-                    selected={values.age.includes(age)}
-                    onPress={() => onChange("age", toggle(values.age, age))}
-                  />
-                ))}
-              </View>
-            </View>
+            <MultiSelectField
+              label={t("filters.age")}
+              values={values.age}
+              options={AGES.map((age) => ({ value: age, label: String(age) }))}
+              onChange={(next) => onChange("age", next)}
+              compactOptions
+            />
+
+            <MultiSelectField
+              label={tStory("form.settings.moral")}
+              values={values.moral}
+              options={Morals.map((moral) => ({
+                value: moral.value,
+                label: moral.name,
+              }))}
+              onChange={(next) => onChange("moral", next)}
+            />
+
+            <MultiSelectField
+              label={tStory("form.settings.tone")}
+              values={values.tone}
+              options={Tones.map((tone) => ({
+                value: tone.value,
+                label: tone.name,
+              }))}
+              onChange={(next) => onChange("tone", next)}
+            />
+
+            <MultiSelectField
+              label={tStory("form.settings.environment")}
+              values={values.environment}
+              options={Environments.map((environment) => ({
+                value: environment.value,
+                label: environment.name,
+              }))}
+              onChange={(next) => onChange("environment", next)}
+            />
 
             <View style={styles.section}>
               {toggleRow(t("filters.storyAudio"), Boolean(values.audio), (next) =>
@@ -245,53 +260,6 @@ export const StoryFiltersSheet = ({
                     (next) => onChange("createdByAdmin", next || undefined),
                   )
                 : null}
-            </View>
-
-            <View style={styles.section}>
-              <SectionLabel>{tStory("form.settings.moral")}</SectionLabel>
-              <View style={styles.chipRow}>
-                {Morals.map((moral) => (
-                  <ChoiceChip
-                    key={moral.value}
-                    label={moral.name}
-                    selected={values.moral.includes(moral.value)}
-                    onPress={() => onChange("moral", toggle(values.moral, moral.value))}
-                  />
-                ))}
-              </View>
-            </View>
-
-            <View style={styles.section}>
-              <SectionLabel>{tStory("form.settings.tone")}</SectionLabel>
-              <View style={styles.chipRow}>
-                {Tones.map((tone) => (
-                  <ChoiceChip
-                    key={tone.value}
-                    label={tone.name}
-                    selected={values.tone.includes(tone.value)}
-                    onPress={() => onChange("tone", toggle(values.tone, tone.value))}
-                  />
-                ))}
-              </View>
-            </View>
-
-            <View style={styles.section}>
-              <SectionLabel>{tStory("form.settings.environment")}</SectionLabel>
-              <View style={styles.chipRow}>
-                {Environments.map((environment) => (
-                  <ChoiceChip
-                    key={environment.value}
-                    label={environment.name}
-                    selected={values.environment.includes(environment.value)}
-                    onPress={() =>
-                      onChange(
-                        "environment",
-                        toggle(values.environment, environment.value),
-                      )
-                    }
-                  />
-                ))}
-              </View>
             </View>
           </ScrollView>
 

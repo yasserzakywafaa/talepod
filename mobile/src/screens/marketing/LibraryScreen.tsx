@@ -11,6 +11,7 @@ import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useDrawerPageHeader } from "src/components/layout/useDrawerPageHeader";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
 import { FiltersButton } from "src/components/brand/FiltersButton";
+import { NoStoriesFound } from "src/components/brand/NoStoriesFound";
 import { PillButton } from "src/components/brand/PillButton";
 import { SegmentedControl } from "src/components/brand/SegmentedControl";
 import { StoryCard } from "src/components/brand/StoryCard";
@@ -84,17 +85,14 @@ const LibraryScreenContent = () => {
 
   const listEmpty =
     !isFetching && stories.length === 0 ? (
-      <View style={styles.empty}>
-        <PillButton onPress={() => navigateToCreateStory()}>
-          {t("page.emptyCreate")}
-        </PillButton>
-        <PillButton
-          variant="outlined"
-          onPress={() => void handleClearFilters()}
-        >
-          {t("page.emptyClearFilters")}
-        </PillButton>
-      </View>
+      <NoStoriesFound
+        onCreate={() => navigateToCreateStory()}
+        onClearFilters={
+          activeFiltersCount > 0
+            ? () => void handleClearFilters()
+            : undefined
+        }
+      />
     ) : null;
 
   return (
@@ -168,6 +166,5 @@ const styles = StyleSheet.create({
   root: { flex: 1 },
   header: { marginBottom: 16, gap: 4 },
   listContent: { paddingBottom: 24, gap: 16 },
-  empty: { gap: 12, paddingVertical: 32, alignItems: "center" },
   footer: { paddingVertical: 16, alignItems: "center", gap: 12 },
 });

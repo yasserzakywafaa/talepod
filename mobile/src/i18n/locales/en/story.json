@@ -198,6 +198,11 @@
       "deleted": "Avatar deleted.",
       "error": "Something went wrong.",
       "deleteError": "Failed to delete avatar."
+    },
+    "card": {
+      "create": "Create",
+      "edit": "Edit",
+      "delete": "Delete"
     }
   },
   "reader": {
