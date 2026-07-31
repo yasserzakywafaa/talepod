@@ -273,7 +273,10 @@ export const PersistentMainTabBar = ({ navigation }: Props) => {
         styles.wrapper,
         {
           paddingBottom: insets.bottom + FLOATING_TAB_BAR_BOTTOM_GAP,
-          paddingHorizontal: FLOATING_TAB_BAR_MARGIN_H,
+          // Sideways the notch takes one long edge; inset both so the pill
+          // stays centred rather than shifting away from it.
+          paddingHorizontal:
+            FLOATING_TAB_BAR_MARGIN_H + Math.max(insets.left, insets.right),
         },
       ]}
       pointerEvents="box-none"

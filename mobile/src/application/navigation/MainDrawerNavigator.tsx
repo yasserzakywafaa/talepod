@@ -1,5 +1,5 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { Dimensions } from "react-native";
+import { useWindowDimensions } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "react-native-paper";
 import type { NavigatorScreenParams } from "@react-navigation/native";
@@ -24,11 +24,16 @@ export type MainDrawerParamList = {
 
 const Drawer = createDrawerNavigator<MainDrawerParamList>();
 
-const drawerWidth = Math.min(Dimensions.get("window").width * 0.55, 320);
-
 export const MainDrawerNavigator = () => {
   const theme = useTheme();
   const { i18n } = useTranslation();
+  /**
+   * Read per render, not once at import: a width snapshotted in one
+   * orientation is wrong in the other — 55% of a landscape screen covers most
+   * of the portrait one.
+   */
+  const { width } = useWindowDimensions();
+  const drawerWidth = Math.min(width * 0.55, 320);
   const {
     store: {
       state: {

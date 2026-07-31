@@ -16,6 +16,7 @@ import { useMainShellDrawer } from "src/application/navigation/MainShellDrawerCo
 import { useAppTheme } from "src/application/theme/useAppTheme";
 import { DisplayText } from "src/components/brand/DisplayText";
 import { LocaleLayoutBoundary } from "src/components/layout/LocaleLayoutBoundary";
+import { useReadableLayout } from "src/components/layout/useReadableLayout";
 import { Page } from "src/components/layout/Page";
 import {
   useViewStoryManager,
@@ -32,6 +33,13 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
   const { slug } = route.params;
   const theme = useAppTheme();
   const { width } = useWindowDimensions();
+  const { contentMaxWidth } = useReadableLayout();
+  /**
+   * Sideways the window is wider than the screen is tall, so a full-width
+   * comic page would stand taller than the viewport. Cap it the way every
+   * other page caps its copy.
+   */
+  const mediaWidth = Math.min(width, contentMaxWidth) - 32;
   const shellDrawer = useMainShellDrawer();
   const store = useViewStoryStore();
   const manager = useViewStoryManager(store);
@@ -101,8 +109,8 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
                     <Image
                       source={{ uri: page.imageUrl }}
                       style={{
-                        width: width - 32,
-                        height: (width - 32) * 0.75,
+                        width: mediaWidth,
+                        height: mediaWidth * 0.75,
                         borderRadius: theme.tokens.radius.lg,
                       }}
                       resizeMode="cover"
@@ -111,7 +119,7 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
                     <View
                       style={[
                         styles.imagePlaceholder,
-                        { width: width - 32, backgroundColor: theme.colors.surfaceVariant },
+                        { width: mediaWidth, backgroundColor: theme.colors.surfaceVariant },
                       ]}
                     >
                       <ActivityIndicator color={theme.colors.primary} />

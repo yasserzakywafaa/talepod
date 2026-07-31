@@ -8,13 +8,18 @@ type SafeAreaTopBarProps = {
   style?: StyleProp<ViewStyle>;
 };
 
-/** Top safe-area inset (notch / Dynamic Island / status bar) for headers and standalone top bars. */
+/**
+ * Safe-area inset for headers and standalone top bars.
+ *
+ * Includes the side edges, not just the top: held sideways the notch sits on
+ * one long edge, and a menu button pinned to that edge would sit under it.
+ */
 export const SafeAreaTopBar = ({ children, style }: SafeAreaTopBarProps) => {
   const theme = useTheme();
 
   return (
     <SafeAreaView
-      edges={["top"]}
+      edges={["top", "left", "right"]}
       style={[
         styles.bar,
         { backgroundColor: theme.colors.background },

@@ -15,7 +15,7 @@ import { I18nAppShell } from "src/application/I18nAppShell";
 import { ThemedPaperProvider } from "src/application/ThemedPaperProvider";
 import { rootNavigationRef } from "src/application/navigation/rootNavigation";
 import { paperDarkTheme, paperLightTheme } from "src/application/paperTheme";
-import { fontFamily } from "src/application/theme/tokens";
+import { brand, fontFamily } from "src/application/theme/tokens";
 import { useAppFonts } from "src/application/theme/useAppFonts";
 import { ApplicationContextProvider } from "src/application/store/Provider";
 import { useResolvedThemeMode } from "src/application/useResolvedThemeMode";
@@ -107,6 +107,13 @@ const App = () => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+    /**
+     * Matches the native splash background. Without it React Native's root
+     * view is white, which flashes for a frame between the splash hiding and
+     * the first screen painting — the one white frame the night-sky launch is
+     * meant to avoid.
+     */
+    backgroundColor: brand.plum[700],
   },
 });
 

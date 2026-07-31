@@ -5,14 +5,15 @@ const MOBILE_OAUTH_SCHEME =
 
 /** Brand colours — mirrors `src/application/theme/tokens.ts`. */
 const PLUM_700 = "#0A0E2B"; // dark page background
-const PARCHMENT_100 = "#FAF4EA"; // light page background
 
 const config: ExpoConfig = {
   name: "TalePod",
   slug: "talepod",
   scheme: MOBILE_OAUTH_SCHEME,
   version: "1.0.0",
-  orientation: "portrait",
+  // Follow the device. A story being read aloud is often propped sideways,
+  // and the layout is width-driven rather than fixed to a portrait frame.
+  orientation: "default",
   // Opaque, square, night-sky icon. iOS rejects alpha in app icons and draws
   // transparency as black, so this must not be the adaptive foreground.
   icon: "./assets/icon.png",
@@ -44,11 +45,10 @@ const config: ExpoConfig = {
         image: "./assets/splash-icon.png",
         imageWidth: 200,
         resizeMode: "contain",
-        backgroundColor: PARCHMENT_100,
-        dark: {
-          image: "./assets/splash-icon.png",
-          backgroundColor: PLUM_700,
-        },
+        // Night sky in both themes, not just dark mode: the mark is a bunny
+        // asleep on a moon, and a white launch frame reads as the wrong app
+        // for a second before the first screen paints.
+        backgroundColor: PLUM_700,
       },
     ],
   ],

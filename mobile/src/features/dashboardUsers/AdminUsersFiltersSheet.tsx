@@ -92,6 +92,9 @@ export const AdminUsersFiltersSheet = ({
               borderTopLeftRadius: radius.xl,
               borderTopRightRadius: radius.xl,
               paddingBottom: insets.bottom,
+              // The sheet spans the screen, so sideways it meets the notch.
+              paddingLeft: insets.left,
+              paddingRight: insets.right,
             },
           ]}
         >
