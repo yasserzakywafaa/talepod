@@ -88,9 +88,12 @@ export const CreateStoryScreen = ({
   } = useStoryCreatorContext();
 
   const { isGenerating, isCreatingStory, generateStory } = useGenerateStory();
-  const { avatars, isLoading: avatarsLoading } = useAvatarsList(
-    auth.isAuthenticated,
-  );
+  const {
+    avatars,
+    isLoading: avatarsLoading,
+    loadError: avatarsError,
+    refetch: refetchAvatars,
+  } = useAvatarsList(auth.isAuthenticated);
 
   const user = auth.user;
   const isUserActive = user && user.status === UserStatus.active;
@@ -199,6 +202,8 @@ export const CreateStoryScreen = ({
         onSelect={handleSelectAvatar}
         onRequestLogin={() => openRootSheet(mobileRoutes.public.login)}
         onManage={() => navigateToMainMyAvatars()}
+        loadError={avatarsError}
+        onRetry={() => void refetchAvatars()}
       />
 
       <View style={styles.section}>

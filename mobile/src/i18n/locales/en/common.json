@@ -43,5 +43,12 @@
     "version": "Version {{version}}"
   },
   "sheetClose": "Close",
-  "signedInUser": "Signed-in user"
+  "signedInUser": "Signed-in user",
+  "serviceError": {
+    "offlineTitle": "We can't reach TalePod",
+    "offlineBody": "Check your connection and try again. If everything looks fine on your end, our storyteller may be having a nap.",
+    "serverTitle": "Something went wrong",
+    "serverBody": "TalePod is having trouble right now. Nothing you did — please try again in a moment.",
+    "retry": "Try again"
+  }
 }

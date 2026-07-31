@@ -3,7 +3,8 @@
   "nav": {
     "overview": "نظرة عامة",
     "stories": "القصص",
-    "users": "المستخدمون"
+    "users": "المستخدمون",
+    "backToApp": "العودة إلى التطبيق"
   },
   "overview": {
     "storiesMetricHint": "القصص المُنشأة على المنصة.",

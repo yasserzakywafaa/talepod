@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import type { User } from "src/shared/types/user";
 import type { AdminFeedback } from "src/features/dashboardShared/adminFeedback";
+import type { RequestErrorKind } from "src/shared/api/getRequestErrorKind";
 
 import {
   getDashboardUserInitialState,
@@ -15,6 +16,7 @@ export interface DashboardUserStore {
   setUser: (user: User | null) => void;
   setStoriesCount: (storiesCount: number) => void;
   setFeedback: (feedback: AdminFeedback | null) => void;
+  setLoadError: (loadError: RequestErrorKind | null) => void;
 }
 
 export const useDashboardUserStore = (): DashboardUserStore => {
@@ -36,6 +38,9 @@ export const useDashboardUserStore = (): DashboardUserStore => {
   const setFeedback = (feedback: AdminFeedback | null) =>
     setState((prev) => ({ ...prev, feedback }));
 
+  const setLoadError = (loadError: RequestErrorKind | null) =>
+    setState((prev) => ({ ...prev, loadError }));
+
   return {
     state,
     setIsFetching,
@@ -43,5 +48,6 @@ export const useDashboardUserStore = (): DashboardUserStore => {
     setUser,
     setStoriesCount,
     setFeedback,
+    setLoadError,
   };
 };

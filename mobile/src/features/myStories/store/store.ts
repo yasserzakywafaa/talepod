@@ -1,3 +1,4 @@
+import type { RequestErrorKind } from "src/shared/api/getRequestErrorKind";
 import { useState } from "react";
 
 import type { PagingInfo } from "src/shared/types/api";
@@ -12,6 +13,7 @@ import {
 export interface MyStoriesStore {
   state: MyStoriesInitialState;
   isMyStoriesFetching: (isFetching: boolean) => void;
+  setLoadError: (loadError: RequestErrorKind | null) => void;
   updateStories: (stories: Story[]) => void;
   updatePageNumber: (pageNumber: number) => void;
   updatePagingInfo: (pagingInfo: PagingInfo) => void;
@@ -31,6 +33,10 @@ export const useMyStoriesStore = (): MyStoriesStore => {
 
   const isMyStoriesFetching = (isFetching: boolean) => {
     setState((prev) => ({ ...prev, isFetching }));
+  };
+
+  const setLoadError = (loadError: RequestErrorKind | null) => {
+    setState((prev) => ({ ...prev, loadError }));
   };
 
   const updateStories = (stories: Story[]) => {
@@ -77,6 +83,7 @@ export const useMyStoriesStore = (): MyStoriesStore => {
   return {
     state,
     isMyStoriesFetching,
+    setLoadError,
     updateStories,
     updatePageNumber,
     updatePagingInfo,

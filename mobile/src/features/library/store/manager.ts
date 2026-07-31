@@ -1,3 +1,5 @@
+import { logApiError } from "src/shared/api/logApiError";
+import { getRequestErrorKind } from "src/shared/api/getRequestErrorKind";
 import END_POINTS from "src/application/shared/endpoints";
 import { api } from "src/application/shared/apiClient";
 import type { Story } from "src/features/storyCreator/store/state";
@@ -75,6 +77,12 @@ export const useLibraryManager = (store: LibraryStore): LibraryManager => {
       store.updateStories(
         page > 1 ? [...previous, ...data.results] : data.results,
       );
+      store.setLoadError(null);
+    } catch (error) {
+      // Previously this rejected into the void and left an empty list with no
+      // explanation. An unreachable API now surfaces on screen instead.
+      logApiError("Failed to fetch library stories", error);
+      store.setLoadError(getRequestErrorKind(error));
     } finally {
       store.isLibraryFetching(false);
     }

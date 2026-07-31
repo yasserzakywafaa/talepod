@@ -1,3 +1,5 @@
+import { logApiError } from "src/shared/api/logApiError";
+import { getRequestErrorKind, type RequestErrorKind } from "src/shared/api/getRequestErrorKind";
 import { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
@@ -13,6 +15,7 @@ import { useReadableLayout } from "src/components/layout/useReadableLayout";
 import { AvatarCard } from "src/components/brand/AvatarCard";
 import { DisplayText } from "src/components/brand/DisplayText";
 import { PillButton } from "src/components/brand/PillButton";
+import { ServiceUnavailable } from "src/components/brand/ServiceUnavailable";
 import { AvatarFormDialog } from "src/features/myAvatars/AvatarFormDialog";
 import { useStoryCreatorContext } from "src/features/storyCreator/store/Provider";
 import {
@@ -26,12 +29,17 @@ export const useMyAvatars = (enabled = true) => {
   const [avatars, setAvatars] = useState<Avatar[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [loadError, setLoadError] = useState<RequestErrorKind | null>(null);
 
   const fetchAvatars = useCallback(async () => {
     setIsLoading(true);
     try {
       const { data } = await api.get<Avatar[]>(END_POINTS.AVATARS.LIST);
       setAvatars(Array.isArray(data) ? data : []);
+      setLoadError(null);
+    } catch (error) {
+      logApiError("Failed to fetch avatars", error);
+      setLoadError(getRequestErrorKind(error));
     } finally {
       setIsLoading(false);
     }
@@ -73,6 +81,7 @@ export const useMyAvatars = (enabled = true) => {
     avatars,
     isLoading,
     isSaving,
+    loadError,
     refetch: fetchAvatars,
     saveAvatar,
     removeAvatar,
@@ -93,7 +102,7 @@ const MyAvatarsScreenContent = () => {
   const { t } = useTranslation("story");
   const theme = useAppTheme();
   const { horizontalGutter, contentMaxWidth } = useReadableLayout();
-  const { avatars, isLoading, isSaving, saveAvatar, removeAvatar } =
+  const { avatars, isLoading, isSaving, loadError, refetch, saveAvatar, removeAvatar } =
     useMyAvatars(true);
   const {
     manager: { handleSelectAvatar },
@@ -128,6 +137,20 @@ const MyAvatarsScreenContent = () => {
     handleSelectAvatar(avatar);
     navigateToCreateStory();
   };
+
+  // Nothing loaded and the API is unreachable — say so rather than showing
+  // an empty list that reads as "you have no avatars".
+  if (loadError && avatars.length === 0) {
+    return (
+      <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
+        <ServiceUnavailable
+          kind={loadError}
+          isRetrying={isLoading}
+          onRetry={() => void refetch()}
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.root, { backgroundColor: theme.colors.background }]}>

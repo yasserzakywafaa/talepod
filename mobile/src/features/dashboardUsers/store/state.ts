@@ -1,6 +1,7 @@
 import type { PagingInfo } from "src/shared/types/api";
 import type { User, UserRole, UserStatus } from "src/shared/types/user";
 import type { AdminFeedback } from "src/features/dashboardShared/adminFeedback";
+import type { RequestErrorKind } from "src/shared/api/getRequestErrorKind";
 
 /**
  * What an admin actually needs to find someone: a name, an email, a phone
@@ -19,6 +20,8 @@ export interface DashboardUsersState {
   users: User[];
   paging: PagingInfo;
   feedback: AdminFeedback | null;
+  /** Set when the list could not load at all, so the screen can explain why. */
+  loadError: RequestErrorKind | null;
   filters: DashboardUsersFilters;
   isFiltersPanelOpen: boolean;
   activeFiltersCount: number;
@@ -40,6 +43,7 @@ export const getDashboardUsersInitialState = (): DashboardUsersState => ({
     totalCount: 0,
   },
   feedback: null,
+  loadError: null,
   filters: getDashboardUsersInitialFilters(),
   isFiltersPanelOpen: false,
   activeFiltersCount: 0,

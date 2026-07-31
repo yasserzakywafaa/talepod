@@ -3,7 +3,8 @@
   "nav": {
     "overview": "Overview",
     "stories": "Stories",
-    "users": "Users"
+    "users": "Users",
+    "backToApp": "Back to app"
   },
   "overview": {
     "storiesMetricHint": "Stories created on the platform.",

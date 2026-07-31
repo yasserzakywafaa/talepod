@@ -13,6 +13,7 @@ import { AppToast } from "src/components/chrome/AppToast";
 import { BrandCard } from "src/components/brand/BrandCard";
 import { DisplayText } from "src/components/brand/DisplayText";
 import { PillButton } from "src/components/brand/PillButton";
+import { ServiceUnavailable } from "src/components/brand/ServiceUnavailable";
 import { ConfirmDestructiveDialog } from "src/features/dashboardShared/ConfirmDestructiveDialog";
 import { isUserBlocked } from "src/features/dashboardShared/userPresentation";
 import { getUserProfileContact } from "src/shared/utils/getUserProfileContact";
@@ -36,7 +37,14 @@ const DashboardUserContent = ({ navigation, route }: Props) => {
 
   const {
     store: {
-      state: { isFetching, isMutating, user, storiesCount, feedback },
+      state: {
+        isFetching,
+        isMutating,
+        user,
+        storiesCount,
+        feedback,
+        loadError,
+      },
     },
     manager: {
       setUp,
@@ -57,6 +65,16 @@ const DashboardUserContent = ({ navigation, route }: Props) => {
       <View style={styles.centered}>
         <ActivityIndicator color={theme.colors.primary} />
       </View>
+    );
+  }
+
+  if (loadError && !user) {
+    return (
+      <ServiceUnavailable
+        kind={loadError}
+        isRetrying={isFetching}
+        onRetry={() => void setUp(userId)}
+      />
     );
   }
 

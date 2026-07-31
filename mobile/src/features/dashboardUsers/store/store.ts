@@ -3,6 +3,7 @@ import { useState } from "react";
 import type { PagingInfo } from "src/shared/types/api";
 import type { User } from "src/shared/types/user";
 import type { AdminFeedback } from "src/features/dashboardShared/adminFeedback";
+import type { RequestErrorKind } from "src/shared/api/getRequestErrorKind";
 
 import {
   getDashboardUsersInitialFilters,
@@ -20,6 +21,7 @@ export interface DashboardUsersStore {
   appendUsers: (users: User[]) => void;
   setPaging: (paging: PagingInfo) => void;
   setFeedback: (feedback: AdminFeedback | null) => void;
+  setLoadError: (loadError: RequestErrorKind | null) => void;
   toggleFiltersPanel: (isOpen: boolean) => void;
   updateFilter: <Key extends keyof DashboardUsersFilters>(
     key: Key,
@@ -51,6 +53,9 @@ export const useDashboardUsersStore = (): DashboardUsersStore => {
   const setFeedback = (feedback: AdminFeedback | null) =>
     setState((prev) => ({ ...prev, feedback }));
 
+  const setLoadError = (loadError: RequestErrorKind | null) =>
+    setState((prev) => ({ ...prev, loadError }));
+
   const toggleFiltersPanel = (isFiltersPanelOpen: boolean) =>
     setState((prev) => ({ ...prev, isFiltersPanelOpen }));
 
@@ -81,6 +86,7 @@ export const useDashboardUsersStore = (): DashboardUsersStore => {
     appendUsers,
     setPaging,
     setFeedback,
+    setLoadError,
     toggleFiltersPanel,
     updateFilter,
     setActiveFiltersCount,

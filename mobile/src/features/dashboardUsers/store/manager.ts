@@ -9,6 +9,10 @@ import type { User } from "src/shared/types/user";
 import { normalizeUserFromApi } from "src/shared/utils/normalizeUserFromApi";
 import { countActiveFilters } from "src/shared/utils/countActiveFilters";
 import { getApiErrorMessage } from "src/features/dashboardShared/adminFeedback";
+import {
+  getRequestErrorKind,
+  isServiceUnavailable,
+} from "src/shared/api/getRequestErrorKind";
 
 import {
   getDashboardUsersInitialState,
@@ -79,15 +83,23 @@ export const useDashboardUsersManager = (
           totalCount: data.paging?.totalCount ?? 0,
           totalPagesCount: data.paging?.totalPagesCount,
         });
+        storeRef.current.setLoadError(null);
       } catch (error) {
         logApiError("Failed to fetch dashboard users", error);
-        storeRef.current.setFeedback({
-          message: getApiErrorMessage(
-            error,
-            i18n.t("dashboard:errors.loadUsers"),
-          ),
-          variant: "error",
-        });
+
+        // An unreachable API replaces the list with an explanation; anything
+        // else is a passing problem and stays a toast over what is on screen.
+        if (isServiceUnavailable(error)) {
+          storeRef.current.setLoadError(getRequestErrorKind(error));
+        } else {
+          storeRef.current.setFeedback({
+            message: getApiErrorMessage(
+              error,
+              i18n.t("dashboard:errors.loadUsers"),
+            ),
+            variant: "error",
+          });
+        }
       } finally {
         storeRef.current.setIsFetching(false);
       }

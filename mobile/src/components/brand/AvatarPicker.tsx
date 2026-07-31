@@ -14,6 +14,7 @@ import { useAppTheme } from "src/application/theme/useAppTheme";
 import { PillButton } from "src/components/brand/PillButton";
 import { SectionLabel } from "src/components/brand/SectionLabel";
 import type { Avatar } from "src/shared/types/avatar";
+import type { RequestErrorKind } from "src/shared/api/getRequestErrorKind";
 
 type AvatarPickerProps = {
   value: string | null;
@@ -24,6 +25,9 @@ type AvatarPickerProps = {
   enabled: boolean;
   onRequestLogin: () => void;
   onManage?: () => void;
+  /** Avatars could not be fetched — offer a retry instead of an empty rail. */
+  loadError?: RequestErrorKind | null;
+  onRetry?: () => void;
 };
 
 /**
@@ -39,6 +43,8 @@ export const AvatarPicker = ({
   enabled,
   onRequestLogin,
   onManage,
+  loadError = null,
+  onRetry,
 }: AvatarPickerProps) => {
   const { t } = useTranslation("story");
   const theme = useAppTheme();
@@ -83,6 +89,54 @@ export const AvatarPicker = ({
           <PillButton compact icon="login" onPress={onRequestLogin}>
             {t("avatars.picker.login")}
           </PillButton>
+        </View>
+      </View>
+    );
+  }
+
+  /**
+   * The picker is one optional field on a form that still works without it,
+   * so a failed fetch stays contained here rather than replacing the screen.
+   */
+  if (loadError && avatars.length === 0 && !isLoading) {
+    return (
+      <View style={styles.block}>
+        {header}
+        <View
+          style={[
+            styles.dashed,
+            {
+              borderRadius: radius.md,
+              borderColor: theme.colors.outlineVariant,
+              backgroundColor: theme.colors.surface,
+            },
+          ]}
+        >
+          <Text
+            style={[
+              styles.prompt,
+              {
+                color: theme.colors.onSurfaceVariant,
+                fontFamily: fontFamily.regular,
+              },
+            ]}
+          >
+            {t(
+              loadError === "offline"
+                ? "avatars.picker.offline"
+                : "avatars.picker.failed",
+            )}
+          </Text>
+          {onRetry ? (
+            <PillButton
+              compact
+              variant="outlined"
+              icon="refresh"
+              onPress={onRetry}
+            >
+              {t("serviceError.retry", { ns: "common" })}
+            </PillButton>
+          ) : null}
         </View>
       </View>
     );

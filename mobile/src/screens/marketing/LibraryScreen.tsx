@@ -14,6 +14,7 @@ import { FiltersButton } from "src/components/brand/FiltersButton";
 import { NoStoriesFound } from "src/components/brand/NoStoriesFound";
 import { PillButton } from "src/components/brand/PillButton";
 import { SegmentedControl } from "src/components/brand/SegmentedControl";
+import { ServiceUnavailable } from "src/components/brand/ServiceUnavailable";
 import { StoryCard } from "src/components/brand/StoryCard";
 import { StoryFiltersSheet } from "src/components/brand/StoryFiltersSheet";
 import {
@@ -32,6 +33,7 @@ const LibraryScreenContent = () => {
       state: {
         isFetching,
         stories,
+        loadError,
         pagingInfo,
         storiesSource,
         filters,
@@ -94,6 +96,20 @@ const LibraryScreenContent = () => {
         }
       />
     ) : null;
+
+  // Nothing loaded and the API is unreachable — say so rather than showing
+  // an empty library that reads as "there are no stories".
+  if (loadError && stories.length === 0) {
+    return (
+      <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
+        <ServiceUnavailable
+          kind={loadError}
+          isRetrying={isFetching}
+          onRetry={() => void setUp()}
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.root, { backgroundColor: theme.colors.background }]}>

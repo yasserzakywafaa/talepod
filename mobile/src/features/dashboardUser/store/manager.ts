@@ -7,6 +7,10 @@ import { logApiError } from "src/shared/api/logApiError";
 import type { User, UserRole } from "src/shared/types/user";
 import { normalizeUserFromApi } from "src/shared/utils/normalizeUserFromApi";
 import { getApiErrorMessage } from "src/features/dashboardShared/adminFeedback";
+import {
+  getRequestErrorKind,
+  isServiceUnavailable,
+} from "src/shared/api/getRequestErrorKind";
 
 import type { DashboardUserStore } from "./store";
 
@@ -46,15 +50,23 @@ export const useDashboardUserManager = (
 
       try {
         await Promise.all([fetchUser(userId), fetchStoriesCount(userId)]);
+        storeRef.current.setLoadError(null);
       } catch (error) {
         logApiError("Failed to fetch dashboard user", error);
-        storeRef.current.setFeedback({
-          message: getApiErrorMessage(
-            error,
-            i18n.t("dashboard:errors.loadUser"),
-          ),
-          variant: "error",
-        });
+
+        // Without this the screen falls through to "User Not Found", which is
+        // a different — and wrong — thing to tell an admin.
+        if (isServiceUnavailable(error)) {
+          storeRef.current.setLoadError(getRequestErrorKind(error));
+        } else {
+          storeRef.current.setFeedback({
+            message: getApiErrorMessage(
+              error,
+              i18n.t("dashboard:errors.loadUser"),
+            ),
+            variant: "error",
+          });
+        }
       } finally {
         storeRef.current.setIsFetching(false);
       }

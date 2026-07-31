@@ -15,7 +15,10 @@ import {
 } from "src/application/routes";
 import type { DashboardShellStackParamList } from "src/application/navigation/DashboardShellStackNavigator";
 import { resolveActiveDashboardStackRoute } from "src/application/navigation/dashboardShellNavigation";
-import { navigateToMarketingHome } from "src/application/navigation/rootNavigation";
+import {
+  navigateToCreateStory,
+  navigateToMarketingHome,
+} from "src/application/navigation/rootNavigation";
 import { useApplicationContext } from "src/application/store/Provider";
 import { Logo } from "./Logo";
 import { SettingsMenuButton } from "./SettingsMenuButton";
@@ -102,6 +105,19 @@ export const DashboardDrawerContent = (props: DrawerContentComponentProps) => {
         )}
 
         <View style={styles.bottom}>
+          {/* The admin area is a separate root stack, so nothing else here
+              leads back to the app the rest of the time. */}
+          <List.Item
+            title={t("nav.backToApp")}
+            left={(p) => (
+              <List.Icon {...p} icon="arrow-left" color={theme.colors.primary} />
+            )}
+            onPress={() => {
+              navigation.closeDrawer();
+              navigateToCreateStory();
+            }}
+            titleStyle={{ color: theme.colors.onSurface }}
+          />
           <Divider
             style={[styles.divider, { backgroundColor: theme.colors.outline }]}
           />

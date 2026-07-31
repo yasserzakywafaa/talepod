@@ -150,7 +150,9 @@
       "addOne": "Add one →",
       "noneAria": "No avatar",
       "none": "None",
-      "useAria": "Use {{name}}"
+      "useAria": "Use {{name}}",
+      "offline": "We couldn't load your characters — check your connection.",
+      "failed": "We couldn't load your characters just now."
     },
     "page": {
       "title": "My Avatars",

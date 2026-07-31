@@ -8,6 +8,7 @@ import type {
 import type { Story } from "src/features/storyCreator/store/state";
 import type { PagingInfo } from "src/shared/types/api";
 import type { AdminFeedback } from "src/features/dashboardShared/adminFeedback";
+import type { RequestErrorKind } from "src/shared/api/getRequestErrorKind";
 
 import {
   getDashboardStoriesInitialFilters,
@@ -23,6 +24,7 @@ export interface DashboardStoriesStore {
   appendStories: (stories: Story[]) => void;
   setPaging: (paging: PagingInfo) => void;
   setFeedback: (feedback: AdminFeedback | null) => void;
+  setLoadError: (loadError: RequestErrorKind | null) => void;
   toggleFiltersPanel: (isOpen: boolean) => void;
   updateFilter: (key: StoryFilterKey, value: StoryFilterValue) => void;
   setActiveFiltersCount: (count: number) => void;
@@ -52,6 +54,9 @@ export const useDashboardStoriesStore = (): DashboardStoriesStore => {
   const setFeedback = (feedback: AdminFeedback | null) =>
     setState((prev) => ({ ...prev, feedback }));
 
+  const setLoadError = (loadError: RequestErrorKind | null) =>
+    setState((prev) => ({ ...prev, loadError }));
+
   const toggleFiltersPanel = (isFiltersPanelOpen: boolean) =>
     setState((prev) => ({ ...prev, isFiltersPanelOpen }));
 
@@ -79,6 +84,7 @@ export const useDashboardStoriesStore = (): DashboardStoriesStore => {
     appendStories,
     setPaging,
     setFeedback,
+    setLoadError,
     toggleFiltersPanel,
     updateFilter,
     setActiveFiltersCount,

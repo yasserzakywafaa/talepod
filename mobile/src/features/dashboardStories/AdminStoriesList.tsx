@@ -16,6 +16,7 @@ import { useReadableLayout } from "src/components/layout/useReadableLayout";
 import { AppToast } from "src/components/chrome/AppToast";
 import { FiltersButton } from "src/components/brand/FiltersButton";
 import { PillButton } from "src/components/brand/PillButton";
+import { ServiceUnavailable } from "src/components/brand/ServiceUnavailable";
 import { StoryFiltersSheet } from "src/components/brand/StoryFiltersSheet";
 import { AdminEmptyState } from "src/features/dashboardShared/AdminEmptyState";
 import { ConfirmDestructiveDialog } from "src/features/dashboardShared/ConfirmDestructiveDialog";
@@ -53,6 +54,7 @@ export const AdminStoriesList = ({
         stories,
         paging,
         feedback,
+        loadError,
         filters,
         isFiltersPanelOpen,
         activeFiltersCount,
@@ -88,6 +90,20 @@ export const AdminStoriesList = ({
   );
 
   const hasMore = (paging.totalPagesCount ?? 1) > paging.pageNumber;
+
+  // Nothing loaded and the API is unreachable: the list has nothing to say,
+  // so the screen explains itself instead of showing an empty page.
+  if (loadError && stories.length === 0) {
+    return (
+      <View style={styles.root}>
+        <ServiceUnavailable
+          kind={loadError}
+          isRetrying={isFetching}
+          onRetry={() => void setUp()}
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.root}>

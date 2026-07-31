@@ -13,6 +13,10 @@ import type { Story } from "src/features/storyCreator/store/state";
 import type { ApiResponseWithPaging } from "src/shared/types/api";
 import { countActiveFilters } from "src/shared/utils/countActiveFilters";
 import { getApiErrorMessage } from "src/features/dashboardShared/adminFeedback";
+import {
+  getRequestErrorKind,
+  isServiceUnavailable,
+} from "src/shared/api/getRequestErrorKind";
 
 import { getDashboardStoriesInitialState } from "./state";
 import type { DashboardStoriesStore } from "./store";
@@ -92,15 +96,23 @@ export const useDashboardStoriesManager = (
           totalCount: data.paging?.totalCount ?? 0,
           totalPagesCount: data.paging?.totalPagesCount,
         });
+        storeRef.current.setLoadError(null);
       } catch (error) {
         logApiError("Failed to fetch dashboard stories", error);
-        storeRef.current.setFeedback({
-          message: getApiErrorMessage(
-            error,
-            i18n.t("dashboard:errors.loadStories"),
-          ),
-          variant: "error",
-        });
+
+        // An unreachable API replaces the list with an explanation; anything
+        // else is a passing problem and stays a toast over what is on screen.
+        if (isServiceUnavailable(error)) {
+          storeRef.current.setLoadError(getRequestErrorKind(error));
+        } else {
+          storeRef.current.setFeedback({
+            message: getApiErrorMessage(
+              error,
+              i18n.t("dashboard:errors.loadStories"),
+            ),
+            variant: "error",
+          });
+        }
       } finally {
         storeRef.current.setIsFetching(false);
       }

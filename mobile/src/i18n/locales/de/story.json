@@ -150,7 +150,9 @@
       "addOne": "Einen hinzufügen →",
       "noneAria": "Kein Avatar",
       "none": "Keiner",
-      "useAria": "{{name}} verwenden"
+      "useAria": "{{name}} verwenden",
+      "offline": "Deine Charaktere konnten nicht geladen werden — prüfe deine Verbindung.",
+      "failed": "Deine Charaktere konnten gerade nicht geladen werden."
     },
     "page": {
       "title": "Meine Avatare",

@@ -4,6 +4,7 @@ import {
   StoryFilters,
   StoryFiltersEnum,
 } from "../types/story";
+import { User, UserRole, UserStatus } from "../types/user";
 import { Filter, FilterOperations, ObjectId } from "mongodb";
 
 type QueryCondition = Partial<Record<StoryFiltersEnum, FilterOperations<any>>>;
@@ -115,4 +116,46 @@ export const getQuery = (
     queryConditions.length > 0 ? { $and: queryConditions } : {};
 
   return finalQuery;
+};
+
+/**
+ * Dashboard user list filter — the users counterpart to `getQuery` above.
+ *
+ * Every other user lookup in the server fetches a single document by id,
+ * email or phone number, so there was nothing to reuse: this is the only
+ * place that searches across users. It exists because the admin lists are
+ * paged, and walking to page 100 on a phone is not a search strategy.
+ */
+export const getUsersQuery = (
+  search: string,
+  role?: string,
+  status?: string
+): Filter<User> => {
+  const conditions: Filter<User>[] = [];
+
+  const term = search.trim();
+  if (term) {
+    // Escaped so a stray "+" in a phone number is not read as a quantifier.
+    const pattern = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const like = { $regex: pattern, $options: "i" };
+    conditions.push({
+      $or: [
+        { "name.givenName": like },
+        { "name.familyName": like },
+        { email: like },
+        { phoneNumber: like },
+        { userId: like },
+      ],
+    } as Filter<User>);
+  }
+
+  if (role && Object.values(UserRole).includes(role as UserRole)) {
+    conditions.push({ role: role as UserRole } as Filter<User>);
+  }
+
+  if (status && Object.values(UserStatus).includes(status as UserStatus)) {
+    conditions.push({ status: status as UserStatus } as Filter<User>);
+  }
+
+  return conditions.length ? { $and: conditions } : {};
 };
