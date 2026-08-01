@@ -46,4 +46,13 @@ module.exports = [
     files: ["src/shared/logger.ts"],
     rules: { "no-console": "off" },
   },
+  {
+    // Jest globals (`jest`, `describe`, `it`, `expect`, ...) aren't declared
+    // anywhere else in this config, so test files and the setup file need
+    // their own environment or every `jest.fn()` reads as an undefined global.
+    files: ["**/__tests__/**/*.{ts,tsx}", "**/*.test.{ts,tsx}", "jest.setup.js"],
+    languageOptions: {
+      globals: require("globals").jest,
+    },
+  },
 ];

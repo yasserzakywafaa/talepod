@@ -1,5 +1,3 @@
-/* eslint-env jest */
-
 // Native modules have no JS implementation under Jest, so anything that
 // touches them at import time has to be mocked here or the suite fails on
 // `require` rather than on an assertion.
