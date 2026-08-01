@@ -6,7 +6,6 @@ import {
   Text,
   View,
 } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 
@@ -15,6 +14,7 @@ import type { DashboardShellStackParamList } from "src/application/navigation/Da
 import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
+import { ScreenErrorBoundary } from "src/components/shared/ErrorBoundary";
 import { DashboardAppBar } from "src/components/chrome/DashboardAppBar";
 import { AppToast } from "src/components/chrome/AppToast";
 import { FiltersButton } from "src/components/brand/FiltersButton";
@@ -25,9 +25,9 @@ import { ConfirmDestructiveDialog } from "src/features/dashboardShared/ConfirmDe
 import { AdminUserCard } from "src/features/dashboardUsers/AdminUserCard";
 import { AdminUsersFiltersSheet } from "src/features/dashboardUsers/AdminUsersFiltersSheet";
 import {
-  DashboardUsersContextProvider,
-  useDashboardUsersContext,
-} from "src/features/dashboardUsers/store/Provider";
+  useDashboardUsers,
+  type DashboardUsersFilters,
+} from "src/features/dashboardUsers/useDashboardUsers";
 import type { User } from "src/shared/types/user";
 
 type Props = NativeStackScreenProps<
@@ -45,40 +45,28 @@ const DashboardUsersContent = ({ navigation }: Props) => {
   } | null>(null);
 
   const {
-    store: {
-      state: {
-        isFetching,
-        isMutating,
-        users,
-        paging,
-        feedback,
-        loadError,
-        filters,
-        isFiltersPanelOpen,
-        activeFiltersCount,
-      },
-    },
-    manager: {
-      setUp,
-      handleGetUsersByPage,
-      handleBlockUser,
-      handleUnblockUser,
-      handleDeleteUser,
-      handleToggleFiltersPanel,
-      handleUpdateFilter,
-      handleApplyFilters,
-      handleClearFilters,
-      handleDismissFeedback,
-    },
-  } = useDashboardUsersContext();
-
-  // Refetch on focus, not just on mount: coming back from a user's page, that
-  // row's role or status may have changed under us.
-  useFocusEffect(
-    useCallback(() => {
-      void setUp();
-    }, [setUp]),
-  );
+    users,
+    totalCount,
+    isFetching,
+    isFetchingNextPage,
+    hasNextPage,
+    loadError,
+    loadMore,
+    retry,
+    draftFilters,
+    updateDraftFilter,
+    applyFilters,
+    clearFilters,
+    activeFiltersCount,
+    isFiltersPanelOpen,
+    setFiltersPanelOpen,
+    blockUser,
+    unblockUser,
+    deleteUser,
+    isMutating,
+    feedback,
+    dismissFeedback,
+  } = useDashboardUsers();
 
   const renderItem = useCallback(
     ({ item }: { item: User }) => (
@@ -87,8 +75,8 @@ const DashboardUsersContent = ({ navigation }: Props) => {
         onPress={() =>
           navigation.navigate(mobileRoutes.dashboard.user, { userId: item._id })
         }
-        onBlock={() => void handleBlockUser(item._id)}
-        onUnblock={() => void handleUnblockUser(item._id)}
+        onBlock={() => blockUser(item._id)}
+        onUnblock={() => unblockUser(item._id)}
         onDelete={() =>
           setUserToDelete({
             id: item._id,
@@ -99,22 +87,15 @@ const DashboardUsersContent = ({ navigation }: Props) => {
         }
       />
     ),
-    [navigation, handleBlockUser, handleUnblockUser],
+    [navigation, blockUser, unblockUser],
   );
-
-  const totalCount = paging.totalCount ?? 0;
-  const hasMore = (paging.totalPagesCount ?? 1) > paging.pageNumber;
 
   // Nothing loaded and the API is unreachable: the list has nothing to say,
   // so the screen explains itself instead of showing an empty page.
-  if (loadError && users.length === 0) {
+  if (loadError) {
     return (
       <View style={styles.root}>
-        <ServiceUnavailable
-          kind={loadError}
-          isRetrying={isFetching}
-          onRetry={() => void setUp()}
-        />
+        <ServiceUnavailable kind={loadError} isRetrying={isFetching} onRetry={retry} />
       </View>
     );
   }
@@ -126,6 +107,8 @@ const DashboardUsersContent = ({ navigation }: Props) => {
         keyExtractor={(item) => item._id}
         renderItem={renderItem}
         {...PAGE_SCROLL_PROPS}
+        onEndReached={loadMore}
+        onEndReachedThreshold={0.5}
         contentContainerStyle={[
           styles.listContent,
           { paddingHorizontal: horizontalGutter, maxWidth: contentMaxWidth },
@@ -147,7 +130,7 @@ const DashboardUsersContent = ({ navigation }: Props) => {
             </Text>
             <FiltersButton
               activeCount={activeFiltersCount}
-              onPress={() => handleToggleFiltersPanel(true)}
+              onPress={() => setFiltersPanelOpen(true)}
             />
           </View>
         }
@@ -162,11 +145,7 @@ const DashboardUsersContent = ({ navigation }: Props) => {
               }
               action={
                 activeFiltersCount > 0 ? (
-                  <PillButton
-                    variant="outlined"
-                    compact
-                    onPress={() => void handleClearFilters()}
-                  >
+                  <PillButton variant="outlined" compact onPress={clearFilters}>
                     {t("library:filters.clear")}
                   </PillButton>
                 ) : null
@@ -176,14 +155,11 @@ const DashboardUsersContent = ({ navigation }: Props) => {
         }
         ListFooterComponent={
           <View style={styles.footer}>
-            {isFetching ? (
+            {isFetching || isFetchingNextPage ? (
               <ActivityIndicator color={theme.colors.primary} />
             ) : null}
-            {hasMore && !isFetching ? (
-              <PillButton
-                variant="outlined"
-                onPress={() => void handleGetUsersByPage(paging.pageNumber + 1)}
-              >
+            {hasNextPage && !isFetchingNextPage && !isFetching ? (
+              <PillButton variant="outlined" onPress={loadMore}>
                 {t("library:page.loadMore")}
               </PillButton>
             ) : null}
@@ -193,11 +169,16 @@ const DashboardUsersContent = ({ navigation }: Props) => {
 
       <AdminUsersFiltersSheet
         visible={isFiltersPanelOpen}
-        values={filters}
-        onChange={handleUpdateFilter}
-        onApply={() => void handleApplyFilters()}
-        onClear={() => void handleClearFilters()}
-        onDismiss={() => handleToggleFiltersPanel(false)}
+        values={draftFilters}
+        onChange={(key, value) =>
+          updateDraftFilter(
+            key as keyof DashboardUsersFilters,
+            value as DashboardUsersFilters[keyof DashboardUsersFilters],
+          )
+        }
+        onApply={applyFilters}
+        onClear={clearFilters}
+        onDismiss={() => setFiltersPanelOpen(false)}
       />
 
       <ConfirmDestructiveDialog
@@ -209,7 +190,7 @@ const DashboardUsersContent = ({ navigation }: Props) => {
         isBusy={isMutating}
         onConfirm={() => {
           if (userToDelete) {
-            void handleDeleteUser(userToDelete.id);
+            deleteUser(userToDelete.id);
             setUserToDelete(null);
           }
         }}
@@ -220,7 +201,7 @@ const DashboardUsersContent = ({ navigation }: Props) => {
         visible={!!feedback}
         message={feedback?.message ?? ""}
         variant={feedback?.variant}
-        onDismiss={handleDismissFeedback}
+        onDismiss={dismissFeedback}
       />
     </View>
   );
@@ -228,9 +209,9 @@ const DashboardUsersContent = ({ navigation }: Props) => {
 
 export const DashboardUsersScreen = (props: Props) => (
   <Page header={<DashboardAppBar routeName={props.route.name} />}>
-    <DashboardUsersContextProvider>
+    <ScreenErrorBoundary name="DashboardUsers">
       <DashboardUsersContent {...props} />
-    </DashboardUsersContextProvider>
+    </ScreenErrorBoundary>
   </Page>
 );
 

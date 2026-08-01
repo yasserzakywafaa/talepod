@@ -12,7 +12,7 @@ import {
   type SelectOption,
 } from "src/components/brand/SelectField";
 import { getUserRoleLabel } from "src/features/dashboardShared/userPresentation";
-import type { DashboardUsersFilters } from "src/features/dashboardUsers/store/state";
+import type { DashboardUsersFilters } from "src/features/dashboardUsers/useDashboardUsers";
 import { UserRole, UserStatus } from "src/shared/types/user";
 
 type AdminUsersFiltersSheetProps = {

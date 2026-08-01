@@ -6,7 +6,6 @@ import {
   Text,
   View,
 } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 
 import { navigateToViewStory } from "src/application/navigation/rootNavigation";
@@ -21,12 +20,14 @@ import { StoryFiltersSheet } from "src/components/brand/StoryFiltersSheet";
 import { AdminEmptyState } from "src/features/dashboardShared/AdminEmptyState";
 import { ConfirmDestructiveDialog } from "src/features/dashboardShared/ConfirmDestructiveDialog";
 import { AdminStoryCard } from "src/features/dashboardStories/AdminStoryCard";
-import { useDashboardStoriesContext } from "src/features/dashboardStories/store/Provider";
+import { useDashboardStories } from "src/features/dashboardStories/useDashboardStories";
 import type { Story } from "src/features/storyCreator/store/state";
 
 type AdminStoriesListProps = {
-  /** Rendered above the list — the count line, or a per-user heading. */
-  subtitle: string;
+  /** Scopes the list to one account's stories, as on the user detail screen. */
+  userId?: string;
+  /** Rendered above the list once totalCount is known — the count line, or a per-user heading. */
+  subtitle: (totalCount: number) => string;
   emptyMessage: string;
 };
 
@@ -35,6 +36,7 @@ type AdminStoriesListProps = {
  * exactly as the web shares one data-grid config between those two pages.
  */
 export const AdminStoriesList = ({
+  userId,
   subtitle,
   emptyMessage,
 }: AdminStoriesListProps) => {
@@ -47,36 +49,26 @@ export const AdminStoriesList = ({
   } | null>(null);
 
   const {
-    store: {
-      state: {
-        isFetching,
-        isMutating,
-        stories,
-        paging,
-        feedback,
-        loadError,
-        filters,
-        isFiltersPanelOpen,
-        activeFiltersCount,
-      },
-    },
-    manager: {
-      setUp,
-      handleGetStoriesByPage,
-      handleDeleteStory,
-      handleToggleFiltersPanel,
-      handleUpdateFilter,
-      handleApplyFilters,
-      handleClearFilters,
-      handleDismissFeedback,
-    },
-  } = useDashboardStoriesContext();
-
-  useFocusEffect(
-    useCallback(() => {
-      void setUp();
-    }, [setUp]),
-  );
+    stories,
+    totalCount,
+    isFetching,
+    isFetchingNextPage,
+    hasNextPage,
+    loadError,
+    loadMore,
+    retry,
+    draftFilters,
+    updateDraftFilter,
+    applyFilters,
+    clearFilters,
+    activeFiltersCount,
+    isFiltersPanelOpen,
+    setFiltersPanelOpen,
+    deleteStory,
+    isMutating,
+    feedback,
+    dismissFeedback,
+  } = useDashboardStories(userId);
 
   const renderItem = useCallback(
     ({ item }: { item: Story }) => (
@@ -89,18 +81,12 @@ export const AdminStoriesList = ({
     [],
   );
 
-  const hasMore = (paging.totalPagesCount ?? 1) > paging.pageNumber;
-
   // Nothing loaded and the API is unreachable: the list has nothing to say,
   // so the screen explains itself instead of showing an empty page.
-  if (loadError && stories.length === 0) {
+  if (loadError) {
     return (
       <View style={styles.root}>
-        <ServiceUnavailable
-          kind={loadError}
-          isRetrying={isFetching}
-          onRetry={() => void setUp()}
-        />
+        <ServiceUnavailable kind={loadError} isRetrying={isFetching} onRetry={retry} />
       </View>
     );
   }
@@ -112,6 +98,8 @@ export const AdminStoriesList = ({
         keyExtractor={(item) => item._id}
         renderItem={renderItem}
         {...PAGE_SCROLL_PROPS}
+        onEndReached={loadMore}
+        onEndReachedThreshold={0.5}
         contentContainerStyle={[
           styles.listContent,
           { paddingHorizontal: horizontalGutter, maxWidth: contentMaxWidth },
@@ -127,11 +115,11 @@ export const AdminStoriesList = ({
                 },
               ]}
             >
-              {subtitle}
+              {subtitle(totalCount)}
             </Text>
             <FiltersButton
               activeCount={activeFiltersCount}
-              onPress={() => handleToggleFiltersPanel(true)}
+              onPress={() => setFiltersPanelOpen(true)}
             />
           </View>
         }
@@ -146,11 +134,7 @@ export const AdminStoriesList = ({
               }
               action={
                 activeFiltersCount > 0 ? (
-                  <PillButton
-                    variant="outlined"
-                    compact
-                    onPress={() => void handleClearFilters()}
-                  >
+                  <PillButton variant="outlined" compact onPress={clearFilters}>
                     {t("library:filters.clear")}
                   </PillButton>
                 ) : null
@@ -160,16 +144,11 @@ export const AdminStoriesList = ({
         }
         ListFooterComponent={
           <View style={styles.footer}>
-            {isFetching ? (
+            {isFetching || isFetchingNextPage ? (
               <ActivityIndicator color={theme.colors.primary} />
             ) : null}
-            {hasMore && !isFetching ? (
-              <PillButton
-                variant="outlined"
-                onPress={() =>
-                  void handleGetStoriesByPage(paging.pageNumber + 1)
-                }
-              >
+            {hasNextPage && !isFetchingNextPage && !isFetching ? (
+              <PillButton variant="outlined" onPress={loadMore}>
                 {t("library:page.loadMore")}
               </PillButton>
             ) : null}
@@ -181,12 +160,12 @@ export const AdminStoriesList = ({
           exactly the fields those lists do, and the server reads one shape. */}
       <StoryFiltersSheet
         visible={isFiltersPanelOpen}
-        values={filters}
+        values={draftFilters}
         showOriginals
-        onChange={handleUpdateFilter}
-        onApply={() => void handleApplyFilters()}
-        onClear={() => void handleClearFilters()}
-        onDismiss={() => handleToggleFiltersPanel(false)}
+        onChange={updateDraftFilter}
+        onApply={applyFilters}
+        onClear={clearFilters}
+        onDismiss={() => setFiltersPanelOpen(false)}
       />
 
       <ConfirmDestructiveDialog
@@ -198,7 +177,7 @@ export const AdminStoriesList = ({
         isBusy={isMutating}
         onConfirm={() => {
           if (storyToDelete) {
-            void handleDeleteStory(storyToDelete.id);
+            deleteStory(storyToDelete.id);
             setStoryToDelete(null);
           }
         }}
@@ -209,7 +188,7 @@ export const AdminStoriesList = ({
         visible={!!feedback}
         message={feedback?.message ?? ""}
         variant={feedback?.variant}
-        onDismiss={handleDismissFeedback}
+        onDismiss={dismissFeedback}
       />
     </View>
   );
