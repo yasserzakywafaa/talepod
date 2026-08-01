@@ -12,6 +12,10 @@ import { SafeAreaProvider, initialWindowMetrics } from "react-native-safe-area-c
 
 import AppContent from "src/application/AppContent";
 import { I18nAppShell } from "src/application/I18nAppShell";
+import { QueryProvider } from "src/application/query/QueryProvider";
+import { linking } from "src/application/navigation/linking";
+import { ErrorBoundary } from "src/components/shared/ErrorBoundary";
+import { initMonitoring } from "src/shared/monitoring";
 import { ThemedPaperProvider } from "src/application/ThemedPaperProvider";
 import { rootNavigationRef } from "src/application/navigation/rootNavigation";
 import { paperDarkTheme, paperLightTheme } from "src/application/paperTheme";
@@ -58,6 +62,7 @@ const NavigationRoot = () => {
     <NavigationContainer
       ref={rootNavigationRef}
       theme={navigationTheme}
+      linking={linking}
       direction="ltr"
     >
       <AppContent />
@@ -65,6 +70,10 @@ const NavigationRoot = () => {
     </NavigationContainer>
   );
 };
+
+// Before anything else, so an error thrown during the first render is still
+// reported. No-ops in Expo Go and when no DSN is configured.
+initMonitoring();
 
 // Hold the native splash so the first painted frame already uses the brand
 // faces — otherwise the app flashes system type for a frame or two.
@@ -83,24 +92,33 @@ const App = () => {
   }, [fontsLoaded]);
 
   return (
-    <GestureHandlerRootView style={styles.root}>
-      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-        <I18nAppShell>
-          <ApplicationContextProvider>
-            <DashboardOverviewContextProvider>
-              <DashboardProfileContextProvider>
-                <ThemedPaperProvider fontsLoaded={fontsLoaded}>
-                  <StoryFlowProviders>
-                    <NavigationRoot />
-                    <GenerationProgressSnackbar />
-                  </StoryFlowProviders>
-                </ThemedPaperProvider>
-              </DashboardProfileContextProvider>
-            </DashboardOverviewContextProvider>
-          </ApplicationContextProvider>
-        </I18nAppShell>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    /**
+     * The boundary sits outermost, above the providers: a provider throwing
+     * during initialisation is exactly the failure that used to leave a blank
+     * screen with no way back.
+     */
+    <ErrorBoundary boundaryName="root">
+      <GestureHandlerRootView style={styles.root}>
+        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+          <QueryProvider>
+            <I18nAppShell>
+              <ApplicationContextProvider>
+                <DashboardOverviewContextProvider>
+                  <DashboardProfileContextProvider>
+                    <ThemedPaperProvider fontsLoaded={fontsLoaded}>
+                      <StoryFlowProviders>
+                        <NavigationRoot />
+                        <GenerationProgressSnackbar />
+                      </StoryFlowProviders>
+                    </ThemedPaperProvider>
+                  </DashboardProfileContextProvider>
+                </DashboardOverviewContextProvider>
+              </ApplicationContextProvider>
+            </I18nAppShell>
+          </QueryProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </ErrorBoundary>
   );
 };
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
@@ -10,6 +10,7 @@ import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useDrawerPageHeader } from "src/components/layout/useDrawerPageHeader";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
+import { ScreenErrorBoundary } from "src/components/shared/ErrorBoundary";
 import { FiltersButton } from "src/components/brand/FiltersButton";
 import { NoStoriesFound } from "src/components/brand/NoStoriesFound";
 import { PillButton } from "src/components/brand/PillButton";
@@ -18,94 +19,80 @@ import { ServiceUnavailable } from "src/components/brand/ServiceUnavailable";
 import { StoryCard } from "src/components/brand/StoryCard";
 import { StoryFiltersSheet } from "src/components/brand/StoryFiltersSheet";
 import {
-  LibraryContextProvider,
-  useLibraryContext,
-} from "src/features/library/store/Provider";
-import type { LibraryStoryFilters } from "src/features/library/store/state";
+  useLibraryStories,
+  type LibraryStoryFilters,
+} from "src/features/library/useLibraryStories";
 import type { Story } from "src/features/storyCreator/store/state";
 
 const LibraryScreenContent = () => {
   const { t } = useTranslation("library");
   const theme = useAppTheme();
   const { horizontalGutter, contentMaxWidth } = useReadableLayout();
-  const {
-    store: {
-      state: {
-        isFetching,
-        stories,
-        loadError,
-        pagingInfo,
-        storiesSource,
-        filters,
-        isFiltersPanelOpen,
-        activeFiltersCount,
-      },
-    },
-    manager: {
-      setUp,
-      handleClearFilters,
-      handleGetStoriesByPage,
-      handleSetStoriesSource,
-      handleToggleFiltersPanel,
-      handleUpdateFilters,
-      handleFilterStories,
-    },
-  } = useLibraryContext();
 
-  useEffect(() => {
-    void setUp();
-    // Initial library load only on mount.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const {
+    stories,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    loadError,
+    loadMore,
+    retry,
+    source,
+    setSource,
+    draftFilters,
+    updateDraftFilter,
+    applyFilters,
+    clearFilters,
+    activeFiltersCount,
+    isFiltersPanelOpen,
+    setFiltersPanelOpen,
+  } = useLibraryStories();
 
   const onStoryPress = useCallback((slug: string) => {
     navigateToViewStory(slug);
   }, []);
 
-  const renderItem = ({ item }: { item: Story }) => (
-    <StoryCard story={item} onPress={() => onStoryPress(item.slug)} />
+  const renderItem = useCallback(
+    ({ item }: { item: Story }) => (
+      <StoryCard story={item} onPress={() => onStoryPress(item.slug)} />
+    ),
+    [onStoryPress],
   );
 
   const listHeader = (
     <View style={styles.header}>
       <SegmentedControl
-        value={storiesSource === "talepod" ? "talepod" : "community"}
+        value={source === "talepod" ? "talepod" : "community"}
         options={[
           { value: "community", label: t("page.sourceCommunity") },
           { value: "talepod", label: t("page.sourceTalepod") },
         ]}
-        onChange={(value) =>
-          void handleSetStoriesSource(value as "community" | "talepod")
-        }
+        onChange={(value) => setSource(value as "community" | "talepod")}
       />
       <FiltersButton
         activeCount={activeFiltersCount}
-        onPress={() => handleToggleFiltersPanel(true)}
+        onPress={() => setFiltersPanelOpen(true)}
       />
     </View>
   );
 
   const listEmpty =
-    !isFetching && stories.length === 0 ? (
+    !isLoading && stories.length === 0 ? (
       <NoStoriesFound
         onCreate={() => navigateToCreateStory()}
-        onClearFilters={
-          activeFiltersCount > 0
-            ? () => void handleClearFilters()
-            : undefined
-        }
+        onClearFilters={activeFiltersCount > 0 ? clearFilters : undefined}
       />
     ) : null;
 
   // Nothing loaded and the API is unreachable — say so rather than showing
   // an empty library that reads as "there are no stories".
-  if (loadError && stories.length === 0) {
+  if (loadError) {
     return (
       <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
         <ServiceUnavailable
           kind={loadError}
-          isRetrying={isFetching}
-          onRetry={() => void setUp()}
+          isRetrying={isLoading}
+          onRetry={retry}
         />
       </View>
     );
@@ -120,6 +107,14 @@ const LibraryScreenContent = () => {
         ListHeaderComponent={listHeader}
         ListEmptyComponent={listEmpty}
         {...PAGE_SCROLL_PROPS}
+        /**
+         * Infinite scroll rather than a tap target. The threshold is half a
+         * screen so the next page is usually resolved before the user reaches
+         * the end; the button below stays as the fallback when the prefetch
+         * has not landed yet.
+         */
+        onEndReached={loadMore}
+        onEndReachedThreshold={0.5}
         contentContainerStyle={[
           styles.listContent,
           {
@@ -131,17 +126,11 @@ const LibraryScreenContent = () => {
         ]}
         ListFooterComponent={
           <View style={styles.footer}>
-            {isFetching ? (
+            {isLoading || isFetchingNextPage ? (
               <ActivityIndicator color={theme.colors.primary} />
             ) : null}
-            {(pagingInfo.totalPagesCount ?? 1) > pagingInfo.pageNumber &&
-            !isFetching ? (
-              <PillButton
-                variant="outlined"
-                onPress={() =>
-                  void handleGetStoriesByPage(pagingInfo.pageNumber + 1)
-                }
-              >
+            {hasNextPage && !isFetchingNextPage && !isLoading ? (
+              <PillButton variant="outlined" onPress={loadMore}>
                 {t("page.loadMore")}
               </PillButton>
             ) : null}
@@ -151,16 +140,19 @@ const LibraryScreenContent = () => {
 
       <StoryFiltersSheet
         visible={isFiltersPanelOpen}
-        values={filters}
+        values={draftFilters}
         onChange={(key, value) => {
           // The sheet's key set includes `createdByAdmin`, which only My
           // Stories filters on; without `showOriginals` it is never emitted.
           if (key === "createdByAdmin") return;
-          handleUpdateFilters(key, value as LibraryStoryFilters[typeof key]);
+          updateDraftFilter(
+            key as keyof LibraryStoryFilters,
+            value as LibraryStoryFilters[keyof LibraryStoryFilters],
+          );
         }}
-        onApply={() => void handleFilterStories()}
-        onClear={() => void handleClearFilters()}
-        onDismiss={() => handleToggleFiltersPanel(false)}
+        onApply={applyFilters}
+        onClear={clearFilters}
+        onDismiss={() => setFiltersPanelOpen(false)}
       />
     </View>
   );
@@ -171,9 +163,9 @@ export const LibraryScreen = () => {
 
   return (
     <Page header={header}>
-      <LibraryContextProvider>
+      <ScreenErrorBoundary name="Library">
         <LibraryScreenContent />
-      </LibraryContextProvider>
+      </ScreenErrorBoundary>
     </Page>
   );
 };
