@@ -7,7 +7,7 @@ import { navigateToCreateStory } from "src/application/navigation/rootNavigation
 import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { MainShellAppBar } from "src/components/chrome/MainShellAppBar";
-import { useReadableLayout } from "src/components/layout/useReadableLayout";
+import { useGridList } from "src/components/layout/useGridList";
 import { ScreenErrorBoundary } from "src/components/shared/ErrorBoundary";
 import { AvatarCard } from "src/components/brand/AvatarCard";
 import { DisplayText } from "src/components/brand/DisplayText";
@@ -38,7 +38,7 @@ export const MyAvatarsScreen = () => {
 const MyAvatarsScreenContent = () => {
   const { t } = useTranslation("story");
   const theme = useAppTheme();
-  const { horizontalGutter, contentMaxWidth } = useReadableLayout();
+  const { gridKey, listProps, itemStyle } = useGridList();
   const { avatars, isLoading, loadError, refetch } = useAvatarsQuery(true);
   const { saveAvatar, removeAvatar, isSaving, isPortraitPending, isBusy } =
     useAvatarMutations();
@@ -93,18 +93,11 @@ const MyAvatarsScreenContent = () => {
   return (
     <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
       <FlatList
+        key={gridKey}
         data={avatars}
         keyExtractor={(item) => item._id}
         {...PAGE_SCROLL_PROPS}
-        contentContainerStyle={[
-          styles.list,
-          {
-            paddingHorizontal: horizontalGutter,
-            maxWidth: contentMaxWidth,
-            alignSelf: "center",
-            width: "100%",
-          },
-        ]}
+        {...listProps}
         ListHeaderComponent={
           <View style={styles.header}>
             <Text
@@ -144,14 +137,16 @@ const MyAvatarsScreenContent = () => {
           )
         }
         renderItem={({ item }) => (
-          <AvatarCard
-            avatar={item}
-            disabled={isBusy(item._id)}
-            portraitPending={isPortraitPending(item._id)}
-            onCreate={() => startStoryWith(item)}
-            onEdit={() => openEdit(item)}
-            onDelete={() => setDeleteTarget(item)}
-          />
+          <View style={itemStyle}>
+            <AvatarCard
+              avatar={item}
+              disabled={isBusy(item._id)}
+              portraitPending={isPortraitPending(item._id)}
+              onCreate={() => startStoryWith(item)}
+              onEdit={() => openEdit(item)}
+              onDelete={() => setDeleteTarget(item)}
+            />
+          </View>
         )}
       />
 
@@ -207,7 +202,6 @@ const MyAvatarsScreenContent = () => {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  list: { paddingBottom: 24, gap: 16 },
   header: { marginBottom: 4, gap: 12 },
   subtitle: { fontSize: 14, lineHeight: 21, includeFontPadding: false },
   loader: { marginTop: 24 },

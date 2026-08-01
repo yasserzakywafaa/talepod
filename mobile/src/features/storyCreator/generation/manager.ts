@@ -167,9 +167,12 @@ export const useGenerationManager = (
         format: placeholder.format ?? "comic",
         textStatus: "pending",
       });
+      // The placeholder row exists on the server the moment this is called, but
+      // My Stories won't show it until its cache is told to refetch.
+      void invalidateStories();
       pollForStatus(placeholder._id);
     },
-    [store, pollForStatus],
+    [store, pollForStatus, invalidateStories],
   );
 
   const dismissGeneration = () => {

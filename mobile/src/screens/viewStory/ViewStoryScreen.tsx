@@ -1,5 +1,4 @@
 import {
-  Image,
   ScrollView,
   StyleSheet,
   View,
@@ -19,6 +18,7 @@ import { LocaleLayoutBoundary } from "src/components/layout/LocaleLayoutBoundary
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
 import { Page } from "src/components/layout/Page";
 import { useViewStory } from "src/features/viewStory/useViewStory";
+import { ComicReader } from "src/features/viewStory/ComicReader";
 import { LongStoryBody } from "src/features/viewStory/LongStoryBody";
 import { ScreenErrorBoundary } from "src/components/shared/ErrorBoundary";
 
@@ -94,7 +94,12 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
         <Text style={styles.notFound}>{t("viewStory.notFound")}</Text>
       ) : (
         <LocaleLayoutBoundary>
-          <ScrollView contentContainerStyle={styles.scroll}>
+          <ScrollView
+            contentContainerStyle={[
+              styles.scroll,
+              { maxWidth: contentMaxWidth, alignSelf: "center", width: "100%" },
+            ]}
+          >
             {story.summary ? (
               <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
                 {story.summary}
@@ -139,33 +144,7 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
             ) : null}
 
             {isComic ? (
-              story.pages!.map((page) => (
-                <View key={page.index} style={styles.page}>
-                  {page.imageUrl ? (
-                    <Image
-                      source={{ uri: page.imageUrl }}
-                      style={{
-                        width: mediaWidth,
-                        height: mediaWidth * 0.75,
-                        borderRadius: theme.tokens.radius.lg,
-                      }}
-                      resizeMode="cover"
-                    />
-                  ) : (
-                    <View
-                      style={[
-                        styles.imagePlaceholder,
-                        { width: mediaWidth, backgroundColor: theme.colors.surfaceVariant },
-                      ]}
-                    >
-                      <ActivityIndicator color={theme.colors.primary} />
-                    </View>
-                  )}
-                  <Text variant="bodyLarge" style={{ color: theme.colors.onSurface }}>
-                    {page.caption}
-                  </Text>
-                </View>
-              ))
+              <ComicReader pages={story.pages!} width={mediaWidth} />
             ) : (
               <LongStoryBody
                 mainStory={story.mainStory}
@@ -188,13 +167,6 @@ const styles = StyleSheet.create({
   loader: { marginTop: 48, alignItems: "center" },
   notFound: { marginTop: 48, alignSelf: "center" },
   scroll: { padding: 16, gap: 16, paddingBottom: 40 },
-  page: { gap: 8 },
-  imagePlaceholder: {
-    height: 200,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   generatingBanner: {
     flexDirection: "row",
     alignItems: "center",

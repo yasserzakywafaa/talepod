@@ -8,7 +8,7 @@ import {
 } from "src/application/navigation/rootNavigation";
 import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
-import { useReadableLayout } from "src/components/layout/useReadableLayout";
+import { useGridList } from "src/components/layout/useGridList";
 import { ScreenErrorBoundary } from "src/components/shared/ErrorBoundary";
 import { ConfirmDestructiveDialog } from "src/features/dashboardShared/ConfirmDestructiveDialog";
 import { FiltersButton } from "src/components/brand/FiltersButton";
@@ -25,7 +25,7 @@ import { MainShellAppBar } from "src/components/chrome/MainShellAppBar";
 const MyStoriesScreenContent = () => {
   const { t } = useTranslation(["library", "story"]);
   const theme = useAppTheme();
-  const { horizontalGutter, contentMaxWidth } = useReadableLayout();
+  const { gridKey, listProps, itemStyle } = useGridList();
   const {
     stories,
     isLoading,
@@ -60,16 +60,18 @@ const MyStoriesScreenContent = () => {
     ({ item }: { item: Story }) => {
       const isFailed = item.textStatus === "failed";
       return (
-        <StoryCard
-          story={item}
-          onPress={() => navigateToViewStory(item.slug)}
-          onRetry={isFailed ? () => retryStory(item) : undefined}
-          onDelete={isFailed ? () => setPendingDelete(item) : undefined}
-          isRetrying={isRetryingStory(item._id)}
-        />
+        <View style={itemStyle}>
+          <StoryCard
+            story={item}
+            onPress={() => navigateToViewStory(item.slug)}
+            onRetry={isFailed ? () => retryStory(item) : undefined}
+            onDelete={isFailed ? () => setPendingDelete(item) : undefined}
+            isRetrying={isRetryingStory(item._id)}
+          />
+        </View>
       );
     },
-    [retryStory, isRetryingStory],
+    [retryStory, isRetryingStory, itemStyle],
   );
 
   // Nothing loaded and the API is unreachable — say so rather than showing
@@ -89,6 +91,7 @@ const MyStoriesScreenContent = () => {
   return (
     <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
       <FlatList
+        key={gridKey}
         ref={listRef}
         data={stories}
         keyExtractor={(item) => item._id}
@@ -104,15 +107,7 @@ const MyStoriesScreenContent = () => {
         {...PAGE_SCROLL_PROPS}
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}
-        contentContainerStyle={[
-          styles.listContent,
-          {
-            paddingHorizontal: horizontalGutter,
-            maxWidth: contentMaxWidth,
-            alignSelf: "center",
-            width: "100%",
-          },
-        ]}
+        {...listProps}
         ListEmptyComponent={
           !isLoading ? (
             <NoStoriesFound
@@ -187,6 +182,5 @@ export const MyStoriesScreen = () => {
 const styles = StyleSheet.create({
   root: { flex: 1 },
   header: { marginBottom: 4 },
-  listContent: { paddingBottom: 24, gap: 16 },
   footer: { paddingVertical: 16, alignItems: "center", gap: 12 },
 });

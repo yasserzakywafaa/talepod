@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 import { navigateToViewStory } from "src/application/navigation/rootNavigation";
 import { useAppTheme } from "src/application/theme/useAppTheme";
 import { PAGE_SCROLL_PROPS } from "src/components/layout/Page";
-import { useReadableLayout } from "src/components/layout/useReadableLayout";
+import { useGridList } from "src/components/layout/useGridList";
 import { AppToast } from "src/components/chrome/AppToast";
 import { FiltersButton } from "src/components/brand/FiltersButton";
 import { PillButton } from "src/components/brand/PillButton";
@@ -42,7 +42,7 @@ export const AdminStoriesList = ({
 }: AdminStoriesListProps) => {
   const { t } = useTranslation(["dashboard", "library"]);
   const theme = useAppTheme();
-  const { horizontalGutter, contentMaxWidth } = useReadableLayout();
+  const { gridKey, listProps, itemStyle } = useGridList();
   const [storyToDelete, setStoryToDelete] = useState<{
     id: string;
     title: string;
@@ -72,13 +72,15 @@ export const AdminStoriesList = ({
 
   const renderItem = useCallback(
     ({ item }: { item: Story }) => (
-      <AdminStoryCard
-        story={item}
-        onOpen={() => navigateToViewStory(item.slug)}
-        onDelete={() => setStoryToDelete({ id: item._id, title: item.title })}
-      />
+      <View style={itemStyle}>
+        <AdminStoryCard
+          story={item}
+          onOpen={() => navigateToViewStory(item.slug)}
+          onDelete={() => setStoryToDelete({ id: item._id, title: item.title })}
+        />
+      </View>
     ),
-    [],
+    [itemStyle],
   );
 
   // Nothing loaded and the API is unreachable: the list has nothing to say,
@@ -94,16 +96,14 @@ export const AdminStoriesList = ({
   return (
     <View style={styles.root}>
       <FlatList
+        key={gridKey}
         data={stories}
         keyExtractor={(item) => item._id}
         renderItem={renderItem}
         {...PAGE_SCROLL_PROPS}
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}
-        contentContainerStyle={[
-          styles.listContent,
-          { paddingHorizontal: horizontalGutter, maxWidth: contentMaxWidth },
-        ]}
+        {...listProps}
         ListHeaderComponent={
           <View style={styles.header}>
             <Text
@@ -196,12 +196,6 @@ export const AdminStoriesList = ({
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  listContent: {
-    paddingBottom: 24,
-    gap: 12,
-    width: "100%",
-    alignSelf: "center",
-  },
   header: {
     flexDirection: "row",
     alignItems: "center",

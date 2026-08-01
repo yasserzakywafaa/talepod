@@ -13,7 +13,7 @@ import { mobileRoutes } from "src/application/routes";
 import type { DashboardShellStackParamList } from "src/application/navigation/DashboardShellStackNavigator";
 import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
-import { useReadableLayout } from "src/components/layout/useReadableLayout";
+import { useGridList } from "src/components/layout/useGridList";
 import { ScreenErrorBoundary } from "src/components/shared/ErrorBoundary";
 import { DashboardAppBar } from "src/components/chrome/DashboardAppBar";
 import { AppToast } from "src/components/chrome/AppToast";
@@ -38,7 +38,7 @@ type Props = NativeStackScreenProps<
 const DashboardUsersContent = ({ navigation }: Props) => {
   const { t } = useTranslation(["dashboard", "library"]);
   const theme = useAppTheme();
-  const { horizontalGutter, contentMaxWidth } = useReadableLayout();
+  const { gridKey, listProps, itemStyle } = useGridList();
   const [userToDelete, setUserToDelete] = useState<{
     id: string;
     name: string;
@@ -70,6 +70,7 @@ const DashboardUsersContent = ({ navigation }: Props) => {
 
   const renderItem = useCallback(
     ({ item }: { item: User }) => (
+      <View style={itemStyle}>
       <AdminUserCard
         user={item}
         onPress={() =>
@@ -86,8 +87,9 @@ const DashboardUsersContent = ({ navigation }: Props) => {
           })
         }
       />
+      </View>
     ),
-    [navigation, blockUser, unblockUser],
+    [navigation, blockUser, unblockUser, itemStyle],
   );
 
   // Nothing loaded and the API is unreachable: the list has nothing to say,
@@ -103,16 +105,14 @@ const DashboardUsersContent = ({ navigation }: Props) => {
   return (
     <View style={styles.root}>
       <FlatList
+        key={gridKey}
         data={users}
         keyExtractor={(item) => item._id}
         renderItem={renderItem}
         {...PAGE_SCROLL_PROPS}
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}
-        contentContainerStyle={[
-          styles.listContent,
-          { paddingHorizontal: horizontalGutter, maxWidth: contentMaxWidth },
-        ]}
+        {...listProps}
         ListHeaderComponent={
           <View style={styles.header}>
             <Text
@@ -217,12 +217,6 @@ export const DashboardUsersScreen = (props: Props) => (
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  listContent: {
-    paddingBottom: 24,
-    gap: 12,
-    width: "100%",
-    alignSelf: "center",
-  },
   header: {
     flexDirection: "row",
     alignItems: "center",

@@ -9,7 +9,7 @@ import {
 import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useDrawerPageHeader } from "src/components/layout/useDrawerPageHeader";
-import { useReadableLayout } from "src/components/layout/useReadableLayout";
+import { useGridList } from "src/components/layout/useGridList";
 import { ScreenErrorBoundary } from "src/components/shared/ErrorBoundary";
 import { FiltersButton } from "src/components/brand/FiltersButton";
 import { NoStoriesFound } from "src/components/brand/NoStoriesFound";
@@ -27,7 +27,7 @@ import type { Story } from "src/features/storyCreator/store/state";
 const LibraryScreenContent = () => {
   const { t } = useTranslation("library");
   const theme = useAppTheme();
-  const { horizontalGutter, contentMaxWidth } = useReadableLayout();
+  const { gridKey, listProps, itemStyle } = useGridList();
 
   const {
     stories,
@@ -54,9 +54,11 @@ const LibraryScreenContent = () => {
 
   const renderItem = useCallback(
     ({ item }: { item: Story }) => (
-      <StoryCard story={item} onPress={() => onStoryPress(item.slug)} />
+      <View style={itemStyle}>
+        <StoryCard story={item} onPress={() => onStoryPress(item.slug)} />
+      </View>
     ),
-    [onStoryPress],
+    [onStoryPress, itemStyle],
   );
 
   const listHeader = (
@@ -101,6 +103,7 @@ const LibraryScreenContent = () => {
   return (
     <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
       <FlatList
+        key={gridKey}
         data={stories}
         keyExtractor={(item) => item._id}
         renderItem={renderItem}
@@ -111,15 +114,7 @@ const LibraryScreenContent = () => {
         // the end; the button below is the fallback when it hasn't.
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}
-        contentContainerStyle={[
-          styles.listContent,
-          {
-            paddingHorizontal: horizontalGutter,
-            maxWidth: contentMaxWidth,
-            alignSelf: "center",
-            width: "100%",
-          },
-        ]}
+        {...listProps}
         ListFooterComponent={
           <View style={styles.footer}>
             {isLoading || isFetchingNextPage ? (
@@ -169,6 +164,5 @@ export const LibraryScreen = () => {
 const styles = StyleSheet.create({
   root: { flex: 1 },
   header: { marginBottom: 16, gap: 4 },
-  listContent: { paddingBottom: 24, gap: 16 },
   footer: { paddingVertical: 16, alignItems: "center", gap: 12 },
 });
