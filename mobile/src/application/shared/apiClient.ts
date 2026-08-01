@@ -5,9 +5,11 @@ import APP_CONSTANTS from "./app_constants";
 import END_POINTS from "./endpoints";
 import {
   clearStoredAuth,
+  getCachedAccessToken,
   getStoredAuth,
   setStoredTokens,
 } from "../../shared/storage/authStorage";
+import { emitSessionExpired } from "./authEvents";
 
 export const api = axios.create();
 
@@ -29,8 +31,12 @@ export const setupMobileAxios = (): void => {
   authSetupDone = true;
 
   api.interceptors.request.use(async (config) => {
-    const { accessToken } = await getStoredAuth();
     config.headers = config.headers ?? {};
+
+    // Hot path: the token is held in memory, so the common case adds no I/O
+    // to a request. Only a cold start (cache not yet hydrated) falls through
+    // to storage, and that read is itself coalesced.
+    const accessToken = getCachedAccessToken() ?? (await getStoredAuth()).accessToken;
 
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
@@ -55,11 +61,17 @@ export const setupMobileAxios = (): void => {
         void clearStoredAuth();
       },
     },
+    /**
+     * There is no URL to redirect to on native. What matters is that React
+     * hears about it: clearing storage alone left the UI in a signed-in state
+     * whose every request 401s. Clear storage first, then notify — the
+     * listener reads storage to rebuild auth state.
+     */
     redirectToLogin: () => {
-      /* Mobile keeps session in storage; AppContent reacts to auth state */
+      void clearStoredAuth().finally(emitSessionExpired);
     },
     onLogout: () => {
-      void clearStoredAuth();
+      void clearStoredAuth().finally(emitSessionExpired);
     },
     isExcludedAuthUrl: (requestUrl, authUrl) =>
       isExcludedAuthUrl(requestUrl, authUrl) ||
