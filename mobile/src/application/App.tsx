@@ -23,8 +23,6 @@ import { brand, fontFamily } from "src/application/theme/tokens";
 import { useAppFonts } from "src/application/theme/useAppFonts";
 import { ApplicationContextProvider } from "src/application/store/Provider";
 import { useResolvedThemeMode } from "src/application/useResolvedThemeMode";
-import { DashboardOverviewContextProvider } from "src/features/dashboardOverview/store/Provider";
-import { DashboardProfileContextProvider } from "src/features/profile/store/Provider";
 import { StoryFlowProviders } from "src/features/storyCreator/StoryFlowProviders";
 import { GenerationProgressSnackbar } from "src/features/storyCreator/generation/GenerationProgressSnackbar";
 
@@ -103,16 +101,12 @@ const App = () => {
           <QueryProvider>
             <I18nAppShell>
               <ApplicationContextProvider>
-                <DashboardOverviewContextProvider>
-                  <DashboardProfileContextProvider>
-                    <ThemedPaperProvider fontsLoaded={fontsLoaded}>
-                      <StoryFlowProviders>
-                        <NavigationRoot />
-                        <GenerationProgressSnackbar />
-                      </StoryFlowProviders>
-                    </ThemedPaperProvider>
-                  </DashboardProfileContextProvider>
-                </DashboardOverviewContextProvider>
+                <ThemedPaperProvider fontsLoaded={fontsLoaded}>
+                  <StoryFlowProviders>
+                    <NavigationRoot />
+                    <GenerationProgressSnackbar />
+                  </StoryFlowProviders>
+                </ThemedPaperProvider>
               </ApplicationContextProvider>
             </I18nAppShell>
           </QueryProvider>

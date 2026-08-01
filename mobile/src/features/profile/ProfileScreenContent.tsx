@@ -20,7 +20,7 @@ import { PillButton } from "src/components/brand/PillButton";
 import { UnderlineTabs } from "src/components/brand/UnderlineTabs";
 import { DeleteAccountDialog } from "src/features/profile/DeleteAccountDialog";
 import { ProfileBillingPanel } from "src/features/profile/ProfileBillingPanel";
-import { useDashboardProfileContext } from "src/features/profile/store/Provider";
+import { useDeleteAccount } from "src/features/profile/useDeleteAccount";
 import { UserStatus } from "src/shared/types/user";
 import { getUserProfileContact } from "src/shared/utils/getUserProfileContact";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
@@ -100,12 +100,7 @@ export const ProfileScreenContent = () => {
     manager: { handleThemePreferenceChange },
   } = useApplicationContext();
 
-  const {
-    store: {
-      state: { isDeletingAccount },
-    },
-    manager: { handleDeleteAccount },
-  } = useDashboardProfileContext();
+  const { deleteAccount, isDeletingAccount } = useDeleteAccount();
 
   if (!user) {
     return null;
@@ -123,7 +118,7 @@ export const ProfileScreenContent = () => {
   };
 
   const onConfirmDelete = async (confirmationPhrase: string) => {
-    const result = await handleDeleteAccount(confirmationPhrase);
+    const result = await deleteAccount(confirmationPhrase);
     if (result.success) {
       setDeleteDialogVisible(false);
       resetToMarketingAfterLogout();
