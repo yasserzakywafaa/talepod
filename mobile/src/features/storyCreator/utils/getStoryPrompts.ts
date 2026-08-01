@@ -1,55 +1,37 @@
+/**
+ * Story prompt construction — client side.
+ *
+ * This ALSO exists on the server (`server/src/services/create/storyPrompt.ts`),
+ * which builds the identical prompt when a request arrives without one. The
+ * two are kept byte-for-byte in step on purpose: the server copy is the
+ * destination, this copy is the bridge.
+ *
+ * Why both, for now: the server only learned to build the prompt on this
+ * branch. Any API deployment that predates it — `develop` / `api-dev` today —
+ * still reads `storyPrompt` straight off the request body, and an absent one
+ * means the model is handed an empty user message. It then answers the system
+ * prompt alone ("you are a storyteller"), returns prose with none of the
+ * curly-bracket sections `extractComicParts` needs, and generation fails.
+ *
+ * So this is a deliberate expand/contract migration, and we are between the
+ * two halves:
+ *   1. server learns to build the prompt   <- done, not yet deployed
+ *   2. clients stop sending it             <- ONLY once (1) is live on every
+ *                                             environment the app talks to
+ *   3. server rejects the field outright
+ *
+ * DELETE THIS FILE at step 2 — not before. Mobile JS ships over the air and
+ * can reach users faster than a server deploy, so the client must never depend
+ * on a server capability that might not be there yet.
+ */
+
 import {
   AdultGenderEnum,
   ChildGenderEnum,
   ProfileInfo,
-  StoryFormat,
-  StoryParams,
-} from "../../models/types";
+  StoryCreatorInitialState,
+} from "../store/state";
 
-/**
- * Story prompt construction.
- *
- * This used to live in the clients — each of them built the full prompt and
- * posted it as `storyPrompt`. That had two problems:
- *
- *  1. It is trivially inspectable and editable. A mobile bundle can be pulled
- *     apart, and the endpoint accepts whatever prompt it is handed, so the
- *     prompt engineering was both public and overridable by anyone willing to
- *     call the API directly.
- *  2. Every prompt change needed a client release. On mobile that means an
- *     app-store round trip, so old installs kept generating stories against
- *     an old prompt indefinitely.
- *
- * `createStory` now builds the prompt here when the request does not carry
- * one. Clients that still send `storyPrompt` keep working unchanged — see the
- * note in the controller — so this can roll out without a lockstep release.
- *
- * ROLLOUT ORDER MATTERS, and it only runs one way:
- *
- *   old client + new server  → fine, the client's prompt is honoured
- *   new client + OLD server  → BROKEN, the old server has no builder and
- *                              hands the model an empty user message
- *
- * So this file must be deployed to every environment BEFORE any client stops
- * sending `storyPrompt`. That is not hypothetical: mobile shipped the client
- * half first against an `api-dev` still running the old server, and every
- * story generation failed with "the comic does not contain the correct
- * structure". Mobile therefore still sends the field today; see the header of
- * `mobile/src/features/storyCreator/utils/getStoryPrompts.ts` for the
- * remaining steps and when it is safe to remove.
- *
- * Keep this byte-for-byte in step with the client copies until they are gone.
- */
-
-export interface BuildStoryPromptInput {
-  profileInfo: ProfileInfo;
-  storyParams: StoryParams;
-  format: StoryFormat;
-}
-
-/** Long-story word bounds when a client omits them (pre-word-length clients). */
-const DEFAULT_MIN_WORDS = 350;
-const DEFAULT_MAX_WORDS = 600;
 
 const getGenderDescription = (gender: ProfileInfo["gender"]): string => {
   if (gender === ChildGenderEnum.Boy) return "boy";
@@ -81,15 +63,27 @@ const getYoungReaderRules = (
   return { comicCaptionRule, longStoryVocabRule };
 };
 
-const getLongStoryPrompt = ({
-  profileInfo,
-  storyParams,
-}: BuildStoryPromptInput): string => {
-  const { name, age, gender, interests, language } = profileInfo;
-  const { moral, tone, environment } = storyParams;
+/**
+ * Builds the AI prompt for the story. Dispatches on the chosen format:
+ * "comic" → ~6 illustrated pages (caption + scene per page); otherwise the
+ * original long-prose prompt (unchanged default).
+ */
+export const getCreateStoryPrompt = (
+  promptParams: StoryCreatorInitialState
+): string => {
+  if (promptParams.format === "comic") {
+    return getCreateComicPrompt(promptParams);
+  }
+  return getLongStoryPrompt(promptParams);
+};
 
-  const minWords = storyParams.minWords ?? DEFAULT_MIN_WORDS;
-  const maxWords = storyParams.maxWords ?? DEFAULT_MAX_WORDS;
+const getLongStoryPrompt = (
+  promptParams: StoryCreatorInitialState
+): string => {
+  const { name, age, gender, interests, language } = promptParams.profileInfo;
+
+  const { moral, tone, environment, minWords, maxWords } =
+    promptParams.storyParams;
 
   const { longStoryVocabRule } = getYoungReaderRules(age);
   const targetWords = Math.round((minWords + maxWords) / 2);
@@ -98,7 +92,7 @@ const getLongStoryPrompt = ({
       ? `Aim for the lower end of the range (around ${minWords} words).`
       : "";
 
-  return `Write a story ${
+  const fullDynamicPrompt = `Write a story ${
     language.value ? ` in the language of ${language.name},` : "English"
   } with the following outputs inside of the curly brackets for the data ETL process.
     Make sure the Title, Story summary, Story, and Poem are each between curly brackets for easy data extraction.
@@ -129,51 +123,52 @@ const getLongStoryPrompt = ({
 
     {Provide a bedtime poem here that summarizes the story in 3-4 rhyming verses}
 
-    ${tone?.value ? `The tone of the story is to be ${tone.name}.` : ""}
+    ${tone.value ? `The tone of the story is to be ${tone.name}.` : ""}
 
     ${
-      moral?.value
+      moral.value
         ? `Value or theme: The value to teach through the story is ${moral.name}.`
         : ""
     }
 
     ${
-      environment?.value
+      environment.value
         ? `Environment: The environment of the story is a/an ${environment.name}.`
         : ""
     }
 
     Characters:
      - Protagonist: ${name}, a ${age}-year-old ${getGenderDescription(
-       gender,
-     )}. ${getGenderPronounInstruction(gender)}
+    gender
+  )}. ${getGenderPronounInstruction(gender)}
      - Supporting Characters: ${
-       interests?.length
+       interests.length
          ? `Create 2-3 friendly supporting characters connected to ${interests}, with simple, easy-to-pronounce names and brief descriptions.`
          : `Create 1-2 friendly supporting characters with simple, easy-to-pronounce names and brief descriptions.`
      } Introduce each character when they first appear, and keep the cast consistent — do not bring in new, unexplained characters late in the story.
 
     Ensure the story is compliant for children aged 1-12, with no explicit content outside this age range.`;
+
+  return fullDynamicPrompt;
 };
 
 /**
  * Comic-book prompt. Produces an ordered, curly-bracket-delimited structure
- * `extractComicParts` parses: {title}{summary} then, for each of the 6 pages,
- * {caption}{scene}. The caption is shown in the reader; the scene is stored as
- * the page's image prompt for later illustration generation.
+ * the server `extractComicParts` parses: {title}{summary} then, for each of
+ * the 6 pages, {caption}{scene}. The caption is shown in the reader; the scene
+ * is stored as the page's image prompt for later illustration generation.
  */
-const getCreateComicPrompt = ({
-  profileInfo,
-  storyParams,
-}: BuildStoryPromptInput): string => {
-  const { name, age, gender, interests, language } = profileInfo;
-  const { moral, tone, environment } = storyParams;
+export const getCreateComicPrompt = (
+  promptParams: StoryCreatorInitialState
+): string => {
+  const { name, age, gender, interests, language } = promptParams.profileInfo;
+  const { moral, tone, environment } = promptParams.storyParams;
   const { comicCaptionRule, longStoryVocabRule } = getYoungReaderRules(age);
 
   return `Write a 6-page children's bedtime COMIC story${
     language.value ? ` in the language of ${language.name}` : " in English"
   } for a ${age}-year-old ${getGenderDescription(gender)} named ${name}. ${getGenderPronounInstruction(
-    gender,
+    gender
   )}
 
 This must read as ONE continuous, logical story — not six unrelated pictures. Plan the whole story first, then write the pages so each one follows naturally from the one before it.
@@ -214,22 +209,9 @@ Comic art direction for all 6 pages:
 - Each page must be a separate full-page comic scene, not a grid and not multiple panels.
 - Captions must stay short and simple while the overall story feels complete and logical, with a clear beginning, middle, and end.
 - Use expressive child-friendly characters, clear emotions, cozy bedtime energy, and a strong visual action in every scene.
-${tone?.value ? `- Tone: ${tone.name}.` : ""}
-${moral?.value ? `- Value to teach: ${moral.name}.` : ""}
-${environment?.value ? `- Setting: a/an ${environment.name}.` : ""}
-${interests?.length ? `- Weave in the child's interests: ${interests}.` : ""}
+${tone.value ? `- Tone: ${tone.name}.` : ""}
+${moral.value ? `- Value to teach: ${moral.name}.` : ""}
+${environment.value ? `- Setting: a/an ${environment.name}.` : ""}
+${interests.length ? `- Weave in the child's interests: ${interests}.` : ""}
 Ensure all content is fully appropriate for young children.`;
-};
-
-/**
- * Builds the AI prompt for a story. Dispatches on the chosen format: "comic"
- * → 6 illustrated pages (caption + scene per page); otherwise long prose.
- */
-export const buildCreateStoryPrompt = (
-  input: BuildStoryPromptInput,
-): string => {
-  if (input.format === "comic") {
-    return getCreateComicPrompt(input);
-  }
-  return getLongStoryPrompt(input);
 };

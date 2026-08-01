@@ -14,6 +14,19 @@ import type {
 } from "src/features/storyCreator/store/state";
 
 export interface CreateStoryInput {
+  /**
+   * The fully built AI prompt.
+   *
+   * Still sent, and still required in practice: an API deployment that
+   * predates this branch reads this field straight off the body and hands it
+   * to the model, so omitting it there produces an empty user message and a
+   * response with none of the structure the extractors need. Newer servers
+   * ignore what is sent here and build their own.
+   *
+   * Drop this field only once every environment runs a server that builds the
+   * prompt itself — see the note at the top of `utils/getStoryPrompts.ts`.
+   */
+  storyPrompt: string;
   profileInfo: ProfileInfo;
   storyParams: StoryParams;
   format?: StoryFormat;
@@ -28,10 +41,8 @@ export interface CreateStoryInput {
  * (`features/storyCreator/openai/`) wrapping one POST. Most of that state
  * turned out to be dead: `createAudio` and `createImage` were never read
  * outside their own initial-state function, and `createStoryPrompt` /
- * `handleUpdateCreateStoryPrompt` were leftovers from when the client built
- * the AI prompt and sent it — the server does that now (see
- * `server/src/services/create/storyPrompt.ts`), so nothing calls the setter
- * any more. The one thing anything actually read — `createStory.isFetching`
+ * `handleUpdateCreateStoryPrompt` were a half-finished draft feature nothing
+ * ever called. The one thing anything actually read — `createStory.isFetching`
  * — is exactly what `useMutation`'s `isPending` gives for free.
  *
  * Response caching doesn't apply here (a create request is never repeated
@@ -47,6 +58,7 @@ export const useCreateStoryMutation = () => {
   const mutation = useMutation({
     mutationFn: async (input: CreateStoryInput): Promise<Story> => {
       const { data } = await api.post<Story>(END_POINTS.CREATE.GENERATE.STORY, {
+        storyPrompt: input.storyPrompt,
         profileInfo: input.profileInfo,
         storyParams: input.storyParams,
         format: input.format ?? "comic",

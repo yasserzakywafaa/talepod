@@ -1,4 +1,5 @@
 import { ProfileInfo } from "../store/state";
+import { getCreateStoryPrompt } from "../utils/getStoryPrompts";
 import { useGenerationContext } from "../generation/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
 import { useCreateStoryMutation } from "src/features/storyCreator/useCreateStoryMutation";
@@ -20,6 +21,7 @@ export const useGenerateStory = (): UseGenerateStory => {
     store: {
       state: { profileInfo, storyParams, format, artStyle, avatarId },
     },
+    store: storyCreatorStore,
   } = useStoryCreatorContext();
 
   const { createStory, isCreatingStory } = useCreateStoryMutation();
@@ -35,8 +37,17 @@ export const useGenerateStory = (): UseGenerateStory => {
       ...profileInfo,
       ...options?.profileOverride,
     };
+    // Built from the same state the request carries, so a server that ignores
+    // this and builds its own produces an identical prompt.
+    const storyPrompt = getCreateStoryPrompt({
+      ...storyCreatorStore.state,
+      profileInfo: resolvedProfile,
+    });
+    if (!storyPrompt) return;
+
     try {
       const placeholder = await createStory({
+        storyPrompt,
         profileInfo: resolvedProfile,
         storyParams,
         format,
