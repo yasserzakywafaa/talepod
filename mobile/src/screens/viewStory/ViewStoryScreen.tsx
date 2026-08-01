@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import {
   Image,
   ScrollView,
@@ -18,11 +17,9 @@ import { DisplayText } from "src/components/brand/DisplayText";
 import { LocaleLayoutBoundary } from "src/components/layout/LocaleLayoutBoundary";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
 import { Page } from "src/components/layout/Page";
-import {
-  useViewStoryManager,
-  useViewStoryStore,
-} from "src/features/viewStory/useViewStory";
+import { useViewStory } from "src/features/viewStory/useViewStory";
 import { LongStoryBody } from "src/features/viewStory/LongStoryBody";
+import { ScreenErrorBoundary } from "src/components/shared/ErrorBoundary";
 
 type Props = NativeStackScreenProps<
   MainShellStackParamList,
@@ -41,13 +38,7 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
    */
   const mediaWidth = Math.min(width, contentMaxWidth) - 32;
   const shellDrawer = useMainShellDrawer();
-  const store = useViewStoryStore();
-  const manager = useViewStoryManager(store);
-  const { story, isFetching } = store.state;
-
-  useEffect(() => {
-    void manager.setUp(slug);
-  }, [slug]);
+  const { story, isFetching } = useViewStory(slug);
 
   /**
    * A story can be opened straight from the generation snackbar, in which case
@@ -89,6 +80,7 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
 
   return (
     <Page header={header}>
+      <ScreenErrorBoundary name="ViewStory">
       {isFetching && !story ? (
         <ActivityIndicator style={styles.loader} color={theme.colors.primary} />
       ) : !story ? (
@@ -145,6 +137,7 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
           </ScrollView>
         </LocaleLayoutBoundary>
       )}
+      </ScreenErrorBoundary>
     </Page>
   );
 };

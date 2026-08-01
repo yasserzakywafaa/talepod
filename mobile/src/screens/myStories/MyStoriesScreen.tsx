@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
@@ -9,16 +9,14 @@ import {
 import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
+import { ScreenErrorBoundary } from "src/components/shared/ErrorBoundary";
 import { FiltersButton } from "src/components/brand/FiltersButton";
 import { NoStoriesFound } from "src/components/brand/NoStoriesFound";
 import { PillButton } from "src/components/brand/PillButton";
 import { ServiceUnavailable } from "src/components/brand/ServiceUnavailable";
 import { StoryCard } from "src/components/brand/StoryCard";
 import { StoryFiltersSheet } from "src/components/brand/StoryFiltersSheet";
-import {
-  MyStoriesContextProvider,
-  useMyStoriesContext,
-} from "src/features/myStories/store/Provider";
+import { useMyStories } from "src/features/myStories/useMyStories";
 import type { Story } from "src/features/storyCreator/store/state";
 import { MainShellAppBar } from "src/components/chrome/MainShellAppBar";
 
@@ -27,31 +25,21 @@ const MyStoriesScreenContent = () => {
   const theme = useAppTheme();
   const { horizontalGutter, contentMaxWidth } = useReadableLayout();
   const {
-    store: {
-      state: {
-        isFetching,
-        stories,
-        loadError,
-        pagingInfo,
-        filters,
-        isFiltersPanelOpen,
-        activeFiltersCount,
-      },
-    },
-    manager: {
-      setUp,
-      handleGetStoriesByPage,
-      handleClearFilters,
-      handleToggleFiltersPanel,
-      handleUpdateFilters,
-      handleFilterStories,
-    },
-  } = useMyStoriesContext();
-
-  useEffect(() => {
-    void setUp();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    stories,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    loadError,
+    loadMore,
+    retry,
+    draftFilters,
+    updateDraftFilter,
+    applyFilters,
+    clearFilters,
+    activeFiltersCount,
+    isFiltersPanelOpen,
+    setFiltersPanelOpen,
+  } = useMyStories();
 
   const renderItem = useCallback(
     ({ item }: { item: Story }) => (
@@ -62,13 +50,13 @@ const MyStoriesScreenContent = () => {
 
   // Nothing loaded and the API is unreachable — say so rather than showing
   // an empty list that reads as "you have no stories".
-  if (loadError && stories.length === 0) {
+  if (loadError) {
     return (
       <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
         <ServiceUnavailable
           kind={loadError}
-          isRetrying={isFetching}
-          onRetry={() => void setUp()}
+          isRetrying={isLoading}
+          onRetry={retry}
         />
       </View>
     );
@@ -84,11 +72,13 @@ const MyStoriesScreenContent = () => {
           <View style={styles.header}>
             <FiltersButton
               activeCount={activeFiltersCount}
-              onPress={() => handleToggleFiltersPanel(true)}
+              onPress={() => setFiltersPanelOpen(true)}
             />
           </View>
         }
         {...PAGE_SCROLL_PROPS}
+        onEndReached={loadMore}
+        onEndReachedThreshold={0.5}
         contentContainerStyle={[
           styles.listContent,
           {
@@ -99,30 +89,20 @@ const MyStoriesScreenContent = () => {
           },
         ]}
         ListEmptyComponent={
-          !isFetching ? (
+          !isLoading ? (
             <NoStoriesFound
               onCreate={() => navigateToCreateStory()}
-              onClearFilters={
-                activeFiltersCount > 0
-                  ? () => void handleClearFilters()
-                  : undefined
-              }
+              onClearFilters={activeFiltersCount > 0 ? clearFilters : undefined}
             />
           ) : null
         }
         ListFooterComponent={
           <View style={styles.footer}>
-            {isFetching ? (
+            {isLoading || isFetchingNextPage ? (
               <ActivityIndicator color={theme.colors.primary} />
             ) : null}
-            {(pagingInfo.totalPagesCount ?? 1) > pagingInfo.pageNumber &&
-            !isFetching ? (
-              <PillButton
-                variant="outlined"
-                onPress={() =>
-                  void handleGetStoriesByPage(pagingInfo.pageNumber + 1)
-                }
-              >
+            {hasNextPage && !isFetchingNextPage && !isLoading ? (
+              <PillButton variant="outlined" onPress={loadMore}>
                 {t("page.loadMore")}
               </PillButton>
             ) : null}
@@ -132,12 +112,17 @@ const MyStoriesScreenContent = () => {
 
       <StoryFiltersSheet
         visible={isFiltersPanelOpen}
-        values={filters}
+        values={draftFilters}
         showOriginals
-        onChange={handleUpdateFilters}
-        onApply={() => void handleFilterStories()}
-        onClear={() => void handleClearFilters()}
-        onDismiss={() => handleToggleFiltersPanel(false)}
+        onChange={(key, value) =>
+          updateDraftFilter(
+            key as keyof typeof draftFilters,
+            value as (typeof draftFilters)[keyof typeof draftFilters],
+          )
+        }
+        onApply={applyFilters}
+        onClear={clearFilters}
+        onDismiss={() => setFiltersPanelOpen(false)}
       />
     </View>
   );
@@ -150,9 +135,9 @@ export const MyStoriesScreen = () => {
     <Page
       header={<MainShellAppBar title={t("nav.myStories", { ns: "common" })} />}
     >
-      <MyStoriesContextProvider>
+      <ScreenErrorBoundary name="MyStories">
         <MyStoriesScreenContent />
-      </MyStoriesContextProvider>
+      </ScreenErrorBoundary>
     </Page>
   );
 };

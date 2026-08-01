@@ -1,9 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import END_POINTS from "src/application/shared/endpoints";
 import { api } from "src/application/shared/apiClient";
+import { queryKeys } from "src/shared/api/queryKeys";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
 import { getCurrencySymbol } from "src/shared/utils/getCurrencySymbol";
 import type { Price, Product } from "src/shared/types/payment";
@@ -18,6 +20,22 @@ export type PricingPlan = {
   isFree: boolean;
 };
 
+const fetchCatalog = async (): Promise<{
+  products: Product[];
+  prices: Price[];
+}> => {
+  const [productsResponse, pricesResponse] = await Promise.all([
+    api.get<Product[]>(END_POINTS.PAYMENTS.GET_PRODUCTS_LIST_WITH_PRICES),
+    api.get<Price[]>(END_POINTS.PAYMENTS.GET_PRICES_LIST),
+  ]);
+  return {
+    products: Array.isArray(productsResponse.data)
+      ? productsResponse.data
+      : [],
+    prices: Array.isArray(pricesResponse.data) ? pricesResponse.data : [],
+  };
+};
+
 /**
  * Read-only port of the web's `usePricing`.
  *
@@ -28,36 +46,21 @@ export type PricingPlan = {
  */
 export const usePricingPlans = () => {
   const { t } = useTranslation("page");
-  const [products, setProducts] = useState<Product[]>([]);
-  const [prices, setPrices] = useState<Price[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [billingInterval, setBillingInterval] =
     useState<BillingInterval>("month");
 
-  const fetchCatalog = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const [productsResponse, pricesResponse] = await Promise.all([
-        api.get<Product[]>(END_POINTS.PAYMENTS.GET_PRODUCTS_LIST_WITH_PRICES),
-        api.get<Price[]>(END_POINTS.PAYMENTS.GET_PRICES_LIST),
-      ]);
-      setProducts(
-        Array.isArray(productsResponse.data) ? productsResponse.data : [],
-      );
-      setPrices(Array.isArray(pricesResponse.data) ? pricesResponse.data : []);
-    } catch {
-      // A missing catalogue is not an error worth interrupting the page for —
-      // the plans still render with their feature lists, just without prices.
-      setProducts([]);
-      setPrices([]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const query = useQuery({
+    queryKey: queryKeys.pricing.plans("default"),
+    queryFn: fetchCatalog,
+    // A missing catalogue is not an error worth interrupting the page for —
+    // the plans still render with their feature lists, just without prices.
+    // useQuery would otherwise retry a genuinely-empty Stripe catalogue.
+    retry: false,
+  });
 
-  useEffect(() => {
-    void fetchCatalog();
-  }, [fetchCatalog]);
+  const products = query.data?.products ?? [];
+  const prices = query.data?.prices ?? [];
+  const isLoading = query.isPending;
 
   const findProduct = (plan: SubscriptionPlanEnum, interval: BillingInterval) =>
     products.find(
