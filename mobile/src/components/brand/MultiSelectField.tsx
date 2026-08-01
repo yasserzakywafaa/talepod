@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 
 import { useAppTheme } from "src/application/theme/useAppTheme";
+import { SelectFieldShell } from "src/components/brand/SelectFieldShell";
 
 export type MultiSelectOption<T extends string | number> = {
   value: T;
@@ -17,6 +18,11 @@ type MultiSelectFieldProps<T extends string | number> = {
   onChange: (values: T[]) => void;
   /** Lays the choices out in a wrapped grid — good for short labels like ages. */
   compactOptions?: boolean;
+  /**
+   * Colour behind the floating label. This component previously hardcoded the
+   * page background, so the label notched the wrong colour inside a dialog.
+   */
+  surfaceColor?: string;
 };
 
 /**
@@ -33,6 +39,7 @@ export const MultiSelectField = <T extends string | number>({
   options,
   onChange,
   compactOptions = false,
+  surfaceColor,
 }: MultiSelectFieldProps<T>) => {
   const { t } = useTranslation("library");
   const [open, setOpen] = useState(false);
@@ -57,42 +64,39 @@ export const MultiSelectField = <T extends string | number>({
 
   return (
     <View style={styles.block}>
-      <Pressable
+      <SelectFieldShell
+        label={label}
+        open={open}
         onPress={() => setOpen((previous) => !previous)}
-        accessibilityRole="button"
-        accessibilityState={{ expanded: open }}
-        accessibilityLabel={label}
-        accessibilityValue={{ text: summary }}
-        style={[
-          styles.field,
-          {
-            borderRadius: radius.md,
-            borderColor: open ? theme.colors.primary : theme.colors.outline,
-            borderWidth: open ? 2 : 1,
-          },
-        ]}
+        surfaceColor={surfaceColor}
+        accessibilityValueText={summary}
+        trailing={
+          <>
+            {selectedLabels.length ? (
+              <View
+                style={[
+                  styles.count,
+                  {
+                    backgroundColor: brand.honey[400],
+                    borderRadius: radius.pill,
+                  },
+                ]}
+              >
+                <Text
+                  style={[styles.countLabel, { fontFamily: fontFamily.bold }]}
+                >
+                  {selectedLabels.length}
+                </Text>
+              </View>
+            ) : null}
+            <MaterialCommunityIcons
+              name={open ? "menu-up" : "menu-down"}
+              size={22}
+              color={theme.colors.onSurfaceVariant}
+            />
+          </>
+        }
       >
-        <View
-          style={[
-            styles.labelWrap,
-            { backgroundColor: theme.colors.background },
-          ]}
-        >
-          <Text
-            style={[
-              styles.label,
-              {
-                color: open
-                  ? theme.colors.primary
-                  : theme.colors.onSurfaceVariant,
-                fontFamily: fontFamily.regular,
-              },
-            ]}
-          >
-            {label}
-          </Text>
-        </View>
-
         <Text
           numberOfLines={1}
           style={[
@@ -107,26 +111,7 @@ export const MultiSelectField = <T extends string | number>({
         >
           {summary}
         </Text>
-
-        {selectedLabels.length ? (
-          <View
-            style={[
-              styles.count,
-              { backgroundColor: brand.honey[400], borderRadius: radius.pill },
-            ]}
-          >
-            <Text style={[styles.countLabel, { fontFamily: fontFamily.bold }]}>
-              {selectedLabels.length}
-            </Text>
-          </View>
-        ) : null}
-
-        <MaterialCommunityIcons
-          name={open ? "menu-up" : "menu-down"}
-          size={22}
-          color={theme.colors.onSurfaceVariant}
-        />
-      </Pressable>
+      </SelectFieldShell>
 
       {open ? (
         <View
@@ -191,20 +176,6 @@ export const MultiSelectField = <T extends string | number>({
 
 const styles = StyleSheet.create({
   block: { gap: 8 },
-  field: {
-    flexDirection: "row",
-    alignItems: "center",
-    minHeight: 56,
-    paddingHorizontal: 14,
-    gap: 8,
-  },
-  labelWrap: {
-    position: "absolute",
-    top: -8,
-    left: 10,
-    paddingHorizontal: 4,
-  },
-  label: { fontSize: 12, includeFontPadding: false },
   summary: { flex: 1, fontSize: 15, includeFontPadding: false },
   count: {
     minWidth: 20,

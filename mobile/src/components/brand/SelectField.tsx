@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Menu } from "react-native-paper";
 
 import { useAppTheme } from "src/application/theme/useAppTheme";
+import { SelectFieldShell } from "src/components/brand/SelectFieldShell";
 
 export type SelectOption<T extends string | number> = {
   value: T;
@@ -42,42 +43,29 @@ export const SelectField = <T extends string | number>({
   const [open, setOpen] = useState(false);
   const theme = useAppTheme();
   const { radius, fontFamily, semantic } = theme.tokens;
-  const fieldBackground = surfaceColor ?? theme.colors.background;
 
   const selected = options.find((option) => option.value === value);
 
-  const field = (
-    <Pressable
-      onPress={() => setOpen((previous) => !previous)}
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      accessibilityState={{ expanded: open }}
-      accessibilityValue={{ text: selected?.label }}
-      style={[
-        styles.field,
-        {
-          borderRadius: radius.md,
-          borderColor: open ? theme.colors.primary : theme.colors.outline,
-          borderWidth: open ? 2 : 1,
-        },
-      ]}
-    >
-      <View style={[styles.labelWrap, { backgroundColor: fieldBackground }]}>
-        <Text
-          style={[
-            styles.label,
-            {
-              color: open
-                ? theme.colors.primary
-                : theme.colors.onSurfaceVariant,
-              fontFamily: fontFamily.regular,
-            },
-          ]}
-        >
-          {label}
-        </Text>
-      </View>
+  const select = (nextValue: T) => {
+    onChange(nextValue);
+    setOpen(false);
+  };
 
+  const trigger = (onPress: () => void, chevronUp: boolean) => (
+    <SelectFieldShell
+      label={label}
+      open={open}
+      onPress={onPress}
+      surfaceColor={surfaceColor}
+      accessibilityValueText={selected?.label}
+      trailing={
+        <MaterialCommunityIcons
+          name={chevronUp ? "menu-up" : "menu-down"}
+          size={22}
+          color={theme.colors.onSurfaceVariant}
+        />
+      }
+    >
       <Text
         numberOfLines={1}
         style={[
@@ -90,19 +78,13 @@ export const SelectField = <T extends string | number>({
       >
         {selected?.label ?? ""}
       </Text>
-
-      <MaterialCommunityIcons
-        name={inline && open ? "menu-up" : "menu-down"}
-        size={22}
-        color={theme.colors.onSurfaceVariant}
-      />
-    </Pressable>
+    </SelectFieldShell>
   );
 
   if (inline) {
     return (
       <View style={styles.block}>
-        {field}
+        {trigger(() => setOpen((previous) => !previous), open)}
         {open ? (
           <View
             style={[
@@ -114,21 +96,18 @@ export const SelectField = <T extends string | number>({
             ]}
           >
             {options.map((option) => {
-              const selectedOption = option.value === value;
+              const isSelected = option.value === value;
               return (
                 <Pressable
                   key={String(option.value)}
-                  onPress={() => {
-                    onChange(option.value);
-                    setOpen(false);
-                  }}
+                  onPress={() => select(option.value)}
                   accessibilityRole="menuitem"
-                  accessibilityState={{ selected: selectedOption }}
+                  accessibilityState={{ selected: isSelected }}
                   style={({ pressed }) => [
                     styles.option,
                     {
                       borderRadius: radius.sm,
-                      backgroundColor: selectedOption
+                      backgroundColor: isSelected
                         ? theme.colors.primaryContainer
                         : "transparent",
                       opacity: pressed ? 0.7 : 1,
@@ -137,15 +116,13 @@ export const SelectField = <T extends string | number>({
                 >
                   <MaterialCommunityIcons
                     name={
-                      selectedOption
+                      isSelected
                         ? "check-circle"
                         : "checkbox-blank-circle-outline"
                     }
                     size={18}
                     color={
-                      selectedOption
-                        ? theme.colors.primary
-                        : theme.colors.outline
+                      isSelected ? theme.colors.primary : theme.colors.outline
                     }
                   />
                   <Text
@@ -153,10 +130,10 @@ export const SelectField = <T extends string | number>({
                     style={[
                       styles.optionLabel,
                       {
-                        color: selectedOption
+                        color: isSelected
                           ? theme.colors.onSurface
                           : theme.colors.onSurfaceVariant,
-                        fontFamily: selectedOption
+                        fontFamily: isSelected
                           ? fontFamily.semiBold
                           : fontFamily.regular,
                       },
@@ -178,57 +155,7 @@ export const SelectField = <T extends string | number>({
       visible={open}
       onDismiss={() => setOpen(false)}
       anchorPosition="bottom"
-      anchor={
-        <Pressable
-          onPress={() => setOpen(true)}
-          accessibilityRole="button"
-          accessibilityLabel={label}
-          accessibilityValue={{ text: selected?.label }}
-          style={[
-            styles.field,
-            {
-              borderRadius: radius.md,
-              borderColor: open ? theme.colors.primary : theme.colors.outline,
-              borderWidth: open ? 2 : 1,
-            },
-          ]}
-        >
-          <View style={[styles.labelWrap, { backgroundColor: fieldBackground }]}>
-            <Text
-              style={[
-                styles.label,
-                {
-                  color: open
-                    ? theme.colors.primary
-                    : theme.colors.onSurfaceVariant,
-                  fontFamily: fontFamily.regular,
-                },
-              ]}
-            >
-              {label}
-            </Text>
-          </View>
-
-          <Text
-            numberOfLines={1}
-            style={[
-              styles.value,
-              {
-                color: theme.colors.onSurface,
-                fontFamily: fontFamily.regular,
-              },
-            ]}
-          >
-            {selected?.label ?? ""}
-          </Text>
-
-          <MaterialCommunityIcons
-            name="menu-down"
-            size={22}
-            color={theme.colors.onSurfaceVariant}
-          />
-        </Pressable>
-      }
+      anchor={trigger(() => setOpen(true), false)}
     >
       {options.map((option) => (
         <Menu.Item
@@ -242,10 +169,7 @@ export const SelectField = <T extends string | number>({
             fontFamily:
               option.value === value ? fontFamily.semiBold : fontFamily.regular,
           }}
-          onPress={() => {
-            onChange(option.value);
-            setOpen(false);
-          }}
+          onPress={() => select(option.value)}
         />
       ))}
     </Menu>
@@ -263,19 +187,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   optionLabel: { flex: 1, fontSize: 14, includeFontPadding: false },
-  field: {
-    flexDirection: "row",
-    alignItems: "center",
-    minHeight: 56,
-    paddingHorizontal: 14,
-    gap: 8,
-  },
-  labelWrap: {
-    position: "absolute",
-    top: -8,
-    left: 10,
-    paddingHorizontal: 4,
-  },
-  label: { fontSize: 12, includeFontPadding: false },
   value: { flex: 1, fontSize: 16, includeFontPadding: false },
 });
