@@ -14,6 +14,8 @@ import type { DashboardShellStackParamList } from "src/application/navigation/Da
 import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useGridList } from "src/components/layout/useGridList";
+import { useBackToTop } from "src/components/layout/useBackToTop";
+import { BackToTopButton } from "src/components/brand/BackToTopButton";
 import { ScreenErrorBoundary } from "src/components/shared/ErrorBoundary";
 import { DashboardAppBar } from "src/components/chrome/DashboardAppBar";
 import { AppToast } from "src/components/chrome/AppToast";
@@ -39,6 +41,7 @@ const DashboardUsersContent = ({ navigation }: Props) => {
   const { t } = useTranslation(["dashboard", "library"]);
   const theme = useAppTheme();
   const { gridKey, listProps, itemStyle } = useGridList();
+  const backToTop = useBackToTop();
   const [userToDelete, setUserToDelete] = useState<{
     id: string;
     name: string;
@@ -106,6 +109,8 @@ const DashboardUsersContent = ({ navigation }: Props) => {
     <View style={styles.root}>
       <FlatList
         key={gridKey}
+        ref={backToTop.ref as never}
+        {...backToTop.scrollProps}
         data={users}
         keyExtractor={(item) => item._id}
         renderItem={renderItem}
@@ -202,6 +207,11 @@ const DashboardUsersContent = ({ navigation }: Props) => {
         message={feedback?.message ?? ""}
         variant={feedback?.variant}
         onDismiss={dismissFeedback}
+      />
+
+      <BackToTopButton
+        visible={backToTop.isVisible}
+        onPress={backToTop.scrollToTop}
       />
     </View>
   );

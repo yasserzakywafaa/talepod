@@ -264,6 +264,10 @@
       "closeAria": "close",
       "allPagesAria": "All pages",
       "pageOf": "Page {{current}} of {{total}}"
+    },
+    "backToTop": "Back to top",
+    "share": {
+      "aria": "Share this story"
     }
   },
   "card": {

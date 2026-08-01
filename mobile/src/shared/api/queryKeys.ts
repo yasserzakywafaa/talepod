@@ -21,6 +21,8 @@ export const queryKeys = {
   avatars: {
     all: ["avatars"] as const,
     list: () => [...queryKeys.avatars.all, "list"] as const,
+    detail: (avatarId: string) =>
+      [...queryKeys.avatars.all, "detail", avatarId] as const,
   },
 
   pricing: {

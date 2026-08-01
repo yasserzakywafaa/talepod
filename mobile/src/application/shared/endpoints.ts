@@ -44,6 +44,10 @@ const END_POINTS = {
     GET_ALL_USER_STORIES: `${publicApiUrl}/api/v1/user-bedtime-stories`,
     DELETE_MY_STORY: (storyId: string) =>
       `${publicApiUrl}/api/v1/user-bedtime-stories/${storyId}`,
+    EXPORT_STORY_PDF: (slug: string) =>
+      `${publicApiUrl}/api/v1/bedtime-story/${slug}/pdf`,
+    EMAIL_STORY_PDF: (slug: string) =>
+      `${publicApiUrl}/api/v1/bedtime-story/${slug}/email-pdf`,
   },
   AVATARS: {
     LIST: `${publicApiUrl}/api/v1/avatars`,

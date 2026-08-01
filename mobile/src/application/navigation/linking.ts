@@ -1,8 +1,20 @@
 import * as Linking from "expo-linking";
-import type { LinkingOptions } from "@react-navigation/native";
+import { getStateFromPath, type LinkingOptions } from "@react-navigation/native";
 
 import { mobileRoutes, rootRoutes } from "src/application/routes";
 import type { RootStackParamList } from "src/application/navigation/types";
+
+/**
+ * Incoming https links are web URLs, and the web prefixes its marketing pages
+ * with a locale (`/en/pricing`) that the app has no route for. Stripping it
+ * lets one config serve both. `/story/:slug` is the app's own older shape,
+ * kept working for links already shared.
+ */
+const normalizeWebPath = (path: string): string =>
+  path
+    .replace(/^\/[a-z]{2}(?=\/|$)/, "")
+    .replace(/^\/story\//, "/bedtime-story/")
+    .replace(/^\/bedtime-stories(?=\/|$)/, "/library") || "/";
 
 /**
  * Deep links; without these a shared story URL drops its destination. The
@@ -23,8 +35,9 @@ export const linking: LinkingOptions<RootStackParamList> = {
           [mobileRoutes.public.home]: "",
           [mobileRoutes.main.shell]: {
             screens: {
-              // The shared-story destination — the one link that matters most.
-              [mobileRoutes.authenticated.viewStory]: "story/:slug",
+              // Matches the web's own `/bedtime-story/:slug`, since a shared
+              // link is a web URL that Universal Links hands to the app.
+              [mobileRoutes.authenticated.viewStory]: "bedtime-story/:slug",
               [mobileRoutes.public.library]: "library",
               [mobileRoutes.public.pricing]: "pricing",
               [mobileRoutes.public.contact]: "contact",
@@ -46,6 +59,9 @@ export const linking: LinkingOptions<RootStackParamList> = {
       [mobileRoutes.public.register]: "register",
     },
   },
+
+  getStateFromPath: (path, options) =>
+    getStateFromPath(normalizeWebPath(path), options),
 
   // `WebBrowser.openAuthSessionAsync` already consumes the OAuth callback;
   // letting React Navigation see it too would race and push a bogus screen.

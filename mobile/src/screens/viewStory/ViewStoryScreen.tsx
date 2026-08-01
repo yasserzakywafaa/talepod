@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -10,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Appbar, Text } from "react-native-paper";
 
 import { mobileRoutes } from "src/application/routes";
+import { useApplicationContext } from "src/application/store/Provider";
 import type { MainShellStackParamList } from "src/application/navigation/MainShellStackNavigator";
 import { useMainShellDrawer } from "src/application/navigation/MainShellDrawerContext";
 import { useAppTheme } from "src/application/theme/useAppTheme";
@@ -17,9 +19,16 @@ import { DisplayText } from "src/components/brand/DisplayText";
 import { LocaleLayoutBoundary } from "src/components/layout/LocaleLayoutBoundary";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
 import { Page } from "src/components/layout/Page";
+import { useBackToTop } from "src/components/layout/useBackToTop";
+import { AppToast, type AppToastVariant } from "src/components/chrome/AppToast";
+import { FloatingActionButton } from "src/components/brand/FloatingActionButton";
+import { ShareStoryButton } from "src/components/brand/ShareStoryButton";
 import { useViewStory } from "src/features/viewStory/useViewStory";
 import { ComicReader } from "src/features/viewStory/ComicReader";
 import { LongStoryBody } from "src/features/viewStory/LongStoryBody";
+import { StoryAuthorInfo } from "src/features/viewStory/StoryAuthorInfo";
+import { StoryExportActions } from "src/features/viewStory/StoryExportActions";
+import { StoryInfoChips } from "src/features/viewStory/StoryInfoChips";
 import { ScreenErrorBoundary } from "src/components/shared/ErrorBoundary";
 
 type Props = NativeStackScreenProps<
@@ -37,6 +46,16 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
   const mediaWidth = Math.min(width, contentMaxWidth) - 32;
   const shellDrawer = useMainShellDrawer();
   const { story, isFetching } = useViewStory(slug);
+  const {
+    store: {
+      state: { auth },
+    },
+  } = useApplicationContext();
+  const backToTop = useBackToTop();
+  const [toast, setToast] = useState<{
+    message: string;
+    variant: AppToastVariant;
+  } | null>(null);
 
   // Opened from the generation snackbar there is nothing to pop back to.
   const goBack = () => {
@@ -95,6 +114,8 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
       ) : (
         <LocaleLayoutBoundary>
           <ScrollView
+            ref={backToTop.ref as never}
+            {...backToTop.scrollProps}
             contentContainerStyle={[
               styles.scroll,
               { maxWidth: contentMaxWidth, alignSelf: "center", width: "100%" },
@@ -154,10 +175,42 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
                 showPendingPlaceholder={imagesPending && !hasAnyLongStoryImage}
               />
             )}
+
+            <StoryExportActions
+              story={story}
+              canEmail={Boolean(auth.user?.email)}
+              onFeedback={(message, isError) =>
+                setToast({ message, variant: isError ? "error" : "success" })
+              }
+            />
+
+            <StoryInfoChips story={story} />
+
+            <StoryAuthorInfo author={story.authorProfile} />
           </ScrollView>
         </LocaleLayoutBoundary>
       )}
       </ScreenErrorBoundary>
+
+      {story ? (
+        <>
+          <ShareStoryButton slug={story.slug} title={story.title} bottom={92} />
+          <FloatingActionButton
+            icon="chevron-up"
+            onPress={backToTop.scrollToTop}
+            visible={backToTop.isVisible}
+            accessibilityLabel={t("reader.backToTop")}
+            bottom={28}
+          />
+        </>
+      ) : null}
+
+      <AppToast
+        visible={toast !== null}
+        message={toast?.message ?? ""}
+        variant={toast?.variant}
+        onDismiss={() => setToast(null)}
+      />
     </Page>
   );
 };

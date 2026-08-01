@@ -8,6 +8,8 @@ import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { MainShellAppBar } from "src/components/chrome/MainShellAppBar";
 import { useGridList } from "src/components/layout/useGridList";
+import { useBackToTop } from "src/components/layout/useBackToTop";
+import { BackToTopButton } from "src/components/brand/BackToTopButton";
 import { ScreenErrorBoundary } from "src/components/shared/ErrorBoundary";
 import { AvatarCard } from "src/components/brand/AvatarCard";
 import { DisplayText } from "src/components/brand/DisplayText";
@@ -39,6 +41,7 @@ const MyAvatarsScreenContent = () => {
   const { t } = useTranslation("story");
   const theme = useAppTheme();
   const { gridKey, listProps, itemStyle } = useGridList();
+  const backToTop = useBackToTop();
   const { avatars, isLoading, loadError, refetch } = useAvatarsQuery(true);
   const { saveAvatar, removeAvatar, isSaving, isPortraitPending, isBusy } =
     useAvatarMutations();
@@ -94,6 +97,8 @@ const MyAvatarsScreenContent = () => {
     <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
       <FlatList
         key={gridKey}
+        ref={backToTop.ref as never}
+        {...backToTop.scrollProps}
         data={avatars}
         keyExtractor={(item) => item._id}
         {...PAGE_SCROLL_PROPS}
@@ -196,6 +201,11 @@ const MyAvatarsScreenContent = () => {
           </Dialog.Actions>
         </Dialog>
       </Portal>
+
+      <BackToTopButton
+        visible={backToTop.isVisible}
+        onPress={backToTop.scrollToTop}
+      />
     </View>
   );
 };

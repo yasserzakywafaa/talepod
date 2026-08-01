@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
@@ -9,6 +9,8 @@ import {
 import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useGridList } from "src/components/layout/useGridList";
+import { useBackToTop } from "src/components/layout/useBackToTop";
+import { BackToTopButton } from "src/components/brand/BackToTopButton";
 import { ScreenErrorBoundary } from "src/components/shared/ErrorBoundary";
 import { ConfirmDestructiveDialog } from "src/features/dashboardShared/ConfirmDestructiveDialog";
 import { FiltersButton } from "src/components/brand/FiltersButton";
@@ -26,6 +28,7 @@ const MyStoriesScreenContent = () => {
   const { t } = useTranslation(["library", "story"]);
   const theme = useAppTheme();
   const { gridKey, listProps, itemStyle } = useGridList();
+  const backToTop = useBackToTop();
   const {
     stories,
     isLoading,
@@ -43,17 +46,10 @@ const MyStoriesScreenContent = () => {
     setFiltersPanelOpen,
   } = useMyStories();
 
-  const listRef = useRef<FlatList<Story>>(null);
-
   // The replacement placeholder is inserted at the top; without this the retry
   // looked like it did nothing until the user scrolled up to find it.
-  const scrollToTop = useCallback(
-    () => listRef.current?.scrollToOffset({ offset: 0, animated: true }),
-    [],
-  );
-
   const { deleteStory, retryStory, isDeletingStory, isRetryingStory } =
-    useFailedStoryActions({ onRetryStarted: scrollToTop });
+    useFailedStoryActions({ onRetryStarted: backToTop.scrollToTop });
   const [pendingDelete, setPendingDelete] = useState<Story | null>(null);
 
   const renderItem = useCallback(
@@ -92,7 +88,8 @@ const MyStoriesScreenContent = () => {
     <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
       <FlatList
         key={gridKey}
-        ref={listRef}
+        ref={backToTop.ref as never}
+        {...backToTop.scrollProps}
         data={stories}
         keyExtractor={(item) => item._id}
         renderItem={renderItem}
@@ -160,6 +157,11 @@ const MyStoriesScreenContent = () => {
           }
         }}
         onDismiss={() => setPendingDelete(null)}
+      />
+
+      <BackToTopButton
+        visible={backToTop.isVisible}
+        onPress={backToTop.scrollToTop}
       />
     </View>
   );

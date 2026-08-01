@@ -264,6 +264,10 @@
       "closeAria": "fermer",
       "allPagesAria": "Toutes les pages",
       "pageOf": "Page {{current}} sur {{total}}"
+    },
+    "backToTop": "Retour en haut",
+    "share": {
+      "aria": "Partager cette histoire"
     }
   },
   "card": {

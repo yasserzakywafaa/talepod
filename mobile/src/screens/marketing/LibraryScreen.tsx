@@ -10,6 +10,8 @@ import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useDrawerPageHeader } from "src/components/layout/useDrawerPageHeader";
 import { useGridList } from "src/components/layout/useGridList";
+import { useBackToTop } from "src/components/layout/useBackToTop";
+import { BackToTopButton } from "src/components/brand/BackToTopButton";
 import { ScreenErrorBoundary } from "src/components/shared/ErrorBoundary";
 import { FiltersButton } from "src/components/brand/FiltersButton";
 import { NoStoriesFound } from "src/components/brand/NoStoriesFound";
@@ -28,6 +30,7 @@ const LibraryScreenContent = () => {
   const { t } = useTranslation("library");
   const theme = useAppTheme();
   const { gridKey, listProps, itemStyle } = useGridList();
+  const backToTop = useBackToTop();
 
   const {
     stories,
@@ -104,6 +107,8 @@ const LibraryScreenContent = () => {
     <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
       <FlatList
         key={gridKey}
+        ref={backToTop.ref as never}
+        {...backToTop.scrollProps}
         data={stories}
         keyExtractor={(item) => item._id}
         renderItem={renderItem}
@@ -144,6 +149,11 @@ const LibraryScreenContent = () => {
         onApply={applyFilters}
         onClear={clearFilters}
         onDismiss={() => setFiltersPanelOpen(false)}
+      />
+
+      <BackToTopButton
+        visible={backToTop.isVisible}
+        onPress={backToTop.scrollToTop}
       />
     </View>
   );

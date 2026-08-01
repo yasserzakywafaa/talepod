@@ -12,6 +12,8 @@ import { navigateToViewStory } from "src/application/navigation/rootNavigation";
 import { useAppTheme } from "src/application/theme/useAppTheme";
 import { PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useGridList } from "src/components/layout/useGridList";
+import { useBackToTop } from "src/components/layout/useBackToTop";
+import { BackToTopButton } from "src/components/brand/BackToTopButton";
 import { AppToast } from "src/components/chrome/AppToast";
 import { FiltersButton } from "src/components/brand/FiltersButton";
 import { PillButton } from "src/components/brand/PillButton";
@@ -43,6 +45,7 @@ export const AdminStoriesList = ({
   const { t } = useTranslation(["dashboard", "library"]);
   const theme = useAppTheme();
   const { gridKey, listProps, itemStyle } = useGridList();
+  const backToTop = useBackToTop();
   const [storyToDelete, setStoryToDelete] = useState<{
     id: string;
     title: string;
@@ -97,6 +100,8 @@ export const AdminStoriesList = ({
     <View style={styles.root}>
       <FlatList
         key={gridKey}
+        ref={backToTop.ref as never}
+        {...backToTop.scrollProps}
         data={stories}
         keyExtractor={(item) => item._id}
         renderItem={renderItem}
@@ -189,6 +194,11 @@ export const AdminStoriesList = ({
         message={feedback?.message ?? ""}
         variant={feedback?.variant}
         onDismiss={dismissFeedback}
+      />
+
+      <BackToTopButton
+        visible={backToTop.isVisible}
+        onPress={backToTop.scrollToTop}
       />
     </View>
   );

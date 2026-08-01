@@ -29,9 +29,14 @@ type AvatarCardProps = {
   // The server is painting this portrait in the background — create and
   // appearance edits both return before it exists.
   portraitPending?: boolean;
-  onCreate: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
+  /**
+   * Drops the action row — used where the card is shown as a reference rather
+   * than something to manage, as beside a story's export card.
+   */
+  readOnly?: boolean;
+  onCreate?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 };
 
 // Tall portrait, name with relationship badge, trait line, action row.
@@ -39,6 +44,7 @@ export const AvatarCard = ({
   avatar,
   disabled = false,
   portraitPending = false,
+  readOnly = false,
   onCreate,
   onEdit,
   onDelete,
@@ -108,11 +114,12 @@ export const AvatarCard = ({
           </Text>
         ) : null}
 
+        {readOnly ? null : (
         <View style={styles.actions}>
           <PillButton
             compact
             icon="book-open-variant"
-            onPress={onCreate}
+            onPress={() => onCreate?.()}
             disabled={disabled}
             style={styles.createAction}
           >
@@ -123,7 +130,7 @@ export const AvatarCard = ({
             variant="outlined"
             compact
             icon="pencil-outline"
-            onPress={onEdit}
+            onPress={() => onEdit?.()}
             disabled={disabled}
             color={theme.colors.secondary}
           >
@@ -131,7 +138,7 @@ export const AvatarCard = ({
           </PillButton>
 
           <Pressable
-            onPress={onDelete}
+            onPress={() => onDelete?.()}
             disabled={disabled}
             accessibilityRole="button"
             accessibilityLabel={t("avatars.card.delete")}
@@ -148,6 +155,7 @@ export const AvatarCard = ({
             />
           </Pressable>
         </View>
+        )}
       </View>
     </BrandCard>
   );
