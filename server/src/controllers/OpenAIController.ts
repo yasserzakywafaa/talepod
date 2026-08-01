@@ -28,6 +28,7 @@ import {
   resolveAvatarMeta,
   validateUserCanCreate,
 } from "../services/create/story";
+import { buildCreateStoryPrompt } from "../services/create/storyPrompt";
 import {
   generateImage,
   handleGenerateStoryImages,
@@ -42,7 +43,7 @@ export const createStory = async (
   response: Response,
   next: NextFunction,
 ) => {
-  const { storyPrompt } = request.body;
+  const clientStoryPrompt = request.body.storyPrompt as string | undefined;
   const profileInfo = request.body.profileInfo as ProfileInfo;
   const storyParams = request.body.storyParams as StoryParams;
   const userInfo = request.body.userInfo as User;
@@ -53,11 +54,27 @@ export const createStory = async (
   // Optional saved character whose description seeds the story's characterSheet.
   const avatarId = request.body.avatarId as string | undefined;
 
+  /**
+   * The prompt is built here from the structured parameters. Clients used to
+   * construct it themselves and post it, which made the prompt public,
+   * overridable by anyone calling the API directly, and impossible to change
+   * without shipping a release to every client.
+   *
+   * A client-supplied prompt is still honoured so older installs — which
+   * cannot be updated on demand once they are in the wild — keep working.
+   * Once the store builds have rolled over, this fallback can go and the
+   * field can be rejected outright.
+   */
+  const storyPrompt =
+    clientStoryPrompt ??
+    buildCreateStoryPrompt({ profileInfo, storyParams, format });
+
   console.log("⌛︎  Creating Story...", {
     request: request.path,
     format,
     artStyle,
     avatarId,
+    promptSource: clientStoryPrompt ? "client (legacy)" : "server",
   });
 
   try {

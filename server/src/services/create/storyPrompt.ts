@@ -2,11 +2,38 @@ import {
   AdultGenderEnum,
   ChildGenderEnum,
   ProfileInfo,
-  Story,
-  StoryCreatorInitialState,
-} from "../store/state";
+  StoryFormat,
+  StoryParams,
+} from "../../models/types";
 
-import { Keywords } from "src/shared/types/seo";
+/**
+ * Story prompt construction.
+ *
+ * This used to live in the clients — each of them built the full prompt and
+ * posted it as `storyPrompt`. That had two problems:
+ *
+ *  1. It is trivially inspectable and editable. A mobile bundle can be pulled
+ *     apart, and the endpoint accepts whatever prompt it is handed, so the
+ *     prompt engineering was both public and overridable by anyone willing to
+ *     call the API directly.
+ *  2. Every prompt change needed a client release. On mobile that means an
+ *     app-store round trip, so old installs kept generating stories against
+ *     an old prompt indefinitely.
+ *
+ * `createStory` now builds the prompt here when the request does not carry
+ * one. Clients that still send `storyPrompt` keep working unchanged — see the
+ * note in the controller — so this can roll out without a lockstep release.
+ */
+
+export interface BuildStoryPromptInput {
+  profileInfo: ProfileInfo;
+  storyParams: StoryParams;
+  format: StoryFormat;
+}
+
+/** Long-story word bounds when a client omits them (pre-word-length clients). */
+const DEFAULT_MIN_WORDS = 350;
+const DEFAULT_MAX_WORDS = 600;
 
 const getGenderDescription = (gender: ProfileInfo["gender"]): string => {
   if (gender === ChildGenderEnum.Boy) return "boy";
@@ -38,27 +65,15 @@ const getYoungReaderRules = (
   return { comicCaptionRule, longStoryVocabRule };
 };
 
-/**
- * Builds the AI prompt for the story. Dispatches on the chosen format:
- * "comic" → ~6 illustrated pages (caption + scene per page); otherwise the
- * original long-prose prompt (unchanged default).
- */
-export const getCreateStoryPrompt = (
-  promptParams: StoryCreatorInitialState
-): string => {
-  if (promptParams.format === "comic") {
-    return getCreateComicPrompt(promptParams);
-  }
-  return getLongStoryPrompt(promptParams);
-};
+const getLongStoryPrompt = ({
+  profileInfo,
+  storyParams,
+}: BuildStoryPromptInput): string => {
+  const { name, age, gender, interests, language } = profileInfo;
+  const { moral, tone, environment } = storyParams;
 
-const getLongStoryPrompt = (
-  promptParams: StoryCreatorInitialState
-): string => {
-  const { name, age, gender, interests, language } = promptParams.profileInfo;
-
-  const { moral, tone, environment, minWords, maxWords } =
-    promptParams.storyParams;
+  const minWords = storyParams.minWords ?? DEFAULT_MIN_WORDS;
+  const maxWords = storyParams.maxWords ?? DEFAULT_MAX_WORDS;
 
   const { longStoryVocabRule } = getYoungReaderRules(age);
   const targetWords = Math.round((minWords + maxWords) / 2);
@@ -67,7 +82,7 @@ const getLongStoryPrompt = (
       ? `Aim for the lower end of the range (around ${minWords} words).`
       : "";
 
-  const fullDynamicPrompt = `Write a story ${
+  return `Write a story ${
     language.value ? ` in the language of ${language.name},` : "English"
   } with the following outputs inside of the curly brackets for the data ETL process.
     Make sure the Title, Story summary, Story, and Poem are each between curly brackets for easy data extraction.
@@ -98,52 +113,51 @@ const getLongStoryPrompt = (
 
     {Provide a bedtime poem here that summarizes the story in 3-4 rhyming verses}
 
-    ${tone.value ? `The tone of the story is to be ${tone.name}.` : ""}
+    ${tone?.value ? `The tone of the story is to be ${tone.name}.` : ""}
 
     ${
-      moral.value
+      moral?.value
         ? `Value or theme: The value to teach through the story is ${moral.name}.`
         : ""
     }
 
     ${
-      environment.value
+      environment?.value
         ? `Environment: The environment of the story is a/an ${environment.name}.`
         : ""
     }
 
     Characters:
      - Protagonist: ${name}, a ${age}-year-old ${getGenderDescription(
-    gender
-  )}. ${getGenderPronounInstruction(gender)}
+       gender,
+     )}. ${getGenderPronounInstruction(gender)}
      - Supporting Characters: ${
-       interests.length
+       interests?.length
          ? `Create 2-3 friendly supporting characters connected to ${interests}, with simple, easy-to-pronounce names and brief descriptions.`
          : `Create 1-2 friendly supporting characters with simple, easy-to-pronounce names and brief descriptions.`
      } Introduce each character when they first appear, and keep the cast consistent — do not bring in new, unexplained characters late in the story.
 
     Ensure the story is compliant for children aged 1-12, with no explicit content outside this age range.`;
-
-  return fullDynamicPrompt;
 };
 
 /**
  * Comic-book prompt. Produces an ordered, curly-bracket-delimited structure
- * the server `extractComicParts` parses: {title}{summary} then, for each of
- * the 6 pages, {caption}{scene}. The caption is shown in the reader; the scene
- * is stored as the page's image prompt for later illustration generation.
+ * `extractComicParts` parses: {title}{summary} then, for each of the 6 pages,
+ * {caption}{scene}. The caption is shown in the reader; the scene is stored as
+ * the page's image prompt for later illustration generation.
  */
-export const getCreateComicPrompt = (
-  promptParams: StoryCreatorInitialState
-): string => {
-  const { name, age, gender, interests, language } = promptParams.profileInfo;
-  const { moral, tone, environment } = promptParams.storyParams;
+const getCreateComicPrompt = ({
+  profileInfo,
+  storyParams,
+}: BuildStoryPromptInput): string => {
+  const { name, age, gender, interests, language } = profileInfo;
+  const { moral, tone, environment } = storyParams;
   const { comicCaptionRule, longStoryVocabRule } = getYoungReaderRules(age);
 
   return `Write a 6-page children's bedtime COMIC story${
     language.value ? ` in the language of ${language.name}` : " in English"
   } for a ${age}-year-old ${getGenderDescription(gender)} named ${name}. ${getGenderPronounInstruction(
-    gender
+    gender,
   )}
 
 This must read as ONE continuous, logical story — not six unrelated pictures. Plan the whole story first, then write the pages so each one follows naturally from the one before it.
@@ -184,57 +198,22 @@ Comic art direction for all 6 pages:
 - Each page must be a separate full-page comic scene, not a grid and not multiple panels.
 - Captions must stay short and simple while the overall story feels complete and logical, with a clear beginning, middle, and end.
 - Use expressive child-friendly characters, clear emotions, cozy bedtime energy, and a strong visual action in every scene.
-${tone.value ? `- Tone: ${tone.name}.` : ""}
-${moral.value ? `- Value to teach: ${moral.name}.` : ""}
-${environment.value ? `- Setting: a/an ${environment.name}.` : ""}
-${interests.length ? `- Weave in the child's interests: ${interests}.` : ""}
+${tone?.value ? `- Tone: ${tone.name}.` : ""}
+${moral?.value ? `- Value to teach: ${moral.name}.` : ""}
+${environment?.value ? `- Setting: a/an ${environment.name}.` : ""}
+${interests?.length ? `- Weave in the child's interests: ${interests}.` : ""}
 Ensure all content is fully appropriate for young children.`;
 };
 
-export const getCreateImagePrompt = (childInfo: ProfileInfo): string => {
-  const { name, gender, age } = childInfo;
-
-  const fullDynamicPrompt = `A ${age} years old ${gender.toLowerCase()} named ${name}, with physical characteristics`;
-
-  return fullDynamicPrompt;
-};
-
-export const getStorySeoPrompt = (story: Story): string => {
-  const { summary, profileInfo } = story;
-  const appLink = "www.talepod.com";
-  const keywordsByLang = Keywords[profileInfo.language.value] || [];
-
-  const keywords = keywordsByLang.flatMap((word) => word.keyword);
-  const keywordsVolume = keywordsByLang.flatMap((word) => word.keywordVolume);
-  const keywordsDifficulty = keywordsByLang.flatMap(
-    (word) => word.keywordDifficulty
-  );
-
-  const fullDynamicPrompt = `Write an SEO-optimized text that attracts organic traffic to ${appLink} to place after a bedtime story, 
-  with the following story parameters and position the text inside the appropriate HTML tags to use: 
-  
-  Story summary: ${summary}. 
-
-  The text should include at least one <h2> tag, and create it in the language of ${
-    profileInfo.language.name
-  }.
-  ${
-    keywordsByLang.length
-      ? `Also include the following keywords and their respective volume and keyword difficulty: 
-      
-      • Keywords: ${keywords}
-      • Volume: ${keywordsVolume}
-      • Keyword Difficulty: ${keywordsDifficulty}
-      `
-      : ""
+/**
+ * Builds the AI prompt for a story. Dispatches on the chosen format: "comic"
+ * → 6 illustrated pages (caption + scene per page); otherwise long prose.
+ */
+export const buildCreateStoryPrompt = (
+  input: BuildStoryPromptInput,
+): string => {
+  if (input.format === "comic") {
+    return getCreateComicPrompt(input);
   }
-
-  Ensure the keywords are naturally integrated into the text.
-  Include internal links only to this site (${appLink}) and a call to action.
-  Do not include the keywords into the internal links, internal links refer ONLY to this site (${appLink}).
-  Any hyperlink should open in a new tab.
-
-  In the response, don't mention anything other than the required SEO-optimized text and include it around curly brackets for easy data extraction.`;
-
-  return fullDynamicPrompt;
+  return getLongStoryPrompt(input);
 };

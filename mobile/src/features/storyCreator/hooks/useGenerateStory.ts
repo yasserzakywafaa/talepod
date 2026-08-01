@@ -1,5 +1,4 @@
 import { ProfileInfo } from "../store/state";
-import { getCreateStoryPrompt } from "../utils/getStoryPrompts";
 import { useGenerationContext } from "../generation/Provider";
 import { useOpenaiContext } from "../openai/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
@@ -21,7 +20,6 @@ export const useGenerateStory = (): UseGenerateStory => {
     store: {
       state: { profileInfo, storyParams, format, artStyle, avatarId },
     },
-    store: storyCreatorStore,
   } = useStoryCreatorContext();
 
   const {
@@ -44,16 +42,9 @@ export const useGenerateStory = (): UseGenerateStory => {
       ...profileInfo,
       ...options?.profileOverride,
     };
-    const prompt = getCreateStoryPrompt({
-      ...storyCreatorStore.state,
-      profileInfo: resolvedProfile,
-    });
-    if (!prompt) return;
-
     isCreateStoryFetching(true);
     try {
       const placeholder = await handleCreateStoryRequest(
-        prompt,
         resolvedProfile,
         storyParams,
         format,

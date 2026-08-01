@@ -7,24 +7,19 @@ export interface OpenaiManager {
   handleCreateStoryRequest: ReturnType<
     typeof useCreateStory
   >["handleCreateStoryRequest"];
-  handleCreateStorySeoRequest: ReturnType<
-    typeof useCreateStory
-  >["handleCreateStorySeoRequest"];
 }
 
-/** Create-story API only; prompt is built at submit time in useGenerateStory. */
+/** Create-story API only; the server builds the prompt from these params. */
 export const useOpenAiGPTManager = (store: OpenaiStore): OpenaiManager => {
   const {
     isCreateStoryFetching,
     handleUpdateCreateStoryPrompt,
     handleCreateStoryRequest,
-    handleCreateStorySeoRequest,
   } = useCreateStory(store);
 
   return {
     isCreateStoryFetching,
     handleUpdateCreateStoryPrompt,
     handleCreateStoryRequest,
-    handleCreateStorySeoRequest,
   };
 };

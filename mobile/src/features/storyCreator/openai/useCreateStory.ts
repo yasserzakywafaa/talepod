@@ -12,24 +12,18 @@ import type {
   Story,
   StoryFormat,
   StoryParams,
-  StorySeo,
 } from "../store/state";
 
 export interface UseTextGeneration {
   isCreateStoryFetching: (isFetching: boolean) => void;
   handleUpdateCreateStoryPrompt: (createStoryPrompt: string) => void;
   handleCreateStoryRequest: (
-    storyPrompt: string,
     profileInfo: ProfileInfo,
     storyParams: StoryParams,
     format?: StoryFormat,
     artStyle?: string,
     avatarId?: string,
   ) => Promise<Story>;
-  handleCreateStorySeoRequest: (
-    storyId: string,
-    userSeoPrompt: string,
-  ) => Promise<StorySeo>;
 }
 
 export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
@@ -53,8 +47,14 @@ export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
     });
   };
 
+  /**
+   * The prompt is no longer built or sent by the client — the server
+   * constructs it from these structured parameters. Keeping prompt
+   * engineering out of the bundle means it is neither inspectable nor
+   * overridable by calling the API directly, and it can change without an
+   * app-store release.
+   */
   const handleCreateStoryRequest = async (
-    storyPrompt: string,
     profileInfo: ProfileInfo,
     storyParams: StoryParams,
     format: StoryFormat = "comic",
@@ -62,7 +62,6 @@ export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
     avatarId?: string,
   ): Promise<Story> => {
     const payload = {
-      storyPrompt,
       profileInfo,
       storyParams,
       format,
@@ -84,22 +83,10 @@ export const useCreateStory = (store: OpenaiStore): UseTextGeneration => {
     return response.data;
   };
 
-  const handleCreateStorySeoRequest = async (
-    storyId: string,
-    userSeoPrompt: string,
-  ): Promise<StorySeo> => {
-    const response: AxiosResponse<StorySeo> = await api.post(
-      END_POINTS.CREATE.GENERATE.STORY_SEO,
-      { storyId, userSeoPrompt },
-    );
-    return response.data;
-  };
-
   return {
     isCreateStoryFetching,
     handleUpdateCreateStoryPrompt,
     handleCreateStoryRequest,
-    handleCreateStorySeoRequest,
   };
 };
 
