@@ -40,7 +40,8 @@ const MyAvatarsScreenContent = () => {
   const theme = useAppTheme();
   const { horizontalGutter, contentMaxWidth } = useReadableLayout();
   const { avatars, isLoading, loadError, refetch } = useAvatarsQuery(true);
-  const { saveAvatar, removeAvatar, isSaving } = useAvatarMutations();
+  const { saveAvatar, removeAvatar, isSaving, isPortraitPending, isBusy } =
+    useAvatarMutations();
   const {
     manager: { handleSelectAvatar },
   } = useStoryCreatorContext();
@@ -145,7 +146,8 @@ const MyAvatarsScreenContent = () => {
         renderItem={({ item }) => (
           <AvatarCard
             avatar={item}
-            disabled={isSaving}
+            disabled={isBusy(item._id)}
+            portraitPending={isPortraitPending(item._id)}
             onCreate={() => startStoryWith(item)}
             onEdit={() => openEdit(item)}
             onDelete={() => setDeleteTarget(item)}

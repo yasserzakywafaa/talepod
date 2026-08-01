@@ -204,7 +204,8 @@
     "card": {
       "create": "Erstellen",
       "edit": "Bearbeiten",
-      "delete": "Löschen"
+      "delete": "Löschen",
+      "paintingPortrait": "Porträt wird gemalt…"
     }
   },
   "reader": {
@@ -280,5 +281,11 @@
     "deleteFailedTitle": "Diese Geschichte löschen?",
     "deleteFailedBody": "Damit wird der fehlgeschlagene Platzhalter für {{title}} entfernt. Dies kann nicht rückgängig gemacht werden.",
     "failedBody": "Beim Erstellen dieser Geschichte ist etwas schiefgelaufen."
+  },
+  "viewStory": {
+    "loading": "Deine Geschichte wird geladen…",
+    "notFound": "Geschichte nicht gefunden",
+    "imagesGenerating": "Illustrationen sind noch unterwegs",
+    "imagesGeneratingHint": "Das kann eine Minute dauern — die Geschichte kannst du schon jetzt lesen."
   }
 }

@@ -204,7 +204,8 @@
     "card": {
       "create": "Créer",
       "edit": "Modifier",
-      "delete": "Supprimer"
+      "delete": "Supprimer",
+      "paintingPortrait": "Portrait en cours…"
     }
   },
   "reader": {
@@ -280,5 +281,11 @@
     "deleteFailedTitle": "Supprimer cette histoire ?",
     "deleteFailedBody": "Cela supprime l'espace réservé de l'histoire ayant échoué pour {{title}}. Cette action est irréversible.",
     "failedBody": "Une erreur s'est produite lors de la création de cette histoire."
+  },
+  "viewStory": {
+    "loading": "Chargement de votre histoire…",
+    "notFound": "Histoire introuvable",
+    "imagesGenerating": "Les illustrations arrivent bientôt",
+    "imagesGeneratingHint": "Cela peut prendre une minute — l'histoire est déjà prête à lire."
   }
 }

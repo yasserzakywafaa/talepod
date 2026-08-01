@@ -1,4 +1,4 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 
@@ -23,8 +23,20 @@ const traitSummary = (avatar: Avatar): string =>
 
 type AvatarCardProps = {
   avatar: Avatar;
-  /** A mutation is in flight for this avatar → its actions are disabled. */
+  /**
+   * A mutation is in flight for this specific avatar — the whole card dims
+   * and its actions disable, not just the buttons. Previously this flipped
+   * for every card on screen at once (one shared `isSaving` flag), so editing
+   * one avatar visibly disabled every other card's buttons too, with no way
+   * to tell which one was actually doing something.
+   */
   disabled?: boolean;
+  /**
+   * The server is painting (or re-painting) this avatar's portrait in the
+   * background — create and an appearance-changing edit both return before
+   * it exists. Overlays a spinner on the portrait until it lands.
+   */
+  portraitPending?: boolean;
   onCreate: () => void;
   onEdit: () => void;
   onDelete: () => void;
@@ -38,6 +50,7 @@ type AvatarCardProps = {
 export const AvatarCard = ({
   avatar,
   disabled = false,
+  portraitPending = false,
   onCreate,
   onEdit,
   onDelete,
@@ -49,7 +62,7 @@ export const AvatarCard = ({
   const traits = traitSummary(avatar);
 
   return (
-    <BrandCard>
+    <BrandCard style={disabled ? styles.dimmed : undefined}>
       <View style={styles.portrait}>
         {avatar.portraitUrl ? (
           <Image
@@ -64,11 +77,22 @@ export const AvatarCard = ({
             colors={["#F0B648", "#C9622F"] as const}
             style={[StyleSheet.absoluteFillObject, styles.fallback]}
           >
-            <DisplayText size={48} color="#FFFFFF">
-              {avatar.name?.[0]?.toUpperCase() ?? "?"}
-            </DisplayText>
+            {!portraitPending ? (
+              <DisplayText size={48} color="#FFFFFF">
+                {avatar.name?.[0]?.toUpperCase() ?? "?"}
+              </DisplayText>
+            ) : null}
           </Gradient>
         )}
+
+        {portraitPending ? (
+          <View style={styles.paintingOverlay}>
+            <ActivityIndicator color="#FFFFFF" />
+            <Text style={styles.paintingLabel}>
+              {t("avatars.card.paintingPortrait")}
+            </Text>
+          </View>
+        ) : null}
       </View>
 
       <View style={styles.body}>
@@ -144,6 +168,15 @@ export const AvatarCard = ({
 const styles = StyleSheet.create({
   portrait: { width: "100%", aspectRatio: 1, overflow: "hidden" },
   fallback: { alignItems: "center", justifyContent: "center" },
+  dimmed: { opacity: 0.55 },
+  paintingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.35)",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
+  paintingLabel: { color: "#FFFFFF", fontSize: 12, fontWeight: "600" },
   body: { padding: 16, gap: 6 },
   titleRow: { flexDirection: "row", alignItems: "center", gap: 8 },
   name: { flex: 1 },

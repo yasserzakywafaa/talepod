@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { DrawerActions } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Appbar, Text } from "react-native-paper";
 
 import { mobileRoutes } from "src/application/routes";
@@ -28,6 +29,7 @@ type Props = NativeStackScreenProps<
 
 export const ViewStoryScreen = ({ navigation, route }: Props) => {
   const { slug } = route.params;
+  const { t } = useTranslation("story");
   const theme = useAppTheme();
   const { width } = useWindowDimensions();
   const { contentMaxWidth } = useReadableLayout();
@@ -54,6 +56,10 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
 
   const isComic =
     story?.format === "comic" && (story.pages?.length ?? 0) > 0;
+  const imagesPending = story?.imagesStatus === "pending";
+  const hasAnyLongStoryImage = (story?.longStoryImages ?? []).some(
+    (image) => image.imageUrl,
+  );
 
   const header = (
     <Appbar.Header
@@ -82,9 +88,17 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
     <Page header={header}>
       <ScreenErrorBoundary name="ViewStory">
       {isFetching && !story ? (
-        <ActivityIndicator style={styles.loader} color={theme.colors.primary} />
+        <View style={styles.loader}>
+          <ActivityIndicator color={theme.colors.primary} />
+          <Text
+            variant="bodyMedium"
+            style={{ color: theme.colors.onSurfaceVariant, marginTop: 12 }}
+          >
+            {t("viewStory.loading")}
+          </Text>
+        </View>
       ) : !story ? (
-        <Text style={styles.loader}>Story not found</Text>
+        <Text style={styles.notFound}>{t("viewStory.notFound")}</Text>
       ) : (
         <LocaleLayoutBoundary>
           <ScrollView contentContainerStyle={styles.scroll}>
@@ -92,6 +106,43 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
               <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
                 {story.summary}
               </Text>
+            ) : null}
+
+            {/*
+             * A banner up top, not a caption buried at the bottom — this is
+             * the whole reason a reader might be confused ("is something
+             * broken?"), so it needs to be the first thing they see, not the
+             * last thing they might scroll past.
+             */}
+            {imagesPending ? (
+              <View
+                style={[
+                  styles.generatingBanner,
+                  {
+                    backgroundColor: theme.colors.primaryContainer,
+                    borderRadius: theme.tokens.radius.lg,
+                  },
+                ]}
+              >
+                <ActivityIndicator
+                  size="small"
+                  color={theme.colors.onPrimaryContainer}
+                />
+                <View style={styles.generatingBannerText}>
+                  <Text
+                    variant="labelLarge"
+                    style={{ color: theme.colors.onPrimaryContainer }}
+                  >
+                    {t("viewStory.imagesGenerating")}
+                  </Text>
+                  <Text
+                    variant="bodySmall"
+                    style={{ color: theme.colors.onPrimaryContainer }}
+                  >
+                    {t("viewStory.imagesGeneratingHint")}
+                  </Text>
+                </View>
+              </View>
             ) : null}
 
             {isComic ? (
@@ -126,14 +177,16 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
               <LongStoryBody
                 mainStory={story.mainStory}
                 longStoryImages={story.longStoryImages}
+                /**
+                 * Long stories had no visual cue at all while images were
+                 * pending — a comic page at least shows a spinner box where
+                 * its picture will go. This gives long-format the same
+                 * affordance: one placeholder card, since we don't yet know
+                 * where inside the text the images will land.
+                 */
+                showPendingPlaceholder={imagesPending && !hasAnyLongStoryImage}
               />
             )}
-
-            {story.imagesStatus === "pending" ? (
-              <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>
-                Illustrations are still generating…
-              </Text>
-            ) : null}
           </ScrollView>
         </LocaleLayoutBoundary>
       )}
@@ -144,7 +197,8 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
 
 const styles = StyleSheet.create({
   topBarHeader: { elevation: 0 },
-  loader: { marginTop: 48, alignSelf: "center" },
+  loader: { marginTop: 48, alignItems: "center" },
+  notFound: { marginTop: 48, alignSelf: "center" },
   scroll: { padding: 16, gap: 16, paddingBottom: 40 },
   page: { gap: 8 },
   imagePlaceholder: {
@@ -153,4 +207,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  generatingBanner: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    padding: 14,
+  },
+  generatingBannerText: { flex: 1, gap: 2 },
 });

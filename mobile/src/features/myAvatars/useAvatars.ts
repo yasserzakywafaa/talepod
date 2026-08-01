@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { api } from "src/application/shared/apiClient";
@@ -37,11 +38,120 @@ export const useAvatarsQuery = (enabled = true) => {
   };
 };
 
+/**
+ * Traits that change how the avatar is *drawn*. Editing only name/relationship
+ * must not trigger a portrait re-generation — the avatar still looks
+ * identical, and there's no reason to keep the card muted for it.
+ *
+ * Mirrors the server's `AVATAR_APPEARANCE_FIELDS`
+ * (`server/src/models/types/avatar.ts`) and the web's own copy of the same
+ * list (`web/src/Pages/Avatars/useAvatars.ts`) — not shared via a package
+ * across three runtimes, so kept in step by hand like the web copy already is.
+ */
+const AVATAR_APPEARANCE_FIELDS: (keyof AvatarInput)[] = [
+  "age",
+  "gender",
+  "skinTone",
+  "hairColor",
+  "hairStyle",
+  "eyeColor",
+  "outfit",
+  "distinguishingFeature",
+  "notes",
+];
+
+const normTrait = (value: unknown): string =>
+  value === undefined || value === null ? "" : `${value}`.trim();
+
+/** Did this edit touch a visual trait (→ the server will paint a new portrait)? */
+const didAppearanceChange = (
+  before: Avatar | null,
+  after: AvatarInput,
+): boolean =>
+  !before ||
+  AVATAR_APPEARANCE_FIELDS.some(
+    (field) => normTrait(after[field]) !== normTrait(before[field]),
+  );
+
+const addId = (ids: string[], id: string): string[] =>
+  ids.includes(id) ? ids : [...ids, id];
+const removeId = (ids: string[], id: string): string[] =>
+  ids.filter((existing) => existing !== id);
+
+const POLL_INTERVAL_MS = 4000;
+const POLL_MAX_ATTEMPTS = 6;
+
+/**
+ * Create and update both paint the portrait in the background on the server
+ * (`generatePortraitInBackground` — fire-and-forget; the response returns
+ * before it exists). Without polling for it, a new or visually-edited avatar
+ * just showed the initial-letter fallback until the user happened to leave
+ * the screen and come back. This polls the single-avatar endpoint every 4s,
+ * up to 6 tries, until the portrait actually changes from its prior value —
+ * which is what lets this tell "a fresh portrait landed" apart from "the
+ * portrait was already there". Stragglers are dropped after the cap so a
+ * card never spins forever; it just falls back to whatever image it has.
+ */
 export const useAvatarMutations = () => {
   const queryClient = useQueryClient();
 
-  const invalidate = () =>
-    queryClient.invalidateQueries({ queryKey: queryKeys.avatars.list() });
+  /** Avatar ids currently having a new portrait painted — card shows the overlay. */
+  const [pendingPortraitIds, setPendingPortraitIds] = useState<string[]>([]);
+  /** Avatar ids with a non-portrait mutation in flight — card dims, no overlay. */
+  const [busyIds, setBusyIds] = useState<string[]>([]);
+
+  const activeTimers = useRef(new Set<ReturnType<typeof setTimeout>>());
+  useEffect(() => {
+    const timers = activeTimers.current;
+    return () => {
+      timers.forEach(clearTimeout);
+      timers.clear();
+    };
+  }, []);
+
+  const invalidate = useCallback(
+    () => queryClient.invalidateQueries({ queryKey: queryKeys.avatars.list() }),
+    [queryClient],
+  );
+
+  const pollForPortrait = useCallback(
+    (avatarId: string, sincePortraitUrl: string | undefined) => {
+      setPendingPortraitIds((prev) => addId(prev, avatarId));
+
+      let attempts = 0;
+      const tick = () => {
+        const timer = setTimeout(async () => {
+          activeTimers.current.delete(timer);
+          attempts += 1;
+
+          let settled = false;
+          try {
+            const { data } = await api.get<Avatar>(
+              END_POINTS.AVATARS.GET(avatarId),
+            );
+            settled = Boolean(data.portraitUrl) && data.portraitUrl !== sincePortraitUrl;
+            if (settled) {
+              queryClient.setQueryData<Avatar[]>(
+                queryKeys.avatars.list(),
+                (prev) => prev?.map((a) => (a._id === avatarId ? data : a)),
+              );
+            }
+          } catch {
+            // A failed poll attempt is not fatal on its own — retry until the cap.
+          }
+
+          if (settled || attempts >= POLL_MAX_ATTEMPTS) {
+            setPendingPortraitIds((prev) => removeId(prev, avatarId));
+          } else {
+            tick();
+          }
+        }, POLL_INTERVAL_MS);
+        activeTimers.current.add(timer);
+      };
+      tick();
+    },
+    [queryClient],
+  );
 
   const save = useMutation({
     mutationFn: async ({
@@ -50,7 +160,7 @@ export const useAvatarMutations = () => {
     }: {
       input: AvatarInput;
       existing: Avatar | null;
-    }) => {
+    }): Promise<Avatar> => {
       if (existing) {
         const { data } = await api.put<Avatar>(
           END_POINTS.AVATARS.UPDATE(existing._id),
@@ -61,20 +171,74 @@ export const useAvatarMutations = () => {
       const { data } = await api.post<Avatar>(END_POINTS.AVATARS.CREATE, input);
       return data;
     },
-    onSuccess: invalidate,
   });
+
+  const saveAvatar = useCallback(
+    async (input: AvatarInput, existing: Avatar | null): Promise<void> => {
+      const editingId = existing?._id;
+      const willRepaint = didAppearanceChange(existing, input);
+
+      // Mark the card before the request goes out — the dialog stays open
+      // until this resolves, but the list behind it should already read as
+      // "something is happening to this one" the moment Save is pressed.
+      if (editingId) {
+        if (willRepaint) {
+          setPendingPortraitIds((prev) => addId(prev, editingId));
+        } else {
+          setBusyIds((prev) => addId(prev, editingId));
+        }
+      }
+
+      try {
+        const saved = await save.mutateAsync({ input, existing });
+        await invalidate();
+
+        if (willRepaint) {
+          // A brand-new avatar has no prior portrait to compare against;
+          // `existing` covers the edit case.
+          pollForPortrait(saved._id, existing?.portraitUrl);
+        } else if (editingId) {
+          setBusyIds((prev) => removeId(prev, editingId));
+        }
+      } catch (error) {
+        if (editingId) {
+          setPendingPortraitIds((prev) => removeId(prev, editingId));
+          setBusyIds((prev) => removeId(prev, editingId));
+        }
+        throw error;
+      }
+    },
+    [save, pollForPortrait, invalidate],
+  );
 
   const remove = useMutation({
     mutationFn: async (avatar: Avatar) => {
       await api.delete(END_POINTS.AVATARS.DELETE(avatar._id));
     },
-    onSuccess: invalidate,
   });
 
+  const removeAvatar = useCallback(
+    async (avatar: Avatar): Promise<void> => {
+      setBusyIds((prev) => addId(prev, avatar._id));
+      try {
+        await remove.mutateAsync(avatar);
+        await invalidate();
+      } finally {
+        // Harmless if the card is already gone from the list post-invalidate.
+        setBusyIds((prev) => removeId(prev, avatar._id));
+      }
+    },
+    [remove, invalidate],
+  );
+
   return {
-    saveAvatar: (input: AvatarInput, existing: Avatar | null) =>
-      save.mutateAsync({ input, existing }),
-    removeAvatar: (avatar: Avatar) => remove.mutateAsync(avatar),
+    saveAvatar,
+    removeAvatar,
     isSaving: save.isPending || remove.isPending,
+    /** Portrait is (re)painting for this card → show the overlay. */
+    isPortraitPending: (avatarId: string) => pendingPortraitIds.includes(avatarId),
+    /** Any mutation in flight for this card → dim it and disable its actions. */
+    isBusy: (avatarId: string) =>
+      busyIds.includes(avatarId) || pendingPortraitIds.includes(avatarId),
   };
 };

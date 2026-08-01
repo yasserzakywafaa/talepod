@@ -204,7 +204,8 @@
     "card": {
       "create": "إنشاء",
       "edit": "تعديل",
-      "delete": "حذف"
+      "delete": "حذف",
+      "paintingPortrait": "جارٍ رسم الصورة…"
     }
   },
   "reader": {
@@ -280,5 +281,11 @@
     "deleteFailedTitle": "حذف هذه القصة؟",
     "deleteFailedBody": "سيؤدي هذا إلى إزالة العنصر النائب الفاشل الخاص بـ {{title}}. لا يمكن التراجع عن هذا الإجراء.",
     "failedBody": "حدث خطأ أثناء إنشاء هذه القصة."
+  },
+  "viewStory": {
+    "loading": "جارٍ تحميل قصتك…",
+    "notFound": "القصة غير موجودة",
+    "imagesGenerating": "الرسوم التوضيحية في الطريق",
+    "imagesGeneratingHint": "قد يستغرق هذا دقيقة — القصة جاهزة للقراءة الآن."
   }
 }
