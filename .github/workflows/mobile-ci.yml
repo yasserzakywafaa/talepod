@@ -1,0 +1,55 @@
+name: Mobile CI
+
+on:
+  push:
+    branches: [develop, main]
+    paths:
+      - "mobile/**"
+      - ".github/workflows/mobile-ci.yml"
+  pull_request:
+    paths:
+      - "mobile/**"
+      - ".github/workflows/mobile-ci.yml"
+
+# A new push to the same branch makes the in-flight run obsolete.
+concurrency:
+  group: mobile-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Lint, typecheck, test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+          cache-dependency-path: mobile/yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+        env:
+          # `@yasserzakywafaa/client-core` is a private GitHub Packages
+          # dependency; `.npmrc` reads this token.
+          GITHUB_PACKAGES_TOKEN: ${{ secrets.GITHUB_PACKAGES_TOKEN }}
+
+      - name: Typecheck
+        run: yarn typecheck
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Test
+        run: yarn test --ci
+
+      # Catches native module versions that have drifted from the SDK — the
+      # class of problem that only shows up as a red build on EAS otherwise.
+      - name: Check Expo dependency versions
+        run: npx expo install --check
