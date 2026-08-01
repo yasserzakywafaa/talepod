@@ -1,0 +1,54 @@
+{
+  "account": "Konto",
+  "back": "Zurück",
+  "close": "Schließen",
+  "cancel": "Abbrechen",
+  "delete": "Löschen",
+  "emailSentSuccess": "E-Mail erfolgreich gesendet",
+  "noResults": "Keine Ergebnisse gefunden",
+  "noStoriesFound": "Keine Geschichten gefunden",
+  "loggedOut": "Abgemeldet",
+  "footer": {
+    "company": "Unternehmen",
+    "copyright": "Copyright ©",
+    "linksLine": "{{product}} · {{company}} · {{privacy}} · {{terms}}",
+    "mobileTagline": "Bei TalePod helfen wir Eltern, in wenigen Minuten magische, personalisierte Gutenachtgeschichten zu erstellen — mit Illustrationen, Erzählung und Geschichten für Ihr Kind.",
+    "privacyPolicy": "Datenschutzerklärung",
+    "product": "Produkt",
+    "termsAndConditions": "AGB"
+  },
+  "logo": "TalePod Startseite",
+  "nav": {
+    "contact": "Kontakt",
+    "createProject": "Geschichte erstellen",
+    "features": "Funktionen",
+    "howItWorks": "So funktioniert's",
+    "library": "Bibliothek",
+    "login": "Anmelden",
+    "myStories": "Meine Geschichten",
+    "pricing": "Preise",
+    "register": "Registrieren"
+  },
+  "settings": {
+    "dashboard": "Dashboard",
+    "languageLabel": "Sprache",
+    "logout": "Abmelden",
+    "menu": "Einstellungen",
+    "profile": "Profil",
+    "refreshApp": "App aktualisieren",
+    "theme": "Design",
+    "themeDark": "Dunkel",
+    "themeLight": "Hell",
+    "themeSystem": "System",
+    "version": "Version {{version}}"
+  },
+  "sheetClose": "Schließen",
+  "signedInUser": "Angemeldeter Benutzer",
+  "serviceError": {
+    "offlineTitle": "TalePod ist nicht erreichbar",
+    "offlineBody": "Prüfe deine Verbindung und versuch es erneut. Wenn bei dir alles passt, macht unser Geschichtenerzähler gerade ein Nickerchen.",
+    "serverTitle": "Etwas ist schiefgelaufen",
+    "serverBody": "TalePod hat gerade Probleme. Es liegt nicht an dir — bitte versuch es gleich noch einmal.",
+    "retry": "Erneut versuchen"
+  }
+}

@@ -2,9 +2,11 @@ import CONFIG from "../config";
 import { Request, Response } from "express";
 import {
   createTokenService,
+  isMobileClient,
   TokenService as CoreTokenService,
+  TokenPair,
 } from "@yasserzakywafaa/server-core";
-import { RefreshTokenPayload, TokenPair, TokenPayload } from "../types/token";
+import { RefreshTokenPayload, TokenPayload } from "../types/token";
 
 type AccessTokenInput = Omit<TokenPayload, "iat" | "exp">;
 type RefreshTokenInput = Omit<RefreshTokenPayload, "iat" | "exp">;
@@ -91,10 +93,45 @@ export class TokenService {
     getCoreTokenService().clearTokenCookies(response);
   }
 
+  static extractBearerAccessToken(request: Request): string | undefined {
+    const authorization = request.headers.authorization;
+    if (!authorization) {
+      return undefined;
+    }
+
+    const [scheme, token] = authorization.trim().split(/\s+/);
+    if (scheme?.toLowerCase() !== "bearer" || !token) {
+      return undefined;
+    }
+
+    return token;
+  }
+
   static extractTokenFromCookies(request: Request): {
     accessToken?: string;
     refreshToken?: string;
   } {
-    return getCoreTokenService().extractTokenFromCookies(request);
+    const fromCookies = getCoreTokenService().extractTokenFromCookies(request);
+    const bearerAccessToken = TokenService.extractBearerAccessToken(request);
+
+    return {
+      accessToken: bearerAccessToken ?? fromCookies.accessToken,
+      refreshToken: fromCookies.refreshToken,
+    };
+  }
+
+  static extractRefreshToken(request: Request): string | undefined {
+    if (isMobileClient(request)) {
+      const bodyRefreshToken =
+        typeof request.body?.refreshToken === "string"
+          ? request.body.refreshToken
+          : undefined;
+
+      if (bodyRefreshToken) {
+        return bodyRefreshToken;
+      }
+    }
+
+    return getCoreTokenService().extractTokenFromCookies(request).refreshToken;
   }
 }

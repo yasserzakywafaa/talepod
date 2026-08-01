@@ -3,7 +3,6 @@ import { ChildGenderEnum } from "src/components/StoryCreator/store/state";
 import { ALL_PUBLIC_SEGMENTS } from "src/application/routes";
 import { routes } from "src/application/routes";
 import { User } from "src/shared/types/user";
-import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import { DEFAULT_LOCALE_CONFIG } from "@yasserzakywafaa/client-core/web/i18n";
 
 /**
@@ -128,16 +127,13 @@ export const consumeReturnUrl = (): string | null => {
   }
 };
 
-/** After auth, prefer saved return URL, then admin dashboard, then profile. */
+/** After auth, prefer saved return URL, then the user's story library. */
 export const consumePostAuthRedirect = (user: User): string => {
   const returnUrl = consumeReturnUrl();
   if (returnUrl) {
     return returnUrl;
   }
-  if (hasAdminRights(user)) {
-    return routes.dashboard.home;
-  }
-  return routes.myProfile(user._id);
+  return routes.myStories(user._id);
 };
 
 export const saveCreateDraft = (draft: object): void => {

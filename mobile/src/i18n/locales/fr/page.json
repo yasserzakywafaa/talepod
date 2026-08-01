@@ -1,0 +1,66 @@
+{
+  "contact": {
+    "title": "Contactez-nous",
+    "subtitle": "Envoyez-nous un message — nous vous répondrons.",
+    "name": "Nom",
+    "email": "E-mail",
+    "subject": "Objet",
+    "message": "Message",
+    "sendMessage": "Envoyer le message",
+    "validationRequired": "Veuillez remplir tous les champs.",
+    "validationEmail": "Veuillez saisir une adresse e-mail valide.",
+    "sendFailed": "Impossible d'envoyer votre message. Réessayez.",
+    "networkError": "Serveur inaccessible. Vérifiez votre connexion et réessayez."
+  },
+  "home": {
+    "badge": "Plateforme propulsée par l'IA",
+    "body": "La mise en page mobile reflète le client web : barre d'application Material, menu à droite et panneau tableau de bord après connexion.",
+    "ctaPricing": "Voir les tarifs",
+    "ctaLogin": "Essayer gratuitement",
+    "title": "Créez, gérez et développez vos projets depuis le web ou le mobile."
+  },
+  "pricing": {
+    "mostPopular": "Le plus populaire",
+    "perMonth": "/mois",
+    "freeForever": "gratuit pour toujours",
+    "billedMonthly": "facturation mensuelle",
+    "billedYearly": "facturation annuelle · {{currency}}{{total}}/an",
+    "heroTitle": "Un prix pour des couchers illimités",
+    "heroSubtitle": "Commencez gratuitement. Passez à la version supérieure quand le coucher devient le meilleur moment de la journée.",
+    "bestValue": "Meilleur rapport qualité-prix",
+    "plans": "Forfaits",
+    "cta": {
+      "createStories": "Créer des histoires",
+      "registerSubscribe": "S'inscrire et s'abonner",
+      "upgrade": "Mettre à niveau",
+      "currentPlan": "Forfait actuel"
+    },
+    "features": {
+      "standardSupport": "Support client standard",
+      "createUpToFree_one": "Créer jusqu'à {{count}} histoire du soir",
+      "createUpToFree_other": "Créer jusqu'à {{count}} histoires du soir",
+      "basicTts": "Conversion texte-parole de base",
+      "limitedLibrary": "Accès à une bibliothèque d'histoires limitée",
+      "prioritySupport": "Support client prioritaire",
+      "customizableParams": "Paramètres d'histoire personnalisables",
+      "highQualityTts": "Conversion texte-parole haute qualité",
+      "createUpToMonthly_one": "Créer jusqu'à {{count}} histoire du soir par mois",
+      "createUpToMonthly_other": "Créer jusqu'à {{count}} histoires du soir par mois",
+      "accessPremiumStories": "Accès à vos histoires Premium créées",
+      "everythingInPremium": "Tout ce qui est dans Premium",
+      "unlimitedStories": "Histoires du soir illimitées",
+      "priorityGeneration": "Génération d'histoires prioritaire",
+      "allVoices": "Toutes les voix de conteur",
+      "unlimitedLibrary": "Enregistrer un nombre illimité d'histoires dans votre bibliothèque"
+    },
+    "checkoutOnWeb": "Le paiement se fait sur talepod.com — votre offre s'applique aussitôt dans l'app.",
+    "openOnWeb": "Ouvrir sur le web",
+    "monthly": "Mensuel",
+    "yearly": "Annuel"
+  },
+  "legal": {
+    "lastUpdated": "Dernière mise à jour :",
+    "privacyTitle": "Politique de confidentialité",
+    "termsTitle": "Conditions générales pour TalePod"
+  }
+}

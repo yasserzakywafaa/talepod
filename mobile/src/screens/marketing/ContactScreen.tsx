@@ -1,0 +1,32 @@
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useTranslation } from "react-i18next";
+import { Text } from "react-native-paper";
+
+import { mobileRoutes } from "src/application/routes";
+import type { MainShellStackParamList } from "src/application/navigation/MainShellStackNavigator";
+import { Page, PageBody } from "src/components/layout/Page";
+import { useDrawerPageHeader } from "src/components/layout/useDrawerPageHeader";
+import { useScreenTypography } from "src/components/layout/useScreenTypography";
+import { ContactForm } from "src/features/contact/ContactForm";
+
+type Props = NativeStackScreenProps<
+  MainShellStackParamList,
+  typeof mobileRoutes.public.contact
+>;
+
+export const ContactScreen = (_props: Props) => {
+  const { t } = useTranslation("page");
+  const typography = useScreenTypography();
+  const header = useDrawerPageHeader("nav.contact");
+
+  return (
+    <Page header={header}>
+      <PageBody>
+        <Text variant="bodyMedium" style={typography.body}>
+          {t("contact.subtitle")}
+        </Text>
+        <ContactForm />
+      </PageBody>
+    </Page>
+  );
+};

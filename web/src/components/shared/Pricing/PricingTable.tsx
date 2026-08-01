@@ -27,7 +27,7 @@ import {
 import BillingToggle from "./BillingToggle";
 import PayPerStoryCallout from "./PayPerStoryCallout";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
-import { useApplicationContext } from "src/application/store/Provider";
+import { useAppResolvedThemeMode } from "src/application/hooks/useAppResolvedThemeMode";
 import { usePaymentCatalog } from "../Payment/usePaymentCatalog";
 import { usePricing } from "./usePricing";
 import { useTranslation } from "react-i18next";
@@ -53,11 +53,7 @@ const PricingTable: React.FC<PricingTableProps> = () => {
     getYearlySavingsPercent,
   } = usePricing();
   const tableFeatures = Object.keys(plansForTable[0].features);
-  const {
-    store: {
-      state: { themeMode },
-    },
-  } = useApplicationContext();
+  const themeMode = useAppResolvedThemeMode();
   const tableBgColorOpaque =
     themeMode === "light" ? primaryColorOpaqueTen : primaryColorOpaqueThirty;
 

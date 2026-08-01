@@ -1,0 +1,66 @@
+{
+  "contact": {
+    "title": "اتصل بنا",
+    "subtitle": "أرسل لنا رسالة وسنعاود الاتصال بك.",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "subject": "الموضوع",
+    "message": "الرسالة",
+    "sendMessage": "إرسال الرسالة",
+    "validationRequired": "يرجى تعبئة جميع الحقول.",
+    "validationEmail": "يرجى إدخال بريد إلكتروني صالح.",
+    "sendFailed": "تعذر إرسال رسالتك. يرجى المحاولة مرة أخرى.",
+    "networkError": "تعذر الاتصال بالخادم. تحقق من الاتصال وحاول مرة أخرى."
+  },
+  "home": {
+    "badge": "منصة مدعومة بالذكاء الاصطناعي",
+    "body": "تخطيط الجوال يعكس عميل الويب: شريط تطبيق بأسلوب Material، قائمة جانبية يمينًا، ولوحة تحكم بعد تسجيل الدخول.",
+    "ctaPricing": "عرض الأسعار",
+    "ctaLogin": "جرّب مجانًا",
+    "title": "أنشئ مشاريعك وأدرها ونمِّها من الويب أو الجوال."
+  },
+  "pricing": {
+    "mostPopular": "الأكثر شعبية",
+    "perMonth": "/شهر",
+    "freeForever": "مجاني للأبد",
+    "billedMonthly": "يُدفع شهريًا",
+    "billedYearly": "يُدفع سنويًا · {{currency}}{{total}}/سنة",
+    "heroTitle": "سعر واحد لأوقات نوم لا حصر لها",
+    "heroSubtitle": "ابدأ مجانًا. قم بالترقية عندما يصبح وقت النوم أفضل جزء في يومك.",
+    "bestValue": "أفضل قيمة",
+    "plans": "الباقات",
+    "cta": {
+      "createStories": "إنشاء قصص",
+      "registerSubscribe": "التسجيل والاشتراك",
+      "upgrade": "ترقية",
+      "currentPlan": "الباقة الحالية"
+    },
+    "features": {
+      "standardSupport": "دعم عملاء قياسي",
+      "createUpToFree_one": "إنشاء حتى {{count}} قصة ما قبل النوم",
+      "createUpToFree_other": "إنشاء حتى {{count}} قصص ما قبل النوم",
+      "basicTts": "تحويل نص إلى كلام أساسي",
+      "limitedLibrary": "الوصول إلى مكتبة قصص محدودة",
+      "prioritySupport": "دعم عملاء بأولوية",
+      "customizableParams": "معاملات قصة قابلة للتخصيص",
+      "highQualityTts": "تحويل نص إلى كلام عالي الجودة",
+      "createUpToMonthly_one": "إنشاء حتى {{count}} قصة ما قبل النوم شهريًا",
+      "createUpToMonthly_other": "إنشاء حتى {{count}} قصص ما قبل النوم شهريًا",
+      "accessPremiumStories": "الوصول إلى قصصك المميزة المنشأة",
+      "everythingInPremium": "كل ما في الباقة المميزة",
+      "unlimitedStories": "قصص ما قبل النوم غير محدودة",
+      "priorityGeneration": "توليد قصص بأولوية",
+      "allVoices": "جميع أصوات الراوي",
+      "unlimitedLibrary": "حفظ قصص غير محدود في مكتبتك"
+    },
+    "checkoutOnWeb": "يتم الدفع على talepod.com — وتُطبَّق باقتك في التطبيق فورًا.",
+    "openOnWeb": "افتح على الويب",
+    "monthly": "شهري",
+    "yearly": "سنوي"
+  },
+  "legal": {
+    "lastUpdated": "آخر تحديث:",
+    "privacyTitle": "سياسة الخصوصية",
+    "termsTitle": "الشروط والأحكام لـ TalePod"
+  }
+}

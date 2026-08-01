@@ -31,6 +31,7 @@ import {
   getUserContactLabel,
 } from "src/shared/utils/getUserContact";
 import { useApplicationContext } from "src/application/store/Provider";
+import { useAppResolvedThemeMode } from "src/application/hooks/useAppResolvedThemeMode";
 import { useMyProfileContext } from "./store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
@@ -52,14 +53,15 @@ const MyProfilePage = () => {
   const navigate = useNavigate();
   const [isDeleteAccountDialogOpen, setIsDeleteAccountDialogOpen] =
     useState(false);
+  const resolvedThemeMode = useAppResolvedThemeMode();
   const {
     store: {
       state: {
         auth,
         auth: { isAuthenticated, user },
-        themeMode,
       },
     },
+    manager: { handleThemePreferenceChange },
   } = useApplicationContext();
   const {
     store: {
@@ -93,12 +95,8 @@ const MyProfilePage = () => {
   const showDeleteAccount = !hasAdminRights(user);
 
   const handleOnDarkModeSwitchChange = async () => {
-    await handleUpdateUserInfo({
-      preferences: {
-        ...user.preferences,
-        theme: themeMode === "dark" ? "light" : "dark",
-      },
-    });
+    const next = resolvedThemeMode === "dark" ? "light" : "dark";
+    await handleThemePreferenceChange(next);
   };
 
   const isFreeUser = user.subscription.type === SubscriptionPlanEnum.Free;
@@ -244,11 +242,11 @@ const MyProfilePage = () => {
                       <Switch
                         size="medium"
                         value="dark-mode"
-                        checked={themeMode === "dark"}
+                        checked={resolvedThemeMode === "dark"}
                         onChange={handleOnDarkModeSwitchChange}
                       />
                       <span className="bold">
-                        {themeMode === "dark"
+                        {resolvedThemeMode === "dark"
                           ? t("profile.themeDark")
                           : t("profile.themeLight")}
                       </span>

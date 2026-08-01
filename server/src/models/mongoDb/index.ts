@@ -48,6 +48,8 @@ export enum DBCollectionsEnum {
   users = "users",
   blogs = "blogs",
   avatars = "avatars",
+  mobileOAuthCodes = "mobileOAuthCodes",
+  mobileOAuthRedirects = "mobileOAuthRedirects",
 }
 
 const getMongoDbUri = (): string => {
@@ -452,6 +454,10 @@ const getPaginatedDocuments = async <T extends Document = Document>(
   }
 };
 
+const getCollection = <T extends Document = Document>(
+  collectionName: DBCollectionsEnum,
+): Collection<T> => mongoDatabase.getCollection<T>(collectionName);
+
 // // // FOR DEVELOPMENT USE ONLY
 // const copyDocumentsFromDatabaseToAnotherDatabase = async () => {
 //   // Access the Dev and Prod databases
@@ -492,6 +498,7 @@ export {
   databaseInit,
   getMongoDbUri,
   closeDatabase,
+  getCollection,
   getDocumentFromDb,
   getDocumentByFieldFromDb,
   getDocumentByQueryFromDb,

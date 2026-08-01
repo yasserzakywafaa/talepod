@@ -1,0 +1,26 @@
+{
+  "page": {
+    "libraryTitle": "Bibliothek Gute-Nacht-Geschichten auf TalePod",
+    "myStoriesTitle": "Meine Geschichten",
+    "loadMore": "Mehr laden",
+    "sourceCommunity": "Community",
+    "sourceTalepod": "von TalePod",
+    "filters": "Filter",
+    "emptyCreate": "Geschichte erstellen",
+    "emptyClearFilters": "Filter löschen"
+  },
+  "filters": {
+    "title": "Geschichten filtern",
+    "name": "Name",
+    "language": "Sprache",
+    "age": "Alter",
+    "languageNone": "Keine...",
+    "storyAudio": "Geschichts-Audio",
+    "originals": "TalePod-Originale",
+    "originalsTooltip": "Vom TalePod-Team erstellt und personalisiert",
+    "notAppropriate": "Nicht angemessen 🙈",
+    "cancel": "Abbrechen",
+    "clear": "Löschen",
+    "apply": "Anwenden"
+  }
+}

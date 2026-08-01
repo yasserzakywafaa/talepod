@@ -1,0 +1,54 @@
+{
+  "account": "Compte",
+  "back": "Retour",
+  "close": "Fermer",
+  "cancel": "Annuler",
+  "delete": "Supprimer",
+  "emailSentSuccess": "E-mail envoyé avec succès",
+  "noResults": "Aucun résultat trouvé",
+  "noStoriesFound": "Aucune histoire trouvée",
+  "loggedOut": "Déconnecté",
+  "footer": {
+    "company": "Entreprise",
+    "copyright": "Copyright ©",
+    "linksLine": "{{product}} · {{company}} · {{privacy}} · {{terms}}",
+    "mobileTagline": "Chez TalePod, nous aidons les parents à créer des histoires du soir magiques et personnalisées en quelques minutes — avec illustrations, narration et contes adaptés à votre enfant.",
+    "privacyPolicy": "Politique de confidentialité",
+    "product": "Produit",
+    "termsAndConditions": "Conditions générales"
+  },
+  "logo": "Accueil TalePod",
+  "nav": {
+    "contact": "Nous contacter",
+    "createProject": "Créer une histoire",
+    "features": "Fonctionnalités",
+    "howItWorks": "Comment ça marche",
+    "library": "Bibliothèque",
+    "login": "Se connecter",
+    "myStories": "Mes histoires",
+    "pricing": "Tarifs",
+    "register": "S'inscrire"
+  },
+  "settings": {
+    "dashboard": "Tableau de bord",
+    "languageLabel": "Langue",
+    "logout": "Déconnexion",
+    "menu": "Paramètres",
+    "profile": "Profil",
+    "refreshApp": "Actualiser l'application",
+    "theme": "Thème",
+    "themeDark": "Sombre",
+    "themeLight": "Clair",
+    "themeSystem": "Système",
+    "version": "Version {{version}}"
+  },
+  "sheetClose": "Fermer",
+  "signedInUser": "Utilisateur connecté",
+  "serviceError": {
+    "offlineTitle": "Impossible de joindre TalePod",
+    "offlineBody": "Vérifie ta connexion et réessaie. Si tout va bien de ton côté, notre conteur fait sûrement la sieste.",
+    "serverTitle": "Un problème est survenu",
+    "serverBody": "TalePod rencontre des difficultés. Ce n'est pas de ta faute — réessaie dans un instant.",
+    "retry": "Réessayer"
+  }
+}

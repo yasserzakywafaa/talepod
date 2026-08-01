@@ -8,8 +8,10 @@ import { NextFunction, Request, Response } from "express";
 import { PageResponse, Story } from "../models/types";
 import { User, UserRole, UserStatus } from "../models/types/user";
 
-import { ObjectId } from "mongodb";
+import { Filter, ObjectId } from "mongodb";
+import { StoryFilters } from "../models/types/story";
 import { getDocumentFromDb } from "../models/mongoDb";
+import { getQuery, getUsersQuery } from "../models/mongoDb/query";
 import { deleteUserAccount } from "../services/userDeletionService";
 
 export const getUsersCount = async (
@@ -71,8 +73,14 @@ export const getAllUsers = async (
     const pageNumber = parseInt(request.query.pageNumber as string) || 1;
     const pageSize = parseInt(request.query.pageSize as string) || 10;
 
+    const query = getUsersQuery(
+      (request.query.search as string) || "",
+      request.query.role as string,
+      request.query.status as string
+    );
+
     const { results, paging } = await getPaginatedDocuments<User>(
-      {},
+      query,
       DBCollectionsEnum.users,
       { pageNumber, pageSize },
       {
@@ -251,8 +259,17 @@ export const getAllStories = async (
       },
     ];
 
+    // Same filter shape the story lists already send, so the dashboard can
+    // reuse the app's filters panel rather than inventing a second language.
+    const hasActiveFilters: boolean = request.query.hasActiveFilters === "true";
+    const filters: StoryFilters = JSON.parse(
+      (request.query.filters as string) || "{}"
+    );
+    // `getQuery` is typed against its own condition shape, not the collection.
+    const query = (hasActiveFilters ? getQuery(filters) : {}) as Filter<Story>;
+
     const { results, paging } = await getPaginatedDocuments<Story>(
-      {},
+      query,
       DBCollectionsEnum.stories,
       { pageNumber, pageSize },
       {

@@ -1,0 +1,54 @@
+{
+  "account": "الحساب",
+  "back": "رجوع",
+  "close": "إغلاق",
+  "cancel": "إلغاء",
+  "delete": "حذف",
+  "emailSentSuccess": "تم إرسال البريد الإلكتروني بنجاح",
+  "noResults": "لا توجد نتائج",
+  "noStoriesFound": "لا توجد قصص",
+  "loggedOut": "تم تسجيل الخروج",
+  "footer": {
+    "company": "الشركة",
+    "copyright": "حقوق النشر ©",
+    "linksLine": "{{product}} · {{company}} · {{privacy}} · {{terms}}",
+    "mobileTagline": "في TalePod، نساعد الآباء على إنشاء قصص ما قبل النوم سحرية ومخصصة في دقائق — مع رسوم توضيحية وسرد وقصص مصممة لطفلك.",
+    "privacyPolicy": "سياسة الخصوصية",
+    "product": "المنتج",
+    "termsAndConditions": "الشروط والأحكام"
+  },
+  "logo": "الصفحة الرئيسية لـ TalePod",
+  "nav": {
+    "contact": "اتصل بنا",
+    "createProject": "إنشاء قصة",
+    "features": "الميزات",
+    "howItWorks": "كيف يعمل",
+    "library": "المكتبة",
+    "login": "تسجيل الدخول",
+    "myStories": "قصصي",
+    "pricing": "الأسعار",
+    "register": "التسجيل"
+  },
+  "settings": {
+    "dashboard": "لوحة التحكم",
+    "languageLabel": "اللغة",
+    "logout": "تسجيل الخروج",
+    "menu": "الإعدادات",
+    "profile": "الملف الشخصي",
+    "refreshApp": "تحديث التطبيق",
+    "theme": "المظهر",
+    "themeDark": "داكن",
+    "themeLight": "فاتح",
+    "themeSystem": "النظام",
+    "version": "الإصدار {{version}}"
+  },
+  "sheetClose": "إغلاق",
+  "signedInUser": "مستخدم مسجّل الدخول",
+  "serviceError": {
+    "offlineTitle": "تعذّر الوصول إلى TalePod",
+    "offlineBody": "تحقّق من اتصالك وحاول مرة أخرى. إذا كان كل شيء على ما يرام لديك، فقد يكون راوي القصص لدينا في قيلولة.",
+    "serverTitle": "حدث خطأ ما",
+    "serverBody": "يواجه TalePod مشكلة الآن. الأمر ليس بسببك — من فضلك حاول مرة أخرى بعد قليل.",
+    "retry": "حاول مرة أخرى"
+  }
+}

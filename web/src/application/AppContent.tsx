@@ -22,6 +22,8 @@ import {
 import i18n from "src/i18n/init";
 import { ALL_PUBLIC_SEGMENTS, routes } from "./routes";
 import { useApplicationContext } from "./store/Provider";
+import { useAppResolvedThemeMode } from "./hooks/useAppResolvedThemeMode";
+import { applyThemeToDOM } from "./store/store";
 
 const FeaturesPage = lazy(() => import("../Pages/Features/FeaturesPage"));
 const PricingPage = lazy(() => import("../Pages/Pricing/Pricing"));
@@ -115,11 +117,16 @@ const AppContent = () => {
     manager: { handleInitialAuthentication },
   } = useApplicationContext();
   const direction = useAppDirection();
-  const theme = getThemedTheme(state.themeMode, direction);
+  const resolvedThemeMode = useAppResolvedThemeMode();
+  const theme = getThemedTheme(resolvedThemeMode, direction);
 
   useEffect(() => {
     handleInitialAuthentication();
   }, []);
+
+  useEffect(() => {
+    applyThemeToDOM(resolvedThemeMode);
+  }, [resolvedThemeMode]);
 
   return (
     <ThemeProvider theme={theme}>

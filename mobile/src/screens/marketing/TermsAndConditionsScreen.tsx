@@ -1,0 +1,49 @@
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import {
+  formatLocalizedDate,
+  localeFromLanguage,
+} from "@yasserzakywafaa/client-core";
+import { useTranslation } from "react-i18next";
+import { Text, useTheme } from "react-native-paper";
+
+import { mobileRoutes } from "src/application/routes";
+import type { MainShellStackParamList } from "src/application/navigation/MainShellStackNavigator";
+import { TermsAndConditionsBody } from "src/components/legal/TermsAndConditionsBody";
+import { Page, PageBody } from "src/components/layout/Page";
+import { useDrawerPageHeader } from "src/components/layout/useDrawerPageHeader";
+import { useScreenTypography } from "src/components/layout/useScreenTypography";
+
+type Props = NativeStackScreenProps<
+  MainShellStackParamList,
+  typeof mobileRoutes.public.termsAndConditions
+>;
+
+/** January 1, 2025 — same as web (`01/01/2025`). Use ISO for Hermes. */
+const TERMS_LAST_UPDATED = "2025-01-01";
+
+export const TermsAndConditionsScreen = (_props: Props) => {
+  const { t, i18n } = useTranslation("page");
+  const theme = useTheme();
+  const typography = useScreenTypography();
+  const locale = localeFromLanguage(i18n.language);
+  const header = useDrawerPageHeader("footer.termsAndConditions");
+
+  return (
+    <Page header={header}>
+      <PageBody>
+        <Text
+          variant="bodyMedium"
+          style={[typography.badge, { marginBottom: 8 }]}
+        >
+          {t("legal.lastUpdated")}{" "}
+          <Text style={{ fontWeight: "700", color: theme.colors.primary }}>
+            {formatLocalizedDate(TERMS_LAST_UPDATED, locale, {
+              dateStyle: "short",
+            })}
+          </Text>
+        </Text>
+        <TermsAndConditionsBody />
+      </PageBody>
+    </Page>
+  );
+};

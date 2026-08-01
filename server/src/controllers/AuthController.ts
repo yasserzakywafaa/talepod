@@ -1,4 +1,9 @@
-import { AuthProviderEnum, User, UserRole, getInitialUserData } from "../models/types";
+import {
+  AuthProviderEnum,
+  User,
+  UserRole,
+  getInitialUserData,
+} from "../models/types";
 import { NextFunction, Request, Response } from "express";
 import { AuthenticatedRequest } from "../middleware/authMiddleware";
 import { deleteUserAccount } from "../services/userDeletionService";
@@ -15,8 +20,11 @@ import { DBCollectionsEnum } from "../models/mongoDb";
 import { ObjectId } from "mongodb";
 import { PhoneOtpService } from "../services/PhoneOtpService";
 import { TokenService } from "../services/tokenService";
+import { withMobileTokens } from "@yasserzakywafaa/server-core";
 import passport from "passport";
 import { randomUUID } from "crypto";
+import { mobileOAuth } from "../services/mobileOAuthService";
+import { googleMobileExchange } from "../services/googleMobileExchangeHandler";
 
 /**
  * Send 200 with HTML that redirects via meta refresh. Used so cookies are set in a
@@ -88,13 +96,71 @@ const normalizeAndValidatePhoneNumber = (
 const isPhoneAuthConfiguredError = (message: string): boolean =>
   message.toLowerCase().includes("not configured");
 
-const oauth2Google = (req: Request, res: Response, next: NextFunction) => {
+const oauth2Google = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   console.log("🚀 oauth2Google route handler called");
 
-  return passport.authenticate(AuthProviderEnum.google, {
+  const isMobilePlatform = req.query.platform === "mobile";
+  const redirectUriParam = req.query.redirect_uri;
+
+  if (isMobilePlatform) {
+    console.log("📱 Mobile Google OAuth start:", {
+      redirectUri:
+        typeof redirectUriParam === "string"
+          ? redirectUriParam
+          : redirectUriParam,
+    });
+
+    if (
+      typeof redirectUriParam !== "string" ||
+      !mobileOAuth.isAllowedRedirectUri(redirectUriParam)
+    ) {
+      console.error("❌ Mobile Google OAuth rejected: invalid redirect_uri", {
+        redirectUri: redirectUriParam,
+        scheme: CONFIG.MOBILE_OAUTH_SCHEME,
+      });
+      return res.status(400).json({
+        message:
+          "A valid redirect_uri query parameter is required for mobile Google login.",
+      });
+    }
+  }
+
+  const failureRedirect =
+    isMobilePlatform && typeof redirectUriParam === "string"
+      ? `${redirectUriParam}${redirectUriParam.includes("?") ? "&" : "?"}error=google_auth_failed`
+      : `${CONFIG.APP_URL}/unauthorized?error=google_auth_failed`;
+
+  const authenticateOptions: {
+    session: boolean;
+    failureRedirect: string;
+    state?: string;
+    prompt?: string;
+  } = {
     session: false,
-    failureRedirect: `${CONFIG.APP_URL}/unauthorized?error=google_auth_failed`,
-  })(req, res, next);
+    failureRedirect,
+    ...(isMobilePlatform ? { prompt: "select_account" } : {}),
+  };
+
+  if (isMobilePlatform && typeof redirectUriParam === "string") {
+    const passportState =
+      await mobileOAuth.buildPassportState(redirectUriParam);
+    authenticateOptions.state = passportState;
+
+    console.log("📱 Mobile Google OAuth state saved:", {
+      state: `${passportState.slice(0, 16)}…`,
+      redirectUri: redirectUriParam,
+    });
+  }
+
+  return passport.authenticate(AuthProviderEnum.google, authenticateOptions)(
+    req,
+    res,
+    next,
+  );
 };
 
 const oauth2GoogleCallback = async (
@@ -102,7 +168,14 @@ const oauth2GoogleCallback = async (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log("🔄 Google OAuth callback received");
+  const isMobileCallback = mobileOAuth.isMobileOAuthState(req.query.state);
+  console.log("🔄 Google OAuth callback received", {
+    platform: isMobileCallback ? "mobile" : "web",
+    state:
+      typeof req.query.state === "string"
+        ? String(req.query.state).slice(0, 24) + "…"
+        : req.query.state,
+  });
 
   passport.authenticate(
     AuthProviderEnum.google,
@@ -119,6 +192,19 @@ const oauth2GoogleCallback = async (
           console.error("❌ Google OAuth callback error:", err);
           console.error("🔧 User object:", user);
           console.error("🔧 Info object:", info);
+
+          if (
+            await mobileOAuth.redirectMobileOAuthResult(
+              req.query.state,
+              { error: "google_auth_failed" },
+              res,
+            )
+          ) {
+            console.error(
+              "❌ Mobile Google OAuth callback failed — redirected error to app",
+            );
+            return;
+          }
 
           return res.redirect(
             `${CONFIG.APP_URL}/unauthorized?error=google_auth_failed`,
@@ -140,6 +226,39 @@ const oauth2GoogleCallback = async (
           });
         }
 
+        if (mobileOAuth.isMobileOAuthState(req.query.state)) {
+          console.log(
+            "📱 Mobile Google OAuth callback: issuing one-time code",
+            {
+              userId: dbUser._id?.toString(),
+              email: dbUser.email,
+            },
+          );
+
+          const oauthCode = await mobileOAuth.createCode(
+            dbUser._id?.toString() || "",
+          );
+
+          console.log("🔑 Mobile one-time code created:", {
+            codeLength: oauthCode.length,
+            codePreview: `${oauthCode.slice(0, 8)}…`,
+          });
+
+          if (
+            await mobileOAuth.redirectMobileOAuthResult(
+              req.query.state,
+              { code: oauthCode },
+              res,
+            )
+          ) {
+            return;
+          }
+
+          console.error(
+            "❌ Mobile Google OAuth callback: redirectMobileOAuthResult returned false after code creation",
+          );
+        }
+
         // Debug: Log token generation
         console.log("🍪 Setting cookies with tokenPair:", {
           hasAccessToken: !!tokenPair.accessToken,
@@ -159,6 +278,18 @@ const oauth2GoogleCallback = async (
         return sendRedirectWithCookiesSet(res, redirectUrl);
       } catch (error) {
         console.error("❌ Google OAuth callback error:", error);
+        if (
+          await mobileOAuth.redirectMobileOAuthResult(
+            req.query.state,
+            { error: "server_error" },
+            res,
+          )
+        ) {
+          console.error(
+            "❌ Mobile Google OAuth callback server_error — redirected error to app",
+          );
+          return;
+        }
         return res.redirect(
           `${CONFIG.APP_URL}/unauthorized?error=server_error`,
         );
@@ -293,10 +424,12 @@ const verifyPhoneRegisterOtp = async (
     });
     TokenService.setTokenCookies(res, tokenPair);
 
-    return res.status(201).json({
-      message: "Phone number verified. Account created successfully.",
-      user: sanitizeUserForResponse(savedUser),
-    });
+    return res.status(201).json(
+      withMobileTokens(req, tokenPair, {
+        message: "Phone number verified. Account created successfully.",
+        user: sanitizeUserForResponse(savedUser),
+      }),
+    );
   } catch (error) {
     console.error("❌ Failed to verify phone register OTP:", error);
     const errorMessage =
@@ -422,10 +555,12 @@ const verifyPhoneLoginOtp = async (
     });
     TokenService.setTokenCookies(res, tokenPair);
 
-    return res.status(200).json({
-      message: "Login successful.",
-      user: sanitizeUserForResponse(authenticatedUser),
-    });
+    return res.status(200).json(
+      withMobileTokens(req, tokenPair, {
+        message: "Login successful.",
+        user: sanitizeUserForResponse(authenticatedUser),
+      }),
+    );
   } catch (error) {
     console.error("❌ Failed to verify phone login OTP:", error);
     const errorMessage =
@@ -441,14 +576,14 @@ const refreshToken = async (
   next: NextFunction,
 ) => {
   try {
-    const { refreshToken } = TokenService.extractTokenFromCookies(req);
+    const refreshTokenValue = TokenService.extractRefreshToken(req);
 
-    if (!refreshToken) {
+    if (!refreshTokenValue) {
       return res.status(401).json({ message: "No refresh token provided" });
     }
 
     // Verify refresh token
-    const decoded = TokenService.verifyRefreshToken(refreshToken);
+    const decoded = TokenService.verifyRefreshToken(refreshTokenValue);
 
     // Find user in database
     const user = (await getDocumentFromDb(
@@ -469,7 +604,11 @@ const refreshToken = async (
     // Set new HTTP-only cookies
     TokenService.setTokenCookies(res, tokenPair);
 
-    return res.status(200).json({ message: "Token refreshed successfully" });
+    return res.status(200).json(
+      withMobileTokens(req, tokenPair, {
+        message: "Token refreshed successfully",
+      }),
+    );
   } catch (error) {
     console.error("❌ Token refresh error:", error);
     return res.status(401).json({ message: "Invalid refresh token" });
@@ -645,10 +784,7 @@ const deleteAccount = async (
     return;
   }
 
-  if (
-    user.role === UserRole.admin ||
-    user.role === UserRole.super_admin
-  ) {
+  if (user.role === UserRole.admin || user.role === UserRole.super_admin) {
     response.status(403).json({
       message: "❌ Admin accounts cannot be deleted via self-service",
     });
@@ -662,9 +798,7 @@ const deleteAccount = async (
     return;
   }
 
-  if (
-    confirmationPhrase.trim() !== DELETE_ACCOUNT_CONFIRMATION_PHRASE
-  ) {
+  if (confirmationPhrase.trim() !== DELETE_ACCOUNT_CONFIRMATION_PHRASE) {
     response.status(400).json({
       message: `❌ Please type "${DELETE_ACCOUNT_CONFIRMATION_PHRASE}" to confirm`,
     });
@@ -698,6 +832,7 @@ const deleteAccount = async (
 const AuthController = {
   oauth2Google,
   oauth2GoogleCallback,
+  googleMobileExchange,
   sendPhoneRegisterOtp,
   verifyPhoneRegisterOtp,
   sendPhoneLoginOtp,

@@ -1,0 +1,15 @@
+name: Publish dev update
+
+on:
+  push:
+    paths:
+      - mobile/**
+
+jobs:
+  update:
+    name: Update dev
+    type: update
+    environment: preview
+    params:
+      branch: preview
+      message: "push ${{ github.ref_name }}"
