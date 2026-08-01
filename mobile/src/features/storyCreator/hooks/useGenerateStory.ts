@@ -1,7 +1,7 @@
 import { ProfileInfo } from "../store/state";
 import { useGenerationContext } from "../generation/Provider";
-import { useOpenaiContext } from "../openai/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
+import { useCreateStoryMutation } from "src/features/storyCreator/useCreateStoryMutation";
 import logger from "src/shared/logger";
 
 export interface GenerateStoryOptions {
@@ -22,14 +22,7 @@ export const useGenerateStory = (): UseGenerateStory => {
     },
   } = useStoryCreatorContext();
 
-  const {
-    store: {
-      state: {
-        createStory: { isFetching: isCreatingStory },
-      },
-    },
-    manager: { isCreateStoryFetching, handleCreateStoryRequest },
-  } = useOpenaiContext();
+  const { createStory, isCreatingStory } = useCreateStoryMutation();
 
   const {
     manager: { isGenerating, startGeneration },
@@ -42,15 +35,14 @@ export const useGenerateStory = (): UseGenerateStory => {
       ...profileInfo,
       ...options?.profileOverride,
     };
-    isCreateStoryFetching(true);
     try {
-      const placeholder = await handleCreateStoryRequest(
-        resolvedProfile,
+      const placeholder = await createStory({
+        profileInfo: resolvedProfile,
         storyParams,
         format,
         artStyle,
         avatarId,
-      );
+      });
 
       if (placeholder?._id) {
         startGeneration(placeholder, resolvedProfile.name);
@@ -58,8 +50,6 @@ export const useGenerateStory = (): UseGenerateStory => {
     } catch (error) {
       logger.error("Failed to create a story", error);
       throw error;
-    } finally {
-      isCreateStoryFetching(false);
     }
   };
 

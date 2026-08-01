@@ -32,7 +32,7 @@ import { SelectField } from "src/components/brand/SelectField";
 import { useGenerateStory } from "src/features/storyCreator/hooks/useGenerateStory";
 import { useAvatarsQuery } from "src/features/myAvatars/useAvatars";
 import { useStoryCreatorContext } from "src/features/storyCreator/store/Provider";
-import { getCreateStoryErrorMessage } from "src/features/storyCreator/openai/useCreateStory";
+import { getCreateStoryErrorMessage } from "src/features/storyCreator/useCreateStoryMutation";
 import {
   AdultGenderEnum,
   ChildGenderEnum,
