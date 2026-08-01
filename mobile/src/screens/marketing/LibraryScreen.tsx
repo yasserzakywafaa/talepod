@@ -107,12 +107,8 @@ const LibraryScreenContent = () => {
         ListHeaderComponent={listHeader}
         ListEmptyComponent={listEmpty}
         {...PAGE_SCROLL_PROPS}
-        /**
-         * Infinite scroll rather than a tap target. The threshold is half a
-         * screen so the next page is usually resolved before the user reaches
-         * the end; the button below stays as the fallback when the prefetch
-         * has not landed yet.
-         */
+        // Half a screen of threshold, so the next page usually lands before
+        // the end; the button below is the fallback when it hasn't.
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}
         contentContainerStyle={[

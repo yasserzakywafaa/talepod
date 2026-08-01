@@ -10,14 +10,8 @@ const config: ExpoConfig = {
   name: "TalePod",
   slug: "talepod",
   scheme: MOBILE_OAUTH_SCHEME,
-  /**
-   * The marketing version, and — via `runtimeVersion: appVersion` below —
-   * the OTA compatibility boundary. This stays here even though `eas.json`
-   * sets `appVersionSource: "remote"`: remote governs the build number
-   * (iOS `buildNumber` / Android `versionCode`), which `autoIncrement`
-   * bumps per build. Bumping this string starts a new runtime, so existing
-   * installs stop receiving updates built against the old one.
-   */
+  // Marketing version, and (via `runtimeVersion` below) the OTA boundary:
+  // bumping it starts a new runtime, cutting off existing installs.
   version: "1.0.0",
   // Follow the device. A story being read aloud is often propped sideways,
   // and the layout is width-driven rather than fixed to a portrait frame.
@@ -29,12 +23,8 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: "com.talepod.app",
-    /**
-     * Universal Links. Requires `apple-app-site-association` to be served
-     * from https://talepod.com/.well-known/ — see docs/STORE_READINESS.md.
-     * Until it is, https links open the website (correct fallback) and the
-     * custom scheme still works.
-     */
+    // Universal Links. Needs `apple-app-site-association` served from
+    // /.well-known/ — until then https links open the website instead.
     associatedDomains: [
       "applinks:talepod.com",
       "applinks:www.talepod.com",
@@ -54,11 +44,8 @@ const config: ExpoConfig = {
     },
     predictiveBackGestureEnabled: false,
     package: "com.talepod.app",
-    /**
-     * Android App Links, the counterpart to the iOS block above.
-     * `autoVerify` is what lets links open the app directly rather than
-     * showing a chooser; it needs assetlinks.json on the same origin.
-     */
+    // Android App Links. `autoVerify` skips the app chooser, but needs
+    // assetlinks.json on the same origin.
     intentFilters: [
       {
         action: "VIEW",
@@ -78,19 +65,13 @@ const config: ExpoConfig = {
         image: "./assets/splash-icon.png",
         imageWidth: 200,
         resizeMode: "contain",
-        // Night sky in both themes, not just dark mode: the mark is a bunny
-        // asleep on a moon, and a white launch frame reads as the wrong app
-        // for a second before the first screen paints.
+        // Night sky in both themes — a white launch frame reads as the
+        // wrong app for a second before the first screen paints.
         backgroundColor: PLUM_700,
       },
     ],
-    /**
-     * Uploads source maps at build time so a production stack trace shows
-     * real file names and line numbers instead of minified bundle offsets.
-     * Only added when the EAS build environment carries the Sentry
-     * credentials — without them the plugin fails the build, and a local
-     * `expo start` has no business uploading anything.
-     */
+    // Uploads source maps so stack traces show real file names. Only when
+    // EAS carries the credentials — without them the plugin fails the build.
     ...(process.env.SENTRY_AUTH_TOKEN
       ? [
           [

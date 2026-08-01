@@ -1,13 +1,9 @@
 /**
- * Every React Query key in one place.
- *
- * Keys are the cache's identity: a typo produces a second, silently-empty
- * cache entry rather than an error, and invalidating after a mutation means
- * naming a key exactly. Centralising them keeps those two things honest and
- * makes "what invalidates what" answerable by reading one file.
- *
- * Keys are ordered general → specific so a prefix invalidates everything
- * under it: invalidating `["stories"]` clears every list and detail below it.
+ * Every React Query key, in one place because a typo silently creates a
+ * second empty cache entry rather than failing.
+ * 
+ * Ordered general → specific, so invalidating a prefix clears everything
+ * under it.
  */
 export const queryKeys = {
   stories: {

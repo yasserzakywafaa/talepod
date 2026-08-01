@@ -13,10 +13,8 @@ export interface DeleteAccountResult {
 }
 
 /**
- * A pure write with no cached read of its own — the account either goes away
- * or it doesn't, and the outcome is reported back to the caller rather than
- * stored. `useMutation` gives the `isPending` flag the delete dialog needs
- * without a store/manager/Provider quartet built for a single boolean.
+ * A pure write with nothing cached to read back — `useMutation` supplies the
+ * one `isPending` flag the delete dialog needs.
  */
 export const useDeleteAccount = () => {
   const {

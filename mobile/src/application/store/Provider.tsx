@@ -40,9 +40,8 @@ export const ApplicationContextProvider = ({
   const store = useApplicationStore();
   const manager = useApplicationManager(store);
   const didRunInitialAuth = useRef(false);
-  // `useApplicationStore` returns a fresh object each render, so subscribing
-  // against `store` directly would tear down and re-add the listener on every
-  // state change. The ref keeps one subscription pointed at the latest store.
+  // `store` is a fresh object each render, so the ref keeps one subscription
+  // pointed at the latest one instead of re-adding it on every change.
   const storeRef = useRef(store);
   storeRef.current = store;
 
@@ -54,11 +53,8 @@ export const ApplicationContextProvider = ({
     void manager.handleInitialAuthentication();
   }, [manager]);
 
-  /**
-   * A refresh that fails (revoked or expired refresh token) clears storage in
-   * the axios layer. Mirror that into React so the UI actually returns to the
-   * signed-out state instead of sitting in a broken authenticated shell.
-   */
+  // A failed refresh clears storage in the axios layer; mirror it here or
+  // the UI sits in a broken authenticated shell.
   useEffect(
     () =>
       onSessionExpired(() => {

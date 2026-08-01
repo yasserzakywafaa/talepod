@@ -14,18 +14,8 @@ import type {
 } from "src/features/storyCreator/store/state";
 
 export interface CreateStoryInput {
-  /**
-   * The fully built AI prompt.
-   *
-   * Still sent, and still required in practice: an API deployment that
-   * predates this branch reads this field straight off the body and hands it
-   * to the model, so omitting it there produces an empty user message and a
-   * response with none of the structure the extractors need. Newer servers
-   * ignore what is sent here and build their own.
-   *
-   * Drop this field only once every environment runs a server that builds the
-   * prompt itself — see the note at the top of `utils/getStoryPrompts.ts`.
-   */
+  // Older servers read this straight off the body, so omitting it there
+  // breaks generation. Drop only per the note in `utils/getStoryPrompts.ts`.
   storyPrompt: string;
   profileInfo: ProfileInfo;
   storyParams: StoryParams;
@@ -34,20 +24,8 @@ export interface CreateStoryInput {
   avatarId?: string;
 }
 
-/**
- * The create-story request, as a mutation.
- *
- * This used to be a store/manager/state/Provider quartet
- * (`features/storyCreator/openai/`) wrapping one POST. Most of that state
- * turned out to be dead: `createAudio` and `createImage` were never read
- * outside their own initial-state function, and `createStoryPrompt` /
- * `handleUpdateCreateStoryPrompt` were a half-finished draft feature nothing
- * ever called. The one thing anything actually read — `createStory.isFetching`
- * — is exactly what `useMutation`'s `isPending` gives for free.
- *
- * Response caching doesn't apply here (a create request is never repeated
- * with the same input), so this is a bare mutation, not backed by a query key.
- */
+// A bare mutation, not backed by a query key: a create request is never
+// repeated with the same input, so there is nothing to cache.
 export const useCreateStoryMutation = () => {
   const {
     store: {

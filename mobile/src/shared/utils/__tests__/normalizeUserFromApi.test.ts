@@ -2,9 +2,8 @@ import type { User } from "src/shared/types/user";
 import { normalizeUserFromApi } from "src/shared/utils/normalizeUserFromApi";
 
 /**
- * Every stored session and every refetch goes through this. If `_id` comes
- * back in a shape the app does not expect, requests keyed on the user id fail
- * quietly rather than loudly — which is exactly the kind of break worth a test.
+ * Every stored session goes through this. An unexpected `_id` shape makes
+ * requests keyed on the user id fail quietly rather than loudly.
  */
 const asUser = (value: unknown) => value as User;
 

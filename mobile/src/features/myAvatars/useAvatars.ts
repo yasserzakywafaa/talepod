@@ -8,17 +8,8 @@ import { queryKeys } from "src/shared/api/queryKeys";
 import type { Avatar, AvatarInput } from "src/shared/types/avatar";
 
 /**
- * The saved-character list, shared by two very different screens: the avatar
- * picker inside story creation (read-only) and the My Avatars screen (full
- * CRUD). They used to be two separate hooks — `useAvatarsList` and
- * `useMyAvatars`, defined inline in `MyAvatarsScreen.tsx` — each with its own
- * `useState`/`useEffect` fetch and its own cache of one. Editing an avatar on
- * the management screen never reached the picker's copy; only a full remount
- * (leaving and re-entering the create flow) would refetch it.
- *
- * One query key means one cache: a mutation here invalidates
- * `queryKeys.avatars.list()`, and every consumer — picker included — updates
- * without an extra fetch.
+ * The saved-character list, shared by the story-creator picker and the My
+ * Avatars screen. One query key means an edit on either reaches both.
  */
 export const useAvatarsQuery = (enabled = true) => {
   const query = useQuery({
@@ -39,14 +30,8 @@ export const useAvatarsQuery = (enabled = true) => {
 };
 
 /**
- * Traits that change how the avatar is *drawn*. Editing only name/relationship
- * must not trigger a portrait re-generation — the avatar still looks
- * identical, and there's no reason to keep the card muted for it.
- *
- * Mirrors the server's `AVATAR_APPEARANCE_FIELDS`
- * (`server/src/models/types/avatar.ts`) and the web's own copy of the same
- * list (`web/src/Pages/Avatars/useAvatars.ts`) — not shared via a package
- * across three runtimes, so kept in step by hand like the web copy already is.
+ * Traits that change how the avatar is drawn, so a name-only edit skips the
+ * portrait wait. Mirrors the server's `AVATAR_APPEARANCE_FIELDS`.
  */
 const AVATAR_APPEARANCE_FIELDS: (keyof AvatarInput)[] = [
   "age",
@@ -82,15 +67,8 @@ const POLL_INTERVAL_MS = 4000;
 const POLL_MAX_ATTEMPTS = 6;
 
 /**
- * Create and update both paint the portrait in the background on the server
- * (`generatePortraitInBackground` — fire-and-forget; the response returns
- * before it exists). Without polling for it, a new or visually-edited avatar
- * just showed the initial-letter fallback until the user happened to leave
- * the screen and come back. This polls the single-avatar endpoint every 4s,
- * up to 6 tries, until the portrait actually changes from its prior value —
- * which is what lets this tell "a fresh portrait landed" apart from "the
- * portrait was already there". Stragglers are dropped after the cap so a
- * card never spins forever; it just falls back to whatever image it has.
+ * The server paints portraits in the background and returns before they
+ * exist, so poll until the URL changes. Capped so no card spins forever.
  */
 export const useAvatarMutations = () => {
   const queryClient = useQueryClient();
@@ -178,9 +156,8 @@ export const useAvatarMutations = () => {
       const editingId = existing?._id;
       const willRepaint = didAppearanceChange(existing, input);
 
-      // Mark the card before the request goes out — the dialog stays open
-      // until this resolves, but the list behind it should already read as
-      // "something is happening to this one" the moment Save is pressed.
+      // Mark the card before the request goes out, so the list behind the
+      // dialog reacts the moment Save is pressed.
       if (editingId) {
         if (willRepaint) {
           setPendingPortraitIds((prev) => addId(prev, editingId));

@@ -21,28 +21,16 @@ const mascotBunny = require("../../../assets/images/characters/sleeping_bunny_wi
 type StoryCardProps = {
   story: Story;
   onPress: () => void;
-  /**
-   * Retry/delete actions for a story whose background generation set
-   * `textStatus: "failed"`. Omit both on any list that never surfaces failed
-   * placeholders (Library, the admin lists) — the card falls back to its
-   * normal appearance.
-   */
+  // For a story whose generation failed. Omit on lists that never show
+  // failed placeholders (Library, admin) — the card renders normally.
   onRetry?: () => void;
   onDelete?: () => void;
   isRetrying?: boolean;
 };
 
 /**
- * Story list card — the native read of web `StoryCard`: 16:9 cover with a
- * format badge, serif title, one-line summary and outlined meta tags.
- *
- * A story whose text generation failed used to render exactly like any other
- * card, permanently stuck on the placeholder title ("Creating your story…")
- * with no way to tell it apart from one still generating, and no way to
- * retry or remove it. `story.textStatus === "failed"` now swaps the cover
- * badge, replaces the summary with what happened, and — when the caller
- * passes `onRetry`/`onDelete` — replaces the tap target with explicit
- * actions instead of navigating to a reader that has nothing to show.
+ * Story list card. A failed story swaps its badge and summary for
+ * retry/delete, instead of opening a reader with nothing in it.
  */
 export const StoryCard = ({
   story,

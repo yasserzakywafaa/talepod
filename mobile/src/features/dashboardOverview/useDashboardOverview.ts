@@ -8,9 +8,8 @@ const fetchOverviewCounts = async (): Promise<{
   storiesCount: number | null;
   usersCount: number | null;
 }> => {
-  // Two independent counters — a failure on one must not blank out the
-  // other, so each request degrades to `null` on its own rather than one
-  // rejected Promise.all taking both cards down.
+  // Each counter degrades to `null` on its own, rather than one rejected
+  // Promise.all taking both cards down.
   const [storiesResult, usersResult] = await Promise.allSettled([
     api.get<{ count: number }>(END_POINTS.DASHBOARD.OVERVIEW.GET_STORIES_COUNT),
     api.get<{ count: number }>(END_POINTS.DASHBOARD.OVERVIEW.GET_USERS_COUNT),

@@ -16,22 +16,14 @@ type SelectFieldProps<T extends string | number> = {
   value: T;
   options: readonly SelectOption<T>[];
   onChange: (value: T) => void;
-  /**
-   * Colour painted behind the floating label so it can notch the outline.
-   * Defaults to the page background; pass `colors.surface` inside a dialog.
-   */
+  // Painted behind the floating label; pass `colors.surface` in a dialog.
   surfaceColor?: string;
-  /**
-   * Expand options in-place instead of a Paper `Menu`. Use inside React Native
-   * `Modal` sheets — portaled menus render behind the modal layer.
-   */
+  // Expand in place instead of a Paper `Menu`, which portals behind a
+  // React Native `Modal` sheet.
   inline?: boolean;
 };
 
-/**
- * Outlined select with a floating label — the native read of the web's
- * `<TextField select>`: notched outline, chevron affordance, menu on tap.
- */
+// Outlined select: notched outline, chevron affordance, menu on tap.
 export const SelectField = <T extends string | number>({
   label,
   value,

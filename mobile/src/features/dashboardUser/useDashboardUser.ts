@@ -31,14 +31,8 @@ const fetchStoriesCount = async (userId: string): Promise<number> => {
 };
 
 /**
- * One admin-visible account: its detail, its story count, and the actions
- * that change it (role, block/unblock, delete).
- *
- * A mutation invalidates `queryKeys.admin.all` — every list and detail query
- * for admin data, not just this user's — for the same reason the users list
- * does: this screen is one of two places that can block a user (the other is
- * the list's row menu), and both need to see the other's changes without a
- * manual `useFocusEffect` refetch.
+ * One admin-visible account and the actions that change it. Mutations
+ * invalidate all admin data, since the list can block a user too.
  */
 export const useDashboardUser = (userId: string) => {
   const queryClient = useQueryClient();

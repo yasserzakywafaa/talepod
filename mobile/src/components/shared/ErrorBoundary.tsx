@@ -7,10 +7,7 @@ import { captureException } from "src/shared/monitoring";
 
 type Props = {
   children: React.ReactNode;
-  /**
-   * Shown instead of the default screen. Used by `ScreenErrorBoundary` to
-   * keep a crashed screen inside the app chrome rather than replacing it.
-   */
+  // Lets `ScreenErrorBoundary` keep a crashed screen inside the app chrome.
   fallback?: (reset: () => void) => React.ReactNode;
   /** Identifies which boundary caught the error in the crash report. */
   boundaryName?: string;
@@ -19,14 +16,8 @@ type Props = {
 type State = { error: Error | null };
 
 /**
- * Catches render-phase errors so a single bad component cannot leave the user
- * on a permanently blank screen. On web a user reloads the tab; on a phone
- * there is no reload, so without this the only recovery is force-quitting the
- * app — and the crash is never reported.
- *
- * Note the deliberate limits of React error boundaries: they do **not** catch
- * errors in event handlers, in async callbacks, or during server requests.
- * Those paths report through `logger.error` instead.
+ * Catches render-phase errors; on a phone the only other recovery is a
+ * force-quit. Handlers and async work aren't covered — those use `logger`.
  */
 export class ErrorBoundary extends React.Component<Props, State> {
   state: State = { error: null };
@@ -56,14 +47,8 @@ export class ErrorBoundary extends React.Component<Props, State> {
       return this.props.fallback(this.reset);
     }
 
-    /**
-     * Intentionally plain React Native + Paper primitives with hardcoded
-     * brand colours and system faces. This renders when something upstream is
-     * already broken, so it must not depend on the theme provider, i18n,
-     * navigation, or the custom fonts — any of which may be what threw. (A
-     * font family that has not finished loading throws again on iOS, which
-     * would take down the boundary itself.)
-     */
+    // Hardcoded colours and system faces on purpose: this renders when
+    // something upstream broke, and may be the theme, i18n or fonts.
     return (
       <View style={styles.root}>
         <Text style={styles.title}>Something went wrong</Text>
@@ -117,11 +102,8 @@ const styles = StyleSheet.create({
   },
 });
 
-/**
- * Wraps a single screen. A crash inside one screen resets to that screen's
- * own fallback and leaves the tab bar and drawer usable, instead of taking
- * down the whole navigation tree.
- */
+// A crash resets to this screen's fallback and leaves the tab bar and
+// drawer usable, instead of taking down the navigation tree.
 export const ScreenErrorBoundary = ({
   children,
   name,

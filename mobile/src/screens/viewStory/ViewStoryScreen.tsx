@@ -33,19 +33,12 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
   const theme = useAppTheme();
   const { width } = useWindowDimensions();
   const { contentMaxWidth } = useReadableLayout();
-  /**
-   * Sideways the window is wider than the screen is tall, so a full-width
-   * comic page would stand taller than the viewport. Cap it the way every
-   * other page caps its copy.
-   */
+  // Sideways, a full-width comic page would stand taller than the viewport.
   const mediaWidth = Math.min(width, contentMaxWidth) - 32;
   const shellDrawer = useMainShellDrawer();
   const { story, isFetching } = useViewStory(slug);
 
-  /**
-   * A story can be opened straight from the generation snackbar, in which case
-   * there is nothing beneath it to pop back to — fall back to the library.
-   */
+  // Opened from the generation snackbar there is nothing to pop back to.
   const goBack = () => {
     if (navigation.canGoBack()) {
       navigation.goBack();
@@ -177,13 +170,8 @@ export const ViewStoryScreen = ({ navigation, route }: Props) => {
               <LongStoryBody
                 mainStory={story.mainStory}
                 longStoryImages={story.longStoryImages}
-                /**
-                 * Long stories had no visual cue at all while images were
-                 * pending — a comic page at least shows a spinner box where
-                 * its picture will go. This gives long-format the same
-                 * affordance: one placeholder card, since we don't yet know
-                 * where inside the text the images will land.
-                 */
+                // Comic pages already show a spinner box per page; long
+                // stories had no cue at all while images were pending.
                 showPendingPlaceholder={imagesPending && !hasAnyLongStoryImage}
               />
             )}

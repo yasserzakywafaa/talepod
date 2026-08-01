@@ -8,11 +8,8 @@ type SelectFieldShellProps = {
   /** Drives the focused outline and label colour. */
   open: boolean;
   onPress: () => void;
-  /**
-   * Colour painted behind the floating label so it notches the outline.
-   * Defaults to the page background; pass `colors.surface` inside a dialog,
-   * or the label sits on the wrong colour and the notch reads as a smudge.
-   */
+  // Painted behind the floating label to notch the outline. Pass
+  // `colors.surface` inside a dialog or the notch reads as a smudge.
   surfaceColor?: string;
   /** Read out after the label by a screen reader — the current selection. */
   accessibilityValueText?: string;
@@ -23,18 +20,8 @@ type SelectFieldShellProps = {
 };
 
 /**
- * The outlined field with a notched floating label — the native read of the
- * web's `<TextField select>`.
- *
- * This markup was written out three times: twice inside `SelectField` (once
- * for the inline branch and again for the Paper `Menu` anchor) and once in
- * `MultiSelectField`. The copies had already drifted — the multi-select
- * hardcoded the page background where the single select accepted a surface
- * override, so it notched the wrong colour inside a dialog.
- *
- * Only the trigger is shared. What opens underneath it stays with each
- * component, because those genuinely differ: a portaled menu, an inline
- * panel, and a platform action sheet are not the same control.
+ * The outlined field with a notched floating label, previously copied three
+ * times. Only the trigger is shared; what opens below it genuinely differs.
  */
 export const SelectFieldShell = ({
   label,

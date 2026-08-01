@@ -52,20 +52,8 @@ const fetchUsersPage = async (
 };
 
 /**
- * The admin user list, plus the row actions (block, unblock, delete) that act
- * on it.
- *
- * Each mutation invalidates `queryKeys.admin.all` rather than just the users
- * list: deleting a user also changes the overview counts and, if this admin
- * is on that user's detail screen when it happens, that query too. The old
- * version handled only the second half of that (`setUp()` after every
- * mutation) and needed a `useFocusEffect` on the list screen to catch changes
- * made from the detail screen — a shared cache key makes that manual refetch
- * unnecessary, so it is not carried over.
- *
- * Feedback (the toast on a completed action) is intentionally still local
- * `useState`, not query state — it belongs to how the screen reports outcomes
- * to the admin, not to the data itself.
+ * The admin user list and its row actions. Mutations invalidate all admin
+ * data: deleting a user also moves the overview counts and their detail.
  */
 export const useDashboardUsers = () => {
   const queryClient = useQueryClient();
@@ -171,12 +159,8 @@ export const useDashboardUsers = () => {
       ? getRequestErrorKind(query.error)
       : null;
 
-  /**
-   * React Query v5 dropped onError from useQuery/useInfiniteQuery — side
-   * effects for query failures go through an effect instead. Only a
-   * non-blocking failure gets a toast; an unreachable API is handled by
-   * `loadError` taking over the whole screen instead.
-   */
+  // v5 dropped onError from queries, so failures surface through an effect.
+  // Only non-blocking ones get a toast; `loadError` owns the rest.
   useEffect(() => {
     if (!query.isError || isServiceUnavailable(query.error)) return;
     logApiError("dashboard:errors.loadUsers", query.error);

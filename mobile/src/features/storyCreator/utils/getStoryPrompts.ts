@@ -1,28 +1,9 @@
 /**
- * Story prompt construction — client side.
- *
- * This ALSO exists on the server (`server/src/services/create/storyPrompt.ts`),
- * which builds the identical prompt when a request arrives without one. The
- * two are kept byte-for-byte in step on purpose: the server copy is the
- * destination, this copy is the bridge.
- *
- * Why both, for now: the server only learned to build the prompt on this
- * branch. Any API deployment that predates it — `develop` / `api-dev` today —
- * still reads `storyPrompt` straight off the request body, and an absent one
- * means the model is handed an empty user message. It then answers the system
- * prompt alone ("you are a storyteller"), returns prose with none of the
- * curly-bracket sections `extractComicParts` needs, and generation fails.
- *
- * So this is a deliberate expand/contract migration, and we are between the
- * two halves:
- *   1. server learns to build the prompt   <- done, not yet deployed
- *   2. clients stop sending it             <- ONLY once (1) is live on every
- *                                             environment the app talks to
- *   3. server rejects the field outright
- *
- * DELETE THIS FILE at step 2 — not before. Mobile JS ships over the air and
- * can reach users faster than a server deploy, so the client must never depend
- * on a server capability that might not be there yet.
+ * Duplicates `server/src/services/create/storyPrompt.ts` on purpose: older
+ * servers read `storyPrompt` off the body and fail without it.
+ * 
+ * DELETE only once every environment builds its own — mobile ships over the
+ * air and must never assume a server capability is deployed.
  */
 
 import {
@@ -63,11 +44,8 @@ const getYoungReaderRules = (
   return { comicCaptionRule, longStoryVocabRule };
 };
 
-/**
- * Builds the AI prompt for the story. Dispatches on the chosen format:
- * "comic" → ~6 illustrated pages (caption + scene per page); otherwise the
- * original long-prose prompt (unchanged default).
- */
+// Comic → ~6 illustrated pages (caption + scene each); anything else gets
+// the long-prose prompt.
 export const getCreateStoryPrompt = (
   promptParams: StoryCreatorInitialState
 ): string => {
@@ -152,12 +130,8 @@ const getLongStoryPrompt = (
   return fullDynamicPrompt;
 };
 
-/**
- * Comic-book prompt. Produces an ordered, curly-bracket-delimited structure
- * the server `extractComicParts` parses: {title}{summary} then, for each of
- * the 6 pages, {caption}{scene}. The caption is shown in the reader; the scene
- * is stored as the page's image prompt for later illustration generation.
- */
+// Curly-bracket structure the server's `extractComicParts` parses:
+// {title}{summary}, then {caption}{scene} per page.
 export const getCreateComicPrompt = (
   promptParams: StoryCreatorInitialState
 ): string => {

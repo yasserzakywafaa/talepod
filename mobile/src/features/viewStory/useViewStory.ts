@@ -17,13 +17,8 @@ const IMAGE_POLL_INTERVAL_MS = 5000;
 const IMAGE_POLL_MAX_ATTEMPTS = 24;
 
 /**
- * A single story, with polling while its illustrations are still generating.
- *
- * The polling loop used to be hand-rolled — a `Set` of in-flight slugs and a
- * chain of `setTimeout`s, reimplementing what `useQuery`'s `refetchInterval`
- * already does, including the part that was missing: the old version never
- * stopped polling when the screen unmounted, so navigating away mid-poll left
- * a timer running against a component that no longer existed.
+ * A single story, polled while its illustrations generate. `refetchInterval`
+ * replaces a hand-rolled loop that never stopped on unmount.
  */
 export const useViewStory = (slug: string) => {
   const query = useQuery({

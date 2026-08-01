@@ -7,16 +7,8 @@ const { ACCESS_TOKEN, REFRESH_TOKEN, USER, AUTHENTICATED } =
   APP_CONSTANTS.LOCAL_STORAGE;
 
 /**
- * `authStorage` holds a module-level in-memory cache, so each test needs a
- * genuinely fresh copy or state leaks between cases.
- *
- * `jest.resetModules()` clears the whole registry, including the mocked
- * `expo-secure-store` and `@react-native-async-storage/async-storage` — the
- * next `require` of either creates a brand-new mock instance with its own
- * empty store. A *static* top-level import of those mocks would therefore
- * point at a stale instance the moment a test calls this, silently seeding
- * data nothing under test can see. Requiring everything together, after the
- * reset, keeps every module in a test looking at the same instances.
+ * `authStorage` caches in a module-level variable, so each test needs a fresh
+ * copy — and the mocks must be required with it, or they go stale.
  */
 type Modules = {
   authStorage: typeof AuthStorageModule;

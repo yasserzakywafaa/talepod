@@ -85,18 +85,8 @@ export interface UseLibraryStories {
 }
 
 /**
- * The library list.
- *
- * The split here is the point of the whole migration: **server** state — the
- * pages, whether a fetch is in flight, whether it failed — belongs to React
- * Query, which already handles caching, deduplication, retry and refetch on
- * reconnect. **Client** state — the unapplied filter draft, whether the sheet
- * is open — is plain `useState`, because nothing outside this screen needs it.
- *
- * What this replaced: a `store`/`manager`/`state`/`Provider` quartet that
- * hand-rolled `isFetching` flags, manual page merging, and a bespoke
- * in-flight-request dedupe, and refetched the whole list from scratch on
- * every visit.
+ * The library list. Server state belongs to React Query; the filter draft
+ * and sheet state stay in `useState`, unread outside this screen.
  */
 export const useLibraryStories = (): UseLibraryStories => {
   const [source, setSourceState] = useState<LibraryStoriesSource>("community");
@@ -122,9 +112,8 @@ export const useLibraryStories = (): UseLibraryStories => {
     },
   });
 
-  // Pages arrive separately and are flattened for the list. `useMemo` keeps
-  // FlatList's `data` reference stable so it does not re-render every row on
-  // an unrelated state change.
+  // `useMemo` keeps FlatList's `data` reference stable, so an unrelated
+  // state change doesn't re-render every row.
   const stories = useMemo(
     () => query.data?.pages.flatMap((page) => page.results) ?? [],
     [query.data],

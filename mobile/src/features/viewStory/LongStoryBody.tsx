@@ -7,13 +7,8 @@ import type { LongStoryImage } from "src/features/storyCreator/store/state";
 type LongStoryBodyProps = {
   mainStory: string;
   longStoryImages?: LongStoryImage[];
-  /**
-   * Illustrations are pending and none have landed yet. A comic page shows a
-   * spinner box where its picture will go; long-format prose had nothing
-   * equivalent, so an image-less story just looked finished. This renders one
-   * placeholder ahead of the text — not at a specific paragraph break, since
-   * that position isn't known until the images actually arrive.
-   */
+  // Illustrations pending with none landed yet. Sits ahead of the text, not
+  // at a break — where they land isn't known until they arrive.
   showPendingPlaceholder?: boolean;
 };
 

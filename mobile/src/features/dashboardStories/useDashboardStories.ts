@@ -38,9 +38,8 @@ const fetchStoriesPage = async (
   pageNumber: number,
 ): Promise<ApiResponseWithPaging<Story[]>> => {
   const { data } = await api.get<ApiResponseWithPaging<Story[]>>(
-    // When scoped to a user, this reuses the regular user-stories endpoint —
-    // the same thing the web does on /dashboard/users/:userId/stories —
-    // rather than a second admin-only one.
+    // Scoped to a user this reuses the regular user-stories endpoint, as
+    // the web does, rather than a second admin-only one.
     userId
       ? END_POINTS.STORIES.GET_ALL_USER_STORIES
       : END_POINTS.DASHBOARD.STORIES.GET_ALL_STORIES,
@@ -58,10 +57,8 @@ const fetchStoriesPage = async (
 };
 
 /**
- * The admin story list — either the whole platform or, when `userId` is
- * given, one account's stories (`DashboardUserStoriesScreen`). Same
- * draft/applied filter split and invalidate-the-whole-admin-cache mutation
- * pattern as `useDashboardUsers`; see that file for why.
+ * The admin story list, or one account's when `userId` is given. Same
+ * filter split and cache-invalidation pattern as `useDashboardUsers`.
  */
 export const useDashboardStories = (userId?: string) => {
   const queryClient = useQueryClient();

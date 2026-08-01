@@ -37,12 +37,8 @@ const fetchCatalog = async (): Promise<{
 };
 
 /**
- * Read-only port of the web's `usePricing`.
- *
- * The app deliberately does not take payment — Apple and Google both take a cut
- * of in-app purchases of digital goods, and the Stripe checkout is a web flow.
- * So this reads the same catalogue the web reads and renders the same prices,
- * and the screen hands off to talepod.com to actually subscribe.
+ * Read-only port of the web's `usePricing`: the app takes no payment, it
+ * renders the prices and hands off to talepod.com to subscribe.
  */
 export const usePricingPlans = () => {
   const { t } = useTranslation("page");
@@ -52,9 +48,8 @@ export const usePricingPlans = () => {
   const query = useQuery({
     queryKey: queryKeys.pricing.plans("default"),
     queryFn: fetchCatalog,
-    // A missing catalogue is not an error worth interrupting the page for —
-    // the plans still render with their feature lists, just without prices.
-    // useQuery would otherwise retry a genuinely-empty Stripe catalogue.
+    // A missing catalogue still renders the plans, just without prices —
+    // not worth retrying a genuinely-empty Stripe catalogue over.
     retry: false,
   });
 
@@ -69,11 +64,8 @@ export const usePricingPlans = () => {
         product.prices?.some((price) => price.recurring?.interval === interval),
     );
 
-  /**
-   * A single Stripe product can carry both a monthly and a yearly price, and
-   * `default_price` only points at one of them — so resolve by interval, and
-   * fall back to the flat price list keyed by product id.
-   */
+  // One product can carry monthly and yearly prices while `default_price`
+  // points at only one, so resolve by interval first.
   const findPrice = (
     product: Product | undefined,
     interval: BillingInterval,

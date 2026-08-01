@@ -18,21 +18,13 @@ type MultiSelectFieldProps<T extends string | number> = {
   onChange: (values: T[]) => void;
   /** Lays the choices out in a wrapped grid — good for short labels like ages. */
   compactOptions?: boolean;
-  /**
-   * Colour behind the floating label. This component previously hardcoded the
-   * page background, so the label notched the wrong colour inside a dialog.
-   */
+  // Colour behind the floating label; hardcoding it notched the wrong
+  // colour inside a dialog.
   surfaceColor?: string;
 };
 
-/**
- * Collapsed multi-select — an outlined field showing the current selection,
- * which expands in place to reveal the choices.
- *
- * The web uses a `<Select multiple>` menu here. On a phone a menu that long
- * fights the sheet it lives in, so the options drop down inline instead: the
- * closed state is just as quiet, and nothing has to stack a second modal.
- */
+// Options drop down inline rather than in a menu: on a phone a menu this
+// long fights the sheet it lives in, and would stack a second modal.
 export const MultiSelectField = <T extends string | number>({
   label,
   values,

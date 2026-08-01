@@ -15,17 +15,8 @@ export type StoredAuth = {
 };
 
 /**
- * In-memory mirror of what is on disk.
- *
- * Every outgoing request needs the access token to build the `Authorization`
- * header. Reading it from storage each time meant an `AsyncStorage.multiGet`
- * plus **two keychain reads** plus a `JSON.parse` of the whole user object —
- * per request. Keychain access is genuinely slow on Android, so a screen that
- * fires a handful of requests paid for it visibly.
- *
- * Storage stays the source of truth across launches; this cache is filled on
- * the first read and updated by every write below, so it cannot drift from
- * disk within a session.
+ * In-memory mirror of disk: every request needs the token, and two keychain
+ * reads each time is visibly slow on Android. Every write below updates it.
  */
 let cache: StoredAuth | null = null;
 /** Coalesces concurrent cold reads into a single hydration. */
@@ -117,13 +108,8 @@ export const getStoredAuth = async (): Promise<StoredAuth> => {
   return cache;
 };
 
-/**
- * Synchronous read for the request interceptor's hot path.
- *
- * Returns `null` only before the first `getStoredAuth()` resolves. The app
- * gates its first screen on `handleInitialAuthentication`, so by the time
- * requests flow this is warm.
- */
+// Synchronous read for the interceptor's hot path. Null only before the
+// first `getStoredAuth()`, which the app gates its first screen on.
 export const getCachedAccessToken = (): string | null =>
   cache?.accessToken ?? null;
 

@@ -1,14 +1,6 @@
 /**
- * Crash and error reporting (Sentry), behind a thin wrapper.
- *
- * Why a wrapper rather than importing `@sentry/react-native` everywhere:
- *
- * - Sentry needs a native module. In **Expo Go** it is not linked, so a bare
- *   import throws at startup. Everything here degrades to a no-op instead,
- *   which keeps the Expo Go workflow in `README.md` working.
- * - Reporting must never be able to crash the app it is reporting on. Every
- *   entry point below swallows its own failures.
- * - It keeps one place to scrub PII before anything leaves the device.
+ * Sentry behind a wrapper: its native module is absent in Expo Go, reporting
+ * must never crash the app, and PII gets scrubbed in one place.
  */
 import Constants from "expo-constants";
 
@@ -25,10 +17,7 @@ let initialised = false;
 
 const dsn = process.env.EXPO_PUBLIC_SENTRY_DSN?.trim();
 
-/**
- * Expo Go cannot load native modules that are not part of the Expo Go binary.
- * `appOwnership === "expo"` is exactly that case.
- */
+// Expo Go can't load native modules outside its own binary.
 const isExpoGo = Constants.appOwnership === "expo";
 
 const loadSentry = (): SentryModule | null => {
@@ -36,8 +25,8 @@ const loadSentry = (): SentryModule | null => {
   if (isExpoGo || !dsn) return null;
 
   try {
-    // Deliberately lazy: a static import would execute the native binding at
-    // module load, before we have had a chance to decide it is unsafe.
+    // Lazy: a static import would run the native binding at module load,
+    // before we can decide it is unsafe.
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     sentry = require("@sentry/react-native") as SentryModule;
     return sentry;
@@ -65,10 +54,7 @@ const isRedactedKey = (key: string): boolean => {
   return REDACTED_KEYS.some((redacted) => normalised.includes(redacted));
 };
 
-/**
- * Recursively replaces sensitive values with a marker. Depth-limited so a
- * cyclic or very deep object can never hang the reporter.
- */
+// Depth-limited so a cyclic or deep object can't hang the reporter.
 const scrub = (value: unknown, depth = 0): unknown => {
   if (depth > 4) return "[truncated]";
   if (value === null || value === undefined) return value;
@@ -92,10 +78,7 @@ const scrub = (value: unknown, depth = 0): unknown => {
   return value;
 };
 
-/**
- * Called once from `App.tsx`. Safe to call when no DSN is configured — the
- * app then simply runs without reporting.
- */
+// Safe with no DSN configured: the app just runs without reporting.
 export const initMonitoring = (): void => {
   if (initialised) return;
   initialised = true;
@@ -167,10 +150,7 @@ export const captureException = (
   }
 };
 
-/**
- * Associates later reports with the signed-in account. Only the opaque id is
- * sent — never email or phone, which is why this does not take a `User`.
- */
+// Only the opaque id is sent, never email or phone — hence not a `User`.
 export const setMonitoringUser = (userId: string | null): void => {
   const client = loadSentry();
   if (!client) return;

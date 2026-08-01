@@ -23,30 +23,18 @@ const traitSummary = (avatar: Avatar): string =>
 
 type AvatarCardProps = {
   avatar: Avatar;
-  /**
-   * A mutation is in flight for this specific avatar — the whole card dims
-   * and its actions disable, not just the buttons. Previously this flipped
-   * for every card on screen at once (one shared `isSaving` flag), so editing
-   * one avatar visibly disabled every other card's buttons too, with no way
-   * to tell which one was actually doing something.
-   */
+  // A mutation is in flight for *this* avatar: the whole card dims, rather
+  // than every card's buttons disabling at once as they used to.
   disabled?: boolean;
-  /**
-   * The server is painting (or re-painting) this avatar's portrait in the
-   * background — create and an appearance-changing edit both return before
-   * it exists. Overlays a spinner on the portrait until it lands.
-   */
+  // The server is painting this portrait in the background — create and
+  // appearance edits both return before it exists.
   portraitPending?: boolean;
   onCreate: () => void;
   onEdit: () => void;
   onDelete: () => void;
 };
 
-/**
- * Full-bleed avatar card — the native read of the web `AvatarCard`: a tall
- * portrait, then the name with its relationship badge, the trait line, and
- * the create / edit / delete row.
- */
+// Tall portrait, name with relationship badge, trait line, action row.
 export const AvatarCard = ({
   avatar,
   disabled = false,

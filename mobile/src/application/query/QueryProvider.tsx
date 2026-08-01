@@ -12,21 +12,8 @@ import {
 import { logApiError } from "src/shared/api/logApiError";
 
 /**
- * React Query owns **server** state only — what was fetched, whether it is
- * stale, and whether a request is in flight. Client state (auth, theme,
- * language) stays in the application React context; the two are deliberately
- * separate concerns and should not be merged.
- *
- * React Query is not configured for the web out of the box. Two of its
- * defaults assume a browser and must be wired to React Native equivalents,
- * or queries silently never refetch:
- *
- *  - **Online status** comes from `navigator.onLine`, which does not exist
- *    here. Without NetInfo, a query that fails on a dead connection is
- *    retried on a timer instead of the moment the connection returns.
- *  - **Focus** comes from the browser's `visibilitychange`. The native
- *    equivalent is `AppState` going back to `active`, which is what makes
- *    data refresh when the user returns from the home screen.
+ * React Query owns server state only; auth/theme/language stay in context.
+ * Its online/focus defaults assume a browser, hence NetInfo and AppState.
  */
 onlineManager.setEventListener((setOnline) =>
   NetInfo.addEventListener((state) => {
@@ -46,20 +33,13 @@ const onAppStateChange = (status: AppStateStatus) => {
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      /**
-       * A phone is not a desktop browser: every refetch costs battery and
-       * possibly cellular data. 60s of staleness is the compromise — moving
-       * between tabs reuses the cache, coming back after a minute refreshes.
-       */
+      // Every refetch costs battery and cellular data: 60s means moving
+      // between tabs reuses the cache, returning after a minute refreshes.
       staleTime: 60_000,
       gcTime: 5 * 60_000,
 
-      /**
-       * Retrying a 4xx just repeats a request the server already rejected on
-       * its merits. Only transport failures and 5xx are worth another try,
-       * and only twice — a user staring at a spinner would rather see the
-       * error and a retry button.
-       */
+      // A 4xx was rejected on its merits, so only transport failures and
+      // 5xx are retried — twice, then show the error and a retry button.
       retry: (failureCount, error) => {
         const status = (
           error as { response?: { status?: number } } | undefined

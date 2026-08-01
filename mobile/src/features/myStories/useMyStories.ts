@@ -78,10 +78,8 @@ export interface UseMyStories {
 }
 
 /**
- * The current user's own stories. Same shape as `useLibraryStories` — same
- * paged endpoint family, same filter-draft-vs-applied split — with one
- * difference: this list is keyed to `auth.user._id` and simply does not run
- * until a user is loaded, since "my stories" has no meaning signed out.
+ * The current user's own stories — same shape as `useLibraryStories`, but
+ * keyed to the user id and idle until one loads.
  */
 export const useMyStories = (): UseMyStories => {
   const {

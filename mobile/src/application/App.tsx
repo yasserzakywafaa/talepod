@@ -34,9 +34,8 @@ const NavigationRoot = () => {
 
   const base = resolvedThemeMode === "light" ? DefaultTheme : DarkTheme;
 
-  // Navigation draws its own headers and card backgrounds, so it needs the
-  // same brand palette and faces the Paper theme uses — otherwise Material's
-  // defaults show through on screen transitions.
+  // Navigation draws its own headers, so it needs the same palette as Paper
+  // or Material's defaults show through on transitions.
   const navigationTheme = {
     ...base,
     colors: {
@@ -90,11 +89,8 @@ const App = () => {
   }, [fontsLoaded]);
 
   return (
-    /**
-     * The boundary sits outermost, above the providers: a provider throwing
-     * during initialisation is exactly the failure that used to leave a blank
-     * screen with no way back.
-     */
+    // Outermost, above the providers: a provider throwing during init is
+    // exactly what used to leave a blank screen with no way back.
     <ErrorBoundary boundaryName="root">
       <GestureHandlerRootView style={styles.root}>
         <SafeAreaProvider initialMetrics={initialWindowMetrics}>
@@ -119,12 +115,8 @@ const App = () => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    /**
-     * Matches the native splash background. Without it React Native's root
-     * view is white, which flashes for a frame between the splash hiding and
-     * the first screen painting — the one white frame the night-sky launch is
-     * meant to avoid.
-     */
+    // Matches the native splash: the root view is otherwise white, which
+    // flashes for a frame before the first screen paints.
     backgroundColor: brand.plum[700],
   },
 });

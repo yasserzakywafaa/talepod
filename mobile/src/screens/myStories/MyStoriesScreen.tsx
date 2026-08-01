@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
@@ -43,8 +43,17 @@ const MyStoriesScreenContent = () => {
     setFiltersPanelOpen,
   } = useMyStories();
 
+  const listRef = useRef<FlatList<Story>>(null);
+
+  // The replacement placeholder is inserted at the top; without this the retry
+  // looked like it did nothing until the user scrolled up to find it.
+  const scrollToTop = useCallback(
+    () => listRef.current?.scrollToOffset({ offset: 0, animated: true }),
+    [],
+  );
+
   const { deleteStory, retryStory, isDeletingStory, isRetryingStory } =
-    useFailedStoryActions();
+    useFailedStoryActions({ onRetryStarted: scrollToTop });
   const [pendingDelete, setPendingDelete] = useState<Story | null>(null);
 
   const renderItem = useCallback(
@@ -56,7 +65,7 @@ const MyStoriesScreenContent = () => {
           onPress={() => navigateToViewStory(item.slug)}
           onRetry={isFailed ? () => retryStory(item) : undefined}
           onDelete={isFailed ? () => setPendingDelete(item) : undefined}
-          isRetrying={isFailed && isRetryingStory}
+          isRetrying={isRetryingStory(item._id)}
         />
       );
     },
@@ -80,6 +89,7 @@ const MyStoriesScreenContent = () => {
   return (
     <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
       <FlatList
+        ref={listRef}
         data={stories}
         keyExtractor={(item) => item._id}
         renderItem={renderItem}

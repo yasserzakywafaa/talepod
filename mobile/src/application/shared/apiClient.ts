@@ -33,9 +33,8 @@ export const setupMobileAxios = (): void => {
   api.interceptors.request.use(async (config) => {
     config.headers = config.headers ?? {};
 
-    // Hot path: the token is held in memory, so the common case adds no I/O
-    // to a request. Only a cold start (cache not yet hydrated) falls through
-    // to storage, and that read is itself coalesced.
+    // Hot path: the token is in memory, so only a cold start falls through
+    // to storage, and that read is coalesced.
     const accessToken = getCachedAccessToken() ?? (await getStoredAuth()).accessToken;
 
     if (accessToken) {
@@ -61,12 +60,8 @@ export const setupMobileAxios = (): void => {
         void clearStoredAuth();
       },
     },
-    /**
-     * There is no URL to redirect to on native. What matters is that React
-     * hears about it: clearing storage alone left the UI in a signed-in state
-     * whose every request 401s. Clear storage first, then notify — the
-     * listener reads storage to rebuild auth state.
-     */
+    // Clear storage first, then notify: the listener rebuilds auth state
+    // from storage, and clearing alone left the UI signed-in but 401ing.
     redirectToLogin: () => {
       void clearStoredAuth().finally(emitSessionExpired);
     },

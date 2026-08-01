@@ -20,14 +20,8 @@ export type GoogleBrowserSignInResult = {
   refreshToken: string;
 };
 
-/**
- * Nothing in this flow may be logged verbatim: the callback URL carries the
- * authorization code, and the exchange response carries the account's email.
- * `console.*` is not stripped from release bundles, so anything logged here
- * is readable from a connected device on a shipped build. Diagnostics go
- * through `logger`, which is a no-op outside development, and the callback
- * URL is redacted even there.
- */
+// Never log verbatim: the callback URL carries the authorization code and
+// the exchange response the email, and release bundles keep `console.*`.
 export const signInWithGoogleBrowser =
   async (): Promise<GoogleBrowserSignInResult | null> => {
     const redirectUri = Linking.createURL("auth/google");
