@@ -30,6 +30,14 @@ const END_POINTS = {
     EXPORT_STORY_PDF: (slug: string) => `/api/v1/bedtime-story/${slug}/pdf`,
     EMAIL_STORY_PDF: (slug: string) =>
       `/api/v1/bedtime-story/${slug}/email-pdf`,
+    /**
+     * Author deletes their own story — distinct from
+     * DASHBOARD.STORIES.DELETE_STORY, which is admin-only and unscoped. A
+     * failed generation (textStatus "failed") is the main reason a user needs
+     * this: there was previously no way to remove a stuck placeholder.
+     */
+    DELETE_MY_STORY: (storyId: string) =>
+      `/api/v1/user-bedtime-stories/${storyId}`,
   },
   AVATARS: {
     LIST: "/api/v1/avatars",

@@ -272,6 +272,13 @@
     "badgeStory": "قصة",
     "hasNarration": "يتضمن تعليقًا صوتيًا",
     "tagOriginal": "أصلية",
-    "authorAvatarAlt": "صورة المستخدم"
+    "authorAvatarAlt": "صورة المستخدم",
+    "failedTitle": "فشل إنشاء القصة",
+    "failedBadge": "فشل",
+    "retry": "إعادة المحاولة",
+    "delete": "حذف",
+    "deleteFailedTitle": "حذف هذه القصة؟",
+    "deleteFailedBody": "سيؤدي هذا إلى إزالة العنصر النائب الفاشل الخاص بـ {{title}}. لا يمكن التراجع عن هذا الإجراء.",
+    "failedBody": "حدث خطأ أثناء إنشاء هذه القصة."
   }
 }

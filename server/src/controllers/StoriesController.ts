@@ -12,6 +12,7 @@ import {
 import {
   DBCollectionsEnum,
   database,
+  deleteDocumentByQuery,
   getDocumentFromDb,
 } from "../models/mongoDb";
 import { NextFunction, Request, Response } from "express";
@@ -661,6 +662,46 @@ export const emailStoryPdf = async (
   }
 };
 
+/**
+ * Deletes a story the requesting user authored — the missing piece a failed
+ * generation had no way to clean up. Distinct from the admin endpoint
+ * (`DashboardController.deleteStory`), which takes any story ID with no
+ * ownership check; this one matches on `{ _id, author }` together so a user
+ * can never delete a story that is not theirs, without a separate lookup.
+ */
+export const deleteMyStory = async (
+  request: AuthenticatedRequest,
+  response: Response,
+  next: NextFunction,
+) => {
+  const { storyId } = request.params;
+  const user = request.user as User;
+
+  if (!storyId || !ObjectId.isValid(storyId)) {
+    response.status(400).json({ message: "❌ Invalid story ID" });
+    return;
+  }
+
+  try {
+    const result = await deleteDocumentByQuery(
+      { _id: new ObjectId(storyId), author: new ObjectId(user._id) },
+      DBCollectionsEnum.stories,
+    );
+
+    if (result.deletedCount === 0) {
+      // Either it never existed or it belongs to someone else — the caller
+      // cannot tell the difference either way, so the response doesn't either.
+      response.status(404).json({ message: "❌ Story not found" });
+      return;
+    }
+
+    response.status(200).json({ message: "✅ Story deleted" });
+  } catch (error) {
+    console.error("❌ Failed to delete story", { storyId, error });
+    next(error);
+  }
+};
+
 const StoriesController = {
   getAllStories,
   getStoryBySlug,
@@ -670,6 +711,7 @@ const StoriesController = {
   getAllUsersStories,
   exportStoryPdf,
   emailStoryPdf,
+  deleteMyStory,
 };
 
 export default StoriesController;

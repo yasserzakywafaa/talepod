@@ -272,6 +272,13 @@
     "badgeStory": "Histoire",
     "hasNarration": "Avec narration",
     "tagOriginal": "Original",
-    "authorAvatarAlt": "Photo utilisateur"
+    "authorAvatarAlt": "Photo utilisateur",
+    "failedTitle": "Échec de la création de l'histoire",
+    "failedBadge": "Échec",
+    "retry": "Réessayer",
+    "delete": "Supprimer",
+    "deleteFailedTitle": "Supprimer cette histoire ?",
+    "deleteFailedBody": "Cela supprime l'espace réservé de l'histoire ayant échoué pour {{title}}. Cette action est irréversible.",
+    "failedBody": "Une erreur s'est produite lors de la création de cette histoire."
   }
 }

@@ -272,6 +272,13 @@
     "badgeStory": "Story",
     "hasNarration": "Has narration",
     "tagOriginal": "Original",
-    "authorAvatarAlt": "User Picture"
+    "authorAvatarAlt": "User Picture",
+    "failedTitle": "Story generation failed",
+    "failedBadge": "Failed",
+    "retry": "Retry",
+    "delete": "Delete",
+    "deleteFailedTitle": "Delete this story?",
+    "deleteFailedBody": "This removes the failed story placeholder for {{title}}. This can't be undone.",
+    "failedBody": "Something went wrong while creating this story."
   }
 }

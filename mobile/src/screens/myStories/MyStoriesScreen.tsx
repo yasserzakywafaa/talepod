@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
@@ -10,18 +10,20 @@ import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { useReadableLayout } from "src/components/layout/useReadableLayout";
 import { ScreenErrorBoundary } from "src/components/shared/ErrorBoundary";
+import { ConfirmDestructiveDialog } from "src/features/dashboardShared/ConfirmDestructiveDialog";
 import { FiltersButton } from "src/components/brand/FiltersButton";
 import { NoStoriesFound } from "src/components/brand/NoStoriesFound";
 import { PillButton } from "src/components/brand/PillButton";
 import { ServiceUnavailable } from "src/components/brand/ServiceUnavailable";
 import { StoryCard } from "src/components/brand/StoryCard";
 import { StoryFiltersSheet } from "src/components/brand/StoryFiltersSheet";
+import { useFailedStoryActions } from "src/features/myStories/useFailedStoryActions";
 import { useMyStories } from "src/features/myStories/useMyStories";
 import type { Story } from "src/features/storyCreator/store/state";
 import { MainShellAppBar } from "src/components/chrome/MainShellAppBar";
 
 const MyStoriesScreenContent = () => {
-  const { t } = useTranslation("library");
+  const { t } = useTranslation(["library", "story"]);
   const theme = useAppTheme();
   const { horizontalGutter, contentMaxWidth } = useReadableLayout();
   const {
@@ -41,11 +43,24 @@ const MyStoriesScreenContent = () => {
     setFiltersPanelOpen,
   } = useMyStories();
 
+  const { deleteStory, retryStory, isDeletingStory, isRetryingStory } =
+    useFailedStoryActions();
+  const [pendingDelete, setPendingDelete] = useState<Story | null>(null);
+
   const renderItem = useCallback(
-    ({ item }: { item: Story }) => (
-      <StoryCard story={item} onPress={() => navigateToViewStory(item.slug)} />
-    ),
-    [],
+    ({ item }: { item: Story }) => {
+      const isFailed = item.textStatus === "failed";
+      return (
+        <StoryCard
+          story={item}
+          onPress={() => navigateToViewStory(item.slug)}
+          onRetry={isFailed ? () => retryStory(item) : undefined}
+          onDelete={isFailed ? () => setPendingDelete(item) : undefined}
+          isRetrying={isFailed && isRetryingStory}
+        />
+      );
+    },
+    [retryStory, isRetryingStory],
   );
 
   // Nothing loaded and the API is unreachable — say so rather than showing
@@ -123,6 +138,23 @@ const MyStoriesScreenContent = () => {
         onApply={applyFilters}
         onClear={clearFilters}
         onDismiss={() => setFiltersPanelOpen(false)}
+      />
+
+      <ConfirmDestructiveDialog
+        visible={pendingDelete !== null}
+        title={t("story:card.deleteFailedTitle")}
+        message={t("story:card.deleteFailedBody", {
+          title: pendingDelete?.profileInfo?.name ?? "",
+        })}
+        confirmLabel={t("story:card.delete")}
+        isBusy={isDeletingStory}
+        onConfirm={() => {
+          if (pendingDelete) {
+            deleteStory(pendingDelete._id);
+            setPendingDelete(null);
+          }
+        }}
+        onDismiss={() => setPendingDelete(null)}
       />
     </View>
   );
