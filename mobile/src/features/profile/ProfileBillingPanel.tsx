@@ -10,6 +10,7 @@ import {
 import END_POINTS from "src/application/shared/endpoints";
 import { api } from "src/application/shared/apiClient";
 import type { User, UserSubscription } from "src/shared/types/user";
+import logger from "src/shared/logger";
 
 type Props = {
   user: User;
@@ -33,7 +34,7 @@ export const ProfileBillingPanel = ({ user }: Props) => {
         );
         setDetails(data);
       } catch (error) {
-        console.error("Failed to load subscription", error);
+        logger.error("Failed to load subscription", error);
       } finally {
         setLoading(false);
       }

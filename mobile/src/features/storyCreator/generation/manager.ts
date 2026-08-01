@@ -7,6 +7,7 @@ import { GenerationStore } from "./store";
 import type { Story } from "../store/state";
 import { useApplicationContext } from "src/application/store/Provider";
 import { dedupedGet } from "src/shared/api/dedupedGet";
+import logger from "src/shared/logger";
 
 export interface GenerationManager {
   isGenerating: boolean;
@@ -52,7 +53,7 @@ export const useGenerationManager = (
           );
           status = response.data;
         } catch (error) {
-          console.error("Failed to poll story status", { storyId, error });
+          logger.error("Failed to poll story status", error);
         }
 
         const textStatus = status?.textStatus;

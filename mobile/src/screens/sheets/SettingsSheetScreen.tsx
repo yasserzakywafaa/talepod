@@ -15,6 +15,7 @@ import type { RootStackParamList } from "src/application/navigation/types";
 import { useApplicationContext } from "src/application/store/Provider";
 import { getAppVersionLabel } from "src/application/shared/getAppVersionLabel";
 import { SheetBody } from "src/components/layout/SheetPage";
+import logger from "src/shared/logger";
 
 type Props = NativeStackScreenProps<
   RootStackParamList,
@@ -52,7 +53,7 @@ export const SettingsSheetScreen = ({ navigation }: Props) => {
         return;
       }
     } catch (error) {
-      console.warn("Refresh app via expo-updates failed:", error);
+      logger.warn("Refresh app via expo-updates failed", error);
     }
 
     if (typeof DevSettings.reload === "function") {

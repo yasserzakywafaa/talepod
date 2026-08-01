@@ -3,6 +3,7 @@ import { getCreateStoryPrompt } from "../utils/getStoryPrompts";
 import { useGenerationContext } from "../generation/Provider";
 import { useOpenaiContext } from "../openai/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
+import logger from "src/shared/logger";
 
 export interface GenerateStoryOptions {
   profileOverride?: Partial<ProfileInfo>;
@@ -64,7 +65,7 @@ export const useGenerateStory = (): UseGenerateStory => {
         startGeneration(placeholder, resolvedProfile.name);
       }
     } catch (error) {
-      console.error("Failed to create a story!", { error });
+      logger.error("Failed to create a story", error);
       throw error;
     } finally {
       isCreateStoryFetching(false);

@@ -10,6 +10,7 @@ import { useApplicationContext } from "src/application/store/Provider";
 import { AuthSocialButton } from "src/features/auth/AuthSocialButton";
 
 import type { User } from "src/shared/types/user";
+import logger from "src/shared/logger";
 
 type GoogleAuthButtonProps = {
   authType: "login" | "register";
@@ -53,7 +54,7 @@ export const GoogleAuthButton = ({
       if (!String(message).toLowerCase().includes("cancel")) {
         setErrorMessage(message);
       }
-      console.error(error);
+      logger.error("Google sign-in failed", error);
     } finally {
       setIsSubmitting(false);
     }

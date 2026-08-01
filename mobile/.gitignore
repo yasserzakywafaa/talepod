@@ -31,6 +31,9 @@ yarn-error.*
 *.pem
 
 # local env files
+# `.env` itself is ignored too: it holds the LAN API URL and, for anyone who
+# adds one, real secrets. Only `.env.example` is tracked.
+.env
 .env*.local
 
 # typescript

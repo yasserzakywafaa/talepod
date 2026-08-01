@@ -3,6 +3,7 @@ import { useCallback, useState } from "react";
 import END_POINTS from "src/application/shared/endpoints";
 import { api } from "src/application/shared/apiClient";
 import type { Story } from "src/features/storyCreator/store/state";
+import logger from "src/shared/logger";
 
 export interface ViewStoryState {
   story: Story | undefined;
@@ -48,7 +49,7 @@ export const useViewStoryManager = (store: ViewStoryStore) => {
         if (!options?.keepOnError) {
           store.updateStory(undefined);
         }
-        console.error("Failed to get story by slug", error);
+        logger.error("Failed to get story by slug", error);
         return undefined;
       } finally {
         store.setIsFetching(false);
