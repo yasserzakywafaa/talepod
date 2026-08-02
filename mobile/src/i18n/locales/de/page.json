@@ -296,7 +296,15 @@
     "checkoutOnWeb": "Die Bezahlung erfolgt auf talepod.com — dein Tarif gilt sofort auch in der App.",
     "openOnWeb": "Im Web öffnen",
     "monthly": "Monatlich",
-    "yearly": "Jährlich"
+    "yearly": "Jährlich",
+    "payPerStory": {
+      "badge": "Kein Abo",
+      "caption": "Für gelegentliche Gute-Nacht-Geschichten",
+      "title": "Nur eine Geschichte? Zahlen Sie nach Bedarf.",
+      "body": "Kaufen Sie eine einzelne Gute-Nacht-Geschichte für {{price}} — inklusive Audio, Illustrationen und einem dauerhaften Platz in Ihrer Bibliothek. Keine wiederkehrenden Kosten, keine Verpflichtung.",
+      "perStory": "/ Geschichte",
+      "cta": "Eine Geschichte kaufen"
+    }
   },
   "legal": {
     "lastUpdated": "Zuletzt aktualisiert:",

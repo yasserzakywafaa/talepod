@@ -296,7 +296,15 @@
     "checkoutOnWeb": "Checkout happens on talepod.com — your plan applies to the app straight away.",
     "openOnWeb": "Open on the web",
     "monthly": "Monthly",
-    "yearly": "Yearly"
+    "yearly": "Yearly",
+    "payPerStory": {
+      "badge": "No subscription",
+      "caption": "For occasional bedtimes",
+      "title": "Just want one story? Pay as you go.",
+      "body": "Buy a single bedtime story for {{price}} — includes audio, illustrations, and a keep-forever spot in your library. No recurring charge, no commitment.",
+      "perStory": "/ story",
+      "cta": "Buy one story"
+    }
   },
   "legal": {
     "lastUpdated": "Last updated:",
