@@ -25,7 +25,11 @@ export const CallToActionSection = () => {
       <Text style={[styles.body, { fontFamily: fontFamily.regular }]}>
         {t("home.callToAction.body")}
       </Text>
-      <PillButton onPress={navigateToCreateStory} trailingIcon="arrow-right">
+      <PillButton
+        onPress={navigateToCreateStory}
+        trailingIcon="arrow-right"
+        style={styles.cta}
+      >
         {t("home.callToAction.cta")}
       </PillButton>
       <Text style={[styles.footnote, { fontFamily: fontFamily.regular }]}>
@@ -38,6 +42,7 @@ export const CallToActionSection = () => {
 const styles = StyleSheet.create({
   block: { gap: 12, alignItems: "center", padding: 24 },
   center: { textAlign: "center" },
+  cta: { alignSelf: "center" },
   body: {
     fontSize: 14,
     lineHeight: 22,

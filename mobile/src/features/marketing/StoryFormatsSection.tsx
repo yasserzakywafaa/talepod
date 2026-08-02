@@ -8,9 +8,11 @@ import { BrandBadge } from "src/components/brand/BrandBadge";
 import { BrandCard } from "src/components/brand/BrandCard";
 import { DisplayText } from "src/components/brand/DisplayText";
 import { PillButton } from "src/components/brand/PillButton";
-import { Gradient } from "src/components/shared/Gradient";
+import { FormatPreview } from "src/components/brand/FormatPreview";
 import { MarketingSection } from "src/features/marketing/MarketingSection";
 import { asObject } from "src/features/marketing/copy";
+import { useStoryCreatorContext } from "src/features/storyCreator/store/Provider";
+import type { StoryFormat } from "src/features/storyCreator/store/state";
 
 type FormatCopy = {
   badge: string;
@@ -20,7 +22,7 @@ type FormatCopy = {
   cta: string;
 };
 
-const FORMATS = ["comic", "long"] as const;
+const FORMATS: readonly StoryFormat[] = ["comic", "long"] as const;
 
 const EMPTY_FORMAT: FormatCopy = {
   badge: "",
@@ -33,6 +35,15 @@ const EMPTY_FORMAT: FormatCopy = {
 /** Web `StoryFormats` — comic book vs. long story, one panel each. */
 export const StoryFormatsSection = () => {
   const { t } = useTranslation("page");
+  const {
+    manager: { handleSetFormat },
+  } = useStoryCreatorContext();
+
+  /** "Try comic book" lands on the creator with that format already picked. */
+  const handleTry = (format: StoryFormat) => () => {
+    handleSetFormat(format);
+    navigateToCreateStory();
+  };
 
   return (
     <MarketingSection
@@ -48,6 +59,7 @@ export const StoryFormatsSection = () => {
             t(`home.storyFormats.${format}`, { returnObjects: true }),
             EMPTY_FORMAT,
           )}
+          onTry={handleTry(format)}
         />
       ))}
     </MarketingSection>
@@ -55,20 +67,22 @@ export const StoryFormatsSection = () => {
 };
 
 type FormatPanelProps = {
-  format: (typeof FORMATS)[number];
+  format: StoryFormat;
   copy: FormatCopy;
+  onTry: () => void;
 };
 
-const FormatPanel = ({ format, copy }: FormatPanelProps) => {
+const FormatPanel = ({ format, copy, onTry }: FormatPanelProps) => {
+  const { t } = useTranslation("page");
   const theme = useAppTheme();
-  const { gradients, radius, fontFamily } = theme.tokens;
+  const { fontFamily } = theme.tokens;
 
   return (
     <BrandCard style={styles.panel}>
-      <Gradient
-        colors={format === "comic" ? gradients.scene : gradients.cover}
-        bands={24}
-        style={[styles.preview, { borderRadius: radius.md }]}
+      <FormatPreview
+        kind={format}
+        pagesLabel={t("home.storyFormats.comicPages")}
+        height={140}
       />
 
       <BrandBadge label={copy.badge} />
@@ -113,7 +127,7 @@ const FormatPanel = ({ format, copy }: FormatPanelProps) => {
       <PillButton
         variant="outlined"
         fullWidth
-        onPress={navigateToCreateStory}
+        onPress={onTry}
         trailingIcon="shimmer"
       >
         {copy.cta}
@@ -123,8 +137,7 @@ const FormatPanel = ({ format, copy }: FormatPanelProps) => {
 };
 
 const styles = StyleSheet.create({
-  panel: { gap: 12, padding: 20, alignItems: "flex-start" },
-  preview: { height: 120, width: "100%" },
+  panel: { gap: 12, padding: 20 },
   description: { fontSize: 14, lineHeight: 22, includeFontPadding: false },
   features: { gap: 6, width: "100%" },
   feature: { flexDirection: "row", alignItems: "center", gap: 8 },

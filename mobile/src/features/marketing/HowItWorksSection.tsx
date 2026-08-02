@@ -66,7 +66,11 @@ export const HowItWorksSection = () => {
       ))}
 
       <View style={styles.actions}>
-        <PillButton onPress={navigateToCreateStory} trailingIcon="shimmer">
+        <PillButton
+          onPress={navigateToCreateStory}
+          trailingIcon="shimmer"
+          style={styles.cta}
+        >
           {t("home.howItWorks.cta")}
         </PillButton>
         <Text
@@ -102,5 +106,6 @@ const styles = StyleSheet.create({
     includeFontPadding: false,
   },
   actions: { alignItems: "center", gap: 8, paddingTop: 8 },
+  cta: { alignSelf: "center" },
   footnote: { fontSize: 12, textAlign: "center", includeFontPadding: false },
 });

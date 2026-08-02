@@ -36,7 +36,11 @@ export const GuaranteeSection = () => {
           {t("home.guarantee.body2")}
         </Text>
       </View>
-      <PillButton onPress={navigateToCreateStory} trailingIcon="shimmer">
+      <PillButton
+        onPress={navigateToCreateStory}
+        trailingIcon="shimmer"
+        style={styles.cta}
+      >
         {t("home.guarantee.cta")}
       </PillButton>
     </Gradient>
@@ -47,6 +51,7 @@ const styles = StyleSheet.create({
   block: { gap: 12, alignItems: "center", padding: 24 },
   center: { textAlign: "center" },
   copy: { gap: 6 },
+  cta: { alignSelf: "center" },
   body: {
     fontSize: 14,
     lineHeight: 22,
