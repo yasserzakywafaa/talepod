@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
@@ -9,7 +8,7 @@ import type { DashboardShellStackParamList } from "src/application/navigation/Da
 import { Page, PageBody } from "src/components/layout/Page";
 import { DashboardAppBar } from "src/components/chrome/DashboardAppBar";
 import { useApplicationContext } from "src/application/store/Provider";
-import { useDashboardOverviewContext } from "src/features/dashboardOverview/store/Provider";
+import { useDashboardOverview } from "src/features/dashboardOverview/useDashboardOverview";
 
 type Props = NativeStackScreenProps<
   DashboardShellStackParamList,
@@ -27,16 +26,7 @@ export const DashboardOverviewScreen = ({ navigation, route }: Props) => {
     },
   } = useApplicationContext();
 
-  const {
-    store: {
-      state: { storiesCount, usersCount, isFetching },
-    },
-    manager: { setUp },
-  } = useDashboardOverviewContext();
-
-  useEffect(() => {
-    void setUp();
-  }, []);
+  const { storiesCount, usersCount, isFetching } = useDashboardOverview();
 
   const displayName = user
     ? `${user.name.givenName} ${user.name.familyName}`.trim()

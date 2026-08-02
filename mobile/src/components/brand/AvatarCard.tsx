@@ -1,4 +1,4 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 
@@ -23,21 +23,28 @@ const traitSummary = (avatar: Avatar): string =>
 
 type AvatarCardProps = {
   avatar: Avatar;
-  /** A mutation is in flight for this avatar → its actions are disabled. */
+  // A mutation is in flight for *this* avatar: the whole card dims, rather
+  // than every card's buttons disabling at once as they used to.
   disabled?: boolean;
-  onCreate: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
+  // The server is painting this portrait in the background — create and
+  // appearance edits both return before it exists.
+  portraitPending?: boolean;
+  /**
+   * Drops the action row — used where the card is shown as a reference rather
+   * than something to manage, as beside a story's export card.
+   */
+  readOnly?: boolean;
+  onCreate?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 };
 
-/**
- * Full-bleed avatar card — the native read of the web `AvatarCard`: a tall
- * portrait, then the name with its relationship badge, the trait line, and
- * the create / edit / delete row.
- */
+// Tall portrait, name with relationship badge, trait line, action row.
 export const AvatarCard = ({
   avatar,
   disabled = false,
+  portraitPending = false,
+  readOnly = false,
   onCreate,
   onEdit,
   onDelete,
@@ -49,7 +56,7 @@ export const AvatarCard = ({
   const traits = traitSummary(avatar);
 
   return (
-    <BrandCard>
+    <BrandCard style={disabled ? styles.dimmed : undefined}>
       <View style={styles.portrait}>
         {avatar.portraitUrl ? (
           <Image
@@ -64,11 +71,22 @@ export const AvatarCard = ({
             colors={["#F0B648", "#C9622F"] as const}
             style={[StyleSheet.absoluteFillObject, styles.fallback]}
           >
-            <DisplayText size={48} color="#FFFFFF">
-              {avatar.name?.[0]?.toUpperCase() ?? "?"}
-            </DisplayText>
+            {!portraitPending ? (
+              <DisplayText size={48} color="#FFFFFF">
+                {avatar.name?.[0]?.toUpperCase() ?? "?"}
+              </DisplayText>
+            ) : null}
           </Gradient>
         )}
+
+        {portraitPending ? (
+          <View style={styles.paintingOverlay}>
+            <ActivityIndicator color="#FFFFFF" />
+            <Text style={styles.paintingLabel}>
+              {t("avatars.card.paintingPortrait")}
+            </Text>
+          </View>
+        ) : null}
       </View>
 
       <View style={styles.body}>
@@ -96,11 +114,12 @@ export const AvatarCard = ({
           </Text>
         ) : null}
 
+        {readOnly ? null : (
         <View style={styles.actions}>
           <PillButton
             compact
             icon="book-open-variant"
-            onPress={onCreate}
+            onPress={() => onCreate?.()}
             disabled={disabled}
             style={styles.createAction}
           >
@@ -111,7 +130,7 @@ export const AvatarCard = ({
             variant="outlined"
             compact
             icon="pencil-outline"
-            onPress={onEdit}
+            onPress={() => onEdit?.()}
             disabled={disabled}
             color={theme.colors.secondary}
           >
@@ -119,7 +138,7 @@ export const AvatarCard = ({
           </PillButton>
 
           <Pressable
-            onPress={onDelete}
+            onPress={() => onDelete?.()}
             disabled={disabled}
             accessibilityRole="button"
             accessibilityLabel={t("avatars.card.delete")}
@@ -136,6 +155,7 @@ export const AvatarCard = ({
             />
           </Pressable>
         </View>
+        )}
       </View>
     </BrandCard>
   );
@@ -144,6 +164,15 @@ export const AvatarCard = ({
 const styles = StyleSheet.create({
   portrait: { width: "100%", aspectRatio: 1, overflow: "hidden" },
   fallback: { alignItems: "center", justifyContent: "center" },
+  dimmed: { opacity: 0.55 },
+  paintingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.35)",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
+  paintingLabel: { color: "#FFFFFF", fontSize: 12, fontWeight: "600" },
   body: { padding: 16, gap: 6 },
   titleRow: { flexDirection: "row", alignItems: "center", gap: 8 },
   name: { flex: 1 },

@@ -48,4 +48,10 @@ storiesRouter.get(
   StoriesController.getAllUsersStories
 );
 
+storiesRouter.delete(
+  END_POINTS.STORIES.DELETE_MY_STORY(":storyId"),
+  authMiddleware,
+  StoriesController.deleteMyStory
+);
+
 export default storiesRouter;

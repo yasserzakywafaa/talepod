@@ -204,7 +204,8 @@
     "card": {
       "create": "Create",
       "edit": "Edit",
-      "delete": "Delete"
+      "delete": "Delete",
+      "paintingPortrait": "Painting portrait…"
     }
   },
   "reader": {
@@ -263,6 +264,10 @@
       "closeAria": "close",
       "allPagesAria": "All pages",
       "pageOf": "Page {{current}} of {{total}}"
+    },
+    "backToTop": "Back to top",
+    "share": {
+      "aria": "Share this story"
     }
   },
   "card": {
@@ -272,6 +277,19 @@
     "badgeStory": "Story",
     "hasNarration": "Has narration",
     "tagOriginal": "Original",
-    "authorAvatarAlt": "User Picture"
+    "authorAvatarAlt": "User Picture",
+    "failedTitle": "Story generation failed",
+    "failedBadge": "Failed",
+    "retry": "Retry",
+    "delete": "Delete",
+    "deleteFailedTitle": "Delete this story?",
+    "deleteFailedBody": "This removes the failed story placeholder for {{title}}. This can't be undone.",
+    "failedBody": "Something went wrong while creating this story."
+  },
+  "viewStory": {
+    "loading": "Loading your story…",
+    "notFound": "Story not found",
+    "imagesGenerating": "Illustrations are still on their way",
+    "imagesGeneratingHint": "This can take a minute — the story is ready to read now."
   }
 }

@@ -5,9 +5,11 @@ import APP_CONSTANTS from "./app_constants";
 import END_POINTS from "./endpoints";
 import {
   clearStoredAuth,
+  getCachedAccessToken,
   getStoredAuth,
   setStoredTokens,
 } from "../../shared/storage/authStorage";
+import { emitSessionExpired } from "./authEvents";
 
 export const api = axios.create();
 
@@ -29,8 +31,11 @@ export const setupMobileAxios = (): void => {
   authSetupDone = true;
 
   api.interceptors.request.use(async (config) => {
-    const { accessToken } = await getStoredAuth();
     config.headers = config.headers ?? {};
+
+    // Hot path: the token is in memory, so only a cold start falls through
+    // to storage, and that read is coalesced.
+    const accessToken = getCachedAccessToken() ?? (await getStoredAuth()).accessToken;
 
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
@@ -55,11 +60,13 @@ export const setupMobileAxios = (): void => {
         void clearStoredAuth();
       },
     },
+    // Clear storage first, then notify: the listener rebuilds auth state
+    // from storage, and clearing alone left the UI signed-in but 401ing.
     redirectToLogin: () => {
-      /* Mobile keeps session in storage; AppContent reacts to auth state */
+      void clearStoredAuth().finally(emitSessionExpired);
     },
     onLogout: () => {
-      void clearStoredAuth();
+      void clearStoredAuth().finally(emitSessionExpired);
     },
     isExcludedAuthUrl: (requestUrl, authUrl) =>
       isExcludedAuthUrl(requestUrl, authUrl) ||

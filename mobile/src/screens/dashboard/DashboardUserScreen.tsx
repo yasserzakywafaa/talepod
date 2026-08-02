@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -14,15 +14,13 @@ import { BrandCard } from "src/components/brand/BrandCard";
 import { DisplayText } from "src/components/brand/DisplayText";
 import { PillButton } from "src/components/brand/PillButton";
 import { ServiceUnavailable } from "src/components/brand/ServiceUnavailable";
+import { ScreenErrorBoundary } from "src/components/shared/ErrorBoundary";
 import { ConfirmDestructiveDialog } from "src/features/dashboardShared/ConfirmDestructiveDialog";
 import { isUserBlocked } from "src/features/dashboardShared/userPresentation";
 import { getUserProfileContact } from "src/shared/utils/getUserProfileContact";
 import { AdminUserInfoCard } from "src/features/dashboardUser/AdminUserInfoCard";
 import { AdminUserRoleCard } from "src/features/dashboardUser/AdminUserRoleCard";
-import {
-  DashboardUserContextProvider,
-  useDashboardUserContext,
-} from "src/features/dashboardUser/store/Provider";
+import { useDashboardUser } from "src/features/dashboardUser/useDashboardUser";
 
 type Props = NativeStackScreenProps<
   DashboardShellStackParamList,
@@ -36,29 +34,19 @@ const DashboardUserContent = ({ navigation, route }: Props) => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   const {
-    store: {
-      state: {
-        isFetching,
-        isMutating,
-        user,
-        storiesCount,
-        feedback,
-        loadError,
-      },
-    },
-    manager: {
-      setUp,
-      handleUpdateUserRole,
-      handleBlockUser,
-      handleUnblockUser,
-      handleDeleteUser,
-      handleDismissFeedback,
-    },
-  } = useDashboardUserContext();
-
-  useEffect(() => {
-    void setUp(userId);
-  }, [setUp, userId]);
+    user,
+    storiesCount,
+    isFetching,
+    loadError,
+    retry,
+    updateUserRole,
+    blockUser,
+    unblockUser,
+    deleteUser,
+    isMutating,
+    feedback,
+    dismissFeedback,
+  } = useDashboardUser(userId);
 
   if (isFetching && !user) {
     return (
@@ -69,13 +57,7 @@ const DashboardUserContent = ({ navigation, route }: Props) => {
   }
 
   if (loadError && !user) {
-    return (
-      <ServiceUnavailable
-        kind={loadError}
-        isRetrying={isFetching}
-        onRetry={() => void setUp(userId)}
-      />
-    );
+    return <ServiceUnavailable kind={loadError} isRetrying={isFetching} onRetry={retry} />;
   }
 
   if (!user) {
@@ -99,7 +81,7 @@ const DashboardUserContent = ({ navigation, route }: Props) => {
           visible={!!feedback}
           message={feedback?.message ?? ""}
           variant={feedback?.variant}
-          onDismiss={handleDismissFeedback}
+          onDismiss={dismissFeedback}
         />
       </PageBody>
     );
@@ -131,7 +113,7 @@ const DashboardUserContent = ({ navigation, route }: Props) => {
         <AdminUserRoleCard
           user={user}
           isUpdating={isMutating}
-          onChange={(role) => void handleUpdateUserRole(user._id, role)}
+          onChange={updateUserRole}
         />
 
         <BrandCard style={styles.card}>
@@ -210,11 +192,7 @@ const DashboardUserContent = ({ navigation, route }: Props) => {
             variant="outlined"
             icon={blocked ? "account-check-outline" : "block-helper"}
             loading={isMutating}
-            onPress={() =>
-              void (blocked
-                ? handleUnblockUser(user._id)
-                : handleBlockUser(user._id))
-            }
+            onPress={() => (blocked ? unblockUser() : blockUser())}
           >
             {blocked ? t("admin.users.unblock") : t("admin.users.block")}
           </PillButton>
@@ -238,7 +216,7 @@ const DashboardUserContent = ({ navigation, route }: Props) => {
         isBusy={isMutating}
         onConfirm={() => {
           void (async () => {
-            const deleted = await handleDeleteUser(user._id);
+            const deleted = await deleteUser();
             setIsDeleteOpen(false);
             if (deleted) {
               // The account is gone; there is nothing left on this screen.
@@ -253,7 +231,7 @@ const DashboardUserContent = ({ navigation, route }: Props) => {
         visible={!!feedback}
         message={feedback?.message ?? ""}
         variant={feedback?.variant}
-        onDismiss={handleDismissFeedback}
+        onDismiss={dismissFeedback}
       />
     </>
   );
@@ -261,9 +239,9 @@ const DashboardUserContent = ({ navigation, route }: Props) => {
 
 export const DashboardUserScreen = (props: Props) => (
   <Page header={<DashboardAppBar routeName={props.route.name} showBack />}>
-    <DashboardUserContextProvider>
+    <ScreenErrorBoundary name="DashboardUser">
       <DashboardUserContent {...props} />
-    </DashboardUserContextProvider>
+    </ScreenErrorBoundary>
   </Page>
 );
 

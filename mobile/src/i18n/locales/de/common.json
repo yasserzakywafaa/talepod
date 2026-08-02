@@ -50,5 +50,6 @@
     "serverTitle": "Etwas ist schiefgelaufen",
     "serverBody": "TalePod hat gerade Probleme. Es liegt nicht an dir — bitte versuch es gleich noch einmal.",
     "retry": "Erneut versuchen"
-  }
+  },
+  "backToTop": "Nach oben"
 }

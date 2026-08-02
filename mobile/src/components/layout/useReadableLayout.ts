@@ -1,32 +1,38 @@
-import { useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const TABLET_MIN_WIDTH = 768;
+import { useBreakpoint } from "src/components/layout/useBreakpoint";
 
 export const useReadableLayout = () => {
-  const { width } = useWindowDimensions();
+  const { width, breakpoint, up, value } = useBreakpoint();
   const insets = useSafeAreaInsets();
 
-  /**
-   * A phone held sideways is wider than 768, so it lands here too — which is
-   * what we want: copy gets capped and centred instead of stretching across
-   * the long edge.
-   */
-  const isTablet = width >= TABLET_MIN_WIDTH;
+  // A phone held sideways is wider than 600 and lands here too, which is what
+  // we want: copy gets capped and centred rather than stretching.
+  const isTablet = up("sm");
 
-  /**
-   * In landscape the notch moves to one side, and only that side reports an
-   * inset. Padding both edges by the larger of the two keeps content clear of
-   * it without knocking the layout off centre.
-   */
+  // In landscape only one side reports an inset, so pad both by the larger to
+  // clear the notch without knocking content off centre.
   const sideInset = Math.max(insets.left, insets.right);
-  const horizontalGutter = (isTablet ? 32 : 16) + sideInset;
+  const horizontalGutter = (value({ xs: 16, sm: 24, md: 32 }) ?? 16) + sideInset;
+
+  const cap = (max: number) => Math.min(max, width - horizontalGutter * 2);
 
   return {
+    breakpoint,
     isTablet,
     horizontalGutter,
-    /** Max width for page copy blocks (iPad-friendly). */
-    contentMaxWidth: isTablet ? Math.min(640, width * 0.72) : width,
+    // Prose stays near 640–760pt however wide the display gets: a line
+    // spanning a 12" iPad is harder to read, not a better use of it.
+    contentMaxWidth: isTablet
+      ? cap(value({ sm: 640, md: 720, lg: 760 }) ?? 640)
+      : width,
+    // Grids get the room instead — more cards per row is a real gain where a
+    // longer line of text is not.
+    listMaxWidth: isTablet
+      ? cap(value({ sm: 760, md: 1100, lg: 1400 }) ?? 760)
+      : width,
+    /** Cards per row. Tablets in landscape reach `md`, the largest `lg`. */
+    columns: value({ xs: 1, sm: 2, md: 2, lg: 3 }) ?? 1,
     /** Primary actions should not span the full screen on phones. */
     buttonMaxWidth: isTablet ? 360 : Math.min(320, width - horizontalGutter * 2),
   };

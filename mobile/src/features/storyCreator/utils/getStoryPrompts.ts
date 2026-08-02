@@ -1,12 +1,18 @@
+/**
+ * Duplicates `server/src/services/create/storyPrompt.ts` on purpose: older
+ * servers read `storyPrompt` off the body and fail without it.
+ * 
+ * DELETE only once every environment builds its own — mobile ships over the
+ * air and must never assume a server capability is deployed.
+ */
+
 import {
   AdultGenderEnum,
   ChildGenderEnum,
   ProfileInfo,
-  Story,
   StoryCreatorInitialState,
 } from "../store/state";
 
-import { Keywords } from "src/shared/types/seo";
 
 const getGenderDescription = (gender: ProfileInfo["gender"]): string => {
   if (gender === ChildGenderEnum.Boy) return "boy";
@@ -38,11 +44,8 @@ const getYoungReaderRules = (
   return { comicCaptionRule, longStoryVocabRule };
 };
 
-/**
- * Builds the AI prompt for the story. Dispatches on the chosen format:
- * "comic" → ~6 illustrated pages (caption + scene per page); otherwise the
- * original long-prose prompt (unchanged default).
- */
+// Comic → ~6 illustrated pages (caption + scene each); anything else gets
+// the long-prose prompt.
 export const getCreateStoryPrompt = (
   promptParams: StoryCreatorInitialState
 ): string => {
@@ -127,12 +130,8 @@ const getLongStoryPrompt = (
   return fullDynamicPrompt;
 };
 
-/**
- * Comic-book prompt. Produces an ordered, curly-bracket-delimited structure
- * the server `extractComicParts` parses: {title}{summary} then, for each of
- * the 6 pages, {caption}{scene}. The caption is shown in the reader; the scene
- * is stored as the page's image prompt for later illustration generation.
- */
+// Curly-bracket structure the server's `extractComicParts` parses:
+// {title}{summary}, then {caption}{scene} per page.
 export const getCreateComicPrompt = (
   promptParams: StoryCreatorInitialState
 ): string => {
@@ -189,52 +188,4 @@ ${moral.value ? `- Value to teach: ${moral.name}.` : ""}
 ${environment.value ? `- Setting: a/an ${environment.name}.` : ""}
 ${interests.length ? `- Weave in the child's interests: ${interests}.` : ""}
 Ensure all content is fully appropriate for young children.`;
-};
-
-export const getCreateImagePrompt = (childInfo: ProfileInfo): string => {
-  const { name, gender, age } = childInfo;
-
-  const fullDynamicPrompt = `A ${age} years old ${gender.toLowerCase()} named ${name}, with physical characteristics`;
-
-  return fullDynamicPrompt;
-};
-
-export const getStorySeoPrompt = (story: Story): string => {
-  const { summary, profileInfo } = story;
-  const appLink = "www.talepod.com";
-  const keywordsByLang = Keywords[profileInfo.language.value] || [];
-
-  const keywords = keywordsByLang.flatMap((word) => word.keyword);
-  const keywordsVolume = keywordsByLang.flatMap((word) => word.keywordVolume);
-  const keywordsDifficulty = keywordsByLang.flatMap(
-    (word) => word.keywordDifficulty
-  );
-
-  const fullDynamicPrompt = `Write an SEO-optimized text that attracts organic traffic to ${appLink} to place after a bedtime story, 
-  with the following story parameters and position the text inside the appropriate HTML tags to use: 
-  
-  Story summary: ${summary}. 
-
-  The text should include at least one <h2> tag, and create it in the language of ${
-    profileInfo.language.name
-  }.
-  ${
-    keywordsByLang.length
-      ? `Also include the following keywords and their respective volume and keyword difficulty: 
-      
-      • Keywords: ${keywords}
-      • Volume: ${keywordsVolume}
-      • Keyword Difficulty: ${keywordsDifficulty}
-      `
-      : ""
-  }
-
-  Ensure the keywords are naturally integrated into the text.
-  Include internal links only to this site (${appLink}) and a call to action.
-  Do not include the keywords into the internal links, internal links refer ONLY to this site (${appLink}).
-  Any hyperlink should open in a new tab.
-
-  In the response, don't mention anything other than the required SEO-optimized text and include it around curly brackets for easy data extraction.`;
-
-  return fullDynamicPrompt;
 };

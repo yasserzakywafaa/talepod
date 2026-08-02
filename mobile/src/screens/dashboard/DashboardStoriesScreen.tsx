@@ -5,11 +5,8 @@ import { mobileRoutes } from "src/application/routes";
 import type { DashboardShellStackParamList } from "src/application/navigation/DashboardShellStackNavigator";
 import { Page } from "src/components/layout/Page";
 import { DashboardAppBar } from "src/components/chrome/DashboardAppBar";
+import { ScreenErrorBoundary } from "src/components/shared/ErrorBoundary";
 import { AdminStoriesList } from "src/features/dashboardStories/AdminStoriesList";
-import {
-  DashboardStoriesContextProvider,
-  useDashboardStoriesContext,
-} from "src/features/dashboardStories/store/Provider";
 
 type Props = NativeStackScreenProps<
   DashboardShellStackParamList,
@@ -18,17 +15,10 @@ type Props = NativeStackScreenProps<
 
 const DashboardStoriesContent = () => {
   const { t } = useTranslation("dashboard");
-  const {
-    store: {
-      state: { paging },
-    },
-  } = useDashboardStoriesContext();
-
-  const totalCount = paging.totalCount ?? 0;
 
   return (
     <AdminStoriesList
-      subtitle={
+      subtitle={(totalCount) =>
         totalCount
           ? t("stories.totalCount", { count: totalCount })
           : t("stories.subtitle")
@@ -40,8 +30,8 @@ const DashboardStoriesContent = () => {
 
 export const DashboardStoriesScreen = ({ route }: Props) => (
   <Page header={<DashboardAppBar routeName={route.name} />}>
-    <DashboardStoriesContextProvider>
+    <ScreenErrorBoundary name="DashboardStories">
       <DashboardStoriesContent />
-    </DashboardStoriesContextProvider>
+    </ScreenErrorBoundary>
   </Page>
 );

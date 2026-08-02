@@ -4,8 +4,11 @@ import { useAppTheme } from "src/application/theme/useAppTheme";
 
 type BrandBadgeProps = {
   label: string;
-  /** `primary` → honey, `secondary` → twilight. Mirrors web `Chip variant="badge"`. */
-  tone?: "primary" | "secondary";
+  /**
+   * `primary` → honey, `secondary` → twilight, `error` → the theme's error
+   * color (a failed-state badge, e.g. a story whose generation failed).
+   */
+  tone?: "primary" | "secondary" | "error";
   style?: StyleProp<ViewStyle>;
 };
 
@@ -20,9 +23,11 @@ export const BrandBadge = ({
 }: BrandBadgeProps) => {
   const theme = useAppTheme();
   const background =
-    tone === "primary"
-      ? theme.tokens.brand.honey[400]
-      : theme.tokens.brand.twilight[500];
+    tone === "error"
+      ? theme.colors.error
+      : tone === "primary"
+        ? theme.tokens.brand.honey[400]
+        : theme.tokens.brand.twilight[500];
 
   return (
     <View style={[styles.badge, { backgroundColor: background }, style]}>

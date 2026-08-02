@@ -47,6 +47,22 @@ export interface CreateStoryInput {
 export const handleCreateStoryRequest = async (
   storyPrompt: string,
 ): Promise<string | null> => {
+  /**
+   * Fail loudly rather than sending the model an empty user message.
+   *
+   * Without this, a missing prompt is not an error — it is a request the model
+   * answers from the system prompt alone ("you are a storyteller"), returning
+   * prose with none of the curly-bracket sections the extractors need. The
+   * failure then surfaces much further downstream as "the comic does not
+   * contain the correct structure", which points at the model's output rather
+   * than at the caller that never sent a prompt.
+   */
+  if (!storyPrompt?.trim()) {
+    throw new Error(
+      "❌ createStory was called without a prompt. Either the client omitted `storyPrompt` against an API build that cannot construct one, or buildCreateStoryPrompt returned empty.",
+    );
+  }
+
   try {
     const createRequest = await handleOpenRouterAIRequest(
       CONFIG.OPENROUTER_DEFAULT_MODEL_NAME,

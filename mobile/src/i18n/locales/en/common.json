@@ -50,5 +50,6 @@
     "serverTitle": "Something went wrong",
     "serverBody": "TalePod is having trouble right now. Nothing you did — please try again in a moment.",
     "retry": "Try again"
-  }
+  },
+  "backToTop": "Back to top"
 }

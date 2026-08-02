@@ -1,9 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import END_POINTS from "src/application/shared/endpoints";
 import { api } from "src/application/shared/apiClient";
+import { queryKeys } from "src/shared/api/queryKeys";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
 import { getCurrencySymbol } from "src/shared/utils/getCurrencySymbol";
 import type { Price, Product } from "src/shared/types/payment";
@@ -18,46 +20,42 @@ export type PricingPlan = {
   isFree: boolean;
 };
 
+const fetchCatalog = async (): Promise<{
+  products: Product[];
+  prices: Price[];
+}> => {
+  const [productsResponse, pricesResponse] = await Promise.all([
+    api.get<Product[]>(END_POINTS.PAYMENTS.GET_PRODUCTS_LIST_WITH_PRICES),
+    api.get<Price[]>(END_POINTS.PAYMENTS.GET_PRICES_LIST),
+  ]);
+  return {
+    products: Array.isArray(productsResponse.data)
+      ? productsResponse.data
+      : [],
+    prices: Array.isArray(pricesResponse.data) ? pricesResponse.data : [],
+  };
+};
+
 /**
- * Read-only port of the web's `usePricing`.
- *
- * The app deliberately does not take payment — Apple and Google both take a cut
- * of in-app purchases of digital goods, and the Stripe checkout is a web flow.
- * So this reads the same catalogue the web reads and renders the same prices,
- * and the screen hands off to talepod.com to actually subscribe.
+ * Read-only port of the web's `usePricing`: the app takes no payment, it
+ * renders the prices and hands off to talepod.com to subscribe.
  */
 export const usePricingPlans = () => {
   const { t } = useTranslation("page");
-  const [products, setProducts] = useState<Product[]>([]);
-  const [prices, setPrices] = useState<Price[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [billingInterval, setBillingInterval] =
     useState<BillingInterval>("month");
 
-  const fetchCatalog = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const [productsResponse, pricesResponse] = await Promise.all([
-        api.get<Product[]>(END_POINTS.PAYMENTS.GET_PRODUCTS_LIST_WITH_PRICES),
-        api.get<Price[]>(END_POINTS.PAYMENTS.GET_PRICES_LIST),
-      ]);
-      setProducts(
-        Array.isArray(productsResponse.data) ? productsResponse.data : [],
-      );
-      setPrices(Array.isArray(pricesResponse.data) ? pricesResponse.data : []);
-    } catch {
-      // A missing catalogue is not an error worth interrupting the page for —
-      // the plans still render with their feature lists, just without prices.
-      setProducts([]);
-      setPrices([]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const query = useQuery({
+    queryKey: queryKeys.pricing.plans("default"),
+    queryFn: fetchCatalog,
+    // A missing catalogue still renders the plans, just without prices —
+    // not worth retrying a genuinely-empty Stripe catalogue over.
+    retry: false,
+  });
 
-  useEffect(() => {
-    void fetchCatalog();
-  }, [fetchCatalog]);
+  const products = query.data?.products ?? [];
+  const prices = query.data?.prices ?? [];
+  const isLoading = query.isPending;
 
   const findProduct = (plan: SubscriptionPlanEnum, interval: BillingInterval) =>
     products.find(
@@ -66,11 +64,8 @@ export const usePricingPlans = () => {
         product.prices?.some((price) => price.recurring?.interval === interval),
     );
 
-  /**
-   * A single Stripe product can carry both a monthly and a yearly price, and
-   * `default_price` only points at one of them — so resolve by interval, and
-   * fall back to the flat price list keyed by product id.
-   */
+  // One product can carry monthly and yearly prices while `default_price`
+  // points at only one, so resolve by interval first.
   const findPrice = (
     product: Product | undefined,
     interval: BillingInterval,
