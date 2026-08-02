@@ -1,4 +1,12 @@
-export const WEB_ORIGIN = "https://talepod.com";
+import APP_CONSTANTS from "src/application/shared/app_constants";
+
+/**
+ * Mirrors the web's own origin resolution. A dev build must not hand out
+ * talepod.com links: stories created against the dev API do not exist in the
+ * production database, so the link would open a story the site cannot find.
+ */
+export const getWebOrigin = (): string =>
+  APP_CONSTANTS.IS_PROD ? "https://talepod.com" : "https://dev.talepod.com";
 
 /**
  * The canonical web URL for a story, which is also what the app registers as a
@@ -7,4 +15,4 @@ export const WEB_ORIGIN = "https://talepod.com";
  * web (see `web/src/application/routes.ts`), so this needs no language.
  */
 export const buildStoryShareUrl = (slug: string): string =>
-  `${WEB_ORIGIN}/bedtime-story/${slug}`;
+  `${getWebOrigin()}/bedtime-story/${slug}`;

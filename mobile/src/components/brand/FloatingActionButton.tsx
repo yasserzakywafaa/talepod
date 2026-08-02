@@ -3,6 +3,7 @@ import { Animated, Pressable, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { useAppTheme } from "src/application/theme/useAppTheme";
+import { useReadableLayout } from "src/components/layout/useReadableLayout";
 
 type FloatingActionButtonProps = {
   icon: keyof typeof MaterialCommunityIcons.glyphMap;
@@ -23,6 +24,9 @@ export const FloatingActionButton = ({
   bottom,
 }: FloatingActionButtonProps) => {
   const theme = useAppTheme();
+  // Sideways the notch moves to one edge, and a fixed inset left the button
+  // jammed against it. This is the same gutter the page content uses.
+  const { horizontalGutter } = useReadableLayout();
   const anim = useRef(new Animated.Value(visible ? 1 : 0)).current;
 
   useEffect(() => {
@@ -38,7 +42,12 @@ export const FloatingActionButton = ({
       pointerEvents={visible ? "auto" : "none"}
       style={[
         styles.wrap,
-        { bottom, opacity: anim, transform: [{ scale: anim }] },
+        {
+          bottom,
+          right: horizontalGutter,
+          opacity: anim,
+          transform: [{ scale: anim }],
+        },
       ]}
     >
       <Pressable
@@ -65,7 +74,7 @@ export const FloatingActionButton = ({
 };
 
 const styles = StyleSheet.create({
-  wrap: { position: "absolute", right: 16, zIndex: 20 },
+  wrap: { position: "absolute", zIndex: 20 },
   button: {
     width: 48,
     height: 48,

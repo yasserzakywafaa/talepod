@@ -111,9 +111,13 @@ export const getStoryBySlug = async (
     const pipeline = [
       { $match: { slug: storySlug } },
       {
+        // The union MUST filter by slug too. With an empty pipeline it appended
+        // every library story, so a slug that matched nothing in `stories` fell
+        // through to `$limit: 1` and returned an arbitrary story instead of a
+        // 404 — a valid-looking URL rendering someone else's story.
         $unionWith: {
           coll: DBCollectionsEnum.stories_library,
-          pipeline: [],
+          pipeline: [{ $match: { slug: storySlug } }],
         },
       },
       {
