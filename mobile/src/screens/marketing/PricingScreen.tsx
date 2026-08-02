@@ -1,4 +1,4 @@
-import { Image, Linking, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
@@ -14,22 +14,18 @@ import { BrandCard } from "src/components/brand/BrandCard";
 import { DisplayText } from "src/components/brand/DisplayText";
 import { PillButton } from "src/components/brand/PillButton";
 import { SegmentedControl } from "src/components/brand/SegmentedControl";
-import { legalWebsiteUrl } from "src/components/legal/LegalTypography";
 import {
   usePricingPlans,
   type BillingInterval,
   type PricingPlan,
 } from "src/features/pricing/usePricingPlans";
+import { PayPerStoryCallout } from "src/features/pricing/PayPerStoryCallout";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
-import { useApplicationContext } from "src/application/store/Provider";
-import { navigateToCreateStory } from "src/application/navigation/rootNavigation";
 
 type Props = NativeStackScreenProps<
   MainShellStackParamList,
   typeof mobileRoutes.public.pricing
 >;
-
-const PRICING_URL = `${legalWebsiteUrl}/pricing`;
 
 const MASCOTS = {
   free: require("../../../assets/images/characters/cute_puppy_with_sparkling_eyes.webp"),
@@ -110,6 +106,8 @@ export const PricingScreen = (_props: Props) => {
           />
         ))}
 
+        <PayPerStoryCallout />
+
         {/* The app never takes payment — see `usePricingPlans` for why. */}
         <Text
           style={[
@@ -133,98 +131,14 @@ type PlanCardProps = {
   display: { amount: number; billedYearly: boolean; yearlyTotal: number };
 };
 
-type PlanCardCta = {
-  label: string;
-  disabled: boolean;
-  variant: "contained" | "outlined";
-  icon?: keyof typeof MaterialCommunityIcons.glyphMap;
-  trailingIcon?: keyof typeof MaterialCommunityIcons.glyphMap;
-  onPress: () => void;
-};
-
-const getPlanCardCta = (
-  plan: PricingPlan,
-  isAuthenticated: boolean,
-  isPaidUser: boolean,
-  subscriptionType: SubscriptionPlanEnum | undefined,
-  t: (key: string) => string,
-): PlanCardCta => {
-  const isPremiumUser = subscriptionType === SubscriptionPlanEnum.Premium;
-  const isFreeUser =
-    isAuthenticated &&
-    (subscriptionType === SubscriptionPlanEnum.Free || !isPaidUser);
-
-  if (plan.isFree) {
-    return {
-      label: t("pricing.cta.createStories"),
-      disabled: false,
-      variant: isAuthenticated ? "outlined" : "contained",
-      icon: "auto-fix",
-      onPress: navigateToCreateStory,
-    };
-  }
-
-  if (!isAuthenticated) {
-    return {
-      label: t("pricing.cta.createStories"),
-      disabled: false,
-      variant: "outlined",
-      icon: "auto-fix",
-      onPress: navigateToCreateStory,
-    };
-  }
-
-  if (isPremiumUser) {
-    return {
-      label: t("pricing.cta.currentPlan"),
-      disabled: true,
-      variant: "outlined",
-      onPress: () => undefined,
-    };
-  }
-
-  if (isFreeUser) {
-    return {
-      label: t("pricing.cta.upgrade"),
-      disabled: false,
-      variant: "contained",
-      trailingIcon: "open-in-new",
-      onPress: () => {
-        void Linking.openURL(PRICING_URL);
-      },
-    };
-  }
-
-  return {
-    label: t("pricing.cta.upgrade"),
-    disabled: false,
-    variant: "outlined",
-    trailingIcon: "open-in-new",
-    onPress: () => {
-      void Linking.openURL(PRICING_URL);
-    },
-  };
-};
-
 const PlanCard = ({ plan, currency, display }: PlanCardProps) => {
   const { t } = useTranslation("page");
   const theme = useAppTheme();
-  const {
-    store: {
-      state: { auth },
-    },
-  } = useApplicationContext();
 
   const { fontFamily, brand } = theme.tokens;
   const isPremium = plan.title === SubscriptionPlanEnum.Premium;
   const hasPrice = !plan.isFree && display.amount > 0;
-  const cta = getPlanCardCta(
-    plan,
-    auth.isAuthenticated,
-    auth.user?.isPaidUser ?? false,
-    auth.user?.subscription.type,
-    t,
-  );
+  const { cta } = plan;
 
   const billingLine = plan.isFree
     ? t("pricing.freeForever")
@@ -309,17 +223,20 @@ const PlanCard = ({ plan, currency, display }: PlanCardProps) => {
         </View>
       ))}
 
-      <PillButton
-        variant={cta.variant}
-        icon={cta.icon}
-        trailingIcon={cta.trailingIcon}
-        disabled={cta.disabled}
-        fullWidth
-        onPress={cta.onPress}
-        style={styles.cta}
-      >
-        {cta.label}
-      </PillButton>
+      {/* The web hides the button entirely when `getButtonText` is empty —
+          a paid user has nothing to do on the Free card. */}
+      {cta.label ? (
+        <PillButton
+          variant={cta.variant}
+          icon={plan.isFree ? "auto-fix" : undefined}
+          disabled={cta.disabled}
+          fullWidth
+          onPress={cta.onPress}
+          style={styles.cta}
+        >
+          {cta.label}
+        </PillButton>
+      ) : null}
     </BrandCard>
   );
 };
