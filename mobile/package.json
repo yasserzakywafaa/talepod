@@ -12,8 +12,8 @@
     "web": "expo start --web",
     "update:dev": "eas update --branch preview --environment preview --message dev",
     "update:prod": "eas update --branch production --environment production --message prod",
-    "build:dev:ios": "eas build --profile preview --platform ios",
-    "build:dev:android": "eas build --profile preview --platform android",
+    "build:dev:ios": "eas build --profile development --platform ios",
+    "build:dev:android": "eas build --profile development --platform android",
     "build:prod:ios": "eas build --profile production --platform ios",
     "build:prod:android": "eas build --profile production --platform android"
   },
