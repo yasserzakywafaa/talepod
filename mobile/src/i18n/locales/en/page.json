@@ -18,11 +18,7 @@
     "ctaPricing": "View pricing",
     "ctaLogin": "Get Started for Free",
     "title": "Bedtime stories crafted for the children you love most.",
-    "trustBadges": [
-      "No card required",
-      "11 languages",
-      "Kid-safe"
-    ],
+    "trustBadges": ["No card required", "11 languages", "Kid-safe"],
     "storyFormats": {
       "overline": "Two story formats",
       "title": "Bedtime, told two ways.",

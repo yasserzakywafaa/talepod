@@ -96,7 +96,11 @@ const styles = StyleSheet.create({
     padding: 18,
   },
   copy: { flex: 1, gap: 4 },
-  plan: { fontSize: 16, includeFontPadding: false, textTransform: "capitalize" },
+  plan: {
+    fontSize: 16,
+    includeFontPadding: false,
+    textTransform: "capitalize",
+  },
   feature: { fontSize: 12, lineHeight: 18, includeFontPadding: false },
   price: { fontSize: 14, includeFontPadding: false },
   cta: { alignSelf: "center" },

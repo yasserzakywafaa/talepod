@@ -46,9 +46,7 @@ const fetchCatalog = async (): Promise<{
     api.get<Price[]>(END_POINTS.PAYMENTS.GET_PRICES_LIST),
   ]);
   return {
-    products: Array.isArray(productsResponse.data)
-      ? productsResponse.data
-      : [],
+    products: Array.isArray(productsResponse.data) ? productsResponse.data : [],
     prices: Array.isArray(pricesResponse.data) ? pricesResponse.data : [],
   };
 };
@@ -293,9 +291,7 @@ export const usePricingPlans = () => {
             cta: {
               label: getButtonText(SubscriptionPlanEnum.Advanced),
               disabled: currentUserPackage.isAdvanced,
-              variant: currentUserPackage.isAdvanced
-                ? "outlined"
-                : "contained",
+              variant: currentUserPackage.isAdvanced ? "outlined" : "contained",
               onPress: () =>
                 handleOnSubscribeClick(SubscriptionPlanEnum.Advanced),
             },

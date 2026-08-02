@@ -44,7 +44,11 @@ export const PayPerStoryCallout = () => {
           bands={20}
           style={styles.iconCircle}
         >
-          <MaterialCommunityIcons name="ticket-outline" size={28} color="#FFF" />
+          <MaterialCommunityIcons
+            name="ticket-outline"
+            size={28}
+            color="#FFF"
+          />
         </Gradient>
 
         <View style={styles.headerCopy}>
