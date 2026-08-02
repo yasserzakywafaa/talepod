@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { DrawerScreenProps } from "@react-navigation/drawer";
 import { useTranslation } from "react-i18next";
 
@@ -18,6 +19,21 @@ import { DisplayText } from "src/components/brand/DisplayText";
 import { PillButton } from "src/components/brand/PillButton";
 import { Gradient } from "src/components/shared/Gradient";
 import { MarketingAppBar } from "src/components/chrome/MarketingAppBar";
+import { SectionDivider } from "src/features/marketing/MarketingSection";
+import { StoryFormatsSection } from "src/features/marketing/StoryFormatsSection";
+import { TestimonialsSection } from "src/features/marketing/TestimonialsSection";
+import {
+  BENEFIT_ICONS,
+  IconItemsSection,
+  KEY_FEATURE_ICONS,
+} from "src/features/marketing/IconItemsSection";
+import { HowItWorksSection } from "src/features/marketing/HowItWorksSection";
+import { StoryExamplesSection } from "src/features/marketing/StoryExamplesSection";
+import { PricingTeaserSection } from "src/features/marketing/PricingTeaserSection";
+import { GuaranteeSection } from "src/features/marketing/GuaranteeSection";
+import { CallToActionSection } from "src/features/marketing/CallToActionSection";
+import { FaqSection } from "src/features/marketing/FaqSection";
+import { asList } from "src/features/marketing/copy";
 
 type Props = DrawerScreenProps<
   MainDrawerParamList,
@@ -42,6 +58,10 @@ export const HomeMarketingScreen = ({ navigation }: Props) => {
   const handleCreateStoryPress = () => {
     navigateToCreateStory();
   };
+
+  const trustBadges = asList<string>(
+    t("home.trustBadges", { returnObjects: true }),
+  );
 
   const handlePricingPress = () => {
     navigateToPublicMarketingScreen(mobileRoutes.public.pricing);
@@ -80,7 +100,51 @@ export const HomeMarketingScreen = ({ navigation }: Props) => {
               {t("home.ctaPricing")}
             </PillButton>
           </View>
+
+          <View style={styles.trustBadges}>
+            {trustBadges.map((badge) => (
+              <View key={badge} style={styles.trustBadge}>
+                <MaterialCommunityIcons
+                  name="check-circle-outline"
+                  size={14}
+                  color="rgba(255,255,255,0.85)"
+                />
+                <Text
+                  style={[
+                    styles.trustBadgeLabel,
+                    { fontFamily: theme.tokens.fontFamily.regular },
+                  ]}
+                >
+                  {badge}
+                </Text>
+              </View>
+            ))}
+          </View>
         </Gradient>
+
+        {/* Below the hero the app mirrors the web landing page section order. */}
+        <StoryFormatsSection />
+        <SectionDivider />
+        <TestimonialsSection />
+        <SectionDivider />
+        <IconItemsSection
+          translationKey="keyFeatures"
+          icons={KEY_FEATURE_ICONS}
+        />
+        <SectionDivider />
+        <HowItWorksSection />
+        <SectionDivider />
+        <StoryExamplesSection />
+        <SectionDivider />
+        <IconItemsSection translationKey="benefits" icons={BENEFIT_ICONS} />
+        <SectionDivider />
+        <PricingTeaserSection />
+        <SectionDivider />
+        <GuaranteeSection />
+        <SectionDivider />
+        <CallToActionSection />
+        <SectionDivider />
+        <FaqSection />
       </PageBody>
     </Page>
   );
@@ -108,5 +172,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
     paddingTop: 8,
+  },
+  trustBadges: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    gap: 12,
+  },
+  trustBadge: { flexDirection: "row", alignItems: "center", gap: 5 },
+  trustBadgeLabel: {
+    fontSize: 12,
+    color: "rgba(255,255,255,0.85)",
+    includeFontPadding: false,
   },
 });

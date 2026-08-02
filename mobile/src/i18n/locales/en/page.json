@@ -17,7 +17,247 @@
     "body": "Create magical tales with your child's name, interests, and values — illustrated and narrated in minutes.",
     "ctaPricing": "View pricing",
     "ctaLogin": "Get Started for Free",
-    "title": "Bedtime stories crafted for the children you love most."
+    "title": "Bedtime stories crafted for the children you love most.",
+    "trustBadges": [
+      "No card required",
+      "11 languages",
+      "Kid-safe"
+    ],
+    "storyFormats": {
+      "overline": "Two story formats",
+      "title": "Bedtime, told two ways.",
+      "subtitle": "Pick a comic book of six painted pages for younger kids, or a long, vivid chapter story for the readers who never want bedtime to end.",
+      "comic": {
+        "badge": "New · Picture story",
+        "title": "Comic book",
+        "description": "Six full-page painted scenes with short captions and the occasional speech bubble. Swipe through them like a picture book — perfect for ages 3–7.",
+        "features": [
+          "~6 illustrated pages, one scene each",
+          "Tap or swipe to turn the page",
+          "Classic or speech-bubble panels",
+          "5–7 minutes of bedtime"
+        ],
+        "cta": "Try comic book"
+      },
+      "long": {
+        "badge": "Chapter book",
+        "title": "Long story",
+        "description": "A cover illustration and rich, vivid prose underneath. For readers who want to curl up and disappear into a longer story.",
+        "features": [
+          "One painted cover, no mid-story art",
+          "~4–6 minute cozy read",
+          "Add narration whenever you want",
+          "Save and resume across devices"
+        ],
+        "cta": "Try long story"
+      }
+    },
+    "howItWorks": {
+      "title": "Create Magical Bedtime Stories in 3 Easy Steps",
+      "subtitle": "Bring your child's imagination to life with TalePod's simple story creation process.",
+      "steps": [
+        {
+          "title": "1. Imagine the Adventure",
+          "description": "Start with a character, setting, or theme - let your imagination run wild!"
+        },
+        {
+          "title": "2. Customize Your Story",
+          "description": "Add details, choose the tone, and tailor the story to your child's preferences."
+        },
+        {
+          "title": "3. Share the Magic",
+          "description": "Read your personalized story aloud and create a magical bedtime experience."
+        }
+      ],
+      "cta": "Start Your Free Trial!",
+      "noCreditCard": "No Credit Card Required"
+    },
+    "keyFeatures": {
+      "title": "Unlock the Magic of TalePod",
+      "subtitle": "Discover the amazing features that make TalePod the ultimate bedtime story creator.",
+      "items": [
+        {
+          "title": "Personalized Stories",
+          "description": "Craft unique stories tailored to your child's interests, creating magical adventures just for them."
+        },
+        {
+          "title": "Easy to Use",
+          "description": "Our simple interface makes story creation quick and effortless, even for the busiest parents."
+        },
+        {
+          "title": "Unlimited Creativity",
+          "description": "Explore endless possibilities with a vast library of characters, settings, and plot ideas."
+        },
+        {
+          "title": "Engaging Content",
+          "description": "Create stories that captivate and entertain, making bedtime something to look forward to."
+        },
+        {
+          "title": "Save & Share",
+          "description": "Save your favorite stories and share them with family and friends, creating lasting memories."
+        },
+        {
+          "title": "Multi-Device Access",
+          "description": "Access your stories from any device, making bedtime stories available wherever you are."
+        }
+      ]
+    },
+    "benefits": {
+      "title": "Why You and Your Child Will Love TalePod",
+      "subtitle": "Discover the many ways TalePod can enhance your family's bedtime routine.",
+      "items": [
+        {
+          "title": "Boosts Imagination",
+          "description": "Encourages creativity and imaginative thinking in children."
+        },
+        {
+          "title": "Strengthens Bonds",
+          "description": "Creates special moments between parents and children."
+        },
+        {
+          "title": "Promotes Literacy",
+          "description": "Helps children develop a love for reading and storytelling."
+        },
+        {
+          "title": "Customized Learning",
+          "description": "Tailor stories to reinforce specific lessons or values."
+        },
+        {
+          "title": "Fun and Engaging",
+          "description": "Makes bedtime an exciting and enjoyable experience."
+        },
+        {
+          "title": "Reduces Screen Time",
+          "description": "Offers a creative alternative to passive screen time."
+        }
+      ]
+    },
+    "storyExamples": {
+      "title": "Examples of Stories You Can Create",
+      "items": [
+        {
+          "title": "The Brave Little Astronaut",
+          "description": "A story about a child who goes on an adventure to Mars."
+        },
+        {
+          "title": "The Magical Forest Friends",
+          "description": "A tale of woodland creatures who learn to work together."
+        },
+        {
+          "title": "The Time-Traveling Explorer",
+          "description": "A journey through different historical periods."
+        },
+        {
+          "title": "The Underwater Kingdom",
+          "description": "A story about a child who discovers a hidden underwater world."
+        },
+        {
+          "title": "The Mystery of the Missing Toy",
+          "description": "A detective story where a child solves the case of a lost toy."
+        },
+        {
+          "title": "The Day the Animals Talked",
+          "description": "A whimsical story where animals can suddenly talk to each other."
+        }
+      ]
+    },
+    "testimonials": {
+      "title": "What Parents Are Saying",
+      "items": [
+        {
+          "name": "Sarah J.",
+          "title": "Parent of Two",
+          "text": "TalePod has completely transformed our bedtime routine! My kids now eagerly anticipate story time every night. It's become a cherished part of our day."
+        },
+        {
+          "name": "Michael B.",
+          "title": "Father of a 5-Year-Old",
+          "text": "I love how easy it is to create personalized stories with TalePod. It's like magic! My daughter's face lights up every time we start a new adventure."
+        },
+        {
+          "name": "Emily L.",
+          "title": "Mother of Three",
+          "text": "My children's imagination has exploded since we started using TalePod. They're constantly coming up with new ideas for stories. I highly recommend it!"
+        },
+        {
+          "name": "David K.",
+          "title": "Parent and Educator",
+          "text": "As both a parent and an educator, I'm impressed with TalePod's ability to engage children. It's a fantastic tool for fostering creativity and a love of reading."
+        },
+        {
+          "name": "Jessica R.",
+          "title": "Mom of a Budding Author",
+          "text": "TalePod has empowered my child to become a storyteller. She's now writing her own stories and illustrating them. It's been incredible to witness her growth."
+        },
+        {
+          "name": "Kevin M.",
+          "title": "Dad of Twins",
+          "text": "With twins, bedtime can be chaotic. TalePod has made it so much easier and more enjoyable. Each child gets a personalized story, and they love it!"
+        }
+      ]
+    },
+    "pricing": {
+      "title": "Simple, family-friendly pricing",
+      "subtitle": "Start free with a handful of stories, upgrade whenever bedtime asks for more.",
+      "cta": "See all plans"
+    },
+    "guarantee": {
+      "title": "Our Ironclad Guarantee",
+      "body1": "We're so confident that you and your children will love TalePod that we're offering a 100% satisfaction guarantee.",
+      "body2": "If you're not completely happy, we'll make it right. No questions asked.",
+      "cta": "Try it Risk-Free!"
+    },
+    "callToAction": {
+      "title": "Ready to Create Magical Bedtime Stories?",
+      "body": "Join TalePod today and start crafting personalized stories that your children will cherish forever.",
+      "cta": "Get Started for FREE!",
+      "noCreditCard": "No Credit Card Required"
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "items": [
+        {
+          "question": "How do I create a bedtime story on your platform?",
+          "answer": "To create a bedtime story, simply navigate to the Create Story page and fill in the fields to create your own personalized story."
+        },
+        {
+          "question": "Can I read and listen to stories created by other users?",
+          "answer": "Absolutely! You can explore and enjoy a wide range of stories created by our team and other users. Browse through the Library page to find both text and audio versions of various bedtime stories."
+        },
+        {
+          "question": "How do I contact customer support if I have a question or issue?",
+          "answer": "If you have any questions or encounter any issues, you can contact our customer support team by visiting the Contact page from our menu."
+        },
+        {
+          "question": "Are there any guidelines for creating stories?",
+          "answer": "We make sure that all stories created are appropriate for children and suitable for young audiences."
+        },
+        {
+          "question": "Can I share the stories I create on social media?",
+          "answer": "Yes, you can share your stories on social media directly from our platform. Use the share button on your story page to post it on various social media platforms."
+        },
+        {
+          "question": "Is there a way to filter stories based on age or genre?",
+          "answer": "Certainly! Our platform allows you to filter stories by age group and genre, ensuring you find the perfect story for your child's bedtime."
+        },
+        {
+          "question": "How does TalePod handle my child's data?",
+          "answer": "TalePod collects only the information needed to personalize stories, such as a child's first name, age, and interests entered by a parent or guardian. We do not sell personal data. See our Privacy Policy for full details on collection, storage, and retention."
+        },
+        {
+          "question": "How does TalePod keep stories age-appropriate?",
+          "answer": "Stories are generated with kid-safe defaults and content filters designed to keep language and themes suitable for young audiences. Parents choose the child's age when creating a story to help tailor tone and complexity."
+        },
+        {
+          "question": "Is TalePod compliant with children's privacy laws like COPPA?",
+          "answer": "TalePod is designed for use by parents and guardians who create stories on behalf of children. We aim to follow applicable children's privacy requirements, including limiting data collection to what is necessary. Full compliance details are in our Privacy Policy — please review before use."
+        },
+        {
+          "question": "Does TalePod show ads to children?",
+          "answer": "TalePod does not display third-party advertising within the story creation or reading experience. Our focus is on a calm, ad-free bedtime routine for families."
+        }
+      ]
+    }
   },
   "pricing": {
     "mostPopular": "Most popular",

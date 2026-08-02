@@ -13,11 +13,251 @@
     "networkError": "Server nicht erreichbar. Verbindung prüfen und erneut versuchen."
   },
   "home": {
-    "badge": "KI-gestützte Plattform",
-    "body": "Das mobile Layout spiegelt den Web-Client: Material-App-Leiste, Menü rechts und Dashboard-Seitenleiste nach der Anmeldung.",
+    "badge": "Personalisierte Gute-Nacht-Geschichten",
+    "body": "Erstellen Sie magische Geschichten mit dem Namen, den Interessen und den Werten Ihres Kindes — illustriert und erzählt in wenigen Minuten.",
     "ctaPricing": "Preise ansehen",
-    "ctaLogin": "Kostenlos testen",
-    "title": "Erstellen, verwalten und erweitern Sie Ihre Projekte im Web oder mobil."
+    "ctaLogin": "Kostenlos starten",
+    "title": "Gute-Nacht-Geschichten für die Kinder, die Sie am meisten lieben.",
+    "trustBadges": [
+      "Keine Karte erforderlich",
+      "11 Sprachen",
+      "Kindersicher"
+    ],
+    "storyFormats": {
+      "overline": "Zwei Geschichtsformate",
+      "title": "Gute Nacht, auf zwei Arten erzählt.",
+      "subtitle": "Wählen Sie ein Comicbuch mit sechs gemalten Seiten für jüngere Kinder oder eine lange, lebendige Kapitelgeschichte für Leser, die nie wollen, dass die Gute-Nacht-Zeit endet.",
+      "comic": {
+        "badge": "Neu · Bildergeschichte",
+        "title": "Comicbuch",
+        "description": "Sechs ganzseitige gemalte Szenen mit kurzen Bildunterschriften und gelegentlichen Sprechblasen. Wischen Sie durch wie in einem Bilderbuch — perfekt für 3–7-Jährige.",
+        "features": [
+          "~6 illustrierte Seiten, je eine Szene",
+          "Tippen oder wischen zum Umblättern",
+          "Klassische oder Sprechblasen-Panels",
+          "5–7 Minuten Gute-Nacht-Zeit"
+        ],
+        "cta": "Comicbuch ausprobieren"
+      },
+      "long": {
+        "badge": "Kapitelbuch",
+        "title": "Lange Geschichte",
+        "description": "Eine Cover-Illustration und darunter reiche, lebendige Prosa. Für Leser, die sich einkuscheln und in eine längere Geschichte eintauchen möchten.",
+        "features": [
+          "Ein gemaltes Cover, keine Kunst mitten in der Geschichte",
+          "~4–6 Minuten gemütliches Lesen",
+          "Erzählung hinzufügen, wann immer Sie möchten",
+          "Speichern und auf allen Geräten fortsetzen"
+        ],
+        "cta": "Lange Geschichte ausprobieren"
+      }
+    },
+    "howItWorks": {
+      "title": "Erstellen Sie magische Gute-Nacht-Geschichten in 3 einfachen Schritten",
+      "subtitle": "Erwecken Sie die Fantasie Ihres Kindes mit TalePods einfachem Geschichtenerstellungsprozess zum Leben.",
+      "steps": [
+        {
+          "title": "1. Stellen Sie sich das Abenteuer vor",
+          "description": "Beginnen Sie mit einer Figur, einem Schauplatz oder einem Thema — lassen Sie Ihrer Fantasie freien Lauf!"
+        },
+        {
+          "title": "2. Passen Sie Ihre Geschichte an",
+          "description": "Fügen Sie Details hinzu, wählen Sie den Ton und passen Sie die Geschichte an die Vorlieben Ihres Kindes an."
+        },
+        {
+          "title": "3. Teilen Sie die Magie",
+          "description": "Lesen Sie Ihre personalisierte Geschichte laut vor und schaffen Sie ein magisches Gute-Nacht-Erlebnis."
+        }
+      ],
+      "cta": "Kostenlose Testversion starten!",
+      "noCreditCard": "Keine Kreditkarte erforderlich"
+    },
+    "keyFeatures": {
+      "title": "Entdecken Sie die Magie von TalePod",
+      "subtitle": "Entdecken Sie die erstaunlichen Funktionen, die TalePod zum ultimativen Gute-Nacht-Geschichten-Ersteller machen.",
+      "items": [
+        {
+          "title": "Personalisierte Geschichten",
+          "description": "Gestalten Sie einzigartige Geschichten, die auf die Interessen Ihres Kindes zugeschnitten sind und magische Abenteuer nur für sie schaffen."
+        },
+        {
+          "title": "Einfach zu bedienen",
+          "description": "Unsere einfache Oberfläche macht die Geschichtenerstellung schnell und mühelos, selbst für die beschäftigtesten Eltern."
+        },
+        {
+          "title": "Unbegrenzte Kreativität",
+          "description": "Erkunden Sie endlose Möglichkeiten mit einer riesigen Bibliothek von Charakteren, Schauplätzen und Handlungsideen."
+        },
+        {
+          "title": "Fesselnder Inhalt",
+          "description": "Erstellen Sie Geschichten, die fesseln und unterhalten und die Gute-Nacht-Zeit zu etwas machen, auf das man sich freut."
+        },
+        {
+          "title": "Speichern & Teilen",
+          "description": "Speichern Sie Ihre Lieblingsgeschichten und teilen Sie sie mit Familie und Freunden, um bleibende Erinnerungen zu schaffen."
+        },
+        {
+          "title": "Geräteübergreifender Zugriff",
+          "description": "Greifen Sie von jedem Gerät auf Ihre Geschichten zu, damit Gute-Nacht-Geschichten überall verfügbar sind."
+        }
+      ]
+    },
+    "benefits": {
+      "title": "Warum Sie und Ihr Kind TalePod lieben werden",
+      "subtitle": "Entdecken Sie die vielen Möglichkeiten, wie TalePod die Gute-Nacht-Routine Ihrer Familie bereichern kann.",
+      "items": [
+        {
+          "title": "Fördert die Fantasie",
+          "description": "Fördert Kreativität und fantasievolles Denken bei Kindern."
+        },
+        {
+          "title": "Stärkt die Bindung",
+          "description": "Schafft besondere Momente zwischen Eltern und Kindern."
+        },
+        {
+          "title": "Fördert Lesekompetenz",
+          "description": "Hilft Kindern, eine Liebe zum Lesen und Geschichtenerzählen zu entwickeln."
+        },
+        {
+          "title": "Individuelles Lernen",
+          "description": "Passen Sie Geschichten an, um bestimmte Lektionen oder Werte zu verstärken."
+        },
+        {
+          "title": "Spaßig und fesselnd",
+          "description": "Macht die Gute-Nacht-Zeit zu einem aufregenden und angenehmen Erlebnis."
+        },
+        {
+          "title": "Reduziert Bildschirmzeit",
+          "description": "Bietet eine kreative Alternative zur passiven Bildschirmzeit."
+        }
+      ]
+    },
+    "storyExamples": {
+      "title": "Beispiele für Geschichten, die Sie erstellen können",
+      "items": [
+        {
+          "title": "Der mutige kleine Astronaut",
+          "description": "Eine Geschichte über ein Kind, das ein Abenteuer zum Mars erlebt."
+        },
+        {
+          "title": "Die magischen Waldfreunde",
+          "description": "Eine Erzählung von Waldtieren, die lernen, zusammenzuarbeiten."
+        },
+        {
+          "title": "Der Zeitreisende Entdecker",
+          "description": "Eine Reise durch verschiedene historische Epochen."
+        },
+        {
+          "title": "Das Unterwasser-Königreich",
+          "description": "Eine Geschichte über ein Kind, das eine verborgene Unterwasserwelt entdeckt."
+        },
+        {
+          "title": "Das Geheimnis des verschwundenen Spielzeugs",
+          "description": "Eine Detektivgeschichte, in der ein Kind den Fall eines verlorenen Spielzeugs löst."
+        },
+        {
+          "title": "Der Tag, an dem die Tiere sprachen",
+          "description": "Eine fantasievolle Geschichte, in der Tiere plötzlich miteinander sprechen können."
+        }
+      ]
+    },
+    "testimonials": {
+      "title": "Was Eltern sagen",
+      "items": [
+        {
+          "name": "Sarah J.",
+          "title": "Mutter von zwei Kindern",
+          "text": "TalePod hat unsere Gute-Nacht-Routine komplett verändert! Meine Kinder freuen sich jetzt jede Nacht auf die Geschichtenzeit. Es ist zu einem geschätzten Teil unseres Tages geworden."
+        },
+        {
+          "name": "Michael B.",
+          "title": "Vater eines 5-Jährigen",
+          "text": "Ich liebe, wie einfach es ist, personalisierte Geschichten mit TalePod zu erstellen. Es ist wie Magie! Das Gesicht meiner Tochter leuchtet auf, jedes Mal wenn wir ein neues Abenteuer beginnen."
+        },
+        {
+          "name": "Emily L.",
+          "title": "Mutter von drei Kindern",
+          "text": "Die Fantasie meiner Kinder ist explodiert, seit wir TalePod nutzen. Sie kommen ständig mit neuen Geschichtenideen. Ich kann es nur empfehlen!"
+        },
+        {
+          "name": "David K.",
+          "title": "Elternteil und Pädagoge",
+          "text": "Als Elternteil und Pädagoge bin ich beeindruckt von TalePods Fähigkeit, Kinder zu begeistern. Es ist ein fantastisches Werkzeug, um Kreativität und Leselust zu fördern."
+        },
+        {
+          "name": "Jessica R.",
+          "title": "Mutter einer aufstrebenden Autorin",
+          "text": "TalePod hat mein Kind ermutigt, Geschichtenerzählerin zu werden. Sie schreibt jetzt ihre eigenen Geschichten und illustriert sie. Es war unglaublich, ihr Wachstum zu erleben."
+        },
+        {
+          "name": "Kevin M.",
+          "title": "Vater von Zwillingen",
+          "text": "Mit Zwillingen kann die Gute-Nacht-Zeit chaotisch sein. TalePod hat es so viel einfacher und angenehmer gemacht. Jedes Kind bekommt eine personalisierte Geschichte und liebt es!"
+        }
+      ]
+    },
+    "pricing": {
+      "title": "Einfache, familienfreundliche Preise",
+      "subtitle": "Starten Sie kostenlos mit ein paar Geschichten und wechseln Sie, wann immer die Gute-Nacht-Zeit mehr verlangt.",
+      "cta": "Alle Tarife ansehen"
+    },
+    "guarantee": {
+      "title": "Unsere eiserne Garantie",
+      "body1": "Wir sind so überzeugt, dass Sie und Ihre Kinder TalePod lieben werden, dass wir eine 100%ige Zufriedenheitsgarantie bieten.",
+      "body2": "Wenn Sie nicht vollständig zufrieden sind, machen wir es wieder gut. Ohne Fragen.",
+      "cta": "Risikofrei ausprobieren!"
+    },
+    "callToAction": {
+      "title": "Bereit, magische Gute-Nacht-Geschichten zu erstellen?",
+      "body": "Treten Sie TalePod heute bei und beginnen Sie, personalisierte Geschichten zu gestalten, die Ihre Kinder für immer schätzen werden.",
+      "cta": "Kostenlos starten!",
+      "noCreditCard": "Keine Kreditkarte erforderlich"
+    },
+    "faq": {
+      "title": "Häufig gestellte Fragen",
+      "items": [
+        {
+          "question": "Wie erstelle ich eine Gute-Nacht-Geschichte auf Ihrer Plattform?",
+          "answer": "Um eine Gute-Nacht-Geschichte zu erstellen, navigieren Sie einfach zur Seite Geschichte erstellen und füllen Sie die Felder aus, um Ihre eigene personalisierte Geschichte zu erstellen."
+        },
+        {
+          "question": "Kann ich Geschichten lesen und anhören, die von anderen Nutzern erstellt wurden?",
+          "answer": "Absolut! Sie können eine große Auswahl an Geschichten erkunden und genießen, die von unserem Team und anderen Nutzern erstellt wurden. Durchsuchen Sie die Seite Bibliothek, um sowohl Text- als auch Audioversionen verschiedener Gute-Nacht-Geschichten zu finden."
+        },
+        {
+          "question": "Wie kontaktiere ich den Kundensupport bei einer Frage oder einem Problem?",
+          "answer": "Wenn Sie Fragen haben oder auf Probleme stoßen, können Sie unser Kundensupport-Team kontaktieren, indem Sie die Seite Kontakt in unserem Menü besuchen."
+        },
+        {
+          "question": "Gibt es Richtlinien für die Erstellung von Geschichten?",
+          "answer": "Wir stellen sicher, dass alle erstellten Geschichten für Kinder geeignet und für junge Zielgruppen angemessen sind."
+        },
+        {
+          "question": "Kann ich die von mir erstellten Geschichten in sozialen Medien teilen?",
+          "answer": "Ja, Sie können Ihre Geschichten direkt von unserer Plattform in sozialen Medien teilen. Verwenden Sie die Teilen-Schaltfläche auf Ihrer Geschichtenseite, um sie auf verschiedenen Social-Media-Plattformen zu veröffentlichen."
+        },
+        {
+          "question": "Gibt es eine Möglichkeit, Geschichten nach Alter oder Genre zu filtern?",
+          "answer": "Sicherlich! Unsere Plattform ermöglicht es Ihnen, Geschichten nach Altersgruppe und Genre zu filtern, damit Sie die perfekte Geschichte für die Gute-Nacht-Zeit Ihres Kindes finden."
+        },
+        {
+          "question": "Wie geht TalePod mit den Daten meines Kindes um?",
+          "answer": "TalePod sammelt nur die Informationen, die zur Personalisierung von Geschichten benötigt werden, wie den Vornamen, das Alter und die Interessen eines Kindes, die von einem Elternteil oder Erziehungsberechtigten eingegeben werden. Wir verkaufen keine personenbezogenen Daten. Details zur Erhebung, Speicherung und Aufbewahrung finden Sie in unserer Datenschutzrichtlinie."
+        },
+        {
+          "question": "Wie stellt TalePod sicher, dass Geschichten altersgerecht sind?",
+          "answer": "Geschichten werden mit kindersicheren Standardeinstellungen und Inhaltsfiltern erstellt, die Sprache und Themen für junge Zielgruppen geeignet halten. Eltern wählen das Alter des Kindes bei der Erstellung einer Geschichte, um Ton und Komplexität anzupassen."
+        },
+        {
+          "question": "Ist TalePod mit Kinderschutzgesetzen wie COPPA konform?",
+          "answer": "TalePod ist für die Nutzung durch Eltern und Erziehungsberechtigte konzipiert, die Geschichten im Namen von Kindern erstellen. Wir bemühen uns, geltende Anforderungen zum Kinderschutz einzuhalten, einschließlich der Beschränkung der Datenerhebung auf das Notwendige. Vollständige Compliance-Details finden Sie in unserer Datenschutzrichtlinie — bitte vor der Nutzung lesen."
+        },
+        {
+          "question": "Zeigt TalePod Kindern Werbung?",
+          "answer": "TalePod zeigt keine Werbung von Drittanbietern während der Geschichtenerstellung oder des Leseerlebnisses. Unser Fokus liegt auf einer ruhigen, werbefreien Gute-Nacht-Routine für Familien."
+        }
+      ]
+    }
   },
   "pricing": {
     "mostPopular": "Am beliebtesten",
