@@ -10,6 +10,12 @@ interface AppleAuthProps {
   authType?: AuthType;
 }
 
+/**
+ * Apple's HIG allows a custom button — this one matches the layout of
+ * `GoogleAuth` — but fixes the title to one of Apple's approved strings and the
+ * mark and title to black or white, never a brand colour. "Continue with Apple"
+ * is the approved title that suits both the login and register modals.
+ */
 const AppleAuth = (props: AppleAuthProps): JSX.Element => {
   const { t } = useTranslation("auth");
   const { authType } = props;
@@ -35,20 +41,28 @@ const AppleAuth = (props: AppleAuthProps): JSX.Element => {
       fullWidth
       variant="contained"
       onClick={handleAppleLogin}
-      // Apple's guidelines ask for their own black-on-white / white-on-black
-      // treatment rather than the app's primary colour.
-      sx={{
-        display: "flex",
-        justifyContent: "flex-start",
-        textTransform: "none",
-        gap: 2,
-        backgroundColor: "#000000",
-        color: "#FFFFFF",
-        "&:hover": { backgroundColor: "#1a1a1a" },
+      sx={(theme) => {
+        // Inverts with the theme so the button never disappears into the page:
+        // black on the light parchment background, white on the dark plum one.
+        const isLight = theme.palette.mode === "light";
+        const background = isLight ? "#000000" : "#FFFFFF";
+        const content = isLight ? "#FFFFFF" : "#000000";
+
+        return {
+          display: "flex",
+          justifyContent: "flex-start",
+          textTransform: "none",
+          gap: 2,
+          backgroundColor: background,
+          color: content,
+          "&:hover": {
+            backgroundColor: isLight ? "#1a1a1a" : "#e6e6e6",
+          },
+        };
       }}
     >
       <AppleIcon />
-      {isRegister ? t("registerWithApple") : t("loginWithApple")}
+      {t("continueWithApple")}
     </Button>
   );
 };

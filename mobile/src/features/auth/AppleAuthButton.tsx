@@ -1,16 +1,12 @@
-import { useEffect, useState } from "react";
-import { Platform, StyleSheet, View } from "react-native";
-import * as AppleAuthentication from "expo-apple-authentication";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Text, useTheme } from "react-native-paper";
 
 import { getApiErrorMessage } from "src/application/shared/getApiErrorMessage";
-import {
-  isNativeAppleSignInAvailable,
-  signInWithApple,
-} from "src/application/auth/signInWithApple";
+import { signInWithApple } from "src/application/auth/signInWithApple";
 import { useApplicationContext } from "src/application/store/Provider";
+import { AppleLogo } from "src/features/auth/AppleLogo";
 import { AuthSocialButton } from "src/features/auth/AuthSocialButton";
 
 import type { User } from "src/shared/types/user";
@@ -23,7 +19,6 @@ type AppleAuthButtonProps = {
 };
 
 export const AppleAuthButton = ({
-  authType,
   disabled,
   onSuccess,
 }: AppleAuthButtonProps) => {
@@ -34,26 +29,14 @@ export const AppleAuthButton = ({
   } = useApplicationContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [useNativeButton, setUseNativeButton] = useState(false);
 
-  // Apple's HIG requires their own button when the native sheet is available;
-  // everywhere else the browser flow uses the shared social button.
-  useEffect(() => {
-    let isMounted = true;
-
-    void isNativeAppleSignInAvailable().then((available) => {
-      if (isMounted) {
-        setUseNativeButton(available);
-      }
-    });
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  const label =
-    authType === "register" ? t("registerWithApple") : t("loginWithApple");
+  // Apple's HIG allows a custom button — own font, layout, radius and size — but
+  // fixes two things: the title must be one of Apple's approved strings, and the
+  // mark and title must be black or white, never a brand colour. "Continue with
+  // Apple" is the approved title that works on both the login and register
+  // sheets without contradicting the app's login/register wording.
+  const buttonColor = theme.dark ? "#FFFFFF" : "#000000";
+  const contentColor = theme.dark ? "#000000" : "#FFFFFF";
 
   const handlePress = async () => {
     setIsSubmitting(true);
@@ -84,36 +67,16 @@ export const AppleAuthButton = ({
 
   return (
     <View style={styles.wrap}>
-      {useNativeButton ? (
-        <AppleAuthentication.AppleAuthenticationButton
-          buttonType={
-            authType === "register"
-              ? AppleAuthentication.AppleAuthenticationButtonType.SIGN_UP
-              : AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN
-          }
-          buttonStyle={
-            theme.dark
-              ? AppleAuthentication.AppleAuthenticationButtonStyle.WHITE
-              : AppleAuthentication.AppleAuthenticationButtonStyle.BLACK
-          }
-          cornerRadius={8}
-          style={styles.nativeButton}
-          onPress={() => {
-            void handlePress();
-          }}
-        />
-      ) : (
-        <AuthSocialButton
-          onPress={handlePress}
-          disabled={disabled || isSubmitting}
-          loading={isSubmitting}
-          buttonColor="#000000"
-          textColor="#FFFFFF"
-          icon={<MaterialCommunityIcons name="apple" size={22} color="#FFFFFF" />}
-        >
-          {label}
-        </AuthSocialButton>
-      )}
+      <AuthSocialButton
+        onPress={handlePress}
+        disabled={disabled || isSubmitting}
+        loading={isSubmitting}
+        buttonColor={buttonColor}
+        textColor={contentColor}
+        icon={<AppleLogo color={contentColor} />}
+      >
+        {t("continueWithApple")}
+      </AuthSocialButton>
       {errorMessage ? (
         <Text variant="bodySmall" style={styles.error}>
           {errorMessage}
@@ -126,11 +89,6 @@ export const AppleAuthButton = ({
 const styles = StyleSheet.create({
   wrap: {
     gap: 8,
-  },
-  nativeButton: {
-    // Apple's minimum touch height; the shared button lands on the same size.
-    height: Platform.OS === "ios" ? 44 : 0,
-    alignSelf: "stretch",
   },
   error: {
     color: "#b00020",
