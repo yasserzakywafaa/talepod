@@ -26,7 +26,7 @@ export const AppBarLoginButton = () => {
   return (
     <PillButton
       compact
-      variant="text"
+      variant="outlined"
       onPress={() => openRootSheet(mobileRoutes.public.login)}
     >
       {t("nav.login")}
