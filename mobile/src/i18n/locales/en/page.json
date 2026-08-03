@@ -15,10 +15,14 @@
   "home": {
     "badge": "Personalized bedtime stories",
     "body": "Create magical tales with your child's name, interests, and values — illustrated and narrated in minutes.",
-    "ctaPricing": "View pricing",
+    "ctaSeeExamples": "See Story Examples",
     "ctaLogin": "Get Started for Free",
     "title": "Bedtime stories crafted for the children you love most.",
-    "trustBadges": ["No card required", "11 languages", "Kid-safe"],
+    "trustBadges": [
+      "No card required",
+      "11 languages",
+      "Kid-safe"
+    ],
     "storyFormats": {
       "overline": "Two story formats",
       "title": "Bedtime, told two ways.",

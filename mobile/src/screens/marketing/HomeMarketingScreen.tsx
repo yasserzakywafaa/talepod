@@ -63,8 +63,8 @@ export const HomeMarketingScreen = ({ navigation }: Props) => {
     t("home.trustBadges", { returnObjects: true }),
   );
 
-  const handlePricingPress = () => {
-    navigateToPublicMarketingScreen(mobileRoutes.public.pricing);
+  const handleSeeExamplesPress = () => {
+    navigateToPublicMarketingScreen(mobileRoutes.public.library);
   };
 
   return (
@@ -99,9 +99,9 @@ export const HomeMarketingScreen = ({ navigation }: Props) => {
               variant="text"
               color="#FFFFFF"
               style={styles.centeredAction}
-              onPress={handlePricingPress}
+              onPress={handleSeeExamplesPress}
             >
-              {t("home.ctaPricing")}
+              {t("home.ctaSeeExamples")}
             </PillButton>
           </View>
 
