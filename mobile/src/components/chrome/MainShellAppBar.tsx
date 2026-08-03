@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useMainShellDrawer } from "src/application/navigation/MainShellDrawerContext";
 import { navigateToCreateStory } from "src/application/navigation/rootNavigation";
 import { useAppTheme } from "src/application/theme/useAppTheme";
+import { AppBarLoginButton } from "src/components/chrome/AppBarLoginButton";
 import { DisplayText } from "src/components/brand/DisplayText";
 import { PillButton } from "src/components/brand/PillButton";
 
@@ -64,6 +65,8 @@ export const MainShellAppBar = ({
         </PillButton>
 
         <View style={styles.spacer} />
+
+        <AppBarLoginButton />
 
         <Pressable
           onPress={openMenu}

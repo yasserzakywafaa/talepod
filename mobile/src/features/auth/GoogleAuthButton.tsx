@@ -19,7 +19,6 @@ type GoogleAuthButtonProps = {
 };
 
 export const GoogleAuthButton = ({
-  authType,
   disabled,
   onSuccess,
 }: GoogleAuthButtonProps) => {
@@ -30,8 +29,9 @@ export const GoogleAuthButton = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const label =
-    authType === "register" ? t("registerWithGoogle") : t("loginWithGoogle");
+  // One label on both sheets: social auth has no login/register split — signing
+  // in without an account creates one — so "Continue" is what actually happens.
+  const label = t("continueWithGoogle");
 
   const handlePress = async () => {
     setIsSubmitting(true);

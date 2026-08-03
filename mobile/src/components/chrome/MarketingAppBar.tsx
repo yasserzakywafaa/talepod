@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import type { MainDrawerParamList } from "src/application/navigation/MainDrawerNavigator";
 import { navigateToCreateStory } from "src/application/navigation/rootNavigation";
 import { useAppTheme } from "src/application/theme/useAppTheme";
+import { AppBarLoginButton } from "src/components/chrome/AppBarLoginButton";
 import { DisplayText } from "src/components/brand/DisplayText";
 import { PillButton } from "src/components/brand/PillButton";
 
@@ -34,6 +35,8 @@ export const MarketingAppBar = ({
         </PillButton>
 
         <View style={styles.spacer} />
+
+        <AppBarLoginButton />
 
         <Pressable
           onPress={() => navigation.openDrawer()}
