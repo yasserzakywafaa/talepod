@@ -50,7 +50,7 @@ This is where most first submissions stall. The app collects:
 
 | Data | Why | Linked to identity |
 | --- | --- | --- |
-| Email address | Account (Google sign-in) | Yes |
+| Email address | Account (Google or Apple sign-in) | Yes — may be an Apple private-relay address |
 | Phone number | Account (OTP sign-in) | Yes |
 | User content (stories, avatars, child's name and age) | Core feature | Yes |
 | Purchase history | Subscriptions | Yes |
@@ -94,6 +94,41 @@ by anyone using the API directly.
 
 ---
 
+## 4b. Sign in with Apple — Apple guideline 4.8 — **you**, code side is done
+
+Offering Google sign-in on iOS obliges the app to offer Sign in with Apple.
+The app now does: native system sheet on iOS, in-app browser on Android, and
+a full-page redirect on web. What is left is Apple Developer configuration.
+
+- [ ] App ID `com.talepod.app` → capability **Sign in with Apple** enabled
+- [ ] **Services ID** created (e.g. `com.talepod.app.web`) for the web and
+      Android browser flows
+- [ ] Services ID configured with domains `talepod.com` and `api.talepod.com`
+      (plus the dev API domain), return URL
+      `https://api.talepod.com/api/v1/auth/apple/callback` — it must match
+      `SERVER_URL` exactly. Apple rejects `http://` and `localhost`, so the
+      browser flow cannot be exercised against a local server.
+- [ ] **Sign in with Apple key** (`.p8`) created; Key ID and Team ID noted.
+      The `.p8` is never committed.
+- [ ] Server environment variables set (see table below)
+- [ ] New EAS **production and preview** iOS builds — `usesAppleSignIn` is a
+      native entitlement, so an OTA update cannot deliver it
+
+Server environment variables:
+
+| Variable | Value |
+| --- | --- |
+| `APPLE_TEAM_ID` | Apple Developer Team ID |
+| `APPLE_KEY_ID` | Key ID of the Sign in with Apple `.p8` |
+| `APPLE_PRIVATE_KEY` | `.p8` contents, newlines `\n`-escaped |
+| `APPLE_BUNDLE_ID` | `com.talepod.app` — `aud` for native iOS tokens |
+| `APPLE_SERVICES_ID` | Services ID — `client_id` for web and Android |
+
+The app itself needs no Apple secrets; everything sensitive stays on the
+server.
+
+---
+
 ## 5. Account deletion — Apple guideline 5.1.1(v) — **verify**
 
 Apple rejects apps that create accounts but do not let users delete them
@@ -103,6 +138,8 @@ in-app. `DeleteAccountDialog` exists and is wired to
 - [ ] Confirm it is reachable in a few taps from Profile without hunting
 - [ ] Confirm the server actually deletes (or fully anonymises) the account
       and its stories, rather than flagging a row
+- [ ] For an Apple account, confirm the server revokes the Apple grant on
+      delete (it calls Apple's `/auth/revoke` with the stored refresh token)
 - [ ] Note the path in the review notes so the reviewer finds it
 
 ---
@@ -154,6 +191,10 @@ which does not exercise the native modules that matter here.
 
 - [ ] Cold start, no network → the app explains itself rather than hanging
 - [ ] Sign in with Google, force-quit, reopen → still signed in
+- [ ] Sign in with Apple (native sheet on iOS), force-quit, reopen → still
+      signed in; sign in a second time and confirm the name is still there
+- [ ] Sign in with Apple using **Hide My Email** → the app works with the
+      relay address
 - [ ] Sign in with phone OTP → same
 - [ ] Let the access token expire → the app returns to signed-out state
       instead of silently failing every request

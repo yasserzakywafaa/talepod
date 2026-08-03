@@ -47,7 +47,13 @@ export const setupMobileAxios = (): void => {
     return config;
   });
 
-  const googleMobileExchangeUrl = END_POINTS.AUTH.GOOGLE_MOBILE_EXCHANGE;
+  // A 401 from an exchange means the sign-in failed, not that the session
+  // expired — letting the refresh interceptor see it would wipe stored auth.
+  const oauthExchangeUrls = [
+    END_POINTS.AUTH.GOOGLE_MOBILE_EXCHANGE,
+    END_POINTS.AUTH.APPLE_MOBILE_EXCHANGE,
+    END_POINTS.AUTH.APPLE_NATIVE_EXCHANGE,
+  ];
 
   setupAuthAxios({
     instance: api,
@@ -70,7 +76,9 @@ export const setupMobileAxios = (): void => {
     },
     isExcludedAuthUrl: (requestUrl, authUrl) =>
       isExcludedAuthUrl(requestUrl, authUrl) ||
-      Boolean(requestUrl?.includes(googleMobileExchangeUrl)),
+      oauthExchangeUrls.some((exchangeUrl) =>
+        Boolean(requestUrl?.includes(exchangeUrl)),
+      ),
     requestRefresh: async (_instance, refreshUrl) => {
       const { refreshToken } = await getStoredAuth();
       if (!refreshToken) {

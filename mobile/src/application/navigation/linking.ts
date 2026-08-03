@@ -16,6 +16,9 @@ const normalizeWebPath = (path: string): string =>
     .replace(/^\/story\//, "/bedtime-story/")
     .replace(/^\/bedtime-stories(?=\/|$)/, "/library") || "/";
 
+/** Every provider whose browser callback the auth session consumes itself. */
+const OAUTH_CALLBACK_PATH_PATTERN = /auth\/(google|apple)/;
+
 /**
  * Deep links; without these a shared story URL drops its destination. The
  * https prefixes need association files served (docs/STORE_READINESS.md).
@@ -65,5 +68,5 @@ export const linking: LinkingOptions<RootStackParamList> = {
 
   // `WebBrowser.openAuthSessionAsync` already consumes the OAuth callback;
   // letting React Navigation see it too would race and push a bogus screen.
-  filter: (url) => !url.includes("auth/google"),
+  filter: (url) => !OAUTH_CALLBACK_PATH_PATTERN.test(url),
 };

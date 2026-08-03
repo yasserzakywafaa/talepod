@@ -20,11 +20,23 @@ import { DBCollectionsEnum } from "../models/mongoDb";
 import { ObjectId } from "mongodb";
 import { PhoneOtpService } from "../services/PhoneOtpService";
 import { TokenService } from "../services/tokenService";
-import { withMobileTokens } from "@yasserzakywafaa/server-core";
+import {
+  parseAppleUserPayload,
+  withMobileTokens,
+  type AppleAuthenticatedProfile,
+} from "@yasserzakywafaa/server-core";
 import passport from "passport";
 import { randomUUID } from "crypto";
 import { mobileOAuth } from "../services/mobileOAuthService";
 import { googleMobileExchange } from "../services/googleMobileExchangeHandler";
+import { appleMobileOAuth } from "../services/appleMobileOAuthService";
+import {
+  appleMobileExchange,
+  appleNativeExchange,
+} from "../services/appleExchangeHandlers";
+import { getAppleAuth } from "../services/appleAuthService";
+import { findOrCreateAppleUser } from "../services/appleUserService";
+import END_POINTS from "../models/endpoints";
 
 /**
  * Send 200 with HTML that redirects via meta refresh. Used so cookies are set in a
@@ -71,8 +83,10 @@ interface PhoneLoginVerifyRequestBody extends PhoneOtpRequestBody {
 
 const OTP_CODE_REGEX = /^\d{4,8}$/;
 
-const sanitizeUserForResponse = (user: User): Omit<User, "refreshToken"> => {
-  const { refreshToken, ...safeUser } = user;
+const sanitizeUserForResponse = (
+  user: User,
+): Omit<User, "refreshToken" | "appleRefreshToken"> => {
+  const { refreshToken, appleRefreshToken, ...safeUser } = user;
   return safeUser;
 };
 
@@ -296,6 +310,240 @@ const oauth2GoogleCallback = async (
       }
     },
   )(req, res, next);
+};
+
+/**
+ * Apple browser OAuth start — web full-page redirect and the Android in-app
+ * browser. iOS does not come through here; it uses the native sheet and posts
+ * its identity token straight to APPLE_NATIVE_EXCHANGE.
+ */
+const oauth2Apple = async (req: Request, res: Response, _next: NextFunction) => {
+  console.log("🚀 oauth2Apple route handler called");
+
+  const appleAuth = getAppleAuth();
+  if (!appleAuth) {
+    return res
+      .status(503)
+      .json({ message: "Sign in with Apple is not configured." });
+  }
+
+  const isMobilePlatform = req.query.platform === "mobile";
+  const redirectUriParam = req.query.redirect_uri;
+
+  if (isMobilePlatform) {
+    console.log("📱 Mobile Apple OAuth start:", {
+      hasRedirectUri: typeof redirectUriParam === "string",
+    });
+
+    if (
+      typeof redirectUriParam !== "string" ||
+      !appleMobileOAuth.isAllowedRedirectUri(redirectUriParam)
+    ) {
+      console.error("❌ Mobile Apple OAuth rejected: invalid redirect_uri", {
+        redirectUri: redirectUriParam,
+        scheme: CONFIG.MOBILE_OAUTH_SCHEME,
+      });
+      return res.status(400).json({
+        message:
+          "A valid redirect_uri query parameter is required for mobile Apple login.",
+      });
+    }
+  }
+
+  try {
+    const state =
+      isMobilePlatform && typeof redirectUriParam === "string"
+        ? await appleMobileOAuth.buildPassportState(redirectUriParam)
+        : randomUUID();
+
+    if (isMobilePlatform) {
+      console.log("📱 Mobile Apple OAuth state saved:", {
+        state: `${state.slice(0, 16)}…`,
+      });
+    }
+
+    const authorizeUrl = appleAuth.buildAuthorizeUrl({
+      redirectUri: `${CONFIG.SERVER_URL}${END_POINTS.AUTH.APPLE_CALLBACK}`,
+      state,
+      ...(CONFIG.APPLE_SERVICES_ID
+        ? { clientId: CONFIG.APPLE_SERVICES_ID }
+        : {}),
+    });
+
+    return res.redirect(authorizeUrl);
+  } catch (error) {
+    console.error("❌ Apple OAuth start error:", error);
+    return res.redirect(
+      `${CONFIG.APP_URL}/unauthorized?error=apple_auth_failed`,
+    );
+  }
+};
+
+/**
+ * Apple redirects here with a form POST — requesting name/email scopes forces
+ * `response_mode=form_post`. A GET is registered too for the no-scope case.
+ */
+const oauth2AppleCallback = async (
+  req: Request,
+  res: Response,
+  _next: NextFunction,
+) => {
+  const source = { ...(req.query ?? {}), ...(req.body ?? {}) } as Record<
+    string,
+    unknown
+  >;
+  const state = typeof source.state === "string" ? source.state : undefined;
+  const isMobileCallback = appleMobileOAuth.isMobileOAuthState(state);
+
+  console.log("🔄 Apple OAuth callback received", {
+    platform: isMobileCallback ? "mobile" : "web",
+    method: req.method,
+    state: state ? `${state.slice(0, 24)}…` : undefined,
+  });
+
+  const redirectFailure = async (errorCode: string) => {
+    if (
+      await appleMobileOAuth.redirectMobileOAuthResult(
+        state,
+        { error: errorCode },
+        res,
+      )
+    ) {
+      console.error(
+        `❌ Mobile Apple OAuth callback failed (${errorCode}) — redirected error to app`,
+      );
+      return;
+    }
+
+    res.redirect(`${CONFIG.APP_URL}/unauthorized?error=${errorCode}`);
+  };
+
+  try {
+    const appleAuth = getAppleAuth();
+    if (!appleAuth) {
+      return await redirectFailure("apple_auth_failed");
+    }
+
+    if (source.error) {
+      console.error("❌ Apple OAuth callback returned an error:", source.error);
+      return await redirectFailure("apple_auth_failed");
+    }
+
+    const identityToken =
+      typeof source.id_token === "string" ? source.id_token : undefined;
+    const authorizationCode =
+      typeof source.code === "string" ? source.code : undefined;
+
+    if (!identityToken && !authorizationCode) {
+      console.error("❌ Apple OAuth callback missing id_token and code");
+      return await redirectFailure("apple_auth_failed");
+    }
+
+    const redirectUri = `${CONFIG.SERVER_URL}${END_POINTS.AUTH.APPLE_CALLBACK}`;
+    let verifiedToken = identityToken;
+    let appleRefreshToken: string | undefined;
+
+    // The code exchange yields the refresh token that account deletion needs to
+    // revoke the Apple grant; it also covers a callback with no id_token.
+    if (authorizationCode) {
+      try {
+        const tokens = await appleAuth.exchangeAuthorizationCode({
+          code: authorizationCode,
+          redirectUri,
+          ...(CONFIG.APPLE_SERVICES_ID
+            ? { clientId: CONFIG.APPLE_SERVICES_ID }
+            : {}),
+        });
+        appleRefreshToken = tokens.refreshToken;
+        verifiedToken = tokens.idToken ?? verifiedToken;
+      } catch (error) {
+        console.error("⚠️ Apple authorization code exchange failed:", error);
+        if (!verifiedToken) {
+          return await redirectFailure("apple_auth_failed");
+        }
+      }
+    }
+
+    if (!verifiedToken) {
+      return await redirectFailure("apple_auth_failed");
+    }
+
+    const claims = await appleAuth.verifyIdentityToken(verifiedToken, {
+      ...(CONFIG.APPLE_SERVICES_ID
+        ? { audience: CONFIG.APPLE_SERVICES_ID }
+        : {}),
+    });
+
+    // Name and email arrive in this blob on the first authorization only.
+    const userPayload = parseAppleUserPayload(source.user);
+
+    const profile: AppleAuthenticatedProfile = {
+      sub: claims.sub,
+      email: claims.email ?? userPayload.email ?? "",
+      emailVerified: claims.emailVerified,
+      isPrivateEmail: claims.isPrivateEmail,
+      givenName: userPayload.fullName?.givenName ?? "",
+      familyName: userPayload.fullName?.familyName ?? "",
+      ...(appleRefreshToken ? { appleRefreshToken } : {}),
+    };
+
+    const dbUser = await findOrCreateAppleUser(profile);
+    if (!dbUser) {
+      throw new Error("Failed to create or find user");
+    }
+
+    const userId = dbUser._id?.toString() || "";
+
+    if (isMobileCallback) {
+      console.log("📱 Mobile Apple OAuth callback: issuing one-time code", {
+        userId,
+      });
+
+      const oauthCode = await appleMobileOAuth.createCode(userId);
+
+      console.log("🔑 Mobile one-time code created:", {
+        codeLength: oauthCode.length,
+        codePreview: `${oauthCode.slice(0, 8)}…`,
+      });
+
+      if (
+        await appleMobileOAuth.redirectMobileOAuthResult(
+          state,
+          { code: oauthCode },
+          res,
+        )
+      ) {
+        return;
+      }
+
+      console.error(
+        "❌ Mobile Apple OAuth callback: redirectMobileOAuthResult returned false after code creation",
+      );
+    }
+
+    const tokenPair = TokenService.generateTokenPair({
+      userId,
+      email: dbUser.email,
+    });
+
+    console.log("🍪 Setting cookies with tokenPair:", {
+      hasAccessToken: !!tokenPair.accessToken,
+      hasRefreshToken: !!tokenPair.refreshToken,
+    });
+
+    TokenService.setTokenCookies(res, tokenPair);
+
+    // 200 + HTML redirect (not 302) so Safari persists cookies
+    const redirectUrl = CONFIG.OAUTH_CALLBACK_URL(
+      CONFIG.APP_URL,
+      userId,
+      AuthProviderEnum.apple,
+    );
+    return sendRedirectWithCookiesSet(res, redirectUrl);
+  } catch (error) {
+    console.error("❌ Apple OAuth callback error:", error);
+    return await redirectFailure("server_error");
+  }
 };
 
 const sendPhoneRegisterOtp = async (
@@ -806,6 +1054,16 @@ const deleteAccount = async (
   }
 
   try {
+    // App Store guideline 5.1.1(v): deleting the account must also sever the
+    // Apple grant. Best-effort — a revoke failure must never block deletion.
+    if (user.provider === AuthProviderEnum.apple && user.appleRefreshToken) {
+      try {
+        await getAppleAuth()?.revokeToken({ token: user.appleRefreshToken });
+      } catch (revokeError) {
+        console.error("⚠️ Failed to revoke Apple token on delete:", revokeError);
+      }
+    }
+
     const result = await deleteUserAccount(user._id.toString(), {
       blockAdminSelfDelete: true,
     });
@@ -833,6 +1091,10 @@ const AuthController = {
   oauth2Google,
   oauth2GoogleCallback,
   googleMobileExchange,
+  oauth2Apple,
+  oauth2AppleCallback,
+  appleMobileExchange,
+  appleNativeExchange,
   sendPhoneRegisterOtp,
   verifyPhoneRegisterOtp,
   sendPhoneLoginOtp,

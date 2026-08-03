@@ -23,6 +23,9 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: "com.talepod.app",
+    // Adds the `com.apple.developer.applesignin` entitlement. Native change —
+    // an OTA update cannot deliver it, the app must be rebuilt.
+    usesAppleSignIn: true,
     // Universal Links. Needs `apple-app-site-association` served from
     // /.well-known/ — until then https links open the website instead.
     associatedDomains: [
@@ -59,6 +62,7 @@ const config: ExpoConfig = {
     favicon: "./assets/favicon.png",
   },
   plugins: [
+    "expo-apple-authentication",
     [
       "expo-splash-screen",
       {

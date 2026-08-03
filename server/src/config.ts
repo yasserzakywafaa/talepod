@@ -120,6 +120,11 @@ const CONFIG = {
   // Auth
   GOOGLE_OAUTH_CLIENT_ID: process.env.GOOGLE_OAUTH_CLIENT_ID,
   GOOGLE_OAUTH_CLIENT_SECRET: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+  APPLE_TEAM_ID: process.env.APPLE_TEAM_ID,
+  APPLE_KEY_ID: process.env.APPLE_KEY_ID,
+  APPLE_PRIVATE_KEY: process.env.APPLE_PRIVATE_KEY?.replace(/\\n/g, "\n"), // .p8 contents, newline formatting fixed
+  APPLE_BUNDLE_ID: process.env.APPLE_BUNDLE_ID || "com.talepod.app",
+  APPLE_SERVICES_ID: process.env.APPLE_SERVICES_ID,
   JWT_SECRET: process.env.JWT_SECRET,
   OAUTH_CALLBACK_URL: (baseURL: string, userId: string, provider: string) =>
     `${baseURL}?authStatus=success&provider=${provider}&userId=${userId}`,

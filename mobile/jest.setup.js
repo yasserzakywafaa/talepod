@@ -16,6 +16,19 @@ jest.mock("expo-secure-store", () => {
   };
 });
 
+jest.mock("expo-apple-authentication", () => ({
+  isAvailableAsync: jest.fn(async () => false),
+  signInAsync: jest.fn(),
+  AppleAuthenticationButton: () => null,
+  AppleAuthenticationScope: { FULL_NAME: 0, EMAIL: 1 },
+  AppleAuthenticationButtonType: { SIGN_IN: 0, SIGN_UP: 1 },
+  AppleAuthenticationButtonStyle: { WHITE: 0, BLACK: 2 },
+}));
+
+jest.mock("expo-crypto", () => ({
+  randomUUID: jest.fn(() => "00000000-0000-4000-8000-000000000000"),
+}));
+
 jest.mock("@react-native-async-storage/async-storage", () =>
   require("@react-native-async-storage/async-storage/jest/async-storage-mock"),
 );
