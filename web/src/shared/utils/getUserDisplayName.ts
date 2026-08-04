@@ -33,9 +33,9 @@ export const getUserFullName = (user: NamedUser, fallback: string): string => {
   return [given, family].filter(Boolean).join(" ") || fallback;
 };
 
-/** Avatar letters; "?" when Apple (etc.) provided no name. */
+/** Avatar letters from the real name; empty when Apple (etc.) sent none. */
 export const getUserAvatarInitials = (user: NamedUser): string => {
   const given = trimPart(user.name?.givenName).charAt(0);
   const family = trimPart(user.name?.familyName).charAt(0);
-  return `${given}${family}`.toUpperCase() || "?";
+  return `${given}${family}`.toUpperCase();
 };

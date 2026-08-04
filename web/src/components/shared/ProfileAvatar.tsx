@@ -1,4 +1,5 @@
 import { Avatar, Badge } from "@mui/material";
+import { PersonOutlined } from "@mui/icons-material";
 
 import { User } from "src/shared/types/user";
 import { getUserAvatarInitials } from "src/shared/utils/getUserDisplayName";
@@ -14,6 +15,8 @@ const ProfileAvatar = (props: ProfileAvatarProps) => {
   const { user, avatarSize, verifiedBadgeSize } = props;
 
   if (!user) return <></>;
+
+  const initials = getUserAvatarInitials(user);
 
   return (
     <Badge
@@ -32,7 +35,11 @@ const ProfileAvatar = (props: ProfileAvatarProps) => {
         <Avatar
           sx={{ mr: 1, width: avatarSize.width, height: avatarSize.height }}
         >
-          {getUserAvatarInitials(user)}
+          {initials || (
+            <PersonOutlined
+              sx={{ fontSize: Math.max(14, avatarSize.width * 0.55) }}
+            />
+          )}
         </Avatar>
       )}
     </Badge>
