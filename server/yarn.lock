@@ -909,10 +909,10 @@
     "@types/node" "*"
     "@types/webidl-conversions" "*"
 
-"@yasserzakywafaa/server-core@0.5.0":
-  version "0.5.0"
-  resolved "https://npm.pkg.github.com/download/@yasserzakywafaa/server-core/0.5.0/c1ecc89086e6adc4e1eef83ff51dcc75ec0a4b25#c1ecc89086e6adc4e1eef83ff51dcc75ec0a4b25"
-  integrity sha512-u5Hg1el/jOErnHMm3FZ9YJddamzIL+nwPFLK4utIIpulD+9hwLGdsYgpplWLv64Vv64hLyR6UwtckRIpEMe56Q==
+"@yasserzakywafaa/server-core@0.5.1":
+  version "0.5.1"
+  resolved "https://npm.pkg.github.com/download/@yasserzakywafaa/server-core/0.5.1/eb5ba91a97a9591b1fa7008dee59f44376f6fd72#eb5ba91a97a9591b1fa7008dee59f44376f6fd72"
+  integrity sha512-beMwVUlWZdHDfsFqV2pmvzV3rWPHjiVCZfv2XYXM8kQhUl2aM/cieEkSkG3ZxAQb5AQP5Fg37n/GbD8aq2v9ew==
 
 abbrev@1:
   version "1.1.1"
