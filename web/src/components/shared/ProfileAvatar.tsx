@@ -1,6 +1,7 @@
 import { Avatar, Badge } from "@mui/material";
 
 import { User } from "src/shared/types/user";
+import { getUserAvatarInitials } from "src/shared/utils/getUserDisplayName";
 import { VerifiedBadge } from "./VerifiedBadge";
 
 export interface ProfileAvatarProps {
@@ -31,8 +32,7 @@ const ProfileAvatar = (props: ProfileAvatarProps) => {
         <Avatar
           sx={{ mr: 1, width: avatarSize.width, height: avatarSize.height }}
         >
-          {user.name.givenName.charAt(0)}
-          {user.name.familyName.charAt(0)}
+          {getUserAvatarInitials(user)}
         </Avatar>
       )}
     </Badge>

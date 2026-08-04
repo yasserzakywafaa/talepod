@@ -16,6 +16,7 @@ import { Notify } from "./Notification/Notification";
 import ProfileAvatar from "./ProfileAvatar";
 import { User } from "src/shared/types/user";
 import axios from "axios";
+import { getUserDisplayName } from "src/shared/utils/getUserDisplayName";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
@@ -51,9 +52,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
 
   const isAdmin = hasAdminRights(user);
 
-  const userFullName = `${user.name.givenName} ${user.name.familyName.charAt(
-    0,
-  )}.`;
+  const userFullName = getUserDisplayName(user, t("account"));
 
   const isOpen = Boolean(element);
 

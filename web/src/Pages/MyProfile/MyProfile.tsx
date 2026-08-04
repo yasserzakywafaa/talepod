@@ -30,6 +30,9 @@ import {
   getUserContact,
   getUserContactLabel,
 } from "src/shared/utils/getUserContact";
+import {
+  getUserFullName,
+} from "src/shared/utils/getUserDisplayName";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useAppResolvedThemeMode } from "src/application/hooks/useAppResolvedThemeMode";
 import { useMyProfileContext } from "./store/Provider";
@@ -49,6 +52,7 @@ type ProfileTab = "profile" | "billing";
 
 const MyProfilePage = () => {
   const { t, i18n } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const locale = localeFromLanguage(i18n.language);
   const navigate = useNavigate();
   const [isDeleteAccountDialogOpen, setIsDeleteAccountDialogOpen] =
@@ -139,7 +143,9 @@ const MyProfilePage = () => {
           <Typography variant="h5" component="h5" sx={{
             marginLeft: 2
           }}>
-            {t("profile.greeting", { name: user?.name.givenName })}
+            {t("profile.greeting", {
+              name: getUserFullName(user, tCommon("account")),
+            })}
           </Typography>
         </Box>
 
@@ -206,7 +212,7 @@ const MyProfilePage = () => {
                       {t("profile.fullName")}
                     </Typography>
                     <span className="bold">
-                      {`${user.name.givenName} ${user.name.familyName}`}
+                      {getUserFullName(user, tCommon("account"))}
                     </span>
                   </Grid>
 
