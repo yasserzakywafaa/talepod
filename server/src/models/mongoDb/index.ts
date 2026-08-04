@@ -130,6 +130,7 @@ const createIndexes = async () => {
     const users = database.collection(DBCollectionsEnum.users);
     await users.createIndex({ _id: 1 });
     await users.createIndex({ userId: 1 });
+    await users.createIndex({ appleUserId: 1 });
     await users.createIndex({ email: 1 });
     await users.createIndex({ createdAt: 1 });
     await users.createIndex({ picture: 1 });

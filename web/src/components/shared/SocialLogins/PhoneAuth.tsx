@@ -25,8 +25,7 @@ const PhoneAuth: React.FC<PhoneAuthProps> = ({
   const { t } = useTranslation("auth");
   const [expanded, setExpanded] = useState(false);
   const [isWaitingForOtp, setIsWaitingForOtp] = useState(false);
-  const isRegister = authType === "register";
-  const label = isRegister ? t("registerByPhone") : t("loginByPhone");
+  const label = t("continueWithPhone");
 
   const handleAccordionChange = (
     _: React.SyntheticEvent,

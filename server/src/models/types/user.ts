@@ -4,6 +4,7 @@ import Stripe from "stripe";
 export enum AuthProviderEnum {
   google = "google",
   phone = "phone",
+  apple = "apple",
 }
 
 export interface User {
@@ -30,6 +31,13 @@ export interface User {
   location?: string;
   timezone?: string;
   refreshToken?: string;
+  /**
+   * Apple `sub`, kept separate from `userId` so an account created with Google
+   * can gain an Apple identity without losing its Google one.
+   */
+  appleUserId?: string;
+  /** Apple refresh token — the only way to revoke the Apple grant on delete. */
+  appleRefreshToken?: string;
   provider?: AuthProviderEnum;
   verified?: boolean;
 }

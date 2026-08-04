@@ -1,44 +1,49 @@
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
-import { Text } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
 
 import { getApiErrorMessage } from "src/application/shared/getApiErrorMessage";
-import { signInWithGoogleBrowser } from "src/application/auth/googleSignInBrowser";
+import { signInWithApple } from "src/application/auth/signInWithApple";
 import { useApplicationContext } from "src/application/store/Provider";
+import { AppleLogo } from "src/features/auth/AppleLogo";
 import { AuthSocialButton } from "src/features/auth/AuthSocialButton";
 
 import type { User } from "src/shared/types/user";
 import logger from "src/shared/logger";
 
-type GoogleAuthButtonProps = {
+type AppleAuthButtonProps = {
   authType: "login" | "register";
   disabled?: boolean;
   onSuccess: (user: User) => void;
 };
 
-export const GoogleAuthButton = ({
+export const AppleAuthButton = ({
   disabled,
   onSuccess,
-}: GoogleAuthButtonProps) => {
+}: AppleAuthButtonProps) => {
   const { t } = useTranslation("auth");
+  const theme = useTheme();
   const {
     manager: { handleSetAuthInfo },
   } = useApplicationContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // One label on both sheets: social auth has no login/register split — signing
-  // in without an account creates one — so "Continue" is what actually happens.
-  const label = t("continueWithGoogle");
+  // Apple's HIG allows a custom button — own font, layout, radius and size — but
+  // fixes two things: the title must be one of Apple's approved strings, and the
+  // mark and title must be black or white, never a brand colour. "Continue with
+  // Apple" is the approved title that works on both the login and register
+  // sheets without contradicting the app's login/register wording.
+  const buttonColor = theme.dark ? "#FFFFFF" : "#000000";
+  const contentColor = theme.dark ? "#000000" : "#FFFFFF";
 
   const handlePress = async () => {
     setIsSubmitting(true);
     setErrorMessage(null);
 
     try {
-      const result = await signInWithGoogleBrowser();
+      const result = await signInWithApple();
       if (!result) {
         return;
       }
@@ -50,11 +55,11 @@ export const GoogleAuthButton = ({
       );
       onSuccess(user);
     } catch (error) {
-      const message = getApiErrorMessage(error, t("errorGoogleLoginFailed"));
+      const message = getApiErrorMessage(error, t("errorAppleLoginFailed"));
       if (!String(message).toLowerCase().includes("cancel")) {
         setErrorMessage(message);
       }
-      logger.error("Google sign-in failed", error);
+      logger.error("Apple sign-in failed", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -66,11 +71,11 @@ export const GoogleAuthButton = ({
         onPress={handlePress}
         disabled={disabled || isSubmitting}
         loading={isSubmitting}
-        icon={
-          <MaterialCommunityIcons name="google" size={22} color="#000000" />
-        }
+        buttonColor={buttonColor}
+        textColor={contentColor}
+        icon={<AppleLogo color={contentColor} />}
       >
-        {label}
+        {t("continueWithApple")}
       </AuthSocialButton>
       {errorMessage ? (
         <Text variant="bodySmall" style={styles.error}>

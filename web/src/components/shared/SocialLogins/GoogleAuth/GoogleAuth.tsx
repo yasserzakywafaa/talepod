@@ -43,7 +43,10 @@ const GoogleAuth = (props: GoogleAuthProps): JSX.Element => {
       }}
     >
       <GoogleIcon />
-      {isRegister ? t("registerWithGoogle") : t("loginWithGoogle")}
+      {/* One label on both modals — social auth has no login/register split, so
+          "Continue" is what actually happens. `isRegister` still picks the
+          fetching store above. */}
+      {t("continueWithGoogle")}
     </Button>
   );
 };

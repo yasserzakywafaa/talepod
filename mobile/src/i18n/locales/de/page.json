@@ -15,10 +15,14 @@
   "home": {
     "badge": "Personalisierte Gute-Nacht-Geschichten",
     "body": "Erstellen Sie magische Geschichten mit dem Namen, den Interessen und den Werten Ihres Kindes — illustriert und erzählt in wenigen Minuten.",
-    "ctaPricing": "Preise ansehen",
+    "ctaSeeExamples": "Beispielgeschichten ansehen",
     "ctaLogin": "Kostenlos starten",
     "title": "Gute-Nacht-Geschichten für die Kinder, die Sie am meisten lieben.",
-    "trustBadges": ["Keine Karte erforderlich", "11 Sprachen", "Kindersicher"],
+    "trustBadges": [
+      "Keine Karte erforderlich",
+      "11 Sprachen",
+      "Kindersicher"
+    ],
     "storyFormats": {
       "overline": "Zwei Geschichtsformate",
       "title": "Gute Nacht, auf zwei Arten erzählt.",

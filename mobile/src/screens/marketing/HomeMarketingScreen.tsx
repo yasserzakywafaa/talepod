@@ -63,8 +63,8 @@ export const HomeMarketingScreen = ({ navigation }: Props) => {
     t("home.trustBadges", { returnObjects: true }),
   );
 
-  const handlePricingPress = () => {
-    navigateToPublicMarketingScreen(mobileRoutes.public.pricing);
+  const handleSeeExamplesPress = () => {
+    navigateToPublicMarketingScreen(mobileRoutes.public.library);
   };
 
   return (
@@ -92,12 +92,16 @@ export const HomeMarketingScreen = ({ navigation }: Props) => {
             <PillButton onPress={handleCreateStoryPress} trailingIcon="shimmer">
               {t("home.ctaLogin")}
             </PillButton>
+            {/* PillButton pins itself to `alignSelf: "flex-start"`, which beats
+                the container's `alignItems: "center"` — so centring has to be
+                asked for explicitly here. */}
             <PillButton
               variant="text"
               color="#FFFFFF"
-              onPress={handlePricingPress}
+              style={styles.centeredAction}
+              onPress={handleSeeExamplesPress}
             >
-              {t("home.ctaPricing")}
+              {t("home.ctaSeeExamples")}
             </PillButton>
           </View>
 
@@ -173,6 +177,7 @@ const styles = StyleSheet.create({
     gap: 8,
     paddingTop: 8,
   },
+  centeredAction: { alignSelf: "center" },
   trustBadges: {
     flexDirection: "row",
     flexWrap: "wrap",
