@@ -13,7 +13,7 @@ import { DisplayText } from "src/components/brand/DisplayText";
 import { PillButton } from "src/components/brand/PillButton";
 import { useStoryAvatar } from "src/features/viewStory/useStoryAvatar";
 import type { Story } from "src/features/storyCreator/store/state";
-import logger from "src/shared/logger";
+import { logger } from "src/shared/logger";
 
 type StoryExportActionsProps = {
   story: Story;
@@ -124,7 +124,10 @@ export const StoryExportActions = ({
           />
           <Text
             variant="bodySmall"
-            style={[styles.pendingText, { color: theme.colors.onSurfaceVariant }]}
+            style={[
+              styles.pendingText,
+              { color: theme.colors.onSurfaceVariant },
+            ]}
           >
             {t("reader.export.imagesPending")}
           </Text>

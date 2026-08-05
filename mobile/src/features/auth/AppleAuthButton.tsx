@@ -10,7 +10,7 @@ import { AppleLogo } from "src/features/auth/AppleLogo";
 import { AuthSocialButton } from "src/features/auth/AuthSocialButton";
 
 import type { User } from "src/shared/types/user";
-import logger from "src/shared/logger";
+import { logger } from "src/shared/logger";
 
 type AppleAuthButtonProps = {
   authType: "login" | "register";

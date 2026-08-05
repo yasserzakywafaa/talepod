@@ -3,7 +3,7 @@ import { getCreateStoryPrompt } from "../utils/getStoryPrompts";
 import { useGenerationContext } from "../generation/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
 import { useCreateStoryMutation } from "src/features/storyCreator/useCreateStoryMutation";
-import logger from "src/shared/logger";
+import { logger } from "src/shared/logger";
 
 export interface GenerateStoryOptions {
   profileOverride?: Partial<ProfileInfo>;

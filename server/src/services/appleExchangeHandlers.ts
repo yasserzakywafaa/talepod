@@ -51,7 +51,13 @@ export const appleNativeExchange = createAppleNativeExchangeHandler<User>({
       ...options,
       clientId: CONFIG.APPLE_BUNDLE_ID,
     }),
-  audience: CONFIG.APPLE_BUNDLE_ID,
+  // Tokens from the system sheet carry the iOS bundle ID; the Services ID
+  // belongs to the browser flow and must not be accepted here.
+  audience: [
+    CONFIG.APPLE_BUNDLE_ID,
+    // Only to test in Expo Go
+    ...CONFIG.APPLE_DEV_EXTRA_AUDIENCES,
+  ],
   isMobileClient,
   resolveUser: findOrCreateAppleUser,
   getUserId: (user) => user._id?.toString() ?? "",

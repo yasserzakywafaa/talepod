@@ -11,6 +11,7 @@ import { useAppTheme } from "src/application/theme/useAppTheme";
 import { mobileRoutes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import type { User } from "src/shared/types/user";
+import { getUserAvatarInitials } from "src/shared/utils/getUserDisplayName";
 import type { MainDrawerParamList } from "src/application/navigation/MainDrawerNavigator";
 import type { MainShellStackParamList } from "src/application/navigation/MainShellStackNavigator";
 import {
@@ -119,12 +120,6 @@ const GUEST_TABS: TabDef[] = [
   },
 ];
 
-const avatarLabel = (user: User): string => {
-  const a = user.name.givenName?.charAt(0) ?? "";
-  const b = user.name.familyName?.charAt(0) ?? "";
-  return (a + b).toUpperCase() || "?";
-};
-
 const TabAccountAvatar = ({
   user,
   focused,
@@ -157,15 +152,31 @@ const TabAccountAvatar = ({
     );
   }
 
+  const initials = getUserAvatarInitials(user);
+  const avatarStyle = [
+    styles.accountAvatar,
+    { backgroundColor: theme.colors.surfaceVariant },
+    ringStyle,
+  ];
+
+  // Signed in but nameless (Apple can withhold it), so fall back to the same
+  // silhouette the signed-out tab shows rather than a "?".
+  if (!initials) {
+    return (
+      <Avatar.Icon
+        size={26}
+        icon="account-outline"
+        style={avatarStyle}
+        color={theme.colors.onSurface}
+      />
+    );
+  }
+
   return (
     <Avatar.Text
       size={26}
-      label={avatarLabel(user)}
-      style={[
-        styles.accountAvatar,
-        { backgroundColor: theme.colors.surfaceVariant },
-        ringStyle,
-      ]}
+      label={initials}
+      style={avatarStyle}
       labelStyle={{ color: theme.colors.onSurface, fontSize: 11 }}
     />
   );
@@ -303,7 +314,9 @@ export const PersistentMainTabBar = ({ navigation }: Props) => {
 
           const label =
             tab.labelKey === "account"
-              ? ` ${user?.name.givenName ?? t("account")}`
+              ? // Apple can send an empty name rather than none, which `??`
+                // would let through as a blank tab.
+                user?.name.givenName?.trim() || t("account")
               : tab.labelKey.startsWith("story:")
                 ? t(tab.labelKey)
                 : t(tab.labelKey, { ns: "common" });

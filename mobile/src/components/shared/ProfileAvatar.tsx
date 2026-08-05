@@ -19,12 +19,19 @@ export const ProfileAvatar = ({ user, size = 112 }: ProfileAvatarProps) => {
 
   const avatar = user.picture ? (
     <Avatar.Image size={size} source={{ uri: user.picture }} />
-  ) : (
+  ) : initials ? (
     <Avatar.Text
       size={size}
       label={initials}
       style={{ backgroundColor: theme.colors.primaryContainer }}
       labelStyle={{ color: theme.colors.onPrimaryContainer }}
+    />
+  ) : (
+    <Avatar.Icon
+      size={size}
+      icon="account-outline"
+      style={{ backgroundColor: theme.colors.primaryContainer }}
+      color={theme.colors.onPrimaryContainer}
     />
   );
 

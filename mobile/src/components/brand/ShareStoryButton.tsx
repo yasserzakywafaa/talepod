@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { FloatingActionButton } from "src/components/brand/FloatingActionButton";
 import { buildStoryShareUrl } from "src/shared/utils/buildStoryShareUrl";
-import logger from "src/shared/logger";
+import { logger } from "src/shared/logger";
 
 type ShareStoryButtonProps = {
   slug: string;

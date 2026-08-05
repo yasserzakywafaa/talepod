@@ -9,7 +9,7 @@ import {
 import { api } from "src/application/shared/apiClient";
 import END_POINTS from "src/application/shared/endpoints";
 import { mobileApiHeaders } from "src/application/auth/mobileApiHeaders";
-import logger from "src/shared/logger";
+import { logger } from "src/shared/logger";
 import type { User } from "src/shared/types/user";
 
 WebBrowser.maybeCompleteAuthSession();

@@ -9,7 +9,7 @@ import type { Story } from "../store/state";
 import { useApplicationContext } from "src/application/store/Provider";
 import { dedupedGet } from "src/shared/api/dedupedGet";
 import { queryKeys } from "src/shared/api/queryKeys";
-import logger from "src/shared/logger";
+import { logger } from "src/shared/logger";
 
 export interface GenerationManager {
   isGenerating: boolean;
@@ -185,7 +185,12 @@ export const useGenerationManager = (
     if (store.job?.textStatus === "pending") {
       pollForStatus(store.job.storyId);
     }
-  }, [store.hydrated, store.job?.storyId, store.job?.textStatus, pollForStatus]);
+  }, [
+    store.hydrated,
+    store.job?.storyId,
+    store.job?.textStatus,
+    pollForStatus,
+  ]);
 
   return {
     isGenerating,

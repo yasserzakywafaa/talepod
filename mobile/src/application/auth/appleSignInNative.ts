@@ -4,7 +4,7 @@ import * as Crypto from "expo-crypto";
 import { api } from "src/application/shared/apiClient";
 import END_POINTS from "src/application/shared/endpoints";
 import { mobileApiHeaders } from "src/application/auth/mobileApiHeaders";
-import logger from "src/shared/logger";
+import { logger } from "src/shared/logger";
 import type { User } from "src/shared/types/user";
 
 export type AppleNativeSignInResult = {
@@ -31,8 +31,13 @@ const isCancellation = (error: unknown): boolean =>
  */
 export const signInWithAppleNative =
   async (): Promise<AppleNativeSignInResult | null> => {
-    // Binds the token to this request; the server rejects a mismatch.
+    // Apple expects a SHA-256 hash in the request; the token carries that hash
+    // while the server still receives the raw nonce for verification.
     const rawNonce = Crypto.randomUUID();
+    const hashedNonce = await Crypto.digestStringAsync(
+      Crypto.CryptoDigestAlgorithm.SHA256,
+      rawNonce,
+    );
 
     logger.debug("Native Apple sign-in: presenting system sheet");
 
@@ -43,7 +48,7 @@ export const signInWithAppleNative =
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
           AppleAuthentication.AppleAuthenticationScope.EMAIL,
         ],
-        nonce: rawNonce,
+        nonce: hashedNonce,
       });
     } catch (error) {
       if (isCancellation(error)) {

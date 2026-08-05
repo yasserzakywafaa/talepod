@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import logger from "src/shared/logger";
+import { logger } from "src/shared/logger";
 
 const recentLogs = new Map<string, number>();
 const THROTTLE_MS = 10_000;
@@ -33,13 +33,14 @@ export const logApiError = (label: string, error: unknown): void => {
 
   // A 4xx is the server rejecting the request as asked — expected, and noisy
   // in a crash reporter. Only 5xx and transport failures are worth reporting.
-  const status = axios.isAxiosError(error)
-    ? (error.response?.status ?? 0)
-    : 0;
+  const status = axios.isAxiosError(error) ? (error.response?.status ?? 0) : 0;
   const isClientError = status >= 400 && status < 500;
 
   if (isClientError) {
-    logger.warn(label, { status, url: axios.isAxiosError(error) ? error.config?.url : undefined });
+    logger.warn(label, {
+      status,
+      url: axios.isAxiosError(error) ? error.config?.url : undefined,
+    });
     return;
   }
 

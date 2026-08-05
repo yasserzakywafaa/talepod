@@ -20,7 +20,7 @@ import { useApplicationContext } from "src/application/store/Provider";
 import type { User } from "src/shared/types/user";
 import { countryCodeToFlagEmoji } from "src/shared/utils/countryCodeToFlagEmoji";
 import { validatePhoneNumber } from "src/shared/utils/validatePhoneNumber";
-import logger from "src/shared/logger";
+import { logger } from "src/shared/logger";
 
 const OTP_CODE_REGEX = /^\d{4,8}$/;
 const PREFERRED_COUNTRIES: CountryCode[] = ["DE", "FR", "EG", "PT"];

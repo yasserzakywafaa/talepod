@@ -22,6 +22,7 @@ import { DeleteAccountDialog } from "src/features/profile/DeleteAccountDialog";
 import { ProfileBillingPanel } from "src/features/profile/ProfileBillingPanel";
 import { useDeleteAccount } from "src/features/profile/useDeleteAccount";
 import { UserStatus } from "src/shared/types/user";
+import { getUserFullName } from "src/shared/utils/getUserDisplayName";
 import { getUserProfileContact } from "src/shared/utils/getUserProfileContact";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
 
@@ -134,7 +135,9 @@ export const ProfileScreenContent = () => {
           <ProfileAvatar user={user} />
           <View style={styles.headerText}>
             <DisplayText size={26} color={theme.colors.primary}>
-              {t("profile.greeting", { name: user.name.givenName })}
+              {t("profile.greeting", {
+                name: getUserFullName(user, t("account", { ns: "common" })),
+              })}
             </DisplayText>
             <View style={styles.chips}>
               <MetaTag
@@ -241,7 +244,7 @@ export const ProfileScreenContent = () => {
 
               <ProfileField label={t("profile.fullName")}>
                 <ProfileValue>
-                  {`${user.name.givenName} ${user.name.familyName}`.trim()}
+                  {getUserFullName(user, t("account", { ns: "common" }))}
                 </ProfileValue>
               </ProfileField>
 
