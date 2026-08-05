@@ -1,0 +1,31 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["L4LXS3ZQ99.com.talepod.app"],
+        "components": [
+          { "/": "/bedtime-story/*", "comment": "Shared story pages" },
+          { "/": "/story/*", "comment": "Legacy story path kept for older shares" },
+          { "/": "/library" },
+          { "/": "/create" },
+          { "/": "/my-stories" },
+          { "/": "/my-avatars" },
+          { "/": "/profile" },
+          { "/": "/pricing" },
+          { "/": "/contact" },
+          { "/": "/privacy-policy" },
+          { "/": "/terms-and-conditions" },
+          { "/": "/login" },
+          { "/": "/register" },
+          { "/": "/*/pricing", "comment": "Locale-prefixed marketing routes" },
+          { "/": "/*/contact" },
+          { "/": "/*/privacy-policy" },
+          { "/": "/*/terms-and-conditions" },
+          { "/": "/*/create" },
+          { "/": "/*/bedtime-stories" },
+          { "/": "/*/bedtime-stories/*" }
+        ]
+      }
+    ]
+  }
+}

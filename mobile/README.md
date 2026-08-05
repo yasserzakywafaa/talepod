@@ -276,21 +276,30 @@ See `docs/STORE_READINESS.md` for the DSN and source-map setup.
 ## Deep linking
 
 `application/navigation/linking.ts` maps URLs to screens, including cold
-starts. Both the `talepod-app://` scheme and `https://talepod.com` links are
-declared; the https ones only resolve to the app once the web app serves
-`apple-app-site-association` and `assetlinks.json` (see
-`docs/STORE_READINESS.md`). Until then they open the website, which is the
-correct fallback.
+starts. Prefixes: `talepod-app://`, `https://talepod.com`,
+`https://www.talepod.com`, and `https://dev.talepod.com`.
 
-The Google OAuth callback (`auth/google`) is filtered out of the linking
-config on purpose — `WebBrowser.openAuthSessionAsync` consumes it, and
-letting React Navigation also handle it races that promise.
+**iOS Universal Links** need the AASA file live on those hosts
+(`web/public/.well-known/apple-app-site-association`) and a native build
+that includes `associatedDomains`. See `docs/STORE_READINESS.md` §7 for
+the deploy and WAF checklist.
 
-Test a link without rebuilding:
+**Android App Links** need `assetlinks.json` with the Play signing
+SHA-256 — not committed yet; same doc section.
+
+Until the association files are reachable, https links open the website
+and `talepod-app://` still works — the correct fallback, not a bug.
+
+OAuth callbacks (`auth/google`, `auth/apple`) are filtered out of the
+linking config on purpose — `WebBrowser.openAuthSessionAsync` consumes
+them, and letting React Navigation also handle them races that promise.
+
+Test without rebuilding (custom scheme) or after AASA is deployed (https):
 
 ```bash
-npx uri-scheme open "talepod-app://story/some-slug" --ios
-npx uri-scheme open "talepod-app://story/some-slug" --android
+npx uri-scheme open "talepod-app://bedtime-story/some-slug" --ios
+npx uri-scheme open "talepod-app://bedtime-story/some-slug" --android
+npx uri-scheme open "https://talepod.com/bedtime-story/some-slug" --ios
 ```
 
 ## Arabic and RTL — known limitation

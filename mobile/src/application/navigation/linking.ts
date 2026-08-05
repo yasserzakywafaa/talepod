@@ -21,7 +21,8 @@ const OAUTH_CALLBACK_PATH_PATTERN = /auth\/(google|apple)/;
 
 /**
  * Deep links; without these a shared story URL drops its destination. The
- * https prefixes need association files served (docs/STORE_READINESS.md).
+ * https prefixes need AASA / assetlinks on each host
+ * (docs/STORE_READINESS.md §7).
  */
 export const linking: LinkingOptions<RootStackParamList> = {
   prefixes: [
@@ -29,6 +30,7 @@ export const linking: LinkingOptions<RootStackParamList> = {
     "talepod-app://",
     "https://talepod.com",
     "https://www.talepod.com",
+    "https://dev.talepod.com",
   ],
 
   config: {

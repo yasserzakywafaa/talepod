@@ -154,21 +154,79 @@ in-app. `DeleteAccountDialog` exists and is wired to
 
 ---
 
-## 7. Deep links — **you** (code side is done)
+## 7. Deep links — Universal Links / App Links
 
-`src/application/navigation/linking.ts` and the `associatedDomains` /
-`intentFilters` entries in `app.config.ts` are in place. They only take
-effect once the web app serves the association files:
+Code and the iOS association file are in the repo. What is left is
+**deploying the web app** so Apple (and later Google) can fetch them, then
+shipping a native build that includes the updated `associatedDomains`.
 
-- [ ] `https://talepod.com/.well-known/apple-app-site-association`
-      (JSON, **no** `.json` extension, served as `application/json`,
-      no redirects) containing the `TEAMID.com.talepod.app` app ID
-- [ ] `https://talepod.com/.well-known/assetlinks.json` containing the
-      Play signing certificate's SHA-256 fingerprint
-- [ ] Verify with `npx uri-scheme open https://talepod.com/story/some-slug --ios`
+### Already in the repo
 
-Until these are served, https links open the website and the custom
-`talepod-app://` scheme still works — the correct fallback, not a bug.
+| Piece | Location |
+| --- | --- |
+| AASA (iOS) | `web/public/.well-known/apple-app-site-association` — app ID `L4LXS3ZQ99.com.talepod.app` |
+| Content-Type headers | `web/vercel.json` (`application/json` for both association files) |
+| Associated domains | `mobile/app.config.ts` — `talepod.com`, `www.talepod.com`, `dev.talepod.com` |
+| Linking prefixes | `mobile/src/application/navigation/linking.ts` — same three https hosts + `talepod-app://` |
+| Android intent filters | `mobile/app.config.ts` — `/bedtime-story` and `/story` on those hosts |
+
+### Deploy checklist — **you**
+
+- [ ] Deploy the **web** app (production *and* `dev.talepod.com` if you use
+      preview builds) so the AASA is live on every associated host
+- [ ] Confirm each host returns **200** with `Content-Type: application/json`
+      and **no redirect**:
+      ```bash
+      curl -sI https://talepod.com/.well-known/apple-app-site-association
+      curl -sI https://www.talepod.com/.well-known/apple-app-site-association
+      curl -sI https://dev.talepod.com/.well-known/apple-app-site-association
+      curl -s  https://talepod.com/.well-known/apple-app-site-association
+      ```
+- [ ] If Cloudflare (or another WAF) sits in front of the site, allow Apple's
+      CDN crawler (`app-site-association.cdn-apple.com`) through. A challenge
+      page or bot block makes Universal Links fail silently.
+- [ ] If the apex `talepod.com` **redirects** to `www`, the AASA on the apex
+      must still answer 200 without following that redirect (page-rule /
+      transform exception for `/.well-known/*`). Otherwise drop
+      `applinks:talepod.com` and share only `www` URLs.
+- [ ] Ship a **new native** iOS build after any `associatedDomains` change
+      (OTA cannot add entitlements). TestFlight production profile is fine.
+- [ ] Verify on device (Safari or Notes — not Telegram's in-app browser):
+      ```bash
+      npx uri-scheme open "https://talepod.com/bedtime-story/some-slug" --ios
+      ```
+      Custom scheme still works as a fallback:
+      `talepod-app://bedtime-story/some-slug`.
+
+### Android App Links — still **you**
+
+`assetlinks.json` is intentionally not committed yet: it needs the real
+Play App Signing (or upload-key) SHA-256.
+
+- [ ] After the first Play / EAS Android production build, get the fingerprint:
+      ```bash
+      eas credentials -p android
+      # or Play Console → Setup → App signing → SHA-256 certificate fingerprint
+      ```
+- [ ] Add `web/public/.well-known/assetlinks.json`:
+      ```json
+      [{
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target": {
+          "namespace": "android_app",
+          "package_name": "com.talepod.app",
+          "sha256_cert_fingerprints": ["AA:BB:..."]
+        }
+      }]
+      ```
+- [ ] Redeploy the web app; `vercel.json` already sets the JSON content type.
+
+### Messaging apps (Telegram, etc.)
+
+Many in-app browsers open https links themselves and never hand them to
+Universal Links. That is expected. Users can tap “Open in Safari” / the
+Safari icon, or long-press → Open in TalePod. Messages and Safari are the
+reliable verification targets.
 
 ---
 

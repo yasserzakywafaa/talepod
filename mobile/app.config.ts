@@ -26,11 +26,12 @@ const config: ExpoConfig = {
     // Adds the `com.apple.developer.applesignin` entitlement. Native change —
     // an OTA update cannot deliver it, the app must be rebuilt.
     usesAppleSignIn: true,
-    // Universal Links. Needs `apple-app-site-association` served from
-    // /.well-known/ — until then https links open the website instead.
+    // Universal Links. AASA is served from web/public/.well-known/ on each
+    // of these hosts (see mobile/docs/STORE_READINESS.md §7).
     associatedDomains: [
       "applinks:talepod.com",
       "applinks:www.talepod.com",
+      "applinks:dev.talepod.com",
     ],
     infoPlist: {
       // Declared so App Store Connect stops asking on every submission. The
@@ -47,13 +48,20 @@ const config: ExpoConfig = {
     },
     predictiveBackGestureEnabled: false,
     package: "com.talepod.app",
-    // Android App Links. `autoVerify` skips the app chooser, but needs
-    // assetlinks.json on the same origin.
+    // Android App Links. `autoVerify` skips the app chooser once
+    // assetlinks.json is live with the Play signing SHA-256.
     intentFilters: [
       {
         action: "VIEW",
         autoVerify: true,
-        data: [{ scheme: "https", host: "talepod.com" }],
+        data: [
+          { scheme: "https", host: "talepod.com", pathPrefix: "/bedtime-story" },
+          { scheme: "https", host: "talepod.com", pathPrefix: "/story" },
+          { scheme: "https", host: "www.talepod.com", pathPrefix: "/bedtime-story" },
+          { scheme: "https", host: "www.talepod.com", pathPrefix: "/story" },
+          { scheme: "https", host: "dev.talepod.com", pathPrefix: "/bedtime-story" },
+          { scheme: "https", host: "dev.talepod.com", pathPrefix: "/story" },
+        ],
         category: ["BROWSABLE", "DEFAULT"],
       },
     ],
