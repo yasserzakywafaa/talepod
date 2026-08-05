@@ -2,6 +2,7 @@ import { StyleSheet, View } from "react-native";
 import { Avatar, Badge, useTheme } from "react-native-paper";
 
 import type { User } from "src/shared/types/user";
+import { getUserAvatarInitials } from "src/shared/utils/getUserDisplayName";
 
 export interface ProfileAvatarProps {
   user: User;
@@ -13,9 +14,10 @@ const BORDER_WIDTH = 4;
 export const ProfileAvatar = ({ user, size = 112 }: ProfileAvatarProps) => {
   const theme = useTheme();
 
-  const initials =
-    `${user.name.givenName?.charAt(0) ?? ""}${user.name.familyName?.charAt(0) ?? ""}`.trim() ||
-    "?";
+  // Sign in with Apple can withhold the name entirely, so initials are not
+  // always available — a silhouette reads as "no photo", where "?" reads as
+  // something having gone wrong.
+  const initials = getUserAvatarInitials(user);
 
   const avatar = user.picture ? (
     <Avatar.Image size={size} source={{ uri: user.picture }} />
