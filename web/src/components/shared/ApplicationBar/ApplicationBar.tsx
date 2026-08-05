@@ -131,11 +131,13 @@ const ApplicationBar = () => {
       {isAppBarVisible && (
         <AppBar
           position="fixed"
+          color="transparent"
           sx={{
             mt: 1,
             boxShadow: 0,
             bgcolor: "transparent",
             backgroundImage: "none",
+            color: "text.primary",
             zIndex: (theme) => theme.zIndex.appBar,
           }}
         >

@@ -25,7 +25,11 @@ import {
 import { api } from "../shared/apiClient";
 
 import type { Authentication, ThemePreference } from "./state";
-import { getApplicationInitialState, getThemePreference } from "./state";
+import {
+  DEFAULT_THEME_PREFERENCE,
+  getApplicationInitialState,
+  getThemePreference,
+} from "./state";
 import type { ApplicationStore } from "./store";
 
 export interface ApplicationManager {
@@ -74,7 +78,7 @@ export const useApplicationManager = (
       if (user) {
         const storedTheme = await getStoredThemePreference();
         storeRef.current.setThemePreference(
-          storedTheme ?? getThemePreference(user) ?? "system",
+          storedTheme ?? getThemePreference(user) ?? DEFAULT_THEME_PREFERENCE,
         );
       }
 
@@ -183,7 +187,9 @@ export const useApplicationManager = (
     const storedAuth = await getStoredAuth();
     const storedTheme = await getStoredThemePreference();
     const themePreference =
-      storedTheme ?? getThemePreference(storedAuth.user) ?? "system";
+      storedTheme ??
+      getThemePreference(storedAuth.user) ??
+      DEFAULT_THEME_PREFERENCE;
     storeRef.current.setThemePreference(themePreference);
 
     await syncI18nWithAppLanguage(storedAuth.user ?? undefined);

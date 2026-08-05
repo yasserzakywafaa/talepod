@@ -18,9 +18,12 @@ export interface ApplicationInitialState {
   auth: Authentication;
 }
 
+/** Brand default for first launch — night-sky storytelling, not OS scheme. */
+export const DEFAULT_THEME_PREFERENCE: ThemePreference = "dark";
+
 export const getApplicationInitialState = (): ApplicationInitialState => ({
   isFetchingUserInfo: true,
-  themePreference: "system",
+  themePreference: DEFAULT_THEME_PREFERENCE,
   auth: {
     isAuthenticated: false,
     user: null,
