@@ -24,8 +24,7 @@ export const PhoneAuthSection = ({
   const [expanded, setExpanded] = useState(false);
   const [isWaitingForOtp, setIsWaitingForOtp] = useState(false);
 
-  const isRegister = authType === "register";
-  const label = isRegister ? t("registerByPhone") : t("loginByPhone");
+  const label = t("continueWithPhone");
 
   const toggleExpanded = () => {
     if (expanded && isWaitingForOtp) {

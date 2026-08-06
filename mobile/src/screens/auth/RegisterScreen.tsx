@@ -1,15 +1,13 @@
 import { useEffect } from "react";
-import { StyleSheet, View } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
-import { Text, useTheme } from "react-native-paper";
 
 import { AuthMethodPanel } from "src/features/auth/AuthMethodPanel";
+import { AuthSwitchFooter } from "src/features/auth/AuthSwitchFooter";
 import { mobileRoutes } from "src/application/routes";
 import type { RootStackParamList } from "src/application/navigation/types";
 import { resetAfterLogin } from "src/application/navigation/rootNavigation";
 import { useApplicationContext } from "src/application/store/Provider";
-import { useScreenTypography } from "src/components/layout/useScreenTypography";
 import type { User } from "src/shared/types/user";
 
 type Props = NativeStackScreenProps<
@@ -20,8 +18,6 @@ type Props = NativeStackScreenProps<
 export const RegisterScreen = ({ navigation }: Props) => {
   const { t } = useTranslation("auth");
   const { t: tCommon } = useTranslation("common");
-  const theme = useTheme();
-  const typography = useScreenTypography();
   const {
     store: {
       state: { auth },
@@ -48,32 +44,12 @@ export const RegisterScreen = ({ navigation }: Props) => {
       authType="register"
       onAuthSuccess={handleAuthSuccess}
       footer={
-        <View style={styles.footer}>
-          <Text
-            variant="bodyMedium"
-            style={[typography.body, styles.footerText, { color: theme.colors.onSurface }]}
-          >
-            {t("alreadyHaveAccount")}{" "}
-            <Text
-              variant="bodyMedium"
-              style={{ color: theme.colors.primary }}
-              onPress={goToLogin}
-            >
-              {tCommon("nav.login")}
-            </Text>
-          </Text>
-        </View>
+        <AuthSwitchFooter
+          prompt={t("alreadyHaveAccount")}
+          actionLabel={tCommon("nav.login")}
+          onPress={goToLogin}
+        />
       }
     />
   );
 };
-
-const styles = StyleSheet.create({
-  footer: {
-    marginTop: 8,
-    alignItems: "center",
-  },
-  footerText: {
-    textAlign: "center",
-  },
-});

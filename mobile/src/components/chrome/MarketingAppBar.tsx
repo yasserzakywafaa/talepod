@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import type { MainDrawerParamList } from "src/application/navigation/MainDrawerNavigator";
 import { navigateToCreateStory } from "src/application/navigation/rootNavigation";
 import { useAppTheme } from "src/application/theme/useAppTheme";
+import { AppBarLoginButton } from "src/components/chrome/AppBarLoginButton";
 import { DisplayText } from "src/components/brand/DisplayText";
 import { PillButton } from "src/components/brand/PillButton";
 
@@ -35,6 +36,8 @@ export const MarketingAppBar = ({
 
         <View style={styles.spacer} />
 
+        <AppBarLoginButton />
+
         <Pressable
           onPress={() => navigation.openDrawer()}
           accessibilityRole="button"
@@ -42,7 +45,13 @@ export const MarketingAppBar = ({
           hitSlop={8}
           style={({ pressed }) => [
             styles.menu,
-            { borderColor: theme.colors.primary, opacity: pressed ? 0.7 : 1 },
+            {
+              // Rounded square, not a circle — matches the web app bar, whose
+              // buttons all sit at the shared 14px `md` radius.
+              borderRadius: theme.tokens.radius.md,
+              borderColor: theme.colors.primary,
+              opacity: pressed ? 0.7 : 1,
+            },
           ]}
         >
           <MaterialCommunityIcons
@@ -79,7 +88,6 @@ const styles = StyleSheet.create({
   menu: {
     width: 44,
     height: 44,
-    borderRadius: 22,
     borderWidth: 1.5,
     alignItems: "center",
     justifyContent: "center",

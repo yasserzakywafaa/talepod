@@ -181,7 +181,7 @@ eas env:create --environment preview --name EXPO_PUBLIC_DEV_API_URL --value "htt
 
 # prod tier → EAS "production" bucket
 eas env:create --environment production --name EXPO_PUBLIC_ENV --value "prod"
-eas env:create --environment production --name EXPO_PUBLIC_PROD_API_URL --value "https://api.metriz.ai"
+eas env:create --environment production --name EXPO_PUBLIC_PROD_API_URL --value "https://api.talepod.com"
 ```
 
 **Never** set `EXPO_PUBLIC_ENV=local` or `EXPO_PUBLIC_LOCAL_API_URL` on EAS.
@@ -205,3 +205,130 @@ Language labels and flag images come from `@yasserzakywafaa/client-core/native` 
 ## i18n (aligned with `web/`)
 
 Namespaces under `src/i18n/locales/{en,ar,de,fr}/`: **`common`**, **`auth`**, **`dashboard`**, **`page`** — same files and structure as the web client, with a few extra keys for native-only copy (e.g. `page.home`, `auth.phoneLoginHint`). RTL for Arabic: navigation stays `direction="ltr"` on `NavigationContainer` (drawer stability). Locale layout uses `LocaleLayoutBoundary` on page/drawer content, `LocalePortalBoundary` (not raw Paper `Portal`) for dialogs/overlays, and `useScreenTypography` / `useThemedTextInputProps` for text alignment.
+
+## Quality checks
+
+```bash
+yarn typecheck   # tsc --noEmit
+yarn lint        # ESLint (expo config + react-hooks as errors)
+yarn test        # Jest (jest-expo preset)
+yarn format      # Prettier
+```
+
+CI runs all four on every PR touching `mobile/`, plus `expo install --check`
+so native module versions that have drifted from the SDK fail on the PR
+rather than on an EAS build.
+
+Two ESLint rules are deliberately strict:
+
+- **`react-hooks/*`** — stale closures and unmemoized context values are the
+  bugs this app actually shipped with.
+- **`no-console`** — `console.*` is **not** stripped from release bundles.
+  Use `src/shared/logger`, which compiles away outside development. The
+  logger itself is the one exemption.
+
+## State management
+
+Two layers, deliberately separate:
+
+| Layer | Owner | Examples |
+| --- | --- | --- |
+| **Client state** | React context (`application/store`) | Auth, theme preference, language |
+| **Server state** | React Query | Story lists, avatars, pricing, admin data |
+
+Client state stays in one application context — that is the app's single
+global store and it is not being replaced.
+
+Server state moved to React Query because the hand-rolled version had no
+caching, no retry, no refetch-on-reconnect, and duplicated a manual
+`isFetching` flag and page-merging logic in every feature.
+
+`application/query/QueryProvider.tsx` wires two React Query defaults that
+assume a browser and otherwise silently do nothing on native: online status
+(NetInfo, not `navigator.onLine`) and focus (`AppState`, not
+`visibilitychange`).
+
+`features/library/useLibraryStories.ts` is the reference migration — read it
+before converting another feature. The pattern: server data via
+`useQuery`/`useInfiniteQuery` keyed through `shared/api/queryKeys.ts`, and
+screen-local UI state (a filter draft, whether a sheet is open) left in
+plain `useState`.
+
+Features still on the old `store`/`manager`/`state`/`Provider` quartet:
+story creator, my stories, my avatars, profile, and the dashboard screens.
+They work — this is an incremental migration, not a broken half-state.
+
+## Crash reporting
+
+`src/shared/monitoring.ts` wraps Sentry so that it:
+
+- no-ops in **Expo Go** (the native module is not in the Expo Go binary) and
+  when `EXPO_PUBLIC_SENTRY_DSN` is unset, so local development is unaffected;
+- scrubs tokens, auth codes, emails and phone numbers before sending;
+- identifies users by opaque id only — never email or phone.
+
+`ErrorBoundary` catches render errors app-wide and per screen. Note what
+error boundaries do **not** catch: event handlers, async callbacks, and
+request failures. Those go through `logger.error`.
+
+See `docs/STORE_READINESS.md` for the DSN and source-map setup.
+
+## Deep linking
+
+`application/navigation/linking.ts` maps URLs to screens, including cold
+starts. Prefixes: `talepod-app://`, `https://talepod.com`,
+`https://www.talepod.com`, and `https://dev.talepod.com`.
+
+**iOS Universal Links** need the AASA file live on those hosts
+(`web/public/.well-known/apple-app-site-association`) and a native build
+that includes `associatedDomains`. See `docs/STORE_READINESS.md` §7 for
+the deploy and WAF checklist.
+
+**Android App Links** need `assetlinks.json` with the Play signing
+SHA-256 — not committed yet; same doc section.
+
+Until the association files are reachable, https links open the website
+and `talepod-app://` still works — the correct fallback, not a bug.
+
+OAuth callbacks (`auth/google`, `auth/apple`) are filtered out of the
+linking config on purpose — `WebBrowser.openAuthSessionAsync` consumes
+them, and letting React Navigation also handle them races that promise.
+
+Test without rebuilding (custom scheme) or after AASA is deployed (https):
+
+```bash
+npx uri-scheme open "talepod-app://bedtime-story/some-slug" --ios
+npx uri-scheme open "talepod-app://bedtime-story/some-slug" --android
+npx uri-scheme open "https://talepod.com/bedtime-story/some-slug" --ios
+```
+
+## Arabic and RTL — known limitation
+
+**The app currently renders Arabic in an LTR layout.** Text is translated
+and aligned right, but the layout does not mirror: the drawer stays on the
+right, back gestures and screen transitions keep their LTR direction, and
+`flexDirection: "row"` is not flipped.
+
+This is deliberate, not an oversight. `shared/utils/layoutDirection.ts`
+actively calls `I18nManager.forceRTL(false)`, and `NavigationContainer` is
+pinned to `direction="ltr"`, because `forceRTL` without a full native
+reload breaks touch targets in Expo Go.
+
+What is not established is whether that constraint still applies in a real
+build — the Expo Go behaviour was the reason for the workaround, and it has
+not been re-tested since. **Before claiming Arabic support in a store
+listing, run this in a dev build (not Expo Go):**
+
+1. `npx expo run:ios --device` (or `run:android`) — a real dev build.
+2. Switch the app language to Arabic in Settings.
+3. Remove the `ensureNativeLtrForTouches()` call and set
+   `direction="rtl"` on `NavigationContainer` for the test.
+4. Check, in order: can you tap the tab bar and drawer items at all (this is
+   the failure the workaround exists for); does the drawer open from the
+   correct side; do stack push/pop animations run the right way; are icons
+   that imply direction (back chevrons, "next") mirrored.
+
+If touch targets survive in a real build, the workaround can go and the
+navigation direction can follow the language. If they do not, keep the
+current behaviour and say "Arabic language support" rather than "full RTL"
+in the store listing.

@@ -19,27 +19,18 @@ import {
   resetToMarketingAfterLogout,
 } from "src/application/navigation/rootNavigation";
 import { useApplicationContext } from "src/application/store/Provider";
-import type { User } from "src/shared/types/user";
 import { getUserProfileContact } from "src/shared/utils/getUserProfileContact";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
+import {
+  getUserAvatarInitials,
+  getUserFullName,
+} from "src/shared/utils/getUserDisplayName";
 import { SheetBody } from "src/components/layout/SheetPage";
 
 type Props = NativeStackScreenProps<
   RootStackParamList,
   typeof mobileRoutes.sheet.account
 >;
-
-const fullName = (user: User, accountLabel: string): string => {
-  const given = user.name.givenName?.trim() ?? "";
-  const family = user.name.familyName?.trim() ?? "";
-  return [given, family].filter(Boolean).join(" ") || accountLabel;
-};
-
-const avatarLabel = (user: User): string => {
-  const a = user.name.givenName?.charAt(0) ?? "";
-  const b = user.name.familyName?.charAt(0) ?? "";
-  return (a + b).toUpperCase() || "?";
-};
 
 export const AccountSheetScreen = ({ navigation }: Props) => {
   const { t } = useTranslation("common");
@@ -76,6 +67,7 @@ export const AccountSheetScreen = ({ navigation }: Props) => {
   }
 
   const profileContact = getUserProfileContact(user);
+  const initials = getUserAvatarInitials(user);
   const showDashboardLink = hasAdminRights(user) && !isOnDashboardRoot();
 
   const onLogout = async () => {
@@ -89,18 +81,25 @@ export const AccountSheetScreen = ({ navigation }: Props) => {
         <View style={styles.sheetHeader}>
           {user.picture ? (
             <Avatar.Image size={56} source={{ uri: user.picture }} />
-          ) : (
+          ) : initials ? (
             <Avatar.Text
               size={56}
-              label={avatarLabel(user)}
+              label={initials}
               style={{ backgroundColor: theme.colors.surfaceVariant }}
+            />
+          ) : (
+            <Avatar.Icon
+              size={56}
+              icon="account-outline"
+              style={{ backgroundColor: theme.colors.surfaceVariant }}
+              color={theme.colors.onSurfaceVariant}
             />
           )}
           <Text
             variant="titleMedium"
             style={{ color: theme.colors.onSurface, marginTop: 12 }}
           >
-            {fullName(user, accountLabel)}
+            {getUserFullName(user, accountLabel)}
           </Text>
           {profileContact.value ? (
             <Text

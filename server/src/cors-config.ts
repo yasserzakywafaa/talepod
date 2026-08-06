@@ -1,6 +1,9 @@
 import CONFIG from "./config";
 import { Express } from "express";
-import { createCors } from "@yasserzakywafaa/server-core";
+import {
+  APPLE_FORM_POST_ORIGIN,
+  createCors,
+} from "@yasserzakywafaa/server-core";
 
 const getAllowedOrigins = (): string[] => {
   const {
@@ -11,16 +14,17 @@ const getAllowedOrigins = (): string[] => {
     PUBLIC_URLS_CLIENT_PROD,
   } = CONFIG;
   if ((IS_LOCAL || IS_DEV) && PUBLIC_URLS_CLIENT_DEV) {
-    return PUBLIC_URLS_CLIENT_DEV.split(", ");
+    return [...PUBLIC_URLS_CLIENT_DEV.split(", "), APPLE_FORM_POST_ORIGIN];
   }
   if (IS_PROD && PUBLIC_URLS_CLIENT_PROD) {
-    return PUBLIC_URLS_CLIENT_PROD.split(", ");
+    return [...PUBLIC_URLS_CLIENT_PROD.split(", "), APPLE_FORM_POST_ORIGIN];
   }
 
   return [
     "https://talepod.com",
     "https://www.talepod.com",
     "https://dev.talepod.com",
+    APPLE_FORM_POST_ORIGIN,
   ];
 };
 

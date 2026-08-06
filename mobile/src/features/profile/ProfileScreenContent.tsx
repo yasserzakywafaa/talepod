@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
-import { Snackbar, Switch } from "react-native-paper";
+import { Snackbar } from "react-native-paper";
 import {
   formatLocalizedDate,
   localeFromLanguage,
 } from "@yasserzakywafaa/client-core";
+import { ThemeSwitcher } from "@yasserzakywafaa/client-core/native";
 
 import { resetToMarketingAfterLogout, navigateToMainMyStories } from "src/application/navigation/rootNavigation";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useAppTheme } from "src/application/theme/useAppTheme";
-import { useResolvedThemeMode } from "src/application/useResolvedThemeMode";
 import { ProfileAvatar } from "src/components/shared/ProfileAvatar";
 import { PageBody } from "src/components/layout/Page";
 import { BrandCard } from "src/components/brand/BrandCard";
@@ -20,8 +20,9 @@ import { PillButton } from "src/components/brand/PillButton";
 import { UnderlineTabs } from "src/components/brand/UnderlineTabs";
 import { DeleteAccountDialog } from "src/features/profile/DeleteAccountDialog";
 import { ProfileBillingPanel } from "src/features/profile/ProfileBillingPanel";
-import { useDashboardProfileContext } from "src/features/profile/store/Provider";
+import { useDeleteAccount } from "src/features/profile/useDeleteAccount";
 import { UserStatus } from "src/shared/types/user";
+import { getUserFullName } from "src/shared/utils/getUserDisplayName";
 import { getUserProfileContact } from "src/shared/utils/getUserProfileContact";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
 
@@ -84,7 +85,6 @@ export const ProfileScreenContent = () => {
   const { t, i18n } = useTranslation(["dashboard", "common"]);
   const theme = useAppTheme();
   const locale = localeFromLanguage(i18n.language);
-  const resolvedThemeMode = useResolvedThemeMode();
 
   const [activeTab, setActiveTab] = useState<"profile" | "billing">("profile");
 
@@ -95,17 +95,13 @@ export const ProfileScreenContent = () => {
     store: {
       state: {
         auth: { user },
+        themePreference,
       },
     },
     manager: { handleThemePreferenceChange },
   } = useApplicationContext();
 
-  const {
-    store: {
-      state: { isDeletingAccount },
-    },
-    manager: { handleDeleteAccount },
-  } = useDashboardProfileContext();
+  const { deleteAccount, isDeletingAccount } = useDeleteAccount();
 
   if (!user) {
     return null;
@@ -116,14 +112,8 @@ export const ProfileScreenContent = () => {
   const contactLabelKey =
     profileContact.kind === "phone" ? "profile.phoneNumber" : "profile.email";
 
-  const handleThemeToggle = () => {
-    void handleThemePreferenceChange(
-      resolvedThemeMode === "dark" ? "light" : "dark",
-    );
-  };
-
   const onConfirmDelete = async (confirmationPhrase: string) => {
-    const result = await handleDeleteAccount(confirmationPhrase);
+    const result = await deleteAccount(confirmationPhrase);
     if (result.success) {
       setDeleteDialogVisible(false);
       resetToMarketingAfterLogout();
@@ -139,7 +129,9 @@ export const ProfileScreenContent = () => {
           <ProfileAvatar user={user} />
           <View style={styles.headerText}>
             <DisplayText size={26} color={theme.colors.primary}>
-              {t("profile.greeting", { name: user.name.givenName })}
+              {t("profile.greeting", {
+                name: getUserFullName(user, t("account", { ns: "common" })),
+              })}
             </DisplayText>
             <View style={styles.chips}>
               <MetaTag
@@ -246,7 +238,7 @@ export const ProfileScreenContent = () => {
 
               <ProfileField label={t("profile.fullName")}>
                 <ProfileValue>
-                  {`${user.name.givenName} ${user.name.familyName}`.trim()}
+                  {getUserFullName(user, t("account", { ns: "common" }))}
                 </ProfileValue>
               </ProfileField>
 
@@ -276,36 +268,27 @@ export const ProfileScreenContent = () => {
                 </ProfileValue>
               </ProfileField>
 
-              <ProfileField label={t("profile.appearance")}>
-                <Pressable onPress={handleThemeToggle} style={styles.themeRow}>
-                  <Text
-                    style={[
-                      styles.themeLabel,
-                      {
-                        color: theme.colors.onSurfaceVariant,
-                        fontFamily: theme.tokens.fontFamily.medium,
-                      },
-                    ]}
-                  >
-                    {t("profile.themeLight")}
-                  </Text>
-                  <Switch
-                    value={resolvedThemeMode === "dark"}
-                    onValueChange={handleThemeToggle}
-                  />
-                  <Text
-                    style={[
-                      styles.themeLabel,
-                      {
-                        color: theme.colors.onSurfaceVariant,
-                        fontFamily: theme.tokens.fontFamily.medium,
-                      },
-                    ]}
-                  >
-                    {t("profile.themeDark")}
-                  </Text>
-                </Pressable>
-              </ProfileField>
+              <View style={styles.appearanceRow}>
+                <Text
+                  style={[
+                    styles.fieldLabel,
+                    {
+                      color: theme.colors.onSurface,
+                      textDecorationColor: theme.colors.primary,
+                      fontFamily: theme.tokens.fontFamily.medium,
+                      flexShrink: 1,
+                    },
+                  ]}
+                >
+                  {t("profile.appearance")}
+                </Text>
+                <ThemeSwitcher
+                  value={themePreference}
+                  onChange={(preference) =>
+                    void handleThemePreferenceChange(preference)
+                  }
+                />
+              </View>
             </BrandCard>
           </>
         )}
@@ -401,12 +384,12 @@ const styles = StyleSheet.create({
     includeFontPadding: false,
   },
   fieldValue: { fontSize: 15, includeFontPadding: false },
-  themeRow: {
+  appearanceRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    justifyContent: "space-between",
+    gap: 12,
   },
-  themeLabel: { fontSize: 13, includeFontPadding: false },
   dangerCopy: {
     fontSize: 14,
     lineHeight: 21,

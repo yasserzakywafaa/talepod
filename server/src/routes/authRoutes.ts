@@ -19,6 +19,30 @@ authRouter.post(
   AuthController.googleMobileExchange,
 );
 
+authRouter.get(END_POINTS.AUTH.APPLE, AuthController.oauth2Apple);
+
+// Apple form-posts the callback whenever name/email scopes are requested; the
+// GET registration covers the no-scope case.
+authRouter.post(
+  END_POINTS.AUTH.APPLE_CALLBACK,
+  AuthController.oauth2AppleCallback,
+);
+
+authRouter.get(
+  END_POINTS.AUTH.APPLE_CALLBACK,
+  AuthController.oauth2AppleCallback,
+);
+
+authRouter.post(
+  END_POINTS.AUTH.APPLE_MOBILE_EXCHANGE,
+  AuthController.appleMobileExchange,
+);
+
+authRouter.post(
+  END_POINTS.AUTH.APPLE_NATIVE_EXCHANGE,
+  AuthController.appleNativeExchange,
+);
+
 authRouter.post(
   END_POINTS.AUTH.PHONE_REGISTER_SEND_OTP,
   AuthController.sendPhoneRegisterOtp,

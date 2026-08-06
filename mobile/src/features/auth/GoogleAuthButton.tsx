@@ -10,6 +10,7 @@ import { useApplicationContext } from "src/application/store/Provider";
 import { AuthSocialButton } from "src/features/auth/AuthSocialButton";
 
 import type { User } from "src/shared/types/user";
+import { logger } from "src/shared/logger";
 
 type GoogleAuthButtonProps = {
   authType: "login" | "register";
@@ -18,7 +19,6 @@ type GoogleAuthButtonProps = {
 };
 
 export const GoogleAuthButton = ({
-  authType,
   disabled,
   onSuccess,
 }: GoogleAuthButtonProps) => {
@@ -29,8 +29,9 @@ export const GoogleAuthButton = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const label =
-    authType === "register" ? t("registerWithGoogle") : t("loginWithGoogle");
+  // One label on both sheets: social auth has no login/register split — signing
+  // in without an account creates one — so "Continue" is what actually happens.
+  const label = t("continueWithGoogle");
 
   const handlePress = async () => {
     setIsSubmitting(true);
@@ -53,7 +54,7 @@ export const GoogleAuthButton = ({
       if (!String(message).toLowerCase().includes("cancel")) {
         setErrorMessage(message);
       }
-      console.error(error);
+      logger.error("Google sign-in failed", error);
     } finally {
       setIsSubmitting(false);
     }

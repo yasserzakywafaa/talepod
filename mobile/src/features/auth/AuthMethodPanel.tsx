@@ -3,6 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Icon, Text, useTheme } from "react-native-paper";
 
+import { AppleAuthButton } from "src/features/auth/AppleAuthButton";
 import { GoogleAuthButton } from "src/features/auth/GoogleAuthButton";
 import { PhoneAuthSection } from "src/features/auth/PhoneAuthSection";
 import { AuthScreenBody } from "src/components/layout/SheetPage";
@@ -45,6 +46,8 @@ export const AuthMethodPanel = ({
         </View>
 
         <View style={styles.methods}>
+          {/* Apple HIG: Sign in with Apple sits above other social buttons. */}
+          <AppleAuthButton authType={authType} onSuccess={onAuthSuccess} />
           <GoogleAuthButton authType={authType} onSuccess={onAuthSuccess} />
           <PhoneAuthSection authType={authType} onSuccess={onAuthSuccess} />
         </View>

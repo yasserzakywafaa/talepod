@@ -1,8 +1,9 @@
 import { ProfileInfo } from "../store/state";
 import { getCreateStoryPrompt } from "../utils/getStoryPrompts";
 import { useGenerationContext } from "../generation/Provider";
-import { useOpenaiContext } from "../openai/store/Provider";
 import { useStoryCreatorContext } from "../store/Provider";
+import { useCreateStoryMutation } from "src/features/storyCreator/useCreateStoryMutation";
+import { logger } from "src/shared/logger";
 
 export interface GenerateStoryOptions {
   profileOverride?: Partial<ProfileInfo>;
@@ -23,14 +24,7 @@ export const useGenerateStory = (): UseGenerateStory => {
     store: storyCreatorStore,
   } = useStoryCreatorContext();
 
-  const {
-    store: {
-      state: {
-        createStory: { isFetching: isCreatingStory },
-      },
-    },
-    manager: { isCreateStoryFetching, handleCreateStoryRequest },
-  } = useOpenaiContext();
+  const { createStory, isCreatingStory } = useCreateStoryMutation();
 
   const {
     manager: { isGenerating, startGeneration },
@@ -43,31 +37,30 @@ export const useGenerateStory = (): UseGenerateStory => {
       ...profileInfo,
       ...options?.profileOverride,
     };
-    const prompt = getCreateStoryPrompt({
+    // Built from the same state the request carries, so a server that ignores
+    // this and builds its own produces an identical prompt.
+    const storyPrompt = getCreateStoryPrompt({
       ...storyCreatorStore.state,
       profileInfo: resolvedProfile,
     });
-    if (!prompt) return;
+    if (!storyPrompt) return;
 
-    isCreateStoryFetching(true);
     try {
-      const placeholder = await handleCreateStoryRequest(
-        prompt,
-        resolvedProfile,
+      const placeholder = await createStory({
+        storyPrompt,
+        profileInfo: resolvedProfile,
         storyParams,
         format,
         artStyle,
         avatarId,
-      );
+      });
 
       if (placeholder?._id) {
         startGeneration(placeholder, resolvedProfile.name);
       }
     } catch (error) {
-      console.error("Failed to create a story!", { error });
+      logger.error("Failed to create a story", error);
       throw error;
-    } finally {
-      isCreateStoryFetching(false);
     }
   };
 

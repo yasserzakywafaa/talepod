@@ -9,12 +9,16 @@ import {
 import * as Updates from "expo-updates";
 import { DevSettings } from "react-native";
 
-import { mobileRoutes, type PublicMarketingScreenRoute } from "src/application/routes";
+import {
+  mobileRoutes,
+  type PublicMarketingScreenRoute,
+} from "src/application/routes";
 import { navigateToPublicMarketingScreen } from "src/application/navigation/rootNavigation";
 import type { RootStackParamList } from "src/application/navigation/types";
 import { useApplicationContext } from "src/application/store/Provider";
 import { getAppVersionLabel } from "src/application/shared/getAppVersionLabel";
 import { SheetBody } from "src/components/layout/SheetPage";
+import { logger } from "src/shared/logger";
 
 type Props = NativeStackScreenProps<
   RootStackParamList,
@@ -52,7 +56,7 @@ export const SettingsSheetScreen = ({ navigation }: Props) => {
         return;
       }
     } catch (error) {
-      console.warn("Refresh app via expo-updates failed:", error);
+      logger.warn("Refresh app via expo-updates failed", error);
     }
 
     if (typeof DevSettings.reload === "function") {
@@ -62,76 +66,76 @@ export const SettingsSheetScreen = ({ navigation }: Props) => {
 
   return (
     <SheetBody>
+      <Text
+        variant="titleMedium"
+        style={[styles.title, { color: theme.colors.onSurface }]}
+      >
+        {t("settings.menu")}
+      </Text>
+
+      <View style={styles.settingBlock}>
         <Text
-          variant="titleMedium"
-          style={[styles.title, { color: theme.colors.onSurface }]}
+          variant="bodyLarge"
+          style={[styles.settingLabel, { color: theme.colors.onSurface }]}
         >
-          {t("settings.menu")}
+          {t("settings.languageLabel")}
         </Text>
-
-        <View style={styles.settingBlock}>
-          <Text
-            variant="bodyLarge"
-            style={[styles.settingLabel, { color: theme.colors.onSurface }]}
-          >
-            {t("settings.languageLabel")}
-          </Text>
-          <LanguageSwitcher
-            value={i18n.language}
-            onChange={(lang) => void handleLanguageChange(lang)}
-          />
-        </View>
-
-        <Divider style={styles.divider} />
-
-        <View style={styles.settingRow}>
-          <Text variant="bodyLarge" style={{ color: theme.colors.onSurface }}>
-            {t("settings.theme")}
-          </Text>
-          <ThemeSwitcher
-            value={themePreference}
-            onChange={(preference) =>
-              void handleThemePreferenceChange(preference)
-            }
-          />
-        </View>
-
-        <Divider style={styles.divider} />
-
-        <List.Item
-          title={t("settings.refreshApp")}
-          onPress={() => void handleRefresh()}
-          left={(props) => <List.Icon {...props} icon="refresh" />}
-          titleStyle={{ color: theme.colors.onSurface }}
+        <LanguageSwitcher
+          value={i18n.language}
+          onChange={(lang) => void handleLanguageChange(lang)}
         />
+      </View>
 
-        <Divider style={styles.divider} />
+      <Divider style={styles.divider} />
 
-        <List.Item
-          title={t("footer.privacyPolicy")}
-          onPress={() => openPublicPage(mobileRoutes.public.privacyPolicy)}
-          left={(props) => <List.Icon {...props} icon="shield-lock-outline" />}
-          titleStyle={{ color: theme.colors.onSurface }}
-        />
-        <List.Item
-          title={t("footer.termsAndConditions")}
-          onPress={() => openPublicPage(mobileRoutes.public.termsAndConditions)}
-          left={(props) => <List.Icon {...props} icon="file-document-outline" />}
-          titleStyle={{ color: theme.colors.onSurface }}
-        />
-        <List.Item
-          title={t("nav.contact")}
-          onPress={() => openPublicPage(mobileRoutes.public.contact)}
-          left={(props) => <List.Icon {...props} icon="email-outline" />}
-          titleStyle={{ color: theme.colors.onSurface }}
-        />
-
-        <Text
-          variant="bodySmall"
-          style={[styles.version, { color: theme.colors.onSurfaceVariant }]}
-        >
-          {t("settings.version", { version: appVersion })}
+      <View style={styles.settingRow}>
+        <Text variant="bodyLarge" style={{ color: theme.colors.onSurface }}>
+          {t("settings.theme")}
         </Text>
+        <ThemeSwitcher
+          value={themePreference}
+          onChange={(preference) =>
+            void handleThemePreferenceChange(preference)
+          }
+        />
+      </View>
+
+      <Divider style={styles.divider} />
+
+      <List.Item
+        title={t("settings.refreshApp")}
+        onPress={() => void handleRefresh()}
+        left={(props) => <List.Icon {...props} icon="refresh" />}
+        titleStyle={{ color: theme.colors.onSurface }}
+      />
+
+      <Divider style={styles.divider} />
+
+      <List.Item
+        title={t("footer.privacyPolicy")}
+        onPress={() => openPublicPage(mobileRoutes.public.privacyPolicy)}
+        left={(props) => <List.Icon {...props} icon="shield-lock-outline" />}
+        titleStyle={{ color: theme.colors.onSurface }}
+      />
+      <List.Item
+        title={t("footer.termsAndConditions")}
+        onPress={() => openPublicPage(mobileRoutes.public.termsAndConditions)}
+        left={(props) => <List.Icon {...props} icon="file-document-outline" />}
+        titleStyle={{ color: theme.colors.onSurface }}
+      />
+      <List.Item
+        title={t("nav.contact")}
+        onPress={() => openPublicPage(mobileRoutes.public.contact)}
+        left={(props) => <List.Icon {...props} icon="email-outline" />}
+        titleStyle={{ color: theme.colors.onSurface }}
+      />
+
+      <Text
+        variant="bodySmall"
+        style={[styles.version, { color: theme.colors.onSurfaceVariant }]}
+      >
+        {t("settings.version", { version: appVersion })}
+      </Text>
     </SheetBody>
   );
 };

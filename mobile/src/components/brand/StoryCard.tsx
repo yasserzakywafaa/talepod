@@ -7,6 +7,7 @@ import { BrandBadge } from "src/components/brand/BrandBadge";
 import { BrandCard } from "src/components/brand/BrandCard";
 import { DisplayText } from "src/components/brand/DisplayText";
 import { MetaTag } from "src/components/brand/MetaTag";
+import { PillButton } from "src/components/brand/PillButton";
 import { Gradient } from "src/components/shared/Gradient";
 import {
   AdultGenderEnum,
@@ -20,19 +21,31 @@ const mascotBunny = require("../../../assets/images/characters/sleeping_bunny_wi
 type StoryCardProps = {
   story: Story;
   onPress: () => void;
+  // For a story whose generation failed. Omit on lists that never show
+  // failed placeholders (Library, admin) — the card renders normally.
+  onRetry?: () => void;
+  onDelete?: () => void;
+  isRetrying?: boolean;
 };
 
 /**
- * Story list card — the native read of web `StoryCard`: 16:9 cover with a
- * format badge, serif title, one-line summary and outlined meta tags.
+ * Story list card. A failed story swaps its badge and summary for
+ * retry/delete, instead of opening a reader with nothing in it.
  */
-export const StoryCard = ({ story, onPress }: StoryCardProps) => {
+export const StoryCard = ({
+  story,
+  onPress,
+  onRetry,
+  onDelete,
+  isRetrying = false,
+}: StoryCardProps) => {
   const { t } = useTranslation("story");
   const theme = useAppTheme();
   const { gradients, fontFamily } = theme.tokens;
 
   const cover = getStoryCoverImageUrl(story);
   const isComic = story.format === "comic";
+  const isFailed = story.textStatus === "failed";
   const gender = story.profileInfo?.gender;
   const isFemale =
     gender === ChildGenderEnum.Girl || gender === AdultGenderEnum.Female;
@@ -42,9 +55,12 @@ export const StoryCard = ({ story, onPress }: StoryCardProps) => {
   const authorPicture = story.authorProfile?.picture;
 
   return (
-    <BrandCard onPress={onPress} style={styles.card}>
+    <BrandCard
+      onPress={isFailed ? undefined : onPress}
+      style={styles.card}
+    >
       <View style={styles.cover}>
-        {cover ? (
+        {cover && !isFailed ? (
           <Image
             source={{ uri: cover }}
             style={StyleSheet.absoluteFillObject}
@@ -58,15 +74,21 @@ export const StoryCard = ({ story, onPress }: StoryCardProps) => {
           >
             <Image
               source={mascotBunny}
-              style={styles.mascot}
+              style={[styles.mascot, isFailed ? styles.mascotFailed : null]}
               resizeMode="contain"
             />
           </Gradient>
         )}
 
         <BrandBadge
-          label={isComic ? t("card.badgeComic") : t("card.badgeStory")}
-          tone={isComic ? "primary" : "secondary"}
+          label={
+            isFailed
+              ? t("card.failedBadge")
+              : isComic
+                ? t("card.badgeComic")
+                : t("card.badgeStory")
+          }
+          tone={isFailed ? "error" : isComic ? "primary" : "secondary"}
           style={styles.coverBadge}
         />
 
@@ -86,9 +108,19 @@ export const StoryCard = ({ story, onPress }: StoryCardProps) => {
 
       <View style={styles.content}>
         <DisplayText size={17} numberOfLines={2}>
-          {story.title}
+          {isFailed ? t("card.failedTitle") : story.title}
         </DisplayText>
-        {story.summary ? (
+        {isFailed ? (
+          <Text
+            numberOfLines={2}
+            style={[
+              styles.summary,
+              { color: theme.colors.error, fontFamily: fontFamily.regular },
+            ]}
+          >
+            {t("card.failedBody")}
+          </Text>
+        ) : story.summary ? (
           <Text
             numberOfLines={1}
             style={[
@@ -104,39 +136,68 @@ export const StoryCard = ({ story, onPress }: StoryCardProps) => {
         ) : null}
       </View>
 
-      <View style={styles.meta}>
-        <View style={styles.tags}>
-          {story.profileInfo?.language ? (
-            <MetaTag
-              label={story.profileInfo.language.value.toUpperCase()}
-              tone="secondary"
-            />
+      {isFailed && (onRetry || onDelete) ? (
+        <View style={styles.failedActions}>
+          {onRetry ? (
+            <PillButton
+              compact
+              variant="outlined"
+              icon="refresh"
+              loading={isRetrying}
+              disabled={isRetrying}
+              onPress={onRetry}
+            >
+              {t("card.retry")}
+            </PillButton>
           ) : null}
-          {story.storyParams?.createdByAdmin ? (
-            <MetaTag label={t("card.tagOriginal")} tone="primary" />
-          ) : story.createdAt ? (
-            <MetaTag
-              label={new Date(story.createdAt).toLocaleDateString("en-GB")}
-              tone="secondary"
-            />
+          {onDelete ? (
+            <PillButton
+              compact
+              variant="outlined"
+              color={theme.colors.error}
+              icon="delete-outline"
+              disabled={isRetrying}
+              onPress={onDelete}
+            >
+              {t("card.delete")}
+            </PillButton>
           ) : null}
-          {isFemale || isMale ? (
-            <MaterialCommunityIcons
-              name={isFemale ? "gender-female" : "gender-male"}
-              size={18}
-              color={theme.colors.primary}
+        </View>
+      ) : (
+        <View style={styles.meta}>
+          <View style={styles.tags}>
+            {story.profileInfo?.language ? (
+              <MetaTag
+                label={story.profileInfo.language.value.toUpperCase()}
+                tone="secondary"
+              />
+            ) : null}
+            {story.storyParams?.createdByAdmin ? (
+              <MetaTag label={t("card.tagOriginal")} tone="primary" />
+            ) : story.createdAt ? (
+              <MetaTag
+                label={new Date(story.createdAt).toLocaleDateString("en-GB")}
+                tone="secondary"
+              />
+            ) : null}
+            {isFemale || isMale ? (
+              <MaterialCommunityIcons
+                name={isFemale ? "gender-female" : "gender-male"}
+                size={18}
+                color={theme.colors.primary}
+              />
+            ) : null}
+          </View>
+
+          {authorPicture ? (
+            <Image
+              source={{ uri: authorPicture }}
+              style={styles.author}
+              accessibilityLabel={t("card.authorAvatarAlt")}
             />
           ) : null}
         </View>
-
-        {authorPicture ? (
-          <Image
-            source={{ uri: authorPicture }}
-            style={styles.author}
-            accessibilityLabel={t("card.authorAvatarAlt")}
-          />
-        ) : null}
-      </View>
+      )}
     </BrandCard>
   );
 };
@@ -146,6 +207,7 @@ const styles = StyleSheet.create({
   cover: { width: "100%", aspectRatio: 16 / 9, overflow: "hidden" },
   placeholder: { alignItems: "center", justifyContent: "flex-end" },
   mascot: { width: "44%", height: "88%" },
+  mascotFailed: { opacity: 0.45 },
   coverBadge: { position: "absolute", top: 8, left: 8 },
   audioPill: {
     position: "absolute",
@@ -171,4 +233,11 @@ const styles = StyleSheet.create({
   },
   tags: { flexDirection: "row", alignItems: "center", gap: 6, flexWrap: "wrap" },
   author: { width: 36, height: 36, borderRadius: 6 },
+  failedActions: {
+    flexDirection: "row",
+    gap: 8,
+    paddingHorizontal: 12,
+    paddingTop: 6,
+    paddingBottom: 12,
+  },
 });

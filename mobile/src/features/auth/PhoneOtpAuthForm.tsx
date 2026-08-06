@@ -20,6 +20,7 @@ import { useApplicationContext } from "src/application/store/Provider";
 import type { User } from "src/shared/types/user";
 import { countryCodeToFlagEmoji } from "src/shared/utils/countryCodeToFlagEmoji";
 import { validatePhoneNumber } from "src/shared/utils/validatePhoneNumber";
+import { logger } from "src/shared/logger";
 
 const OTP_CODE_REGEX = /^\d{4,8}$/;
 const PREFERRED_COUNTRIES: CountryCode[] = ["DE", "FR", "EG", "PT"];
@@ -136,7 +137,7 @@ export const PhoneOtpAuthForm = ({
       onWaitingForOtp?.(true);
     } catch (error) {
       setErrorMessage(getApiErrorMessage(error, t("errorSendOtpConfig")));
-      console.error(error);
+      logger.error("Phone OTP step failed", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -187,7 +188,7 @@ export const PhoneOtpAuthForm = ({
       setErrorMessage(
         getApiErrorMessage(error, t("errorOtpVerificationFailed")),
       );
-      console.error(error);
+      logger.error("Phone OTP step failed", error);
     } finally {
       setIsSubmitting(false);
     }

@@ -12,7 +12,7 @@ import {
   type SelectOption,
 } from "src/components/brand/SelectField";
 import { getUserRoleLabel } from "src/features/dashboardShared/userPresentation";
-import type { DashboardUsersFilters } from "src/features/dashboardUsers/store/state";
+import type { DashboardUsersFilters } from "src/features/dashboardUsers/useDashboardUsers";
 import { UserRole, UserStatus } from "src/shared/types/user";
 
 type AdminUsersFiltersSheetProps = {
@@ -28,9 +28,8 @@ type AdminUsersFiltersSheetProps = {
 };
 
 /**
- * Filters for the admin users list — the same bottom sheet as the story
- * filters, with the three things that actually narrow a user list: who they
- * are, what kind of account they hold, and whether it is in good standing.
+ * Filters for the admin users list, in the same sheet as the story filters:
+ * who they are, what account they hold, whether it is in good standing.
  */
 export const AdminUsersFiltersSheet = ({
   visible,

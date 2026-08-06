@@ -30,9 +30,9 @@ import { SectionLabel } from "src/components/brand/SectionLabel";
 import { SegmentedControl } from "src/components/brand/SegmentedControl";
 import { SelectField } from "src/components/brand/SelectField";
 import { useGenerateStory } from "src/features/storyCreator/hooks/useGenerateStory";
-import { useAvatarsList } from "src/features/storyCreator/hooks/useAvatarsList";
+import { useAvatarsQuery } from "src/features/myAvatars/useAvatars";
 import { useStoryCreatorContext } from "src/features/storyCreator/store/Provider";
-import { getCreateStoryErrorMessage } from "src/features/storyCreator/openai/useCreateStory";
+import { getCreateStoryErrorMessage } from "src/features/storyCreator/useCreateStoryMutation";
 import {
   AdultGenderEnum,
   ChildGenderEnum,
@@ -93,7 +93,7 @@ export const CreateStoryScreen = ({
     isLoading: avatarsLoading,
     loadError: avatarsError,
     refetch: refetchAvatars,
-  } = useAvatarsList(auth.isAuthenticated);
+  } = useAvatarsQuery(auth.isAuthenticated);
 
   const user = auth.user;
   const isUserActive = user && user.status === UserStatus.active;

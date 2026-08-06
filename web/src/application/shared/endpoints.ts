@@ -65,6 +65,8 @@ const END_POINTS = {
     LOGOUT: `${publicApiUrl}/api/v1/auth/logout`,
     GOOGLE: `${publicApiUrl}/api/v1/auth/google`,
     GOOGLE_CALLBACK: `${publicApiUrl}/api/v1/auth/google/callback`,
+    APPLE: `${publicApiUrl}/api/v1/auth/apple`,
+    APPLE_CALLBACK: `${publicApiUrl}/api/v1/auth/apple/callback`,
     REFRESH_TOKEN: `${publicApiUrl}/api/v1/auth/refresh-token`,
     PHONE_REGISTER_SEND_OTP: `${publicApiUrl}/api/v1/auth/phone/register/send-otp`,
     PHONE_REGISTER_VERIFY_OTP: `${publicApiUrl}/api/v1/auth/phone/register/verify-otp`,

@@ -30,6 +30,14 @@ const END_POINTS = {
     EXPORT_STORY_PDF: (slug: string) => `/api/v1/bedtime-story/${slug}/pdf`,
     EMAIL_STORY_PDF: (slug: string) =>
       `/api/v1/bedtime-story/${slug}/email-pdf`,
+    /**
+     * Author deletes their own story — distinct from
+     * DASHBOARD.STORIES.DELETE_STORY, which is admin-only and unscoped. A
+     * failed generation (textStatus "failed") is the main reason a user needs
+     * this: there was previously no way to remove a stuck placeholder.
+     */
+    DELETE_MY_STORY: (storyId: string) =>
+      `/api/v1/user-bedtime-stories/${storyId}`,
   },
   AVATARS: {
     LIST: "/api/v1/avatars",
@@ -49,6 +57,10 @@ const END_POINTS = {
     GOOGLE: `/api/v1/auth/google`,
     GOOGLE_CALLBACK: `/api/v1/auth/google/callback`,
     GOOGLE_MOBILE_EXCHANGE: `/api/v1/auth/google/mobile/exchange`,
+    APPLE: `/api/v1/auth/apple`,
+    APPLE_CALLBACK: `/api/v1/auth/apple/callback`,
+    APPLE_MOBILE_EXCHANGE: `/api/v1/auth/apple/mobile/exchange`,
+    APPLE_NATIVE_EXCHANGE: `/api/v1/auth/apple/native/exchange`,
     REFRESH_TOKEN: `/api/v1/auth/refresh-token`,
     PHONE_REGISTER_SEND_OTP: `/api/v1/auth/phone/register/send-otp`,
     PHONE_REGISTER_VERIFY_OTP: `/api/v1/auth/phone/register/verify-otp`,

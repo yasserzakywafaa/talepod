@@ -1,5 +1,7 @@
 import axios from "axios";
 
+import { logger } from "src/shared/logger";
+
 const recentLogs = new Map<string, number>();
 const THROTTLE_MS = 10_000;
 
@@ -23,11 +25,24 @@ export const logApiError = (label: string, error: unknown): void => {
   recentLogs.set(key, now);
 
   if (axios.isAxiosError(error) && error.response?.status === 429) {
-    console.warn(
+    logger.warn(
       `${label}: rate limited (429). Wait a moment or restart the API server.`,
     );
     return;
   }
 
-  console.error(label, error);
+  // A 4xx is the server rejecting the request as asked — expected, and noisy
+  // in a crash reporter. Only 5xx and transport failures are worth reporting.
+  const status = axios.isAxiosError(error) ? (error.response?.status ?? 0) : 0;
+  const isClientError = status >= 400 && status < 500;
+
+  if (isClientError) {
+    logger.warn(label, {
+      status,
+      url: axios.isAxiosError(error) ? error.config?.url : undefined,
+    });
+    return;
+  }
+
+  logger.error(label, error);
 };

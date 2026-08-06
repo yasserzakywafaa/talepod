@@ -10,6 +10,7 @@ import {
 import END_POINTS from "src/application/shared/endpoints";
 import { api } from "src/application/shared/apiClient";
 import type { User, UserSubscription } from "src/shared/types/user";
+import { logger } from "src/shared/logger";
 
 type Props = {
   user: User;
@@ -33,7 +34,7 @@ export const ProfileBillingPanel = ({ user }: Props) => {
         );
         setDetails(data);
       } catch (error) {
-        console.error("Failed to load subscription", error);
+        logger.error("Failed to load subscription", error);
       } finally {
         setLoading(false);
       }
@@ -55,11 +56,17 @@ export const ProfileBillingPanel = ({ user }: Props) => {
           <ActivityIndicator color={theme.colors.primary} />
         ) : (
           <>
-            <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
+            <Text
+              variant="bodyMedium"
+              style={{ color: theme.colors.onSurfaceVariant }}
+            >
               {t("subscription.planType")}: {user.subscription.type}
             </Text>
             {details?.startDate ? (
-              <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
+              <Text
+                variant="bodyMedium"
+                style={{ color: theme.colors.onSurfaceVariant }}
+              >
                 {t("subscription.startDate")}:{" "}
                 {formatLocalizedDate(details.startDate, locale, {
                   year: "numeric",
@@ -69,7 +76,10 @@ export const ProfileBillingPanel = ({ user }: Props) => {
               </Text>
             ) : null}
             {details?.endDate ? (
-              <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
+              <Text
+                variant="bodyMedium"
+                style={{ color: theme.colors.onSurfaceVariant }}
+              >
                 {t("subscription.endDate")}:{" "}
                 {formatLocalizedDate(details.endDate, locale, {
                   year: "numeric",
@@ -82,7 +92,10 @@ export const ProfileBillingPanel = ({ user }: Props) => {
             <Text variant="bodyLarge" style={{ color: theme.colors.onSurface }}>
               {t("subscription.storiesLeft", { left, max })}
             </Text>
-            <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant, marginTop: 12 }}>
+            <Text
+              variant="bodySmall"
+              style={{ color: theme.colors.onSurfaceVariant, marginTop: 12 }}
+            >
               {t("profile.manageOnWeb")}
             </Text>
           </>

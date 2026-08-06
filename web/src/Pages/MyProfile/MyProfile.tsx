@@ -7,7 +7,6 @@ import {
   Chip,
   Container,
   Grid,
-  Switch,
   Typography,
 } from "@mui/material";
 import {
@@ -20,6 +19,7 @@ import {
 } from "@mui/icons-material";
 import { SubscriptionPlanEnum, User } from "src/shared/types/user";
 import { useEffect, useState } from "react";
+import { ThemeSwitcher } from "@yasserzakywafaa/client-core/web";
 
 import Page from "src/components/shared/Page/Page";
 import ProfileAvatar from "src/components/shared/ProfileAvatar";
@@ -30,8 +30,10 @@ import {
   getUserContact,
   getUserContactLabel,
 } from "src/shared/utils/getUserContact";
+import {
+  getUserFullName,
+} from "src/shared/utils/getUserDisplayName";
 import { useApplicationContext } from "src/application/store/Provider";
-import { useAppResolvedThemeMode } from "src/application/hooks/useAppResolvedThemeMode";
 import { useMyProfileContext } from "./store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
@@ -49,16 +51,17 @@ type ProfileTab = "profile" | "billing";
 
 const MyProfilePage = () => {
   const { t, i18n } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const locale = localeFromLanguage(i18n.language);
   const navigate = useNavigate();
   const [isDeleteAccountDialogOpen, setIsDeleteAccountDialogOpen] =
     useState(false);
-  const resolvedThemeMode = useAppResolvedThemeMode();
   const {
     store: {
       state: {
         auth,
         auth: { isAuthenticated, user },
+        themePreference,
       },
     },
     manager: { handleThemePreferenceChange },
@@ -93,11 +96,6 @@ const MyProfilePage = () => {
   if (!isAuthenticated || !user) return <></>;
 
   const showDeleteAccount = !hasAdminRights(user);
-
-  const handleOnDarkModeSwitchChange = async () => {
-    const next = resolvedThemeMode === "dark" ? "light" : "dark";
-    await handleThemePreferenceChange(next);
-  };
 
   const isFreeUser = user.subscription.type === SubscriptionPlanEnum.Free;
   const storiesUsed = user.storyCount;
@@ -139,7 +137,9 @@ const MyProfilePage = () => {
           <Typography variant="h5" component="h5" sx={{
             marginLeft: 2
           }}>
-            {t("profile.greeting", { name: user?.name.givenName })}
+            {t("profile.greeting", {
+              name: getUserFullName(user, tCommon("account")),
+            })}
           </Typography>
         </Box>
 
@@ -206,7 +206,7 @@ const MyProfilePage = () => {
                       {t("profile.fullName")}
                     </Typography>
                     <span className="bold">
-                      {`${user.name.givenName} ${user.name.familyName}`}
+                      {getUserFullName(user, tCommon("account"))}
                     </span>
                   </Grid>
 
@@ -237,20 +237,30 @@ const MyProfilePage = () => {
                   </Grid>
 
                   <Grid size={{ xs: 12, md: 6 }}>
-                    <Typography variant="h6" component="p">
-                      <span className="text-underline">{t("profile.appearance")}</span>
-                      <Switch
-                        size="medium"
-                        value="dark-mode"
-                        checked={resolvedThemeMode === "dark"}
-                        onChange={handleOnDarkModeSwitchChange}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: 1.5,
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      <Typography
+                        variant="h6"
+                        component="p"
+                        className="text-underline"
+                        sx={{ mb: 0 }}
+                      >
+                        {t("profile.appearance")}
+                      </Typography>
+                      <ThemeSwitcher
+                        showLabel={false}
+                        value={themePreference}
+                        onChange={handleThemePreferenceChange}
+                        accentColor={honey400}
                       />
-                      <span className="bold">
-                        {resolvedThemeMode === "dark"
-                          ? t("profile.themeDark")
-                          : t("profile.themeLight")}
-                      </span>
-                    </Typography>
+                    </Box>
                   </Grid>
                 </Grid>
               </Card>

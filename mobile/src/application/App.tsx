@@ -12,6 +12,10 @@ import { SafeAreaProvider, initialWindowMetrics } from "react-native-safe-area-c
 
 import AppContent from "src/application/AppContent";
 import { I18nAppShell } from "src/application/I18nAppShell";
+import { QueryProvider } from "src/application/query/QueryProvider";
+import { linking } from "src/application/navigation/linking";
+import { ErrorBoundary } from "src/components/shared/ErrorBoundary";
+import { initMonitoring } from "src/shared/monitoring";
 import { ThemedPaperProvider } from "src/application/ThemedPaperProvider";
 import { rootNavigationRef } from "src/application/navigation/rootNavigation";
 import { paperDarkTheme, paperLightTheme } from "src/application/paperTheme";
@@ -19,8 +23,6 @@ import { brand, fontFamily } from "src/application/theme/tokens";
 import { useAppFonts } from "src/application/theme/useAppFonts";
 import { ApplicationContextProvider } from "src/application/store/Provider";
 import { useResolvedThemeMode } from "src/application/useResolvedThemeMode";
-import { DashboardOverviewContextProvider } from "src/features/dashboardOverview/store/Provider";
-import { DashboardProfileContextProvider } from "src/features/profile/store/Provider";
 import { StoryFlowProviders } from "src/features/storyCreator/StoryFlowProviders";
 import { GenerationProgressSnackbar } from "src/features/storyCreator/generation/GenerationProgressSnackbar";
 
@@ -32,9 +34,8 @@ const NavigationRoot = () => {
 
   const base = resolvedThemeMode === "light" ? DefaultTheme : DarkTheme;
 
-  // Navigation draws its own headers and card backgrounds, so it needs the
-  // same brand palette and faces the Paper theme uses — otherwise Material's
-  // defaults show through on screen transitions.
+  // Navigation draws its own headers, so it needs the same palette as Paper
+  // or Material's defaults show through on transitions.
   const navigationTheme = {
     ...base,
     colors: {
@@ -58,6 +59,7 @@ const NavigationRoot = () => {
     <NavigationContainer
       ref={rootNavigationRef}
       theme={navigationTheme}
+      linking={linking}
       direction="ltr"
     >
       <AppContent />
@@ -65,6 +67,10 @@ const NavigationRoot = () => {
     </NavigationContainer>
   );
 };
+
+// Before anything else, so an error thrown during the first render is still
+// reported. No-ops in Expo Go and when no DSN is configured.
+initMonitoring();
 
 // Hold the native splash so the first painted frame already uses the brand
 // faces — otherwise the app flashes system type for a frame or two.
@@ -83,36 +89,34 @@ const App = () => {
   }, [fontsLoaded]);
 
   return (
-    <GestureHandlerRootView style={styles.root}>
-      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-        <I18nAppShell>
-          <ApplicationContextProvider>
-            <DashboardOverviewContextProvider>
-              <DashboardProfileContextProvider>
+    // Outermost, above the providers: a provider throwing during init is
+    // exactly what used to leave a blank screen with no way back.
+    <ErrorBoundary boundaryName="root">
+      <GestureHandlerRootView style={styles.root}>
+        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+          <QueryProvider>
+            <I18nAppShell>
+              <ApplicationContextProvider>
                 <ThemedPaperProvider fontsLoaded={fontsLoaded}>
                   <StoryFlowProviders>
                     <NavigationRoot />
                     <GenerationProgressSnackbar />
                   </StoryFlowProviders>
                 </ThemedPaperProvider>
-              </DashboardProfileContextProvider>
-            </DashboardOverviewContextProvider>
-          </ApplicationContextProvider>
-        </I18nAppShell>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+              </ApplicationContextProvider>
+            </I18nAppShell>
+          </QueryProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </ErrorBoundary>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    /**
-     * Matches the native splash background. Without it React Native's root
-     * view is white, which flashes for a frame between the splash hiding and
-     * the first screen painting — the one white frame the night-sky launch is
-     * meant to avoid.
-     */
+    // Matches the native splash: the root view is otherwise white, which
+    // flashes for a frame before the first screen paints.
     backgroundColor: brand.plum[700],
   },
 });

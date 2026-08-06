@@ -120,6 +120,23 @@ const CONFIG = {
   // Auth
   GOOGLE_OAUTH_CLIENT_ID: process.env.GOOGLE_OAUTH_CLIENT_ID,
   GOOGLE_OAUTH_CLIENT_SECRET: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+  APPLE_TEAM_ID: process.env.APPLE_TEAM_ID,
+  APPLE_KEY_ID: process.env.APPLE_KEY_ID,
+  APPLE_PRIVATE_KEY: process.env.APPLE_PRIVATE_KEY?.replace(/\\n/g, "\n"), // .p8 contents, newline formatting fixed
+  APPLE_BUNDLE_ID: process.env.APPLE_BUNDLE_ID || "com.talepod.app",
+  APPLE_SERVICES_ID: process.env.APPLE_SERVICES_ID,
+  // Apple sets a native token's `aud` from the entitlement in the binary that
+  // presented the sheet, so Expo Go yields `host.exp.Exponent` — an App ID owned
+  // by Expo that cannot be added to ours. Accepting it here is the only way to
+  // exercise the native flow without a dev build, and is refused in production
+  // because any Expo Go user can mint such a token.
+  APPLE_DEV_EXTRA_AUDIENCES:
+    process.env.NODE_ENV === "production"
+      ? []
+      : (process.env.APPLE_DEV_EXTRA_AUDIENCES ?? "")
+          .split(",")
+          .map((audience) => audience.trim())
+          .filter(Boolean),
   JWT_SECRET: process.env.JWT_SECRET,
   OAUTH_CALLBACK_URL: (baseURL: string, userId: string, provider: string) =>
     `${baseURL}?authStatus=success&provider=${provider}&userId=${userId}`,

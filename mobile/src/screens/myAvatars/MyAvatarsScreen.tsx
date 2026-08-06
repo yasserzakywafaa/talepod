@@ -1,22 +1,22 @@
-import { logApiError } from "src/shared/api/logApiError";
-import { getRequestErrorKind, type RequestErrorKind } from "src/shared/api/getRequestErrorKind";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Dialog, Portal, Button } from "react-native-paper";
 
-import END_POINTS from "src/application/shared/endpoints";
-import { api } from "src/application/shared/apiClient";
 import { navigateToCreateStory } from "src/application/navigation/rootNavigation";
 import { useAppTheme } from "src/application/theme/useAppTheme";
 import { Page, PAGE_SCROLL_PROPS } from "src/components/layout/Page";
 import { MainShellAppBar } from "src/components/chrome/MainShellAppBar";
-import { useReadableLayout } from "src/components/layout/useReadableLayout";
+import { useGridList } from "src/components/layout/useGridList";
+import { useBackToTop } from "src/components/layout/useBackToTop";
+import { BackToTopButton } from "src/components/brand/BackToTopButton";
+import { ScreenErrorBoundary } from "src/components/shared/ErrorBoundary";
 import { AvatarCard } from "src/components/brand/AvatarCard";
 import { DisplayText } from "src/components/brand/DisplayText";
 import { PillButton } from "src/components/brand/PillButton";
 import { ServiceUnavailable } from "src/components/brand/ServiceUnavailable";
 import { AvatarFormDialog } from "src/features/myAvatars/AvatarFormDialog";
+import { useAvatarMutations, useAvatarsQuery } from "src/features/myAvatars/useAvatars";
 import { useStoryCreatorContext } from "src/features/storyCreator/store/Provider";
 import {
   EMPTY_AVATAR_INPUT,
@@ -25,75 +25,14 @@ import {
   avatarToInput,
 } from "src/shared/types/avatar";
 
-export const useMyAvatars = (enabled = true) => {
-  const [avatars, setAvatars] = useState<Avatar[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [loadError, setLoadError] = useState<RequestErrorKind | null>(null);
-
-  const fetchAvatars = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const { data } = await api.get<Avatar[]>(END_POINTS.AVATARS.LIST);
-      setAvatars(Array.isArray(data) ? data : []);
-      setLoadError(null);
-    } catch (error) {
-      logApiError("Failed to fetch avatars", error);
-      setLoadError(getRequestErrorKind(error));
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (enabled) void fetchAvatars();
-  }, [enabled, fetchAvatars]);
-
-  const saveAvatar = async (input: AvatarInput, existing: Avatar | null) => {
-    setIsSaving(true);
-    try {
-      if (existing) {
-        const { data } = await api.put<Avatar>(
-          END_POINTS.AVATARS.UPDATE(existing._id),
-          input,
-        );
-        setAvatars((prev) => prev.map((a) => (a._id === existing._id ? data : a)));
-      } else {
-        const { data } = await api.post<Avatar>(END_POINTS.AVATARS.CREATE, input);
-        setAvatars((prev) => [data, ...prev]);
-      }
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const removeAvatar = async (avatar: Avatar) => {
-    setIsSaving(true);
-    try {
-      await api.delete(END_POINTS.AVATARS.DELETE(avatar._id));
-      setAvatars((prev) => prev.filter((a) => a._id !== avatar._id));
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  return {
-    avatars,
-    isLoading,
-    isSaving,
-    loadError,
-    refetch: fetchAvatars,
-    saveAvatar,
-    removeAvatar,
-  };
-};
-
 export const MyAvatarsScreen = () => {
   const { t } = useTranslation("story");
 
   return (
     <Page header={<MainShellAppBar title={t("avatars.page.title")} />}>
-      <MyAvatarsScreenContent />
+      <ScreenErrorBoundary name="MyAvatars">
+        <MyAvatarsScreenContent />
+      </ScreenErrorBoundary>
     </Page>
   );
 };
@@ -101,9 +40,11 @@ export const MyAvatarsScreen = () => {
 const MyAvatarsScreenContent = () => {
   const { t } = useTranslation("story");
   const theme = useAppTheme();
-  const { horizontalGutter, contentMaxWidth } = useReadableLayout();
-  const { avatars, isLoading, isSaving, loadError, refetch, saveAvatar, removeAvatar } =
-    useMyAvatars(true);
+  const { gridKey, listProps, itemStyle } = useGridList();
+  const backToTop = useBackToTop();
+  const { avatars, isLoading, loadError, refetch } = useAvatarsQuery(true);
+  const { saveAvatar, removeAvatar, isSaving, isPortraitPending, isBusy } =
+    useAvatarMutations();
   const {
     manager: { handleSelectAvatar },
   } = useStoryCreatorContext();
@@ -146,7 +87,7 @@ const MyAvatarsScreenContent = () => {
         <ServiceUnavailable
           kind={loadError}
           isRetrying={isLoading}
-          onRetry={() => void refetch()}
+          onRetry={refetch}
         />
       </View>
     );
@@ -155,18 +96,13 @@ const MyAvatarsScreenContent = () => {
   return (
     <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
       <FlatList
+        key={gridKey}
+        ref={backToTop.ref as never}
+        {...backToTop.scrollProps}
         data={avatars}
         keyExtractor={(item) => item._id}
         {...PAGE_SCROLL_PROPS}
-        contentContainerStyle={[
-          styles.list,
-          {
-            paddingHorizontal: horizontalGutter,
-            maxWidth: contentMaxWidth,
-            alignSelf: "center",
-            width: "100%",
-          },
-        ]}
+        {...listProps}
         ListHeaderComponent={
           <View style={styles.header}>
             <Text
@@ -206,13 +142,16 @@ const MyAvatarsScreenContent = () => {
           )
         }
         renderItem={({ item }) => (
-          <AvatarCard
-            avatar={item}
-            disabled={isSaving}
-            onCreate={() => startStoryWith(item)}
-            onEdit={() => openEdit(item)}
-            onDelete={() => setDeleteTarget(item)}
-          />
+          <View style={itemStyle}>
+            <AvatarCard
+              avatar={item}
+              disabled={isBusy(item._id)}
+              portraitPending={isPortraitPending(item._id)}
+              onCreate={() => startStoryWith(item)}
+              onEdit={() => openEdit(item)}
+              onDelete={() => setDeleteTarget(item)}
+            />
+          </View>
         )}
       />
 
@@ -262,13 +201,17 @@ const MyAvatarsScreenContent = () => {
           </Dialog.Actions>
         </Dialog>
       </Portal>
+
+      <BackToTopButton
+        visible={backToTop.isVisible}
+        onPress={backToTop.scrollToTop}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  list: { paddingBottom: 24, gap: 16 },
   header: { marginBottom: 4, gap: 12 },
   subtitle: { fontSize: 14, lineHeight: 21, includeFontPadding: false },
   loader: { marginTop: 24 },

@@ -21,6 +21,9 @@ const END_POINTS = {
     LOGOUT: `${publicApiUrl}/api/v1/auth/logout`,
     GOOGLE: `${publicApiUrl}/api/v1/auth/google`,
     GOOGLE_MOBILE_EXCHANGE: `${publicApiUrl}/api/v1/auth/google/mobile/exchange`,
+    APPLE: `${publicApiUrl}/api/v1/auth/apple`,
+    APPLE_MOBILE_EXCHANGE: `${publicApiUrl}/api/v1/auth/apple/mobile/exchange`,
+    APPLE_NATIVE_EXCHANGE: `${publicApiUrl}/api/v1/auth/apple/native/exchange`,
     PHONE_LOGIN_SEND_OTP: `${publicApiUrl}/api/v1/auth/phone/login/send-otp`,
     PHONE_LOGIN_VERIFY_OTP: `${publicApiUrl}/api/v1/auth/phone/login/verify-otp`,
     PHONE_REGISTER_SEND_OTP: `${publicApiUrl}/api/v1/auth/phone/register/send-otp`,
@@ -42,6 +45,12 @@ const END_POINTS = {
     GET_COMMUNITY_STORIES: `${publicApiUrl}/api/v1/bedtime-stories/community`,
     GET_ORIGINAL_STORIES: `${publicApiUrl}/api/v1/bedtime-stories/originals`,
     GET_ALL_USER_STORIES: `${publicApiUrl}/api/v1/user-bedtime-stories`,
+    DELETE_MY_STORY: (storyId: string) =>
+      `${publicApiUrl}/api/v1/user-bedtime-stories/${storyId}`,
+    EXPORT_STORY_PDF: (slug: string) =>
+      `${publicApiUrl}/api/v1/bedtime-story/${slug}/pdf`,
+    EMAIL_STORY_PDF: (slug: string) =>
+      `${publicApiUrl}/api/v1/bedtime-story/${slug}/email-pdf`,
   },
   AVATARS: {
     LIST: `${publicApiUrl}/api/v1/avatars`,
