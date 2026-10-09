@@ -14,10 +14,19 @@
       .then((registration) => {
         console.log("ServiceWorker:>>> Registered successfully");
 
-        // Check for updates every 60 seconds
-        setInterval(() => {
+        // Check for updates when the tab becomes visible again, at most once per hour.
+        // Replaces the previous 60s interval that re-fetched serviceworker.js (max-age=0)
+        // from every open tab even when idle.
+        let lastUpdateCheck = Date.now();
+        const UPDATE_CHECK_INTERVAL_MS = 60 * 60 * 1000;
+
+        document.addEventListener("visibilitychange", () => {
+          if (document.visibilityState !== "visible") return;
+          const now = Date.now();
+          if (now - lastUpdateCheck < UPDATE_CHECK_INTERVAL_MS) return;
+          lastUpdateCheck = now;
           registration.update();
-        }, 60000);
+        });
 
         // Handle updates
         registration.addEventListener("updatefound", () => {
