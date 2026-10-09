@@ -14,10 +14,22 @@
       .then((registration) => {
         console.log("ServiceWorker:>>> Registered successfully");
 
-        // Check for updates every 60 seconds
-        setInterval(() => {
+        // Check for updates when the tab becomes visible, at most once per hour
+        const SW_UPDATE_CHECK_THROTTLE_MS = 60 * 60 * 1000;
+        let lastUpdateCheckAt = Date.now();
+
+        const checkForUpdate = () => {
+          const now = Date.now();
+          if (now - lastUpdateCheckAt < SW_UPDATE_CHECK_THROTTLE_MS) return;
+          lastUpdateCheckAt = now;
           registration.update();
-        }, 60000);
+        };
+
+        document.addEventListener("visibilitychange", () => {
+          if (document.visibilityState === "visible") {
+            checkForUpdate();
+          }
+        });
 
         // Handle updates
         registration.addEventListener("updatefound", () => {
