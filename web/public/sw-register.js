@@ -55,9 +55,13 @@
       });
   }
 
-  // Handle controller change (when new SW activates)
+  // Handle controller change (when new SW activates). On a first visit there is
+  // no controller yet and clients.claim() fires this too: don't reload then,
+  // the page is already fresh (that reload cost every new visitor a full load).
   if (!isPrerendering && "serviceWorker" in navigator) {
+    const hadController = Boolean(navigator.serviceWorker.controller);
     navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (!hadController) return;
       const reloadOnce = localStorage.getItem("SW_RELOAD_ONCE");
 
       // Only reload once per SW update
