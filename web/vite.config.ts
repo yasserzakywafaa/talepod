@@ -21,7 +21,56 @@ const resolveAppUrl = (env: Record<string, string>): string => {
  * Writes dist/sitemap.xml (the location referenced by public/robots.txt) with
  * the indexable, locale-prefixed marketing URLs.
  */
-function sitemapPlugin(siteUrl: string): Plugin {
+interface BuildBlogPost {
+  language: string;
+  slug: string;
+  updatedAt: string;
+}
+
+/**
+ * Published blog posts (written by AI tools through the server's MCP connector),
+ * with bodies, read from the API once per build: each gets a prerendered page and
+ * a sitemap entry. Local builds skip the API unless REACT_APP_BLOG_BUILD_API_URL
+ * is set; if the API can't be reached the build goes on without posts (their
+ * pages still load from the API in the browser).
+ */
+async function fetchBlogPosts(env: Record<string, string>): Promise<BuildBlogPost[]> {
+  const api =
+    env.REACT_APP_BLOG_BUILD_API_URL ||
+    (env.REACT_APP_ENV === "production"
+      ? env.REACT_APP_PROD_API_URL || "https://api.talepod.com"
+      : env.REACT_APP_ENV === "development"
+        ? env.REACT_APP_DEV_API_URL
+        : "");
+  if (!api) {
+    console.log("[blog] No API for this build: no posts prerendered");
+    return [];
+  }
+  try {
+    const response = await fetch(
+      `${api.replace(/\/$/, "")}/api/v1/blog/posts?limit=500&includeBody=1`,
+      { signal: AbortSignal.timeout(20_000) },
+    );
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const { posts } = (await response.json()) as { posts: BuildBlogPost[] };
+    const safe = posts.filter(
+      (post) =>
+        /^[a-z]{2}$/.test(post.language) && /^[a-z0-9-]{1,80}$/.test(post.slug),
+    );
+    console.log(`[blog] ${safe.length} published post(s) to prerender`);
+    return safe;
+  } catch (error) {
+    console.warn(
+      `[blog] Couldn't load posts from ${api} (${(error as Error).message}); building without them`,
+    );
+    return [];
+  }
+}
+
+const blogPostPath = (post: BuildBlogPost) =>
+  `/${post.language}/blog/${post.slug}`;
+
+function sitemapPlugin(siteUrl: string, posts: BuildBlogPost[]): Plugin {
   const origin = siteUrl.replace(/\/$/, "");
 
   return {
@@ -34,6 +83,13 @@ function sitemapPlugin(siteUrl: string): Plugin {
           const priority = /^\/[a-z]{2}$/.test(pathname) ? "1.0" : "0.7";
           return `  <url>\n    <loc>${origin}${pathname}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <priority>${priority}</priority>\n  </url>`;
         })
+        .concat(
+          // Posts exist in one language each: no hreflang alternates.
+          posts.map(
+            (post) =>
+              `  <url>\n    <loc>${origin}${blogPostPath(post)}</loc>\n    <lastmod>${post.updatedAt}</lastmod>\n    <priority>0.6</priority>\n  </url>`,
+          ),
+        )
         .join("\n");
 
       const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
@@ -43,7 +99,7 @@ function sitemapPlugin(siteUrl: string): Plugin {
       fs.writeFileSync(outputPath, xml, "utf8");
 
       console.log(
-        `[sitemap] Wrote ${sitemapPaths.length} URLs to ${outputPath}`,
+        `[sitemap] Wrote ${sitemapPaths.length + posts.length} URLs to ${outputPath}`,
       );
     },
   };
@@ -112,26 +168,29 @@ async function getPuppeteerOptions(): Promise<Record<string, unknown>> {
   };
 }
 
-export default defineConfig(async ({ mode }) => {
+export default defineConfig(async ({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), "REACT_APP_");
   const puppeteerOptions = await getPuppeteerOptions();
   const siteUrl = resolveAppUrl(env);
+  const blogPosts = command === "build" ? await fetchBlogPosts(env) : [];
 
   return {
     plugins: [
       react({
         jsxImportSource: "@emotion/react",
       }),
-      sitemapPlugin(siteUrl),
+      sitemapPlugin(siteUrl, blogPosts),
       prerender({
         staticDir: path.join(__dirname, "dist"),
-        routes: prerenderPaths,
+        routes: [...prerenderPaths, ...blogPosts.map(blogPostPath)],
         renderer: new prerender.PuppeteerRenderer({
           viewport: { width: 1280, height: 800 },
           renderAfterTime: 5000,
           maxConcurrentRoutes: 1,
           skipThirdPartyRequests: true,
-          inject: { isPrerendering: true },
+          // The prerender browser can't reach the API (third-party requests are
+          // blocked), so the blog pages read the posts from here.
+          inject: { isPrerendering: true, blog: { posts: blogPosts } },
           ...puppeteerOptions,
         }),
         postProcess(renderedRoute) {

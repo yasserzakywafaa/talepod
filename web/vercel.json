@@ -18,6 +18,7 @@
   ],
   "redirects": [
     { "source": "/pricing", "destination": "/en/pricing", "permanent": true },
+    { "source": "/blog", "destination": "/en/blog", "permanent": true },
     {
       "source": "/bedtime-stories",
       "destination": "/en/bedtime-stories",
