@@ -61,7 +61,7 @@ hr {
 .text-underline {
   text-decoration: underline solid #f0b648;
 }
-a:not(.MuiButtonBase-root) {
+a:not(.MuiButtonBase-root):not(.blog-content a) {
   color: #4c4c9e;
   font-weight: 400;
   text-decoration: underline solid #f0b648 !important;

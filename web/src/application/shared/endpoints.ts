@@ -18,6 +18,9 @@ const getPublicURL = (): string | undefined => {
 
 const publicApiUrl = getPublicURL();
 
+/** Origin of the API (local, dev or prod). */
+export const PUBLIC_API_URL = publicApiUrl ?? "";
+
 const END_POINTS = {
   TESTING: {
     ROUTE_ONE: `${publicApiUrl}/api/v1/test-route-one`,

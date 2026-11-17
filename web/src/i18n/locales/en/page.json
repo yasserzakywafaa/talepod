@@ -504,5 +504,14 @@
       "createFailed": "Failed to create workspace",
       "invalidJoinCode": "Invalid join code"
     }
+  },
+  "blog": {
+    "pageTitle": "Blog",
+    "seoDescription": "Bedtime story ideas, tips for calmer bedtimes and news from Talepod.",
+    "title": "From the blog",
+    "subtitle": "Bedtime story ideas, sleep routines and tips for parents.",
+    "ctaTitle": "Make tonight's story about your child",
+    "ctaBody": "Create a personalised bedtime story in a minute, with your child as the hero.",
+    "ctaButton": "Create a story"
   }
 }

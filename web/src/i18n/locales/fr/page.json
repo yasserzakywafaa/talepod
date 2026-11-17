@@ -504,5 +504,14 @@
       "createFailed": "Échec de la création de l'espace de travail",
       "invalidJoinCode": "Code d'invitation invalide"
     }
+  },
+  "blog": {
+    "pageTitle": "Blog",
+    "seoDescription": "Idées d'histoires du soir, conseils pour des couchers plus sereins et actualités de Talepod.",
+    "title": "Sur le blog",
+    "subtitle": "Idées d'histoires du soir, routines de sommeil et conseils pour les parents.",
+    "ctaTitle": "Ce soir, l'histoire parle de votre enfant",
+    "ctaBody": "Créez en une minute une histoire du soir personnalisée dont votre enfant est le héros.",
+    "ctaButton": "Créer une histoire"
   }
 }

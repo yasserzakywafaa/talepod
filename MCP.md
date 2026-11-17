@@ -32,6 +32,15 @@ Posts are saved in the `blogPosts` collection (separate from the stories in
 Direct connection also works (the link works like a password):
 `claude mcp add --transport http talepod https://api.talepod.com/mcp/<key>`
 
+## Web pages
+
+`/:locale/blog` and `/:locale/blog/:slug` come from client-core (`createBlogPages`).
+The app's only file is `web/src/Pages/Articles/index.tsx` (API and site URLs, page shell,
+call to action); its text is under `blog` in `web/src/i18n/locales/*/page.json`.
+Each build prerenders published posts and adds them to the sitemap
+(`web/vite.config.ts`). Set `VERCEL_DEPLOY_HOOK_URL` on the server so a new post
+triggers a rebuild.
+
 ## Protection
 
 - Unknown or missing key → 401. Remove it from `MCP_KEYS` to revoke.
