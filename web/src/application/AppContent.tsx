@@ -40,6 +40,12 @@ const BlogPage = lazy(() => import("../Pages/Blog/Blog"));
 
 const MyProfilePage = lazy(() => import("../Pages/MyProfile/MyProfile"));
 const ContactPage = lazy(() => import("../Pages/Contact/Contact"));
+const BlogIndexPage = lazy(() =>
+  import("../Pages/Articles").then((blog) => ({ default: blog.BlogIndexPage })),
+);
+const BlogPostPage = lazy(() =>
+  import("../Pages/Articles").then((blog) => ({ default: blog.BlogPostPage })),
+);
 const ViewStoryPage = lazy(() => import("../Pages/ViewStory/ViewStory"));
 const LoginPage = lazy(() => import("../Pages/Login"));
 const RegisterPage = lazy(() => import("../Pages/Register"));
@@ -230,6 +236,11 @@ const AppContent = () => {
                 <Route index element={<FeaturesPage />} />
                 <Route path={routes.pricing} element={<PricingPage />} />
                 <Route path={routes.contact} element={<ContactPage />} />
+                <Route path={routes.blogHome} element={<BlogIndexPage />} />
+                <Route
+                  path={`${routes.blogHome}/:slug`}
+                  element={<BlogPostPage />}
+                />
                 <Route path={routes.library} element={<LibraryPage />} />
                 <Route path={routes.create} element={<CreateStoryPage />} />
                 <Route

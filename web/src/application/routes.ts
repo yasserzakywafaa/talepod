@@ -25,6 +25,7 @@ const publicPages = {
   features: "",
   pricing: "pricing",
   contact: "contact",
+  blogHome: "blog",
   library: "bedtime-stories",
   create: "create",
   privacyPolicy: "privacy-policy",
@@ -38,6 +39,8 @@ export const routes = {
   /** Root path redirects to the active locale via LocaleRedirect. */
   root: "/",
   ...publicPages,
+  /** One blog post (a segment, like the public pages): localizedPath(routes.blogPost(slug)). */
+  blogPost: (slug: string) => `blog/${slug}`,
   landingPages: landingPageSegments,
   usersStories: `/users-bedtime-stories`,
   story: (slug: string) => `/bedtime-story/${slug}`,
@@ -80,6 +83,7 @@ export const INDEXABLE_SEGMENTS: PublicPageSegment[] = [
   routes.features,
   routes.pricing,
   routes.contact,
+  routes.blogHome,
   routes.library,
   routes.create,
   ...Object.values(landingPageSegments),

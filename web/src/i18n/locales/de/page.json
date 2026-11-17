@@ -504,5 +504,14 @@
       "createFailed": "Arbeitsbereich konnte nicht erstellt werden",
       "invalidJoinCode": "Ungültiger Beitrittscode"
     }
+  },
+  "blog": {
+    "pageTitle": "Blog",
+    "seoDescription": "Ideen für Gutenachtgeschichten, Tipps für ruhigere Abende und News von Talepod.",
+    "title": "Aus dem Blog",
+    "subtitle": "Ideen für Gutenachtgeschichten, Schlafroutinen und Tipps für Eltern.",
+    "ctaTitle": "Die Geschichte von heute Abend handelt von Ihrem Kind",
+    "ctaBody": "Erstellen Sie in einer Minute eine persönliche Gutenachtgeschichte mit Ihrem Kind als Held.",
+    "ctaButton": "Geschichte erstellen"
   }
 }
