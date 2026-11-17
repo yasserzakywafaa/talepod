@@ -1,4 +1,5 @@
-import { closeDatabase, databaseInit } from "./models/mongoDb";
+import { closeDatabase, database, databaseInit } from "./models/mongoDb";
+import { createBlogMcp } from "@yasserzakywafaa/server-core";
 import express, { NextFunction, Request, Response } from "express";
 
 import CONFIG from "./config";
@@ -82,6 +83,9 @@ expressApp.use(avatarRoutes);
 expressApp.use(paymentsRoutes);
 expressApp.use(blogsRoutes);
 expressApp.use(dashboardRoutes);
+// MCP connector for AI tools (Claude, ChatGPT, the SwissLII gateway) + public blog read API, from server-core.
+// Settings from env: MCP_KEYS, MCP_SITE_NAME, MCP_SITE_ABOUT, BLOG_LANGUAGES, VERCEL_DEPLOY_HOOK_URL (see MCP.md).
+expressApp.use(createBlogMcp({ getDb: () => database, siteUrl: CONFIG.APP_URL }));
 
 expressApp.use((req: Request, res: Response) => {
   res.status(404).json({ error: "🙁 Endpoint not found" });
