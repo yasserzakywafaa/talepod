@@ -97,7 +97,9 @@ export const createContactGuard = (options: ContactGuardOptions): RequestHandler
   });
 
   return (req, res, next) => {
-    // Content-Length is missing on chunked requests, so also measure the parsed body.
+    // Content-Length can be missing (chunked, or dropped by a proxy), so also measure the
+    // parsed body. Whitespace padding is stripped by parsing and never reaches the controller,
+    // and every field is length-checked there, so this caps what the guard actually handles.
     const declared = Number(req.headers["content-length"]);
     const parsed = Buffer.byteLength(JSON.stringify(req.body ?? {}));
     const bodyBytes = Math.max(Number.isFinite(declared) ? declared : 0, parsed);

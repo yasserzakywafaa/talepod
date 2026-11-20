@@ -22,21 +22,27 @@ const run = async (
     json: vi.fn((value: unknown) => ((json = value), res)),
   };
   const req = { headers: { "x-forwarded-for": from, ...headers }, socket: {}, body };
-  handler(req as never, res as never, next);
-  await vi.waitFor(() => expect(status !== undefined || next.mock.calls.length > 0).toBe(true));
+  // Completion: a JSON response was sent, or next() was called.
+  await new Promise<void>((resolve) => {
+    res.json.mockImplementation((value: unknown) => ((json = value), resolve(), res));
+    next.mockImplementation(() => resolve());
+    handler(req as never, res as never, next);
+  });
   // Let any late call land, so a response followed by next() is caught.
-  await new Promise((resolve) => setTimeout(resolve, 5));
+  await new Promise((resolve) => setTimeout(resolve, 20));
   return { status, json, next };
 };
 
 const passed = (r: Awaited<ReturnType<typeof run>>) => {
   expect(r.status).toBeUndefined();
+  expect(r.json).toBeUndefined();
   expect(r.next).toHaveBeenCalledTimes(1);
   expect(r.next).toHaveBeenCalledWith();
 };
 
 const blocked = (r: Awaited<ReturnType<typeof run>>, status: number) => {
   expect(r.status).toBe(status);
+  expect(r.json).toBeDefined();
   expect(r.next).not.toHaveBeenCalled();
 };
 
@@ -85,11 +91,16 @@ describe("contact guard", () => {
     blocked(await run(handler, body, { from: "9.9.9.9" }), 429);
   });
 
-  it("rejects large bodies even without a Content-Length header", async () => {
+  it("rejects large bodies, and measures bodies without a Content-Length", async () => {
     vi.spyOn(console, "warn").mockImplementation(() => {});
     const fetchSpy = cloudflare({ success: true, hostname: SITE, action: "contact" });
-    blocked(await run(guard(), { ...fields, message: "x".repeat(40_000), turnstileToken: "tok" }, { headers: {} }), 413);
+    const body = { ...fields, turnstileToken: "tok" };
+    blocked(await run(guard(), { ...body, message: "x".repeat(40_000) }), 413);
+    blocked(await run(guard(), body, { headers: { "content-length": "40000" } }), 413);
+    // No Content-Length (chunked): the parsed body is measured instead.
+    blocked(await run(guard(), { ...body, message: "x".repeat(40_000) }, { headers: {} }), 413);
     expect(fetchSpy).not.toHaveBeenCalled();
+    passed(await run(guard(), body, { headers: {} }));
   });
 
   it("refuses in production without a secret, skips Turnstile elsewhere", async () => {
