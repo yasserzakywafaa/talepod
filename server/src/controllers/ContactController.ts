@@ -1,15 +1,29 @@
 import { NextFunction, Request, Response } from "express";
 
+import { z } from "zod";
+
 import CONFIG from "../config";
-import { ContactFormState } from "../models/types/story";
 import { sendEmail } from "../utils/sendEmail";
+
+/** Visitor fields; the anti-spam fields were already checked by the contact guard. */
+const contactSchema = z.object({
+  name: z.string().trim().min(1).max(100),
+  email: z.string().trim().max(254).email(),
+  subject: z.string().trim().min(1).max(200),
+  message: z.string().trim().min(1).max(5000),
+});
 
 export const contactSupport = async (
   request: Request,
   response: Response,
   next: NextFunction,
 ) => {
-  const { name, email, subject, message } = request.body as ContactFormState;
+  const parsed = contactSchema.safeParse(request.body);
+  if (!parsed.success) {
+    response.status(400).json({ error: "Invalid request body" });
+    return;
+  }
+  const { name, email, subject, message } = parsed.data;
 
   try {
     // Notify the admin of the new submission.

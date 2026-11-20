@@ -1,12 +1,19 @@
-import { ContactInitialState, getContactInitialState } from "./state";
+import {
+  ContactInitialState,
+  ContactSecurityState,
+  getContactInitialState,
+} from "./state";
+import { RefObject, useRef, useState } from "react";
 
-import { useState } from "react";
+import { TurnstileHandle } from "@yasserzakywafaa/client-core/web/security";
 
 export interface ContactStore {
   state: ContactInitialState;
   resetFormState: () => void;
   handleIsFetching: (isFetching: boolean) => void;
   updateContactForm: (key: string, value: string) => void;
+  updateSecurity: (patch: Partial<ContactSecurityState>) => void;
+  turnstileRef: RefObject<TurnstileHandle | null>;
 }
 
 const useContactStore = (): ContactStore => {
@@ -31,8 +38,18 @@ const useContactStore = (): ContactStore => {
     }));
   };
 
+  const updateSecurity = (patch: Partial<ContactSecurityState>) => {
+    setState((prev) => ({ ...prev, security: { ...prev.security, ...patch } }));
+  };
+
+  const turnstileRef = useRef<TurnstileHandle | null>(null);
+
+  // Keeps startedAt: the form stays on screen, so the time trap still counts from the first view.
   const resetFormState = () => {
-    setState(initialState);
+    setState((prev) => ({
+      ...initialState,
+      security: { ...initialState.security, startedAt: prev.security.startedAt },
+    }));
   };
 
   return {
@@ -40,6 +57,8 @@ const useContactStore = (): ContactStore => {
     resetFormState,
     handleIsFetching,
     updateContactForm,
+    updateSecurity,
+    turnstileRef,
   };
 };
 

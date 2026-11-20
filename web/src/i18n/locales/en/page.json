@@ -149,7 +149,10 @@
     "message": "Message",
     "sendMessage": "Send Message",
     "breadcrumbHome": "Home",
-    "breadcrumbContact": "Contact"
+    "breadcrumbContact": "Contact",
+    "verifying": "Checking you're human…",
+    "rateLimited": "Too many messages. Please try again later.",
+    "verificationFailed": "We couldn't verify you're human. Please try again."
   },
   "pricing": {
     "pageTitle": "Pricing | TalePod",
