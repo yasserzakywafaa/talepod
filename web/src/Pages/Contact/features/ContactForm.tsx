@@ -20,6 +20,8 @@ const ContactForm = () => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    // Enter key or requestSubmit(): same rule as the disabled button.
+    if (!verified || state.isFetching) return;
     handleSubmitContactForm(state.contactForm);
   };
 

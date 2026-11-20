@@ -89,6 +89,8 @@ describe("contact guard", () => {
     passed(await run(handler, body, { from: "9.9.9.9" }));
     passed(await run(handler, body, { from: "9.9.9.9" }));
     blocked(await run(handler, body, { from: "9.9.9.9" }), 429);
+    // Another visitor still has their own quota.
+    passed(await run(handler, body, { from: "8.8.8.8" }));
   });
 
   it("rejects large bodies, and measures bodies without a Content-Length", async () => {
