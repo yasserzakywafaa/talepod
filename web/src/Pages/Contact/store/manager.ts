@@ -12,11 +12,12 @@ import { useTranslation } from "react-i18next";
 
 export interface ContactManager {
   handleUpdateContactForm: (key: string, value: string) => void;
-  handleSubmitContactForm: (state: ContactFormState) => void;
+  handleSubmitContactForm: (state: ContactFormState) => Promise<void>;
 }
 
 export const useContactManager = (store: ContactStore): ContactManager => {
   const { t } = useTranslation("common");
+  const { t: tPage } = useTranslation("page");
   const handleUpdateContactForm = (key: string, value: string): void => {
     store.updateContactForm(key, value);
   };
@@ -29,6 +30,7 @@ export const useContactManager = (store: ContactStore): ContactManager => {
         END_POINTS.CONTACT.SUPPORT,
         {
           ...formState,
+          ...store.state.security,
         },
         {
           headers: {
@@ -47,7 +49,13 @@ export const useContactManager = (store: ContactStore): ContactManager => {
 
       store.resetFormState();
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
+      const status = axios.isAxiosError(error) ? error.response?.status : undefined;
+      if (status === 429 || status === 403) {
+        Notify({
+          content: tPage(status === 429 ? "contact.rateLimited" : "contact.verificationFailed"),
+          type: ToastTypes.Error,
+        });
+      } else if (axios.isAxiosError(error) && error.response) {
         Notify({
           content: error.response.statusText,
           type: ToastTypes.Error,
@@ -61,6 +69,9 @@ export const useContactManager = (store: ContactStore): ContactManager => {
       throw new Error(`❌  Failed to send email!  ${error}`);
     } finally {
       store.handleIsFetching(false);
+      // Turnstile tokens are single-use: get a fresh one for the next send.
+      store.updateSecurity({ turnstileToken: "" });
+      store.turnstileRef.current?.reset();
     }
   };
 

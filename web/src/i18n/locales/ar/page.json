@@ -149,7 +149,10 @@
     "message": "الرسالة",
     "sendMessage": "إرسال الرسالة",
     "breadcrumbHome": "الرئيسية",
-    "breadcrumbContact": "اتصل بنا"
+    "breadcrumbContact": "اتصل بنا",
+    "verifying": "جارٍ التحقق من أنك إنسان…",
+    "rateLimited": "رسائل كثيرة جدًا. يرجى المحاولة مرة أخرى بعد بضع دقائق.",
+    "verificationFailed": "تعذّر التحقق من أنك إنسان. يرجى المحاولة مرة أخرى."
   },
   "pricing": {
     "pageTitle": "الأسعار | TalePod",

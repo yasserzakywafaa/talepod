@@ -1,5 +1,6 @@
 import { Box, Button, Grid, TextField } from "@mui/material";
 
+import ContactSecurity, { useContactVerified } from "./ContactSecurity";
 import { SendOutlined } from "@mui/icons-material";
 import { useContactContext } from "../store/Provider";
 import { useTranslation } from "react-i18next";
@@ -10,6 +11,7 @@ const ContactForm = () => {
     store: { state },
     manager: { handleUpdateContactForm, handleSubmitContactForm },
   } = useContactContext();
+  const verified = useContactVerified();
 
   const handleOnFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -68,8 +70,16 @@ const ContactForm = () => {
           />
         </Grid>
         <Grid size={{ xs: 12 }}>
-          <Button type="submit" variant="contained" endIcon={<SendOutlined />}>
-            {t("contact.sendMessage")}
+          <ContactSecurity />
+        </Grid>
+        <Grid size={{ xs: 12 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            endIcon={<SendOutlined />}
+            disabled={!verified || state.isFetching}
+          >
+            {verified ? t("contact.sendMessage") : t("contact.verifying")}
           </Button>
         </Grid>
       </Grid>
