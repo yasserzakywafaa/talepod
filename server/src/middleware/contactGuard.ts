@@ -1,9 +1,9 @@
 import {
-  createExpressFormGuard,
   createFormGuard,
   createMongoRateLimitStore,
   createRateLimiter,
   createTurnstileVerifier,
+  getClientIp,
   type RateLimitStore,
 } from "@yasserzakywafaa/server-core";
 import type { Db } from "mongodb";
@@ -26,9 +26,11 @@ const withTimeout = <T>(promise: Promise<T>, ms: number): Promise<T> =>
     );
   });
 
-/** Hosts a Turnstile token may come from: the site (with its www/apex twin) and dev. */
+/** Hosts a Turnstile token may come from: the site, its www/apex twin and dev. */
+const SITE_HOSTS = ["talepod.com", "www.talepod.com", "dev.talepod.com"];
+
 const allowedHostnames = (): string[] => {
-  const hosts = new Set<string>(["talepod.com", "www.talepod.com", "dev.talepod.com", "localhost"]);
+  const hosts = new Set<string>(SITE_HOSTS);
   try {
     hosts.add(new URL(CONFIG.APP_URL).hostname);
   } catch {
@@ -50,10 +52,13 @@ export interface ContactGuardOptions {
   store?: RateLimitStore;
 }
 
+/** Error body; `message` too, because the web app's error toast reads it. */
+const errorBody = (message: string, code: string) => ({ error: message, message, code });
+
 /**
  * Anti-spam for POST /contact-support, from server-core: body size cap →
  * honeypot + 2 s time trap → per-IP limits in MongoDB → Cloudflare Turnstile.
- * Any failed check answers before the controller runs, so nothing is emailed.
+ * A failed check answers here and never calls `next`, so nothing is emailed.
  */
 export const createContactGuard = (options: ContactGuardOptions): RequestHandler => {
   const { secretKey, isProd = false, isLocal = false, max = 5, windowMs = 10 * 60_000 } = options;
@@ -61,7 +66,7 @@ export const createContactGuard = (options: ContactGuardOptions): RequestHandler
   if (!secretKey && isProd) {
     console.error("[contact-support] TURNSTILE_SECRET_KEY is not set; refusing contact messages.");
     return (_req, res) => {
-      res.status(503).json({ error: "Contact form is temporarily unavailable", code: "verification-unavailable" });
+      res.status(503).json(errorBody("Contact form is temporarily unavailable", "verification-unavailable"));
     };
   }
   if (!secretKey) console.warn("[contact-support] TURNSTILE_SECRET_KEY not set; Turnstile skipped (non-production only).");
@@ -91,5 +96,19 @@ export const createContactGuard = (options: ContactGuardOptions): RequestHandler
       : undefined,
   });
 
-  return createExpressFormGuard(guard) as RequestHandler;
+  return (req, res, next) => {
+    // Content-Length is missing on chunked requests, so also measure the parsed body.
+    const declared = Number(req.headers["content-length"]);
+    const parsed = Buffer.byteLength(JSON.stringify(req.body ?? {}));
+    const bodyBytes = Math.max(Number.isFinite(declared) ? declared : 0, parsed);
+
+    guard({ body: req.body, bodyBytes, ip: getClientIp(req.headers, req.socket?.remoteAddress) })
+      .then((result) => {
+        if (result.ok) return next();
+        if (!result.silent) console.warn("[contact-support] blocked", result.code, result.details ?? "");
+        if (result.retryAfterSeconds) res.setHeader("Retry-After", String(result.retryAfterSeconds));
+        res.status(result.status).json(result.silent ? { success: true } : errorBody(result.message, result.code));
+      })
+      .catch(next);
+  };
 };

@@ -3,23 +3,42 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { createContactGuard } from "../contactGuard";
 
+const SITE = "talepod.com";
 const fields = { name: "Ada", email: "ada@example.com", subject: "Hi", message: "Hello there" };
 let ip = 0;
 
-/** Runs the middleware once; resolves with the status it answered, or "next" when it let the request through. */
-const run = (handler: ReturnType<typeof createContactGuard>, body: unknown, from = `10.0.0.${++ip}`) =>
-  new Promise<number | "next">((resolve) => {
-    const res = {
-      status: vi.fn((code: number) => {
-        resolve(code);
-        return res;
-      }),
-      setHeader: vi.fn(),
-      json: vi.fn(() => res),
-    };
-    const req = { headers: { "x-forwarded-for": from, "content-length": "100" }, socket: {}, body };
-    handler(req as never, res as never, () => resolve("next"));
-  });
+/** Runs the middleware to completion; returns the status it answered (if any), the JSON body and the `next` spy. */
+const run = async (
+  handler: ReturnType<typeof createContactGuard>,
+  body: unknown,
+  { from = `10.0.0.${++ip}`, headers = { "content-length": "100" } as Record<string, string> } = {},
+) => {
+  const next = vi.fn();
+  let status: number | undefined;
+  let json: unknown;
+  const res = {
+    status: vi.fn((code: number) => ((status = code), res)),
+    setHeader: vi.fn(),
+    json: vi.fn((value: unknown) => ((json = value), res)),
+  };
+  const req = { headers: { "x-forwarded-for": from, ...headers }, socket: {}, body };
+  handler(req as never, res as never, next);
+  await vi.waitFor(() => expect(status !== undefined || next.mock.calls.length > 0).toBe(true));
+  // Let any late call land, so a response followed by next() is caught.
+  await new Promise((resolve) => setTimeout(resolve, 5));
+  return { status, json, next };
+};
+
+const passed = (r: Awaited<ReturnType<typeof run>>) => {
+  expect(r.status).toBeUndefined();
+  expect(r.next).toHaveBeenCalledTimes(1);
+  expect(r.next).toHaveBeenCalledWith();
+};
+
+const blocked = (r: Awaited<ReturnType<typeof run>>, status: number) => {
+  expect(r.status).toBe(status);
+  expect(r.next).not.toHaveBeenCalled();
+};
 
 const cloudflare = (reply: Record<string, unknown>) =>
   vi.spyOn(globalThis, "fetch").mockImplementation(async () => new Response(JSON.stringify(reply)));
@@ -30,38 +49,55 @@ const guard = (overrides = {}) =>
 afterEach(() => vi.restoreAllMocks());
 
 describe("contact guard", () => {
-  it("lets a verified message through", async () => {
-    cloudflare({ success: true, hostname: "www.talepod.com", action: "contact" });
-    expect(await run(guard(), { ...fields, turnstileToken: "tok" })).toBe("next");
+  it("lets a verified message through exactly once", async () => {
+    cloudflare({ success: true, hostname: SITE, action: "contact" });
+    passed(await run(guard(), { ...fields, turnstileToken: "tok" }));
   });
 
-  it("blocks a missing or rejected token, and tokens from other sites", async () => {
+  it("blocks missing, rejected and foreign tokens without calling next", async () => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
     cloudflare({ success: false, "error-codes": ["invalid-input-response"] });
-    expect(await run(guard(), fields)).toBe(403);
-    expect(await run(guard(), { ...fields, turnstileToken: "bad" })).toBe(403);
-    cloudflare({ success: true, hostname: "evil.example", action: "contact" });
-    expect(await run(guard(), { ...fields, turnstileToken: "tok" })).toBe(403);
+    blocked(await run(guard(), fields), 403);
+    const rejected = await run(guard(), { ...fields, turnstileToken: "bad" });
+    blocked(rejected, 403);
+    expect(rejected.json).toMatchObject({ code: "verification-failed", message: expect.any(String) });
+    for (const hostname of ["evil.example", "localhost"]) {
+      cloudflare({ success: true, hostname, action: "contact" });
+      blocked(await run(guard(), { ...fields, turnstileToken: "tok" }), 403);
+    }
   });
 
-  it("answers a filled honeypot with a fake success without calling Cloudflare", async () => {
+  it("answers a filled honeypot with a fake success, without Cloudflare or next", async () => {
     const fetchSpy = cloudflare({ success: true });
-    expect(await run(guard(), { ...fields, turnstileToken: "tok", website: "http://spam" })).toBe(200);
+    const r = await run(guard(), { ...fields, turnstileToken: "tok", website: "http://spam" });
+    blocked(r, 200);
+    expect(r.json).toEqual({ success: true });
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
   it("rate limits per IP", async () => {
-    cloudflare({ success: true, hostname: "talepod.com", action: "contact" });
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    cloudflare({ success: true, hostname: SITE, action: "contact" });
     const handler = guard();
     const body = { ...fields, turnstileToken: "tok" };
-    expect(await run(handler, body, "9.9.9.9")).toBe("next");
-    expect(await run(handler, body, "9.9.9.9")).toBe("next");
-    expect(await run(handler, body, "9.9.9.9")).toBe(429);
+    passed(await run(handler, body, { from: "9.9.9.9" }));
+    passed(await run(handler, body, { from: "9.9.9.9" }));
+    blocked(await run(handler, body, { from: "9.9.9.9" }), 429);
+  });
+
+  it("rejects large bodies even without a Content-Length header", async () => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    const fetchSpy = cloudflare({ success: true, hostname: SITE, action: "contact" });
+    blocked(await run(guard(), { ...fields, message: "x".repeat(40_000), turnstileToken: "tok" }, { headers: {} }), 413);
+    expect(fetchSpy).not.toHaveBeenCalled();
   });
 
   it("refuses in production without a secret, skips Turnstile elsewhere", async () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     vi.spyOn(console, "warn").mockImplementation(() => {});
-    expect(await run(guard({ secretKey: "" }), fields)).toBe(503);
-    expect(await run(guard({ secretKey: "", isProd: false }), fields)).toBe("next");
+    const refused = await run(guard({ secretKey: "" }), fields);
+    blocked(refused, 503);
+    expect(refused.json).toMatchObject({ message: expect.any(String) });
+    passed(await run(guard({ secretKey: "", isProd: false }), fields));
   });
 });

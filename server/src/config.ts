@@ -100,7 +100,7 @@ const CONFIG = {
   SMTP_PORT: process.env.SMTP_PORT,
   EMAIL: process.env.EMAIL,
 
-  // Contact form anti-spam (Cloudflare Turnstile secret; the site key is VITE_TURNSTILE_SITE_KEY on the web app)
+  // Contact form anti-spam (Cloudflare Turnstile secret; the site key is REACT_APP_TURNSTILE_SITE_KEY on the web app)
   TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY ?? "",
   CONTACT_RATE_LIMIT_MAX: Number(process.env.CONTACT_RATE_LIMIT_MAX) || 5,
   CONTACT_RATE_LIMIT_WINDOW_MS: Number(process.env.CONTACT_RATE_LIMIT_WINDOW_MS) || 10 * 60_000,

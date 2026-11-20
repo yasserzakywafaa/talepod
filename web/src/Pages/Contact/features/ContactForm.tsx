@@ -31,6 +31,7 @@ const ContactForm = () => {
             required
             fullWidth
             name="name"
+            slotProps={{ htmlInput: { maxLength: 100 } }}
             label={t("contact.name")}
             value={state.contactForm.name}
             onChange={handleOnFieldChange}
@@ -43,6 +44,7 @@ const ContactForm = () => {
             type="email"
             label={t("contact.email")}
             name="email"
+            slotProps={{ htmlInput: { maxLength: 254 } }}
             value={state.contactForm.email}
             onChange={handleOnFieldChange}
           />
@@ -52,6 +54,7 @@ const ContactForm = () => {
             required
             fullWidth
             name="subject"
+            slotProps={{ htmlInput: { maxLength: 200 } }}
             label={t("contact.subject")}
             value={state.contactForm.subject}
             onChange={handleOnFieldChange}
@@ -64,6 +67,7 @@ const ContactForm = () => {
             fullWidth
             rows={4}
             name="message"
+            slotProps={{ htmlInput: { maxLength: 5000 } }}
             label={t("contact.message")}
             value={state.contactForm.message}
             onChange={handleOnFieldChange}
